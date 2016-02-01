@@ -12,15 +12,9 @@ namespace ANNGlobalPID
     addMC12TuneV2();
     // Add the MC12TuneV3 implementations to the factory
     addMC12TuneV3();
-    // Bs2MuMu development networks
+    // Bs2MuMu developmental networks
     addBs2MuMuDev1();
     addBs2MuMuDev2();
-  }
-
-  TMVAImpFactory::~TMVAImpFactory( )
-  {
-    for ( auto& i : m_map ) { delete i.second; }
-    m_map.clear();
   }
 
   // Method to get a static instance of the factory

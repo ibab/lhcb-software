@@ -102,7 +102,6 @@ StatusCode ChargedProtoANNPIDTupleTool::initialize()
 StatusCode ChargedProtoANNPIDTupleTool::finalize()
 {
   // Clean Up
-  for ( const auto & i : m_inputs ) { delete i.second; }
   m_inputs.clear();
   // return
   return ChargedProtoANNPIDToolBase::finalize();

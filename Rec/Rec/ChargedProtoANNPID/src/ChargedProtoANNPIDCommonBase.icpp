@@ -124,7 +124,7 @@ ChargedProtoANNPIDCommonBase<PBASE>::getInputs( const StringInputs& names ) cons
 
 //=============================================================================
 template <class PBASE>
-const typename ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::Input *
+typename ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::Input::SharedPtr
 ANNGlobalPID::
 ChargedProtoANNPIDCommonBase<PBASE>::getInput( const std::string& name ) const
 {
@@ -204,7 +204,7 @@ ChargedProtoANNPIDCommonBase<PBASE>::getInput( const std::string& name ) const
     input->setName(name);
   }
 
-  return input;
+  return typename Input::SharedPtr( input );
 }
 //=============================================================================
 
@@ -287,18 +287,15 @@ NeuroBayesANN::getOutput( const LHCb::ProtoParticle * proto )
 template <class PBASE>
 double
 ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::
-TMVAReaderANN::getOutput( const LHCb::ProtoParticle * proto )
-  const
+TMVAReaderANN::getOutput( const LHCb::ProtoParticle * proto ) const
 {
   // Fill the array of network inputs
+  unsigned int i = 0;
+  for ( const auto& input : this->inputs() )
   {
-    unsigned int i = 0;
-    for ( const auto * input : this->inputs() )
-    {
-      m_inArray[i++] = static_cast<float>( input->value(proto) );
-    }
+    m_inArray[i++] = static_cast<float>( input->value(proto) );
   }
-
+  
   // get the output and return
   return m_reader->EvaluateMVA("PID");
 }
@@ -309,18 +306,15 @@ TMVAReaderANN::getOutput( const LHCb::ProtoParticle * proto )
 template <class PBASE>
 double
 ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::TMVAImpANN::
-getOutput( const LHCb::ProtoParticle * proto )
-  const
+getOutput( const LHCb::ProtoParticle * proto ) const
 {
   // Fill the array of network inputs
+  unsigned int i = 0;
+  for ( const auto& input : this->inputs() )
   {
-    unsigned int i = 0;
-    for ( const auto * input : this->inputs() )
-    {
-      m_vars[i++] = input->value(proto);
-    }
+    m_vars[i++] = input->value(proto);
   }
-
+  
   // get the output and return
   return m_reader->GetMvaValue(m_vars);
 }
@@ -426,7 +420,7 @@ NetConfig( const std::string & tkType,
             if ( !cut.empty() && cut.find("#") == std::string::npos )
             {
               // try and make a cut for this string
-              m_cuts.push_back( new Cut(cut,parent) );
+              m_cuts.push_back( typename Cut::UniquePtr( new Cut(cut,parent) ) );
               if ( !m_cuts.back()->isOK() )
               {
                 OK = false;
@@ -457,19 +451,19 @@ NetConfig( const std::string & tkType,
 
       // Create cut objects
       bool _ok = true;
-      m_cuts.push_back( new Cut( "TrackP                > "+minP,         parent ) );
+      m_cuts.push_back( typename Cut::UniquePtr( new Cut( "TrackP                > "+minP,         parent ) ) );
       _ok &= m_cuts.back()->isOK();
-      m_cuts.push_back( new Cut( "TrackPt               > "+minPt,        parent ) );
+      m_cuts.push_back( typename Cut::UniquePtr( new Cut( "TrackPt               > "+minPt,        parent ) ) );
       _ok &= m_cuts.back()->isOK();
-      m_cuts.push_back( new Cut( "TrackChi2PerDof       < "+maxChiSq,     parent ) );
+      m_cuts.push_back( typename Cut::UniquePtr( new Cut( "TrackChi2PerDof       < "+maxChiSq,     parent ) ) );
       _ok &= m_cuts.back()->isOK();
-      m_cuts.push_back( new Cut( "TrackLikelihood       > "+minLikeli,    parent ) );
+      m_cuts.push_back( typename Cut::UniquePtr( new Cut( "TrackLikelihood       > "+minLikeli,    parent ) ) );
       _ok &= m_cuts.back()->isOK();
-      m_cuts.push_back( new Cut( "TrackGhostProbability < "+maxGhostProb, parent ) );
+      m_cuts.push_back( typename Cut::UniquePtr( new Cut( "TrackGhostProbability < "+maxGhostProb, parent ) ) );
       _ok &= m_cuts.back()->isOK();
       if ( trackPreSel == "TrackPreSelIsMuon" )
       {
-        m_cuts.push_back( new Cut( "MuonIsMuon > 0.5", parent ) );
+        m_cuts.push_back( typename Cut::UniquePtr( new Cut( "MuonIsMuon > 0.5", parent ) ) );
         _ok &= m_cuts.back()->isOK();
       }
       if ( !_ok )
@@ -519,9 +513,9 @@ NetConfig( const std::string & tkType,
       if ( "TMVA" == annType )
       {
         // First see if we have a built in C++ implementation for this case
-        m_netHelper = new TMVAImpANN( netVersion,
-                                      particleType(), trackType(),
-                                      inputs, parent );
+        m_netHelper.reset( new TMVAImpANN( netVersion,
+                                           particleType(), trackType(),
+                                           inputs, parent ) );
         if ( !m_netHelper->isOK() )
         {
           // No, so try again with a TMVA Reader
@@ -529,9 +523,8 @@ NetConfig( const std::string & tkType,
                               << netVersion << " " << particleType() << " " << trackType()
                               << " -> Reverting to Generic XML Reader"
                               << endmsg;
-          delete m_netHelper;
-          m_netHelper = new TMVAReaderANN( paramFileName, inputs, parent,
-                                           suppressANNPrintout );
+          m_netHelper.reset( new TMVAReaderANN( paramFileName, inputs, parent,
+                                                suppressANNPrintout ) );
         }
       }
 #ifdef _ENABLE_NEUROBAYES
@@ -541,8 +534,8 @@ NetConfig( const std::string & tkType,
           parent->debug() << "Using NeuroBayes Expert implementation" << endmsg;
         // FPE Guard for NB call
         FPE::Guard guard(true);
-        m_netHelper = new NeuroBayesANN( paramFileName, inputs, parent,
-                                         suppressANNPrintout );
+        m_netHelper.reset( new NeuroBayesANN( paramFileName, inputs, parent,
+                                              suppressANNPrintout ) );
       }
 #endif
       else
@@ -552,7 +545,7 @@ NetConfig( const std::string & tkType,
       }
 
       // is the final helper OK ?
-      if ( OK && m_netHelper && m_netHelper->isOK() )
+      if ( OK && m_netHelper.get() && m_netHelper->isOK() )
       {
         // print a summary of the configuration
         const std::string sF = "ANNPID : Tune=%-13s TrackType=%-12s Particle=%-12s";
@@ -594,9 +587,7 @@ template <class PBASE>
 void
 ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::NetConfig::cleanUp()
 {
-  delete m_netHelper;
-  m_netHelper = nullptr;
-  for ( auto * cut : m_cuts ) { delete cut; }
+  m_netHelper.reset( nullptr );
   m_cuts.clear();
 }
 
@@ -606,7 +597,7 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::NetConfig::
 passCuts( const LHCb::ProtoParticle * proto ) const
 {
   bool ok = true;
-  for ( const auto * cut : m_cuts )
+  for ( const auto & cut : m_cuts )
   {
     if ( !cut->isSatisfied(proto) ) { ok = false; break; }
   }

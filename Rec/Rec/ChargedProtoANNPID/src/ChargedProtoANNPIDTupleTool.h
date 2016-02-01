@@ -4,6 +4,7 @@
 
 // STL
 #include <unordered_map>
+#include <memory>
 
 // base class
 #include "ChargedProtoANNPIDToolBase.h"
@@ -59,7 +60,7 @@ namespace ANNGlobalPID
     const Rich::Rec::MC::IMCTruthTool * m_truth = nullptr;
 
     /// map of accessor objects for each variable by name
-    typedef std::unordered_map< std::string, const ChargedProtoANNPIDToolBase::Input* > Inputs;
+    typedef std::unordered_map< std::string, ChargedProtoANNPIDToolBase::Input::SharedPtr > Inputs;
     // variables to fill
     Inputs m_inputs;
 

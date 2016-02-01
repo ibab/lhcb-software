@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include <vector>
 #include <cmath>
+#include <memory>
 
 // TMVA IClassifierReader interface
 #include "TMVAIClassifierReader.h"
@@ -63,7 +64,7 @@ namespace ANNGlobalPID
     {
     public:
       /// Create an instance of the TMVA classifier for this factory
-      IClassifierReader* create( const InputNames& inputs ) 
+      IClassifierReader* create( const InputNames& inputs ) override
       {
         return new TMVATYPE( inputs ); 
       }
@@ -75,9 +76,6 @@ namespace ANNGlobalPID
 
     /// Standard constructor
     TMVAImpFactory( );
-
-    /// Destructor
-    ~TMVAImpFactory( );
 
   private:
 
@@ -121,7 +119,7 @@ namespace ANNGlobalPID
                               "ANNGlobalPID::TMVAImpFactory",
                               StatusCode::FAILURE );
       }
-      m_map[ _id ] = new TMVAFactory<TMVATYPE>();
+      m_map[ _id ].reset( new TMVAFactory<TMVATYPE>() );
     }
 
   public:
@@ -140,7 +138,7 @@ namespace ANNGlobalPID
   private:
 
     /// Type for internal map
-    typedef std::unordered_map< std::string, FactoryBase* > Map;
+    typedef std::unordered_map< std::string, std::unique_ptr<FactoryBase> > Map;
 
   private:
 

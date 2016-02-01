@@ -128,8 +128,10 @@ namespace ANNGlobalPID
       /// Access the input value for a given ProtoParticle
       virtual double value( const LHCb::ProtoParticle * proto ) const = 0;
     public:
+      /// Shared pointer type
+      typedef std::shared_ptr<const Input> SharedPtr;
       /// Type for a vector of inputs
-      typedef std::vector<const Input *> ConstVector;
+      typedef std::vector<SharedPtr> ConstVector;
     public:
       /// Access the input name
       const std::string& name() const { return m_name; }
@@ -153,7 +155,7 @@ namespace ANNGlobalPID
       const LHCb::ProtoParticle::additionalInfo m_info;
       const double m_def;
     public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const
+      virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
         return proto->info( m_info, m_def );
       }
@@ -482,8 +484,10 @@ namespace ANNGlobalPID
     class Cut
     {
     public:
+      /// Shared Pointer
+      typedef std::unique_ptr<const Cut> UniquePtr;
       /// Vector of cuts
-      typedef std::vector<const Cut*> ConstVector;
+      typedef std::vector<UniquePtr> ConstVector;
     private:
       /// Delimitor enum
       enum Delim { UNDEFINED = -1, GT, LT, GE, LE };
@@ -491,8 +495,6 @@ namespace ANNGlobalPID
       /// Constructor
       Cut( const std::string& desc = "NOTDEFINED",
            const ChargedProtoANNPIDCommonBase<PBASE> * parent = nullptr );
-      /// Destructor
-      ~Cut( ) { delete m_variable; }
     private:
       /// No Copy Constructor
       Cut( const Cut& ) { }
@@ -515,6 +517,9 @@ namespace ANNGlobalPID
       /// Overload output to ostream
       friend inline std::ostream& operator << ( std::ostream& s, const Cut & cut )
       { return s << "'" << cut.description() << "'" ; }
+      /// Overload output to ostream
+      friend inline std::ostream& operator << ( std::ostream& s, const Cut::UniquePtr & cut )
+      { return s << "'" << cut->description() << "'" ; }
     private:
       /// Set the delimitor enum from a string
       bool setDelim( const std::string & delim )
@@ -527,11 +532,11 @@ namespace ANNGlobalPID
         return ok;
       }
     private:
-      std::string m_desc;                  ///< The cut description
-      bool m_OK{false};                    ///< Is this cut well defined
-      const Input * m_variable = nullptr;  ///< The variable to cut on
-      double m_cut{0};                     ///< The cut value
-      Delim m_delim{UNDEFINED};            ///< The delimitor
+      std::string m_desc;                   ///< The cut description
+      bool m_OK{false};                     ///< Is this cut well defined
+      typename Input::SharedPtr m_variable; ///< The variable to cut on
+      double m_cut{0};                      ///< The cut value
+      Delim m_delim{UNDEFINED};             ///< The delimitor
     };
 
   protected:
@@ -558,15 +563,9 @@ namespace ANNGlobalPID
        */
       ANNHelper( const ChargedProtoANNPIDCommonBase<PBASE>::StringInputs& inputs,
                  const ChargedProtoANNPIDCommonBase<PBASE> * parent )
-        : m_inputs ( parent->getInputs(inputs) ),
-          m_ok     ( false  ) 
-      { }
+        : m_inputs ( parent->getInputs(inputs) ) { }
       /// Destructor
-      virtual ~ANNHelper()
-      {
-        for ( auto * input : m_inputs ) { delete input; }
-        m_inputs.clear();
-      }
+      virtual ~ANNHelper() { }
     public:
       /// Are we configured properly
       inline bool isOK() const { return m_ok; }
@@ -617,12 +616,12 @@ namespace ANNGlobalPID
         this->setOK(true);
       }
       /// Destructor
-      virtual ~NeuroBayesANN() { delete m_expert; delete[] m_inArray; }
+      virtual ~NeuroBayesANN() { delete[] m_inArray; }
     public:
       /// Compute the ANN output for the given ProtoParticle
-      virtual double getOutput( const LHCb::ProtoParticle * proto ) const;
+      virtual double getOutput( const LHCb::ProtoParticle * proto ) const override;
     private:
-      Expert * m_expert = nullptr;   ///< Pointer to the NeuroBayes 'Expert'
+      std::unique_ptr<Expert> m_expert;   ///< Pointer to the NeuroBayes 'Expert'
       float * m_inArray = nullptr;   ///< Working array for network inputs
       bool m_suppressPrintout{true}; ///< Suppress any printout from NeuroBayes
     };
@@ -662,13 +661,13 @@ namespace ANNGlobalPID
         this->setOK(true);
       }
       /// Destructor
-      virtual ~TMVAReaderANN() { delete m_reader; delete[] m_inArray; }
+      virtual ~TMVAReaderANN() { delete[] m_inArray; }
     public:
       /// Compute the ANN output for the given ProtoParticle
-      virtual double getOutput( const LHCb::ProtoParticle * proto ) const;
+      virtual double getOutput( const LHCb::ProtoParticle * proto ) const override;
     private:
-      TMVA::Reader * m_reader = nullptr; ///< The TMVA reader
-      float * m_inArray       = nullptr; ///< Working array for network inputs
+      std::unique_ptr<TMVA::Reader> m_reader; ///< The TMVA reader
+      float * m_inArray = nullptr; ///< Working array for network inputs
     };
 
     /** @class TMVAImpANN ChargedProtoANNPIDCommonBase.h
@@ -701,12 +700,12 @@ namespace ANNGlobalPID
         this->setOK( m_reader && m_reader->IsStatusClean() );
       }
       /// Destructor
-      virtual ~TMVAImpANN() { delete m_reader; }
+      virtual ~TMVAImpANN() { }
     public:
       /// Compute the ANN output for the given ProtoParticle
-      virtual double getOutput( const LHCb::ProtoParticle * proto ) const;
+      virtual double getOutput( const LHCb::ProtoParticle * proto ) const override;
     private:
-      IClassifierReader * m_reader = nullptr; ///< The TMVA reader
+      std::unique_ptr<IClassifierReader> m_reader; ///< The TMVA reader
       mutable std::vector<double> m_vars;     ///< the input variables
     };
 
@@ -730,11 +729,8 @@ namespace ANNGlobalPID
                  const bool suppressANNPrintout,
                  const ChargedProtoANNPIDCommonBase<PBASE> * parent );
 
-      /// Destructor
-      ~NetConfig() { cleanUp(); }
-
       /// Access the Network object
-      inline const ANNHelper * netHelper() const { return m_netHelper; }
+      inline const ANNHelper * netHelper() const { return m_netHelper.get(); }
 
       /// Status
       inline bool isOK() const { return netHelper() && netHelper()->isOK(); }
@@ -756,7 +752,7 @@ namespace ANNGlobalPID
     private:
 
       /// Network Helper
-      ANNHelper * m_netHelper = nullptr;
+      std::unique_ptr<ANNHelper> m_netHelper;
 
       /// Vector of cuts to apply
       typename Cut::ConstVector m_cuts;
@@ -774,7 +770,7 @@ namespace ANNGlobalPID
     /** Get the Input object for a given input name
      *  @attention Created on the heap therefore user takes ownership
      */
-    const Input * getInput( const std::string& name ) const;
+    typename Input::SharedPtr getInput( const std::string& name ) const;
 
     /** Get a vector of input objects for a given set of names
      *  @attention Created on the heap therefore user takes ownership
