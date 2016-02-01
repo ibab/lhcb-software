@@ -170,6 +170,7 @@ def Data(tree, coords, cuts = None, weight = None):
     if None == weight: weight = lambda t: 1.
     ndim = None
     result = []
+    coordsWithRunnr = [lambda t: t.runnr] + list(coords)
     # loop over tree entries
     for dummy in tree:
         # figure out if entry passes cuts
@@ -180,7 +181,7 @@ def Data(tree, coords, cuts = None, weight = None):
                 break
         if not passed: continue
         # yes, cuts passed, get what to draw
-        c = list([c(tree)] for c in coords)
+        c = list([c(tree)] for c in coordsWithRunnr)
         if None == ndim:
             ndim = len(c)
         else:
@@ -192,4 +193,7 @@ def Data(tree, coords, cuts = None, weight = None):
         c = __verifyAndExtendShape(c, __flattenCoordinate(weight(tree)))
         # fill the stuff into the result
         result.append(c)
+
+    # Yuck, but this is to format the result nicely
+    result = list(tuple(x[0] for x in l[1:]) for l in sorted(result, key=lambda item: item[0][0]))
     return result
