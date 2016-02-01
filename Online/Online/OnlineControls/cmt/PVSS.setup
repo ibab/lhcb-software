@@ -1,0 +1,86 @@
+CMTROOT="/sw/lib/contrib/CMT/v1r20p20090520"; export CMTROOT
+CMTCONFIG=x86_64-slc6-gcc44-dbg; export CMTCONFIG
+UPIRROOT="/group/online/dataflow/cmtuser/PVSS/Online/UPIR"; export UPIRROOT
+UPIRCONFIG="x86_64-slc6-gcc44-dbg"; export UPIRCONFIG
+UPIROOT="/group/online/dataflow/cmtuser/PVSS/Online/UPI"; export UPIROOT
+UPICONFIG="x86_64-slc6-gcc44-dbg"; export UPICONFIG
+PVSSINTERFACEROOT="/group/online/dataflow/cmtuser/PVSS/Online/PVSSInterface"; export PVSSINTERFACEROOT
+PVSSINTERFACECONFIG="x86_64-slc6-gcc44-dbg"; export PVSSINTERFACECONFIG
+ONLINEKERNELROOT="/group/online/dataflow/cmtuser/PVSS/Online/OnlineKernel"; export ONLINEKERNELROOT
+ONLINEKERNELCONFIG="x86_64-slc6-gcc44-dbg"; export ONLINEKERNELCONFIG
+ONLINEBASEROOT="/group/online/dataflow/cmtuser/PVSS/Online/OnlineBase"; export ONLINEBASEROOT
+ONLINEBASECONFIG="x86_64-slc6-gcc44-dbg"; export ONLINEBASECONFIG
+PVSSMANAGERROOT="/group/online/dataflow/cmtuser/PVSS/Online/PVSSManager"; export PVSSMANAGERROOT
+PVSSMANAGERCONFIG="x86_64-slc6-gcc44-dbg"; export PVSSMANAGERCONFIG
+PVSSROOT="/group/online/dataflow/cmtuser/PVSS/Online/PVSS"; export PVSSROOT
+PVSSCONFIG="x86_64-slc6-gcc44-dbg"; export PVSSCONFIG
+GAUDIPOLICYROOT="/group/online/dataflow/cmtuser/PVSS/GaudiPolicy"; export GAUDIPOLICYROOT
+GAUDIPOLICYCONFIG="x86_64-slc6-gcc44-dbg"; export GAUDIPOLICYCONFIG
+REFLEXROOT="/group/online/dataflow/cmtuser/PVSS/LCG_Interfaces/Reflex"; export REFLEXROOT
+REFLEXCONFIG="x86_64-slc6-gcc44-dbg"; export REFLEXCONFIG
+ROOTROOT="/group/online/dataflow/cmtuser/PVSS/LCG_Interfaces/ROOT"; export ROOTROOT
+ROOTCONFIG="x86_64-slc6-gcc44-dbg"; export ROOTCONFIG
+PYTHONROOT="/group/online/dataflow/cmtuser/PVSS/LCG_Interfaces/Python"; export PYTHONROOT
+PYTHONCONFIG="x86_64-slc6-gcc44-dbg"; export PYTHONCONFIG
+GCCXMLROOT="/group/online/dataflow/cmtuser/PVSS/LCG_Interfaces/GCCXML"; export GCCXMLROOT
+GCCXMLCONFIG="x86_64-slc6-gcc44-dbg"; export GCCXMLCONFIG
+LCG_CONFIGURATIONROOT="/group/online/dataflow/cmtuser/PVSS/LCG_Configuration"; export LCG_CONFIGURATIONROOT
+LCG_CONFIGURATIONCONFIG="x86_64-slc6-gcc44-dbg"; export LCG_CONFIGURATIONCONFIG
+ONLINECONTROLSROOT="/group/online/dataflow/cmtuser/PVSS/Online/OnlineControls"; export ONLINECONTROLSROOT
+ONLINECONTROLSCONFIG="x86_64-slc6-gcc44-dbg"; export ONLINECONTROLSCONFIG
+CMTPATH="/group/online/dataflow/cmtuser/PVSS"; export CMTPATH
+PATH="/group/online/dataflow/cmtuser/PVSS/InstallArea/x86_64-slc6-gcc44-dbg/scripts:/group/online/dataflow/cmtuser/PVSS/InstallArea/x86_64-slc6-gcc44-dbg/bin:/group/online/dataflow/cmtuser/libraries/ROOT/root-v5-34-08/bin:usr/bin:/sw/lib/contrib/CMT/v1r20p20090520/Linux-x86_64:/usr/bin:/opt/FMC/sbin:/opt/FMC/bin:/group/online/dataflow/scripts:/opt/WinCC_OA/3.11/bin:/usr/lib64/qt-3.3/bin:/usr/local/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/frankm/bin:/sw/lib/scripts"; export PATH
+CLASSPATH="/sw/lib/contrib/CMT/v1r20p20090520/java"; export CLASSPATH
+unset include
+unset lib
+NEWCMTCONFIG="x86_64-slc64-gcc447"; export NEWCMTCONFIG
+ATLAS_TAGS_MAP="none"; export ATLAS_TAGS_MAP
+host_cmtconfig="x86_64-slc6-gcc44-opt"; export host_cmtconfig
+unset intelplat
+unset intel_home
+unset icc_c_home
+unset icc_f_home
+unset LDFLAGS
+unset CPPFLAGS
+unset CFLAGS
+unset CXXFLAGS
+unset FFLAGS
+unset CCACHE_PREFIX
+COMPILER_PATH="/group/online/dataflow/cmtuser/PVSS/LCG_Configuration/../../../../../external/gcc/4.4.3/x86_64-slc6/lib/gcc/x86_64-unknown-linux-gnu/4.4.3"; export COMPILER_PATH
+LD_LIBRARY_PATH="/group/online/dataflow/cmtuser/PVSS/InstallArea/x86_64-slc6-gcc44-dbg/lib:/opt/WinCC_OA/3.11/bin:/opt/WinCC_OA/3.11/api/lib.linux:/opt/FMC/lib"; export LD_LIBRARY_PATH
+PYTHONHOME="${Python_home}"; export PYTHONHOME
+MANPATH="/group/online/dataflow/cmtuser/libraries/ROOT/root-v5-34-08/man:/share/man:/group/online/dataflow/cmtuser/libraries/ROOT/src/root/man"; export MANPATH
+unset QMTEST_CLASS_PATH
+COOLVERS="${COOL_config_version}"; export COOLVERS
+CORALVERS="${CORAL_config_version}"; export CORALVERS
+ROOTVERS="${ROOT_config_version}"; export ROOTVERS
+BoostVERS="${Boost_config_version}"; export BoostVERS
+uuidVERS="${uuid_config_version}"; export uuidVERS
+GCCXMLVERS="${GCCXML_config_version}"; export GCCXMLVERS
+AIDAVERS="${AIDA_config_version}"; export AIDAVERS
+XercesCVERS="${XercesC_config_version}"; export XercesCVERS
+GSLVERS="${GSL_config_version}"; export GSLVERS
+PythonVERS="${Python_config_version}"; export PythonVERS
+HepMCVERS="${HepMC_config_version}"; export HepMCVERS
+QMtestVERS="${QMtest_config_version}"; export QMtestVERS
+LCGCMTVERS="${LCG_config_version}"; export LCGCMTVERS
+GAUDI_DOXY_HOME="${GAUDI_home}/GaudiRelease/doc"; export GAUDI_DOXY_HOME
+unset DYLD_LIBRARY_PATH
+if test -f /group/online/dataflow/cmtuser/PVSS/Online/OnlineBase/scripts/onlinepatches.sh; then
+  . /group/online/dataflow/cmtuser/PVSS/Online/OnlineBase/scripts/onlinepatches.sh
+fi
+
+ROOTSYS="/group/online/dataflow/cmtuser/libraries/ROOT/root-v5-34-08"; export ROOTSYS
+PYTHONPATH="/group/online/dataflow/cmtuser/PVSS/InstallArea/x86_64-slc6-gcc44-dbg/python/lib-dynload:/group/online/dataflow/cmtuser/PVSS/InstallArea/x86_64-slc6-gcc44-dbg/python.zip:/group/online/dataflow/cmtuser/PVSS/Online/OnlineControls/python:/group/online/dataflow/cmtuser/libraries/ROOT/root-v5-34-08/lib:/group/online/dataflow/cmtuser/PVSS/Online/OnlineKernel/python"; export PYTHONPATH
+GENTEST_EXE="/group/online/dataflow/cmtuser/PVSS/Online/OnlineKernel/${CMTCONFIG}/gentest.exe"; export GENTEST_EXE
+PVSS_II="/localdisk/pvss/STORAGE/config/config"; export PVSS_II
+PVSS_II_HOME="/opt/WinCC_OA/3.11"; export PVSS_II_HOME
+PVSS_SYSTEM_ROOT="/opt/WinCC_OA/3.11"; export PVSS_SYSTEM_ROOT
+PROJECT_ROOT="."; export PROJECT_ROOT
+PLATFORM="linux_RHEL4"; export PLATFORM
+PVSS00api="/group/online/dataflow/cmtuser/PVSS/Online/PVSSManager/${CMTCONFIG}/PVSS00api.exe"; export PVSS00api
+if test -f /group/online/dataflow/cmtuser/PVSS/GaudiPolicy/scripts/StripPath.sh; then
+  . /group/online/dataflow/cmtuser/PVSS/GaudiPolicy/scripts/StripPath.sh
+fi
+
+

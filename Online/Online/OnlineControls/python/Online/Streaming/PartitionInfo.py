@@ -77,6 +77,34 @@ def showStorage(partition,extended=None):
     log('-> Partition:'+name+' is used by '+partName)
     printSlots(recvNodes,'   1st. layer nodes in use['+str(len(recvNodes))+']:',99,10)
     log('   1st layer slices allocated:%d'%len(partition.recvSlices()))
+    for i in xrange(len(partition.recvReceivers())):
+      node,task,nick,type,clazz,dns,sys,sl,farm = partition.recvReceiver(i).split('/')
+      slot = partition.recvSlice(i)
+      log('     Farm:%-8s [%s,%s] sends to %-14s using slot:%s'%(eval(farm)[0],type,clazz,task,slot))
+    log('   Writer Tasks:')
+    for i in partition.recvSenders():
+      node,task,nick,type,clazz,dns,sys,sl,opt = i.split('/')
+      opt = eval(opt)
+      for i in xrange(len(opt)):
+        if i == 0:
+          log('     %-38s on %-12s of type:%-10s'%(task+'/'+clazz,node,type))
+        else:
+          log('     %-38s    %-12s         %-10s'%('','',''))
+  log('-> Partition:'+name+' is FREE.')
+
+# ===========================================================================
+def showStorage_2_layers(partition,extended=None):
+  q = partition.tasks
+  p = partition.datapoints
+  name = partition.name
+  if partition.inUse():
+    partName  = partition.detectorName()
+    strmNodes = partition.streamNodes()
+    recvNodes = partition.recvNodes()
+    log('------------------------------- '+name+' -------------------------------',1)
+    log('-> Partition:'+name+' is used by '+partName)
+    printSlots(recvNodes,'   1st. layer nodes in use['+str(len(recvNodes))+']:',99,10)
+    log('   1st layer slices allocated:%d'%len(partition.recvSlices()))
     for i in xrange(len(partition.dataSources())):
       node,task,nick,type,clazz,dns,sys,sl,farm = partition.dataSources()[i].split('/')
       slot = partition.recvSlice(i)
