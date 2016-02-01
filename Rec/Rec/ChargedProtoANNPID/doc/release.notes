@@ -4,6 +4,12 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2016-02-01 - Chris Jones
+ - Add "MC15TuneDev1" developmental tuning for 2016 data taking, based on 
+   MC2015 data samples. Currently only available for Long track types, and no 
+   compiled C++ implementations, so the code will revert to using the slower
+   TMVA generic Reader instances.
+
 !========================= ChargedProtoANNPID v2r13 2016-01-28 =========================
 ! 2016-01-23 - Chris Jones
  - General C++11 clean up.
