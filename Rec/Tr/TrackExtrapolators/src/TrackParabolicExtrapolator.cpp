@@ -146,7 +146,7 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
 
   // Choose the solution closest to the present position
   bool use1 = ( so1 >= 0. && so1 != 999. ) ;
-  return TrackExtrapolator::propagate(state, P.z()+ use1 ? so1 : so3, pid);
+  return TrackExtrapolator::propagate(state, P.z() + ( use1 ? so1 : so3 ), pid);
 }
 
 //=============================================================================
