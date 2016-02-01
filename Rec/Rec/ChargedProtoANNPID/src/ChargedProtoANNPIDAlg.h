@@ -15,6 +15,7 @@
 // STL
 #include <sstream>
 #include <fstream>
+#include <memory>
 
 // Gaudi
 #include "GaudiKernel/IJobOptionsSvc.h"
@@ -54,7 +55,6 @@ namespace ANNGlobalPID
 
     virtual StatusCode initialize();    ///< Algorithm initialization
     virtual StatusCode execute   ();    ///< Algorithm execution
-    virtual StatusCode finalize  ();    ///< Algorithm finalization
 
   private:
 
@@ -71,7 +71,7 @@ namespace ANNGlobalPID
     bool m_suppressANNPrintout;
 
     /// Network Configuration
-    NetConfig * m_netConfig = nullptr;
+    std::unique_ptr<NetConfig> m_netConfig;
 
     /// The extra info to fill on the ProtoParticle
     LHCb::ProtoParticle::additionalInfo m_protoInfo;

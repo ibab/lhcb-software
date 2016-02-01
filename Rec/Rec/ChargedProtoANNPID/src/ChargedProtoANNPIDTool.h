@@ -4,6 +4,7 @@
 
 // STL
 #include <unordered_map>
+#include <memory>
 
 // base class
 #include "ChargedProtoANNPIDToolBase.h"
@@ -60,7 +61,7 @@ namespace ANNGlobalPID
   private:
 
     /// Mapping type to link confgurations to NetConfig instances
-    typedef std::unordered_map< std::string, NetConfig * > Networks;
+    typedef std::unordered_map< std::string, std::unique_ptr<NetConfig> > Networks;
 
     /// Networks for a given ANNPID configuration
     mutable Networks m_annNets;

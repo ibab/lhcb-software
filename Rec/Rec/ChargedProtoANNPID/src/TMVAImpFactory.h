@@ -47,7 +47,7 @@ namespace ANNGlobalPID
     {
     public:
       /// Create an instance of the TMVA classifier for this factory
-      virtual IClassifierReader* create( const InputNames& inputs ) = 0;
+      virtual std::unique_ptr<IClassifierReader> create( const InputNames& inputs ) = 0;
       /// Destructor
       virtual ~FactoryBase() { }
     };
@@ -64,12 +64,12 @@ namespace ANNGlobalPID
     {
     public:
       /// Create an instance of the TMVA classifier for this factory
-      IClassifierReader* create( const InputNames& inputs ) override
+      std::unique_ptr<IClassifierReader> create( const InputNames& inputs ) override
       {
-        return new TMVATYPE( inputs ); 
+        return std::unique_ptr<IClassifierReader>( new TMVATYPE(inputs) ); 
       }
       /// Destructor
-      virtual ~TMVAFactory() { }
+      //virtual ~TMVAFactory() { }
     };
     
   public:
@@ -126,10 +126,10 @@ namespace ANNGlobalPID
 
     /// Get an instance for a given set of parameters
     inline 
-    IClassifierReader* create( const std::string & config,
-                               const std::string & particle,
-                               const std::string & track,
-                               const std::vector<std::string>& inputs ) const
+    std::unique_ptr<IClassifierReader> create( const std::string & config,
+                                               const std::string & particle,
+                                               const std::string & track,
+                                               const std::vector<std::string>& inputs ) const
     {
       const auto i = m_map.find( id(config,particle,track) );
       return ( i != m_map.end() ? i->second->create(inputs) : nullptr );

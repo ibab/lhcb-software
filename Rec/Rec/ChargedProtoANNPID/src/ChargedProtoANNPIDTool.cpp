@@ -41,7 +41,6 @@ ChargedProtoANNPIDTool::~ChargedProtoANNPIDTool() {}
 StatusCode ChargedProtoANNPIDTool::finalize()
 {
   // cleanup
-  for ( auto & ann : m_annNets ) { delete ann.second; }
   m_annNets.clear();
   // return
   return ChargedProtoANNPIDToolBase::finalize();
@@ -111,20 +110,19 @@ ChargedProtoANNPIDTool::getANN( const std::string & trackType,
   // Need to create it
   if ( iANN == m_annNets.end() )
   {
-    m_annNets[key] = new NetConfig( trackType, pidType, netVersion,
-                                    m_suppressANNPrintout, this );
+    m_annNets[key].reset( new NetConfig( trackType, pidType, netVersion,
+                                         m_suppressANNPrintout, this ) );
     if ( !m_annNets[key]->isOK() )
     {
       Warning( "Problem creating ANNPID network for " + 
                trackType + " " + pidType + " " + netVersion ).ignore();
-      delete m_annNets[key];
-      m_annNets[key] = nullptr;
+      m_annNets[key].reset( nullptr );
     }
-    return m_annNets[key];
+    return m_annNets[key].get();
   }
 
   // return it
-  return iANN->second;
+  return iANN->second.get();
 }
 
 //=============================================================================

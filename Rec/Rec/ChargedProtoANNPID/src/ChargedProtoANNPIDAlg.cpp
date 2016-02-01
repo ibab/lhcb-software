@@ -50,8 +50,8 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
   if ( sc.isFailure() ) return sc;
 
   // Create a new network configation
-  m_netConfig = new NetConfig( m_trackType, m_pidType, m_netVersion, 
-                               m_suppressANNPrintout, this );
+  m_netConfig.reset( new NetConfig( m_trackType, m_pidType, m_netVersion, 
+                                    m_suppressANNPrintout, this ) );
   if ( !m_netConfig->isOK() )
   { return Error( "Failed to configure the network" ); }
 
@@ -106,7 +106,7 @@ StatusCode ChargedProtoANNPIDAlg::execute()
     if ( !m_netConfig->passCuts(proto) ) continue;
 
     // get the ANN output for this proto
-    const double nnOut = m_netConfig->netHelper()->getOutput( proto );
+    const auto nnOut = m_netConfig->netHelper()->getOutput( proto );
 
     if ( msgLevel(MSG::VERBOSE) )
     {
@@ -126,18 +126,6 @@ StatusCode ChargedProtoANNPIDAlg::execute()
   } // loop over protos
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode ChargedProtoANNPIDAlg::finalize()
-{
-  // Clean Up
-  delete m_netConfig;
-  m_netConfig = nullptr;
-  // return
-  return ChargedProtoANNPIDAlgBase::finalize();
 }
 
 //=============================================================================
