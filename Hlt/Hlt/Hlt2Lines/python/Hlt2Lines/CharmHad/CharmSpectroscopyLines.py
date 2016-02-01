@@ -15,67 +15,67 @@ class CharmSpectroscopyLines :
 ##  D0,pi is considered separately from the others because the inclusive D0 rate is
 ##  expected to be very high due to the large number of real D0 signal events
                 'Spec_D0Pi' : {
-                                        'Q_AM_MIN'         : 135 * MeV - _local_m_pip,
-                                        'Q_AM_MAX'         : 1025 * MeV - _local_m_pip,
-                                        'Q_M_MIN'          : 135 * MeV - _local_m_pip,
-                                        'Q_M_MAX'          : 995 * MeV - _local_m_pip,
+                                        'Q_AM_MIN'         : 0. * MeV,
+                                        'Q_AM_MAX'         : 885. * MeV,
+                                        'Q_M_MIN'          : -1. * MeV,
+                                        'Q_M_MAX'          : 855. * MeV,
                                         'TagVCHI2PDOF_MAX' : 10.0,
                                         'TisTosSpec'       : "Hlt1.*MVA.*Decision%TOS",
                                        }
 ##  Dpm,pi is considered separately from the others because the inclusive Dpm rate is
 ##  expected to be very high due to the large number of real D+ signal events
                ,'Spec_DpmPi' : {
-                                        'Q_AM_MIN'         : 135 * MeV - _local_m_pip,
-                                        'Q_AM_MAX'         : 1025 * MeV - _local_m_pip,
-                                        'Q_M_MIN'          : 135 * MeV - _local_m_pip,
-                                        'Q_M_MAX'          : 995 * MeV - _local_m_pip,
+                                        'Q_AM_MIN'         : 0. * MeV,
+                                        'Q_AM_MAX'         : 885. * MeV,
+                                        'Q_M_MIN'          : -1. * MeV,
+                                        'Q_M_MAX'          : 855. * MeV,
                                         'TagVCHI2PDOF_MAX' : 10.0,
                                        }
                ,'Spec_DPi' : {
-                                        'Q_AM_MIN'         : 135 * MeV - _local_m_pip,
-                                        'Q_AM_MAX'         : 1025 * MeV - _local_m_pip,
-                                        'Q_M_MIN'          : 135 * MeV - _local_m_pip,
-                                        'Q_M_MAX'          : 995 * MeV - _local_m_pip,
+                                        'Q_AM_MIN'         : 0. * MeV,
+                                        'Q_AM_MAX'         : 885. * MeV,
+                                        'Q_M_MIN'          : -1. * MeV,
+                                        'Q_M_MAX'          : 855. * MeV,
                                         'TagVCHI2PDOF_MAX' : 10.0,
                                        }
                ,'Spec_DK' : {
-                                        'Q_AM_MIN'         : 490 * MeV - _local_m_KS0,
-                                        'Q_AM_MAX'         : 1380 * MeV - _local_m_KS0,
-                                        'Q_M_MIN'          : 490 * MeV - _local_m_KS0,
-                                        'Q_M_MAX'          : 1350 * MeV - _local_m_KS0,
+                                        'Q_AM_MIN'         : 0. * MeV,
+                                        'Q_AM_MAX'         : 885. * MeV,
+                                        'Q_M_MIN'          : -1. * MeV,
+                                        'Q_M_MAX'          : 855. * MeV,
                                         'TagVCHI2PDOF_MAX' : 10.0,
                                        }
                ,'Spec_DPr' : {
-                                        'Q_AM_MIN'         : 930 * MeV - _local_m_pp,
-                                        'Q_AM_MAX'         : 1820 * MeV - _local_m_pp,
-                                        'Q_M_MIN'          : 930 * MeV - _local_m_pp,
-                                        'Q_M_MAX'          : 1790 * MeV - _local_m_pp,
+                                        'Q_AM_MIN'         : 0. * MeV,
+                                        'Q_AM_MAX'         : 885.* MeV,
+                                        'Q_M_MIN'          : -1. * MeV,
+                                        'Q_M_MAX'          : 855. * MeV,
                                         'TagVCHI2PDOF_MAX' : 10.0,
                                        }
                ,'Spec_DLambda' : {
-                                        'Q_AM_MIN'         : 1110 * MeV - _local_m_Lam,
-                                        'Q_AM_MAX'         : 2000 * MeV - _local_m_Lam,
-                                        'Q_M_MIN'          : 1110 * MeV - _local_m_Lam,
-                                        'Q_M_MAX'          : 1970 * MeV - _local_m_Lam,
+                                        'Q_AM_MIN'         : 0. * MeV,
+                                        'Q_AM_MAX'         : 885. * MeV,
+                                        'Q_M_MIN'          : -1. * MeV,
+                                        'Q_M_MAX'          : 855. * MeV,
                                         'TagVCHI2PDOF_MAX' : 10.0,
                                        }
                ,'Spec_DEta' : {
-                                        'Q_AM_MIN'         :  540 * MeV - _local_m_eta,
-                                        'Q_AM_MAX'         : 1440 * MeV - _local_m_eta,
-                                        'Q_M_MIN'          :  540 * MeV - _local_m_eta,
-                                        'Q_M_MAX'          : 1410 * MeV - _local_m_eta,
+                                        'Q_AM_MIN'         :  0. * MeV,
+                                        'Q_AM_MAX'         : 885. * MeV,
+                                        'Q_M_MIN'          :  -1. * MeV,
+                                        'Q_M_MAX'          : 855. * MeV,
                                        }
                ,'Spec_DGamma' : {
-                                        'Q_AM_MIN'         :  0  * MeV,
-                                        'Q_AM_MAX'         : 900 * MeV,
-                                        'Q_M_MIN'          :  0  * MeV,
-                                        'Q_M_MAX'          : 855 * MeV,
+                                        'Q_AM_MIN'         :  0.  * MeV,
+                                        'Q_AM_MAX'         : 885. * MeV,
+                                        'Q_M_MIN'          :  0.  * MeV,
+                                        'Q_M_MAX'          : 855. * MeV,
                                        }
                 ,'Dst2D0pi_D02KPiPiPi' : {
-                                        'Q_AM_MIN'         : 135 * MeV - _local_m_pip,
-                                        'Q_AM_MAX'         : 175 * MeV - _local_m_pip,
-                                        'Q_M_MIN'          : 135 * MeV - _local_m_pip,
-                                        'Q_M_MAX'          : 165 * MeV - _local_m_pip,
+                                        'Q_AM_MIN'         : 0. * MeV,
+                                        'Q_AM_MAX'         : 35.5 * MeV,
+                                        'Q_M_MIN'          : -1. * MeV,
+                                        'Q_M_MAX'          : 25.5 * MeV,
                                         'TagVCHI2PDOF_MAX' : 10.0,
                                        }
                  ,'ChargedSpectroscopyBachelors' : {
