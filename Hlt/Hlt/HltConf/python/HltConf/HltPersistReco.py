@@ -40,9 +40,17 @@ class HltPersistRecoConf(LHCbConfigurableUser):
 
         # Setup packers and add the output locations to the writer
         algs = self.Packers()
-        writer = InputCopyStream(self.getProp("WriterName"))
-        for alg in algs:
-            writer.OptItemList+=[alg.OutputName+'#99']
+        
+        # THE LINES BELOW ONLY WORK VIA THRESHOLDS, NOT WITH A TCK
+        # CHANGES TO THE RECONSTRUCTION LOCATIONS WILL REQUIRE CORRESPONDING
+        # CHANGES TO THE MOORE CONFIGURATION
+        #writer = InputCopyStream(self.getProp("WriterName"))
+        #for alg in algs:
+        #    writer.OptItemList+=[alg.OutputName+'#99']
+
+        # The below is useful when you want to update the locations saved
+        #print "Writing additional output locations:"
+        #print outputs
 
         # Add packer algorithms to the afterburner
         persistReco.Members+= algs
@@ -73,7 +81,7 @@ class HltPersistRecoConf(LHCbConfigurableUser):
                                      AlwaysCreateOutput = True,
                                      DeleteInput        = False,
                                      OutputLevel        = debugLevel,
-                                     InputName          = Hlt2BiKalmanFittedDownstreamTracking().hlt2ChargedAllPIDsProtos().outputSelection(),
+                                     InputName          = Hlt2BiKalmanFittedDownstreamTracking().hlt2ChargedNoPIDsProtos().outputSelection(),
                                      OutputName         = "Hlt2/pRec/down/Protos" )
                   ]
 

@@ -4,10 +4,13 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+!========================= HltConf v13r6 2016-02-01 =========================
+
+! 2016-02-01 - Sean Benson
+ - Fix downstream protos for persist reco and further fix for writing via TCK.
+
 ! 2016-01-28 - Mika Vesterinen
  - Add slots RemoveHlt(1|2)Lines 
-
-!========================= HltConf v13r6 2016-01-20 =========================
 
 ! 2016-01-12 - Sean Benson
  - Add slot to configure pre-filter for PersistReco.
