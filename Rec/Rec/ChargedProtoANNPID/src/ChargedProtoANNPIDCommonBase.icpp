@@ -102,7 +102,7 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::recSummary() const
     if ( !m_summary )
     {
       m_summary =
-        this -> template get<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default, true );
+        this -> template getIfExists<LHCb::RecSummary>( LHCb::RecSummaryLocation::Default, true );
     }
   }
   return m_summary;
