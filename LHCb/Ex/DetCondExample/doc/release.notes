@@ -2,6 +2,8 @@
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =====================================================================
+! 2016-02-02 - Gerhard Raven
+ - modernize code
 
 !========================= DetCondExample v11r15 2016-01-27 =========================
 ! 2015-11-26 - Marco Clemencic

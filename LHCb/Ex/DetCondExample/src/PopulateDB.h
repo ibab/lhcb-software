@@ -23,12 +23,8 @@ public:
   /// Standard constructor
   PopulateDB( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~PopulateDB( ); ///< Destructor
-
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-
-protected:
+  StatusCode initialize() override;    ///< Algorithm initialization
+  StatusCode execute   () override;    ///< Algorithm execution
 
 private:
   /// Store sample data
@@ -40,26 +36,26 @@ private:
   StatusCode i_createHEADVersion();
 
   /// Dump sample data
-  StatusCode i_condDBDumpSampleData();
+  StatusCode i_condDBDumpSampleData() const;
 
   /// Encode XML temperature data
   std::string i_encodeXmlTemperature( const double temperature,
-                                      const std::string& objName );
+                                      const std::string& objName ) const;
   
   /// Encode XML paramVector
   std::string i_encodeXmlParamVector( const double par[3],
                                const std::string& objName,
-                               const std::string& parName );
+                               const std::string& parName ) const;
   
   /// Dump the contents of a CondDBFolder
   StatusCode i_dumpFolder( const std::string& folderName,
-                           const std::string& tagName );
+                           const std::string& tagName ) const;
   
   /// Handle to the CondDBAccessSvc (to write the data in the CondDB)
-  ICondDBEditor* m_dbEditor;
+  SmartIF<ICondDBEditor> m_dbEditor;
 
   /// Handle to the CondDBAccessSvc (to access cool database interface)
-  ICondDBAccessSvc* m_dbAccSvc;
+  SmartIF<ICondDBAccessSvc> m_dbAccSvc;
 
 };
 #endif // POPULATEDB_H

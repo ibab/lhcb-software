@@ -42,7 +42,7 @@ DECLARE_ALGORITHM_FACTORY( PopulateDB )
 
 static std::string fix_dtd(std::string orig)
 {
-  std::string::size_type pos = orig.find("structure.dtd");
+  auto pos = orig.find("structure.dtd");
   if ( pos == std::string::npos ) {
     pos = orig.find("geometry.dtd");
     if ( pos == std::string::npos ) return orig;
@@ -57,15 +57,8 @@ static std::string fix_dtd(std::string orig)
 PopulateDB::PopulateDB( const std::string& name,
                         ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
-  , m_dbEditor(NULL)
-  , m_dbAccSvc(NULL)
 {
-
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-PopulateDB::~PopulateDB() {}
 
 //=============================================================================
 // Initialization
@@ -80,12 +73,11 @@ StatusCode PopulateDB::initialize() {
 
     // Locate the Database Access Service
     m_dbEditor = svc<ICondDBEditor>("CondDBAccessSvc",true);
-    sc = m_dbEditor->queryInterface(ICondDBAccessSvc::interfaceID(),(void**)&m_dbAccSvc);
-    if ( !sc.isSuccess() ) {
+    m_dbAccSvc = m_dbEditor.as<ICondDBAccessSvc>();
+    if ( !m_dbAccSvc ) {
       error() << "Cannot get ICondDBAccessSvc interface from CondDBAccessSvc" << endmsg;
-      return sc;
+      return StatusCode::FAILURE;
     }
-    m_dbAccSvc->release(); // is already referenced as ICondDBEditor
 
     // Store sample data if the database is empty
     info() << "Store sample data in the database if empty" << endmsg;
@@ -181,13 +173,11 @@ StatusCode PopulateDB::i_createHierarchy() {
   
   typedef std::pair<std::string,std::string> str_pair;
   typedef std::vector<str_pair> vec_str_pair;
-  vec_str_pair foldersets;
-
-  foldersets.push_back(str_pair("/Conditions/Online",          "On-line folderSet"));
-  foldersets.push_back(str_pair("/Conditions/Online/Cave",     "Measurements for the cave"));
+  vec_str_pair foldersets{ { { "/Conditions/Online",      "On-line folderSet"},
+                             { "/Conditions/Online/Cave", "Measurements for the cave"} } };
   
   debug() << "Create foldersets" << endmsg;
-  for(vec_str_pair::iterator f = foldersets.begin(); f != foldersets.end(); ++f ){
+  for(auto f = foldersets.begin(); f != foldersets.end(); ++f ){
     sc = m_dbEditor->createNode(f->first,f->second,ICondDBEditor::FOLDERSET);
     if (!sc.isSuccess()){
       error() << "Unable to create folderset \"" << f->first << '"' << endmsg;
@@ -196,29 +186,22 @@ StatusCode PopulateDB::i_createHierarchy() {
   }
 
   // Create folders
-  vec_str_pair xmlfolders;
-
-  xmlfolders.push_back(str_pair("/Conditions/LHCb/Environment/Temperature.xml",""));
-
-  xmlfolders.push_back(str_pair("/Conditions/Hcal/EnvironmentCatalog.xml",""));
-  xmlfolders.push_back(str_pair("/Conditions/Hcal/Environment/Temperature",""));
-
-  xmlfolders.push_back(str_pair("/Conditions/DummyDE/EnvironmentCatalog.xml",""));
-  xmlfolders.push_back(str_pair("/Conditions/DummyDE/Environment/Temperature",""));
-  xmlfolders.push_back(str_pair("/Conditions/DummyDE/ReadoutConfCatalog.xml",""));
-  xmlfolders.push_back(str_pair("/Conditions/DummyDE/ReadoutConf/Conf.xml",""));
-
-  xmlfolders.push_back(str_pair("/Conditions/Velo/Alignment/Module",""));
-
-  xmlfolders.push_back(str_pair("/Conditions/Tests/Properties/TestFunction.xml",""));
-
-  xmlfolders.push_back(str_pair("/Conditions/TestFolder",""));
+  vec_str_pair xmlfolders{ { { "/Conditions/LHCb/Environment/Temperature.xml","" },
+                             { "/Conditions/Hcal/EnvironmentCatalog.xml",""},
+                             { "/Conditions/Hcal/Environment/Temperature",""},
+                             { "/Conditions/DummyDE/EnvironmentCatalog.xml",""},
+                             { "/Conditions/DummyDE/Environment/Temperature",""},
+                             { "/Conditions/DummyDE/ReadoutConfCatalog.xml",""},
+                             { "/Conditions/DummyDE/ReadoutConf/Conf.xml",""},
+                             { "/Conditions/Velo/Alignment/Module",""},
+                             { "/Conditions/Tests/Properties/TestFunction.xml",""},
+                             { "/Conditions/TestFolder","" } } };
   
   debug() << "Create folders (multi-version)" << endmsg;
-  for(vec_str_pair::iterator f = xmlfolders.begin(); f != xmlfolders.end(); ++f ){
-    sc = m_dbEditor->createNode(f->first,f->second,ICondDBEditor::XML);
+  for(const auto& f : xmlfolders ) {
+    sc = m_dbEditor->createNode(f.first,f.second,ICondDBEditor::XML);
     if (!sc.isSuccess()){
-      error() << "Unable to create XML folder \"" << f->first << '"' << endmsg;
+      error() << "Unable to create XML folder \"" << f.first << '"' << endmsg;
       return sc;
     }
   }
@@ -358,25 +341,21 @@ StatusCode PopulateDB::i_createHierarchy() {
                            velo_align_cat.str(),
                            Gaudi::Time::epoch(), Gaudi::Time::max());
 
-  vec_str_pair xmlfolders_online;
-  xmlfolders_online.push_back(str_pair("/Conditions/Online/Cave/T1","Temperature 1"));
-  xmlfolders_online.push_back(str_pair("/Conditions/Online/Cave/T2","Temperature 2"));
-  xmlfolders_online.push_back(str_pair("/Conditions/Online/Cave/P1","Pressure 1"));
+  vec_str_pair xmlfolders_online{ { { "/Conditions/Online/Cave/T1","Temperature 1"},
+                                    { "/Conditions/Online/Cave/T2","Temperature 2"},
+                                    { "/Conditions/Online/Cave/P1","Pressure 1" } } };
   
   debug() << "Create folders (single-version)" << endmsg;
-  for(vec_str_pair::iterator f = xmlfolders_online.begin(); f != xmlfolders_online.end(); ++f ){
-    sc = m_dbEditor->createNode(f->first,f->second,ICondDBEditor::XML,ICondDBEditor::SINGLE);
+  for(const auto& f : xmlfolders_online) {
+    sc = m_dbEditor->createNode(f.first,f.second,ICondDBEditor::XML,ICondDBEditor::SINGLE);
     if (!sc.isSuccess()){
-      error() << "Unable to create XML folder \"" << f->first << '"' << endmsg;
+      error() << "Unable to create XML folder \"" << f.first << '"' << endmsg;
       return sc;
     }
   }
 
   debug() << "Create folder for many files" << endmsg;
-  std::set<std::string> fields;
-  fields.insert("A");
-  fields.insert("B");
-  fields.insert("C");
+  std::set<std::string> fields{ { {"A"},{"B"},{"C"} } };
   sc = m_dbEditor->createNode("/Conditions/ManiFolder","Folders for many files",fields,ICondDBEditor::XML);
 
   return StatusCode::SUCCESS;
@@ -462,8 +441,7 @@ StatusCode PopulateDB::i_createCOLDVersion ( ) {
   debug() << "Add a TabulatedProperty from 0 to 30" << endmsg;
   TabulatedProperty tp1;
   for(double x = 0. ; x < 2. ; x += 0.2){
-    double y = x*x;
-    tp1.table().push_back(TabulatedProperty::Entry(x,y));
+    tp1.table().emplace_back(x,x*x);
   }
   m_dbEditor->storeXMLData("/Conditions/Tests/Properties/TestFunction.xml",
                            fix_dtd(tp1.toXml("TestFunction")),Gaudi::Time(0), Gaudi::Time(30));
@@ -471,8 +449,7 @@ StatusCode PopulateDB::i_createCOLDVersion ( ) {
   debug() << "Add a second TabulatedProperty from 30 to +inf" << endmsg;
   tp1.table().clear();
   for(double x = 0. ; x < 2. ; x += 0.2){
-    double y = x*x*0.5;
-    tp1.table().push_back(TabulatedProperty::Entry(x,y));
+    tp1.table().emplace_back(x,x*x*0.5);
   }
   m_dbEditor->storeXMLData("/Conditions/Tests/Properties/TestFunction.xml",
                            fix_dtd(tp1.toXml("TestFunction")),Gaudi::Time(30), Gaudi::Time::max());
@@ -577,35 +554,33 @@ StatusCode PopulateDB::i_createHEADVersion ( ) {
 //=========================================================================
 //  Dump the content of the database
 //=========================================================================
-StatusCode PopulateDB::i_condDBDumpSampleData() {
+StatusCode PopulateDB::i_condDBDumpSampleData() const {
 
   info() << "============= condDBDumpSampleData() starting ======================" << endmsg;
 
   cool::IDatabasePtr &db = m_dbAccSvc->database();
 
-  std::vector<std::string> tags; tags.reserve(5);
-  tags.push_back("COLD");
-  tags.push_back("HOT");
-  //tags.push_back("PRODUCTION");
-  tags.push_back("HEAD");
-  tags.push_back("FORFUN");
+  std::vector<std::string> tags{ { {"COLD"},
+                                   {"HOT"},
+                                   // { "PRODUCTION" },
+                                   { "HEAD" },
+                                   { "FORFUN" } } };
 
   // List all stored Folders 
   std::vector<std::string> fldr_names = db->listAllNodes();
   info() << " --> List of CondDB Folders" << endmsg;
-  for ( std::vector<std::string>::iterator fldr_name = fldr_names.begin();
-        fldr_name != fldr_names.end(); fldr_name++ ){
-    bool isFolderSet = db->existsFolderSet(*fldr_name);
+  for ( const auto& fldr_name : fldr_names ) {
+    bool isFolderSet = db->existsFolderSet(fldr_name);
     if (isFolderSet) {
       info() << " S "; // Flag FolderSets
     } else {
       info() << "   ";
     }
-    info() << *fldr_name << "  " <<  endmsg;
-    if ( !isFolderSet && (fldr_name->find("/Conditions") == 0) ) { // dump the content of the folder
+    info() << fldr_name << "  " <<  endmsg;
+    if ( !isFolderSet && (fldr_name.find("/Conditions") == 0) ) { // dump the content of the folder
       StatusCode status;
-      for (std::vector<std::string>::const_iterator tag = tags.begin(); tag != tags.end(); ++tag ){
-        status = i_dumpFolder( *fldr_name, *tag );
+      for (const auto& tag : tags) {
+        status = i_dumpFolder( fldr_name, tag );
         if ( !status.isSuccess() ) return status;
       }
     }
@@ -620,7 +595,7 @@ StatusCode PopulateDB::i_condDBDumpSampleData() {
 //  Prepare the xml representation of a Condition containing only a temperature
 //=========================================================================
 std::string PopulateDB::i_encodeXmlTemperature( const double temperature,
-                                                const std::string& objName ) {
+                                                const std::string& objName ) const {
   verbose() << "Encoding XML string for name=" << objName << " and temperature=" << temperature << endmsg;  
 
   Condition temp;
@@ -635,9 +610,9 @@ std::string PopulateDB::i_encodeXmlTemperature( const double temperature,
 //  Dump the contents of a CondDBFolder
 //=========================================================================
 StatusCode PopulateDB::i_dumpFolder( const std::string& folderName,
-                                     const std::string& tagName ) {
+                                     const std::string& tagName ) const {
   
-  cool::IFolderPtr folder = m_dbAccSvc->database()->getFolder(folderName);
+  auto folder = m_dbAccSvc->database()->getFolder(folderName);
 
   if ( tagName != "" && tagName != "HEAD" ) {
     // with ON-LINE folders only HEAD tag makes sense
@@ -680,20 +655,17 @@ StatusCode PopulateDB::i_dumpFolder( const std::string& folderName,
 }
 
 //=========================================================================
-//  Prepare the xml representation of a Contdition containing only a ParamVector
+//  Prepare the xml representation of a Condition containing only a ParamVector
 //=========================================================================
 std::string PopulateDB::i_encodeXmlParamVector( const double pos[3],
                                                 const std::string& objName,
-                                                const std::string& parName ) {
+                                                const std::string& parName ) const {
   
   verbose()
     << "Encoding XML string for name=" << objName 
     << " and position=" << pos[0] << " " << pos[1] << " " << pos[2] << endmsg;
   Condition posCond;
-  std::vector<double> p;
-  p.push_back(pos[0]);
-  p.push_back(pos[1]);
-  p.push_back(pos[2]);
+  std::vector<double> p{ { pos[0],pos[1],pos[2] } };
   posCond.addParam(parName,p);
   std::string xmlString = fix_dtd(posCond.toXml(objName));
   
