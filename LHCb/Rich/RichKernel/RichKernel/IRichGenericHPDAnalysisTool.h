@@ -64,7 +64,7 @@ namespace Rich
     };
 
     /// Type for a list of results
-    typedef std::vector<Result> Results;
+    using Results = std::vector<Result>;
 
   public:
 

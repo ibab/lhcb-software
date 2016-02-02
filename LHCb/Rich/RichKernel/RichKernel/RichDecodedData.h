@@ -38,9 +38,9 @@ namespace Rich
     public:
 
       /// The HPD Header type
-      typedef RichDAQHeaderV4::RichDAQHeaderPD Header;
+      using Header = RichDAQHeaderV4::RichDAQHeaderPD;
       /// The HPD Footer type
-      typedef ParityFooter                     Footer;
+      using Footer = ParityFooter;
       
     public:
 
@@ -125,7 +125,7 @@ namespace Rich
     };
 
     /// Map for RICH HPD data, sorted by HPD number
-    typedef Rich::PoolMap< Rich::DAQ::Level1Input, HPDInfo > HPDMap;
+    using HPDMap = Rich::PoolMap< Rich::DAQ::Level1Input, HPDInfo >;
 
     /** @class IngressInfo RichKernel/RichDecodedData.h
      *  Information for each L1 ingress
@@ -184,10 +184,10 @@ namespace Rich
     };
 
     /// Map for HPD data for each L1 ingress
-    typedef Rich::PoolMap< L1IngressID, IngressInfo > IngressMap;
+    using IngressMap = Rich::PoolMap< L1IngressID, IngressInfo >;
 
     /// Map for RICH HPD data, sorted by Level1 board number
-    typedef Rich::PoolMap< Level1HardwareID, IngressMap > L1Map;
+    using L1Map      = Rich::PoolMap< Level1HardwareID, IngressMap >;
 
   }
 }

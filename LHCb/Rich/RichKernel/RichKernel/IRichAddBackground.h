@@ -46,7 +46,7 @@ namespace Rich
   public:
 
     /// Data structure for returned additional backgrounds
-    typedef Rich::HashMap<LHCb::RichSmartID,LHCb::RichSmartID::Vector> HPDBackgrounds;
+    using HPDBackgrounds = Rich::HashMap<LHCb::RichSmartID,LHCb::RichSmartID::Vector>;
 
   public:
 

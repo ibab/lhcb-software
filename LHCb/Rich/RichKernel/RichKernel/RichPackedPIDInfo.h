@@ -38,10 +38,10 @@ namespace Rich
   public:
 
     /// Type for 8 bit packed word
-    typedef boost::int8_t   Pack8_t;
+    using Pack8_t  = boost::int8_t;
 
     /// Type for 32 bit raw word
-    typedef boost::uint32_t Pack32_t;
+    using Pack32_t = boost::uint32_t;
 
   private:
 

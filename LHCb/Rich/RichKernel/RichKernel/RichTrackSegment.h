@@ -221,7 +221,7 @@ namespace LHCb
       }
       else
       {
-        throw RichException( "Unknown RichTrackSegment::SegmentType" );
+        throw Rich::Exception( "Unknown RichTrackSegment::SegmentType" );
       }
     }
 
@@ -238,7 +238,7 @@ namespace LHCb
       }
       else
       {
-        throw RichException( "Unknown RichTrackSegment::SegmentType" );
+        throw Rich::Exception( "Unknown RichTrackSegment::SegmentType" );
       }
     }
     
@@ -344,16 +344,16 @@ namespace LHCb
                       StateErrors&& middleErrors = StateErrors{}, ///< The segment errors at the mid point
                       StateErrors&& exitErrors   = StateErrors{}  ///< The segment errors at the exit point
                       )
-      : m_type             ( t                        ),
-        m_radIntersections ( std::move(intersects)    ),
-        m_middlePoint      ( std::move(middP)         ),
-        m_middleMomentum   ( std::move(middV)         ),
-        m_radiator         ( rad                      ),
-        m_rich             ( rich                     ),
-        m_errorsEntry      ( std::move(entryErrors)   ),
-        m_errorsMiddle     ( std::move(middleErrors)  ),
-        m_errorsExit       ( std::move(exitErrors)    ),
-        m_avPhotonEnergy   ( avPhotEn(rad)            )
+      : m_type             ( t                       ),
+        m_radIntersections ( std::move(intersects)   ),
+        m_middlePoint      ( std::move(middP)        ),
+        m_middleMomentum   ( std::move(middV)        ),
+        m_radiator         ( rad                     ),
+        m_rich             ( rich                    ),
+        m_errorsEntry      ( std::move(entryErrors)  ),
+        m_errorsMiddle     ( std::move(middleErrors) ),
+        m_errorsExit       ( std::move(exitErrors)   ),
+        m_avPhotonEnergy   ( avPhotEn(rad)           )
     {
       initThreePoints();
     }

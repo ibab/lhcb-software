@@ -163,7 +163,7 @@ namespace Rich
   };
 
   /// Shortcut for reduced typing where useful ...
-  typedef HistogramID HID;
+  using HID = HistogramID;
 
   //-----------------------------------------------------------------------------
   /** @class HistoID RichKernel/RichHistoID.h

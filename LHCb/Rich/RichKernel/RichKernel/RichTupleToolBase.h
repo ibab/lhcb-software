@@ -53,9 +53,4 @@ namespace Rich
 
 }
 
-/** For backwards compatibility
- *  @todo Remove this typedef
- */
-typedef Rich::TupleToolBase RichTupleToolBase;
-
 #endif // RICHKERNEL_RICHTUPLETOOLBASE_H

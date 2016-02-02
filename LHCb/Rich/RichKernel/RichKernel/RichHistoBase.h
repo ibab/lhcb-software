@@ -117,7 +117,7 @@ namespace Rich
   protected:
 
     /// short name for bin labels
-    typedef std::vector<std::string> BinLabels;
+    using BinLabels = std::vector<std::string>;
 
   protected:
 
@@ -244,9 +244,9 @@ namespace Rich
     class HistoMap
     {
     public:
-      typedef Rich::HashMap < std::string, HTYPE * > StringToHist;
+      using StringToHist = Rich::HashMap < std::string, HTYPE * >;
     private:
-      typedef Rich::Map < Rich::PackedPIDInfo::Pack32_t, StringToHist > Map;
+      using Map = Rich::Map < Rich::PackedPIDInfo::Pack32_t, StringToHist >;
     private:
       Map map;
     public:
@@ -257,19 +257,16 @@ namespace Rich
     };
 
     /// Mapping between IDs and 1D histogram pointers
-    typedef HistoMap< AIDA::IHistogram1D > Map1DH;
+    using Map1DH = HistoMap< AIDA::IHistogram1D >;
 
     /// Mapping between IDs and 2D histogram pointers
-    typedef HistoMap< AIDA::IHistogram2D > Map2DH;
-
-    /// Mapping between IDs and 2D histogram pointers
-    //typedef HistoMap< AIDA::IHistogram3D > Map3DH;
+    using Map2DH = HistoMap< AIDA::IHistogram2D >;
 
     /// Mapping between IDs and 1D Profile histogram pointers
-    typedef HistoMap< AIDA::IProfile1D > Map1DP;
+    using Map1DP = HistoMap< AIDA::IProfile1D >;
 
     /// Mapping between IDs and 2D Profile histogram pointers
-    typedef HistoMap< AIDA::IProfile2D > Map2DP;
+    using Map2DP = HistoMap< AIDA::IProfile2D >;
 
   private:
 

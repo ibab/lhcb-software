@@ -68,11 +68,6 @@ namespace Rich
 
 }
 
-/** For backwards compatibility
- *  @todo Remove this typedef
- */
-typedef Rich::Exception RichException;
-
 #endif  ///<   RICHKERNEL_RICHEXCEPTION_H
 
 

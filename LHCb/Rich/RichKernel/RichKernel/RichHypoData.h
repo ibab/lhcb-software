@@ -50,9 +50,9 @@ namespace Rich
   public: // definitions
 
     /// Definition of internal data array type
-    typedef std::array<TYPE,Rich::NParticleTypes> DataArray;
+    using DataArray     = std::array<TYPE,Rich::NParticleTypes>;
     /// Definition of internal validity array type
-    typedef std::array<bool,Rich::NParticleTypes> ValidityArray;
+    using ValidityArray = std::array<bool,Rich::NParticleTypes>;
 
   public: // constructors and destructors
 

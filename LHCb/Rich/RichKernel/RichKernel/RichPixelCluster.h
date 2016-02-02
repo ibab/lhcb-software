@@ -31,9 +31,6 @@
 // RichKernel
 #include "RichKernel/RichDAQDefinitions.h"
 
-// Boost
-#include <boost/shared_ptr.hpp>
-
 namespace Rich
 {
   // Needed to get vector printing to work
@@ -54,7 +51,7 @@ namespace Rich
   public:
 
     /// RichSmartID vector type
-    typedef LHCb::RichSmartID::Vector SmartIDVector;
+    using SmartIDVector = LHCb::RichSmartID::Vector;
 
   public:
 
@@ -100,10 +97,9 @@ namespace Rich
     inline       SmartIDVector&& smartIDs()       && noexcept { return std::move(m_ids); }
 
     /// The primary (seed) channel ID
-    inline const LHCb::RichSmartID& primaryID() const
+    inline LHCb::RichSmartID primaryID() const
     {
-      static const LHCb::RichSmartID defaultID;
-      return ( !smartIDs().empty() ? smartIDs().front() : defaultID );
+      return ( !smartIDs().empty() ? smartIDs().front() : LHCb::RichSmartID() );
     }
 
     /// The RICH detector for this cluster
@@ -160,10 +156,10 @@ namespace Rich
   public:
 
     /// const Shared pointer to a HPDPixelClusters
-    typedef boost::shared_ptr<const HPDPixelClusters> ConstSharedPtn;
+    using ConstSharedPtn = std::shared_ptr<const HPDPixelClusters>;
 
     /// Shared pointer to a HPDPixelClusters
-    typedef boost::shared_ptr<HPDPixelClusters>       SharedPtn;
+    using SharedPtn      = std::shared_ptr<HPDPixelClusters>;
 
   public:
 
@@ -183,7 +179,7 @@ namespace Rich
     public: // definitions
 
       /// collection of cluster pointers
-      typedef LHCb::Boost::PoolAllocList<Cluster*> PtnVector;
+      using PtnVector = LHCb::Boost::PoolAllocList<Cluster*>;
 
     public: // methods
 

@@ -52,9 +52,4 @@ namespace Rich
 
 }
 
-/** For backwards compatibility
- *  @todo Remove this typedef
- */
-typedef Rich::TupleAlgBase RichTupleAlgBase;
-
 #endif // RICHKERNEL_RICHTUPLEALGBASE_H

@@ -32,10 +32,10 @@ namespace Rich
     //---------------------------------------------------------------------------------
 
     /// DAQ long type definition
-    typedef unsigned int   LongType;
+    using LongType  = unsigned int;
 
     /// DAQ short type definition
-    typedef unsigned int   ShortType;
+    using ShortType = unsigned int;
 
     //---------------------------------------------------------------------------------
 
@@ -610,22 +610,22 @@ namespace Rich
     //--------------------------------------------------------------------------------------
 
     /// Local definition of a RawBank constructed from 32bit ints
-    typedef std::vector< LongType >                                      RAWBank;
+    using RAWBank           = std::vector< LongType >;
 
     /// Vector of HPD Hardware IDs
-    typedef std::vector< HPDHardwareID >                                 HPDHardwareIDs;
+    using HPDHardwareIDs    = std::vector< HPDHardwareID >;
 
     /// Vector of Level 0 IDs
-    typedef std::vector< Level0ID >                                      Level0IDs;
+    using Level0IDs         = std::vector< Level0ID >;
 
     /// Vector of Level 1 hardware IDs
-    typedef std::vector< Level1HardwareID >                              Level1HardwareIDs;
+    using Level1HardwareIDs = std::vector< Level1HardwareID >;
 
     /// Vector of Level 1 logical IDs
-    typedef std::vector< Level1LogicalID >                               Level1LogicalIDs;
+    using Level1LogicalIDs  = std::vector< Level1LogicalID >;
 
     /// Vector of L1InputWithinIngress
-    typedef std::vector< L1InputWithinIngress >                          L1IngressInputs;
+    using L1IngressInputs   = std::vector< L1InputWithinIngress >;
 
     //--------------------------------------------------------------------------------------
 
@@ -950,17 +950,17 @@ namespace Rich
   {
 
     /// Map for RICH HPD data, sorted by HPD number
-    typedef std::map< const LHCb::RichSmartID, LHCb::RichSmartID::Vector >            PDMap;
+    using PDMap = std::map< const LHCb::RichSmartID, LHCb::RichSmartID::Vector >;
 
     /// Mapping from Level1 ID to list of HPD RichSmartIDs
-    typedef GaudiUtils::HashMap< const Level1HardwareID, LHCb::RichSmartID::Vector >  L1ToSmartIDs;
+    using L1ToSmartIDs = GaudiUtils::HashMap< const Level1HardwareID, LHCb::RichSmartID::Vector >;
     /// Pair type in a L1ToSmartIDs
-    typedef std::pair< const Level1HardwareID, LHCb::RichSmartID::Vector >            L1ToSmartIDsPair;
+    using L1ToSmartIDsPair = std::pair< const Level1HardwareID, LHCb::RichSmartID::Vector >;
 
     /// Mapping from Level1 ID to list of HPD RichSmartIDs
-    typedef GaudiUtils::HashMap< const Level1HardwareID, HPDHardwareIDs >             L1ToHardIDs;
+    using L1ToHardIDs = GaudiUtils::HashMap< const Level1HardwareID, HPDHardwareIDs >;
     /// Pair type in a L1ToHardIDs
-    typedef std::pair< const Level1HardwareID, HPDHardwareIDs >                       L1ToHardIDsPair;
+    using L1ToHardIDsPair = std::pair< const Level1HardwareID, HPDHardwareIDs >;
 
   }
 }

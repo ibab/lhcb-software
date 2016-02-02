@@ -48,9 +48,9 @@ namespace Rich
     public:
 
       /// Type for Input location for RawEvent in TES
-      typedef std::string                   RawEventLocation;
+      using RawEventLocation  = std::string;
       /// Type for Input location(s) for RawEvent in TES
-      typedef std::vector<RawEventLocation> RawEventLocations;
+      using RawEventLocations = std::vector<RawEventLocation>;
 
     public:
 

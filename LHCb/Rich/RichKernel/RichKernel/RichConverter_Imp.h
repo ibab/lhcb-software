@@ -66,13 +66,13 @@ namespace Rich
   protected: // few actual data types
 
     /// the actual type of general counters
-    typedef std::map<std::string,StatEntity>   Statistics ;
+    using Statistics = std::map<std::string,StatEntity>;
     /// the actual type error/warning counter
-    typedef std::map<std::string,unsigned int> Counter    ;
+    using Counter    = std::map<std::string,unsigned int>;
     /// storage for active tools
-    typedef std::vector<IAlgTool*>             AlgTools   ;
+    using AlgTools = std::vector<IAlgTool*>;
     /// storage for active services
-    typedef GaudiUtils::HashMap<std::string, SmartIF<IService> > Services;
+    using Services = GaudiUtils::HashMap<std::string, SmartIF<IService> >;
 
   public: // tools and services
 
