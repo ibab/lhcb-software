@@ -147,7 +147,7 @@ int _mbm_shutdown (void* /* param */) {
       bm->buff_add = 0;
       ::lib_rtl_output(LIB_RTL_INFO,
 		       "[INFO] mbm client %s CRASHED - Shutdown of buffer %s [pid:%d, part:%d]\n",
-		       bm->name, bm->pid, bm->partID, bm->bm_name);
+		       bm->name, bm->bm_name, bm->pid, bm->partID);
     }
   }
   desc_head = 0;

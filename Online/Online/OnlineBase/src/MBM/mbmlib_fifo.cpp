@@ -79,7 +79,8 @@ namespace {
 
   int _accept(MBMConnection& connection, const char* bm_name, const char* name)   {
     connection.init();
-    ::snprintf(connection.name,sizeof(connection.name),"/dev/shm/bm_%s_%s",bm_name,name);
+    //::snprintf(connection.name,sizeof(connection.name),"/dev/shm/bm_%s_%s",bm_name,name);
+    ::snprintf(connection.name,sizeof(connection.name),"/tmp/bm_%s_%s",bm_name,name);
     if( -1 == (connection.client.response = ::open(connection.name, O_NONBLOCK | O_RDWR ))) {
       ::lib_rtl_signal_message(LIB_RTL_OS,
 			       "MBM: [%s] Unable to open the answer connection %s.",
@@ -91,7 +92,8 @@ namespace {
 
   int _bind(MBMConnection& connection, const char* bm_name, int id)   {
     int fd;
-    ::snprintf(connection.name,sizeof(connection.name),"/dev/shm/bm_%s_server_%d",bm_name,id);
+    //::snprintf(connection.name,sizeof(connection.name),"/dev/shm/bm_%s_server_%d",bm_name,id);
+    ::snprintf(connection.name,sizeof(connection.name),"/tmp/bm_%s_server_%d",bm_name,id);
     connection.name[sizeof(connection.name)-1] = 0;
     if( ::mkfifo(connection.name,0666)  ) {
       if ( errno != EEXIST ) { // It is not an error if the file already exists....
@@ -185,14 +187,16 @@ namespace {
 
   int _open(MBMConnection& connection, const char* bm_name, const char* name)  {
     char text[256];
-    ::snprintf(text,sizeof(text),"/dev/shm/bm_%s_server_0",bm_name);
+    //::snprintf(text,sizeof(text),"/dev/shm/bm_%s_server_0",bm_name);
+    ::snprintf(text,sizeof(text),"/tmp/bm_%s_server_0",bm_name);
     if( (connection.client.request=::open(text, O_WRONLY|O_NONBLOCK)) < 0 ) {
       ::lib_rtl_signal_message(LIB_RTL_OS,"MBM: %s: Cannot open connection '%s' for MBM buffer %s.",
 			       name,text,bm_name);
       _close(connection);
       return MBM_ERROR;
     }
-    ::snprintf(connection.name,sizeof(connection.name),"/dev/shm/bm_%s_%s",bm_name,name);  
+    //::snprintf(connection.name,sizeof(connection.name),"/dev/shm/bm_%s_%s",bm_name,name);  
+    ::snprintf(connection.name,sizeof(connection.name),"/tmp/bm_%s_%s",bm_name,name);  
     if( ::mkfifo(connection.name,0666)  ) {
       if ( errno != EEXIST ) { // It is not an error if the file already exists....
 	::lib_rtl_signal_message(LIB_RTL_OS,"MBM: %s: Cannot create MBM connection '%s'.",
@@ -201,7 +205,8 @@ namespace {
       }
     }
     ::chmod(connection.name,0666);
-    ::snprintf(connection.name,sizeof(connection.name),"/dev/shm/bm_%s_%s",bm_name,name);
+    ::snprintf(connection.name,sizeof(connection.name),"/tmp/bm_%s_%s",bm_name,name);
+    //::snprintf(connection.name,sizeof(connection.name),"/dev/shm/bm_%s_%s",bm_name,name);
     if( -1 == (connection.client.response = ::open(connection.name, O_NONBLOCK | O_RDWR ))) {
       ::lib_rtl_signal_message(LIB_RTL_OS,
 			       "MBM: [%s] Unable to open the answer connection %s.",
@@ -213,7 +218,8 @@ namespace {
 
   int _move(MBMConnection& connection, const char* bm_name, USER*, int serverid)   {
     char text[256];
-    ::snprintf(text,sizeof(text),"/dev/shm/bm_%s_server_%d",bm_name,serverid);
+    //::snprintf(text,sizeof(text),"/dev/shm/bm_%s_server_%d",bm_name,serverid);
+    ::snprintf(text,sizeof(text),"/tmp/bm_%s_server_%d",bm_name,serverid);
     ::close(connection.client.request);
     if( (connection.client.request=::open(text,O_WRONLY|O_NONBLOCK)) < 0 ) {
       ::lib_rtl_signal_message(LIB_RTL_OS,
@@ -442,7 +448,10 @@ namespace {
 	}
 	mbmsrv_handle_request(bm,0,msg);
 	if ( msg.status != MBM_NO_REPLY ) {
-	  msg.status = _send_response(msg.user->connection,&msg,sizeof(msg));
+	  // Do not send a message if the user is already free'ed
+	  if ( msg.user && msg.user->uid != -1 )  {
+	    msg.status = _send_response(msg.user->connection,&msg,sizeof(msg));
+	  }
 	  continue;
 	}
 	//if ( nreq == 200 ) ProfilerStart("mbm_server.prof");

@@ -434,7 +434,9 @@ NetErrorCode NET::remove(netentry_t *e)    {
 //----------------------------------------------------------------------------------
 void NET::setSockOpts(TransferConnection::socket_t& chan)   {
   if ( chan.is_open() )  {
-#ifndef HAVE_ASIO_IPC
+#ifdef HAVE_ASIO_IPC
+    //chan.set_option(asio::socket_base::send_buffer_size(SEND_BUFFER_SIZE));
+#else
     chan.set_option(asio::socket_base::reuse_address(true));
     chan.set_option(asio::socket_base::linger(true,0));
     //chan.set_option(asio::socket_base::receive_buffer_size(RECV_BUFFER_SIZE));
