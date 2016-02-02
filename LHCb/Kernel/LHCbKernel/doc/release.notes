@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2016-02-02 - Chris Jones
+ - Prefer aliases to typedefs in Rich includes.
+
 ! 2016-01-28 - Chris Jones
  - Update (from Ulrik Egede) to support Deuteron RICH PID type.
 

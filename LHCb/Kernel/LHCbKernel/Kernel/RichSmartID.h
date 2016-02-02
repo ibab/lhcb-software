@@ -29,13 +29,13 @@ namespace LHCb
   public:
 
     /// Type for internal key
-    typedef unsigned int KeyType;
+    using KeyType = unsigned int;
 
     /// Vector of RichSmartIDs
-    typedef std::vector< LHCb::RichSmartID > Vector;
+    using Vector = std::vector<LHCb::RichSmartID>;
 
     /// Numerical type for bit packing
-    typedef unsigned int BitPackType;
+    using BitPackType = unsigned int;
 
   private:
 

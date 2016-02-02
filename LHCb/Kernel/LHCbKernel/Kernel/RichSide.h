@@ -60,7 +60,7 @@ namespace Rich
   std::string text( const Rich::DetectorType rich, const Rich::Side side );
 
   /// Type for container of of side types
-  typedef std::vector<Side> Sides;
+  using Sides = std::vector<Side>;
 
   /// Access a vector of valid particle ID types
   const Sides & sides() noexcept;
