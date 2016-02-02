@@ -1,5 +1,5 @@
-# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmtuser/Boole_HEAD/BooleSys/tests/options/testBoole.py'
-# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmtuser/Boole_HEAD/BooleSys/tests/options/testBoole.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@6/build/BOOLE/BOOLE_HEAD/BooleSys/tests/options/testBoole.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@6/build/BOOLE/BOOLE_HEAD/BooleSys/tests/options/testBoole.py'
 # applying configuration of Boole
 # /***** User Boole/Boole ****************************************************************************
 # |-DatasetName         = 'Boole'
@@ -9,6 +9,7 @@
 # |-Histograms          = 'NONE'  (default: 'Default')
 # |-SkipEvents          = 0
 # |-VeloTell1Processing = True
+# |-InputDataType       = 'SIM'
 # |-ProductionMode      = False
 # |-SplitRawEventFormat = None
 # |-FilterSequence      = []  (default: [])
@@ -28,12 +29,14 @@
 # |-EvtMax              = 0  (default: -1)
 # |-TAENext             = 0
 # |-UseSpillover        = False
+# |-MergeGenFSR         = False
 # |-EnableL0            = False
 # |-CondDBtag           = ''
 # |-InitSequence        = ['Data', 'Muon']  (default: [])
-# |-DataType            = '2012'
+# |-DataType            = '2015'
 # |-NoWarnings          = False
-# |-SiG4EnergyDeposit   = False
+# |-SiG4EnergyDeposit   = True
+# |-WriteFSR            = True
 # |-LinkSequence        = ['Velo', 'TT', 'IT', 'OT', 'Tr', 'Rich', 'Calo', 'Muon']  (default: [])
 # |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next', 'NextNext']  (default: [])
 # |-DDDBtag             = ''
@@ -41,11 +44,13 @@
 # \----- (End of User Boole/Boole) -------------------------------------------------------------------
 # DigiWriter.ItemList    = ['/Event/Gen/Header#1', '/Event/MC/Header#1', '/Event/MC/DigiHeader#1', '/Event/DAQ/RawEvent#1', '/Event/Gen/BeamParameters#1', '/Event/Gen/Collisions#1', '/Event/pSim/MCVertices#1', '/Event/pSim/MCParticles#1', '/Event/pSim/Rich/DigitSummaries#1', '/Event/MC/Muon/DigitsInfo#1', '/Event/Link/Raw/Velo/Clusters#1', '/Event/Link/Raw/TT/Clusters#1', '/Event/Link/Raw/IT/Clusters#1', '/Event/Link/Raw/OT/Times#1', '/Event/Link/Raw/Muon/Digits#1', '/Event/Link/Raw/Ecal/Digits#1', '/Event/Link/Raw/Hcal/Digits#1', '/Event/MC/TrackInfo#1', '/Event/Link/Raw/Velo/Clusters2MCHits#1', '/Event/Link/Raw/TT/Clusters2MCHits#1', '/Event/Link/Raw/IT/Clusters2MCHits#1', '/Event/Link/Raw/OT/Times2MCHits#1']
 # DigiWriter.OptItemList = ['/Event/Gen/HepMCEvents#1']
-# WARNING: Using default tag dq-20130806-1 for partition DQFLAGS
+# WARNING: Using default tag dq-20150717 for partition DQFLAGS
+# WARNING: Using default tag head-2015604 for partition CALIBOFF
+# WARNING: Cannot set the tag for partitions ['CALIBOFF']
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Boole version v27r0
-                                          running on lxplus0127 on Fri Mar 14 16:20:56 2014
+                                                   Welcome to Boole version HEAD
+                                          running on lbbuild09.cern.ch on Tue Feb  2 10:21:57 2016
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -53,7 +58,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.33 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.45 times the speed of a 2.8 GHz Xeon.
 BooleSequencer       INFO Member list: ProcessPhase/Init, ProcessPhase/Digi, ProcessPhase/Link, ProcessPhase/Moni, ProcessPhase/Filter
 Init                 INFO Member list: GaudiSequencer/InitBooleSeq, GaudiSequencer/InitDataSeq, GaudiSequencer/InitMuonSeq
 InitBooleSeq         INFO Member list: BooleInit, GaudiSequencer/SpilloverHandler
@@ -62,22 +67,22 @@ BooleInit         SUCCESS Requested to process 0 events
 BooleInit         SUCCESS ==================================================================
 RootHistSvc          INFO Writing ROOT histograms to: UndefinedROOTOutputFileName
 HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
-HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r10/data/muonlow-G4.root as LowEnergy
-HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r10/data/muonflat-G4.root as MuonFlatSpillover
-HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r10/data/OTDoublePulse.root as OTDoublePulse
+HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r999/data/muonlow-G4.root as LowEnergy
+HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r999/data/muonflat-G4.root as MuonFlatSpillover
+HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r999/data/OTDoublePulse.root as OTDoublePulse
 SpilloverHandler     INFO Member list: TESCheck/SpilloverLoader, EventNodeKiller/SpilloverKiller
 InitDataSeq          INFO Member list:
 InitMuonSeq          INFO Member list: MuonBackground/MuonLowEnergy, MuonBackground/MuonFlatSpillover
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/DDDB.db/DDDB"
 DDDB                 INFO Using TAG "head-20100407"
 EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
-SIMCOND              INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/SIMCOND.db/SIMCOND"
+SIMCOND              INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/SIMCOND.db/SIMCOND"
 SIMCOND              INFO Using TAG "sim-20100412-vc-md100"
-RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r10/data/muonlow-G4.root" for reading
+RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r999/data/muonlow-G4.root" for reading
 MuonLowEnergy        INFO The low energy background is run by default for main events plus (if any) spillover events (max 4)
-RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r10/data/muonflat-G4.root" for reading
+RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r999/data/muonflat-G4.root" for reading
 Digi                 INFO Member list: GaudiSequencer/DigiVeloSeq, GaudiSequencer/DigiTTSeq, GaudiSequencer/DigiITSeq, GaudiSequencer/DigiOTSeq, GaudiSequencer/DigiRichSeq, GaudiSequencer/DigiCaloSeq, GaudiSequencer/DigiMuonSeq
 DigiVeloSeq          INFO Member list: VeloSim, VeloSim/VeloPUSim, VeloTell1DataProcessor, VeloSimTell1ClusterMaker, PuVetoFillRawBuffer
 DeVeloRType       WARNING VELO R sensor M2 routing lines not in conditions DB cond: Routing-R-X-Strip0000 and Routing-R-Y-Strip0000
@@ -88,10 +93,10 @@ VeloPUSim            INFO Probability to add noise to empty strips 0.0153028
 VeloPUSim            INFO Probability to add noise to isolated empty strips 3.2331e-08
 VeloPUSim.RadDa...WARNING VeloRadDamageTool:: VELO radiation damage parameters not in conditions DB
 DigiTTSeq            INFO Member list: MCSTDepositCreator/MCTTDepositCreator, MCSTDigitCreator/MCTTDigitCreator, STDigitCreator/TTDigitCreator, STClusterCreator/TTClusterCreator, STClusterKiller/TTClusterKiller, STClustersToRawBankAlg/createTTRawBuffer
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field048.c1.vs.down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field048.c2.vs.down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field048.c3.vs.down.cdf
-MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field048.c4.vs.down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r7/cdf/field048.c1.vs.down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r7/cdf/field048.c2.vs.down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r7/cdf/field048.c3.vs.down.cdf
+MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r7/cdf/field048.c4.vs.down.cdf
 MagneticFieldSvc     INFO Map scaled by factor 1 with polarity internally used: -1 signed relative current: -1
 TTClusterCreator     INFO Loading cuts tagged as Data10
 ToolSvc.TTKiller     INFO Adding Tool: type: STRndmEffSelector / name: Selector
@@ -221,6 +226,8 @@ MoniMuonSeq          INFO Member list: MuonDigitChecker
 MoniMCSeq            INFO Member list:
 Filter               INFO OR Member list:
 PrepareDIGI          INFO Member list: PackMCVertex, PackMCParticle, DataPacking::Pack<LHCb::MCRichDigitSummaryPacker>/MCRichDigitSummaryPacker, EventNodeKiller/MCRichNodeKiller
+FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
+FSROutputStream...   INFO Data source: FileRecordDataSvc output: DATAFILE='PFN:Boole.digi' SVC='FileRecordCnvSvc' OPT='REC'
 EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
 DigiWriter           INFO Data source: EventDataSvc output: DATAFILE='PFN:Boole.digi' SVC='RootCnvSvc' OPT='REC'
 EventPersistenc...   INFO Added successfully Conversion service:LHCb::RawDataCnvSvc
@@ -403,148 +410,154 @@ MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R1
 MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R2
 MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R3
 MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R4
+FSROutputStream...   INFO Set up File Summary Record
+IODataManager        INFO Referring to dataset Boole.digi by its file ID:568F7A7E-8EC9-E511-B474-02163E016DE8
+FSROutputStream...   INFO Events output: 1
 DigiWriter           INFO Events output: 0
 RawWriter            INFO Events output: 0
 RootHistSvc       WARNING no ROOT output file name, Histograms cannot be persistified
 EventLoopMgr         INFO Histograms converted successfully according to request.
+FileRecordCnvSvc     INFO Disconnected data IO:568F7A7E-8EC9-E511-B474-02163E016DE8 [Boole.digi]
+XMLCatalog           INFO File 'test_catalog.xml' does not exist. New file created.
 ToolSvc              INFO Removing all tools created by ToolSvc
 VeloPUSim.RadDa...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 VeloPUSim.RadDa...SUCCESS  #WARNINGS   = 1        Message = 'VELO radiation damage parameters not in conditions DB'
 VeloSim.RadDamage SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 VeloSim.RadDamage SUCCESS  #WARNINGS   = 1        Message = 'VELO radiation damage parameters not in conditions DB'
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
-ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
+ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3 [OTFillRawBuffer]'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.33 times the speed of a 2.8 GHz Xeon.
-TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
+TimingAuditor.T...   INFO This machine has a speed about   2.45 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max    sigma | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO  BooleSequencer               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO   Init                        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    InitBooleSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     BooleInit                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     SpilloverHandler          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      SpilloverLoader          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      SpilloverKiller          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    InitDataSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    InitMuonSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MuonLowEnergy             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MuonFlatSpillover         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO   Digi                        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    DigiVeloSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     VeloSim                   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     VeloPUSim                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     VeloTell1DataProcessor    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     VeloSimTell1ClusterMaker  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     PuVetoFillRawBuffer       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    DigiTTSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MCTTDepositCreator        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MCTTDigitCreator          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TTDigitCreator            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TTClusterCreator          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TTClusterKiller           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     createTTRawBuffer         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    DigiITSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MCITDepositCreator        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MCITDigitCreator          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     ITDigitCreator            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     ITClusterCreator          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     ITClusterKiller           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     createITRawBuffer         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    DigiOTSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MCOTDepositCreator        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MCOTTimeCreator           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     OTFillRawBuffer           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    DigiRichSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     RichPDSignal              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     RichChargeShare           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     RichSummedDeposits        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     RichPDResponse            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     RichFillRawBuffer         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    DigiCaloSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     SpdSignal                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     PrsSignal                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     EcalSignal                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     HcalSignal                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     SpdDigit                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     PrsDigit                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     EcalDigit                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     HcalDigit                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     CaloFillPrsSpdRawBuffer   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     EcalFillRawBuffer         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     HcalFillRawBuffer         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    DigiMuonSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MuonDigitization          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MuonDigitToRawBuffer      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO   Link                        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    LinkVeloSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     createVeloClusters        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     VeloCluster2MCHitLinker   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     VeloCluster2MCParticleLink|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    LinkTTSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TTDigitLinker             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TTClusterLinker           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TTTruthLinker             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    LinkITSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     ITDigitLinker             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     ITClusterLinker           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     ITTruthLinker             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    LinkOTSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     OTMCDepositLinker         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     OTMCHitLinker             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     OTMCParticleLinker        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    LinkTrSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     BuildMCTrackInfo          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    LinkRichSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     Rich::MC::MCRichDigitSumma|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    LinkCaloSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     EcalFromRaw               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     HcalFromRaw               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     CaloReCreateMCLinks       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     EcalDigitMCTruth          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     HcalDigitMCTruth          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    LinkMuonSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MuonDigit2MCParticleAlg   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MuonTileDigitInfo         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO   Moni                        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    MoniVeloSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     VeloSimMoni               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     VeloRawClustersMoni       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    MoniTTSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MCTTDepositMonitor        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MCTTDigitMonitor          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TTDigitMonitor            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TTClusterMonitor          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MCP2TTMCHitAlg            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TTEffChecker              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    MoniITSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MCITDepositMonitor        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MCITDigitMonitor          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     ITDigitMonitor            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     ITClusterMonitor          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MCP2ITMCHitAlg            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     ITEffChecker              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    MoniOTSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MCOTDepositMonitor        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    MoniRichSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     RiDigitQC                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    MoniCaloSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     SpdCheck                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     PrsCheck                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     EcalCheck                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     HcalCheck                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    MoniMuonSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MuonDigitChecker          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    MoniMCSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO   Filter                      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO  PrepareDIGI                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO   PackMCVertex                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO   PackMCParticle              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO   MCRichDigitSummaryPacker    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO   MCRichNodeKiller            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO  DigiWriter                   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO  MDFKiller                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO  RawWriter                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO  BooleSequencer               |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO   Init                        |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    InitBooleSeq               |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     BooleInit                 |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     SpilloverHandler          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO      SpilloverLoader          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO      SpilloverKiller          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    InitDataSeq                |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    InitMuonSeq                |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MuonLowEnergy             |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MuonFlatSpillover         |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO   Digi                        |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    DigiVeloSeq                |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     VeloSim                   |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     VeloPUSim                 |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     VeloTell1DataProcessor    |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     VeloSimTell1ClusterMaker  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     PuVetoFillRawBuffer       |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    DigiTTSeq                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MCTTDepositCreator        |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MCTTDigitCreator          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     TTDigitCreator            |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     TTClusterCreator          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     TTClusterKiller           |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     createTTRawBuffer         |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    DigiITSeq                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MCITDepositCreator        |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MCITDigitCreator          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     ITDigitCreator            |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     ITClusterCreator          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     ITClusterKiller           |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     createITRawBuffer         |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    DigiOTSeq                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MCOTDepositCreator        |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MCOTTimeCreator           |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     OTFillRawBuffer           |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    DigiRichSeq                |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     RichPDSignal              |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     RichChargeShare           |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     RichSummedDeposits        |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     RichPDResponse            |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     RichFillRawBuffer         |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    DigiCaloSeq                |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     SpdSignal                 |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     PrsSignal                 |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     EcalSignal                |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     HcalSignal                |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     SpdDigit                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     PrsDigit                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     EcalDigit                 |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     HcalDigit                 |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     CaloFillPrsSpdRawBuffer   |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     EcalFillRawBuffer         |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     HcalFillRawBuffer         |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    DigiMuonSeq                |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MuonDigitization          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MuonDigitToRawBuffer      |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO   Link                        |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    LinkVeloSeq                |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     createVeloClusters        |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     VeloCluster2MCHitLinker   |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     VeloCluster2MCParticleLink|     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    LinkTTSeq                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     TTDigitLinker             |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     TTClusterLinker           |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     TTTruthLinker             |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    LinkITSeq                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     ITDigitLinker             |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     ITClusterLinker           |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     ITTruthLinker             |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    LinkOTSeq                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     OTMCDepositLinker         |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     OTMCHitLinker             |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     OTMCParticleLinker        |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    LinkTrSeq                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     BuildMCTrackInfo          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    LinkRichSeq                |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     Rich::MC::MCRichDigitSumma|     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    LinkCaloSeq                |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     EcalFromRaw               |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     HcalFromRaw               |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     CaloReCreateMCLinks       |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     EcalDigitMCTruth          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     HcalDigitMCTruth          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    LinkMuonSeq                |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MuonDigit2MCParticleAlg   |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MuonTileDigitInfo         |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO   Moni                        |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    MoniVeloSeq                |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     VeloSimMoni               |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     VeloRawClustersMoni       |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    MoniTTSeq                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MCTTDepositMonitor        |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MCTTDigitMonitor          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     TTDigitMonitor            |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     TTClusterMonitor          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MCP2TTMCHitAlg            |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     TTEffChecker              |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    MoniITSeq                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MCITDepositMonitor        |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MCITDigitMonitor          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     ITDigitMonitor            |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     ITClusterMonitor          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MCP2ITMCHitAlg            |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     ITEffChecker              |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    MoniOTSeq                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MCOTDepositMonitor        |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    MoniRichSeq                |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     RiDigitQC                 |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    MoniCaloSeq                |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     SpdCheck                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     PrsCheck                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     EcalCheck                 |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     HcalCheck                 |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    MoniMuonSeq                |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     MuonDigitChecker          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    MoniMCSeq                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO   Filter                      |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO  PrepareDIGI                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO   PackMCVertex                |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO   PackMCParticle              |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO   MCRichDigitSummaryPacker    |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO   MCRichNodeKiller            |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO  FSROutputStreamDigiWriter    |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO  DigiWriter                   |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO  MDFKiller                    |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO  RawWriter                    |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/0(Alg/Node/Total).
 ApplicationMgr       INFO Application Manager Finalized successfully
