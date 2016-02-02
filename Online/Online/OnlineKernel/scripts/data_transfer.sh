@@ -57,7 +57,7 @@ make_transfer_aliases()
 start_tan_server()
 {
     LIBRARY=$1; 
-    start_gentest ${LIBRARY} TanServer boost_asio_tan_server -d -v;
+    ##start_gentest ${LIBRARY} TanServer boost_asio_tan_server -d -v;
     sleep 1;
     start_gentest ${LIBRARY} TanMon tanmon -c;
     sleep 2;
@@ -135,25 +135,28 @@ exec_transfer_test()
     TYPE=$2;
     shift;
     shift;
+    if test "$1" = "-bounce"; then
+	OPT_ARGS=$1;
+	shift;
+    fi;
     if test -n "$1"; then
 	export HOSTNAME=${1};
 	echo export HOSTNAME=${HOSTNAME};
 	shift;
     fi;
-
     if test -n "$1"; then
 	echo export PROCID=$1;
 	export PROCID=$1;
 	shift;
     fi;
     TARGET=${HOSTNAME}RCV_${PROCID};
-    OPT_ARGS=$*;
-    TURNS="-turns=1000000";
+    OPT_ARGS="$OPT_ARGS $*";
+    TURNS="-turns=5000000";
     if test -n "`echo BB $OPT_ARGS | grep bounce`"; then
 	TURNS="-turns=1";
     fi;
     echo "+++ Executing data transfer test ${TYPE} using load-library ${LIBRARY}";
-    kill_all_tasks_of_type gentest.exe
+    #kill_all_tasks_of_type gentest.exe
     start_tan_server ${LIBRARY};
     export TAN_NODE=${HOST};
     echo PROCID=${PROCID};
@@ -162,7 +165,7 @@ exec_transfer_test()
 	-name=${TARGET} \
 	-l=1000000 -threads=10 ${OPT_ARGS};
     sleep 2;
-
+    #
     ps -ef | grep -v xterm | grep Receiver;
     sleep 3;
     for ID in $(seq 0 6); do
