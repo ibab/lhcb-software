@@ -184,7 +184,7 @@ namespace ANNGlobalPID
     public:
       virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
-        const auto MaxP = 5000.0 * Gaudi::Units::GeV;
+        constexpr auto MaxP = 5000.0 * Gaudi::Units::GeV;
         const auto var = proto->track()->p();
         return ( var < MaxP ? var : -999 );
       }
@@ -196,7 +196,7 @@ namespace ANNGlobalPID
     public:
       virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
-        const auto MaxPt = 1000.0 * Gaudi::Units::GeV;
+        constexpr auto MaxPt = 1000.0 * Gaudi::Units::GeV;
         const auto var = proto->track()->pt();
         return ( var < MaxPt ? var : -999 );
       }
@@ -494,7 +494,7 @@ namespace ANNGlobalPID
       typedef std::vector<UniquePtr> ConstVector;
     private:
       /// Delimitor enum
-      enum Delim { UNDEFINED = -1, GT, LT, GE, LE };
+      enum class Delim { UNDEFINED, GT, LT, GE, LE };
     public:
       /// Constructor
       Cut( const std::string& desc = "NOTDEFINED",
@@ -509,10 +509,10 @@ namespace ANNGlobalPID
       bool isSatisfied( const LHCb::ProtoParticle * proto ) const
       {
         const double var = m_variable->value(proto);
-        return ( m_delim == GT ? var >  m_cut :
-                 m_delim == LT ? var <  m_cut :
-                 m_delim == GE ? var >= m_cut :
-                 m_delim == LE ? var <= m_cut :
+        return ( m_delim == Delim::GT ? var >  m_cut :
+                 m_delim == Delim::LT ? var <  m_cut :
+                 m_delim == Delim::GE ? var >= m_cut :
+                 m_delim == Delim::LE ? var <= m_cut :
                  false );
       }
       /// Cut description
@@ -529,18 +529,18 @@ namespace ANNGlobalPID
       bool setDelim( const std::string & delim ) noexcept
       {
         bool ok = false;
-        if      ( ">"  == delim ) { m_delim = GT; ok = true; }
-        else if ( "<"  == delim ) { m_delim = LT; ok = true; }
-        else if ( ">=" == delim ) { m_delim = GE; ok = true; }
-        else if ( "<=" == delim ) { m_delim = LE; ok = true; }
+        if      ( ">"  == delim ) { m_delim = Delim::GT; ok = true; }
+        else if ( "<"  == delim ) { m_delim = Delim::LT; ok = true; }
+        else if ( ">=" == delim ) { m_delim = Delim::GE; ok = true; }
+        else if ( "<=" == delim ) { m_delim = Delim::LE; ok = true; }
         return ok;
       }
     private:
-      std::string m_desc;                   ///< The cut description
-      bool m_OK{false};                     ///< Is this cut well defined
+      std::string m_desc;                  ///< The cut description
+      bool m_OK{false};                    ///< Is this cut well defined
       typename Input::SmartPtr m_variable; ///< The variable to cut on
-      double m_cut{0};                      ///< The cut value
-      Delim m_delim{UNDEFINED};             ///< The delimitor
+      double m_cut{0};                     ///< The cut value
+      Delim m_delim{Delim::UNDEFINED};     ///< The delimitor
     };
 
   protected:
@@ -577,8 +577,6 @@ namespace ANNGlobalPID
       void setOK( const bool ok ) noexcept { m_ok = ok; }
       /// Compute the ANN output for the given ProtoParticle
       virtual double getOutput( const LHCb::ProtoParticle * proto ) const = 0;
-      /// Number of inputs to the ANN
-      inline unsigned int nInputs() const noexcept { return m_inputs.size(); }
       /// Access the inputs
       const Inputs& inputs() const noexcept { return m_inputs; }
     private:
@@ -710,7 +708,7 @@ namespace ANNGlobalPID
       virtual double getOutput( const LHCb::ProtoParticle * proto ) const override;
     private:
       std::unique_ptr<IClassifierReader> m_reader; ///< The TMVA reader
-      mutable std::vector<double> m_vars;     ///< the input variables
+      mutable std::vector<double> m_vars;          ///< The input variables
     };
 
   protected:
