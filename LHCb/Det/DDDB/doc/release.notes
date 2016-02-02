@@ -4,6 +4,11 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2016-02-02 - Marco Cattaneo
+ - Do not set default tak for LHCBCOND, CALIBOFF and DQFLAGS partitions in
+   case of Simulation
+ - Remove MC09 default tags
+
 !========================= DDDB v1r83 2016-01-27 =========================
 ! 2016-01-07 - Marco Cattaneo
  - Add support for 2016 DataType

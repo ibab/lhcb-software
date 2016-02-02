@@ -25,7 +25,7 @@ class DDDBConf(ConfigurableUser):
                    }
     _propertyDocDct = {
                        'DbRoot' : """ Root file of the detector description """,
-                       'DataType' : """ Symbolic name for the data type. Allowed values: ["2016", "2015", "2013", "2012", "2011", "2010", "2009","2008","MC09","Upgrade"] """,
+                       'DataType' : """ Symbolic name for the data type. Allowed values: ["2016", "2015", "2013", "2012", "2011", "2010", "2009","2008","Upgrade"] """,
                        'Simulation' : """ Boolean flag to select the simulation or real-data configuration """,
                        'AutoTags'  : """ Perform automatic resolution of CondDB tags """,
                        'InitialTime' : """ How to set the initial time. None/'Safe' uses a list of dummy times for each year and sets that time. 'Now' uses the current time. Sepcifying a number assumes that is a time in utc."""
@@ -93,7 +93,7 @@ class DDDBConf(ConfigurableUser):
             raise ValueError("Invalid value %r for property DetDesc().DataType."
                              " (allowed: %r)"% (dataType,
                                                 self.__data_types_handlers__.keys()))
-        if dataType in [ "MC09", "Upgrade" ]:
+        if dataType in [ "Upgrade" ]:
             sim = self.getProp("Simulation")
             if not sim:
                 log.info("%s data is _always_ simulation", dataType )
@@ -178,11 +178,11 @@ class DDDBConf(ConfigurableUser):
         """
         # Set the tags
         self.__set_tag__(["DDDB"],     "dddb-20150724" )
-        self.__set_tag__(["LHCBCOND"], "cond-20151016" )
-        self.__set_tag__(["DQFLAGS"],  "dq-20150717"   )
-        self.__set_tag__(["CALIBOFF"], "head-2015604" )
         if not self.getProp("Simulation"):
-           # set initialization time to a safe default
+            self.__set_tag__(["LHCBCOND"], "cond-20151016" )
+            self.__set_tag__(["DQFLAGS"],  "dq-20150717"   )
+            self.__set_tag__(["CALIBOFF"], "head-2015604" )
+            # set initialization time to a safe default
             self.__set_init_time__(datetime(2016, 12, 31, 23, 59))
 
     def __2015_conf__(self):
@@ -191,10 +191,10 @@ class DDDBConf(ConfigurableUser):
         """
         # Set the tags
         self.__set_tag__(["DDDB"],     "dddb-20150724" )
-        self.__set_tag__(["LHCBCOND"], "cond-20151016" )
-        self.__set_tag__(["DQFLAGS"],  "dq-20150717"   )
-        self.__set_tag__(["CALIBOFF"], "head-2015604" )
         if not self.getProp("Simulation"):
+            self.__set_tag__(["LHCBCOND"], "cond-20151016" )
+            self.__set_tag__(["DQFLAGS"],  "dq-20150717"   )
+            self.__set_tag__(["CALIBOFF"], "head-2015604" )
             self.__set_init_time__(datetime(2015, 12, 13, 12, 8)) # End of fill 4720
 
     def __2013_conf__(self):
@@ -203,9 +203,9 @@ class DDDBConf(ConfigurableUser):
         """
         # Set the tags
         self.__set_tag__(["DDDB"],     "dddb-20130929-1" )
-        self.__set_tag__(["LHCBCOND"], "cond-20150409-1"   )
-        self.__set_tag__(["DQFLAGS"],  "dq-20140822"   )
         if not self.getProp("Simulation"):
+            self.__set_tag__(["LHCBCOND"], "cond-20150409-1"   )
+            self.__set_tag__(["DQFLAGS"],  "dq-20140822"   )
             self.__set_init_time__(datetime(2013, 2, 14, 6, 25)) # End of fill 3564
 
     def __2012_conf__(self):
@@ -214,9 +214,9 @@ class DDDBConf(ConfigurableUser):
         """
         # Set the tags
         self.__set_tag__(["DDDB"],     "dddb-20150928" )
-        self.__set_tag__(["LHCBCOND"], "cond-20150409-1"   )
-        self.__set_tag__(["DQFLAGS"],  "dq-20140822"   )
         if not self.getProp("Simulation"):
+            self.__set_tag__(["LHCBCOND"], "cond-20150409-1"   )
+            self.__set_tag__(["DQFLAGS"],  "dq-20140822"   )
             self.__set_init_time__(datetime.utcfromtimestamp(1355694590)) # End of fill 3453
 
     def __2011_conf__(self):
@@ -225,9 +225,9 @@ class DDDBConf(ConfigurableUser):
         """
         # Set the tags
         self.__set_tag__(["DDDB"],     "dddb-20150522-1" )
-        self.__set_tag__(["LHCBCOND"], "cond-20150409"   )
-        self.__set_tag__(["DQFLAGS"], "dq-20140822")
         if not self.getProp("Simulation"):
+            self.__set_tag__(["LHCBCOND"], "cond-20150409"   )
+            self.__set_tag__(["DQFLAGS"], "dq-20140822")
             self.__set_init_time__(datetime.utcfromtimestamp(1319991087)) # End of fill 2267
 
     def __2010_conf__(self):
@@ -236,9 +236,9 @@ class DDDBConf(ConfigurableUser):
         """
         # Set the tags
         self.__set_tag__(["DDDB"],     "dddb-20150522" )
-        self.__set_tag__(["LHCBCOND"], "cond-20150527" )
-        self.__set_tag__(["DQFLAGS"], "tt-20110126")
         if not self.getProp("Simulation"):
+            self.__set_tag__(["LHCBCOND"], "cond-20150527" )
+            self.__set_tag__(["DQFLAGS"], "tt-20110126")
             self.__set_init_time__(datetime.utcfromtimestamp(1288505611)) # End of fill 1459
 
     def __2009_conf__(self):
@@ -247,32 +247,26 @@ class DDDBConf(ConfigurableUser):
         """
         # Set the tags
         self.__set_tag__(["DDDB"], "head-20101206")
-        self.__set_tag__(["LHCBCOND"], "head-20110614")
-        self.__set_tag__(["SIMCOND"], "MC-20101026-vc15mm-md100")
-        self.__set_tag__(["DQFLAGS"], "tt-20110126")
         if not self.getProp("Simulation"):
+            self.__set_tag__(["LHCBCOND"], "head-20110614")
+            self.__set_tag__(["DQFLAGS"], "tt-20110126")
             self.__set_init_time__(datetime(2009, 12, 31, 21, 0)) # 31/12/2009 21:00
-
+        else:
+            self.__set_tag__(["SIMCOND"], "MC-20101026-vc15mm-md100")
+        
     def __2008_conf__(self):
         """
         Default configuration for 2008 data and corresponding MonteCarlo
         """
         # Set the tags
         self.__set_tag__(["DDDB"], "head-20101003")
-        self.__set_tag__(["LHCBCOND"], "head-20101010")
-        self.__set_tag__(["SIMCOND"], "sim-20090212")
-        self.__set_tag__(["DQFLAGS"], "tt-20110126")
         if not self.getProp("Simulation"):
+            self.__set_tag__(["LHCBCOND"], "head-20101010")
+            self.__set_tag__(["DQFLAGS"], "tt-20110126")
             self.__set_init_time__(datetime(2008, 12, 31, 21, 0)) # 31/12/2008 21:00
-
-    def __MC09_conf__(self):
-        """
-        Default configuration for MC09 MonteCarlo production and analysis
-        """
-        # Set the tags
-        self.__set_tag__(["DDDB"], "MC09-20090602")
-        self.__set_tag__(["SIMCOND"], "MC09-20100921-vc-md100")
-
+        else:
+            self.__set_tag__(["SIMCOND"], "sim-20090212")
+                
     def __Upgrade_conf__(self):
         """
         Default database for Upgrade MonteCarlo production and analysis
@@ -288,5 +282,4 @@ class DDDBConf(ConfigurableUser):
                                  "2010": __2010_conf__,
                                  "2009": __2009_conf__,
                                  "2008": __2008_conf__,
-                                 "MC09": __MC09_conf__,
                                  "Upgrade": __Upgrade_conf__ }
