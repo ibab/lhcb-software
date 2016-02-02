@@ -170,7 +170,7 @@ exec_transfer_test()
     export TAN_NODE=${HOST};
     echo PROCID=${PROCID};
     echo TARGET=${TARGET};
-    TYPE=socket;
+    ##TYPE=socket;
     start_gentest ${LIBRARY} Receiver test_${TYPE}_net_recv \
 	-name=${TARGET} \
 	-l=1000000 -threads=10 ${OPT_ARGS};
@@ -178,7 +178,7 @@ exec_transfer_test()
     #
     ps -ef | grep -v xterm | grep Receiver;
     sleep 3;
-    TYPE=asio;
+    ##TYPE=asio;
     for ID in $(seq 0 6); do
 	start_gentest ${LIBRARY} SND_${ID} test_${TYPE}_net_send \
 	    -name=${HOSTNAME}SND${PROCID}_${ID} \
