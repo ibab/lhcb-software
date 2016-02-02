@@ -4,6 +4,12 @@
 ! Purpose     : Components to fully rebuild PIDs from packed DST
 !-----------------------------------------------------------------------------
 
+! 2016-02-02 - Chris Jones
+ - Add a check to RichPIDsFromProtoParticlesAlg to detect when old unpacked
+   (Pre-Deuteron) have been read in that have inconsistent 
+   Deuteron/BelowThreshold information due to changes in the enum values,
+   and to correct for it.
+
 ! 2016-01-28 - Chris Jones
  - Update (from Ulrik Egede) to support Deuteron RICH PID type.
 
