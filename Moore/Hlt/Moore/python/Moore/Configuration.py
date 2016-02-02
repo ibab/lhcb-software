@@ -5,6 +5,7 @@ __version__ = "$Id: Configuration.py,v 1.131 2010-09-01 16:39:02 raaij Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
+from functools import partial
 from LHCbKernel.Configuration import *
 from Gaudi.Configuration import *
 from Configurables import HltConf
@@ -492,7 +493,7 @@ class Moore(LHCbConfigurableUser):
         if not self.getProp("UseTCK") and level>INFO:
             #post config to really reset all the output to null
             from DAQSys.Decoders import DecoderDB
-            from GaudiConf.Manipulations import postConfForAll#,fullNameConfigurables
+            from GaudiConf.Manipulations import recurseConfigurables, setPropertiesAndAddTools
             props={}
             props["OutputLevel"]=level
             props["StatPrint"]=(level<WARNING)
@@ -504,49 +505,48 @@ class Moore(LHCbConfigurableUser):
                 for pk,pv in props.iteritems():
                     v.Properties[pk]=pv
 
-            postConfForAll(head=[k for k in DecoderDB], prop_value_dict=props,force=True,recurseToTools=True)
-
-            #only for GaudiHistoAlgs...
             props["HistoCountersPrint"]=(level<WARNING)
-            postConfForAll(head=None, prop_value_dict=props,force=True,recurseToTools=True)
-            #so, the above works for almost everything, apart from on-demand created tools, of which there are a lot, and these need to be added separately
-            #mostly these tools are in the calo
+            calo_tools = [
+                "CaloECorrection/ECorrection",
+                "CaloSCorrection/SCorrection",
+                "CaloLCorrection/LCorrection", "CaloHypoEstimator", "CaloExtraDigits/SpdPrsExtraE",
+                "CaloExtraDigits/SpdPrsExtraG",
+                "CaloExtraDigits/SpdPrsExtraM",
+                "CaloExtraDigits/SpdPrsExtraS",
+                "CaloSelectCluster/PhotonCluster",
+                "CaloSelectCluster/ElectronCluster",
+                "CaloSelectChargedClusterWithSpd/ChargedClusterWithSpd",
+                "CaloSelectClusterWithPrs/ClusterWithPrs",
+                "CaloSelectNeutralClusterWithTracks/NeutralCluster",
+                "CaloSelectNeutralClusterWithTracks/NotNeutralCluster",
+                "CaloSelectorNOT/ChargedCluster",
+                "CaloSelectNeutralClusterWithTracks/ChargedCluster.NeutralCluster",
+            ]
+            tools_per_type = {
+                # turn off the calo tool finalize printout, there are *a lot* of tools here
+                "CaloSinglePhotonAlg": calo_tools,
+                "CaloElectronAlg": calo_tools,
+                "CaloMergedPi0Alg": calo_tools,
+                "NeutralProtoPAlg": calo_tools,
+                # three extras for merged pi0
+                "CaloMergedPi0Alg": ["CaloCorrectionBase/ShowerProfile", "CaloCorrectionBase/Pi0SCorrection", "CaloCorrectionBase/Pi0LCorrection"],
+                # and one calo clustering
+                "CellularAutomatonAlg": ["CaloClusterizationTool"],
+            }
+            func = partial(setPropertiesAndAddTools, properties=props, tools_per_type=tools_per_type, force=True)
 
-            #now turn off the calo tool finalize printout, there are *a lot* of tools here
-            tools={"CaloECorrection/ECorrection":props,
-                   "CaloSCorrection/SCorrection":props,
-                   "CaloLCorrection/LCorrection":props,
-                   "CaloHypoEstimator":props,
-                   "CaloExtraDigits/SpdPrsExtraE":props,
-                   "CaloExtraDigits/SpdPrsExtraG":props,
-                   "CaloExtraDigits/SpdPrsExtraM":props,
-                   "CaloExtraDigits/SpdPrsExtraS":props,
-                   "CaloSelectCluster/PhotonCluster":props,
-                   "CaloSelectCluster/ElectronCluster":props,
-                   "CaloSelectChargedClusterWithSpd/ChargedClusterWithSpd":props,
-                   "CaloSelectClusterWithPrs/ClusterWithPrs":props,
-                   "CaloSelectNeutralClusterWithTracks/NeutralCluster":props,
-                   "CaloSelectNeutralClusterWithTracks/NotNeutralCluster":props,
-
-                   "CaloSelectorNOT/ChargedCluster" : props,
-                   "CaloSelectNeutralClusterWithTracks/ChargedCluster.NeutralCluster":props
-                   }
-            #allcalotools=[]
-
-            postConfForAll(head=None, prop_value_dict={},types=["CaloSinglePhotonAlg","CaloElectronAlg","CaloMergedPi0Alg","NeutralProtoPAlg"],force=True,tool_value_dict=tools)
-            #three extras for merged pi0
-            tools={"CaloCorrectionBase/ShowerProfile":props,
-                   "CaloCorrectionBase/Pi0SCorrection":props,
-                   "CaloCorrectionBase/Pi0LCorrection":props
-                   }
-            postConfForAll(head=None, prop_value_dict=props,types=["CaloMergedPi0Alg"],force=True,tool_value_dict=tools)
-            #and one calo clustering
-            tools={"CaloClusterizationTool":props}
-            postConfForAll(head=None, types=["CellularAutomatonAlg"],prop_value_dict=props, tool_value_dict=tools, force=True)
-            #same for members of the ToolService
+            # Instantiate a few public tools (members of the ToolService),
+            # which means their output properties will also be set in the post config action
             from Configurables import LoKi__LifetimeFitter, CaloDigitFilterTool, CaloGetterTool, OTChannelMapTool, CaloClusterizationTool
-            #public tools
-            postConfForAll(head=[LoKi__LifetimeFitter("ToolSvc.lifetime"),CaloDigitFilterTool("ToolSvc.FilterTool"),CaloGetterTool("ToolSvc.CaloGetter"),OTChannelMapTool("ToolSvc.OTChannelMapTool"),CaloClusterizationTool("ToolSvc.CaloClusterizationTool")], prop_value_dict=props,force=True)
+            LoKi__LifetimeFitter("ToolSvc.lifetime")
+            CaloDigitFilterTool("ToolSvc.FilterTool")
+            CaloGetterTool("ToolSvc.CaloGetter")
+            OTChannelMapTool("ToolSvc.OTChannelMapTool")
+            CaloClusterizationTool("ToolSvc.CaloClusterizationTool")
+            
+            # visit_properties = ['Members', 'Filter0', 'Filter1', 'TopAlg']
+            descend_properties = ['Members', 'Prescale', 'ODIN', 'L0DU', 'HLT', 'HLT1', 'HLT2', 'Filter0', 'Filter1', 'Postscale']
+            appendPostConfigAction(partial(recurseConfigurables, func, descend_properties=descend_properties, descend_tools=True))
 
 
             #I still want to print "Application Manager Finalized Successfully"
@@ -589,13 +589,15 @@ class Moore(LHCbConfigurableUser):
             trans={".*DistanceCalculator.*":{"MaxPrints" : {"^.*$":str(set)}}}
             Funcs._mergeTransform(trans)
             #kill one extra loki print in tool service
-            from GaudiConf.Manipulations import postConfForAll#,fullNameConfigurables
+            from GaudiConf.Manipulations import recurseConfigurables, setPropertiesAndAddTools
             props={}
             props["OutputLevel"]=level
             props["StatPrint"]=(level<WARNING)
             props["ErrorsPrint"]=(level<WARNING)
             props["PropertiesPrint"]=(level<WARNING)
-            postConfForAll(head=["LoKi::LifetimeFitter/ToolSvc.lifetime"],force=True,prop_value_dict=props)
+            # postConfForAll(head=["LoKi::LifetimeFitter/ToolSvc.lifetime"],force=True,prop_value_dict=props)
+            func = partial(setPropertiesAndAddTools, properties=props, force=True)
+            appendPostConfigAction(partial(recurseConfigurables, func, head="LoKi::LifetimeFitter/ToolSvc.lifetime"))
 
             from Configurables import HltConfigSvc
             cfg = HltConfigSvc()

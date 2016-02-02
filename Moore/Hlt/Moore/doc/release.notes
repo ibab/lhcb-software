@@ -4,6 +4,11 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2016-02-02 - Rosen Matev
+ - Adapt to changes in GaudiConf to speed up Moore configuration.
+   As a result setting the output-related properties of all configurables
+   is now much faster.
+
 !========================= Moore v24r2p1 2016-02-01 =========================
 
 Moore to be included with v24r2 stack plus package modifications for Turbo reprocessing.
