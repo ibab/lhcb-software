@@ -47,5 +47,8 @@ private:
   DeVelo*      m_velo;
   unsigned int m_maxVeloClusters;
   unsigned int m_errorCount;  ///< number of errors to print
+  std::string  m_compareLocation;
+  std::vector<std::string> m_rawEventLocations;
+  
 };
 #endif // FASTVELODECODING_H

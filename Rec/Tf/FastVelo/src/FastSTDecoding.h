@@ -51,5 +51,8 @@ private:
   LHCb::RawBank::BankType m_bankType;
   std::string   m_compareLocation;
   unsigned int  m_errorCount;  ///< number of errors to print
+  std::vector<std::string> m_rawEventLocations;
+  
+
 };
 #endif // FASTSTDECODING_H

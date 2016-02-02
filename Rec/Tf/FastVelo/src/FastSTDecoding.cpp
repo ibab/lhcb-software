@@ -32,6 +32,11 @@ DECLARE_ALGORITHM_FACTORY( FastSTDecoding )
   declareProperty( "ErrorCount",        m_errorCount      = 0      );
   declareProperty( "IgnoreErrors",      m_ignoreErrors    = false  );
   declareProperty( "CompareResult",     m_compareResult   = false  );
+  declareProperty( "RawEventLocations", m_rawEventLocations=
+      {LHCb::RawEventLocation::Tracker,LHCb::RawEventLocation::Other,LHCb::RawEventLocation::Default},
+                   "List of possible locations of the RawEvent object in the"
+                   " transient store. By default it is LHCb::RawEventLocation::Tracker,LHCb::RawEventLocation::Other,"
+                   " LHCb::RawEventLocation::Default.");
 }
 //=============================================================================
 // Destructor
@@ -74,13 +79,22 @@ StatusCode FastSTDecoding::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default );
+  // Retrieve the RawEvent:
+  LHCb::RawEvent* rawEvent = nullptr;
+  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
+    if (exist<LHCb::RawEvent>(*p)){
+      rawEvent = get<LHCb::RawEvent>(*p);
+      break;
+    }
+  }
+  if( rawEvent == nullptr ) return Error("Failed to find raw data");
+
   const std::vector<LHCb::RawBank*>& banks = rawEvent->banks( m_bankType );
 
   LHCb::STLiteCluster::FastContainer* fastCont = new LHCb::STLiteCluster::FastContainer();
   put( fastCont, m_outputLocation );
   
-  debug() << "Number of ST banks : " << banks.size() << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) )) debug() << "Number of "+ m_detectorName+" banks : " << banks.size() << endmsg;
 
   for (std::vector<LHCb::RawBank*>::const_iterator bi = banks.begin(); bi != banks.end(); ++bi) {
     const LHCb::RawBank* rb = *bi;
@@ -98,8 +112,8 @@ StatusCode FastSTDecoding::execute() {
     }
     STDAQ::version bankVersion = STDAQ::v4;
 
-   // get the board and data
-    STTell1Board* aBoard = m_readoutTool->findByBoardID( STTell1ID( rb->sourceID() ) );
+    // get the board and data
+    const STTell1Board* aBoard = m_readoutTool->findByBoardID( STTell1ID( rb->sourceID() ) );
     if (!aBoard ){
       failEvent( format( "Invalid source ID %4d ->skip bank", rb->sourceID() ), 
                  "CorruptSTBuffer", CorruptSTBuffer, false );
@@ -109,22 +123,23 @@ StatusCode FastSTDecoding::execute() {
     const unsigned int* data = rb->data();
 
     unsigned int nClus = (*data) & 0xFFFF;
-    unsigned int error = ( (*data) & 0x1000000 ) >> 24;
+    const unsigned int error = ( (*data) & 0x1000000 ) >> 24;
     if ( !m_ignoreErrors && 0 != error ) continue;
-    debug() << "Process source id " << rb->sourceID()
-            << " data " << (*data) << " nData " << nClus << endmsg;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) )) debug() << "Process source id " << rb->sourceID()
+                                                  << " data " << (*data) << " nData " << nClus << endmsg;
 
     unsigned short* word = (unsigned short*) (data+1);
     for (  ; 0 < nClus; nClus--, ++word ) {
-      unsigned int frac    = (*word) & 0x3;
-      unsigned int channel = ( (*word) & 0x3FFC ) >> 2;
-      unsigned int size    = ( (*word) & 0x4000 ) >> 14;
-      bool high            = ( ( (*word) & 0x8000 ) >> 15) != 0;
+      const unsigned int frac    = (*word) & 0x3;
+      const unsigned int channel = ( (*word) & 0x3FFC ) >> 2;
+      const unsigned int size    = ( (*word) & 0x4000 ) >> 14;
+      const bool high            = ( ( (*word) & 0x8000 ) >> 15) != 0;
 
       const std::pair<LHCb::STChannelID,int> chan = aBoard->DAQToOffline( frac, bankVersion, 
                                                                           STDAQ::StripRepresentation( channel ));
       LHCb::STLiteCluster liteCluster( chan.second, size, high, chan.first );
       fastCont->push_back( liteCluster );
+      //fastCont->emplace_back( chan.second, size, high, chan.first );
     }
   }
 
@@ -132,7 +147,7 @@ StatusCode FastSTDecoding::execute() {
 
   //== Test if the result is equal to another decoding in the default location
 
-  if ( m_compareResult ) {
+  if ( UNLIKELY(m_compareResult) ) {
     LHCb::STLiteCluster::FastContainer* old;
     old = get<LHCb::STLiteCluster::FastContainer>( m_compareLocation );
 
@@ -175,9 +190,9 @@ StatusCode FastSTDecoding::finalize() {
 //  Print and store failure information
 //=========================================================================
 void FastSTDecoding::failEvent( const std::string &ErrorText,
-                                  const std::string &ProcText,
-                                  AlgStatusType status,
-                                  bool procAborted){
+                                const std::string &ProcText,
+                                AlgStatusType status,
+                                bool procAborted){
   // set ProcStat for this event to failed in DecodeSTRawBuffer
   LHCb::ProcStatus *pStat = getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(LHCb::ProcStatusLocation::Default);
   pStat->addAlgorithmStatus("FastSTDecoding", "ST", ProcText, status, procAborted);

@@ -4,6 +4,9 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2016-02-02 - Michel De Cian
+ - Adapt FastVeloDecoding and FastSTDecoding to search the raw events in the correct locations.
+
 !========================= FastVelo v1r24 2015-11-23 =========================
 ! 2015-11-12 - Marco Cattaneo 
  - Remove unused member variables

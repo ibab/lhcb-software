@@ -20,14 +20,21 @@ DECLARE_ALGORITHM_FACTORY( FastVeloDecoding )
 //=============================================================================
   FastVeloDecoding::FastVeloDecoding( const std::string& name,
                                       ISvcLocator* pSvcLocator)
-    : GaudiAlgorithm ( name , pSvcLocator )
-    , m_velo(NULL)
+: GaudiAlgorithm ( name , pSvcLocator )
+  , m_velo(NULL)
+  , m_compareLocation("")
 {
   declareProperty( "OutputLocation",    m_outputLocation  = LHCb::VeloLiteClusterLocation::Default );
   declareProperty( "MaxVeloClusters",   m_maxVeloClusters = 10000  );
   declareProperty( "ErrorCount",        m_errorCount      = 0      );
   declareProperty( "IgnoreErrors",      m_ignoreErrors    = false  );
   declareProperty( "CompareResult",     m_compareResult   = false  );
+  declareProperty( "RawEventLocations", m_rawEventLocations=
+      {LHCb::RawEventLocation::Velo,LHCb::RawEventLocation::Other,LHCb::RawEventLocation::Default},
+                   "List of possible locations of the RawEvent object in the"
+                   " transient store. By default it is LHCb::RawEventLocation::Velo,LHCb::RawEventLocation::Other,"
+                   " LHCb::RawEventLocation::Default.");
+  
 }
 //=============================================================================
 // Destructor
@@ -45,6 +52,11 @@ StatusCode FastVeloDecoding::initialize() {
 
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
+  if ( m_compareResult ) {
+    m_compareLocation = m_outputLocation;
+    m_outputLocation  = m_outputLocation + "Test";
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -55,13 +67,22 @@ StatusCode FastVeloDecoding::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default );
+  // Retrieve the RawEvent:
+  LHCb::RawEvent* rawEvent = nullptr;
+  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
+    if (exist<LHCb::RawEvent>(*p)){
+      rawEvent = get<LHCb::RawEvent>(*p);
+      break;
+    }
+  }
+  if( rawEvent == nullptr ) return Error("Failed to find raw data");
+
   const std::vector<LHCb::RawBank*>& banks = rawEvent->banks( LHCb::RawBank::Velo );
 
   LHCb::VeloLiteCluster::FastContainer* fastCont = new LHCb::VeloLiteCluster::FastContainer();
   put( fastCont, m_outputLocation);
 
-  debug() << "Number of Velo banks : " << banks.size() << endmsg;
+   if( UNLIKELY( msgLevel(MSG::DEBUG) )) debug() << "Number of Velo banks : " << banks.size() << endmsg;
 
   for (std::vector<LHCb::RawBank*>::const_iterator bi = banks.begin(); bi != banks.end(); ++bi) {
     const LHCb::RawBank* rb = *bi;
@@ -81,7 +102,7 @@ StatusCode FastVeloDecoding::execute() {
       continue;
     }
     sensor->tell1EventInfo().setHasError(false);
-    unsigned int sensorNb = sensor->sensorNumber();
+    const unsigned int sensorNb = sensor->sensorNumber();
 
     const unsigned int* data = rb->data();
 
@@ -93,12 +114,12 @@ StatusCode FastVeloDecoding::execute() {
       debug() << "Process source id " << rb->sourceID() << " that is sensor " << sensorNb
               << " data " << (*data) << " nData " << nClus << endmsg;
     }
-    unsigned short* word = (unsigned short*) (data+1);
+    const unsigned short* word = (unsigned short*) (data+1);
     for (  ; 0 < nClus; nClus--, ++word ) {
-      unsigned int frac    = (*word) & 0x7;
-      unsigned int channel = ( (*word) & 0x3FF8 ) >> 3;
-      unsigned int size    = ( (*word) & 0x4000 ) >> 14;
-      bool high            = ( ( (*word) & 0x8000 ) >> 15) != 0;
+      const unsigned int frac    = (*word) & 0x7;
+      const unsigned int channel = ( (*word) & 0x3FF8 ) >> 3;
+      const unsigned int size    = ( (*word) & 0x4000 ) >> 14;
+      const bool high            = ( ( (*word) & 0x8000 ) >> 15) != 0;
       fastCont->push_back( LHCb::VeloLiteCluster( frac, size, high,
                                                   LHCb::VeloChannelID( sensorNb, channel)));
     }
@@ -119,7 +140,7 @@ StatusCode FastVeloDecoding::execute() {
 
   if ( m_compareResult ) {
     LHCb::VeloLiteCluster::FastContainer* old;
-    old = get<LHCb::VeloLiteCluster::FastContainer>(LHCb::VeloLiteClusterLocation::Default );
+    old = get<LHCb::VeloLiteCluster::FastContainer>( m_compareLocation );
 
     if ( old->size() != fastCont->size() ) {
       info() << "=== Wrong size: old " << old->size() << " new " << fastCont->size() << endmsg;
