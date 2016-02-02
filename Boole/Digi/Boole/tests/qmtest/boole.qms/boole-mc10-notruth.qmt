@@ -27,6 +27,7 @@ preprocessor = BoolePreprocessor + \
   LineSkipper(["OTTimeClassific..."]) + \
   LineSkipper(["MCRichDigitSumm..."]) + \
   RegexpReplacer(when = "LHCb::RawDataCn...   INFO ", orig = r'ev-Minimal.mdf', repl = r'ev.mdf') + \
+  RegexpReplacer(when = "FSROutputStream...   INFO ", orig = r'ev-Minimal.digi', repl = r'ev.digi') + \
   RegexpReplacer(when = "ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics", orig = r'0/0/2/0', repl = r'0/0/1/0') + \
   LineSkipper(["ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 63'"]) + \
   RegexpReplacer(when = "DataOnDemandSvc      INFO Handled ", orig = r'1090', repl = r'1110')
