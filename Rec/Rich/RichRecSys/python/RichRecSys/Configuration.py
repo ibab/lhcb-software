@@ -64,7 +64,7 @@ class RichRecSysBaseConf(RichConfigurableUser):
        ,"OnlineMode"    : False   # Online mode
        ,"OutputLevel"   : INFO    # The output level to set all algorithms and tools to use
        ,"RichPIDLocation" : ""    # Output RichPID Location
-       ,"PIDVersion"      : 1     # Default PID version
+       ,"PIDVersion"      : 2     # Default PID version
         }
 
     ## Initialize 

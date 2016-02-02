@@ -4,6 +4,12 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2016-02-02 - Chris Jones
+ - Update RichPID version number from 1 to 2, to reflect the fact the data
+   objects have changed in structure (an additional float in the DLL vector
+   for the Deuteron hypothesis). Needs to be done even if support for
+   computing the Deuteron DLL values is not enabled.
+
 !========================= RichRecSys v5r9 2016-01-28 =========================
 ! 2016-01-18 - Chris Jones
  - Add a configuration flag to make sure the MC association information for
