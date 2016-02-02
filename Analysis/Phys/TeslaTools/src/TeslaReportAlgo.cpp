@@ -11,7 +11,6 @@
 #include "TeslaReportAlgo.h"
 
 static const  Gaudi::StringKey RelInfoLocations{"RelInfoLocations"};
-static const  Gaudi::StringKey test{"Hlt2SelectionID"};
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TeslaReportAlgo
