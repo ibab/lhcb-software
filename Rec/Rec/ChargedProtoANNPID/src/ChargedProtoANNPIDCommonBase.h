@@ -153,7 +153,7 @@ namespace ANNGlobalPID
         : m_info(info), m_def(def) { }
     private:
       const LHCb::ProtoParticle::additionalInfo m_info;
-      const double m_def;
+      const double m_def{-999};
     public:
       virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
@@ -165,13 +165,16 @@ namespace ANNGlobalPID
     class InTrackExInfo : public Input
     {
     public:
-      InTrackExInfo( const int info ) : m_info(info) { }
+      InTrackExInfo( const LHCb::Track::AdditionalInfo info,
+                     const double def = -999 ) 
+        : m_info(info), m_def(def) { }
     private:
-      const int m_info;
+      const LHCb::Track::AdditionalInfo m_info = LHCb::Track::AdditionalInfoUnknown;
+      const double m_def{-999};
     public:
       virtual double value( const LHCb::ProtoParticle * proto ) const override
       {
-        return proto->track()->info( m_info, -999 );
+        return proto->track()->info( m_info, m_def );
       }
     };
 
@@ -420,12 +423,12 @@ namespace ANNGlobalPID
     class InRecSummary : public Input
     {
     public:
-      InRecSummary( const int info,
+      InRecSummary( const LHCb::RecSummary::DataTypes info,
                     const ChargedProtoANNPIDCommonBase<PBASE> * parent )
         : m_info( info ), m_parent( parent ) { }
     private:
-      const int m_info;   ///< The info variable to access
-      const ChargedProtoANNPIDCommonBase<PBASE> * m_parent; ///< Pointer to parent
+      const LHCb::RecSummary::DataTypes m_info;   ///< The info variable to access
+      const ChargedProtoANNPIDCommonBase<PBASE> * m_parent = nullptr; ///< Pointer to parent
     public:
       virtual double value( const LHCb::ProtoParticle * ) const override
       {
@@ -513,7 +516,7 @@ namespace ANNGlobalPID
                  false );
       }
       /// Cut description
-      const std::string description() const { return m_desc; }
+      const std::string description() const noexcept { return m_desc; }
     public:
       /// Overload output to ostream
       friend inline std::ostream& operator << ( std::ostream& s, const Cut & cut )
@@ -523,7 +526,7 @@ namespace ANNGlobalPID
       { return s << "'" << cut->description() << "'" ; }
     private:
       /// Set the delimitor enum from a string
-      bool setDelim( const std::string & delim )
+      bool setDelim( const std::string & delim ) noexcept
       {
         bool ok = false;
         if      ( ">"  == delim ) { m_delim = GT; ok = true; }
@@ -569,15 +572,15 @@ namespace ANNGlobalPID
       virtual ~ANNHelper() { }
     public:
       /// Are we configured properly
-      inline bool isOK() const { return m_ok; }
+      inline bool isOK() const noexcept { return m_ok; }
       /// Set the OK flag
-      void setOK( const bool ok ) { m_ok = ok; }
+      void setOK( const bool ok ) noexcept { m_ok = ok; }
       /// Compute the ANN output for the given ProtoParticle
       virtual double getOutput( const LHCb::ProtoParticle * proto ) const = 0;
       /// Number of inputs to the ANN
-      inline unsigned int nInputs() const { return m_inputs.size(); }
+      inline unsigned int nInputs() const noexcept { return m_inputs.size(); }
       /// Access the inputs
-      const Inputs& inputs() const { return m_inputs; }
+      const Inputs& inputs() const noexcept { return m_inputs; }
     private:
       /// The list of inputs for this network
       Inputs m_inputs;
@@ -731,16 +734,16 @@ namespace ANNGlobalPID
                  const ChargedProtoANNPIDCommonBase<PBASE> * parent );
 
       /// Access the Network object
-      inline const ANNHelper * netHelper() const { return m_netHelper.get(); }
+      inline const ANNHelper * netHelper() const noexcept { return m_netHelper.get(); }
 
       /// Status
-      inline bool isOK() const { return netHelper() && netHelper()->isOK(); }
+      inline bool isOK() const noexcept { return netHelper() && netHelper()->isOK(); }
 
       /// Access the track type
-      inline const std::string& trackType() const { return m_trackType; }
+      inline const std::string& trackType() const noexcept { return m_trackType; }
 
       /// Access the particle type
-      inline const std::string& particleType() const { return m_particleType; }
+      inline const std::string& particleType() const noexcept { return m_particleType; }
 
       /// Check a ProtoParticle against the configured cuts
       bool passCuts( const LHCb::ProtoParticle * proto ) const;

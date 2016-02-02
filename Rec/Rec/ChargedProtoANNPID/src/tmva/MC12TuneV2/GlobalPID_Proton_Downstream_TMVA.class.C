@@ -1959,10 +1959,10 @@ inline void ReadProton_Downstream_TMVA::Initialize()
 
 inline double ReadProton_Downstream_TMVA::GetMvaValue__( const std::vector<double>& inputValues ) const
 {
-  if (inputValues.size() != (unsigned int)fLayerSize[0]-1) {
-    std::cout << "Input vector needs to be of size " << fLayerSize[0]-1 << std::endl;
-    return 0;
-  }
+  // if (inputValues.size() != (unsigned int)fLayerSize[0]-1) {
+  //   std::cout << "Input vector needs to be of size " << fLayerSize[0]-1 << std::endl;
+  //   return 0;
+  // }
 
   for (int l=0; l<fLayers; l++)
     for (int i=0; i<fLayerSize[l]; i++) fWeights[l][i]=0;
@@ -1995,11 +1995,15 @@ inline double ReadProton_Downstream_TMVA::GetMvaValue__( const std::vector<doubl
 
 inline double ReadProton_Downstream_TMVA::ActivationFnc(double x) const {
   // hyperbolic tan
-  return tanh(x);
+  //return tanh(x);
+  const auto exp_xx = vdt::fast_exp( 2.0 * x );
+  return ( exp_xx - 1.0 ) / ( exp_xx + 1.0 );
 }
+
 inline double ReadProton_Downstream_TMVA::OutputActivationFnc(double x) const {
   // sigmoid
-  return 1.0/(1.0+exp(-x));
+  //return 1.0/(1.0+exp(-x));
+  return 1.0/(1.0+vdt::fast_exp(-x));
 }
 
 // Clean up
@@ -2009,18 +2013,20 @@ inline void ReadProton_Downstream_TMVA::Clear()
   delete[] fWeights[1];
   delete[] fWeights[2];
 }
+
 inline double ReadProton_Downstream_TMVA::GetMvaValue( const std::vector<double>& inputValues ) const
 {
   // classifier response value
   double retval = 0;
 
-  // classifier response, sanity check first
-  if (!IsStatusClean()) {
-    std::cout << "Problem in class \"" << fClassName << "\": cannot return classifier response"
-              << " because status is dirty" << std::endl;
-    retval = 0;
-  }
-  else {
+  // // classifier response, sanity check first
+  // if (!IsStatusClean()) {
+  //   std::cout << "Problem in class \"" << fClassName << "\": cannot return classifier response"
+  //             << " because status is dirty" << std::endl;
+  //   retval = 0;
+  // }
+  // else 
+  {
     static std::vector<double> iV;
     iV.clear();
     if (IsNormalised()) {
@@ -2034,9 +2040,8 @@ inline double ReadProton_Downstream_TMVA::GetMvaValue( const std::vector<double>
       retval = GetMvaValue__( iV );
     }
     else {
-      int ivar = 0;
       for (std::vector<double>::const_iterator varIt = inputValues.begin();
-           varIt != inputValues.end(); varIt++, ivar++) {
+           varIt != inputValues.end(); varIt++) {
         iV.push_back(*varIt);
       }
       Transform( iV, -1 );

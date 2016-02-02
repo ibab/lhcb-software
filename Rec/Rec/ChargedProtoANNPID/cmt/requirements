@@ -19,6 +19,7 @@ use  MCEvent             v*   Event
 use  RecEvent            v*   Event
 use  MCEvent             v*   Event
 use  RecInterfaces       v*   Rec
+use  vdt                 v*   LCG_Interfaces
 
 private
 macro_append Boost_linkopts " $(Boost_linkopts_regex) "

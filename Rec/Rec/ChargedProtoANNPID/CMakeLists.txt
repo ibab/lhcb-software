@@ -18,11 +18,12 @@ gaudi_depends_on_subdirs(Event/MCEvent
 #endif()
 
 find_package(ROOT COMPONENTS TMVA)
+find_package(VDT)
 
 gaudi_add_module(ChargedProtoANNPID
                  src/*.cpp
-                 INCLUDE_DIRS ROOT Rec/RecInterfaces
-                 LINK_LIBRARIES ROOT MCEvent PhysEvent RecEvent GaudiAlgLib)
+                 INCLUDE_DIRS ROOT VDT Rec/RecInterfaces
+                 LINK_LIBRARIES ROOT VDT MCEvent PhysEvent RecEvent GaudiAlgLib)
 
 #if(NEUROBAYESEXPERT_FOUND)
 #  target_link_libraries(ChargedProtoANNPID ${NEUROBAYESEXPERT_LIBRARIES})

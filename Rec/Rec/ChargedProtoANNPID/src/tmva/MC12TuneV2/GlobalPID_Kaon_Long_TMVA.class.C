@@ -2356,33 +2356,32 @@ inline void ReadKaon_Long_TMVA::Initialize()
 
 inline double ReadKaon_Long_TMVA::GetMvaValue__( const std::vector<double>& inputValues ) const
 {
-  if (inputValues.size() != (unsigned int)fLayerSize[0]-1) {
-    std::cout << "Input vector needs to be of size " << fLayerSize[0]-1 << std::endl;
-    return 0;
-  }
-
+  // I know this will always be OK, by construction, so disable
+  //if (inputValues.size() != (unsigned int)fLayerSize[0]-1) {
+  //  std::cout << "Input vector needs to be of size " << fLayerSize[0]-1 << std::endl;
+  //  return 0;
+  //}
+  
   for (int l=0; l<fLayers; l++)
     for (int i=0; i<fLayerSize[l]; i++) fWeights[l][i]=0;
-
+  
   for (int l=0; l<fLayers-1; l++)
     fWeights[l][fLayerSize[l]-1]=1;
 
   for (int i=0; i<fLayerSize[0]-1; i++)
     fWeights[0][i]=inputValues[i];
-
+  
   // layer 0 to 1
   for (int o=0; o<fLayerSize[1]-1; o++) {
     for (int i=0; i<fLayerSize[0]; i++) {
-      double inputVal = fWeightMatrix0to1[o][i] * fWeights[0][i];
-      fWeights[1][o] += inputVal;
+      fWeights[1][o] += fWeightMatrix0to1[o][i] * fWeights[0][i];
     }
     fWeights[1][o] = ActivationFnc(fWeights[1][o]);
   }
   // layer 1 to 2
   for (int o=0; o<fLayerSize[2]; o++) {
     for (int i=0; i<fLayerSize[1]; i++) {
-      double inputVal = fWeightMatrix1to2[o][i] * fWeights[1][i];
-      fWeights[2][o] += inputVal;
+      fWeights[2][o] += fWeightMatrix1to2[o][i] * fWeights[1][i];
     }
     fWeights[2][o] = OutputActivationFnc(fWeights[2][o]);
   }
@@ -2392,11 +2391,15 @@ inline double ReadKaon_Long_TMVA::GetMvaValue__( const std::vector<double>& inpu
 
 inline double ReadKaon_Long_TMVA::ActivationFnc(double x) const {
   // hyperbolic tan
-  return tanh(x);
+  //return tanh(x);
+  const auto exp_xx = vdt::fast_exp( 2.0 * x );
+  return ( exp_xx - 1.0 ) / ( exp_xx + 1.0 );
 }
+
 inline double ReadKaon_Long_TMVA::OutputActivationFnc(double x) const {
   // sigmoid
-  return 1.0/(1.0+exp(-x));
+  //return 1.0/(1.0+exp(-x));
+  return 1.0/(1.0+vdt::fast_exp(-x));
 }
 
 // Clean up
@@ -2406,18 +2409,21 @@ inline void ReadKaon_Long_TMVA::Clear()
   delete[] fWeights[1];
   delete[] fWeights[2];
 }
+
 inline double ReadKaon_Long_TMVA::GetMvaValue( const std::vector<double>& inputValues ) const
 {
   // classifier response value
   double retval = 0;
 
-  // classifier response, sanity check first
-  if (!IsStatusClean()) {
-    std::cout << "Problem in class \"" << fClassName << "\": cannot return classifier response"
-              << " because status is dirty" << std::endl;
-    retval = 0;
-  }
-  else {
+  // Will always be OK
+  // // classifier response, sanity check first
+  // if (!IsStatusClean()) {
+  //   std::cout << "Problem in class \"" << fClassName << "\": cannot return classifier response"
+  //             << " because status is dirty" << std::endl;
+  //   retval = 0;
+  // }
+  // else
+  {
     static std::vector<double> iV;
     iV.clear();
     if (IsNormalised()) {
@@ -2431,9 +2437,8 @@ inline double ReadKaon_Long_TMVA::GetMvaValue( const std::vector<double>& inputV
       retval = GetMvaValue__( iV );
     }
     else {
-      int ivar = 0;
       for (std::vector<double>::const_iterator varIt = inputValues.begin();
-           varIt != inputValues.end(); varIt++, ivar++) {
+           varIt != inputValues.end(); varIt++ ) {
         iV.push_back(*varIt);
       }
       Transform( iV, -1 );
