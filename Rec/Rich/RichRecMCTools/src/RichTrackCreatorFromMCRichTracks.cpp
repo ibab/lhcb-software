@@ -27,27 +27,19 @@ TrackCreatorFromMCRichTracks::
 TrackCreatorFromMCRichTracks( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : RichTrackCreatorBase   ( type, name, parent ),
-    m_mcrTracks            ( 0 ),
-    m_massHypoRings        ( 0 ),
-    m_segMaker             ( 0 ),
-    m_signal               ( 0 ),
+  : TrackCreatorBase       ( type, name, parent ),
     m_mcrTracksLocation    ( LHCb::MCRichTrackLocation::Default ),
     m_trSegToolNickName    ( "RichTrSegMakerFromMCRichTracks"   ),
-    m_allDone              ( false ),
-    m_buildHypoRings       ( false ),
-    m_fakeRecoTracks       ( true  ),
-    m_fakeTrLoc            ( "Rec/Rich/MCFakedTracks" ),
-    m_fakeTracks           ( 0 )
+    m_fakeTrLoc            ( "Rec/Rich/MCFakedTracks" )
 {
   // declare interface for this tool
   declareInterface<ITrackCreator>(this);
 
   // job options
   declareProperty( "TracksLocation",           m_mcrTracksLocation  );
-  declareProperty( "BuildMassHypothesisRings", m_buildHypoRings     );
+  declareProperty( "BuildMassHypothesisRings", m_buildHypoRings = false );
   declareProperty( "TrackSegmentTool",         m_trSegToolNickName  );
-  declareProperty( "FakeRecoTracks",           m_fakeRecoTracks     );
+  declareProperty( "FakeRecoTracks",           m_fakeRecoTracks = true  );
   declareProperty( "TrackLocation",            m_fakeTrLoc          );
 }
 
@@ -187,7 +179,7 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
   if ( !mcrTrack )
   {
     Warning( "Input data object is not of type 'MCRichTrack'" );
-    return NULL;
+    return nullptr;
   }
 
   // Pointer to underlying MCParticle
@@ -195,7 +187,7 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
   if ( !mcPart )
   {
     Warning( "MCRichTrack has null MCParticle reference" );
-    return NULL;
+    return nullptr;
   }
 
   // flag the tool as having been used this event
@@ -219,7 +211,7 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
   }
 
   // Is track a usable type
-  if ( !Rich::Rec::Track::isUsable(trType) ) return NULL;
+  if ( !Rich::Rec::Track::isUsable(trType) ) return nullptr;
 
   // Get reference to track stats object
   TrackCount & tkCount = trackStats().trackStats(trType,trUnique);
@@ -244,7 +236,7 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
     }
 
     // New track object pointer
-    LHCb::RichRecTrack * newTrack = NULL;
+    LHCb::RichRecTrack * newTrack = nullptr;
 
     // Form the RichRecSegments for this track
     std::vector<LHCb::RichTrackSegment*> segments;
@@ -309,7 +301,7 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
                         << " rejected : Has no RICH info" << endmsg;
             }
             delete newSegment;
-            newSegment = NULL;
+            newSegment = nullptr;
           }
 
         }
@@ -321,7 +313,7 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
                       << " rejected : Failed to project to detector plane" << endmsg;
           }
           delete newSegment;
-          newSegment = NULL;
+          newSegment = nullptr;
         }
 
       } // end loop over RichTrackSegments
@@ -367,7 +359,7 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
       else
       {
         delete newTrack;
-        newTrack = NULL;
+        newTrack = nullptr;
       }
 
     }
@@ -386,7 +378,7 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
 
 void TrackCreatorFromMCRichTracks::InitNewEvent()
 {
-  RichTrackCreatorBase::InitNewEvent();
+  TrackCreatorBase::InitNewEvent();
   m_allDone    = false;
   m_mcrTracks  = 0;
   m_fakeTracks = 0;
@@ -394,7 +386,7 @@ void TrackCreatorFromMCRichTracks::InitNewEvent()
 
 void TrackCreatorFromMCRichTracks::FinishEvent()
 {
-  RichTrackCreatorBase::FinishEvent();
+  TrackCreatorBase::FinishEvent();
   if ( m_fakeTracks )
   {
     debug() << "Created " << m_fakeTracks->size() << " fake Tracks at "

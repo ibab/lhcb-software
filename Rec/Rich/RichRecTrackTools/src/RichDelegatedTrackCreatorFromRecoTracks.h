@@ -85,20 +85,20 @@ namespace Rich
     private: // data
 
       /// Pointer to Tracks
-      mutable LHCb::Tracks * m_trTracks;
+      mutable LHCb::Tracks * m_trTracks = nullptr;
 
       /// Input location of Tracks in TES
       std::string m_trTracksLocation;
 
       /// Flag to signify all tracks have been formed for current event
-      mutable bool m_allDone;
+      mutable bool m_allDone = false;
 
-      typedef std::vector<std::string> ToolList;
+      using ToolList = std::vector<std::string>;
       /// Tool data from job options
       ToolList m_names;
 
       /// mapping type between track type and  RichTrackCreator tool pointer
-      typedef std::vector< const ITrackCreator* > TrackToPnt;
+      using TrackToPnt = std::vector< const ITrackCreator* >;
       TrackToPnt m_tkToPtn;
 
       /// Flag to turn on the creation of the RichRecRings for the segment mass hypotheses

@@ -33,7 +33,7 @@ namespace Rich
      */
     //-----------------------------------------------------------------------------
 
-    class TrackSelector : public RichTrackSelectorBase
+    class TrackSelector : public TrackSelectorBase
     {
 
     public: // Gaudi methods

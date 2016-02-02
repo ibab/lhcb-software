@@ -56,7 +56,7 @@ namespace Rich
   {
     namespace MC
     {
-      class RichParticleSearchMain : public RichRecTupleAlgBase {
+      class RichParticleSearchMain : public TupleAlgBase {
       public:
 
         /// Standard constructor

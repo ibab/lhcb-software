@@ -20,7 +20,7 @@ using namespace Rich::Rec;
 DECLARE_TOOL_FACTORY( TrackCreatorFromRecoTracks )
 
 // Standard constructor
-  TrackCreatorFromRecoTracks::
+TrackCreatorFromRecoTracks::
 TrackCreatorFromRecoTracks( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
@@ -406,7 +406,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
 
 void TrackCreatorFromRecoTracks::InitNewEvent()
 {
-  RichTrackCreatorBase::InitNewEvent();
+  TrackCreatorBase::InitNewEvent();
   m_allDone  = false;
   m_trTracks = nullptr;
 }

@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromSignalRawBuffer
  *
- *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRawBuffer.h,v 1.9 2008-03-25 16:46:34 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
@@ -91,10 +88,10 @@ namespace Rich
       private: // data
 
         /// General MC truth tool
-        const Rich::MC::IMCTruthTool * m_mcTool;
+        const Rich::MC::IMCTruthTool * m_mcTool = nullptr;
 
         /// Reconstruction MC truth tool
-        const Rich::Rec::MC::IMCTruthTool * m_mcRecTool;
+        const Rich::Rec::MC::IMCTruthTool * m_mcRecTool = nullptr;
 
         /** Flag to turn on/off the filtering of pixels that do not
             associated to any reconstructed RichRecTrack */
@@ -113,7 +110,7 @@ namespace Rich
         mutable TrackedMCPList m_trackedMCPs;
 
         // flag to indicated tracked MCParticle list has been made for current event
-        mutable bool m_trackMCPsDone;
+        mutable bool m_trackMCPsDone = false;
 
       };
 

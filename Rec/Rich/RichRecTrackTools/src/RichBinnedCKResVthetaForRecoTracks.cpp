@@ -156,7 +156,7 @@ BinnedCKResVthetaForRecoTracks::ckThetaResolution_Imp( LHCb::RichRecSegment * se
 {
 
   // Reference to track ID object
-  const RichTrackID & tkID = segment->richRecTrack()->trackID();
+  const auto & tkID = segment->richRecTrack()->trackID();
 
   res = 0;
   bool OK(false);
@@ -167,10 +167,10 @@ BinnedCKResVthetaForRecoTracks::ckThetaResolution_Imp( LHCb::RichRecSegment * se
   {
 
     // radiator type
-    const Rich::RadiatorType rad = segment->trackSegment().radiator();
+    const auto rad = segment->trackSegment().radiator();
 
     // track type
-    const Rich::Rec::Track::Type type = tkID.trackType();
+    const auto type = tkID.trackType();
 
     // error data
     const BinData & theerr = m_theerr[rad][type];
@@ -187,8 +187,8 @@ BinnedCKResVthetaForRecoTracks::ckThetaResolution_Imp( LHCb::RichRecSegment * se
     }
 
     // search the bins
-    BinEdges::const_reverse_iterator iBins = (m_binEdges[rad]).rbegin();
-    BinData::const_reverse_iterator  iData = theerr.rbegin();
+    auto iBins = (m_binEdges[rad]).rbegin();
+    auto iData = theerr.rbegin();
     for ( ; iBins != (m_binEdges[rad]).rend() && iData != theerr.rend();
           ++iBins, ++iData )
     {

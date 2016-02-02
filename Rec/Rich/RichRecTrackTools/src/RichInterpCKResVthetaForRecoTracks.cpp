@@ -24,8 +24,7 @@ InterpCKResVthetaForRecoTracks::
 InterpCKResVthetaForRecoTracks ( const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent )
-  : ToolBase   ( type, name, parent ),
-    m_ckAngle  ( NULL )
+  : ToolBase   ( type, name, parent )
 {
 
   declareInterface<ICherenkovResolution>(this);
@@ -94,7 +93,7 @@ InterpCKResVthetaForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segmen
     {
 
       // Reference to track ID object
-      const RichTrackID & tkID = segment->richRecTrack()->trackID();
+      const auto & tkID = segment->richRecTrack()->trackID();
 
       // Check track parent type is Track
       if ( Rich::Rec::TrackParent::Track != tkID.parentType() )
@@ -103,10 +102,10 @@ InterpCKResVthetaForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segmen
       }
 
       // track type
-      const Rich::Rec::Track::Type type = tkID.trackType();
+      const auto type = tkID.trackType();
 
       // which radiator
-      const Rich::RadiatorType rad = segment->trackSegment().radiator();
+      const auto rad = segment->trackSegment().radiator();
 
       // compute the res
       res = getInterp(rad,type)->value(thetaExp);
@@ -127,14 +126,10 @@ InterpCKResVthetaForRecoTracks::getInterp( const Rich::RadiatorType rad,
                                            const Rich::Rec::Track::Type track ) const
 {
   const InterKey key(rad,track);
-  Interps::const_iterator i = m_ckRes.find(key);
+  const auto i = m_ckRes.find(key);
   if ( i == m_ckRes.end() )
   {
-    if ( msgLevel(MSG::VERBOSE) )
-    {
-      verbose() << "Found CK resolution data for " << rad << " " << track << endmsg;
-      //verbose() << " -> " << m_joData[key] << endmsg;
-    }
+    _ri_verbo << "Found CK resolution data for " << rad << " " << track << endmsg;
     m_ckRes[key] = new Rich1DTabFunc(m_joData[key]);
     if ( !m_ckRes[key]->valid() )
     {

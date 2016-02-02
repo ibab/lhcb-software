@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-02-02 - Chris Jones
+ - Adapt to removal of old backwards compatibility typedefs.
+
 ! 2016-01-29 - Chris Jones
  - A few more clean ups
 

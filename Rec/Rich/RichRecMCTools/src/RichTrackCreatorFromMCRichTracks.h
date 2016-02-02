@@ -105,16 +105,16 @@ namespace Rich
       private: // data
 
         /// Pointer to MCRichTracks
-        mutable LHCb::MCRichTracks * m_mcrTracks;
+        mutable LHCb::MCRichTracks * m_mcrTracks = nullptr;
 
         /// Pointer to ring creator
-        const IMassHypothesisRingCreator * m_massHypoRings;
+        const IMassHypothesisRingCreator * m_massHypoRings = nullptr;
 
         /// Pointer to track segment maker
-        const ITrSegMaker * m_segMaker;
+        const ITrSegMaker * m_segMaker = nullptr;
 
         /// Pointer to RichExpectedTrackSignal interface
-        const IExpectedTrackSignal * m_signal;
+        const IExpectedTrackSignal * m_signal = nullptr;
 
         /// Input location of MCRichTracks in TES
         std::string m_mcrTracksLocation;
@@ -123,7 +123,7 @@ namespace Rich
         std::string m_trSegToolNickName;
 
         // Flag to signify all tracks have been formed for current event
-        mutable bool m_allDone;
+        mutable bool m_allDone = false;
 
         /// Flag to turn on the creation of the RichRecRings for the segment mass hypotheses
         bool m_buildHypoRings;
@@ -135,7 +135,7 @@ namespace Rich
         std::string m_fakeTrLoc;
 
         /// Pointer to faked Tracks
-        mutable LHCb::Tracks * m_fakeTracks;
+        mutable LHCb::Tracks * m_fakeTracks = nullptr;
 
         /// Map linking MCRichTracks to fake reconstructed tracks
         mutable Rich::Map<const LHCb::MCRichTrack*,const LHCb::Track*> m_mcToFakeMap;

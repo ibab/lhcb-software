@@ -24,8 +24,7 @@ PixelCreatorFromCheatedRawBuffer::
 PixelCreatorFromCheatedRawBuffer( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : Rich::Rec::PixelCreatorBase ( type, name, parent ),
-    m_mcTool                    ( NULL               ) { }
+  : Rich::Rec::PixelCreatorBase ( type, name, parent ) { }
 
 StatusCode PixelCreatorFromCheatedRawBuffer::initialize()
 {
@@ -43,7 +42,7 @@ LHCb::RichRecPixel *
 PixelCreatorFromCheatedRawBuffer::buildPixel( const Rich::HPDPixelCluster& cluster ) const
 {
   // First run base class method to produce reconstructed pixel
-  LHCb::RichRecPixel * pixel = Rich::Rec::PixelCreatorBase::buildPixel(cluster);
+  auto * pixel = Rich::Rec::PixelCreatorBase::buildPixel(cluster);
 
   // Now, update coords using MC information
   addMCInfo( pixel );
@@ -56,7 +55,7 @@ LHCb::RichRecPixel *
 PixelCreatorFromCheatedRawBuffer::buildPixel( const LHCb::RichSmartID& id ) const
 {
   // First run base class method to produce reconstructed pixel
-  LHCb::RichRecPixel * pixel = Rich::Rec::PixelCreatorBase::buildPixel(id);
+  auto * pixel = Rich::Rec::PixelCreatorBase::buildPixel(id);
 
   // Now, update coords using MC information
   addMCInfo( pixel );
@@ -74,11 +73,10 @@ void PixelCreatorFromCheatedRawBuffer::addMCInfo( LHCb::RichRecPixel * pixel ) c
     m_mcTool->mcRichHits( pixel->hpdPixelCluster(), mcRichHits );
 
     // Loop over photons
-    for (  SmartRefVector<LHCb::MCRichHit>::const_iterator iHit = mcRichHits.begin();
-           iHit != mcRichHits.end(); ++iHit )
+    for ( const auto & hit : mcRichHits )
     {
       // Is this a true CK photon ?
-      const LHCb::MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton( *iHit );
+      const auto * mcPhot = m_mcTool->mcOpticalPhoton( hit );
       if ( mcPhot )
       {
         // Update coordinates with cheated info
@@ -86,11 +84,8 @@ void PixelCreatorFromCheatedRawBuffer::addMCInfo( LHCb::RichRecPixel * pixel ) c
         pixel->setLocalPosition( smartIDTool()->globalToPDPanel(pixel->globalPosition()) );
         // set the corrected local positions
         geomTool()->setCorrLocalPos(pixel,pixel->hpdPixelCluster().rich());
-        if ( msgLevel(MSG::VERBOSE) )
-        {
-          verbose() << "Pixel " << pixel->hpdPixelCluster()
-                    << " MC cheated global pos " << pixel->globalPosition() << endmsg;
-        }
+        _ri_verbo << "Pixel " << pixel->hpdPixelCluster()
+                  << " MC cheated global pos " << pixel->globalPosition() << endmsg;
         // break out of loop (i.e. ignore any other associated hits)
         break;
       } // true photon

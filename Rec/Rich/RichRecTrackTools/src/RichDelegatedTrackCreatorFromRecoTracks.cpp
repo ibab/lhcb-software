@@ -16,16 +16,15 @@
 using namespace Rich::Rec;
 
 //---------------------------------------------------------------------------------------------
+
 DECLARE_TOOL_FACTORY( DelegatedTrackCreatorFromRecoTracks )
 
 // Standard constructor
-  DelegatedTrackCreatorFromRecoTracks::
+DelegatedTrackCreatorFromRecoTracks::
 DelegatedTrackCreatorFromRecoTracks( const std::string& type,
                                      const std::string& name,
                                      const IInterface* parent )
   : TrackCreatorBase ( type, name, parent ),
-    m_trTracks       ( NULL  ),
-    m_allDone        ( false ),
     m_tkToPtn        ( Rich::Rec::Track::NTrTypes, 0 )
 {
 
@@ -167,7 +166,7 @@ DelegatedTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) co
 
 void DelegatedTrackCreatorFromRecoTracks::InitNewEvent()
 {
-  RichTrackCreatorBase::InitNewEvent();
+  TrackCreatorBase::InitNewEvent();
   m_allDone  = false;
-  m_trTracks = NULL;
+  m_trTracks = nullptr;
 }

@@ -50,14 +50,14 @@ StatusCode MCTrueTrackSelector::initialize()
 bool MCTrueTrackSelector::trackSelected( const LHCb::Track * track ) const
 {
   const auto * mcp = m_richRecMCTruth->mcParticle(track,m_weight);
-  return ( mcp ? RichTrackSelectorBase::trackSelected(track) : false );
+  return ( mcp ? TrackSelectorBase::trackSelected(track) : false );
 }
 
 // Test it the given RichRecTrack is selected
 bool MCTrueTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
 {
   const auto * mcp = m_richRecMCTruth->mcParticle(track,m_weight);
-  return ( mcp ? RichTrackSelectorBase::trackSelected(track) : false );
+  return ( mcp ? TrackSelectorBase::trackSelected(track) : false );
 }
 
 //-----------------------------------------------------------------------------

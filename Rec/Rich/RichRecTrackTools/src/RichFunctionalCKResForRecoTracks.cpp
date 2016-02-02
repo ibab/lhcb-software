@@ -109,7 +109,7 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
     double res2 = 0;
 
     // track segment shortcut
-    const LHCb::RichTrackSegment & tkSeg = segment->trackSegment();
+    const auto & tkSeg = segment->trackSegment();
 
     // momentum for this segment, in GeV units
     const double ptot = std::sqrt(tkSeg.bestMomentum().Mag2()) / GeV;
@@ -117,13 +117,13 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
     {
 
       // Reference to track ID object
-      const RichTrackID & tkID = segment->richRecTrack()->trackID();
+      const auto & tkID = segment->richRecTrack()->trackID();
 
       // track type
-      const Rich::Rec::Track::Type tkType = tkID.trackType();
+      const auto tkType = tkID.trackType();
 
       // radiator
-      const Rich::RadiatorType rad = tkSeg.radiator();
+      const auto rad = tkSeg.radiator();
 
       //-------------------------------------------------------------------------------
       // asymtopic error

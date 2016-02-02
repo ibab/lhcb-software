@@ -4,9 +4,6 @@
  *
  *  Header file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromCheatedRawBuffer
  *
- *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRawBuffer.h,v 1.7 2008-02-20 16:10:33 jonrob Exp $
- *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
@@ -78,7 +75,7 @@ namespace Rich
       private: // data
 
         /// MC Truth tool
-        const Rich::MC::IMCTruthTool * m_mcTool;
+        const Rich::MC::IMCTruthTool * m_mcTool = nullptr;
 
       };
 

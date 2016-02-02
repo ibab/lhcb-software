@@ -83,7 +83,7 @@ namespace Rich
     private:  // Private data
 
       /// Pointer to RichCherenkovAngle interface
-      const ICherenkovAngle * m_ckAngle;
+      const ICherenkovAngle * m_ckAngle = nullptr;
 
       /// type for map of interpolators
       typedef std::pair<const Rich::RadiatorType, const Rich::Rec::Track::Type> InterKey;

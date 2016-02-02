@@ -4,6 +4,9 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2016-02-02 - Chris Jones
+ - Adapt to removal of old backwards compatibility typedefs.
+
 !========================= RichRecMCTools v2r33 2016-01-28 =========================
 ! 2016-01-21 - Chris Jones
  - Add an option to TruePhotonEmissionPoint to allow the computation of an
