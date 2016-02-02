@@ -758,10 +758,8 @@ void  TRANSFER_NS::net_cancel(NET* net)
 { if ( net ) net->cancel();                                        }
 
 #ifdef HAVE_ASIO_IPC
-#define TRANSFERTEST_SEND test_asio_ipc_net_send
-#define TRANSFERTEST_RECV test_asio_ipc_net_recv
+#define TRANSFERTEST(x) test_asio_ipc_net_##x
 #else
-#define TRANSFERTEST_SEND test_asio_net_send
-#define TRANSFERTEST_RECV test_asio_net_recv
+#define TRANSFERTEST(x) test_asio_net_##x
 #endif
 #include "NET/TransferTest.h"

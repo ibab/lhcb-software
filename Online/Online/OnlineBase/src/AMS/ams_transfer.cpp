@@ -97,6 +97,5 @@ void AMS::net_cancel(NET* net)
 
 
 using namespace AMS;
-#define TRANSFERTEST_SEND test_socket_ams_send
-#define TRANSFERTEST_RECV test_socket_ams_recv
+#define TRANSFERTEST(x) test_socket_ams_##x
 #include "NET/TransferTest.h"

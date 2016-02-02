@@ -122,24 +122,35 @@ namespace  {
 
   //----------------------------------------------------------------------------------
   void header_fill(netheader_t& header, const char* nam,unsigned int hash_val, size_t siz, int fac, int mtype, const void *buf)    {
-    header.magic    = NET_MAGIC;
+#if 0
+    header.magic    = htonl(NET_MAGIC);
     header.size     = htonl(siz);
     header.facility = htonl(fac);
     header.msg_type = htonl(mtype);
     header.hash     = htonl(hash_val);
-    strncpy(header.name,nam,sizeof(header.name));
+#endif
+    header.magic    = NET_MAGIC;
+    header.size     = siz;
+    header.facility = fac;
+    header.msg_type = mtype;
+    header.hash     = hash_val;
+    ::strncpy(header.name,nam,sizeof(header.name));
     header.name[sizeof(header.name)-1] = 0;
     if (buf != 0 && siz>0)  {
       ::memcpy(&header+1,buf,siz);
     }
   }
   //----------------------------------------------------------------------------------
+  void header_net_to_host (netheader_t&)  {}
+#if 0
   void header_net_to_host (netheader_t& header)  {
+    header.magic    = ntohl(NET_MAGIC);
     header.hash     = ntohl(header.hash);
     header.size     = ntohl(header.size);
     header.msg_type = ntohl(header.msg_type);
     header.facility = ntohl(header.facility);
   }
+#endif
 }
 
 //----------------------------------------------------------------------------------
@@ -662,6 +673,5 @@ void DataTransfer::net_unlock(NET* net, void* lock)
 void DataTransfer::net_cancel(NET* net)
 { if ( net ) net->cancel();                                       }
 
-#define TRANSFERTEST_SEND test_socket_net_send
-#define TRANSFERTEST_RECV test_socket_net_recv
+#define TRANSFERTEST(x) test_socket_net_##x
 #include "NET/TransferTest.h"

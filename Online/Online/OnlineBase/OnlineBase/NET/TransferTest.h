@@ -27,7 +27,7 @@
 namespace {
 
   void help_send() {
-    ::printf("test_zmq_net_send -opt [-opt]\n");
+    ::printf("test_<type>_net_send -opt [-opt]\n");
     ::printf("    -n<ame>=<process-name>     Sender/own process name     \n");
     ::printf("    -ta<rget>=<process-name>   Receiver's process name     \n");
     ::printf("    -tu<rns>=<number>          Number of receive/send turns\n");
@@ -37,11 +37,12 @@ namespace {
   }
 
   void help_recv() {
-    ::printf("test_zmq_net_recv -opt [-opt]\n");
+    ::printf("test_<type>_net_recv -opt [-opt]\n");
     ::printf("    -b<ounce>                  Run in message bounce mode) \n");
     ::printf("    -n<ame>=<process-name>     Receiver's process name     \n");
     ::printf("    -th<reeads>=<number>       Number of threads for underlying implementation\n");
   }
+
   struct NetSensor  {
     std::vector<unsigned char> m_buffer;
     bool  m_bounce;
@@ -99,9 +100,31 @@ namespace {
     const char* add = inet_ntoa(*(in_addr*)h->h_addr_list[0]);
     return add;
   }
+#define Offseto
+  template <typename A, typename B> int offset_of(const A* obj, const B* member)  {
+    const unsigned char* m = (const unsigned char*)member;
+    const unsigned char* o = (const unsigned char*)obj;
+    return int(m-o);
+  }
 }
 
-extern "C" int TRANSFERTEST_SEND(int argc, char **argv)  {
+extern "C" int TRANSFERTEST(print_net_header) (int, char**)   {
+  netheader_t * hdr = new netheader_t();
+  ::printf("+-------------------------------------------------------------------------+\n");
+  ::printf("|        %-60s     |\n",__func__);
+  ::printf("| netheader_t: size:%d bytes.\n",int(sizeof(netheader_t)));
+  ::printf("| netheader_t: offset 'size':      %-32d\n", offset_of(hdr,&hdr->size) );
+  ::printf("| netheader_t: offset 'msg_type':  %-32d\n", offset_of(hdr,&hdr->msg_type) );
+  ::printf("| netheader_t: offset 'facility':  %-32d\n", offset_of(hdr,&hdr->facility) );
+  ::printf("| netheader_t: offset 'magic':     %-32d\n", offset_of(hdr,&hdr->magic) );
+  ::printf("| netheader_t: offset 'hash':      %-32d\n", offset_of(hdr,&hdr->hash) );
+  ::printf("| netheader_t: offset 'name':      %-32d\n", offset_of(hdr,hdr->name) );
+  ::printf("+-------------------------------------------------------------------------+\n");
+  ::lib_rtl_sleep(999999);
+  return 1;
+}
+
+extern "C" int TRANSFERTEST(send) (int argc, char **argv)  {
   RTL::CLI cli(argc, argv, help_send);
   std::string target, name, proc, to;
   int count=1, length=256, loop=100000, num_thread=1;
@@ -161,7 +184,7 @@ extern "C" int TRANSFERTEST_SEND(int argc, char **argv)  {
   return 0x1;
 }
 
-extern "C" int TRANSFERTEST_RECV (int argc, char **argv)  {
+extern "C" int TRANSFERTEST(recv) (int argc, char **argv)  {
   RTL::CLI cli(argc, argv, help_recv);
   std::string proc;
   int run = 1, num_thread = 3, bounce = cli.getopt("bounce",1) != 0;
