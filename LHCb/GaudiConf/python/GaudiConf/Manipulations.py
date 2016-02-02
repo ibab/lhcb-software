@@ -15,6 +15,7 @@ or same with postConfForAll...
 # Copied from GaudiConf, IOHelper. Manipulators of configurables.
 import Gaudi.Configuration as GaudiConfigurables
 import Configurables
+from GaudiKernel.Configurable import Configurable
 
 def fullNameConfigurables():
     """
@@ -89,110 +90,85 @@ def removeConfigurables(conf_list):
         del allConfigurables[k]
 
 
-# Copied from HLT Conf, setting given configurables with a dictionary:
-
-def forAllConf( head=None, prop_value_dict={}, types=[], force=False, tool_value_dict={} , recurseToTools=False) :
-    """ Find all configurable algorithms and set certain properties
-
-    head: can be a sequence or a list, or a configurable to start with.
-    if None is given, allConfigurables plus ApplicationMgr().TopAlg will be used
-    prop_value_dict: A dictionary of Property: Value, e.g. {'OutputLevel':3}
-    types: A list of types to check against, e.g. ['FilterDesktop','CombineParticles','DVAlgorithm'...], default empty list, doesn't check for types
-    force: Overwrite properties even if they are already set, default False
-    tool_value_dict dictionary of dictionaries, first add tools then set their properties.
-
-    To obtain all configurables try something like:
-    forAllConf(ApplicationMgr().TopAlg,{'OutputLevel':3})
-    or:
-    forAllConf(fullNameConfigurables().keys(),{'OutputLevel':3})
-    or:
-    forAllConf(head=None, prop_value_dict={'OutputLevel':3})
-    (last if you want to find all configurable which exist during a
-    postconfig action, for example)
+def recurseConfigurables(func, head=None, descend_properties=[], descend_tools=False):
+    """Recursively visit configurables and call a function for each.
+    
+    Note that the function is called before recursing over properties
+    or tools, so if it modifies them (e.g. adds tools), this will be
+    reflected in the recursion.
+    The behaviour of the removed forAllConf / postConfForAll can be
+    achieved with:
+    
+    func = partial(setPropertiesAndAddTools, properties=..., tools_per_type=..., force=...)
+    descend_properties = ['Members', 'Filter0', 'Filter1', 'TopAlg']
+    appendPostConfigAction(partial(recurseConfigurables, func, descend_properties=descend_properties, descend_tools=...))
+    
+    Args:
+        func: A function taking a single argument to be called for each
+            visited configurable.
+        head: A configurable or a list of configurables from which to
+            start recursing. If None is given (default), all instantiated
+            configurables plus ApplicationMgr().TopAlg will be used.
+        descend_properties: List of properties to recurse over.
+        descend_tools: Whether to recurse over tools or not.
+    
+    Returns:
+        A set of all configurables that were visited.
     """
-    if type(prop_value_dict) is not dict:
-        raise TypeError("Hey, you need to give me a dictionary, you passed me a, "+str(type(prop_value_dict)))
-    if type(tool_value_dict) is not dict:
-        raise TypeError("Hey, you need to give me a dictionary, you passed me a, "+str(type(prop_value_dict)))
-
+    
     if head is None:
         from Gaudi.Configuration import ApplicationMgr
-        head=[ApplicationMgr()]+fullNameConfigurables().values()
+        head = [ApplicationMgr()] + ApplicationMgr().TopAlg
+        head += GaudiConfigurables.allConfigurables.values()
 
-    #recurse over lists
-    if type(head) is list:
-        for i in head: forAllConf(i,prop_value_dict,types,force, tool_value_dict)
+    visited = set()
+    __recurseConfigurables(func, head, descend_properties, descend_tools, visited)
+    return visited
+
+def __recurseConfigurables(func, head, properties, tools, visited):
+    if isinstance(head, list):
+        for i in head:
+            __recurseConfigurables(func, i, properties, tools, visited)
         return
-    #interpret strings:
-    if type(head) is str:
+
+    if isinstance(head, str):
         try:
-            head=configurableInstanceFromString(head)
-        except:
-            #I cannot find the configurable, skip it
-            return
+            head = configurableInstanceFromString(head)
+        except (AttributeError, TypeError):
+            return  # I cannot find the configurable, skip it
+        
+    if isinstance(head, Configurable) and head not in visited:
+        visited.add(head)
+        func(head)
+        if tools:
+            for tool in head.getTools():
+                __recurseConfigurables(func, tool, properties, tools, visited)
+        if properties is not None:
+            prop_values = [getattr(head, p, None) for p in properties]
+        else:
+            prop_values = head.getProperties().values()
+        for value in prop_values:
+            if isinstance(value, (list, str, Configurable)):
+                __recurseConfigurables(func, value, properties, tools, visited)
 
-
-    if head is None:
-        return
-    #print "attempting",  nameFromConfigurable(head)
-    if (not len(types)) or head.getType() in types:
-        #recurse over tools
-        if len(tool_value_dict):
-            for k,v in tool_value_dict.iteritems():
-                tool=addPrivateToolFromString(head,k)
-                forAllConf(tool,prop_value_dict=v,types=[],force=force,recurseToTools=recurseToTools)
-        if recurseToTools:
-            forAllConf(head.getTools(),prop_value_dict,types=[],force=force,recurseToTools=recurseToTools)
-        for prop in prop_value_dict:
-            if hasattr(head,prop) or (hasattr(head,"properties") and prop in head.properties()) or(hasattr(head,"__slots__") and prop in head.__slots__):
-                if force or (not head.isPropertySet(prop)):
-                    head.setProp(prop,prop_value_dict[prop])
-                    #print "set", nameFromConfigurable(head)
-
-    #iterate/recurse over all subparts
-    for p in [ 'Members','Filter0','Filter1','TopAlg' ] :
-        if not hasattr(head,p) : continue
-        seq = getattr(head,p)
-        forAllConf(seq,prop_value_dict,types,force)
-
-def postConfigCallable(*args,**kwargs):
+def setPropertiesAndAddTools(configurable, properties, tools_per_type={}, force=False):
+    """Set properties of, and add private tools to a configurable.
+    
+    Args:
+        configurable: The configurable to modify.
+        properties: A dictionary of property names and values. If a
+            property does not exist for the given configurable, it is
+            ignored.
+        tools_per_type: A dictionary of the form {"configurable type":
+            ["tooltype/toolname", ...]}. For example:
+            {"CaloSinglePhotonAlg": ["CaloECorrection/ECorrection"]}
     """
-    Setup a post comfig action for any function requiring arguments
-
-    usage:
-
-    postConfigCallable(<afunction>,<arg1>,...,<kw1>=<kwarg1>,...)
-
-    first unnamed argument MUST be a function to call in postConfig
-
-    all other named or unnamed arguments are passed into the function
-
-    """
-    from Gaudi.Configuration import appendPostConfigAction
-    import collections
-
-    class dummyPostConf(object):
-        """dummy class to wrap function call"""
-        def __init__(self,thefunction,theargs,thekwargs):
-            self.thefunction=thefunction
-            self.theargs=theargs
-            self.thekwargs=thekwargs
-        def method(self):
-            return self.thefunction(*self.theargs,**self.thekwargs)
-
-    if not len(args):
-        raise ValueError("You must pass at least one nameless arg, the function to call!")
-    if not isinstance(args[0], collections.Callable):
-        raise TypeError("The first nameless argument must be a callable function!")
-    mydummy=None
-    if len(args)==1:
-        mydummy=dummyPostConf(args[0],kwargs)
-    else:
-        mydummy=dummyPostConf(args[0],args[1:],kwargs)
-    appendPostConfigAction(mydummy.method)
-
-def postConfForAll(head=None, prop_value_dict={}, types=[], force=False, tool_value_dict={} , recurseToTools=False) :
-    """postConfigCallable with signature for forAllConf
-    Append postConfigAction or forAllConf"""
-    postConfigCallable(forAllConf,head,prop_value_dict, types=types, force=force, tool_value_dict=tool_value_dict, recurseToTools=recurseToTools)
-
+    for name, value in properties.iteritems():
+        if force or (not configurable.isPropertySet(name)):
+            try:
+                configurable.setProp(name, value)
+            except AttributeError:
+                pass
+    tools = tools_per_type.get(configurable.getType(), [])
+    for spec in tools:
+        tool = addPrivateToolFromString(configurable, spec)

@@ -3,7 +3,13 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
-!========================= GaudiConf v19r16 2016-01-29 =========================
+!========================= GaudiConf v19r16 2016-02-02 =========================
+! 2016-02-02 - Rosen Matev
+ - Remove the slow forAllConf() and derivatives from Manipulations.py
+ - Add a new generic recurseConfigurables() and a payload function
+   setPropertiesAndAddTools(). Together these replace the old functions.
+   See help(...) for more details.
+
 ! 2016-10-29 - Marco Cattaneo
  - Update ioh-fsr-dressing test reference to follow changes in Gaudi v27r0 output
 

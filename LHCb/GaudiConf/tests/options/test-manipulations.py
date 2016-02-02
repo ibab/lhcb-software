@@ -1,3 +1,5 @@
+from functools import partial
+
 #test the import
 from GaudiConf.Manipulations import *
 
@@ -23,7 +25,10 @@ if (ops not in fullNameConfigurables()) or (nameFromConfigurable(ics) not in ful
 
 ics.OutputLevel=2
 
-forAllConf(fullNameConfigurables().keys(),{'OutputLevel':3,"OutputFile":'ASpamName'})
+recurseConfigurables(
+    partial(setPropertiesAndAddTools, properties={'OutputLevel':3,"OutputFile":'ASpamName'}),
+    fullNameConfigurables().values()
+)
 
 if not ec.isPropertySet("OutputLevel"):
     raise AttributeError("I didn't set the OutputLevel of the EventCounter you made")
@@ -35,7 +40,10 @@ for conf in [configurableInstanceFromString(ops),ics]:
 
 fdict={'OutputLevel':7,"OutputFile":'AnotherSpamName'}
 
-forAllConf(fullNameConfigurables().keys(),fdict, force=True)
+recurseConfigurables(
+    partial(setPropertiesAndAddTools, properties=fdict, force=True),
+    fullNameConfigurables().values()
+)
 
 for conf in [configurableInstanceFromString(ops),ics,ec]:
     for key in fdict:
@@ -47,15 +55,17 @@ for conf in [configurableInstanceFromString(ops),ics,ec]:
 gs=configurableInstanceFromString("GaudiSequencer/testSeq")
 gs.Members=["EventCounter/NewCounter","InputCopyStream/newStream","OutputStream/spamStream"]
 
-forAllConf(fullNameConfigurables().keys(),fdict, force=True)
+recurseConfigurables(
+    partial(setPropertiesAndAddTools, properties=fdict, force=True),
+    fullNameConfigurables().values(),
+    descend_properties=['Members']
+)
+
 for conf in gs.Members:
     conf=configurableInstanceFromString(conf)
     for key in fdict:
         if hasattr(conf,key) or (hasattr(conf,"properties") and key in conf.properties()) or(hasattr(conf,"__slots__") and key in conf.__slots__):
             if (not conf.isPropertySet(key)) or conf.getProp(key)!=fdict[key]:
                 raise ("I didn't correctly set the property of" +key+" for "+nameFromConfigurable(conf))
-
-#test that I successfully can add a postConfigAction
-postConfForAll(fullNameConfigurables().keys(),fdict, force=True)
 
 print "PASS"
