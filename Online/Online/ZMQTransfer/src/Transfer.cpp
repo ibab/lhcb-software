@@ -501,6 +501,5 @@ void  ZMQ::net_unlock(NET* net, void* lock)
 void  ZMQ::net_cancel(NET* net)
 { if ( net ) net->cancel();                                          }
 
-#define TRANSFERTEST_SEND test_zmq_net_send
-#define TRANSFERTEST_RECV test_zmq_net_recv
+#define TRANSFERTEST(x) test_zmq_net_##x
 #include "NET/TransferTest.h"
