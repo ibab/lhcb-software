@@ -45,7 +45,7 @@ start_gentest_debug()
     if test -z "${EXE}"; then
 	echo "ERROR:  Did not find gentest.exe: ${EXE}.....";
     else
-	xterm -ls -132 -geometry 132x32 -title ${HOST}::${TITLE} -e "exec -a ${TITLE}_${PROCID} `which debug` --args `which gentest.exe` ${LIB} $*" &
+	xterm -ls -132 -geometry 132x32 -title ${HOST}::${TITLE} -e "exec -a ${TITLE}_${PROCID} `which debug2` --args `which gentest.exe` ${LIB} $*" &
     fi;
 }
 #

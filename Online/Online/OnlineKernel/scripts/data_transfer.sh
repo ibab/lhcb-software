@@ -18,6 +18,14 @@ TYPE=$2;
 #
 #
 #
+print_headers()
+{
+    . ${ONLINEKERNELROOT}/scripts/test_macros.sh;
+    start_gentest libOnlineKernel.so NET  test_socket_net_print_net_header
+    start_gentest libOnlineKernel.so ASIO test_asio_net_print_net_header
+    start_gentest libZMQTransfer.so  ZMQ  test_zmq_net_print_net_header
+}
+
 make_transfer_aliases()
 {
     alias zmq_transfer='   exec_transfer_test libZMQTransfer.so  zmq';
@@ -30,9 +38,9 @@ make_transfer_aliases()
     alias ipc_bounce='     exec_transfer_test libOnlineKernel.so asio_ipc  /dev/shm/ -bounce';
     alias asio_bounce='    exec_transfer_test libOnlineKernel.so asio     -bounce';
     alias socket_bounce='  exec_transfer_test libOnlineKernel.so socket   -bounce';
-    alias kill_transfer='  pkill -9 gentest.exe;killall -9 gentest.exe';
     alias start_asio_send='start_sender libOnlineKernel.so asio';
     alias start_asio_recv='start_receiver libOnlineKernel.so asio';
+    alias kill_transfer='  pkill -9 gentest.exe;killall -9 gentest.exe';
     echo "Type:                                                                   ";
     echo "     ams_transfer    to use ALEPH Message system  as a transfer library.";
     echo "     zmq_transfer    to use ZeroMQ                as a transfer library.";
@@ -50,6 +58,7 @@ make_transfer_aliases()
     echo "     start_asio_recv <receive-node>::<receive-process>                  ";
     echo "                                                                        ";
     echo "     kill_transfer   to KILL all processes and stop.                    ";
+    echo "     print_headers                       ";
 }
 #
 #
@@ -57,7 +66,7 @@ make_transfer_aliases()
 start_tan_server()
 {
     LIBRARY=$1; 
-    ##start_gentest ${LIBRARY} TanServer boost_asio_tan_server -d -v;
+    start_gentest ${LIBRARY} TanServer boost_asio_tan_server -d -v;
     sleep 1;
     start_gentest ${LIBRARY} TanMon tanmon -c;
     sleep 2;
@@ -161,13 +170,15 @@ exec_transfer_test()
     export TAN_NODE=${HOST};
     echo PROCID=${PROCID};
     echo TARGET=${TARGET};
+    TYPE=socket;
     start_gentest ${LIBRARY} Receiver test_${TYPE}_net_recv \
 	-name=${TARGET} \
 	-l=1000000 -threads=10 ${OPT_ARGS};
-    sleep 2;
+    #sleep 22;
     #
     ps -ef | grep -v xterm | grep Receiver;
     sleep 3;
+    TYPE=asio;
     for ID in $(seq 0 6); do
 	start_gentest ${LIBRARY} SND_${ID} test_${TYPE}_net_send \
 	    -name=${HOSTNAME}SND${PROCID}_${ID} \
