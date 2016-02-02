@@ -27,6 +27,7 @@
 #include "Kernel/IDistanceCalculator.h"
 #include "Kernel/Particle2Vertex.h"
 #include "Kernel/IANNSvc.h"
+#include "Kernel/IIndexedANNSvc.h"
 //
 #include "ReportCheckTool.h"
 //
@@ -84,7 +85,7 @@ private:
 	std::string m_PVLoc;
 	std::string m_VertRepLoc;
 	std::string m_OutputPref;
-        std::map<std::string,int> m_RelInfoLocationsMap;
+        std::map<int,std::string> m_RelInfoLocationsMap;
        
         bool turbo;
         bool m_PV3D;
@@ -95,5 +96,7 @@ private:
         IReportConvert* m_conv;
         /// HltANNSvc for making selection names to int selection ID
         IANNSvc* m_hltANNSvc;
+        IIndexedANNSvc* m_tckANNSvc;
+        unsigned int m_lastTCK;
 };
 #endif // TESLAREPORTALGO_H

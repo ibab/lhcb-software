@@ -127,3 +127,22 @@ int ReportCheckTool::checkBankVersion(){
   }
   return 0;
 }    
+
+//===========================================================================
+/// ReportCheckTool::getTCK finds TCK from raw bank
+//===========================================================================
+unsigned int ReportCheckTool::getTCK() {
+  LHCb::RawEvent* raw = getIfExists<LHCb::RawEvent>(LHCb::RawEventLocation::Trigger);
+  if(!raw) raw = getIfExists<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
+  if(!raw) {
+    debug() << "Cannot get raw event, returning 0" << endmsg;
+    return 0u;
+  }
+  const auto& rawbanks = raw->banks( LHCb::RawBank::HltDecReports );
+  auto rb = rawbanks.front();
+  if ( rb && rb->magic() == LHCb::RawBank::MagicPattern && rb->version() > 0 && rb->size()>0 )  {
+    auto content = rb->begin<unsigned int>();
+    return *content;
+  }
+  return 0u;
+}

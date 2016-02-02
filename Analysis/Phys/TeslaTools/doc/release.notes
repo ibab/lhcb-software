@@ -3,6 +3,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-02-02 - Sean Benson
+ - Fix to related info restoration via TCK.
+
 !========================= TeslaTools v1r17 2015-12-03 =======================
 
 ! 2015-11-25 - Sean Benson

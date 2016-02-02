@@ -11,6 +11,7 @@
 #include "TeslaReportAlgo.h"
 
 static const  Gaudi::StringKey RelInfoLocations{"RelInfoLocations"};
+static const  Gaudi::StringKey test{"Hlt2SelectionID"};
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TeslaReportAlgo
@@ -68,10 +69,7 @@ StatusCode TeslaReportAlgo::initialize()
   }
 
   m_hltANNSvc = svc<IANNSvc>("HltANNSvc");
-  // get string-to-dict Rel. info. locations map
-  for( auto p: m_hltANNSvc->items(RelInfoLocations) ) {
-    m_RelInfoLocationsMap.insert( p );
-  }
+  m_tckANNSvc = svc<IIndexedANNSvc>("TCKANNSvc");
   return StatusCode::SUCCESS;
 }
 
@@ -81,7 +79,23 @@ StatusCode TeslaReportAlgo::initialize()
 StatusCode TeslaReportAlgo::execute()
 {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-
+  
+  // get string-to-dict Rel. info. locations map
+  unsigned int tck = m_check->getTCK();
+  if(tck!=m_lastTCK) m_RelInfoLocationsMap.clear();
+  m_lastTCK=tck;
+  if(m_RelInfoLocationsMap.size()==0){
+    if(tck==0){
+      for( auto p: m_hltANNSvc->item_map(RelInfoLocations) ) {
+        m_RelInfoLocationsMap.insert( std::pair<int,std::string>(p.second,p.first) );
+      }
+    } else {
+      for( auto p: m_tckANNSvc->i2s(tck,RelInfoLocations) ) {
+        m_RelInfoLocationsMap.insert( p );
+      }
+    }
+  }
+  
   std::stringstream HltLoc;
   HltLoc << m_inputName << "Decision";
   //
@@ -930,16 +944,17 @@ void TeslaReportAlgo::AddRelInfo(const LHCb::HltObjectSummary* Obj_d, LHCb::Part
   int loc_enum = (int)loc_info["0#LocationID"];
   std::stringstream locRelInfo;
   locRelInfo << "/Event/" << m_OutputPref << m_inputName << "/";
-  auto infoLoc = m_hltANNSvc->value(RelInfoLocations, loc_enum);
-  if (infoLoc) {
-    locRelInfo << infoLoc->first.str();
-  } else {
+  auto relInfoLoc = m_RelInfoLocationsMap.find(loc_enum);
+  if (relInfoLoc==m_RelInfoLocationsMap.end()) {
     error() << "Requested to save RelatedInfo for ID " << loc_enum
             << " but it is not registered in the ANNSvc, skipping!"
             << endmsg;
   }
+  else{
+    locRelInfo << relInfoLoc->second;
+  }
   if ( msgLevel(MSG::DEBUG) ) debug() << "Placing RelInfo at location ("
-                                      << loc_enum << "): " << locRelInfo << endmsg;
+                                      << loc_enum << "): " << locRelInfo.str() << endmsg;
   if (Obj_d->substructure().size() > 0){
     const LHCb::HltObjectSummary* RelInfo_sub = Obj_d->substructure()[0].target();
     const LHCb::HltObjectSummary::Info rel_info = RelInfo_sub->numericalInfo();
