@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <array>
 #include <algorithm>
 #include <string>
 
@@ -72,13 +73,13 @@ class VPSuperPixelBankEncoder : public GaudiAlgorithm {
   /// bank version. (change this every time semantics change!)
   const unsigned int m_bankVersion;
   /// quick check for debug state
-  bool m_isDebug;
+  bool m_isDebug = false;
   /// quick check for verbose state
-  bool m_isVerbose;
+  bool m_isVerbose = false;
   /// event counter
-  unsigned int m_evt;
+  unsigned int m_evt = 0;
   /// per sensor buffers of super pixel words
-  std::vector<std::vector<unsigned int> > m_spBySensor;
+  std::array<std::vector<unsigned int>,208 > m_spBySensor;
   /// buffer for checking super pixel neighbours
   unsigned char m_buffer[VP::NPixelsPerSensor];
   /// buffer for all non-zero super pixel indices on a sensor

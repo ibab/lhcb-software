@@ -19,11 +19,8 @@ DECLARE_ALGORITHM_FACTORY(VPSuperPixelBankEncoder)
 VPSuperPixelBankEncoder::VPSuperPixelBankEncoder(const std::string& name,
                                                  ISvcLocator* pSvcLocator)
     : GaudiAlgorithm(name, pSvcLocator),
-      m_bankVersion(2),
-      m_isDebug(false),
-      m_isVerbose(false),
-      m_evt(0),
-      m_spBySensor(208, std::vector<unsigned int>()) {
+      m_bankVersion(2)
+{
   declareProperty("DigitLocation",
                   m_digitLocation = LHCb::VPDigitLocation::Default);
   declareProperty("RawEventLocation",
@@ -61,46 +58,41 @@ StatusCode VPSuperPixelBankEncoder::execute() {
 
   // Check if RawEvent exists
   RawEvent* rawEvent = getIfExists<RawEvent>(m_rawEventLocation);
-  if (NULL == rawEvent) {
+  if (!rawEvent) {
     // Create RawEvent
     rawEvent = new LHCb::RawEvent();
     put(rawEvent, m_rawEventLocation);
   }
 
-  for (unsigned int sensor = 0; sensor < m_spBySensor.size(); ++sensor) {
-    m_spBySensor[sensor].clear();
+  for (auto& s : m_spBySensor) {
+    s.clear();
     // put header word as first element (but don't know content yet)
-    m_spBySensor[sensor].push_back(0);
+    s.push_back(0);
   }
 
   // Loop over digits create super pixel words and store them.
   // No assumption about the order of digits is made.
-  LHCb::VPDigits::const_iterator itSeed;
-  for (itSeed = digits->begin(); itSeed != digits->end(); ++itSeed) {
-    const unsigned int chip = (*itSeed)->channelID().chip();
-    const unsigned int row = (*itSeed)->channelID().row();
-    const unsigned int col = (*itSeed)->channelID().col();
-    const unsigned int sensor = (*itSeed)->channelID().sensor();
+  for (const auto& seed : *digits) {
+    const unsigned int chip = seed->channelID().chip();
+    const unsigned int row = seed->channelID().row();
+    const unsigned int col = seed->channelID().col();
+    const unsigned int sensor = seed->channelID().sensor();
     const unsigned int sensorCol = col + 256 * chip;
     const unsigned int spCol = sensorCol / 2;
     const unsigned int spRow = row / 4;
     const unsigned int spAddr = ((spCol << 6) | spRow);
     const unsigned int spix = 1 << (((col % 2) * 4) + row % 4);
 
-    bool found = false;
+    auto j = std::find_if( m_spBySensor[sensor].begin(), m_spBySensor[sensor].end(),
+                           [&](unsigned int s) {
+        return (s >> 8) == spAddr;
+    });
 
-    for (unsigned int j = 0; j < m_spBySensor[sensor].size(); j++) {
-      if ((m_spBySensor[sensor][j] >> 8) == spAddr) {
-        m_spBySensor[sensor][j] |= spix;
-        found = true;
-        break;
-      }
+    if (j!=m_spBySensor[sensor].end()) {
+        *j |= spix;
+    } else {
+        m_spBySensor[sensor].push_back((spAddr << 8) | spix);
     }
-
-    if (!found) {
-      m_spBySensor[sensor].push_back((spAddr << 8) | spix);
-    }
-
   }
 
   // set 'no neighbour' hint flags
