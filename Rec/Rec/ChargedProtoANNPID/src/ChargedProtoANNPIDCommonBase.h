@@ -617,14 +617,12 @@ namespace ANNGlobalPID
       { 
         this->setOK(true);
       }
-      /// Destructor
-      virtual ~NeuroBayesANN() { delete[] m_inArray; }
     public:
       /// Compute the ANN output for the given ProtoParticle
       virtual double getOutput( const LHCb::ProtoParticle * proto ) const override;
     private:
       std::unique_ptr<Expert> m_expert;   ///< Pointer to the NeuroBayes 'Expert'
-      float * m_inArray = nullptr;   ///< Working array for network inputs
+      std::unique_ptr<float[]> m_inArray; ///< Working array for network inputs
       bool m_suppressPrintout{true}; ///< Suppress any printout from NeuroBayes
     };
 #endif
@@ -662,14 +660,12 @@ namespace ANNGlobalPID
         m_reader->BookMVA( "PID", paramFileName.c_str() );
         this->setOK(true);
       }
-      /// Destructor
-      virtual ~TMVAReaderANN() { delete[] m_inArray; }
     public:
       /// Compute the ANN output for the given ProtoParticle
       virtual double getOutput( const LHCb::ProtoParticle * proto ) const override;
     private:
       std::unique_ptr<TMVA::Reader> m_reader; ///< The TMVA reader
-      float * m_inArray = nullptr; ///< Working array for network inputs
+      std::unique_ptr<float[]> m_inArray;     ///< Working array for network inputs
     };
 
     /** @class TMVAImpANN ChargedProtoANNPIDCommonBase.h
