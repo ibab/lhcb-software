@@ -4,6 +4,13 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2016-02-02 - Chris Jones
+ - Add work around to the RichPID unpacking to deal with the change in the
+   numerical value of the BelowThreshold enum, that means when old RichPID
+   objects from before the additional of Deuteron are unpacked, the best
+   particle ID field in the bitpacked word would would be wrongly set to
+   Deuteron. Manually adjust this to Below Threshold in this case.
+
 ! 2016-01-28 - Chris Jones
  - Update (from Ulrik Egede) to support Deuteron in RichPID data objects.
 

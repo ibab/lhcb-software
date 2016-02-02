@@ -72,13 +72,16 @@ void RichPIDPacker::unpack( const PackedData       & ppid,
     pid.setParticleDeltaLL( Rich::Pion,      (float)m_pack.deltaLL(ppid.dllPi) );
     pid.setParticleDeltaLL( Rich::Kaon,      (float)m_pack.deltaLL(ppid.dllKa) );
     pid.setParticleDeltaLL( Rich::Proton,    (float)m_pack.deltaLL(ppid.dllPr) );
+    // Below threshold information only available in packed version 1 onwards
     if ( ver > 0 ) pid.setParticleDeltaLL( Rich::BelowThreshold,
                                            (float)m_pack.deltaLL(ppid.dllBt) );
+    // Deuteron information only available in packed version 4 onwards
     if ( ver > 3 ) pid.setParticleDeltaLL( Rich::Deuteron,
                                            (float)m_pack.deltaLL(ppid.dllDe) );
     if ( -1 != ppid.track )
     {
       int hintID(0), key(0);
+      // Smart ref packing changed to 64 bit in packing version 3 onwards
       if ( ( ver >= 3 && m_pack.hintAndKey64(ppid.track,&ppids,&pids,hintID,key) ) ||
            ( ver <  3 && m_pack.hintAndKey32(ppid.track,&ppids,&pids,hintID,key) ) )
       {
@@ -86,6 +89,13 @@ void RichPIDPacker::unpack( const PackedData       & ppid,
         pid.setTrack( ref );
       }
       else { parent().Error( "Corrupt RichPID Track SmartRef detected." ).ignore(); }
+    }
+    // If the packing version is pre-Deuteron, check the BestPID field and correct for 
+    // the fact the numerical value of the Below Threshold enum changed when Deuteron 
+    // was added.
+    if ( ver < 4 && Rich::Deuteron == pid.bestParticleID() )
+    {
+      pid.setBestParticleID( Rich::BelowThreshold );
     }
   }
 }
@@ -101,8 +111,9 @@ void RichPIDPacker::unpack( const PackedDataVector & ppids,
     {
       // make and save new pid in container
       auto * pid  = new Data();
-      if ( ver < 2 ) { pids.add( pid ); }
-      else           { pids.insert( pid, ppid.key ); }
+      // key information only available in version 2 onwards
+      if ( ver > 1 ) { pids.insert( pid, ppid.key ); }
+      else           { pids.add( pid ); }
       // Fill data from packed object
       unpack( ppid, *pid, ppids, pids );
     }
