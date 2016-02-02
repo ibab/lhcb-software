@@ -68,9 +68,4 @@ namespace Rich
   } // Rec
 } // RICH
 
-
-/** Backwards compatibility typedef
- * @todo Remove eventually */
-typedef Rich::Rec::TupleToolBase RichRecTupleToolBase;
-
 #endif // RICHRECBASE_RICHRECTUPLETOOLBASE_H

@@ -53,9 +53,9 @@ namespace Rich
     public:
 
       /// Range for RichRecPixels
-      typedef Gaudi::Range_<LHCb::RichRecPixels> PixelRange;
+      using PixelRange  = Gaudi::Range_<LHCb::RichRecPixels>;
       /// List of RichRecPixel Ranges
-      typedef std::vector<PixelRange>            PixelRanges;
+      using PixelRanges = std::vector<PixelRange>;
 
     public:
 

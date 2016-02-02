@@ -68,9 +68,4 @@ namespace Rich
   }
 } // RICH
 
-/** Backwards compatibility typedef
- * @todo Remove eventually
- */
-typedef Rich::Rec::HistoToolBase RichRecHistoToolBase;
-
 #endif // RICHRECBASE_RICHRECHISTOTOOLBASE_H

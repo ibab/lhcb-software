@@ -44,10 +44,10 @@ namespace Rich
   public: // definitions
 
     /// Definition of the underlaying distribution container
-    typedef std::vector<TYPE>        PhotonData;
+    using PhotonData     = std::vector<TYPE>;
 
     /// Definition of the container used for the particle hypothesis distributions
-    typedef std::vector<PhotonData>  HypoPhotonData;
+    using HypoPhotonData = std::vector<PhotonData>;
 
   public: // methods
 

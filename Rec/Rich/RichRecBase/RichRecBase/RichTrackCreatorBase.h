@@ -117,7 +117,7 @@ namespace Rich
       };
 
       /// Tag for tracks. A combination for type and uniqueness
-      typedef std::pair<Rich::Rec::Track::Type,bool> TrackTag;
+      using TrackTag = std::pair<Rich::Rec::Track::Type,bool>;
 
       /// Map of track statistics objects for different track types
       class TrackTypeCount : public Rich::Map< TrackTag, TrackCount >
@@ -257,16 +257,11 @@ namespace Rich
       }
       else
       {
-        throw RichException( "Unknown radiator type" + Rich::text(rad) );
+        throw Rich::Exception( "Unknown radiator type" + Rich::text(rad) );
       }
     }
 
   }
 } // RICH
-
-/** Backwards compatibility typedef
- * @todo Remove eventually
- */
-typedef Rich::Rec::TrackCreatorBase RichTrackCreatorBase;
 
 #endif // RICHRECBASE_RICHPTRACKCREATORBASE_H

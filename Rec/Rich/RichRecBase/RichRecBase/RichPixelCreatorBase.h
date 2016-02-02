@@ -330,8 +330,8 @@ namespace Rich
       mutable boost::array<LHCb::RichRecPixels::iterator,Rich::NRiches> m_richEnd;
 
       /// HPD range map type
-      typedef std::pair<LHCb::RichRecPixels::iterator,LHCb::RichRecPixels::iterator> HPDItPair;
-      typedef Rich::Map<const LHCb::RichSmartID,HPDItPair> HPDItMap;
+      using HPDItPair = std::pair<LHCb::RichRecPixels::iterator,LHCb::RichRecPixels::iterator>;
+      using HPDItMap  = Rich::Map<const LHCb::RichSmartID,HPDItPair>;
 
       /// iterators for each HPD
       mutable HPDItMap m_hpdIts;
@@ -463,10 +463,5 @@ namespace Rich
 
   }
 } // RICH
-
-  /** Backwards compatibility typedef
-   * @todo Remove eventually
-   */
-typedef Rich::Rec::PixelCreatorBase RichPixelCreatorBase;
 
 #endif // RICHRECBASE_RICHPIXELCREATORBASE_H

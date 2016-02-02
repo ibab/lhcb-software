@@ -76,9 +76,4 @@ namespace Rich
   }
 } // RICH
 
-  /** Backwards compatibility typedef
-   * @todo Remove eventually
-   */
-typedef Rich::Rec::HistoAlgBase RichRecHistoAlgBase;
-
 #endif // RICHRECBASE_RICHRECHISTOALGBASE_H

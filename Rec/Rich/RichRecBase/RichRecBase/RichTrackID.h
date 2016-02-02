@@ -344,9 +344,4 @@ namespace Rich
 
 }
 
-/** Backwards compatibility typedef
- * @todo Remove eventually
- */
-typedef Rich::Rec::TrackID RichTrackID;
-
 #endif // RICHRECBASE_RICHTRACKID_H

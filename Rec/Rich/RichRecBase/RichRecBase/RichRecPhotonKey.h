@@ -38,10 +38,10 @@ namespace Rich
     public:
 
       /// Type for packed fields
-      typedef boost::uint16_t PackedType;
+      using PackedType = boost::uint16_t;
 
       /// Type for overall word
-      typedef boost::uint32_t KeyType;
+      using KeyType    = boost::uint32_t;
 
     private:
 

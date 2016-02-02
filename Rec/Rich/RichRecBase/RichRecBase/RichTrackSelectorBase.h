@@ -164,7 +164,7 @@ namespace Rich
     private: // defintions
 
       /// List of track names
-      typedef std::vector<std::string> TrackNames;
+      using TrackNames = std::vector<std::string>;
 
     private: // methods
 
@@ -194,11 +194,11 @@ namespace Rich
       TrackNames m_trNames;
 
       /// Mapping between track type and selection tool name to use
-      typedef Rich::HashMap<Rich::Rec::Track::Type,std::string> ToolNames;
+      using ToolNames = Rich::HashMap<Rich::Rec::Track::Type,std::string>;
       ToolNames m_tkToolNames;
 
       /// Mapping between track type and selection tool pointer to use
-      typedef Rich::HashMap<Rich::Rec::Track::Type,const IBaseTrackSelector*> TrackTools;
+      using TrackTools = Rich::HashMap<Rich::Rec::Track::Type,const IBaseTrackSelector*>;
       TrackTools m_tkTools;
 
       // job options
@@ -234,10 +234,5 @@ namespace Rich
 
   }
 } // RICH namespace
-
-/** Backwards compatibility typedef
- * @todo Remove eventually
- */
-typedef Rich::Rec::TrackSelectorBase RichTrackSelectorBase;
 
 #endif // RICHRECBASE_RichTrackSelectorBase_H
