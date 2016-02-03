@@ -236,8 +236,8 @@ class Tesla(LHCbConfigurableUser):
                         , self.base + l + "/Tracks#99"
                         , self.base + l + "/RichPIDs#99"
                         , self.base + l + "/MuonPIDs#99"
-                        , self.base + l + "/CaloHypos#99"
-                        , self.base + l + "/CaloClusters#99"
+                        , self.base + "CaloHypos#99"
+                        , self.base + "CaloClusters#99"
                         ]
             dplic.Inputs+=[self.base + l + "/Particles"]
         
@@ -275,7 +275,7 @@ class Tesla(LHCbConfigurableUser):
             NeutralProtoSeq.Members+=[assocdigits]
             for l in lines:
                 if "gamma" in l.lower() or "pi0" in l.lower():
-                    clustLoc = self.base + l + "/CaloClusters"
+                    clustLoc = self.base + "CaloClusters"
                     protoLoc = self.base + l + "/Protos"
                     self._configureDigitsTruth()
                     protoneutral, retSeq = self._configureClustersAndProtosTruth(l,outputDigiLoc)
@@ -301,6 +301,22 @@ class Tesla(LHCbConfigurableUser):
                     AlwaysCreateOutput = True)
             seq.Members +=[packer]
             
+            from Configurables import PackCaloHypo as PackCaloHypos
+            hypopacker = PackCaloHypos( name = "PackCaloHypos",
+                    AlwaysCreateOutput = True,
+                    DeleteInput        = False,
+                    OutputLevel        = self.getProp('OutputLevel'),
+                    InputName          = self.base+"CaloHypos",
+                    OutputName         = self.base+"pRec/neutral/Hypos" )
+            from Configurables import DataPacking__Pack_LHCb__CaloClusterPacker_ as PackCaloClusters
+            clusterpacker = PackCaloClusters( name = "PackCaloClusters",
+                    AlwaysCreateOutput = True,
+                    DeleteInput        = False,
+                    OutputLevel        = self.getProp('OutputLevel'),
+                    InputName          = self.base+"CaloClusters",
+                    OutputName         = self.base+"pRec/neutral/Clusters" )
+            seq.Members +=[hypopacker,clusterpacker]
+            
             writer.OptItemList+=[
                     self.base+"pPhys/Particles#99"
                     ,self.base+"pPhys/Vertices#99"
@@ -312,6 +328,8 @@ class Tesla(LHCbConfigurableUser):
                     ,self.base+"pRec/Muon/CustomPIDs#99"
                     ,self.base+"pRec/Rich/CustomPIDs#99"
                     ,self.base+"pRec/ProtoP/Custom#99"
+                    ,self.base+"pRec/neutral/Hypos#99"
+                    ,self.base+"pRec/neutral/Clusters#99"
                     ,self.base+"Rec/Summary#99"
                     ]
             packer.OutputLevel = self.getProp('OutputLevel')
