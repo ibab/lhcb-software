@@ -48,7 +48,8 @@ namespace Rich
   std::string text( const Rich::DetectorType detector );
 
   /// Type for container of detector types
-  using Detectors = std::vector<Rich::DetectorType>;
+  typedef std::vector<Rich::DetectorType> Detectors;
+  //using Detectors = std::vector<Rich::DetectorType>;
 
   /// Access a vector of valid detector types
   const Detectors & detectors() noexcept;

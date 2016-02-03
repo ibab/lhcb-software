@@ -48,7 +48,8 @@ namespace Rich
   std::string text( const Rich::ParticleIDType particle );
 
   /// Type for container of particle types
-  using Particles = std::vector<ParticleIDType>;
+  typedef std::vector<ParticleIDType> Particles;
+  //using Particles = std::vector<ParticleIDType>;
 
   /// Access a vector of valid particle ID types
   const Particles & particles() noexcept;

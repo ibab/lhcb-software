@@ -46,7 +46,8 @@ namespace Rich
   public:
 
     /// Definition of a vector of intersections
-    using Vector = std::vector<Rich::RadIntersection>;
+    typedef std::vector<Rich::RadIntersection> Vector;
+    //using Vector = std::vector<Rich::RadIntersection>;
 
   public:
 
