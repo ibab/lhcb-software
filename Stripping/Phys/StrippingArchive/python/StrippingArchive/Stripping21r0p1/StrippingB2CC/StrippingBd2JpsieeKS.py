@@ -36,7 +36,9 @@ default_config = {
         , 'KstarMassMax'          :   966.    # MeV
         , 'KstarPT'               :  1500.    # MeV
         , 'KstarVCHI2'            :    20.    # adimensional
-        , 'KplusPT'               :   500.    # MeV
+        , 'KstarDaughtersIP'      :     9.    # adimensional
+        , 'KplusPT'               :   800.    # MeV
+        , 'KplusIP'               :     9.    # adimensional
         , 'KSVCHI2'               :    20.    # adimensional
         , 'KSBPVDLS'              :     5.    # adimensional
         , 'BdVertexCHI2pDOF'      :     7.    # adimensional
@@ -80,7 +82,9 @@ class Bd2JpsieeKSConf(LineBuilder):
                 , 'KstarMassMax'              # MeV
                 , 'KstarPT'                   # MeV
                 , 'KstarVCHI2'                # adimensional
+                , 'KstarDaughtersIP'          # adimensional
                 , 'KplusPT'                   # MeV
+                , 'KplusIP'                   # adimensional
                 , 'KSVCHI2'                   # adimensional
                 , 'KSBPVDLS'                  # adimensional
                 , 'BdVertexCHI2pDOF'          # adimensional
@@ -105,9 +109,10 @@ class Bd2JpsieeKSConf(LineBuilder):
         DiElectrons           = DataOnDemand( Location = "Phys/StdLooseDiElectron/Particles" )
         DiElectronsFromTracks = DataOnDemand( Location = "Phys/StdDiElectronFromTracks/Particles" )
 
-        self.NoIPKaonList = self.createSubSel( OutputList = "NoIPKaonsForBetaS" + self.name,
-                                               InputList = DataOnDemand(Location = "Phys/StdAllLooseKaons/Particles"),
-                                               Cuts = "(TRCHI2DOF < %(TRCHI2DOF)s ) & (PIDK > %(KaonPID)s )" % self.config )
+        self.KaonList = self.createSubSel( OutputList = "KaonsForBetaS" + self.name,
+                                           InputList = DataOnDemand(Location = "Phys/StdLooseKaons/Particles"),
+                                           Cuts = "(TRCHI2DOF < %(TRCHI2DOF)s ) & (PIDK > %(KaonPID)s )" \
+                                                  "& (INTREE((ABSID=='K+') & (MIPCHI2DV(PRIMARY) > %(KplusIP)s ))) " % self.config )
 
         self.KsListLoose = MergedSelection( "StdLooseKsMergedForBetaS" + self.name,
                                             RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseKsDD/Particles"),
@@ -116,7 +121,7 @@ class Bd2JpsieeKSConf(LineBuilder):
                                 InputList = self.KsListLoose,
                                 Cuts = "(VFASPF(VCHI2) < %(KSVCHI2)s) & (BPVDLS > %(KSBPVDLS)s)" % self.config )
 
-        self.KstarList = self.createSubSel( OutputList = "Kstar2KpiForBetaS" + self.name,
+        self.KstarListNoBias = self.createSubSel( OutputList = "Kstar2KpiForBetaSNoBias" + self.name,
                                             InputList = DataOnDemand(Location = "Phys/StdLooseKstar2Kpi/Particles"),
                                             Cuts = "(in_range(%(KstarMassMin)s,M,%(KstarMassMax)s))" \
                                             "& (PT > %(KstarPT)s *MeV) " \
@@ -124,6 +129,12 @@ class Bd2JpsieeKSConf(LineBuilder):
                                             "& (MAXTREE('K+'==ABSID,  TRCHI2DOF) < %(TRCHI2DOF)s )" \
                                             "& (MAXTREE('pi-'==ABSID, TRCHI2DOF) < %(TRCHI2DOF)s )" \
                                             "& (MINTREE('K+'==ABSID, PIDK) > %(KaonPID)s )" % self.config)
+
+        self.KstarList = self.createSubSel( OutputList = "Kstar2KpiForBetaS" + self.name,
+                                            InputList = self.KstarListNoBias,
+                                            Cuts =  "(INTREE((ABSID=='K+') & (MIPCHI2DV(PRIMARY) > %(KstarDaughtersIP)s )))" \
+                                            	    "& (INTREE((ABSID=='pi-') & (MIPCHI2DV(PRIMARY) > %(KstarDaughtersIP)s )))" % self.config)
+
 
         self._jpsi = FilterDesktop( Code = "   (MM > %(JpsiMassMin)s *MeV)" \
                                            " & (MM < %(JpsiMassMax)s *MeV)" \
@@ -219,6 +230,12 @@ class Bd2JpsieeKSConf(LineBuilder):
         self.registerLine(Bd2JpsieeKSDetachedLine)
 
     def makeBd2JpsieeKstar( self ):
+        Bd2JpsieeKstarFromTracksPrescaled = self.createCombinationSel( OutputList = "Bd2JpsieeKstarFromTracksPrescaled" + self.name,
+                                                              DecayDescriptor = "[B0 -> J/psi(1S) K*(892)0]cc",
+                                                              DaughterLists   = [ self.JpsiFromTracks, self.KstarListNoBias ],
+                                                              PreVertexCuts   = "in_range(%(BdMassMin)s,AM,%(BdMassMax)s)" % self.config,
+                                                              PostVertexCuts  = "(VFASPF(VCHI2/VDOF) < %(BdFromKstarVCHI2pDOF)s)" % self.config )
+
         Bd2JpsieeKstarFromTracks = self.createCombinationSel( OutputList = "Bd2JpsieeKstarFromTracks" + self.name,
                                                               DecayDescriptor = "[B0 -> J/psi(1S) K*(892)0]cc",
                                                               DaughterLists   = [ self.JpsiFromTracks, self.KstarList ],
@@ -226,7 +243,7 @@ class Bd2JpsieeKSConf(LineBuilder):
                                                               PostVertexCuts  = "(VFASPF(VCHI2/VDOF) < %(BdFromKstarVCHI2pDOF)s)" % self.config )
 
         Bd2JpsieeKstarFromTracksPrescaledLine = StrippingLine( self.name + "Bd2JpsieeKstarFromTracksPrescaledLine",
-                                                               algos = [ Bd2JpsieeKstarFromTracks ],
+                                                               algos = [ Bd2JpsieeKstarFromTracksPrescaled ],
                                                                prescale = self.config['Bd2JpsieeKstarPrescale'],
                                                                EnableFlavourTagging = True,
                                                                MDSTFlag = True )
@@ -247,11 +264,12 @@ class Bd2JpsieeKSConf(LineBuilder):
     def makeBu2JpsieeK( self ):
         Bu2JpsieeKFromTracks = self.createCombinationSel( OutputList = "Bu2JpsieeKFromTracks" + self.name,
                                                           DecayDescriptor = "[B+ -> J/psi(1S) K+]cc",
-                                                          DaughterLists = [ self.JpsiFromTracks, self.NoIPKaonList ],
+                                                          DaughterLists = [ self.JpsiFromTracks, self.KaonList ],
                                                           DaughterCuts  = {"K+": "(PT > %(KplusPT)s *MeV)" % self.config },
                                                           PreVertexCuts   = "in_range(%(BdMassMin)s,AM,%(BdMassMax)s)" % self.config,
                                                           PostVertexCuts = "(VFASPF(VCHI2PDOF) < %(BdVertexCHI2pDOF)s)" % self.config )
      
+
         Bu2JpsieeKFromTracksDetached = self.createSubSel( InputList = Bu2JpsieeKFromTracks,
                                                           OutputList = Bu2JpsieeKFromTracks.name() + "Detached" + self.name,
                                                           Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps) & "\

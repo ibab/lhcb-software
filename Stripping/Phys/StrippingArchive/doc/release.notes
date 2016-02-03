@@ -4,6 +4,9 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+2016-02-03 - Ricardo Vazquez Gomez
+ - Update Bd2JpsieeKS for S21rXp1
+
 2016-01-04 - Ricardo Vazquez Gomez
  - Fix typo in __init__.py
 
