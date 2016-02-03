@@ -6,7 +6,7 @@ import subprocess, re, socket
 import shlex
 
 # Path to DaVinic user area
-dv_path = "/home/dsavrina/cmtuser/DaVinciDev_v36r5"
+dv_path = os.environ['User_release_area']+"/DaVinciDev_v36r5"
 
 # Run the "run" script to generate the environment
 
@@ -39,12 +39,7 @@ for line in lines:
     else:
         dv_env[result.group(1)] = result.group(2)
 
-builtdir = os.path.dirname(PyKaliOnline.__file__)   
-spname   = builtdir.split('build.x86_64-slc6-gcc48-')
-homedir  = spname[0]+'AlignmentOnline/PyKaliOnline'+spname[1][3:]
-print homedir
-
-#homedir = '/home/dsavrina/AlignmentOnlineDev_v10r5/AlignmentOnline/PyKaliOnline/python/PyKaliOnline/'
+homedir = os.environ['PYKALIONLINEROOT']+'/python/PyKaliOnline/'
 
 def fmDSTprod(list_of_files, lambdas = None, index=0):
     # Use our parsed environment to run a DaVinci command. Output goes to terminal.

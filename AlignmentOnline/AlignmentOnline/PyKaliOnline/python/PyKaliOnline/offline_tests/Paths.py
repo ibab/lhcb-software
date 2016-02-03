@@ -44,7 +44,7 @@ def importOnline():
 class Paths():
     ## contains the paths common for all the modules
     ## just not to get confused between them
-    def __init__(self, index = 0, hn = None):
+    def __init__(self, index = 0, hn = None, input_dir = '.'):
         #self.__input = input_file
 
         ## determine the working directory
@@ -53,14 +53,14 @@ class Paths():
         #else:
         #    self.__dir   = os.path.dirname(input_file)
 
-        self.dst_dir = '/home/dsavrina/cmtuser/data/TrueRootFiles/test_files'
+        self.dst_dir = input_dir #'/home/dsavrina/cmtuser/data/TrueRootFiles/test_files'
         if not os.path.exists(self.dst_dir): os.mkdir(self.dst_dir)
 
-        self.gz_dir = '/home/dsavrina/cmtuser/data/TrueRootFiles/test_files'
+        self.gz_dir = input_dir #'/home/dsavrina/cmtuser/data/TrueRootFiles/test_files'
         if not os.path.exists(self.gz_dir): os.mkdir(self.gz_dir)
 
         #self.input_dir = '/localdisk/Alignment/BWDivision/'
-        self.input_dir = '/home/dsavrina/cmtuser/data/TrueRootFiles/test_files'
+        self.input_dir = input_dir #'/home/dsavrina/cmtuser/data/TrueRootFiles/test_files'
 
         self.__index = index
         if hn:    self.__hn    = hn

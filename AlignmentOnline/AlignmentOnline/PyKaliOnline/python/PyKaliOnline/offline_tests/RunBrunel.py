@@ -7,7 +7,7 @@ import subprocess, re
 import shlex
 
 # Path to Brunel user area
-brunel_path = "/home/dsavrina/cmtuser/BrunelDev_v47r8"
+brunel_path = os.environ['User_release_area']+"/BrunelDev_v47r8"
 
 # Run the "run" script to generate the environment
 
@@ -40,7 +40,7 @@ for line in lines:
     else:
         brunel_env[result.group(1)] = result.group(2)
    
-homedir = '/home/dsavrina/AlignmentOnlineDev_v10r4/KaliOnline/PyKaliOnline/python/PyKaliOnline/'#homedir = os.path.dirname(PyKaliOnline.__file__)
+homedir = os.environ['PYKALIONLINEROOT']+'/python/PyKaliOnline/'
 
 def RunBrunel(list_of_files, index):
     # def RunBrunel(input_file, index):

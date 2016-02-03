@@ -14,7 +14,7 @@ def run(index, input_directory):
     n_it = 0
     p_it = 2
     hn = socket.gethostname()
-    pt = Paths(index,hn)
+    pt = Paths(index,hn,os.path.dirname(input_directory))
     #pt = Paths(input_file,index,hn)
     while True:
         command = com.get_command()
@@ -68,13 +68,13 @@ def run(index, input_directory):
                 lambdas_db_location = pt.lambdas_db_location()
 
                 ## Run reconstruction if necessary
-                #if not dstfiles:
-                #    print "Running event reconstruction at first"
-                #    list_of_files = pt.getinputfiles()[index]
-                #    RunBrunel(list_of_files, index)
-                #    #RunBrunel(input_file, index)
-                #
-                #    dstfiles = pt.getdstfiles()
+                if not dstfiles:
+                    print "Running event reconstruction at first"
+                    list_of_files = pt.getinputfiles()[index]
+                    RunBrunel(list_of_files, index)
+                    #RunBrunel(input_file, index)
+                
+                    dstfiles = pt.getdstfiles()
 
                 ## Creat the fmdsts and root files if necessary
                 #if not fmdstfiles and not rootfiles:

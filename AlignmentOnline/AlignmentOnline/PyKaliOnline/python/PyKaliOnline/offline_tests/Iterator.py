@@ -22,6 +22,24 @@ def run(directory='.'):
     while True:
         command = com.get_command()
         if command == 'configure' and state == State.NOT_READY:
+            ## find the last one saved and
+            ## save current as the next one
+            if n_it == 0:
+                StoredHistoPath  = pt.histos_location_it()
+                ih   = 1
+                Pass = 1
+                while True:
+                    if ih > PassIt/2:
+                        Pass += 1
+                        ih    = 1
+                    if os.path.exists(StoredHistoPath%(Pass,ih)): ## look through all the existing files
+                        ih += 1
+                        continue
+                    else:                                  ## write to the file next to the latest existing
+                        n_it = ih-1
+                        p_it = Pass
+                        break
+
             state = State.READY
         elif command == 'start' and state == State.READY:
             state = State.RUNNING
@@ -31,24 +49,6 @@ def run(directory='.'):
             if n_it < MaxIt:
                 n_it += 1
                 i_it += 1
-
-                ## find the last one saved and
-                ## save current as the next one
-                if n_it == 1:
-                    StoredHistoPath  = pt.histos_location_it()
-                    ih   = 1
-                    Pass = 1
-                    while True:
-                        if ih > PassIt/2:
-                            Pass += 1
-                            ih    = 1
-                        if os.path.exists(StoredHistoPath%(Pass,ih)): ## look through all the existing files
-                            ih += 1
-                            continue
-                        else:                                  ## write to the file next to the latest existing
-                            n_it = ih
-                            p_it = Pass
-                            break
 
 
                 ## If enough primary iterations are done
