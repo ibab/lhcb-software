@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2016-02-03 - John Back
- - src/components/EvtGenDecay.cpp: Corrected the name of the m_imHelZero double
+ - src/component/EvtGenDecay.cpp: Corrected the name of the m_imHelZero double
    property from ImHelOne to ImHelZero, which specifies the imaginary part of
    the helicity 0 spin density matrix element for polarised J/psi and chi_c1.
    See: https://its.cern.ch/jira/browse/LHCBGAUSS-628.
