@@ -5,6 +5,11 @@
 !               Detector Description, Material Budget etc
 ! ------------------------------------------------------------------------------
 
+! 2016-02-03 - Marco Cattaneo
+ - remove obsolete loaddddb-mc09 test
+ - Update checkoverlap, materialbudget, volumecheck tests to use "2015" DataType
+   instead of MC09 
+
 !========================= DetDescChecks v5r12p1 2015-10-12 ========================
 ! 2015-08-03 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
