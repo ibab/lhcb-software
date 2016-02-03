@@ -15,7 +15,7 @@ or same with postConfForAll...
 # Copied from GaudiConf, IOHelper. Manipulators of configurables.
 import Gaudi.Configuration as GaudiConfigurables
 import Configurables
-from GaudiKernel.Configurable import Configurable
+from GaudiKernel.Configurable import Configurable, ConfigurableGeneric
 
 def fullNameConfigurables():
     """
@@ -154,6 +154,10 @@ def __recurseConfigurables(func, head, properties, tools, visited):
 def setPropertiesAndAddTools(configurable, properties, tools_per_type={}, force=False):
     """Set properties of, and add private tools to a configurable.
     
+    Note that properties of ConfigurableGeneric instances are only set
+    if they have been previously set and force=True. (The reason is that
+    ConfigurableGeneric-s do not know what properties are valid).
+    
     Args:
         configurable: The configurable to modify.
         properties: A dictionary of property names and values. If a
@@ -163,8 +167,11 @@ def setPropertiesAndAddTools(configurable, properties, tools_per_type={}, force=
             ["tooltype/toolname", ...]}. For example:
             {"CaloSinglePhotonAlg": ["CaloECorrection/ECorrection"]}
     """
+    is_generic = isinstance(configurable, ConfigurableGeneric)
     for name, value in properties.iteritems():
         if force or (not configurable.isPropertySet(name)):
+            if is_generic and not hasattr(configurable, name):
+                continue  # skip unset properties of ConfigurableGeneric-s
             try:
                 configurable.setProp(name, value)
             except AttributeError:
