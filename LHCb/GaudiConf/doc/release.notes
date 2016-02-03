@@ -3,10 +3,11 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v19r16 2016-02-03 =========================
+
 ! 2016-02-03 - Sean Benson
  - Add option to DstConf to unpack calo containers.
 
-!========================= GaudiConf v19r16 2016-02-03 =========================
 ! 2016-02-03 - Rosen Matev
  - Add special treatment for ConfigurableGeneric instances in
    setPropertiesAndAddTools()
