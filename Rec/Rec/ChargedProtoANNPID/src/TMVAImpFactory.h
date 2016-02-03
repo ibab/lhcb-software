@@ -11,9 +11,10 @@
 #include <vector>
 #include <cmath>
 #include <memory>
+#include <limits>
 
 // Include VDT here so it gets into all TMVA compilations
-#include "vdt/exp.h"
+//#include "vdt/exp.h"
 
 // TMVA IClassifierReader interface
 #include "TMVAIClassifierReader.h"

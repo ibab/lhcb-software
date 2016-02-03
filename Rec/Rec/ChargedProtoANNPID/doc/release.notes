@@ -4,6 +4,11 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2016-02-03 - Chris Jones
+ - Revert last change to use VDT exp method, as this casues some FPE warnings.
+   Working around this is ugly, and likely to wipe out some of the gains,
+   so for now for back to std::exp and std::tanh.
+
 ! 2016-02-02 - Chris Jones
  - Optimise a bit the MC12TuneV2 networks, as a test to see what can be gained.
    + Use VDT math functions for tanh and exp.

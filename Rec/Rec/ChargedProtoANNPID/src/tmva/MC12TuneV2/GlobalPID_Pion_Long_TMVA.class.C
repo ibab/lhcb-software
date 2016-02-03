@@ -2298,15 +2298,12 @@ inline double ReadPion_Long_TMVA::GetMvaValue__( const std::vector<double>& inpu
 
 inline double ReadPion_Long_TMVA::ActivationFnc(double x) const {
   // hyperbolic tan
-  //return tanh(x);
-  const auto exp_xx = vdt::fast_exp( 2.0 * x );
-  return ( exp_xx - 1.0 ) / ( exp_xx + 1.0 );
+  return std::tanh(x);
 }
 
 inline double ReadPion_Long_TMVA::OutputActivationFnc(double x) const {
   // sigmoid
-  //return 1.0/(1.0+exp(-x));
-  return 1.0/(1.0+vdt::fast_exp(-x));
+  return 1.0/(1.0+std::exp(-x));
 }
 
 // Clean up
