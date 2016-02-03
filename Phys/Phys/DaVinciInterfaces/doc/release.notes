@@ -4,6 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2016-02-03 - Eduardo Rodrigues
+ - Documentation of ILifetimeFitter updated.
+
 !===================== DaVinciInterfaces v2r25 2015-10-05 ====================
 
 ! 2015-09-28 - Gerhard Raven

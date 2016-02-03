@@ -28,6 +28,7 @@ class GAUDI_API ILifetimeFitter : virtual public IAlgTool
   /// inputs: Vertex corresponding to the assumed production point
   ///         LHCb::Particle itself
   /// output: resulting lifetime and error, chisq.
+  ///         The lifetime is returned in nanoseconds.
   virtual StatusCode fit( const LHCb::VertexBase&, 
                           const LHCb::Particle&, 
                           double& lifetime, 
