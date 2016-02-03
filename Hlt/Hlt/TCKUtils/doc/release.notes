@@ -5,6 +5,17 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+! 2016-02-03 - Anton Poluektov 
+ - Add python/TCKUtils/createWebDoc.py
+   The script to generate webpages with Hlt lines cuts. Usage: 
+     > python createWebDoc.py - show list of available TCKs
+     > python createWebDoc.py [tck] - generate webpages for a given TCK
+   example: 
+     > python createWebDoc.py 0x01200240
+   the pages are stored under the current directory, in html/[tck]/ subdir, 
+   so make sure there is plenty of space in the current directory (typical 
+   size of web pages is 40-50 Mb). 
+
 !========================= TCKUtils v1r18 2015-12-17 =========================
 
 ! 2015-11-23 - Roel Aaij
