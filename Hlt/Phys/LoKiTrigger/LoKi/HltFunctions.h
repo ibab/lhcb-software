@@ -68,7 +68,8 @@ namespace LoKi
       /// MANDATORY: clone method ("virtual constructor")  
       virtual  DistanceOfClosestApproach* clone() const 
       { return new DistanceOfClosestApproach(*this) ; }
-      /// MANDATORY: the only one essential method 
+      /// MANDATORY: the only one essential method
+      using LoKi::BasicFunctors<LoKi::TrackTypes::TrackPair>::Function::operator();
       virtual result_type operator() ( argument a ) const ;
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream( std::ostream& s ) const 

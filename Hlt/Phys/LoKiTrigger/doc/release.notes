@@ -4,6 +4,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2016-02-03 - Rosen Matev
+ - Fix overloaded virtual method warning.
+
 ! 2016-01-31 - Rosen Matev
  - Fix build with boost 1.59
 
