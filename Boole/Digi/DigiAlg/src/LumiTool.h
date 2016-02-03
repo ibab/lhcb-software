@@ -34,7 +34,7 @@ public:
             const IInterface* parent );
 
   // Standard Destructor
-  virtual ~LumiTool();
+  ~LumiTool() override = default;
 
   /// standard methods
   StatusCode initialize();
@@ -46,7 +46,7 @@ private:
   double m_bunchCrossRate; ///< bunch crossing rate (MHz)
   double m_totalXSection;  ///< total cross-section (mbarn)
 
-  IRndmGenSvc*      m_randSvc;        ///< pointer to random numbers service
+  SmartIF<IRndmGenSvc> m_randSvc;        ///< pointer to random numbers service
 };
 
 #endif // LUMITOOL_H

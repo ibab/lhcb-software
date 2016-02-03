@@ -3,6 +3,8 @@
 ! Responsible : Marco CATTANEO
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
+! 2016-02-03 - Gerhard Raven
+ - modernize LumiTool, MergeEventAlg
 
 !========================= DigiAlg v5r4 2015-09-23 =========================
 ! 2015-08-26 - Gerhard Raven

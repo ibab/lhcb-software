@@ -18,14 +18,14 @@ class ILumiTool;
 /** @class MergeEventAlg MergeEventAlg.h
  *
  *  Merge events from different OO files and put them in different
- *  TES locations. Initializes an EventSelector per additional file 
+ *  TES locations. Initializes an EventSelector per additional file
  *
  *  Currently implements:
  *     merging of flat event from LHC background
  *     merging of luminosity weighted spillover
  *
  *  @author Gloria CORTI
- *  @date   2003-06-23  
+ *  @date   2003-06-23
  */
 
 class MergeEventAlg : public GaudiAlgorithm {
@@ -33,11 +33,11 @@ class MergeEventAlg : public GaudiAlgorithm {
 public:
 
   /// Typedefs
-  typedef std::vector<DataStoreItem*> Items;
+  typedef std::vector<std::unique_ptr<DataStoreItem>> Items;
   typedef std::vector<std::string>    ItemNames;
 
   /// Standard constructor
-  MergeEventAlg(const std::string& name, ISvcLocator* pSvcLocator); 
+  MergeEventAlg(const std::string& name, ISvcLocator* pSvcLocator);
 
   virtual ~MergeEventAlg( );  ///< Destructor
 
@@ -47,8 +47,6 @@ public:
 
 private:
 
-  /// Clear list of data objects to load in new path
-  void clearItems(Items& itms);
   /// Add item to list of data objects to load new path
   void addItem(Items& itms, const std::string& descriptor);
 
@@ -57,7 +55,7 @@ private:
 
   /// Read spillover event and load it into transient Event Store
   StatusCode readSpillover();
-  
+
   /// Read additional event and load it into transient Event Store
   StatusCode readAndLoadEvent( const std::string& subPath );
 
@@ -88,9 +86,9 @@ private:
   /// Vector of items to be loaded from this event selector
   Items                    m_itemList;
 
-  /// Service of additional event selector 
-  Service*                  m_mergeSelector; 
-  /// IEvtSelector interface of additional event selector 
+  /// Service of additional event selector
+  Service*                  m_mergeSelector;
+  /// IEvtSelector interface of additional event selector
   IEvtSelector*             m_mergeISelector;
   /// EventSelector iterator
   IEvtSelector::Context*    m_mergeIt;

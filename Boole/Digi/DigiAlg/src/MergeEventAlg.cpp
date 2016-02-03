@@ -95,31 +95,15 @@ StatusCode MergeEventAlg::initialize()
   m_mergeISelector = dynamic_cast<IEvtSelector*>(pISvc);
 
   // Clear the item list that will be loaded by this event selector
-  clearItems(m_itemList);
+  m_itemList.clear();
 
-  ItemNames::iterator i;
   // Take the new item list from the properties.
-  for ( i = m_itemNames.begin(); i != m_itemNames.end(); ++i )   
-  {
-    addItem( m_itemList, *i );
-  }
+  for (const auto& i : m_itemNames ) addItem( m_itemList, i );
 
   // Get the luminosity tool
   if( "Spillover" == m_mergeType ) m_lumiTool = tool<ILumiTool>( "LumiTool" );
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-// Remove all items from the list
-//=============================================================================
-void MergeEventAlg::clearItems(Items& itms)     
-{
-  for ( Items::iterator i = itms.begin(); i != itms.end(); ++i )    
-  {
-    delete (*i);
-  }
-  itms.erase(itms.begin(), itms.end());
 }
 
 //=============================================================================
@@ -142,15 +126,14 @@ void MergeEventAlg::addItem(Items& itms, const std::string& descriptor)
 
   const std::string newPath = resetPath( obj_path );
 
-  DataStoreItem* item = new DataStoreItem(newPath, level);
+  itms.emplace_back( new DataStoreItem(newPath, level));
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Will load and reset path for item " << item->path()
-            << " with " << item->depth() << " level(s)." << endmsg;
+    debug() << "Will load and reset path for item " << itms.back()->path()
+            << " with " << itms.back()->depth() << " level(s)." << endmsg;
   }
 
-  itms.push_back( item );
 }
 
 //=============================================================================
@@ -181,7 +164,7 @@ StatusCode MergeEventAlg::execute()
 //=============================================================================
 StatusCode MergeEventAlg::finalize() 
 {
-  clearItems(m_itemList);
+  m_itemList.clear();
   if( 0 != m_mergeIt ) m_mergeISelector->releaseContext(m_mergeIt);
 
   return GaudiAlgorithm::finalize();
@@ -261,9 +244,9 @@ StatusCode MergeEventAlg::readAndLoadEvent( const std::string& subPath )
          << ++m_eventCounter << "] at " << eventPath << endmsg;
 
   // Read and load list as in properties
-  for ( Items::iterator i = m_itemList.begin(); i != m_itemList.end(); ++i )
+  for ( const auto& i : m_itemList )
   {
-    const std::string mcPath = eventPath + "/" + (*i)->path();
+    const std::string mcPath = eventPath + "/" + i->path();
     DataObject* pMC = get<DataObject>( mcPath );
 
     if ( msgLevel(MSG::DEBUG) )
@@ -278,7 +261,7 @@ StatusCode MergeEventAlg::readAndLoadEvent( const std::string& subPath )
       return Error( "Error in setting links for " + mcPath, sc );
     }
     // Read all leaves down to specified depth
-    sc = readLeaves( subPath, pMC, (*i)->depth() );
+    sc = readLeaves( subPath, pMC, i->depth() );
     if ( !sc.isSuccess() )
     {
       return Error( "Error in loading leaves of " + subPath, sc );
@@ -336,23 +319,17 @@ StatusCode MergeEventAlg::resetLinks( const std::string& subPath,
 
   std::string mainPath = "/Event";
   std::vector< std::pair< std::string, long > > refs;
-  auto oldlinks = pMCObj->linkMgr()->m_linkVector;
-  for ( auto ilink = oldlinks.begin(); ilink!= oldlinks.end(); ++ilink)
+  for ( const auto&  ilink :pMCObj->linkMgr()->m_linkVector )
   {
-    refs.emplace_back( (*ilink)->path(), (*ilink)->ID() );
+    refs.emplace_back( ilink->path(), ilink->ID() );
   }
   pMCObj->linkMgr()->clearLinks();
-  for ( auto il=refs.begin(); refs.end()!=il; ++il )
+  for ( const auto&  il : refs )
   {
-    const std::string newPath = resetPath( (*il).first, subPath );
-    const long itemp = il->second;
-    const long lid = pMCObj->linkMgr()->addLink( newPath, nullptr );
-    if ( lid != itemp )
-    {
-      return StatusCode::FAILURE;
-    }
+    std::string newPath = resetPath( il.first, subPath );
+    long lid = pMCObj->linkMgr()->addLink( newPath, nullptr );
+    if ( lid != il.second ) return StatusCode::FAILURE;
   }
-
   return StatusCode::SUCCESS;
 }
 
@@ -363,23 +340,17 @@ StatusCode MergeEventAlg::resetLinks( const std::string& subPath,
 std::string MergeEventAlg::resetPath( const std::string& oldPath,
                                       const std::string& subPath )
 {
-
   // Check if /Event already in path and reset
   std::string newPath  = oldPath;
-  std::string mainPath = "/Event";
+  const std::string mainPath = "/Event";
   std::string::size_type pos = newPath.find(mainPath);
-  if ( pos != std::string::npos )
-  {
-    newPath = newPath.erase( pos, mainPath.length()+1 );
-    if ( subPath != "" )
-    {
+  if ( pos != std::string::npos ) {
+    newPath.erase( pos );
+    if ( !subPath.empty() ) {
       newPath = mainPath+"/"+subPath+"/"+newPath;
     }
-  }
-  else
-  {
+  } else {
     newPath = subPath+newPath;
   }
-
   return newPath;
 }
