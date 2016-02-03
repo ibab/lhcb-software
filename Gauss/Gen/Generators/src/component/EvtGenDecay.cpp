@@ -99,7 +99,7 @@ EvtGenDecay::EvtGenDecay( const std::string& type,
     declareProperty("RealHelOne"  , m_realHelOne  = 1. ) ;
     declareProperty("ImHelOne"    , m_imHelOne    = 0. ) ;
     declareProperty("RealHelZero" , m_realHelZero = 1. ) ;
-    declareProperty("ImHelOne"    , m_imHelZero   = 0. ) ;   
+    declareProperty("ImHelZero"   , m_imHelZero   = 0. ) ;   
     // Initialize signalId
     m_signalId = EvtId( -1, -1 ) ;
 }
