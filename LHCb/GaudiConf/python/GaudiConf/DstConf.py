@@ -181,6 +181,8 @@ class DstConf(LHCbConfigurableUser):
                             ,"/Event/Turbo/pRec/Track/Custom#99"
                             ,"/Event/Turbo/pRec/Muon/CustomPIDs#99"
                             ,"/Event/Turbo/pRec/Rich/CustomPIDs#99"
+                            ,"/Event/Turbo/pRec/neutrals/Clusters#99"
+                            ,"/Event/Turbo/pRec/neutrals/Hypos#99"
                             ,"/Event/Turbo/pRec/ProtoP/Custom#99"
                             ]
 
@@ -408,6 +410,17 @@ class DstConf(LHCbConfigurableUser):
             unpackFittedVeloTracks.OutputName = "Rec/Track/FittedHLT1VeloTracks"
             DataOnDemandSvc().AlgMap[ "/Event/Rec/Track/FittedHLT1VeloTracks" ] = unpackFittedVeloTracks
 
+        if self.getProp("Turbo"): 
+            from Configurables import DataPacking__Unpack_LHCb__CaloClusterPacker_ as UnpackCaloClusters
+            from Configurables import UnpackCaloHypo as UnpackCaloHypos
+            clustersT=UnpackCaloClusters( name = "UnpackCaloClusters",
+                    InputName          = "Turbo/pRec/neutral/Clusters", 
+                    OutputName         = "Turbo/CaloClusters" )
+            hyposT=UnpackCaloHypos( name = "UnpackCaloHypos",
+                    InputName          = "Turbo/pRec/neutral/Hypos",
+                    OutputName         = "Turbo/CaloHypos" )
+            DataOnDemandSvc().AlgMap[ "/Event/Turbo/CaloHypos" ] = hyposT
+            DataOnDemandSvc().AlgMap[ "/Event/Turbo/CaloClusters" ] = clustersT
 
         if "Tracking" in self.getProp("EnableUnpack") : return # skip the rest
 
