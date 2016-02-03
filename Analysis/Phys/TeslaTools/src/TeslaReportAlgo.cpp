@@ -673,6 +673,31 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
             if ( msgLevel(MSG::DEBUG) ) debug() << "RichPID details added" << endmsg;
             break;
           }
+        
+        case LHCb::CLID_CaloHypo:
+          {
+            LHCb::CaloHypo* hypo = new LHCb::CaloHypo();
+
+            const LHCb::HltObjectSummary::Info hypo_info = ObjBasic->numericalInfo();
+            // What keys are present:
+            std::vector<std::string> vec_keys_hypo = ObjBasic->numericalInfoKeys();
+            if ( msgLevel(MSG::DEBUG) ) {
+              debug() << "Available information (hypo)" << endmsg;
+              for(std::vector<std::string>::iterator it = vec_keys_hypo.begin(); it!=vec_keys_hypo.end(); it++)
+                 debug() << *it << " = " << hypo_info[(*it)] << endmsg;
+            }
+            //
+            m_conv->CaloHypoObjectFromSummary(&hypo_info,hypo,turbo);
+            if ( msgLevel(MSG::DEBUG) ) debug() << "Added hypo info to object" << endmsg;
+            calo_vector->push_back(hypo);
+            SmartRefVector<LHCb::HltObjectSummary> hyposub = ObjBasic->substructureExtended();
+            if ( msgLevel(MSG::DEBUG) ) debug() << "Commencing cluster addition" << endmsg;
+            for(auto cluster : hyposub){
+              hypo->addToClusters(processCluster(cluster.target(),calo_vector));
+            }
+            if ( msgLevel(MSG::DEBUG) ) debug() << "CaloHypo details added" << endmsg;
+            break;
+          }
 
         case LHCb::CLID_MuonPID:
           {
@@ -700,50 +725,7 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
 
         case LHCb::CLID_CaloCluster:
           {
-            debug() << "Adding CaloCluster details" << endmsg;
-            // Need to make new CaloCluster and seed Digit
-            LHCb::CaloCluster* calo = new LHCb::CaloCluster();
-
-            std::vector<LHCb::LHCbID> ids = ObjBasic->lhcbIDs();
-
-            if ( msgLevel(MSG::DEBUG) ) {
-              debug() << "Associated CALO LHCbIDs:" << endmsg;
-              for(unsigned int i=0;i<ids.size();i++){
-                debug()<<i<<"\t"<<ids[i].detectorType()<<"\t"<<ids[i].lhcbID()<<endmsg;
-              }
-            }
-            // reports save seed LHCbID as the first one
-            LHCb::CaloCellID cellID = (*(ids.begin())).caloID();
-
-            // make digits from our LHCb IDs
-            std::vector<LHCb::CaloDigit*> digits;
-            for( auto id : ids ){
-              LHCb::CaloCellID i_cellID = id.caloID();
-              LHCb::CaloDigit* i_digit = DigitSearchRaw(i_cellID);
-              if(i_digit) digits.push_back(i_digit);
-            }
-
-            const LHCb::HltObjectSummary::Info Calo_info = ObjBasic->numericalInfo();
-            // What keys are present:
-            std::vector<std::string> vec_keys_calo = ObjBasic->numericalInfoKeys();
-            if ( msgLevel(MSG::DEBUG) ) {
-              debug() << "Available information (calo)" << endmsg;
-              for(std::vector<std::string>::iterator it = vec_keys_calo.begin(); it!=vec_keys_calo.end(); it++)
-                 debug() << *it << " = " << Calo_info[(*it)] << endmsg;
-            }
-            m_conv->CaloClusterObjectFromSummary(&Calo_info,calo,turbo);
-            calo->setSeed(cellID);
-
-            std::vector<LHCb::CaloClusterEntry> entries;
-            for( auto digit : digits ){
-              if ( msgLevel(MSG::DEBUG) ) debug() << "Digit found to adding to cluster" << endmsg;
-              LHCb::CaloClusterEntry entry;
-              entry.setStatus( LHCb::CaloDigitStatus::UseForEnergy );
-              entry.setDigit(digit);
-              entries.push_back(entry);
-            }
-            calo->setEntries(entries);
-            calo_vector->push_back(calo);
+            processCluster(ObjBasic,calo_vector);
 
             break;
           }
@@ -808,17 +790,6 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
     }
 
     // add calorimeter hypos
-    if( calo_vector->size()>0 ){
-      LHCb::CaloHypo* hypo = new LHCb::CaloHypo();
-      for( auto calo : *calo_vector ){
-        if( calo->clID() == LHCb::CLID_CaloCluster ) {
-          LHCb::CaloCluster* calo_clust = dynamic_cast<LHCb::CaloCluster*>( calo );
-          hypo->addToClusters( calo_clust );
-          if( calo_clust->entries().size()>0 ) hypo->addToDigits( calo_clust->entries().front().digit() );
-        }
-      }
-      calo_vector->push_back( hypo );
-    }
     for( auto calo : *calo_vector ){
       if( calo->clID() == LHCb::CLID_CaloHypo ) proto->addToCalo( dynamic_cast<LHCb::CaloHypo*>( calo ) );
     }
@@ -827,10 +798,9 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
       if ( msgLevel(MSG::DEBUG) ){
         debug() << "Proto has " << proto->calo().size() << " calo hypotheses" << endmsg;
         if ( proto->calo().size() > 0 ) {
-          debug() << "First hypo has " << proto->calo().front()->clusters().size() << " clusters and "
-                  << proto->calo().front()->digits().size() << " digits" << endmsg;
-          debug() << "First CaloCluster has "
-                  << proto->calo().front()->clusters().front()->entries().size() << " entries" << endmsg;
+          debug() << "First hypo has " << proto->calo().front()->clusters().size() << " clusters " << endmsg;
+          //debug() << "First CaloCluster has "
+          //        << proto->calo().front()->clusters().front()->entries().size() << " entries" << endmsg;
         }
       }
     }
@@ -968,4 +938,53 @@ void TeslaReportAlgo::AddRelInfo(const LHCb::HltObjectSummary* Obj_d, LHCb::Part
     rel_RelInfo->relate(Part,*relmap);
     put( rel_RelInfo , locRelInfo.str() );
   }
+}
+
+LHCb::CaloCluster* TeslaReportAlgo::processCluster(const LHCb::HltObjectSummary* ObjBasic, std::vector<ContainedObject*>* calo_vector){
+  debug() << "Adding CaloCluster details" << endmsg;
+  // Need to make new CaloCluster and seed Digit
+  LHCb::CaloCluster* calo = new LHCb::CaloCluster();
+
+  std::vector<LHCb::LHCbID> ids = ObjBasic->lhcbIDs();
+
+  if ( msgLevel(MSG::DEBUG) ) {
+    debug() << "Associated CALO LHCbIDs:" << endmsg;
+    for(unsigned int i=0;i<ids.size();i++){
+      debug()<<i<<"\t"<<ids[i].detectorType()<<"\t"<<ids[i].lhcbID()<<endmsg;
+    }
+  }
+  // reports save seed LHCbID as the first one
+  LHCb::CaloCellID cellID = (*(ids.begin())).caloID();
+
+  // make digits from our LHCb IDs
+  std::vector<LHCb::CaloDigit*> digits;
+  for( auto id : ids ){
+    LHCb::CaloCellID i_cellID = id.caloID();
+    LHCb::CaloDigit* i_digit = DigitSearchRaw(i_cellID);
+    if(i_digit) digits.push_back(i_digit);
+  }
+
+  const LHCb::HltObjectSummary::Info Calo_info = ObjBasic->numericalInfo();
+  // What keys are present:
+  std::vector<std::string> vec_keys_calo = ObjBasic->numericalInfoKeys();
+  if ( msgLevel(MSG::DEBUG) ) {
+    debug() << "Available information (calo)" << endmsg;
+    for(std::vector<std::string>::iterator it = vec_keys_calo.begin(); it!=vec_keys_calo.end(); it++)
+      debug() << *it << " = " << Calo_info[(*it)] << endmsg;
+  }
+  m_conv->CaloClusterObjectFromSummary(&Calo_info,calo,turbo);
+  calo->setSeed(cellID);
+
+  std::vector<LHCb::CaloClusterEntry> entries;
+  for( auto digit : digits ){
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Digit found to adding to cluster" << endmsg;
+    LHCb::CaloClusterEntry entry;
+    entry.setStatus( LHCb::CaloDigitStatus::UseForEnergy );
+    entry.setDigit(digit);
+    entries.push_back(entry);
+  }
+  calo->setEntries(entries);
+  calo_vector->push_back(calo);
+
+  return calo;
 }

@@ -77,6 +77,7 @@ public:
 
         LHCb::CaloDigit* DigitSearchRaw(LHCb::CaloCellID);
         LHCb::RecVertex* bestPV(LHCb::Particle*, LHCb::RecVertex::Container*);
+        LHCb::CaloCluster* processCluster(const LHCb::HltObjectSummary*, std::vector<ContainedObject*>*);
 protected:
 
 private:
