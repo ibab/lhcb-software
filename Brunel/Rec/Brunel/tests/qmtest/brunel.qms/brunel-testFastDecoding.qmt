@@ -17,7 +17,6 @@
       <text>../options/brunel-testFastDecoding.py</text>
   </set></argument>
   <argument name="reference"><text>../refs/brunel-testFastDecoding.ref</text></argument>
-  <argument name="error_reference"><text>../refs/brunel-testFastDecoding-err.ref</text></argument>
   <argument name="validator"><text>
 from Brunel.QMTest.BrunelExclusions import preprocessor
 validateWithReference(preproc = preprocessor)
