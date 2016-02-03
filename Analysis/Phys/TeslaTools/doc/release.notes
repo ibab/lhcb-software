@@ -3,6 +3,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-02-03 - Sean Benson
+ - Use shared containers for CaloHypos and CaloClusters.
+
 ! 2015-02-02 - Sean Benson
  - Fix to related info restoration via TCK.
 

@@ -201,10 +201,12 @@ StatusCode TeslaReportAlgo::execute()
   ss_MPIDLoc << m_OutputPref << m_inputName << "/MuonPIDs"; // NOT STORED BY ORIGINAL SELREPORTS
   //
   std::stringstream ss_CaloHyposLoc;
-  ss_CaloHyposLoc << m_OutputPref << m_inputName << "/CaloHypos";
+  //ss_CaloHyposLoc << m_OutputPref << m_inputName << "/CaloHypos";
+  ss_CaloHyposLoc << m_OutputPref << "CaloHypos";
   //
   std::stringstream ss_CaloClustLoc;
-  ss_CaloClustLoc << m_OutputPref << m_inputName << "/CaloClusters";
+  //ss_CaloClustLoc << m_OutputPref << m_inputName << "/CaloClusters";
+  ss_CaloClustLoc << m_OutputPref << "CaloClusters";
   //
   std::stringstream ss_P2PVLoc;
   ss_P2PVLoc << m_OutputPref << m_inputName << "/Particle2VertexRelations";
@@ -227,11 +229,13 @@ StatusCode TeslaReportAlgo::execute()
   LHCb::MuonPID::Container* cont_MPID = new LHCb::MuonPID::Container() ;
   put( cont_MPID , ss_MPIDLoc.str().c_str() );
   //
-  LHCb::CaloHypo::Container* cont_CaloHypo = new LHCb::CaloHypo::Container() ;
-  put( cont_CaloHypo , ss_CaloHyposLoc.str().c_str() );
+  //LHCb::CaloHypo::Container* cont_CaloHypo = new LHCb::CaloHypo::Container() ;
+  //put( cont_CaloHypo , ss_CaloHyposLoc.str().c_str() );
+  LHCb::CaloHypos* cont_CaloHypo = getOrCreate<LHCb::CaloHypos,LHCb::CaloHypos>(ss_CaloHyposLoc.str().c_str());
   //
-  LHCb::CaloCluster::Container* cont_CaloClust = new LHCb::CaloCluster::Container() ;
-  put( cont_CaloClust , ss_CaloClustLoc.str().c_str() );
+  //LHCb::CaloCluster::Container* cont_CaloClust = new LHCb::CaloCluster::Container() ;
+  //put( cont_CaloClust , ss_CaloClustLoc.str().c_str() );
+  LHCb::CaloClusters* cont_CaloClust = getOrCreate<LHCb::CaloClusters,LHCb::CaloClusters>(ss_CaloClustLoc.str().c_str());
   //
   // PV situation:
   // Need to detect if a refitted PV has been stored.
