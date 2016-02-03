@@ -4,6 +4,9 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2016-02-03 - Chris Jones
+ - Adapt to removal of old backwards compatibility typedefs in RichKernel.
+
 !========================= RichReadout v2r17 2016-01-29 =========================
 ! 2015-12-07 - Marcin Kucharczyk
   - Fix obsolete includes and remove warnings

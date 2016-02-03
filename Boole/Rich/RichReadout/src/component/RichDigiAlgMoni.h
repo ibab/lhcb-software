@@ -58,7 +58,7 @@ namespace Rich
        *  @date   2003-09-08
        */
 
-      class AlgMoni : public RichHistoAlgBase
+      class AlgMoni : public HistoAlgBase
       {
 
       public:
