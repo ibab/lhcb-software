@@ -16,7 +16,6 @@
 #include <vector>
 #include <list>
 #include <ostream>
-#include <memory>
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
@@ -143,23 +142,12 @@ namespace Rich
    *
    *  Utility class representing a set of clusters for a single HPD
    *
-   *  @todo Update how row and column data is handled to not need to create
-   *        ALICE mode sized array when LHCb mode is in use
-   *
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   21/03/2006
    */
   //-----------------------------------------------------------------------------
   class HPDPixelClusters : public LHCb::MemPoolAlloc<Rich::HPDPixelClusters>
   {
-
-  public:
-
-    /// const Shared pointer to a HPDPixelClusters
-    using ConstSharedPtn = std::shared_ptr<const HPDPixelClusters>;
-
-    /// Shared pointer to a HPDPixelClusters
-    using SharedPtn      = std::shared_ptr<HPDPixelClusters>;
 
   public:
 

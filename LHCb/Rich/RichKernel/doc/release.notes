@@ -4,6 +4,9 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2016-02-03 - Chris Jones
+ - Remove (unused) smart pointer aliases from RichPixelCluster.h
+
 ! 2016-02-02 - Chris Jones
  - Prefer aliases to typedefs.
  - Remove some old backwards compatibility typedefs.
