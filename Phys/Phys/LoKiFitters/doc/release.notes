@@ -5,13 +5,12 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+!===================== Phys/LoKiFitters v4r20 2016-02-04 ======================
+
 ! 2016-01-21 - Vanya Belyaev
-
  - DistanceCalculator: use 
-
      !matrix.InvertChol() && !matrix.Invert() construction instead of 
      !matrix.Invert() 
-
     It should be a bit faster..
 
 ! 2016-01-18 - Vanya Belyaev
@@ -20,7 +19,6 @@
    (Thanks to Jascha Grabovski)
 
 ! 2016-01-15 - Vanya Belyaev
-
  - Unification of code between
    LoKi::DistanceCalculator and LoKi::TrgDistanceCalcualtor
    Essentially now the same  code is running, modulo
