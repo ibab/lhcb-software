@@ -1,8 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/SelPy
-! Responsible : Juan Palacios
+! Responsible : Vanya Belyaev
 ! Purpose     : Pure python core components for Selection "Framework".
 !-----------------------------------------------------------------------------
+
+!=========================== SelPy v4r4 2016-02-04 ===========================
 
 ! 2016-01-25 - Vanya Belyaev
  - add Graphviz to CMAKE 
