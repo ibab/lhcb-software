@@ -3,6 +3,22 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v30r0>2016-02-05 Boole v30r0</A></H1><PRE>
+This version uses projects:
+ LCG_83 (ROOT 6.06.00), Gaudi v27r0, LHCb v40r0, Lbcom v18r0
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- New functionality and configuration changes
+  . Allow GenFSR merging and propagation
+    (GenEvent v7r0, FSRAlgs v2r0, Boole v40r0)
+  . Remove GlobalTimeOffset(). Instead, derive its value from rootInTes()
+    (CaloDigit v3r5, FTDigitisation v3r1, MuonAlgs v6r14, Boole v40r0)
+  . Add option for Rich upgrade (PMTs) (RichReadout v2r17, RichDigiSys v1r4)
+
+- Changes to tests
+  . Swap order of mc10 tests so that when both tests fail the correct
+    new reference file survives
+
 </PRE><H1><A NAME=v29r12>2015-11-25 Boole v29r12</A></H1><PRE>
 This version uses projects:
  LCG_79 (ROOT 6.04.02), Gaudi v26r4, LHCb v39r2, Lbcom v17r2
