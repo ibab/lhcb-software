@@ -55,7 +55,6 @@
 
   <class pattern = "Gaudi::*Range_<*Hlt::*>" />
   <class pattern = "Gaudi::*Range_<*Muon*>"  />
-  <class pattern = "Gaudi::*Range_<*Calo*>"  />
   
   <class name   = "Hlt::TSelection<Hlt::Candidate>"          />
   <class name   = "Hlt::TSelection<Hlt::Stage>"              />

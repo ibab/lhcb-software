@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2016-02-03 - Rosen Matev
+ - Remove unused class rule "Gaudi::*Range_<*Calo*>"
+
 !========================= HltBase v15r8 2015-12-17 =========================
 
 ! 2015-12-06 - Gerhard Raven
