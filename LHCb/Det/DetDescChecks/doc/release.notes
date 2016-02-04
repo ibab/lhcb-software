@@ -5,6 +5,9 @@
 !               Detector Description, Material Budget etc
 ! ------------------------------------------------------------------------------
 
+! 2016-02-04 - Liang Sun
+ - Add loaddddb2016 test
+
 ! 2016-02-03 - Marco Cattaneo
  - remove obsolete loaddddb-mc09 test
  - Update checkoverlap, materialbudget, volumecheck tests to use "2015" DataType
