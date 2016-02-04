@@ -60,18 +60,16 @@ StatusCode HltTrackFilterGhostProb::tracksFromTrack( const LHCb::Track& track,
 		                                 std::vector<LHCb::Track*>& tracks )
 {
   if ( m_initializeEvent ){
-    //always()<<"Initialize event"<<endmsg;
     if ( m_ghostTool->beginEvent().isFailure() ){
       return Error("GhostIdTool could not begin event.", StatusCode::SUCCESS,10);
     }
-    //always()<<"Initialized event"<<endmsg;
     m_initializeEvent = false;
   }
   auto tr = const_cast<LHCb::Track*>( &track );
   if ( track.chi2PerDoF() < m_maxChi2PerDoFCut ){
     // Workaround to accomodate that the variable is not always filled in Hlt1.
     if (track.info(LHCb::Track::NCandCommonHits, -999) == -999){
-      tr->addInfo(LHCb::Track::NCandCommonHits,0);
+      tr->addInfo(LHCb::Track::NCandCommonHits,1.0);
     }
     m_ghostTool->execute( const_cast<LHCb::Track&>(track) ).ignore();
   }else{

@@ -4,6 +4,11 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2016-02-04 - Sascha Stahl
+ - Hlt1TrackFilterGhostProb: Set NCandCommonHits to 1 in case it does not exist,
+   this is in line with the value set in PatMatch and the smallest possible
+   in PatForward.
+
 ! 2016-02-01 - Sascha Stahl
  - Added possibility to calculate ProbNN variables. 
    Activate for now with HltRecoConf().CalculateProbNN = True.
