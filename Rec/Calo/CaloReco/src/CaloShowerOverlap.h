@@ -37,6 +37,7 @@ private:
   int m_iter;
   std::string m_input;
   std::vector<std::string> m_taggerP  ;  
+  std::vector<std::string> m_taggerE  ;  
   std::string m_det;
   const DeCalorimeter* m_detector;
   ICaloShowerOverlapTool* m_oTool;

@@ -100,10 +100,11 @@ def clusterReco ( context , enableRecoOnDemand , clusterPt = 0.  , fastReco = Fa
     covar = getAlgo ( CaloClusterCovarianceAlg , "EcalCovar"  , context ) 
 
     if masksE != [] :
-        covar.EnergyMasks = masksE
+        share.EnergyTags = masksE
+        covar.EnergyTags = masksE
     if masksP != [] :
-        share.PositionMasks = masksP
-        covar.PositionMasks = masksP
+        share.PositionTags = masksP
+        covar.PositionTags = masksP
 
     if external != '' :                  # use non-default clusters 
         share.InputData = external
@@ -384,9 +385,9 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
         pi0 = getAlgo ( CaloMergedPi0 , 'MergedPi0Rec', context )        
 
     if masksE != [] :
-        pi0.EnergyMasks = masksE
+        pi0.EnergyTags = masksE
     if masksP != [] :
-        pi0.PositionMasks = masksP
+        pi0.PositionTags = masksP
 
     if external  != '' :
         pi0.InputData = external

@@ -36,13 +36,10 @@ SubClusterSelectorTool::SubClusterSelectorTool( const std::string& type,
   if( 0 != parent ){ 
     const IProperty* prop = dynamic_cast<const IProperty*> ( parent );
     if( 0 != prop ){
-      StatusCode sc;
-      sc=prop->getProperty( &eTags      );
-      sc=prop->getProperty( &pTags      );
-      if( sc.isSuccess() ){
-        m_taggerE   = eTags.value();
-        m_taggerP   = pTags.value();
-      } 
+      StatusCode sc1=prop->getProperty( &eTags      );
+      if( sc1.isSuccess() )m_taggerE   = eTags.value();
+      StatusCode sc2=prop->getProperty( &pTags      );
+      if( sc2.isSuccess() )m_taggerP   = pTags.value();
     }
   }
   
@@ -221,6 +218,7 @@ StatusCode SubClusterSelectorTool::getParamsFromOptions(){
       ICaloSubClusterTag* tP= tool<ICaloSubClusterTag>(taggerP,areaName+"PositionTagger",this);
       tP->setMask(m_positionStatus);    
       m_tagP.push_back( tP  );    
+      m_DBtaggerP[area]=nameP;
     }    
   }
 

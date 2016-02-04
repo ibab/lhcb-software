@@ -32,6 +32,7 @@ CaloShowerOverlap::CaloShowerOverlap( const std::string& name,
   declareProperty("Detector"               , m_det) ;
   // following properties are inherited by the selector tool when defined :
   declareProperty( "PositionTags" , m_taggerP      ) ;
+  declareProperty( "EnergyTags"   , m_taggerE      ) ;
 
   m_input = LHCb::CaloAlgUtils::CaloClusterLocation( name , context() );
   m_det   = LHCb::CaloAlgUtils::DeCaloLocation( name ) ;

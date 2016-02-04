@@ -4,6 +4,10 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+
+! 2016-02-02 - Olivier Deschamps
+ - Fix EnergyTags & PositionTags property setting in configurable.
+
 !========================= CaloReco v5r27 2016-01-28 =========================
 ! 2015-12-16 - Marco Cattaneo
  - CaloCorrectionBase.cpp: add workaround to prevent wierd FPE with clang

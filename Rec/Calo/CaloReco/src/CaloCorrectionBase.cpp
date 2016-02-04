@@ -181,8 +181,6 @@ StatusCode CaloCorrectionBase::updParams(){
   if ( !m_cond ) return Error("Condition points to NULL", StatusCode::FAILURE);
 
   // toDo
-
-
   for( const auto& paramName : m_cond->paramNames() ) {
     if( m_cond -> exists( paramName ) ){
       const std::vector<double>&  params = m_cond->paramAsDoubleVect( paramName ); 
