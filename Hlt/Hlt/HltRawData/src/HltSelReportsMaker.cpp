@@ -910,6 +910,22 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::CaloCluster
 }
 
 // -------------------------------------------
+// store CaloHypo in HltObjectSummary store
+// -------------------------------------------
+const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::CaloHypo& object)
+{
+  std::unique_ptr<HltObjectSummary> hos {new HltObjectSummary{} };
+  hos->setSummarizedObjectCLID( object.clID() );
+  hos->setSummarizedObject(&object);
+  hos->setNumericalInfo( infoToSave( *hos ));
+  for(auto cluster : object.clusters()){
+    hos->addToSubstructureExtended( store_( *cluster ) );
+  }
+  m_objectSummaries->push_back(hos.release());
+  return m_objectSummaries->back();
+}
+
+// -------------------------------------------
 // store Vertex in HltObjectSummary store
 // -------------------------------------------
 const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Vertex& object)
@@ -1097,12 +1113,9 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle& o
         }
         if(m_Turbo){
           if( !caloVec.empty() ) {
-            const LHCb::CaloHypo* hypo  = caloVec.front();
-            int numCluster=0;
-            for( auto cluster : hypo->clusters() ){
-              numCluster++;
-              hos->addToSubstructureExtended( store_( *cluster ) );
-              if(numCluster==3) break;
+            //const LHCb::CaloHypo* hypo  = caloVec.front();
+            for(auto hypo : caloVec){
+              hos->addToSubstructure( store_( *hypo ) );
             }
           }
         }
@@ -1111,18 +1124,24 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle& o
         // neutral particle ?
         // Ecal via CaloHypo
         if( !caloVec.empty() ) {
-          const LHCb::CaloHypo*   hypo  = caloVec.front();
-          if( LHCb::CaloHypo::Photon == hypo->hypothesis() ){
-            // Photon
-            hos->addToSubstructure( store_( *hypo->clusters().front() ) );
-          }
-          else if (  LHCb::CaloHypo::Pi0Merged == hypo->hypothesis() ){
-            // Split Photons
-            const SmartRefVector<LHCb::CaloHypo>& hypos = hypo->hypos();
-            const LHCb::CaloHypo* g1 = hypos.front();
-            hos->addToSubstructure( store_( *g1->clusters().front() ) );
-            const LHCb::CaloHypo* g2 = *std::next(std::begin((hypos)));
-            hos->addToSubstructure( store_( *g2->clusters().front() ) );
+          if(m_Turbo){
+            for(auto hypo : caloVec){
+              hos->addToSubstructure( store_( *hypo ) );
+            }
+          } else{
+            const LHCb::CaloHypo*   hypo  = caloVec.front();
+            if( LHCb::CaloHypo::Photon == hypo->hypothesis() ){
+              // Photon
+              hos->addToSubstructure( store_( *hypo->clusters().front() ) );
+            }
+            else if (  LHCb::CaloHypo::Pi0Merged == hypo->hypothesis() ){
+              // Split Photons
+              const SmartRefVector<LHCb::CaloHypo>& hypos = hypo->hypos();
+              const LHCb::CaloHypo* g1 = hypos.front();
+              hos->addToSubstructure( store_( *g1->clusters().front() ) );
+              const LHCb::CaloHypo* g2 = *std::next(std::begin((hypos)));
+              hos->addToSubstructure( store_( *g2->clusters().front() ) );
+            }
           }
         }
       }
@@ -1197,6 +1216,15 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary& h
       if( !candi )return infoPersistent;
       if( kStandardInfoLevel & m_presentInfoLevel ){
         m_conv->ProtoParticleObject2Summary(&infoPersistent, candi, m_Turbo);
+      }
+    }
+    break;
+  case LHCb::CLID_CaloHypo: // Only for Turbo
+    {
+      const CaloHypo* candi = dynamic_cast<const CaloHypo*>(hos.summarizedObject());
+      if( !candi )return infoPersistent;
+      if( kStandardInfoLevel & m_presentInfoLevel ){
+        m_conv->CaloHypoObject2Summary(&infoPersistent, candi, m_Turbo);
       }
     }
     break;

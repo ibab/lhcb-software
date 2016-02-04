@@ -103,6 +103,8 @@ private:
   const LHCb::HltObjectSummary* store_(const LHCb::ProtoParticle& object);
   /// store CaloCluster in HltObjectSummary store
   const LHCb::HltObjectSummary* store_(const LHCb::CaloCluster& object);
+  /// store CaloHypo in HltObjectSummary store
+  const LHCb::HltObjectSummary* store_(const LHCb::CaloHypo& object);
   /// store RelatedInfoMap in HltObjectSummary store
   const LHCb::HltObjectSummary* store_(std::pair<int,const LHCb::RelatedInfoMap&> object);
 
