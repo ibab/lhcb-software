@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciFilters
 ################################################################################
-gaudi_subdir(DaVinciFilters v1r4)
+gaudi_subdir(DaVinciFilters v1r5)
 
 gaudi_depends_on_subdirs(Phys/DaVinciKernel
                          Phys/LoKiArrayFunctors

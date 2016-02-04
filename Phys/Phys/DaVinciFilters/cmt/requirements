@@ -3,7 +3,7 @@
 # Maintainer : Chris Jones
 #============================================================================
 package           DaVinciFilters
-version           v1r4
+version           v1r5
 
 #============================================================================
 # Structure, i.e. directories to process. 
