@@ -338,7 +338,7 @@ StatusCode HltSelReportsWriter::execute() {
 
     const auto& subs = hos->substructure();
     const auto& subsExt = hos->substructureExtended();
-    if( !subs.empty() ){
+    if( !subs.empty() || !subsExt.empty() ){
       std::transform( std::begin(subs), std::end(subs),
                       std::back_inserter(svect),
                       [&](const SmartRef<LHCb::HltObjectSummary>& i) { return fromIndexToNewIndex[ i->index() ] ; } );

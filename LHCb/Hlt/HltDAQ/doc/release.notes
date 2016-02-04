@@ -3,6 +3,10 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
+
+! 2016-02-03 - Sean Benson
+ - Port changes in development branch for Turbo reprocessing.
+
 ! 2016-02-01 - Gerhard Raven
  - remove obsolete part of requirements
  - prever SmartIF over bare interface pointer 

@@ -49,6 +49,9 @@ ReportConvertTool::ReportConvertTool( const std::string& type,
   for(const auto & elem : m_recsummary_unordered_map2){
     if(elem.first > m_LatestVersion) m_LatestVersion = elem.first;
   }
+  for(const auto & elem : m_calohypo_unordered_map2_Turbo){
+    if(elem.first > m_LatestVersion) m_LatestVersion = elem.first;
+  }
 }
 
 float ReportConvertTool::floatFromInt(unsigned int i) {
@@ -179,6 +182,12 @@ void ReportConvertTool::SummaryFromRaw(HltObjectSummary::Info* info, HltSelRepRB
       {      
         if( subbank->size()<m_rpid_unordered_map2_Turbo.at( findBestPrevious( m_rpid_unordered_map2_Turbo, m_version ) ).size() ) used_map = m_rpid_unordered_map2;
         else used_map = m_rpid_unordered_map2_Turbo;
+      }
+      break;
+    case LHCb::CLID_CaloHypo:
+      {      
+        if( subbank->size()<m_calohypo_unordered_map2_Turbo.at( findBestPrevious( m_calohypo_unordered_map2_Turbo, m_version ) ).size() ) used_map = m_calohypo_unordered_map2;
+        else used_map = m_calohypo_unordered_map2_Turbo;
       }
       break;
     case LHCb::CLID_MuonPID:
@@ -389,6 +398,10 @@ void ReportConvertTool::ProtoParticleObject2Summary( HltObjectSummary::Info* inf
       case 53: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::InAccHcal, -1000 ) ) ); break;
       case 54: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::VeloCharge, -1000 ) ) ); break;
       case 55: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::RichPIDStatus, -1000 ) ) ); break;
+      case 56: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloChargedID, -1000 ) ) ); break;
+      case 57: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloChargedEcal, -1000 ) ) ); break;
+      case 58: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloChargedPrs, -1000 ) ) ); break;
+      case 59: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloChargedSpd, -1000 ) ) ); break;
     }
   }
 
@@ -538,6 +551,29 @@ void ReportConvertTool::CaloClusterObject2Summary( HltObjectSummary::Info* info,
       case 1: info->insert( calo_it->first, float( object->position().x() ) ); break;
       case 2: info->insert( calo_it->first, float( object->position().y() ) ); break;
       case 3: info->insert( calo_it->first, float( object->position().z() ) ); break;
+    }
+  }
+}
+
+void ReportConvertTool::CaloHypoObject2Summary( HltObjectSummary::Info* info, const LHCb::CaloHypo* object, bool turbo) {
+  unordered_map<int,unordered_map<string, pair<int,int> > > used_map;
+  if( m_version == -999 ){ 
+    Warning( "I have not been told a verision number to use, assuming the latest", StatusCode::SUCCESS, 20 );
+    m_version = m_LatestVersion;
+  }
+  
+  if(turbo==true) used_map = m_calohypo_unordered_map2_Turbo;
+  else used_map = m_calohypo_unordered_map2;
+
+  for(it_unordered_map calo_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); calo_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); calo_it++){
+    switch( calo_it->second.second )
+    {
+      case 0: info->insert( calo_it->first, float( object->e() ) ); break;
+      case 1: info->insert( calo_it->first, float( object->position()->x() ) ); break;
+      case 2: info->insert( calo_it->first, float( object->position()->y() ) ); break;
+      case 3: info->insert( calo_it->first, float( object->position()->z() ) ); break;
+      case 4: info->insert( calo_it->first, float( object->lh() ) ); break;
+      case 5: info->insert( calo_it->first, float( object->hypothesis() ) ); break;
     }
   }
 }
@@ -840,6 +876,10 @@ void ReportConvertTool::ProtoParticleObjectFromSummary( const HltObjectSummary::
       case 53: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::InAccHcal, ( (*info)[ proto_it->first ] ) ); break;// ''
       case 54: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::VeloCharge, ( (*info)[ proto_it->first ] ) ); break;// ''
       case 55: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::RichPIDStatus, ( (*info)[ proto_it->first ] ) ); break;// ''
+      case 56: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloChargedID, ( (*info)[ proto_it->first ] ) ); break;// 
+      case 57: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloChargedEcal, ( (*info)[ proto_it->first ] ) ); break;// 
+      case 58: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloChargedPrs, ( (*info)[ proto_it->first ] ) ); break;// 
+      case 59: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloChargedSpd, ( (*info)[ proto_it->first ] ) ); break;// 
     }
   }
 
@@ -1019,6 +1059,42 @@ void ReportConvertTool::CaloClusterObjectFromSummary( const HltObjectSummary::In
   xye(1) = y; 
   xye(2) = e;
 
+}
+
+void ReportConvertTool::CaloHypoObjectFromSummary( const HltObjectSummary::Info* info, LHCb::CaloHypo* object, bool turbo) {
+  if( m_version == -999 ){ 
+    Warning( "I have not been told a verision number to use, assuming the latest", StatusCode::SUCCESS, 20 );
+    m_version = m_LatestVersion;
+  }
+  
+  unordered_map<int,unordered_map<string, pair<int,int> > > used_map;
+  if(turbo==true) used_map = m_calohypo_unordered_map2_Turbo;
+  else used_map = m_calohypo_unordered_map2;
+ 
+  LHCb::CaloHypo::Position* pos = new LHCb::CaloHypo::Position();
+  object->setPosition(pos);
+  
+  Gaudi::Vector3 & xye = *(const_cast<Gaudi::Vector3*>(&object->position()->parameters()));
+  //
+  double e=0;
+  double x=0;
+  double y=0;
+  
+  for(it_unordered_map calo_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); calo_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); calo_it++){
+    switch( calo_it->second.second )
+    {
+      case 0: e = (*info)[ calo_it->first ]; break;
+      case 1: x = (*info)[ calo_it->first ]; break;
+      case 2: y = (*info)[ calo_it->first ]; break;
+      case 3: object->position()->setZ( (*info)[ calo_it->first ] ); break;
+      case 4: object->setLh( (*info)[ calo_it->first ] ); break;
+      case 5: object->setHypothesis( static_cast<LHCb::CaloHypo::Hypothesis>( (*info)[ calo_it->first ] ) ); break;
+    }
+  }
+  xye(0) = x; 
+  xye(1) = y; 
+  xye(2) = e;
+ 
 }
 
 void ReportConvertTool::RecVertexObjectFromSummary( const HltObjectSummary::Info* info, LHCb::RecVertex* object, bool turbo) {

@@ -75,6 +75,7 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
     void RichPIDObject2Summary( HltObjectSummary::Info*, const LHCb::RichPID*, bool) ;
     void MuonPIDObject2Summary( HltObjectSummary::Info*, const LHCb::MuonPID*, bool) ;
     void CaloClusterObject2Summary( HltObjectSummary::Info*, const LHCb::CaloCluster*, bool) ;
+    void CaloHypoObject2Summary( HltObjectSummary::Info*, const LHCb::CaloHypo*, bool) ;
     void RecVertexObject2Summary( HltObjectSummary::Info*, const LHCb::RecVertex*, bool) ;
     void VertexObject2Summary( HltObjectSummary::Info*, const LHCb::Vertex*, bool) ;
     void RecSummaryObject2Summary( HltObjectSummary::Info*, const LHCb::RecSummary*) ;
@@ -87,6 +88,7 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
     void RichPIDObjectFromSummary( const HltObjectSummary::Info*, LHCb::RichPID*,bool) ;
     void MuonPIDObjectFromSummary( const HltObjectSummary::Info*, LHCb::MuonPID*,bool) ;
     void CaloClusterObjectFromSummary( const HltObjectSummary::Info*, LHCb::CaloCluster*,bool) ;
+    void CaloHypoObjectFromSummary( const HltObjectSummary::Info*, LHCb::CaloHypo*,bool) ;
     void RecVertexObjectFromSummary( const HltObjectSummary::Info*, LHCb::RecVertex*,bool) ;
     void VertexObjectFromSummary( const HltObjectSummary::Info*, LHCb::Vertex*,bool) ;
     void RecSummaryObjectFromSummary( const HltObjectSummary::Info*, LHCb::RecSummary*) ;
@@ -337,6 +339,68 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
         ,  {"53#Proto.extraInfo.InAccHcal",             {49,53}}
         ,  {"54#Proto.extraInfo.VeloCharge",            {50,54}}}
       }
+      , { 8
+        , {{"0#Proto.extraInfo.IsPhoton",               {0,0}}
+        ,  {"1#Proto.extraInfo.IsNotE",                 {1,1}}
+        ,  {"2#Proto.extraInfo.IsNotH",                 {12,2}}
+        ,  {"3#Proto.extraInfo.EcalPIDe",               {23,3}}
+        ,  {"4#Proto.extraInfo.PrsPIDe",                {34,4}}
+        ,  {"5#Proto.extraInfo.BremPIDe",               {45,5}}
+        ,  {"6#Proto.extraInfo.HcalPIDe",               {56,6}}
+        ,  {"7#Proto.extraInfo.HcalPIDmu",              {57,7}}
+        ,  {"8#Proto.extraInfo.EcalPIDmu",              {58,8}}
+        ,  {"9#Proto.extraInfo.CaloTrMatch",            {59,9}}
+        ,  {"10#Proto.extraInfo.CaloElectronMatch",     {2,10}}
+        ,  {"11#Proto.extraInfo.CaloBremMatch",         {3,11}}
+        ,  {"12#Proto.extraInfo.CaloNeutralSpd",        {4,12}}
+        ,  {"13#Proto.extraInfo.CaloNeutralPrs",        {5,13}}
+        ,  {"14#Proto.extraInfo.CaloNeutralEcal",       {6,14}}
+        ,  {"15#Proto.extraInfo.CaloNeutralHcal2Ecal",  {7,15}}
+        ,  {"16#Proto.extraInfo.CaloNeutralE49",        {8,16}}
+        ,  {"17#Proto.extraInfo.CaloNeutralID",         {9,17}}
+        ,  {"18#Proto.extraInfo.CaloDepositID",         {10,18}}
+        ,  {"19#Proto.extraInfo.ShowerShape",           {11,19}}
+        ,  {"20#Proto.extraInfo.ClusterMass",           {13,20}}
+        ,  {"21#Proto.extraInfo.CaloSpdE",              {14,21}}
+        ,  {"22#Proto.extraInfo.CaloPrsE",              {15,22}}
+        ,  {"23#Proto.extraInfo.CaloEcalE",             {16,23}}
+        ,  {"24#Proto.extraInfo.CaloHcalE",             {17,24}}
+        ,  {"25#Proto.extraInfo.CaloEcalChi2",          {18,25}}
+        ,  {"26#Proto.extraInfo.CaloBremChi2",          {19,26}}
+        ,  {"27#Proto.extraInfo.CaloClusChi2",          {20,27}}
+        ,  {"28#Proto.extraInfo.CaloNeutralPrsM",       {21,28}}
+        ,  {"29#Proto.extraInfo.CaloShapeFr2r4",        {22,29}}
+        ,  {"30#Proto.extraInfo.CaloShapeKappa",        {24,30}}
+        ,  {"31#Proto.extraInfo.CaloShapeAsym",         {25,31}}
+        ,  {"32#Proto.extraInfo.CaloShapeE1",           {26,32}}
+        ,  {"33#Proto.extraInfo.CaloShapeE2",           {27,33}}
+        ,  {"34#Proto.extraInfo.CaloPrsShapeE2",        {28,34}}
+        ,  {"35#Proto.extraInfo.CaloPrsShapeEmax",      {29,35}}
+        ,  {"36#Proto.extraInfo.CaloPrsShapeFr2",       {30,36}}
+        ,  {"37#Proto.extraInfo.CaloPrsShapeAsym",      {31,37}}
+        ,  {"38#Proto.extraInfo.CaloPrsM",              {32,38}}
+        ,  {"39#Proto.extraInfo.CaloPrsM15",            {33,39}}
+        ,  {"40#Proto.extraInfo.CaloPrsM30",            {35,40}}
+        ,  {"41#Proto.extraInfo.CaloPrsM45",            {36,41}}
+        ,  {"42#Proto.extraInfo.CaloClusterCode",       {37,42}}
+        ,  {"43#Proto.extraInfo.CaloClusterFrac",       {38,43}}
+        ,  {"44#Proto.extraInfo.CombDLLe",              {39,44}}
+        ,  {"45#Proto.extraInfo.CombDLLmu",             {40,45}}
+        ,  {"46#Proto.extraInfo.CombDLLpi",             {41,46}}
+        ,  {"47#Proto.extraInfo.CombDLLk",              {42,47}}
+        ,  {"48#Proto.extraInfo.CombDLLp",              {43,48}}
+        ,  {"49#Proto.extraInfo.InAccBrem",             {44,49}}
+        ,  {"50#Proto.extraInfo.InAccSpd",              {46,50}}
+        ,  {"51#Proto.extraInfo.InAccPrs",              {47,51}}
+        ,  {"52#Proto.extraInfo.InAccEcal",             {48,52}}
+        ,  {"53#Proto.extraInfo.InAccHcal",             {49,53}}
+        ,  {"54#Proto.extraInfo.VeloCharge",            {50,54}}
+        ,  {"55#Proto.extraInfo.RichPIDStatus",         {51,55}}
+        ,  {"56#Proto.extraInfo.CaloChargedID",         {52,56}}
+        ,  {"57#Proto.extraInfo.CaloChargedEcal",       {53,57}}
+        ,  {"58#Proto.extraInfo.CaloChargedPrs",        {54,58}}
+        ,  {"59#Proto.extraInfo.CaloChargedSpd",        {55,59}}}
+      }
     };
     //===========================================================================
     /// Version unordered_map for LHCb::ProtoParticle in the Full stream
@@ -583,6 +647,23 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
           , {"2#CaloCluster.position.y",              {2,2}}
           , {"3#CaloCluster.position.z",              {3,3}}}
       }
+    };
+    
+    //===========================================================================
+    /// Version unordered_map for LHCb::CaloHypo in the Turbo stream
+    unordered_map<int, unordered_map<string,pair<int,int> > > const m_calohypo_unordered_map2_Turbo {
+      { 8
+        , {{"0#CaloHypo.e",                        {0,0}}
+          , {"1#CaloHypo.position.x",              {1,1}}
+          , {"2#CaloHypo.position.y",              {2,2}}
+          , {"3#CaloHypo.position.z",              {3,3}}
+          , {"4#CaloHypo.lh",                      {4,4}}
+          , {"5#CaloHypo.h",                       {5,5}}}
+      }
+    };
+    //===========================================================================
+    /// Version unordered_map for LHCb::CaloHypo in the Full stream
+    unordered_map<int, unordered_map<string,pair<int,int> > > const m_calohypo_unordered_map2 {
     };
 
     //===========================================================================
