@@ -5,10 +5,11 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiPhys v11r7 2016-02-04 =========================
+
 ! 2016-01-30 - Vanya Belyaev
  - LoKiPhys.xml:
   remove duplicated rules (thanks to Marco Cattaneo)
-   
 
 ! 2016-01-25 - Vanya Belyaev
  - add Graphviz into CMT&CMAKE 
@@ -21,7 +22,6 @@
 
 ! 2015-12-30 - Gerhard Raven
  - replace deprecated std::auto_ptr with std::unique_ptr
-
 
 ! 2015-12-05 - Vanya Belyaev
  - add CHI2VX, CHI2NDF and CHI2NDOF symbols 
