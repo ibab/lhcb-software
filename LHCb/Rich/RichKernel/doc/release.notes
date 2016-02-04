@@ -4,6 +4,9 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2016-02-04 - Chris Jones
+ - Prefer std::sqrt( x*x + y*y ) to std::hypot(x,y) as it is (much) faster.
+
 ! 2016-02-03 - Chris Jones
  - Remove (unused) smart pointer aliases from RichPixelCluster.h
 

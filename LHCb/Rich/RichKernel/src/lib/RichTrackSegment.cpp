@@ -44,7 +44,9 @@ LHCb::RichTrackSegment::angleToDirection( const Gaudi::XYZVector & direction,
   // do it by hand, the same only faster ;)
   // Skip checks against 0 as we know that never happens here.
   phi   = vdt::fast_atan2( rotDir.y(), rotDir.x() );
-  theta = vdt::fast_atan2( std::hypot( rotDir.x(), rotDir.y() ), rotDir.z() );
+  theta = vdt::fast_atan2( std::sqrt( std::pow(rotDir.x(),2) + 
+                                      std::pow(rotDir.y(),2) ),
+                           rotDir.z() );
 
   // correct phi
   if ( phi < 0 ) phi += 2.0*M_PI;
