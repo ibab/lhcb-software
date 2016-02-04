@@ -1,5 +1,3 @@
-// $Id: $
-
 // FTDet
 #include "FTDet/DeFTBiLayer.h"
 
@@ -23,7 +21,7 @@ DeFTBiLayer::DeFTBiLayer( const std::string& name ) :
 //=============================================================================
 // Destructor
 //=============================================================================
-DeFTBiLayer::~DeFTBiLayer(){} 
+DeFTBiLayer::~DeFTBiLayer() = default;
 
 //=============================================================================
 // classID function

@@ -3,6 +3,22 @@
 ! Purpose     : Interface to the xml description
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
+! 2016-02-04 - Gerhard Raven
+ - modernize DeFTDetector, DeFTFibreMat, DeFTBiLayer, DeFTTestAlg
+   o qualify implementation of virtual functions with  override
+   o remove obsolete/unused functions
+   o prefer direct member initialization
+   o prefer std::unique_ptr over raw pointer + explicit delete
+   o prefer passing by const & over const * if nullptr is not an acceptable
+     parameter
+   o prefer std::array over std::vector if size is a compile-time constant
+   o prefer auto where appropriate
+   o prefer STL algorithms over raw loops
+   o prefer range-based loops
+   o prefer control flow which reduces code indentation
+   o prefer emplace_back over push_back
+   o avoid mixing single and double precision
+   o prefer returning by value over an OUT parameter if it pertains a double
 
 !========================= FTDet v2r12 2016-01-27 =========================
 ! 2015-12-21 - Gerhard Raven

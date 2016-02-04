@@ -2,6 +2,8 @@
 #ifndef DEFTDETECTOR_H
 #define DEFTDETECTOR_H 1
 
+#include <memory>
+
 // DetDesc
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
@@ -52,12 +54,12 @@ public:
   DeFTDetector( const std::string& name = "" );
   
   /// Destructor
-  virtual ~DeFTDetector( );
+  ~DeFTDetector( ) override;
 
   /** Initialization method 
    *  @return Status of initialization
    */ 
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
 
   /** Finalization method - delete objects created with new
    *  @return Status of finalization
@@ -67,7 +69,7 @@ public:
   /** Retrieves reference to class identifier
    *  @return The class identifier for this class
    */
-  const CLID& clID() const;
+  const CLID& clID() const override;
 
   /** Another reference to class identifier
    *  @return The class identifier for this class
@@ -138,33 +140,25 @@ public:
 
   // update and acquire any user geometry paramters
   StatusCode geometryUpdate ( );
-  
-
-  //OBSOLETE
-  //const DeFTLayer* findLayer( const LHCb::FTChannelID id ) const;
 
   /// Make the Test algo a friend so that it can call private methods
   friend class DeFTTestAlg;
 
-private: // private member functions
-
 private: // private data members
 
-  unsigned int m_FTversion;
+  unsigned int m_FTversion = 0;
   Stations m_stations;           ///< vector of pointers to stations
-  BiLayers m_bilayers;               ///< vector of pointers to Bilayers
+  BiLayers m_bilayers;           ///< vector of pointers to Bilayers
   Layers m_layers;               ///< vector of pointers to layers
   Modules m_modules;             ///< vector of pointers to modules
   FibreModules m_fibremodules;   ///< vector of pointers to fibremodules
   FibreMats m_fibremats;         ///< vector of pointers to fibremats
 
-  std::string m_FibreModuleNameSpec;
-  std::string m_FibreMatNameSpec;
+  std::string m_FibreModuleNameSpec = "FibreModule";
+  std::string m_FibreMatNameSpec = "Fibre";
 
   /// Use a single MsgStream instance (created in initialize)
-  MsgStream* m_msg;
-
-
+  std::unique_ptr<MsgStream> m_msg;
   
 }; //end of class
 

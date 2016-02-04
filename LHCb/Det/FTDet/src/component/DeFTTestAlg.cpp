@@ -109,13 +109,12 @@ StatusCode DeFTTestAlg::execute() {
     /// Points of the real MCHits
     const LHCb::MCHits* hitsCont = get<LHCb::MCHits>(m_mcHitsLocation);
     /// Iterate over the first few hits and test the calculateHits method
-    LHCb::MCHits::const_iterator aHit;
     std::cout<<"MC hits: "<<hitsCont->size()<<std::endl;
-    for ( aHit=hitsCont->begin(); aHit != hitsCont->end(); ++aHit ) {
+    for ( const auto &aHit : *hitsCont) {
 
-     Gaudi::XYZPoint pMid = (*aHit)->midPoint();
-     Gaudi::XYZPoint pIn =  (*aHit)->entry();
-     Gaudi::XYZPoint pOut = (*aHit)->exit();
+     Gaudi::XYZPoint pMid = aHit->midPoint();
+     Gaudi::XYZPoint pIn =  aHit->entry();
+     Gaudi::XYZPoint pOut = aHit->exit();
 
      tuple->column("Hit_X", pMid.X()); 
      tuple->column("Hit_Y", pMid.Y()); 
@@ -128,7 +127,7 @@ StatusCode DeFTTestAlg::execute() {
      tuple->column("HitOut_Z", pOut.Z());
 
       // Make DeFT checks
-      if ( msgLevel(MSG::DEBUG) ) debug() << "\n\n\n**************************\nMC Hit " << (*aHit)->index() << "\n"
+      if ( msgLevel(MSG::DEBUG) ) debug() << "\n\n\n**************************\nMC Hit " << aHit->index() << "\n"
               << "**************************" << endmsg;
 
       std::string lVolName;
@@ -174,9 +173,9 @@ StatusCode DeFTTestAlg::execute() {
         tuple->column("cfibrestat",1.);   //keep status
         
         //hit local coordinates
-        Gaudi::XYZPoint pInloc = pFibreMat->geometry()->toLocal((*aHit)->entry());
-        Gaudi::XYZPoint pMidloc = pFibreMat->geometry()->toLocal((*aHit)->midPoint());
-        Gaudi::XYZPoint pOutloc = pFibreMat->geometry()->toLocal((*aHit)->exit());
+        Gaudi::XYZPoint pInloc = pFibreMat->geometry()->toLocal(aHit->entry());
+        Gaudi::XYZPoint pMidloc = pFibreMat->geometry()->toLocal(aHit->midPoint());
+        Gaudi::XYZPoint pOutloc = pFibreMat->geometry()->toLocal(aHit->exit());
         tuple->column("HitIn_XL", pInloc.X());
         tuple->column("HitIn_YL", pInloc.Y());
         tuple->column("HitIn_ZL", pInloc.Z());
@@ -186,7 +185,7 @@ StatusCode DeFTTestAlg::execute() {
         tuple->column("HitOut_XL", pOutloc.X());
         tuple->column("HitOut_YL", pOutloc.Y());
         tuple->column("HitOut_ZL", pOutloc.Z());
-        tuple->column("HitE", (*aHit)->energy());
+        tuple->column("HitE", aHit->energy());
 
         //Fibermat info
  	tuple->column("fibermat_id",pFibreMat->FibreMatID());
@@ -218,8 +217,8 @@ StatusCode DeFTTestAlg::execute() {
         tuple->column("testFramez",testFrame.Z());
          
         //Fibre length max
-        double FibreLengthMax=pFibreMat->FibreLengh(pFibreMat->geometry()->toLocal((*aHit)->entry()),
-                                                    pFibreMat->geometry()->toLocal((*aHit)->exit()));
+        double FibreLengthMax=pFibreMat->FibreLengh(pFibreMat->geometry()->toLocal(aHit->entry()),
+                                                    pFibreMat->geometry()->toLocal(aHit->exit()));
         tuple->column("FiberLmax", FibreLengthMax);
   
    
@@ -298,7 +297,7 @@ StatusCode DeFTTestAlg::execute() {
             //centroid
             if((itPair->first).layer()<15) {
               //take off energy for now (keep just geom fraction), for calculateListOfFiredChannels
-              ////itPair->second /= (*aHit)->energy();  
+              ////itPair->second /= aHit->energy();  
                  
               meanCellx+=pFibreMat->cellUCoordinate(itPair->first)/cos(pFibreMat->angle());
               meanCellxw+=pFibreMat->cellUCoordinate(itPair->first)/cos(pFibreMat->angle())*(1 - 2.*std::abs(itPair->second));

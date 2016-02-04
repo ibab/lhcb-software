@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef DEFTFIBREMAT_H
 #define DEFTFIBREMAT_H 1
 
@@ -97,22 +96,22 @@ public:
   DeFTFibreMat( const std::string& name = "" );
   
   /// Destructor
-  virtual ~DeFTFibreMat( );
+  ~DeFTFibreMat( ) override;
 
   /** Initialization method 
    *  @return Status of initialization
    */ 
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
 
   /** Finalization method - delete objects created with new
    *  @return Status of finalization
    */ 
-  StatusCode finalize();
+  StatusCode finalize(); //@TODO: note: no override!!! (so who calls this?)
 
   /** Retrieves reference to class identifier
    *  @return The class identifier for this class
    */
-  const CLID& clID() const;
+  const CLID& clID() const override;
 
   /** Another reference to class identifier
    *  @return The class identifier for this class
@@ -126,7 +125,7 @@ public:
    *  deposited in it by the MC particle passed as an argument.
    *  @return Status of the execution
    */
-  StatusCode calculateListOfFiredChannels(const LHCb::MCHit*  fthit,
+  StatusCode calculateListOfFiredChannels(const LHCb::MCHit&  fthit,
                                           VectFTPairs&        vectChanAndFrac) const;
 
   /** Get the position of the mean SiPM channels plus fractionnal position within the channel
@@ -137,7 +136,7 @@ public:
    *  deposited in it by the MC particle passed as an argument.
    *  @return Status of the execution
    */
-  StatusCode calculateMeanChannel(const LHCb::MCHit*  fthit,
+  StatusCode calculateMeanChannel(const LHCb::MCHit&  fthit,
                                   FTPair&             ChanAndFrac) const;
 
   /** Get the list of SiPM channels traversed by the hit.
@@ -146,7 +145,7 @@ public:
    *  Fills a vector of 'FT pairs' (channel ID and fraction of the crossed length).
    *  @return Status of the execution
    */
-  StatusCode calculateHits(const LHCb::MCHit*  fthit,
+  StatusCode calculateHits(const LHCb::MCHit&  fthit,
                            VectFTPairs&        vectChanAndFracPos) const;
 
 
@@ -157,7 +156,7 @@ public:
    *  @param fibre lengh for the mean y-value of the hit (from entry to exit point)
    *  @param relative position of the hit in the fibre wrt the SiPm position
    */
-  StatusCode hitPositionInFibre(const LHCb::MCHit*  fthit,
+  StatusCode hitPositionInFibre(const LHCb::MCHit&  fthit,
                                 double& meanfibrefullLengh,
                                 double& fibreLenghFrac)const;
                                 
@@ -359,14 +358,6 @@ private: //-----private member functions
                                     Gaudi::XYZPoint&        pIntersect) const;
                                
 
-  /** Function to determine the y coordinate of the crossing point between
-   *  the beam-pipe hole (circle) and the fibres. Purely geometrical function.
-   *  @param x0 u-coordinate of the fibre (i.e. x@y=0)
-   *  @param ySign is the fibre at the top or at the bottom
-   *  @param yIntersect y-coordinate of the crossing point (set by the function)
-   *  @return StatusCode: does the fibre trajectory cross the beam-pipe circle
-   */
-  void beamPipeYCoord(const double x0, const int ySign, double& yIntersect) const;
 
   /** Function to determine the y coordinate of the crossing point between
    *  the beam-pipe hole (circle) and the fibres. Purely geometrical function.
@@ -375,9 +366,7 @@ private: //-----private member functions
    *  @param yIntersect y-coordinate of the crossing point (set by the function)
    *  @return StatusCode: does the fibre trajectory cross the beam-pipe circle
    */
-  void beamPipeYCoord(const double xcoord,
-		      const double ycoord,
-		      double& yIntersect) const;
+  double  beamPipeYCoord(double xcoord, double ycoord) const;
 
   /** Function for light sharing between neighbouring SiPM cells.
    *  This model uses straight lines for describing the fibre fractions
@@ -394,7 +383,7 @@ private: //-----private member functions
    *  @param normalized position of the MC particle trajectory in the central cell.
    *  @param fractions vector to be filled with the left/central/right energy fractions.
    */
-  void lightSharing( double position, std::vector<double>& fractions ) const;
+  std::array<double,3> lightSharing( double position ) const;
 
   /** FibreLengh function determines the full lengh of the fibre as a function of its location 
    *  to take the beam-pipe hole (circle) into account, but also the stereo angle.
@@ -410,33 +399,33 @@ private: // private data members
 
 
   ///Detector info
-  std::string  m_DeFTLocation;
+  std::string  m_DeFTLocation = {"/dd/Structure/LHCb/AfterMagnetRegion/T/FT"};
   unsigned int m_FTGeomversion;   ///Geometry version
-  unsigned int m_FTGeomVersion_reference;
-  unsigned int m_BadChannelLayerFlag;  ///used for flagging problematich channels (layer=15)
+  unsigned int m_FTGeomVersion_reference = 20;
+  unsigned int m_BadChannelLayerFlag = 15;  ///used for flagging problematich channels (layer=15)
   
   ///general geometry info 
-  double m_angle;               ///< stereo angle of the layer
-  double m_tanAngle;            ///< tangent of stereo angle
-  double m_cosAngle;            ///< cos of stereo angle
-  double m_dzDy;                ///< layer slope in the y-z plane
+  double m_angle = 0;               ///< stereo angle of the layer
+  double m_tanAngle = 0;            ///< tangent of stereo angle
+  double m_cosAngle = 0;            ///< cos of stereo angle
+  double m_dzDy = 0;                ///< layer slope in the y-z plane
   bool m_RightHoleAxesXZInversion;   ///flag for temporary Right Holes axes inversion (v4)
   double m_Ztolerance;     ///tolerances used in testing some spatial limits
   double m_dZtolerance;      ///
   double m_ARtolerance;  //machine arithmetic toerance
 
   ///ChannelID info and related
-  unsigned int m_FibreMatID;
-  unsigned int m_layerID;
-  int m_mat;
-  int m_module;
-  int m_layer;
-  int m_quarter;
-  int m_relativemodule;
-  bool m_holey;
+  unsigned int m_FibreMatID = 0;
+  unsigned int m_layerID = 0;
+  int m_mat = 0;
+  int m_module = 0;
+  int m_layer = 0;
+  int m_quarter = 0;
+  int m_relativemodule = 0;
+  bool m_holey = false;
 
   ///Fibremat info
-  double m_fibreMatHalfSizeX, m_fibreMatHalfSizeY, m_fibreMatHalfSizeZ;
+  double m_fibreMatHalfSizeX=0, m_fibreMatHalfSizeY=0, m_fibreMatHalfSizeZ=0;
   //Fibremat global frame center and corners (Right,Left,Top,Bottom)
   Gaudi::XYZPoint m_fibreMatGlobalCenter;   ///Origin of local fibremat frame in global frame
   Gaudi::XYZPoint m_fibreMatGlobalRT;       ///Right Top (local) corner of fibremat global coordinates
@@ -450,11 +439,11 @@ private: // private data members
   double m_FibreModuleHalfSizeZ;   ///FibreModule Z half size
   
   ///Layer info
-  double m_layerMinX, m_layerMaxX;
-  double m_layerMinY, m_layerMaxY;
-  double m_layerMinZ, m_layerMaxZ;
-  double m_layerHalfSizeX, m_layerHalfSizeY, m_layerHalfSizeZ;
-  double m_innerHoleRadius;     ///for v2 and before
+  double m_layerMinX=0, m_layerMaxX=0;
+  double m_layerMinY=0, m_layerMaxY=0;
+  double m_layerMinZ=0, m_layerMaxZ=0;
+  double m_layerHalfSizeX=0, m_layerHalfSizeY=0, m_layerHalfSizeZ=0;
+  double m_innerHoleRadius=0;     ///for v2 and before
   
   
   ///Gaps
@@ -468,32 +457,32 @@ private: // private data members
   double m_cellSizeX;
   double m_sipmSizeX;
   /// Parameters derived from the above values
-  double m_sipmPitchX;             /// X size of full sipm with gaps
+  double m_sipmPitchX=0;             /// X size of full sipm with gaps
   unsigned int m_nSipmPerQuarter;  
   //variables for sipm at fibremat level
-  unsigned int m_nSipmPerModule;
+  unsigned int m_nSipmPerModule=0;
   double m_fibreMatSipmY;    ///end fibre position in local frame (depends on top/bottom mats)
   double m_sipmOriginX;       ///X origin of sipms frame in fibremat
   double m_sipmPitchXsigned;
 
 
   /// Holes
-  Gaudi::XYZPoint m_posHole;   ///Hole position
-  double m_HoleShiftX;    ///X Hole shift in local frame
-  double m_HoleShiftY;    ///Y Hole shift in local frame
-  double m_halfHole1X;    ///Hole in local frame X, section 1
-  double m_halfHole2X;    ///Hole in local frame X, section 2
-  double m_halfHole3X;    ///Hole in local frame X, section 3
-  double m_halfHole4X;    ///Hole in local frame X, section 4
-  double m_halfHole1Y;    ///Hole in local frame Y, section 1, T station dependent
-  double m_halfHole2Y;    ///Hole in local frame Y, section 2, T station dependent
-  double m_halfHole3Y;    ///Hole in local frame Y, section 3, T station dependent
-  double m_halfHole4Y;    ///Hole in local frame Y, section 4, T station dependent
+  Gaudi::XYZPoint m_posHole={0,0,0};   ///Hole position
+  double m_HoleShiftX=0;    ///X Hole shift in local frame
+  double m_HoleShiftY=0;    ///Y Hole shift in local frame
+  double m_halfHole1X=0;    ///Hole in local frame X, section 1
+  double m_halfHole2X=0;    ///Hole in local frame X, section 2
+  double m_halfHole3X=0;    ///Hole in local frame X, section 3
+  double m_halfHole4X=0;    ///Hole in local frame X, section 4
+  double m_halfHole1Y=0;    ///Hole in local frame Y, section 1, T station dependent
+  double m_halfHole2Y=0;    ///Hole in local frame Y, section 2, T station dependent
+  double m_halfHole3Y=0;    ///Hole in local frame Y, section 3, T station dependent
+  double m_halfHole4Y=0;    ///Hole in local frame Y, section 4, T station dependent
 
   
   ///---Auxiliary stuff
   /// Use a single MsgStream instance (created in initialize)
-  MsgStream* m_msg;
+  std::unique_ptr<MsgStream> m_msg;
   /// Print functions
   MsgStream& debug()   const { return *m_msg << MSG::DEBUG; }
   MsgStream& info()    const { return *m_msg << MSG::INFO; }
