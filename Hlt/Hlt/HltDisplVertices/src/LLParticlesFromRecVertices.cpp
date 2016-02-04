@@ -364,7 +364,6 @@ bool LLParticlesFromRecVertices::RecVertex2Particle(
     // Values for cut calculated during loop on tracks
     double maxDaugE = 0.;
     int numDaugTracksWithHitsBefore = 0;
-    double fractTracksWithHitBeforeVertex;
 
     for ( const LHCb::Track* iVtxTrack : rv->tracks() ) {
         if ( m_verbose && iVtxTrack->hasVelo() ) {
@@ -442,6 +441,9 @@ bool LLParticlesFromRecVertices::RecVertex2Particle(
                                   m_selectedVeloDaughters.size(), motherMomentum,
                                   numDaugTracksWithHitsBefore, maxDaugE );
     }
+    
+    // initialize here just to get rid of the maybe-uninitialized warning
+    double fractTracksWithHitBeforeVertex = 0.;
 
     bool foundPrey =
         ( ( motherMomentum.M() > m_LLPMinMass ) &&

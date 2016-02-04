@@ -4,6 +4,9 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+! 2016-02-03 - Rosen Matev
+ - Fix maybe-uninitialized warning in debug builds
+
 !========================= HltDisplVertices v4r3 2015-03-31 =========================
 
 ! 2015-03-16 - Pieter David
