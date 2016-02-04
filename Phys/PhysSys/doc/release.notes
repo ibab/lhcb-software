@@ -3,6 +3,81 @@ Package             : PhysSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v21r0>2016-02-04 Phys v21r0</A></H1><PRE>
+Development release for 2016 data taking.
+It is based on Gaudi v27r0, LHCb v40r0 and Rec v19r0 and uses LCG_83 with ROOT 6.06.00.
+
+- Packages updated :
+  Kernel/SelectionLine v1r7, Phys/DaVinciFilters v1r5, Phys/DaVinciInterfaces v2r26, Phys/DaVinciTransporter v3r14,
+  Phys/FlavourTagging v14r2, Phys/JetAccessories v3r16, Phys/KalmanFilter v1r16, Phys/LoKiFitters v4r20,
+  Phys/LoKiPhys v11r7, Phys/LoKiTracks v3r5, Phys/PhysConf v1r31, Phys/SelPy v4r4.
+
+- In Kernel/SelectionLine v1r7 :
+  . Stopped propagating globalTimeOffset.
+
+- In Phys/DaVinciFilters v1r5 :
+  . Replaced deprecated std::auto_ptr with std::unique_ptr.
+
+- In Phys/DaVinciInterfaces v2r26 :
+  . Documentation of ILifetimeFitter updated.
+
+- In Phys/DaVinciTransporter v3r14, :
+  . DaVinci::ParticleTransporter:
+    - Make use of Trajectory approximation for long tracks for certain Z-region
+    - Define new property 'TrajectoryRegion' to define this region
+      [ Default value:  (-30cm, 100cm) ]
+  . ParticleTransporter & DaVinci::ParticleTransporter
+    - Add new property 'MeasureCPUPerformance' to report CPU perfromance for extrapolation.
+
+- In Phys/FlavourTagging v14r2 :
+  . Replaced deprecated std::auto_ptr with std::unique_ptr.
+
+- In Phys/JetAccessories v3r16 :
+  . Added ClearDaughters (based on FilterDesktop) which clear the vect of daughter
+    and save in a new location in the TES.
+
+- In Phys/KalmanFilter v1r16 :
+  . Introduces new type of particles "rho+-like"
+    1) Added corresponding enum.
+    2) Updated IParticleClassifier interface.
+  . VertexFit.cpp:
+    Fixed nDof calculation in the presence of 'rho+-like' particle thanks to Jascha Grabovski.
+
+- In Phys/LoKiFitters v4r20 :
+  . Unification of code between
+   LoKi::DistanceCalculator and LoKi::TrgDistanceCalculator
+   Essentially now the same code is running, modulo
+   property setting ( 'UseFastAlgorithms' ))
+   In short -  LoKi::TrgDistanceCalculator is LoKi::DistanceCalculator
+   with no transportation and no iterations.
+  . Implemented more correct treatment of rho+-like particles (thanks to Jascha Grabovski).
+  . DistanceCalculator: use
+    !matrix.InvertChol() && !matrix.Invert() construction instead of
+    !matrix.Invert()
+    It should be a bit faster.
+
+- In Phys/LoKiPhys v11r7 :
+  . LoKiPhys.xml: removed duplicated rules (thanks to Marco Cattaneo).
+  . Added Graphviz into CMT&CMAKE.
+  . LoKiPhys.graph: several improvements.
+  . Added new module LoKiPhys.graph to produce decay tree graphs.
+  . Replaced deprecated std::auto_ptr with std::unique_ptr.
+  . Added CHI2VX, CHI2NDF and CHI2NDOF symbols.
+
+- In Phys/LoKiTracks v3r5 :
+  . Added functor TrGHOSTPROB to cut on the ghost probability.
+
+- In Phys/PhysConf v1r31 :
+  . Configuration.py :
+    - Delete the obsolete CaloHypo->MC Linker on TES in case ofCaloReprocessing is active on MC.
+    - New slot 'UpdateCaloMCLinks' (default = True) : recreate the CaloHypo->MC Linker after deletion
+     (relies on CaloHypo->CaloCluster->CaloDigit->MC back-propagation available onDemand via CaloAssociator).
+     In case the Linker is not recreated the Calo2MCTool is able to perform the MC-association using the
+     same back-propagation chain.
+
+- In Phys/SelPy v4r4 :
+  . Added Graphviz to CMAKE.
+
 </PRE><H1><A NAME=v20r3>2016-01-14 Phys v20r3</A></H1><PRE>
 Release of two kinds :
 - Development release for 2016 data taking.
