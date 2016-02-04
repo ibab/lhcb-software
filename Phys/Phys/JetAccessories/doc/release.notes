@@ -3,6 +3,9 @@
 ! Responsible : Victor Coco victor.coco@cern.ch, Cedric Potterat cedric.potterat@cern.ch
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
+
+!====================== JetAccessories v3r16 2016-02-04 =======================
+
 ! 2015-12-28 - Gerhard Raven
  - fix const correctness
 
