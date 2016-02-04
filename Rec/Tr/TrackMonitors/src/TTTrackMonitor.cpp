@@ -182,25 +182,25 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
         plot(fNode->unbiasedResidual(), "BySector/UnbiasedResidual_"+sectorName, "Residual (unbiased)", -0.5, 0.5, 100);
       }
       if ( m_2DSummaryHist ){
-        plot2D(histoBin(chan), fNode->unbiasedResidual(),  "BySector/AllSectorsUnbiasedResidualHisto", "Residual (unbiased)", -0.5, 300.5, -0.5, 0.5, 301  , 100);
-        plot2D(histoBin(chan), fNode->residual(),  "BySector/AllSectorsBiasedResidualHisto", "Biased residual", -0.5, 300.5, -0.5, 0.5, 301  , 100);
-        plot2D(histoBin(chan), residual,  "BySector/AllSectorsResidualHisto", "Residual (rms-unbiased)",  -0.5, 300.5, -0.5, 0.5,301 , 100);
+        plot2D(histoBin(chan), fNode->unbiasedResidual(),  "BySector/AllSectorsUnbiasedResidualHisto", "Residual (unbiased)", -0.5, 312.5, -0.5, 0.5, 313  , 100);
+        plot2D(histoBin(chan), fNode->residual(),  "BySector/AllSectorsBiasedResidualHisto", "Biased residual", -0.5, 312.5, -0.5, 0.5, 313  , 100);
+        plot2D(histoBin(chan), residual,  "BySector/AllSectorsResidualHisto", "Residual (rms-unbiased)",  -0.5, 312.5, -0.5, 0.5,313 , 100);
       }
       if ( m_ProfileSummaryHist){
-        profile1D(histoBin(chan), fNode->unbiasedResidual(),  "BySector/AllSectorsUnbiasedResidualProfile", "Residual (unbiased)",   -0.5, 300.5);
-        profile1D(histoBin(chan), fNode->residual(),  "BySector/AllSectorsBiasedResidualProfile", "Biased residual",    -0.5, 300.5);
-        profile1D(histoBin(chan), residual,  "BySector/AllSectorsResidualProfile", "Residual (rms-unbiased)",    -0.5, 300.5);
+        profile1D(histoBin(chan), fNode->unbiasedResidual(),  "BySector/AllSectorsUnbiasedResidualProfile", "Residual (unbiased)",   -0.5, 312.5);
+        profile1D(histoBin(chan), fNode->residual(),  "BySector/AllSectorsBiasedResidualProfile", "Biased residual",    -0.5, 312.5);
+        profile1D(histoBin(chan), residual,  "BySector/AllSectorsResidualProfile", "Residual (rms-unbiased)",    -0.5, 312.5);
       }
 
       // 2D plots in full detail mode
       if( fullDetail() ) {
         const unsigned int bin = histoBin(chan);
         plot2D(bin, residual, "unbiasedResRMSCorrSector"+layerName ,
-               "unbiasedResRMSCorrSector (rms-corrected)", -0.5, 300.5, -2., 2.,301 , 200  );
+               "unbiasedResRMSCorrSector (rms-corrected)", -0.5, 312.5, -2., 2.,313 , 200  );
         plot2D(bin, fNode->unbiasedResidual() , "unbiasedResSector"+layerName ,
-               "unbiasedResSector"+layerName  , -0.5, 300.5, -2., 2.,301 , 200  );
+               "unbiasedResSector"+layerName  , -0.5, 312.5, -2., 2.,313 , 200  );
         plot2D(bin, fNode->residual() , "biasedResSector"+layerName , 
-               "biasedResSector"+layerName  , -0.5, 300.5, -2., 2.,301 , 200  );
+               "biasedResSector"+layerName  , -0.5, 312.5, -2., 2.,313 , 200  );
 	
 	// plot residual versus Y position for every module
 	const DeSTSector* sector = static_cast<const DeSTSector*>(measurement.detectorElement()) ;
@@ -212,8 +212,8 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
 	  double noise = hit->sector().noise(chan) ;
 	  if(noise>0) {
 	    const double signalToNoise = hit->totalCharge()/noise;
-	    plot2D(bin, signalToNoise,"SNSector"+layerName ,"SNSector"+layerName  , -0.5, 300.5, -0.25, 100.25, 401, 201);
-	    plot2D(bin, hit->totalCharge(),"CSector"+layerName ,"CSector"+layerName  , -0.5, 300.5, -0.5, 200.5,401,201 );
+	    plot2D(bin, signalToNoise,"SNSector"+layerName ,"SNSector"+layerName  , -0.5, 312.5, -0.25, 100.25, 313, 201);
+	    plot2D(bin, hit->totalCharge(),"CSector"+layerName ,"CSector"+layerName  , -0.5, 312.5, -0.5, 200.5,313,201 );
 	    if(m_plotsBySector) {
 	      std::string sectorName = hit->cluster()->sectorName();
 	      plot(signalToNoise, "BySector/SignalToNoise_"+sectorName, "Signal-to-noise", -0.5, 200.5, 200);
@@ -310,7 +310,7 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
 unsigned int TTTrackMonitor::histoBin(const LHCb::STChannelID& chan) const {
 
   // convert layer and station to a flat number
-  return (chan.station()-1)*25*3*2 + (chan.layer()-1)*25*3 + (chan.detRegion()-1)*25 + (chan.sector() -1);
+  return (chan.station()-1)*26*3*2 + (chan.layer()-1)*26*3 + (chan.detRegion()-1)*26 + (chan.sector() -1);
 }
 
 

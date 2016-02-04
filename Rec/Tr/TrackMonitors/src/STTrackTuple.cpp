@@ -962,7 +962,7 @@ ChanelID->number converters, copy from STEfficiency. May be can be done smarter.
 unsigned int STTrackTuple::TThistoBin(const LHCb::STChannelID& chan) const {
 
   // convert sector to a flat number (300 in total)
-  return (chan.station()-1)*25*3*2 + (chan.layer()-1)*25*3 + (chan.detRegion()-1)*25 + (chan.sector() -1);
+  return (chan.station()-1)*26*3*2 + (chan.layer()-1)*26*3 + (chan.detRegion()-1)*26 + (chan.sector() -1);
   }
 
 unsigned int STTrackTuple::IThistoBin(const LHCb::STChannelID& chan) const {

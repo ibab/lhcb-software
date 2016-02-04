@@ -507,14 +507,14 @@ StatusCode STEfficiency::finalize()
               histoNbHits -> fill( theBins.xBin, ybin, nExpected );
               histoNbFoundHits -> fill( theBins.xBin, ybin, nFound );
               if (m_ProfileSummaryHist){
-                profile1D(TThistoBin(channelID), eff,  "MonitoringEfficiency", "Efficiency",   -0.5, 300.5);
-                profile1D(TThistoBin(channelID), nExpected,  "MonitoringNExpected", "Number of expected hits",   -0.5, 300.5);
-                profile1D(TThistoBin(channelID), nFound,  "MonitoringNFound", "Number of found hits",   -0.5, 300.5);
+                profile1D(TThistoBin(channelID), eff,  "MonitoringEfficiency", "Efficiency",   -0.5, 312.5);
+                profile1D(TThistoBin(channelID), nExpected,  "MonitoringNExpected", "Number of expected hits",   -0.5, 312.5);
+                profile1D(TThistoBin(channelID), nFound,  "MonitoringNFound", "Number of found hits",   -0.5, 312.5);
               }
               if (m_2DSummaryHist){
-                plot2D(TThistoBin(channelID), eff,  "MonitoringEfficiency", "Efficiency",   -0.5, 300.5, -0.5, 0.5, 301, 100);
-                plot2D(TThistoBin(channelID), nExpected,  "MonitoringNExpected", "Number of expected hits",   -0.5, 300.5, -0.5, 0.5, 301, 100);
-                plot2D(TThistoBin(channelID), nFound,  "MonitoringNFound", "Number of found hits",   -0.5, 300.5, -0.5, 0.5, 301, 100);
+                plot2D(TThistoBin(channelID), eff,  "MonitoringEfficiency", "Efficiency",   -0.5, 312.5, -0.5, 0.5, 313, 100);
+                plot2D(TThistoBin(channelID), nExpected,  "MonitoringNExpected", "Number of expected hits",   -0.5, 312.5, -0.5, 0.5, 313, 100);
+                plot2D(TThistoBin(channelID), nFound,  "MonitoringNFound", "Number of found hits",   -0.5, 312.5, -0.5, 0.5, 313, 100);
               }
 
             }
@@ -588,7 +588,7 @@ std::string STEfficiency::formatNumber(const double& nbr,
 unsigned int STEfficiency::TThistoBin(const LHCb::STChannelID& chan) const {
 
   // convert sector to a flat number (300 in total)
-  return (chan.station()-1)*25*3*2 + (chan.layer()-1)*25*3 + (chan.detRegion()-1)*25 + (chan.sector() -1);
+  return (chan.station()-1)*26*3*2 + (chan.layer()-1)*26*3 + (chan.detRegion()-1)*26 + (chan.sector() -1);
   }
 
 unsigned int STEfficiency::IThistoBin(const LHCb::STChannelID& chan) const {

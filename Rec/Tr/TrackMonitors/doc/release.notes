@@ -4,6 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-04-02 - Komarov Ilya
+- Fixed a bug with missing TT sectors number 26 in 2D histograms. (TTTrackMonitor, STEfficiency, STTrackTuple)
+
+
 !========================= TrackMonitors v2r12 2016-01-28 =========================
 ! 2016-23-01 - Komarov Ilya
 - replaced auto_ptr with unique_ptr in STTrackTuple (Is possible since no copying of this object is applied in a code)
