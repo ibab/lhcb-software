@@ -1,4 +1,7 @@
 
+#include <tuple>
+#include <vector>
+
 #include "GlobalPID.C"
 
 void RichKaonIDCompareFiles()
@@ -16,6 +19,10 @@ void RichKaonIDCompareFiles()
 
   // Histo range
   defaultConfig.useFixedGraphRange = true;
+  //defaultConfig.minGraphX = 93;
+  //defaultConfig.maxGraphX = 97;
+  //defaultConfig.minGraphY = 3;
+  //defaultConfig.maxGraphY = 8;
   defaultConfig.minGraphX = 80;
   defaultConfig.maxGraphX = 100;
   defaultConfig.minGraphY = 1;
@@ -45,73 +52,48 @@ void RichKaonIDCompareFiles()
   //const std::string dir = "/Users/chris/LHCb/RootFiles/Run2";
   const std::string dir = "/usera/jonesc/LHCbCMake/lhcb-head/BrunelDevNightly/output/Run2";
 
-  pid->loadTTree((dir+"/Quartic/50000events/protoparticles.tuples.root").c_str());
-  pid->config = defaultConfig;
-  pid->config.subtitle = "Quartic";
-  pid->config.superImpose = false;
-  pid->config.color = kBlack;
-  // create the plot
-  pid->makeCurve(nTracks);
+  //const std::vector<Color_t> colors = { kBlack, kRed+1, kBlue+1, kGreen+2, 
+  //                                      kYellow+3, kMagenta+1, kCyan+1 };
+  //const std::vector< std::pair<std::string,std::string> > plots =
+  //  {
+  //   { "Quartic", "Quartic" },
+  //   { "Quartic-NoAmbig", "Quartic - No Ambiguous Photon Test" },
+  //    { "Esti-100points", "Estimation - All Hypos - 100 points" }
+  //  };
 
-  pid->loadTTree((dir+"/Quartic-NoAmbig/50000events/protoparticles.tuples.root").c_str());
-  pid->config = defaultConfig;
-  pid->config.subtitle = "Quartic - No Ambiguous Photon Test";
-  pid->config.superImpose = true;
-  pid->config.color = kRed+1;
-  // create the plot
-  pid->makeCurve(nTracks);
+  typedef std::vector< std::tuple<std::string,std::string,Color_t> > PlotData;
+  const PlotData plotdata = 
+    {
+      std::make_tuple ( "Quartic",         "Quartic",                             kBlack   ),
+      //std::make_tuple ( "Quartic-WithDeuteron",  "Quartic | With Deuteron",        kRed-6   )
+      std::make_tuple ( "Quartic-NoAmbig", "Quartic - No Ambiguous Photon Test",  kRed-6 ),
+      std::make_tuple ( "Esti-50points",   "Estimation | 50 points",  kBlue+1  ),
+      std::make_tuple ( "Esti-100points",  "Estimation | 100 points", kGreen+2  ),
+      std::make_tuple ( "Esti-200points",  "Estimation | 200 points", kYellow+3 ),
+      std::make_tuple ( "Esti-1000points", "Estimation | 1000 points", kRed+1 ),
+      //std::make_tuple ( "Adaptive-100points-0to90pc",  "Adaptive | 100 points | 0 to 90%", kYellow+3 ),
+      //std::make_tuple ( "Adaptive-100points-0to925pc", "Adaptive | 100 points | 0 to 92.5%", kMagenta+2 ),
+      std::make_tuple ( "Adaptive-100points-0to95pc", "Adaptive | 100 points | 0 to 95%", kCyan+2 ),
+      std::make_tuple ( "Adaptive-75to100points-0to95pc", "Adaptive | 75 to 100 points | 0 to 95%", kMagenta+2 )
+      //std::make_tuple ( "Adaptive-100points-0to98pc", "Adaptive | 100 points | 0 to 98%", kRed+1 )
+    };
 
-  // pid->loadTTree((dir+"/Esti-LightestOnly/50000events/protoparticles.tuples.root").c_str());
-  // pid->config = defaultConfig;
-  // pid->config.subtitle = "Estimation - Lightest Hypo Only - 100 points";
-  // pid->config.superImpose = true;
-  // pid->config.color = kYellow+3;
-  // // create the plot
-  // pid->makeCurve(nTracks);
-
-  // pid->loadTTree((dir+"/Esti-200points/50000events/protoparticles.tuples.root").c_str());
-  // pid->config = defaultConfig;
-  // pid->config.subtitle = "Estimation - 200 points";
-  // pid->config.superImpose = true;
-  // pid->config.color = kMagenta+1;
-  // // create the plot
-  // pid->makeCurve(nTracks);
-
-  // pid->loadTTree((dir+"/Esti-150points/50000events/protoparticles.tuples.root").c_str());
-  // pid->config = defaultConfig;
-  // pid->config.subtitle = "Estimation - 150 points";
-  // pid->config.superImpose = true;
-  // pid->config.color = kCyan+1;
-  // // create the plot
-  // pid->makeCurve(nTracks);
-
-  pid->loadTTree((dir+"/Esti-100points/50000events/protoparticles.tuples.root").c_str());
-  pid->config = defaultConfig;
-  pid->config.subtitle = "Estimation - All Hypos - 100 points";
-  pid->config.superImpose = true;
-  pid->config.color = kBlue+1;
-  // create the plot
-  pid->makeCurve(nTracks);
-
-  // pid->loadTTree((dir+"/Esti-50points/50000events/protoparticles.tuples.root").c_str());
-  // pid->config = defaultConfig;
-  // pid->config.subtitle = "Estimation - 50 points";
-  // pid->config.superImpose = true;
-  // pid->config.color = kBlue+1;
-  // // create the plot
-  // pid->makeCurve(nTracks);
-
-  pid->loadTTree((dir+"/Adaptive-100points/50000events/protoparticles.tuples.root").c_str());
-  pid->config = defaultConfig;
-  pid->config.subtitle = "Adaptive - 100 points";
-  pid->config.superImpose = true;
-  pid->config.color = kGreen+2;
-  // create the plot
-  pid->makeCurve(nTracks);
-
+  unsigned int iPlot = 0;
+  for ( const auto& pd : plotdata )
+  {
+    pid->loadTTree((dir+"/"+std::get<0>(pd)+"/50000events/protoparticles.tuples.root").c_str());
+    pid->config = defaultConfig;
+    pid->config.subtitle = std::get<1>(pd);
+    pid->config.superImpose = (iPlot != 0);
+    pid->config.color = std::get<2>(pd);
+    // create the plot
+    pid->makeCurve(nTracks);
+    ++iPlot;
+  }
+  
   // save the figures
   pid->saveFigures();
-
+  
   // cleanup
   delete pid;
 

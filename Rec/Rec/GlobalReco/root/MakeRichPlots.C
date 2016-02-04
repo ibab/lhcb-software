@@ -21,16 +21,20 @@ void MakeRichPlots()
   const std::vector<std::string> nametags =
     {
       "Quartic",
+      "Quartic-NoAmbig",
       "Esti-50points",
       "Esti-100points",
-      "Esti-200points"
+      "Esti-200points",
+      "Esti-1000points",
+      "Adaptive-100points-0to95pc",
+      "Adaptive-75to100points-0to95pc"
     };
 
   for ( const auto& nametag : nametags )
   {
 
     // load the file and TTree
-    TFile * f = TFile::Open((dir+"/"+nametag+"/10000events/protoparticles.tuples.root").c_str());
+    TFile * f = TFile::Open((dir+"/"+nametag+"/50000events/protoparticles.tuples.root").c_str());
     if ( !f ) continue;
     TTree * tree = (TTree*)gDirectory->Get("ChargedProtoTuple/protoPtuple");
     if ( !tree ) continue;
