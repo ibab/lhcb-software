@@ -8,6 +8,8 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+!=========================== Ostap v1r13 2016-02-04 ===========================
+
 ! 2016-01-31 - Vanya BELYAEV
  - improve in the history file 
 
@@ -15,18 +17,16 @@
  - minor fix in ROOTCWD 
    better fix is welcome ...
 
-
 ! 2016-01-27 - Vanya Belyaev
  - fix qmtest ostap_batch 
 
 ! 2016-01-26 - Vanya Belyaev
- - improve a bit handling of TFiles & progrees bars 
+ - improve a bit handling of TFiles & progress bars 
 
 ! 2016-01-24 - Vanya Belyaev
  - improve logging & qmtests 
  - clean up interactive context
  - add new comman option "--verbose" that enables all DEBUG logging  
-
 
 ! 2016-01-23 - Vanya Belyaev
  - improvement with logging 
@@ -40,32 +40,21 @@
                  './.ostap.py'     )
 
 ! 2016-01-19 - Vanya Belyaev
-
  - ostap: add two command line aruments
    "-q  --quite" to suppress loggiing 
-
       ostap -q 
-
    "-w  --with-context" to execute ostap scripts using the context 
-
       ostap myscript1.py      ## "bare" execution, just line plain python
-
     vs 
-
       ostap myscript2.py -w   ## "use the context"
-
 
    reshuffle a bit the internal machinery:  
    the content (name and keys) for opened files will be printed..
-   
       ostap  myfile1.root  myfile2.root 
 
  - Ostap/TFileDeco.py
-
      Fix the ambiguity of TKey::IsFolder:
      for new ROOT, it is not the same as checking the Directory...
-
-
 
 ! 2016-01-12 - Vanya Belyaev
  - add RunDB module with utilities to deal with LHCb RunDB, 
@@ -74,7 +63,6 @@
    fill_info     : get fill-info from #fill 
    fill_number   : get #fill from #run
    Thanks to Alex Pearce!  
-
 
 ! 2015-12-04 - Vanya Belyaev
  - tiny improvement in convolution 
