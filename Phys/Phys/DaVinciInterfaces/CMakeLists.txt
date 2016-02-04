@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciInterfaces
 ################################################################################
-gaudi_subdir(DaVinciInterfaces v2r25)
+gaudi_subdir(DaVinciInterfaces v2r26)
 
 gaudi_depends_on_subdirs(Calo/CaloUtils
                          Event/PhysEvent
