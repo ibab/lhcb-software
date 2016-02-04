@@ -195,7 +195,7 @@ StatusCode HltRoutingBitsWriter::initialize() {
    }
 
    // Hlt Monitoring Service
-   m_hltMonSvc = service(m_monSvc, false);
+   m_hltMonSvc = service(m_monSvc, false, true); // createIf=false, quiet=true
    // If we cannot retrieve it, HLT2 style monitoring is disabled.
    if (!m_hltMonSvc.isValid()) {
       info() << "Could not retrieve " << m_monSvc << endmsg;

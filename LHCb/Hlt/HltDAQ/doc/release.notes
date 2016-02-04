@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2016-02-04 - Rosen Matev
+ - Remove error message when Hlt2MonSvc is not there
+
 ! 2016-02-03 - Sean Benson
  - Port changes in development branch for Turbo reprocessing.
 
