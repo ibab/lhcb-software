@@ -62,7 +62,8 @@ public:
             ,LHCb::CaloHypo::Container*
             ,LHCb::CaloCluster::Container*
             ,Particle2Vertex::Table*);
-        void fillParticleInfo(std::vector<ContainedObject*>,const LHCb::HltObjectSummary*,bool, LHCb::Track::Container*,std::vector<ContainedObject*>*);
+        void fillParticleInfo(std::vector<ContainedObject*>,const LHCb::HltObjectSummary*,bool, LHCb::Track::Container*,std::vector<ContainedObject*>*,
+            LHCb::CaloHypos*, LHCb::CaloClusters*);
         void fillVertexInfo(LHCb::Vertex*,const LHCb::HltObjectSummary*);
         void AddRelInfo(const LHCb::HltObjectSummary*,LHCb::Particle*);
         /// for splitting strings
@@ -77,7 +78,9 @@ public:
 
         LHCb::CaloDigit* DigitSearchRaw(LHCb::CaloCellID);
         LHCb::RecVertex* bestPV(LHCb::Particle*, LHCb::RecVertex::Container*);
-        LHCb::CaloCluster* processCluster(const LHCb::HltObjectSummary*, std::vector<ContainedObject*>*);
+        LHCb::CaloCluster* processCluster(const LHCb::HltObjectSummary*, std::vector<ContainedObject*>*, LHCb::CaloClusters*);
+        LHCb::CaloCluster* compareClusterPosition(LHCb::CaloCluster*, LHCb::CaloClusters*);
+        LHCb::CaloHypo* compareHypoPosition(LHCb::CaloHypo*, LHCb::CaloHypos*);
 protected:
 
 private:

@@ -386,11 +386,11 @@ StatusCode TeslaReportAlgo::execute()
         //
       }
 
-      fillParticleInfo( newObjects_mother , Obj , motherBasic, cont_Track, &calo_mother );
+      fillParticleInfo( newObjects_mother , Obj , motherBasic, cont_Track, &calo_mother, cont_CaloHypo, cont_CaloClust );
       cont_Part->insert( Part );
       for( auto calo : calo_mother ){
-        if( calo->clID() == LHCb::CLID_CaloHypo ) cont_CaloHypo->insert( dynamic_cast<LHCb::CaloHypo*>( calo ) );
-        if( calo->clID() == LHCb::CLID_CaloCluster ) cont_CaloClust->insert( dynamic_cast<LHCb::CaloCluster*>( calo ) );
+        if( calo->clID() == LHCb::CLID_CaloHypo && !calo->parent() ) cont_CaloHypo->insert( dynamic_cast<LHCb::CaloHypo*>( calo ) );
+        if( calo->clID() == LHCb::CLID_CaloCluster && !calo->parent() ) cont_CaloClust->insert( dynamic_cast<LHCb::CaloCluster*>( calo ) );
       }
 
 
@@ -496,15 +496,15 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, LHCb::Particle* Part, const LHC
       cont_MPID->insert( muon_d );
       //
       vert_mother->addToOutgoingParticles( Part_d );
-      fillParticleInfo( newObjects_d , Obj_d , d_Basic, cont_Track, &calo_daughter);
+      fillParticleInfo( newObjects_d , Obj_d , d_Basic, cont_Track, &calo_daughter, cont_CaloHypo, cont_CaloClust);
       for( auto calo : calo_daughter ){
-        if( calo->clID() == LHCb::CLID_CaloHypo ) cont_CaloHypo->insert( dynamic_cast<LHCb::CaloHypo*>( calo ) );
-        if( calo->clID() == LHCb::CLID_CaloCluster ) cont_CaloClust->insert( dynamic_cast<LHCb::CaloCluster*>( calo ) );
+        if( calo->clID() == LHCb::CLID_CaloHypo && !calo->parent() ) cont_CaloHypo->insert( dynamic_cast<LHCb::CaloHypo*>( calo ) );
+        if( calo->clID() == LHCb::CLID_CaloCluster && !calo->parent() ) cont_CaloClust->insert( dynamic_cast<LHCb::CaloCluster*>( calo ) );
       }
     }
     else {
       vert_mother->addToOutgoingParticles( Part_d );
-      fillParticleInfo( newObjects_d , Obj_d , d_Basic , cont_Track , &calo_daughter);
+      fillParticleInfo( newObjects_d , Obj_d , d_Basic , cont_Track , &calo_daughter, cont_CaloHypo, cont_CaloClust);
       ProcessObject( n, Part_d, Obj_d, cont_PV, cont_Vert, cont_Part,
           cont_Proto, cont_RPID, cont_MPID, cont_Track, cont_CaloHypo, cont_CaloClust, cont_P2PV);
     }
@@ -526,7 +526,9 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, LHCb::Particle* Part, const LHC
 void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
     const LHCb::HltObjectSummary* obj,
     bool isBasic, LHCb::Track::Container* cont_Track,
-    std::vector<ContainedObject*>* calo_vector){
+    std::vector<ContainedObject*>* calo_vector,
+    LHCb::CaloHypos* cont_CaloHypo,
+    LHCb::CaloClusters* cont_CaloClust){
 /*
  * vector Key:
  * For basic particle:
@@ -676,8 +678,7 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
         
         case LHCb::CLID_CaloHypo:
           {
-            LHCb::CaloHypo* hypo = new LHCb::CaloHypo();
-
+            LHCb::CaloHypo* hypotemp = new LHCb::CaloHypo();
             const LHCb::HltObjectSummary::Info hypo_info = ObjBasic->numericalInfo();
             // What keys are present:
             std::vector<std::string> vec_keys_hypo = ObjBasic->numericalInfoKeys();
@@ -687,13 +688,23 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
                  debug() << *it << " = " << hypo_info[(*it)] << endmsg;
             }
             //
-            m_conv->CaloHypoObjectFromSummary(&hypo_info,hypo,turbo);
+            m_conv->CaloHypoObjectFromSummary(&hypo_info,hypotemp,turbo);
+            LHCb::CaloHypo* hypo = compareHypoPosition(hypotemp,cont_CaloHypo);
+            if(hypo!=hypotemp) {
+              if ( msgLevel(MSG::DEBUG) ) debug() << "Found already inserted hypo, using that one" << endmsg;
+              delete hypotemp;
+              break;
+            }
+
             if ( msgLevel(MSG::DEBUG) ) debug() << "Added hypo info to object" << endmsg;
             calo_vector->push_back(hypo);
             SmartRefVector<LHCb::HltObjectSummary> hyposub = ObjBasic->substructureExtended();
             if ( msgLevel(MSG::DEBUG) ) debug() << "Commencing cluster addition" << endmsg;
+            if ( msgLevel(MSG::DEBUG) ) debug() << "Hypo has " << hyposub.size() << " clusters" << endmsg;
             for(auto cluster : hyposub){
-              hypo->addToClusters(processCluster(cluster.target(),calo_vector));
+              hypo->addToClusters(processCluster(cluster.target(),calo_vector,cont_CaloClust));
+              // hypo has no ids, need to add the ones from the cluster
+              totalIDs.insert( totalIDs.end(), cluster.target()->lhcbIDs().begin(), cluster.target()->lhcbIDs().end());
             }
             if ( msgLevel(MSG::DEBUG) ) debug() << "CaloHypo details added" << endmsg;
             break;
@@ -725,7 +736,7 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
 
         case LHCb::CLID_CaloCluster:
           {
-            processCluster(ObjBasic,calo_vector);
+            processCluster(ObjBasic,calo_vector,cont_CaloClust);
 
             break;
           }
@@ -940,10 +951,29 @@ void TeslaReportAlgo::AddRelInfo(const LHCb::HltObjectSummary* Obj_d, LHCb::Part
   }
 }
 
-LHCb::CaloCluster* TeslaReportAlgo::processCluster(const LHCb::HltObjectSummary* ObjBasic, std::vector<ContainedObject*>* calo_vector){
+LHCb::CaloCluster* TeslaReportAlgo::compareClusterPosition(LHCb::CaloCluster* calo, LHCb::CaloClusters* cont){
+  auto found = std::find_if(cont->begin(),cont->end(),
+      [&calo](LHCb::CaloCluster* icalo){ return std::sqrt( pow(calo->position().x()-icalo->position().x(),2.0) 
+        + pow(calo->position().y()-icalo->position().y(),2.0) 
+        + pow(calo->position().z()-icalo->position().z(),2.0)  
+        + pow(calo->position().e()-icalo->position().e(),2.0) )<0.01; });
+  if(found!=cont->end()) return *found;
+  return calo;
+}
+LHCb::CaloHypo* TeslaReportAlgo::compareHypoPosition(LHCb::CaloHypo* calo, LHCb::CaloHypos* cont){
+  auto found = std::find_if(cont->begin(),cont->end(),
+      [&calo](LHCb::CaloHypo* icalo){ return std::sqrt( pow(calo->position()->x()-icalo->position()->x(),2.0) 
+        + pow(calo->position()->y()-icalo->position()->y(),2.0) 
+        + pow(calo->position()->z()-icalo->position()->z(),2.0)  
+        + pow(calo->position()->e()-icalo->position()->e(),2.0) )<0.01; });
+  if(found!=cont->end()) return *found;
+  return calo;
+}
+
+LHCb::CaloCluster* TeslaReportAlgo::processCluster(const LHCb::HltObjectSummary* ObjBasic, std::vector<ContainedObject*>* calo_vector, LHCb::CaloClusters* cont_CaloClust){
   debug() << "Adding CaloCluster details" << endmsg;
   // Need to make new CaloCluster and seed Digit
-  LHCb::CaloCluster* calo = new LHCb::CaloCluster();
+  LHCb::CaloCluster* calotemp = new LHCb::CaloCluster();
 
   std::vector<LHCb::LHCbID> ids = ObjBasic->lhcbIDs();
 
@@ -972,7 +1002,14 @@ LHCb::CaloCluster* TeslaReportAlgo::processCluster(const LHCb::HltObjectSummary*
     for(std::vector<std::string>::iterator it = vec_keys_calo.begin(); it!=vec_keys_calo.end(); it++)
       debug() << *it << " = " << Calo_info[(*it)] << endmsg;
   }
-  m_conv->CaloClusterObjectFromSummary(&Calo_info,calo,turbo);
+  m_conv->CaloClusterObjectFromSummary(&Calo_info,calotemp,turbo);
+  LHCb::CaloCluster* calo = compareClusterPosition(calotemp,cont_CaloClust);
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Compared cluster position" << endmsg;
+  if(calo!=calotemp){
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Found already inserted cluster, returning that one" << endmsg;
+    delete calotemp;
+    return calo;
+  }
   calo->setSeed(cellID);
 
   std::vector<LHCb::CaloClusterEntry> entries;
