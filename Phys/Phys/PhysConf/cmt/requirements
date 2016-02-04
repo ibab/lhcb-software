@@ -1,10 +1,10 @@
 #$Id$
 # ============================================================================
 # Created    : 2008-12-17
-# Maintainer : Patrick Koppenburg
+# Maintainer : DaVinci coordinator
 # ============================================================================
 package           PhysConf
-version           v1r30
+version           v1r31
 
 # ============================================================================
 # Structure, i.e. directories to process.
