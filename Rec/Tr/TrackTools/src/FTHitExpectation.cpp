@@ -153,7 +153,7 @@ void FTHitExpectation::collectHits( Tf::Tsa::Line3D aLine3D,
       hit.setDisplacement ( globalExit-globalEntry  );
       hit.setEnergy( 1.0 );
       if( f -> isInside( hit.midPoint() ) ){
-        f -> calculateHits( &hit, vectFTPairs ).ignore();
+        f -> calculateHits( hit, vectFTPairs ).ignore();
       }
     }
 }
