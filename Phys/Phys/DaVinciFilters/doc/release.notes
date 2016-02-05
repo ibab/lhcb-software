@@ -4,12 +4,11 @@
 ! Purpose     : DV Filtering tools
 !-----------------------------------------------------------------------------
 
+!======================= DaVinciFilters v1r5 2016-02-05 ======================
+
 ! 2016-02-05 - Vanya Belyaev
  - fix a clash between local menthod  "index()" ( that returns an intex fr extraInfo in LHCb:LParticle)
  and newly introduced IAlgorithm::index  method..
-
-
-!======================= DaVinciFilters v1r5 2016-02-04 ======================
 
 ! 2015-12-30 - Gerhard Raven
  - replace deprecated std::auto_ptr with std::unique_ptr
