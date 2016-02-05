@@ -183,7 +183,7 @@ Pi0Veto::Tagger::Tagger
   ISvcLocator*       pSvc ) 
   : Pi0Veto::Filter ( name , pSvc ) 
 //
-  , m_index         ( 0  )
+  , m_indexInfo     ( 0  )
   , m_photonCutCode ( " \"gamma\" == ID " ) 
   , m_photonCut     ( LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant( false ) )
   , m_photons       ()
@@ -192,7 +192,7 @@ Pi0Veto::Tagger::Tagger
   //
   declareProperty 
     ( "ExtraInfoIndex"  , 
-      m_index           , 
+      m_indexInfo       , 
       "Index in ExtraInfo object to store the result" ) 
     -> declareUpdateHandler ( &Tagger::updateHandler30 , this ) ;  
   //
@@ -222,7 +222,7 @@ void Pi0Veto::Tagger::updateHandler30 ( Property& p )
   //
   info () << "The updated property is: " << p << endmsg ;
   //
-  if ( LHCb::Particle::LastGlobal >= m_index  ) 
+  if ( LHCb::Particle::LastGlobal >= m_indexInfo  ) 
   { error () << "Invalid index for ExtraInfo" << endmsg ; }
   //
 }
@@ -285,7 +285,7 @@ StatusCode Pi0Veto::Tagger::initialize()
   for ( auto& iloc : m_photons )
   { iloc = long_name ( iloc ) ; }
   //
-  if ( LHCb::Particle::LastGlobal >= m_index  ) 
+  if ( LHCb::Particle::LastGlobal >= m_indexInfo  ) 
   { return Error ( "Invalid index for ExtraInfo" ) ; }
   ///
   return StatusCode::SUCCESS ;  
@@ -401,20 +401,20 @@ StatusCode Pi0Veto::Tagger::filter
                                                  massChi2   () , 
                                                  pi0Mass    () ) ;
     // erase info
-    if ( _gamma->hasInfo( m_index ) ) 
+    if ( _gamma->hasInfo( m_indexInfo ) ) 
     {
       //
-      const double old_result = _gamma->info ( m_index , result ) ;
+      const double old_result = _gamma->info ( m_indexInfo , result ) ;
       //
       if      (  result &&  old_result ) {}
       else if ( !result && !old_result ) {}
       else 
       { Warning ( "ExtraInfo to be replaced" , 1 , StatusCode::SUCCESS ) ; }  
       //
-      _gamma -> eraseInfo ( m_index ) ; 
+      _gamma -> eraseInfo ( m_indexInfo ) ; 
     }
     //
-    _gamma->addInfo ( m_index , result ) ;
+    _gamma->addInfo ( m_indexInfo , result ) ;
     //
     cnt += result ;
   }
@@ -501,20 +501,20 @@ StatusCode Pi0Veto::Tagger2g::filter
                                                  pi0Mass    () ) ;
     //
     // erase info
-    if ( _diphoton -> hasInfo ( index() ) ) 
+    if ( _diphoton -> hasInfo ( indexInfo() ) ) 
     {
       //
-      const double old_result = _diphoton->info ( index() , result ) ;
+      const double old_result = _diphoton->info ( indexInfo() , result ) ;
       //
       if      (  result &&  old_result ) {}
       else if ( !result && !old_result ) {}
       else 
       { Warning ( "ExtraInfo to be replaced" , 1 , StatusCode::SUCCESS ) ; }  
       //
-      _diphoton -> eraseInfo  ( index() ) ; 
+      _diphoton -> eraseInfo  ( indexInfo() ) ; 
     }
     //
-    _diphoton->addInfo  ( index (), result ) ;
+    _diphoton->addInfo  ( indexInfo (), result ) ;
     //
     cnt += result ;
   }

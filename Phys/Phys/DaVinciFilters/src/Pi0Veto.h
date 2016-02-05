@@ -206,12 +206,12 @@ namespace Pi0Veto
      */
     unsigned int getPhotons ( LHCb::Particle::ConstVector& other ) const ;
     /// get the index 
-    unsigned int index      () const { return m_index ; }
+    unsigned int indexInfo  () const { return m_indexInfo ; }
     // ========================================================================
   private:
     // ========================================================================
     /// Extra-info index to be used 
-    unsigned int      m_index ;    // Extra-info index to be used 
+    unsigned int      m_indexInfo ;    // Extra-info index to be used 
     /// the cut for "another" photon
     std::string       m_photonCutCode ; // the cut for "another" photon
     /// the cut for "another" photon
