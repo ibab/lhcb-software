@@ -24,6 +24,11 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2016-02-05 - Vanya Belyaev
+ - Fixes_Gaudi.py
+   - iAlgTool: add posiibility to use interface methods
+   - iToolSvc: add mehtod 'tool' to be coherent with GaudiAlgorithm(/Tool::tool methods 
+
 ! 2016-01-28 - Vanya Belyaev
  - more improvements for histos&tuples 
  - fix the issue with pending tuples in interactive  mode 

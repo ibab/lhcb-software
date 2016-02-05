@@ -451,6 +451,12 @@ def _links_ ( self ) :
 cpp.DataObject.links = _links_
 # =============================================================================
 
+## decorate Incident Service 
+if not hasattr ( _AppMgr , 'ppSvc' ) :
+    import PartProp.Service 
+    logger.debug ( 'decorate AppMgr.ppSvc() ') 
+
+    
 # =============================================================================
 logger.debug ( 'Suppress excessive prints from GaudiPython.TupleUtils') 
 # =============================================================================
@@ -495,6 +501,103 @@ def _nt_print_ ( self ) :
 
 cpp.Tuples.Tuple.__repr__ = _nt_print_
 cpp.Tuples.Tuple.__str__  = _nt_print_
+
+
+if not hasattr ( GaudiPython.Bindings.iAlgTool , '_old_init_' ) :
+    
+    ##  Get list of methods from abstract iAglTool interface
+    #   @code  
+    #   tool = ...
+    #   for m in tool.interface_methods() : print m
+    #   @endcode
+    def _interface_methods_ ( self ) :
+        """ Get list of methods from abstract iAglTool interface
+        >>> tool = ...
+        >>> for m in tool.interface_methods() : print m 
+        """
+        
+        if not self._itool : return tuple()
+        
+        my_methods = list ( dir ( GaudiPython.Bindings.iAlgTool ) )
+        my_methods               += [ i for i in dir ( cpp.IAlgTool   ) ] 
+        my_methods               += [ i for i in dir ( cpp.IInterface ) ]
+        if self._ip : my_methods += [ i for i in dir ( self._ip       ) ]
+        my_methdos = set( my_methods )
+        if_methods = set()  
+        for i in dir( self._itool ) :
+            if i in my_methods    : continue
+            if_methods.add ( i )
+            
+        return tuple( if_methods )
+    
+    _old_iAlgTool_init_ = GaudiPython.Bindings.iAlgTool.__init__
+    ## initialize iAlgTool and extend vizibel interface 
+    def _new_iAlgTool_init_ ( self , name , itool = None ) :
+
+        ##  invoke 'old' method 
+        _old_iAlgTool_init_ ( self , name , itool )
+        
+        for i in self.interface_methods() : 
+            if i in self.__dict__ : continue 
+            self.__dict__ [ i ] = getattr ( self._itool , i )
+                
+             
+    ## allow to get 'interface' methods for iAlgTool (experimental)
+    def  _itool_getattrib_  ( tool , attribute ) :
+        """ Get 'interface' method ofr iAlgTool
+        
+        """
+        if cpp.Gaudi.Utils.hasProperty ( tool._itool , attribute ) :
+            return GaudiPython.Bindings.iProperty.__getattr__ ( tool , attribute )
+        
+        if tool._itool :
+            return getattr  ( tool._itool , attribute ) 
+        
+        raise AttributeError ('Attribubte/property %s does not exist for %s' % ( attribute , tool ) ) 
+
+    GaudiPython.Bindings.iAlgTool._old_init_        = _old_iAlgTool_init_
+    GaudiPython.Bindings.iAlgTool._new_init_        = _new_iAlgTool_init_
+    GaudiPython.Bindings.iAlgTool.__init__          = _new_iAlgTool_init_
+    GaudiPython.Bindings.iAlgTool.interface_methods = _interface_methods_  
+    GaudiPython.Bindings.iAlgTool.__getattr__       = _itool_getattrib_   
+    
+    logger.debug ( 'more decoration for iAlgTool: add interface methods') 
+
+
+if not hasattr ( GaudiPython.Bindings.iToolSvc , 'tool' ) :
+
+    ## get the tool from tool service 
+    def _its_tool_ ( self ,  typename , name = None , interface = None , createIf = True , parent = None   ) :
+        """ Get the tool form Tool Service
+        >>> toolSvc = ...
+        >>> dvt = toolSvc.tool('DaVinci::Transporter/QUQU', interface = cpp.IParticleTransporter )  
+        """
+        if not name :
+            t,s,n = typename.rpartition('/')
+            if t and s and n :
+                typename = t
+                name     = n
+            else : name = typename
+            
+        p1 = typename.find ( ':PUBLIC' )
+        if 0 < p1 and  p1 + 6 == len(typename) :
+            typename = typename [:p1]
+                
+        itool = GaudiPython.Bindings.Helper.tool ( self._its , typename , name  , parent , createIf ) 
+        if itool and  interface :
+            iif = GaudiPython.Bindings.InterfaceCast(interface)( itool )
+            if not iif : logger.warning("Can't retrieve proepr interface %s  for %s" % ( interface , itool ) )
+            return GaudiPython.Bindings.iAlgTool  ( itool.name() , iif )
+        elif not itool : logger.warning("Can't retrieve the tool  %s'%s" % ( typename , name ) )
+    
+        return GaudiPython.Bindings.iAlgTool  ( name , itool  )
+    
+    GaudiPython.Bindings.iToolSvc.tool = _its_tool_
+    
+    logger.debug ( 'Decoration for iToolSvc.tool') 
+    
+    
+    
 
 # =============================================================================
 if __name__ == '__main__' :

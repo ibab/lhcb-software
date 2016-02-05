@@ -245,7 +245,6 @@ else                    : from Bender.Main     import *
 ## more imports 
 #     
 from BenderTools.Seek       import * 
-from BenderTools.GoodEvents import * 
 
 ## likely we'll play with tuples  
 if arguments.TupleFile :
@@ -254,6 +253,25 @@ if arguments.TupleFile :
 ## likely we'll play with histograms 
 if arguments.HistoFile :
     from GaudiPython.HistoUtils import book, bookProf, fill, dumpHisto  
+
+#try :
+from Ostap.Utils import mute_py 
+with mute_py() :
+    import pydot
+del mute_py 
+#except :
+#    pass
+
+##outptu file is specified, immport corresponding functions
+if arguments.OutputFile :
+    from BenderTools.GoodEvents import writeEvent
+
+
+##  drawing graphs 
+import  LoKiPhys.graph
+if arguments.Simulation :
+    import  LoKiMC.graph
+    import  LoKiGen.graph
     
 if not arguments.UserStart : 
 
