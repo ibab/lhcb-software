@@ -42,13 +42,47 @@ def _get_db_tags_ ( files ) :
        
     from Configurables import LHCbApp
     app = LHCbApp()
+
+    #
+    ## some action to get ODIN
+    #
+    from Configurables import OdinTimeDecoder, ODINDecodeTool
+    otd = OdinTimeDecoder()
+    otd.addTool( ODINDecodeTool, 'ODINDecodeTool' )
+    otd.ODINDecodeTool.RawEventLocations+= [ '/Event/Trigger/RawEvent' ]
+    
+    from Configurables import createODIN
+    from Configurables import DataOnDemandSvc, ApplicationMgr
+    dod = DataOnDemandSvc( Dump = True )
+    dod.AlgMap.update ( { '/Event/DAQ/ODIN' : createODIN() } )
+    
+    mgr = ApplicationMgr()
+    mgr.ExtSvc += [ dod ]
+    
+    from Configurables import ApplicationMgr, createODIN
+    from DAQSys.Decoders import DecoderDB
+    CreateODIN=DecoderDB["createODIN"].setup()
+    
+    from Configurables import EventClockSvc
+    EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
+    
+    mgr = ApplicationMgr()
+    ##mgr.TopAlg = [ createODIN() ] + mgr.TopAlg
+    mgr.TopAlg = [ CreateODIN ] + mgr.TopAlg
+    
+    
     
     from GaudiPython.Bindings import AppMgr
- 
+    
+    from Configurables import IODataManager
+    IODataManager  ( 'IODataManager' , OutputLevel = 6 ,
+                     AgeLimit = 1    , UseGFAL = False )
+    
+    
     import Bender.Fixes_Gaudi
-
+    
     gaudi = AppMgr( outputlevel = 6 )
-
+    
     gaudi.run(1)
     evtsvc = gaudi.evtSvc()
 
@@ -89,8 +123,8 @@ def get_db_tags ( silent = True , files = [] ) :
     """
     Helper function to get DB-tags 
     """
-    import sys 
     if not files :
+        import sys 
         if len(sys.argv) > 1 : 
             files = sys.argv[1:] 
 
