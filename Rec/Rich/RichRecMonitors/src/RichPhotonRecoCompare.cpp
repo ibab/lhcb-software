@@ -132,7 +132,7 @@ StatusCode PhotonRecoCompare::execute()
                        -ckRange[rad],ckRange[rad], nBins1D() )
             -> fill( stdBaseDiffDiff );
           richHisto2D( hid(rad,"stdMCDiffVbaseMCDIff"),
-                       "|StdRec-MC| CK Theta Versue |BaseRec-MC| CK Theta",
+                       "|StdRec-MC| CK Theta Versus |BaseRec-MC| CK Theta",
                        minCkTheta[rad], maxCkTheta[rad], nBins1D(),
                        minCkTheta[rad], maxCkTheta[rad], nBins1D() )
             -> fill( baseCKTheta, stdCKTheta );   
@@ -151,7 +151,7 @@ StatusCode PhotonRecoCompare::execute()
                        -ckRange[rad],ckRange[rad], nBins1D() )
             -> fill( stdBaseDiffDiff );
           richHisto2D( hid(rad,mcType,"stdMCDiffVbaseMCDIff"),
-                       "|StdRec-MC| CK Theta Versue |BaseRec-MC| CK Theta",
+                       "|StdRec-MC| CK Theta Versus |BaseRec-MC| CK Theta",
                        minCkTheta[rad], maxCkTheta[rad], nBins1D(),
                        minCkTheta[rad], maxCkTheta[rad], nBins1D() )
             -> fill( baseCKTheta, stdCKTheta );
