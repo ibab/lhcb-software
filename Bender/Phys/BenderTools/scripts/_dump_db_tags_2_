@@ -86,7 +86,6 @@ def _get_db_tags_ ( files ) :
     gaudi.run(1)
     evtsvc = gaudi.evtSvc()
 
-    for i in range (0,5) : print 100*'*'
     
     for header in ( '/Event/Rec/Header' ,
                     '/Event/MC/Header'  ,
