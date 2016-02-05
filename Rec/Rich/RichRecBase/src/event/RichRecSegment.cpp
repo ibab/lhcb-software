@@ -27,7 +27,7 @@ void LHCb::RichRecSegment::reset()
   if ( m_geomEfficiencyScat.objectExists()   ) geomEfficiencyScat().resetData(0);
   m_avSaturatedRadiusLocal = -999;
 
-  PDGeomEffsVector resetVector3( Rich::NParticleTypes );
+  const PDGeomEffsVector resetVector3( Rich::NParticleTypes );
   setGeomEfficiencyPerPD( resetVector3 );
 
   emittedPhotonSpectra().reset();
