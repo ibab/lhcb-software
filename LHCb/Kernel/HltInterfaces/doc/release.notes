@@ -2,8 +2,13 @@
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
+
+! 2016-02-05 - Marco Clemencic
+ - Ported to the CMT configuration the workaround for Boost bug 11743.
+   (unfortunately it cannot be made conditional to the version of Boost)
+
 ! 2016-02-04 - Gerhard Raven
- - do not use move semantics in TCK::set as it implies in some cases one more 
+ - do not use move semantics in TCK::set as it implies in some cases one more
    move than passing by const ref.
 
 !========================= HltInterfaces v6r5 2016-01-27 =========================

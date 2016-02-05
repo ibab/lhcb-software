@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2016-02-05 - Marco Clemencic
+ - Fixed compilation with CMT and Gaudi v27r0.
+
 !========================= HltDAQ v4r25 2016-02-05 =========================
 
 ! 2016-02-04 - Rosen Matev
@@ -14,11 +17,11 @@
 
 ! 2016-02-01 - Gerhard Raven
  - remove obsolete part of requirements
- - prever SmartIF over bare interface pointer 
+ - prever SmartIF over bare interface pointer
 
 !========================= HltDAQ v4r24 2016-01-27 =========================
 ! 2016-01-22 - Chris Jones
- - Add a work around to HltTrackingCoder to fix compilation with clang do to 
+ - Add a work around to HltTrackingCoder to fix compilation with clang do to
    the LLVM bug https://llvm.org/bugs/show_bug.cgi?id=23381.
  - Make the packers a local object to each method where it is required.
 

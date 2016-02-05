@@ -5,7 +5,7 @@
 package           HltInterfaces
 version           v6r5
 
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #=====================================================================
 branches          cmt doc dict Kernel src
 
@@ -39,5 +39,7 @@ apply_pattern    reflex_dictionary                                 \
                  headerfiles=$(HLTINTERFACESROOT)/dict/HltInterfacesDict.h     \
                  selectionfile=$(HLTINTERFACESROOT)/dict/HltInterfacesDict.xml \
                  options="-U__MINGW32__"
+
+macro_append HltInterfaces_pp_cppflags ' -UNDEBUG'
 
 macro_append Boost_linkopts $(Boost_linkopts_regex)

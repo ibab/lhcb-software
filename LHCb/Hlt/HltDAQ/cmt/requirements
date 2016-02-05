@@ -18,7 +18,7 @@ private
 use GaudiObjDesc v* -no_auto_imports
 end_private
 
-use Boost               v*    LCG_Interfaces 
+use Boost               v*    LCG_Interfaces
 use AIDA                v*    LCG_Interfaces -no_auto_imports
 
 use GaudiAlg            v*
@@ -56,7 +56,7 @@ apply_pattern    component_library library=HltDAQ
 #=====================================================================
 # Component library building rule
 #=====================================================================
-library          HltDAQ    ../src/*.cpp 
+library          HltDAQ    ../src/*.cpp
 
 #=====================================================================
 # define component library link options for use in HltDAQ and outside
@@ -73,6 +73,20 @@ macro_append Boost_linkopts " -lboost_unit_test_framework-${Boost_compiler_versi
 private
 # Work around to be able to compile with Gaudi v22r5
 macro_append pp_cppflags " -DBOOST_FILESYSTEM_VERSION=3 "
+
+# This work around comes from GaudiGLS, but it seems to be needed here
+# only since Gaudi v27r0.
+# Note: libgslcblas is needed by libgsl, but the link is missing.
+macro_prepend GSL_linkopts " -Wl,--no-as-needed " \
+              target-darwin "" \
+              target-winxp  ""
+macro_append GSL_linkopts " -Wl,--as-needed " \
+             target-darwin "" \
+             target-winxp  "" \
+             target-icc    ""
+# Note: we pass only "--no-as-needed" to icc because the icc linker seems not
+# to understand positional arguments, so the last of "--as-needed" or
+# "--no-as-needed" wins.
 end_private
 
 #private
