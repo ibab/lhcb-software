@@ -106,13 +106,18 @@ def get_plot_dictionary(name):
         return plot
 
 def format_run_range(runRange):
-    if isinstance(runRange, tuple) and len(runRange) == 2:
+    if len(runRange) == 2:
         return lambda t: t.runnr >= runRange[0] and t.runnr <= runRange[1]
     return lambda t: t.runnr in runRange
 
 def get_trending_plot(name, runRange, formatter = dictionary_formatter):
     """
     Get a trending plot, showing a certain variable plotted against run number.
+    @param name the name of the variable to plot.
+    @param runRange list of all run numbers to plot. If this contains exactly
+           two items, it is treated as a range instead, plotting all runs with
+           run number greater than or equal to the first item but not greater
+           than the second.
     """
     f = ROOT.TFile(Config().grf_file_path, 'READ')
     t = Tree(Config().grf_tree_name)
@@ -135,6 +140,15 @@ def get_trending_plot(name, runRange, formatter = dictionary_formatter):
     return formatted
 
 def get_2d_trending_plot(nameX, nameY, runRange, formatter = dictionary_formatter):
+    """
+    Get a trending plot, showing two variables plotted against each other.
+    @param nameX the name of the first variable to plot.
+    @param nameY the name of the second variable to plot.
+    @param runRange list of all run numbers to plot. If this contains exactly
+           two items, it is treated as a range instead, plotting all runs with
+           run number greater than or equal to the first item but not greater
+           than the second.
+    """
     f = ROOT.TFile(Config().grf_file_path, 'READ')
     t = Tree(Config().grf_tree_name)
     data = t.Data( 
