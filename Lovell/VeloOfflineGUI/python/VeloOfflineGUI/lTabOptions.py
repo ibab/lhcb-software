@@ -162,7 +162,7 @@ class lTabOptions(QGroupBox):
 		self.add_bar()
 		self.showing_ref_box = QCheckBox("Display References")
 		self.showing_ref_box.stateChanged.connect(self.reference_button_fading)
-		self.showing_ref_box.setChecked(False)
+		self.showing_ref_box.setChecked(True)
 		self.overlay_ref_box = QRadioButton("Overlay", self)
 		self.overlay_ref_box.setChecked(True)
 		self.overlay_refDiff_box = QRadioButton("Data - Ref", self)
