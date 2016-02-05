@@ -1,9 +1,11 @@
 !$Id: release.notes,v 1.47 2010-04-08 13:41:46 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/AnalysisConf
-! Responsible : Patrick Koppenburg
+! Responsible : DaVinci coordinator
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
+
+!======================= AnalysisConf v2r6 2016-02-05 ========================
 
 ! 2016-01-11 - Olivier Deschamps
  - Configuration.py : RedoMCLinks change NodeKiller setting from "Link/Rec" to "Link/Rec/Track" to avoid removing the Calo Linkers ...
