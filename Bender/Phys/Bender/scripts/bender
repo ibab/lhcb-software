@@ -254,13 +254,14 @@ if arguments.TupleFile :
 if arguments.HistoFile :
     from GaudiPython.HistoUtils import book, bookProf, fill, dumpHisto  
 
-#try :
-from Ostap.Utils import mute_py 
-with mute_py() :
-    import pydot
-del mute_py 
-#except :
-#    pass
+try :
+    from Ostap.Utils import mute_py 
+    with mute_py() :
+        import pydot
+    del mute_py
+    import LoKiPhys.gr
+except :
+    pass
 
 ##outptu file is specified, immport corresponding functions
 if arguments.OutputFile :
