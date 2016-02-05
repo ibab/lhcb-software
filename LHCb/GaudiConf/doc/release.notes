@@ -7,6 +7,7 @@
 
 ! 2016-02-03 - Sean Benson
  - Add option to DstConf to unpack calo containers.
+ - Add option to DstConf to unpack full HLT reco.
 
 ! 2016-02-03 - Rosen Matev
  - Add special treatment for ConfigurableGeneric instances in

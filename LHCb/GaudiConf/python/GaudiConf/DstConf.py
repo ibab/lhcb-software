@@ -421,6 +421,56 @@ class DstConf(LHCbConfigurableUser):
                     OutputName         = "Turbo/CaloHypos" )
             DataOnDemandSvc().AlgMap[ "/Event/Turbo/CaloHypos" ] = hyposT
             DataOnDemandSvc().AlgMap[ "/Event/Turbo/CaloClusters" ] = clustersT
+            
+            ## HLT full reco unpacking
+            unpackers = []
+            from Configurables import UnpackProtoParticle
+            proto1=UnpackProtoParticle(name="UnpackProtoParticle",
+                    InputName="Hlt2/pRec/long/Protos",
+                    OutputName="Hlt2/long/Protos")
+            proto2=UnpackProtoParticle(name="UnpackProtoParticleDown",
+                    InputName="Hlt2/pRec/down/Protos",
+                    OutputName="Hlt2/down/Protos")
+            from Configurables import DataPacking__Unpack_LHCb__RichPIDPacker_ as UnpackRichPIDs
+            rich1=UnpackRichPIDs( name = "Hlt2UnpackRichPIDs",
+                    InputName          = "Hlt2/pRec/long/RichPIDs",
+                    OutputName         = "Hlt2/long/RichPIDs" )
+            from Configurables import DataPacking__Unpack_LHCb__MuonPIDPacker_ as UnpackMuonPIDs
+            muon1=UnpackMuonPIDs( name = "Hlt2UnpackMuonPIDs",
+                    InputName          = "Hlt2/pRec/long/MuonIDs",
+                    OutputName         = "Hlt2/long/MuonIDs" )
+            from Configurables import UnpackTrack
+            track1=UnpackTrack( name = "UnpackLongTracks",
+                    InputName          = "Hlt2/pRec/long/Tracks",
+                    OutputName         = "Hlt2/long/Tracks" )
+            track2=UnpackTrack( name = "UnpackDownTracks",
+                    InputName          = "Hlt2/pRec/down/Tracks",
+                    OutputName         = "Hlt2/down/Tracks" )
+            proto3=UnpackProtoParticle( name = "UnpackNeutralProtoP",
+                    InputName          = "Hlt2/pRec/neutral/Protos",
+                    OutputName         = "Hlt2/neutral/Protos" )
+            from Configurables import DataPacking__Unpack_LHCb__CaloClusterPacker_ as UnpackCaloClusters
+            clusters1=UnpackCaloClusters( name = "UnpackCaloClusters",
+                    InputName          = "Hlt2/pRec/neutral/CaloClusters", 
+                    OutputName         = "Hlt2/neutral/CaloClusters" )
+            from Configurables import UnpackCaloHypo as UnpackCaloHypos
+            hypos1=UnpackCaloHypos( name = "UnpackCaloElectronHypos",
+                    InputName          = "Hlt2/pRec/neutral/Electrons",
+                    OutputName         = "Hlt2/neutral/Electrons" )
+            hypos2=UnpackCaloHypos( name = "UnpackCaloPhotonHypos",
+                    InputName          = "Hlt2/pRec/neutral/Photons",
+                    OutputName         = "Hlt2/neutral/Photons" )
+            hypos3=UnpackCaloHypos( name = "UnpackCaloMergedPi0Hypos",
+                    InputName          = "Hlt2/pRec/neutral/MergedPi0s",
+                    OutputName         = "Hlt2/neutral/MergedPi0s" )
+            hypos4=UnpackCaloHypos( name = "UnpackCaloSplitPhotonHypos",
+                    InputName          = "Hlt2/pRec/neutral/SplitPhotons",
+                    OutputName         = "Hlt2/neutral/SplitPhotons" )
+            unpackers+=[proto1,proto2,proto3,rich1,muon1,track1,track2,clusters1,hypos1,hypos2,hypos3,hypos4]
+            
+            # Update data on demand
+            for alg in unpackers:
+                DataOnDemandSvc().AlgMap[alg.OutputName] = alg
 
         if "Tracking" in self.getProp("EnableUnpack") : return # skip the rest
 
