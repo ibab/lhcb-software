@@ -117,14 +117,14 @@ StatusCode MCFTDepositMonitor::execute() {
     double fibrelenghfraction = 0;
 
     if (pL) {
-      if(pL->calculateListOfFiredChannels(ftHit, energyDistribution)){
+      if(pL->calculateListOfFiredChannels(*ftHit, energyDistribution)){
         
 
         plot(pL->angle()*180/M_PI,"CheckStereoAngle","Stereo Angle; Stereo Angle [#degree];" ,-10 , 10);
         plot(pL->layerInnerHoleRadius(),"CheckHoleRadius","Hole Radius ; Hole Radius  [mm];" ,50 , 150);
         plot(pL->layerMaxY(),"CheckLayerHalfSizeY","Layer Half Size Y ; Layer Half Size Y  [mm];" ,3000 , 3100);
 
-        if(pL->hitPositionInFibre(ftHit, fibrelengh,fibrelenghfraction)){
+        if(pL->hitPositionInFibre(*ftHit, fibrelengh,fibrelenghfraction)){
         
           plot(fibrelengh,"CheckFibreLengh","FibreLengh; Sci. Fibre Lengh [mm]; Nber of Events" ,2900 ,3100);
           plot(fibrelenghfraction,"CheckFibreFraction","FibreFraction; Sci. Fibre Fraction ; Nber of Events" ,0 ,1);

@@ -460,7 +460,7 @@ StatusCode MCFTDepositCreator::hitToChannelConversion(LHCb::MCHit* ftHit, LHCb::
   
   // -- If this fails, it's mostly due to geometrical reasons (in FTDet v2.0)
   // -- so not dangerous
-  if( pL->calculateListOfFiredChannels( ftHit, channels) == StatusCode::FAILURE){
+  if( pL->calculateListOfFiredChannels( *ftHit, channels) == StatusCode::FAILURE){
     if ( msgLevel( MSG::DEBUG) ) debug() << "Could not calculate list of fired channels" << endmsg;
     return StatusCode::SUCCESS;
   }
@@ -628,7 +628,7 @@ void MCFTDepositCreator::plotChannelProperties(const DeFTFibreMat* pL, FTDoubleP
   
   double fibrelength = 0;
   double fibrelengthfraction = 0;
-  if(pL->hitPositionInFibre(ftHit, fibrelength,fibrelengthfraction)){
+  if(pL->hitPositionInFibre(*ftHit, fibrelength,fibrelengthfraction)){
         
     
     if ( msgLevel( MSG::DEBUG) ) {

@@ -107,7 +107,7 @@ StatusCode FTClusterMonitor::execute() {
     const DeFTFibreMat* pL = m_deFT->findFibreMat(largestHit->midPoint());
     if( pL ) {
       std::pair<LHCb::FTChannelID, double> hitMeanChannel;
-      if( pL->calculateMeanChannel(largestHit, hitMeanChannel)){
+      if( pL->calculateMeanChannel(*largestHit, hitMeanChannel)){
         // default
         //double dXCluster = (((double)hitMeanChannel.first-(double)cluster->channelID()) + 
         //                    (hitMeanChannel.second - cluster->fraction()))*250.; // in micrometer

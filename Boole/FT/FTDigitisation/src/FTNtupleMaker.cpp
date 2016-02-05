@@ -143,7 +143,7 @@ StatusCode FTNtupleMaker::execute() {
     const DeFTFibreMat* pL = m_deFT->findFibreMat(mcHit->midPoint());
     std::pair<LHCb::FTChannelID, double>  hitchannel;
     std::vector <std::pair<LHCb::FTChannelID, double> > hitchannelVec;
-    if( ( pL ) && ( pL->calculateMeanChannel( mcHit, hitchannel)) ) {
+    if( ( pL ) && ( pL->calculateMeanChannel( *mcHit, hitchannel)) ) {
       HitX.push_back( mcHit->midPoint().x() );
       HitY.push_back( mcHit->midPoint().y() );
       HitZ.push_back( mcHit->midPoint().z() );
@@ -161,7 +161,7 @@ StatusCode FTNtupleMaker::execute() {
       HitSiPMId.push_back( hitchannel.first.sipmId() );
       HitSiPMCell.push_back( hitchannel.first.sipmCell() );
       HitFraction.push_back( hitchannel.second );
-      if( pL->calculateListOfFiredChannels( mcHit, hitchannelVec)){
+      if( pL->calculateListOfFiredChannels( *mcHit, hitchannelVec)){
         if ( msgLevel( MSG::DEBUG) ) info() << "Could not calculate list of fired channels" << endmsg;
         HitChannelID_Start.push_back( hitchannelVec[0].first.channelID() );
         HitLayer_Start.push_back( hitchannelVec[0].first.layer() );
@@ -455,7 +455,7 @@ StatusCode FTNtupleMaker::ClusterWithLargestMCHitInfo(Tuple &tpl)
 
     const DeFTFibreMat* pL = m_deFT->findFibreMat(pHit->midPoint());
     std::pair<LHCb::FTChannelID, double>  hitchannel;
-    if( ( pL ) && ( pL->calculateMeanChannel( pHit, hitchannel)) ) {
+    if( ( pL ) && ( pL->calculateMeanChannel( *pHit, hitchannel)) ) {
       
       
         HitclusChannelID.push_back(hitchannel.first) ;
@@ -611,7 +611,7 @@ StatusCode FTNtupleMaker::ClusterWithAllMCHitInfo(Tuple &tpl){
 
     const DeFTFibreMat* pL = m_deFT->findFibreMat(pHit->midPoint());
     std::pair<LHCb::FTChannelID, double>  hitchannel;
-    if( ( pL ) && ( pL->calculateMeanChannel( pHit, hitchannel)) ) {
+    if( ( pL ) && ( pL->calculateMeanChannel( *pHit, hitchannel)) ) {
         HitclusChannelID.push_back(hitchannel.first) ;
         HitclusLayer.push_back((hitchannel.first).layer()) ;
         HitclusQuarter.push_back((hitchannel.first).quarter()) ;

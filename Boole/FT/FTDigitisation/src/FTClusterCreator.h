@@ -24,11 +24,8 @@ public:
   /// Standard constructor
   FTClusterCreator( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~FTClusterCreator( ); ///< Destructor
-
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  StatusCode execute   () override;    ///< Algorithm execution
+  StatusCode finalize  () override;    ///< Algorithm finalization
 
 private:
   // Location
@@ -50,10 +47,10 @@ private:
   float m_ITScale;
 
   //=== Sum for some average information
-  int   m_nCluster;
-  float m_sumCharge;
-  int m_nberOfLostHitFromMap;
-  int m_nberOfKeptHitFromMap;
+  int   m_nCluster = 0;
+  float m_sumCharge = 0.;
+  int m_nberOfLostHitFromMap = 0;
+  int m_nberOfKeptHitFromMap = 0;
 
 };
 #endif // FTCLUSTERCREATOR_H

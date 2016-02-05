@@ -26,16 +26,12 @@ using namespace LHCb;
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( FTClusterCreator )
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 FTClusterCreator::FTClusterCreator( const std::string& name,
                                     ISvcLocator* pSvcLocator)
 : GaudiHistoAlg ( name , pSvcLocator )
-  , m_nCluster(0)
-  , m_sumCharge(0.)
-
 {
   declareProperty("InputLocation" ,     m_inputLocation     = LHCb::MCFTDigitLocation::Default, "Path to input MCDigits");
   declareProperty("OutputLocation" ,    m_outputLocation    = LHCb::FTClusterLocation::Default, "Path to output Clusters");
@@ -52,23 +48,7 @@ FTClusterCreator::FTClusterCreator( const std::string& name,
   declareProperty("MakeSpillPlots"    , m_makeSpillPlots    = false , "In case of spillover, add extra monitoring");
   declareProperty("RemoveITRegion"    , m_removeITRegion    = 0     , "1 = remove IT region, 2 = keep only IT region, 3 = remove square");
   declareProperty("ITScale"           , m_ITScale           = 1     , "Scale of IT to be removed / kept (only relevant if RemoveITRegion)");
-  m_nberOfLostHitFromMap = 0;
-  m_nberOfKeptHitFromMap = 0;
 
-}
-//=============================================================================
-// Destructor
-//=============================================================================
-FTClusterCreator::~FTClusterCreator() {}
-
-//=============================================================================
-// Initialization
-//=============================================================================
-StatusCode FTClusterCreator::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -99,8 +79,8 @@ StatusCode FTClusterCreator::execute(){
 
   // Get the default (signal) spill (to check for spillover cluster origin)
   const MCHits* mcHits = get<MCHits>(LHCb::MCHitLocation::FT);
-  const MCHits* mcHitsNext = 0;
-  const MCHits* mcHitsPrev = 0;
+  const MCHits* mcHitsNext = nullptr;
+  const MCHits* mcHitsPrev = nullptr;
   if( m_makeSpillPlots ) {
     mcHitsNext = getIfExists<MCHits>("Next/"+LHCb::MCHitLocation::FT); //"/Event/Next/MC/FT/Hits"
     mcHitsPrev = getIfExists<MCHits>("Prev/"+LHCb::MCHitLocation::FT); //"/Event/Prev/MC/FT/Hits"
@@ -108,36 +88,30 @@ StatusCode FTClusterCreator::execute(){
 
   // Create map of involved hits, all of them associated to false (not yet in clusters)
   std::map<const LHCb::MCHit*, bool> hitBoolMap;
-  for (MCFTDigits::const_iterator iterDigit = mcDigitsCont->begin(); iterDigit!=mcDigitsCont->end();++iterDigit){
-    MCFTDigit* mcDigit = *iterDigit;
+  for (MCFTDigit *mcDigit : *mcDigitsCont) {
     const MCFTDeposit* mcDeposit = mcDigit->deposit();
-    if (mcDeposit != 0) {
-      for (unsigned int idx = 0; idx<mcDeposit->mcHitVec().size(); ++idx) {
-        if( mcDeposit->mcHitVec()[idx] != 0 ) {
-          hitBoolMap[ mcDeposit->mcHitVec()[idx] ]=false;
-        }
+    if (mcDeposit) {
+      for (const auto& hit : mcDeposit->mcHitVec() ) {
+         if (hit) hitBoolMap[hit] = false;
       }
     }
   }
-
-
-
 
   //***********************
   //* MAIN LOOP
   //***********************
 
-  MCFTDigits::const_iterator lastStopDigitIter = mcDigitsCont->begin(); // end digit of last cluster, to prevent overlap
+  auto lastStopDigitIter = mcDigitsCont->begin(); // end digit of last cluster, to prevent overlap
 
-  // Since Digit Container is sorted wrt channelID, clusters are defined searching for bumps of ADC Count
-  MCFTDigits::const_iterator seedDigitIter = mcDigitsCont->begin();
   
   // Counters for clusters per SiPM plot
   int ClusterPerSiPMCounter = 0;
   unsigned int ReferenceSiPMID = 0;
   unsigned int LastSiPMID = 0;
 
-  while(seedDigitIter != mcDigitsCont->end()){ 
+  // Since Digit Container is sorted wrt channelID, clusters are defined searching for bumps of ADC Count
+  auto seedDigitIter = mcDigitsCont->begin();
+  while(seedDigitIter != mcDigitsCont->end()){
     // loop over digits
 
     MCFTDigit* seedDigit = *seedDigitIter; // the seed of the cluster
@@ -148,8 +122,8 @@ StatusCode FTClusterCreator::execute(){
       if ( msgLevel( MSG::DEBUG) )
         debug() << " ---> START NEW CLUSTER WITH SEED @ " << seedDigit->channelID() << endmsg;
       
-      MCFTDigits::const_iterator startDigitIter = seedDigitIter; // begin channel of cluster
-      MCFTDigits::const_iterator stopDigitIter  = seedDigitIter; // end   channel of cluster
+      auto startDigitIter = seedDigitIter; // begin channel of cluster
+      auto stopDigitIter  = seedDigitIter; // end   channel of cluster
 
       // vector of MCHits that contributed to the cluster
       std::vector<const LHCb::MCHit*> clusterHitDistribution;
@@ -161,8 +135,6 @@ StatusCode FTClusterCreator::execute(){
       std::map< const LHCb::MCParticle*, double> mcContributionMap;
       std::map< const LHCb::MCHit*, double> mcHitContributionMap;
 
-
-      //
       // test neighbours to define starting and ending channels of Cluster
       bool ContinueStartLoop = true;
       bool ContinueStopLoop  = true;
@@ -260,8 +232,6 @@ StatusCode FTClusterCreator::execute(){
 
       lastStopDigitIter = stopDigitIter; // update the 'previous cluster last channel'
 
-
-
       //
       // calculate the cluster charge / mean position
       if ( msgLevel( MSG::DEBUG) )
@@ -272,7 +242,7 @@ StatusCode FTClusterCreator::execute(){
 
       //std::vector<LHCb::MCFTDigit*> digitVec; //TODO
 
-      for(MCFTDigits::const_iterator iterDigit = startDigitIter; iterDigit <(stopDigitIter+1); ++iterDigit) {
+      for(auto iterDigit = startDigitIter; iterDigit <(stopDigitIter+1); ++iterDigit) {
         // Loop over digits in to-be cluster
 
         MCFTDigit* digit = *iterDigit;
@@ -289,34 +259,29 @@ StatusCode FTClusterCreator::execute(){
         // meanPosition will be [ (rel. pos. from left) * charge ] / totalCharge
         meanPosition += (iterDigit-startDigitIter) * (ChannelWeight);
 
-
         // check contributions from MCHits, for monitoring
         const MCFTDeposit* mcDeposit = digit->deposit();
-        if( mcDeposit != 0 ) { 
+        if( mcDeposit ) { 
           for (unsigned int idx = 0; idx<mcDeposit->mcHitVec().size(); ++idx) {
             // loop over all mcHits contributing to the deposit associated with the digit
-
-            if(mcDeposit -> mcHitVec()[idx] != 0) {
-              // add dir+ref energy to total energy from MC
-              totalEnergyFromMC += mcDeposit->energyVec()[idx] + mcDeposit->energyRefVec()[idx];
-              // add the MCParticle that deposited the energy to the map
-              mcContributionMap[ mcDeposit->mcHitVec()[idx]->mcParticle() ]  +=  (mcDeposit->energyVec()[idx] + mcDeposit->energyRefVec()[idx]);
-              // add the MCHit that contributed energy to the map
-              mcHitContributionMap[ mcDeposit->mcHitVec()[idx] ]  +=  (mcDeposit->energyVec()[idx] + mcDeposit->energyRefVec()[idx]);
-              // add MCHit to clusterHitDistribution list
-              clusterHitDistribution.push_back(mcDeposit->mcHitVec()[idx]);
-            }
+            auto& hit = mcDeposit -> mcHitVec()[idx];
+            if(!hit) continue;
+            // add dir+ref energy
+            auto energy = mcDeposit->energyVec()[idx] + mcDeposit->energyRefVec()[idx];
+            // add dir+ref energy to total energy from MC
+            totalEnergyFromMC += energy;
+            // add the MCParticle that deposited the energy to the map
+            mcContributionMap[ hit->mcParticle() ]  +=  energy;
+            // add the MCHit that contributed energy to the map
+            mcHitContributionMap[ hit ]  +=  energy; 
+            // add MCHit to clusterHitDistribution list
+            clusterHitDistribution.push_back(hit);
           }
         }
       } // end of loop over digits in 'cluster'
       
-
       // Update the hitBoolMap of MCHits contributing to clusters
-      for(std::vector<const LHCb::MCHit*>::const_iterator hitIter = clusterHitDistribution.begin(); 
-        hitIter != clusterHitDistribution.end(); ++hitIter){
-        hitBoolMap[*hitIter]=true;     
-      }
-
+      for(const auto& hit : clusterHitDistribution) hitBoolMap[hit]=true;     
 
       if( 0 < totalCharge) { 
         // add the offset of the cluster channelID to the meanPosition
@@ -326,14 +291,11 @@ StatusCode FTClusterCreator::execute(){
         info() << "Warning: Cluster charge < 0! Cluster mean position not estimated correctly." << endmsg;
       }
 
-        
-
-
       //
       // Before Cluster is recorded, check that total ADC > threshold and size > minSize
 
       //if( ( totalCharge >= m_clusterMinCharge) &&
-      //    ((stopDigitIter-startDigitIter+1) >= m_clusterMinWidth) ){
+      //    ((stopDigitIter-startDigitIter+1) >= m_clusterMinWidth) )
       unsigned int width = (stopDigitIter-startDigitIter+1);
       if(
          ( (width==1 && totalCharge >= m_clusterMinCharge) ||
@@ -351,7 +313,6 @@ StatusCode FTClusterCreator::execute(){
           ReferenceSiPMID = LastSiPMID;
           ClusterPerSiPMCounter = 1;
         }
-
 
         // Calculate the fractional position
         // Due to max.size of 4 and thresholds 3,5,8, the extremes of meanPosition are 
@@ -375,14 +336,12 @@ StatusCode FTClusterCreator::execute(){
         }
         */
 
-
         // Check to fix certain properties for tracking eff. studies
         int newClusSize = (stopDigitIter-startDigitIter+1);
         if(m_fixClusterWidth != 0)  { newClusSize = m_fixClusterWidth;  }
         if(m_fixClusterCharge != 0) { totalCharge = m_fixClusterCharge; }
         if(m_fixFracPos != 0.) { fractionChanPosition = m_fixFracPos; }
 
-        
         // Define new cluster
         //  FTCluster::FTCluster( LHCb::FTChannelID &id, double fraction, int size, int charge )
         //FTCluster *newCluster = new FTCluster(meanChanPosition,fractionChanPosition,newClusSize,totalCharge,digitVec); // TODO
@@ -390,33 +349,29 @@ StatusCode FTClusterCreator::execute(){
         ++m_nCluster;
         m_sumCharge += totalCharge;
  
-        bool acceptCluster = 1;
+        bool acceptCluster = true;
 
         // TEMPORARY FIX! The calculation of the meanChanPos creates module=12 when on an edge channel!!
         //  Should be taken into account in the calculation of meanChanPos.
         if( newCluster->channelID().module() >= 12 ) { 
           info() << "Warning: cluster module is out of allowed bounds. Ignoring Cluster. [ " << newCluster->channelID() << " ] " << endmsg;
-          acceptCluster = 0; 
+          acceptCluster = false; 
         }
 
 
         // Get largest MCHit object contributing to cluster
-        if( mcHitContributionMap.size() > 0 ) {
+        if( !mcHitContributionMap.empty() ) {
           // NOT a noise cluster
           plot( (mcHitContributionMap.size()) , "Cluster_NberOfHits", "Number of Hits in Cluster ; Number of Hits ; Number of clusters",0.,50.,50); 
 
           double largestDeposit = -999;
-          const LHCb::MCHit* largestHit = 0; 
-          for(std::map<const LHCb::MCHit*,double>::iterator i = mcHitContributionMap.begin(); i != mcHitContributionMap.end(); ++i) {
-
-            if(largestDeposit < (i->second)) {
-              largestDeposit = (i->second);
-              largestHit = (i->first);
+          const LHCb::MCHit* largestHit = nullptr; 
+          for(const auto& i : mcHitContributionMap ) {
+            if(largestDeposit < i.second) {
+              largestDeposit = i.second;
+              largestHit = i.first;
             }
           }
-
-          
-
 
           // TESTS: Check if we should remove cluster
           if( m_removeITRegion != 0 ) {
@@ -436,23 +391,20 @@ StatusCode FTClusterCreator::execute(){
                              ( hitX > -ITXcenp && hitX <  ITXcenp && hitY > -ITYmaxp && hitY < -ITYmin) || //B
                              ( hitX > -ITXmin  && hitX <  ITXmin  && hitY > -ITYmin  && hitY < ITYmin ) ); //C
             float sqX = (536+2*2)/2., sqY = 99. + 50. * m_ITScale ; 
-            bool hitInSq = ( hitX > -sqX && hitX < sqX && hitY > -sqY && hitY < sqY );  
+            bool hitInSq = ( std::abs(hitX) < sqX && std::abs(hitY) < sqY );  
             if ( ( m_removeITRegion == 1 &&  hitInIT ) ||
                  ( m_removeITRegion == 2 && !hitInIT ) ||
                  ( m_removeITRegion == 3 &&  hitInSq ) ) {
               // if this hit is (or isn't) in the IT region
-              acceptCluster = 0;
+              acceptCluster = false;
             }
           } // end of if removeITRegion
-
-
-
 
           if ( acceptCluster ) {
             clusterCont -> insert(newCluster); // add cluster to container
         
             //implement counters
-            if(newCluster->size() == 1) counter("NberOfClusterSize1")++;
+            if(newCluster->size() == 1)       counter("NberOfClusterSize1")++;
             else if (newCluster->size() == 2) counter("NberOfClusterSize2")++;
             else if (newCluster->size() == 3) counter("NberOfClusterSize3")++;
             else if (newCluster->size() == 4) counter("NberOfClusterSize4")++;
@@ -539,13 +491,12 @@ StatusCode FTClusterCreator::execute(){
         
           // Setup MCParticle to cluster link (also for spillover / not accepted clusters, as long as it's not noise)
           if ( acceptCluster ) {
-            for(std::map<const LHCb::MCParticle*,double>::iterator i = mcContributionMap.begin(); i != mcContributionMap.end(); ++i) {
-              mcToClusterLink.link(newCluster, (i->first), (i->second)/totalEnergyFromMC ) ;
+            for(const auto& i : mcContributionMap) {
+              mcToClusterLink.link(newCluster, i.first, i.second/totalEnergyFromMC ) ;
             }
-            
             // Setup MCHit to cluster link
-            for(std::map<const LHCb::MCHit*,double>::iterator i = mcHitContributionMap.begin(); i != mcHitContributionMap.end(); ++i) {
-              hitToClusterLink.link(newCluster, (i->first), (i->second)/totalEnergyFromMC ) ;
+            for(const auto& i : mcHitContributionMap) {
+              hitToClusterLink.link(newCluster, i.first, i.second/totalEnergyFromMC ) ;
             }
           }
           
@@ -590,9 +541,6 @@ StatusCode FTClusterCreator::execute(){
           }
         }
 
-
-
-
       } // end of Cluster satisfies charge / size requirements
 
       // Set the loop iterator to the end digit, to continue looking for next cluster without overlap.
@@ -610,39 +558,31 @@ StatusCode FTClusterCreator::execute(){
 
 
   // plot the KeptMCHits / LostMCHits by the clustering
-  for(std::map<const LHCb::MCHit*, bool>::const_iterator hitboolMapiter = hitBoolMap.begin(); hitboolMapiter != hitBoolMap.end(); ++hitboolMapiter){
-    if(hitboolMapiter->second == true){
+  for(const auto& hitbool: hitBoolMap) {
+    if(hitbool.second){
       ++m_nberOfKeptHitFromMap;
       counter("NberOfKeptHitFromMap")++;
-      plot2D( hitboolMapiter->first->entry().x(), hitboolMapiter->first->entry().y(), "KeptHitEntryPosition",
+      plot2D( hitbool.first->entry().x(), hitbool.first->entry().y(), "KeptHitEntryPosition",
           "Entry position of Hits kept by Clusterisation ; x [mm]; y [mm]", -500., 500., -500.,500., 100, 100);  
-      plot(hitboolMapiter->first->energy(),"KeptHitEnergy", "Energy of Hits kept by Clusterisation; Energy [MeV];Number of hits" , 0 , 1 );
-      plot(hitboolMapiter->first->mcParticle()->particleID().pid(),"KeptHitPDGId", "PDGId of Hits kept by Clusterisation; Energy [MeV];Number of hits" , 0. , 100., 100);
-    }
-    else{
+      plot(hitbool.first->energy(),"KeptHitEnergy", "Energy of Hits kept by Clusterisation; Energy [MeV];Number of hits" , 0 , 1 );
+      plot(hitbool.first->mcParticle()->particleID().pid(),"KeptHitPDGId", "PDGId of Hits kept by Clusterisation; Energy [MeV];Number of hits" , 0. , 100., 100);
+    } else{
       ++m_nberOfLostHitFromMap;
       counter("NberOfLostHitFromMap")++;
-      plot2D( hitboolMapiter->first->entry().x(), hitboolMapiter->first->entry().y(), "LostHitEntryPosition",
+      plot2D( hitbool.first->entry().x(), hitbool.first->entry().y(), "LostHitEntryPosition",
           "Entry position of Hits lost in Clusterisation; x [mm]; y [mm]", -500., 500., -500.,500., 100, 100);  
-      plot(hitboolMapiter->first->energy(),"LostHitEnergy", "Energy of Hits lost in Clusterisation; Energy [MeV];Number of hits" , 0 , 1 );
-      plot(hitboolMapiter->first->mcParticle()->particleID().pid(),"LostHitPDGId", "PDGId of Hits lost in Clusterisation; Energy [MeV];Number of hits" , 0. , 100., 100 );
+      plot(hitbool.first->energy(),"LostHitEnergy", "Energy of Hits lost in Clusterisation; Energy [MeV];Number of hits" , 0 , 1 );
+      plot(hitbool.first->mcParticle()->particleID().pid(),"LostHitPDGId", "PDGId of Hits lost in Clusterisation; Energy [MeV];Number of hits" , 0. , 100., 100 );
     }
   }
-
-
-
   if(msgLevel(MSG::DEBUG)) debug() << "done with clustering!" << endmsg;
   return StatusCode::SUCCESS;
 }
-
-
-
 
 //=============================================================================
 //  Finalize
 //=============================================================================
 StatusCode FTClusterCreator::finalize() {
-
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
   if (m_nCluster > 0) info() << "*** Average cluster charge = " << m_sumCharge / m_nCluster << endmsg;
   info() << "*** Lost Hits = " <<m_nberOfLostHitFromMap << "\t Kept Hits = "<< m_nberOfKeptHitFromMap
@@ -651,10 +591,3 @@ StatusCode FTClusterCreator::finalize() {
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
-
-
-
-
-
-
-

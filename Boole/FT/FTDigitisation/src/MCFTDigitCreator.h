@@ -38,20 +38,16 @@ public:
   /// Standard constructor
   MCFTDigitCreator( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~MCFTDigitCreator( ); ///< Destructor
+  StatusCode initialize() override ;    ///< Algorithm initialization
+  StatusCode execute   () override ;    ///< Algorithm execution
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
+private:
 
   int deposit2ADC(const LHCb::MCFTDeposit* ftdeposit); ///< This function converts deposited energy in ADC Count
   std::pair<double,double> integrateResponse(const LHCb::MCFTDeposit* ftdeposit);
   int averagePhotoElectrons(double energy, LHCb::MCHit* noiseBypass);
   
-  SiPMResponse* m_SiPMResponse; ///< pointer to SiPM integrated response function
-  
-protected:
-
-private:
+  SiPMResponse* m_SiPMResponse = nullptr; ///< pointer to SiPM integrated response function
 
   std::string m_inputLocation;///< FT energy deposit Location
   std::string m_outputLocation;///< FT digit Location
@@ -71,12 +67,12 @@ private:
   
   
   // Set geometry
-  int Nlayers   = 4*3;  // layers * stations
-  int NModule   = 12;   // per up/down
-  int NMat      = 2;    // up and down
-  int Nsipms    = 16;   // per module
-  int Nchannels = 128;  // per sipm array
-  int Ntotchannels = Nlayers * NModule * NMat * Nsipms * Nchannels;
+  static constexpr int Nlayers   = 4*3;  // layers * stations
+  static constexpr int NModule   = 12;   // per up/down
+  static constexpr int NMat      = 2;    // up and down
+  static constexpr int Nsipms    = 16;   // per module
+  static constexpr int Nchannels = 128;  // per sipm array
+  static constexpr int Ntotchannels = Nlayers * NModule * NMat * Nsipms * Nchannels;
 
   int m_clusterLowThreshold;
   int m_clusterMidThreshold;
@@ -85,6 +81,6 @@ private:
   // tools
   
   // detectors
-  DeFTDetector* m_deFT; ///< pointer to FT detector description
+  DeFTDetector* m_deFT = nullptr; ///< pointer to FT detector description
 };
 #endif // MCFTDIGITCREATOR_H

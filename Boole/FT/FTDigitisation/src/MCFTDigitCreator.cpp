@@ -20,14 +20,8 @@
 // local
 #include "MCFTDigitCreator.h"
 
-// boost
-#include <boost/assign/std/vector.hpp>
-#include <boost/assign/list_of.hpp>
-
-
 using namespace LHCb;
 using namespace Gaudi;
-using namespace boost;
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( MCFTDigitCreator )
@@ -39,13 +33,7 @@ DECLARE_ALGORITHM_FACTORY( MCFTDigitCreator )
 MCFTDigitCreator::MCFTDigitCreator( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
-  , m_SiPMResponse(0)
 {
-  std::vector<double> tmp = boost::assign::list_of(26*Gaudi::Units::ns)
-                                                  (28*Gaudi::Units::ns)
-                                                  (30*Gaudi::Units::ns);//  tof (21+2+2)
-                                                                        // + full fiber propagation time (15) 
-                                                                        // - integration rise (15)
 
   declareProperty("InputLocation" ,       m_inputLocation        = LHCb::MCFTDepositLocation::Default );
   declareProperty("OutputLocation" ,      m_outputLocation       = LHCb::MCFTDigitLocation::Default   );
@@ -53,7 +41,12 @@ MCFTDigitCreator::MCFTDigitCreator( const std::string& name,
   declareProperty("SiPMGain",             m_sipmGain             = 2.0  );
   declareProperty("SiPMGainVariation",    m_sipmGainVariation    = 0.05 );  // relative fluctuation of the gain
   declareProperty("ADCNoise",             m_adcNoise             = 0.5  );
-  declareProperty("IntegrationOffset",    m_integrationOffset    = tmp); // tof + full fiber propagation time
+  // tof + full fiber propagation time
+  declareProperty("IntegrationOffset",    m_integrationOffset    = { 26*Gaudi::Units::ns,
+                                                                     28*Gaudi::Units::ns,
+                                                                     30*Gaudi::Units::ns} );//  tof (21+2+2)
+                                                                        // + full fiber propagation time (15) 
+                                                                        // - integration rise (15)
   declareProperty("Force2bitADC"     ,    m_force2bitADC         = 1); // force the use of 3-valued charges at the end
 
   declareProperty("ClusterLowThreshold" , m_clusterLowThreshold  = 3, "ADC low threshold");
@@ -61,11 +54,6 @@ MCFTDigitCreator::MCFTDigitCreator( const std::string& name,
   declareProperty("ClusterHighThreshold", m_clusterHighThreshold = 9, "ADC high threshold");
 
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-MCFTDigitCreator::~MCFTDigitCreator() {}
-
 
 //=============================================================================
 // Initialization
@@ -270,15 +258,12 @@ StatusCode MCFTDigitCreator::execute() {
 
   if(m_force2bitADC) {
     // Force 2-bits ADC charge values
-    int adc, newAdc;
-    for (MCFTDigits::const_iterator iterDigit = digitCont->begin(); iterDigit!=digitCont->end();++iterDigit){
+    for (auto iterDigit = digitCont->begin(); iterDigit!=digitCont->end();++iterDigit){
       MCFTDigit* mcDigit = *iterDigit;   
-      adc = mcDigit -> adcCount();
-
-      newAdc = 0;
-      if(adc >= m_clusterLowThreshold) { newAdc = m_clusterLowThreshold; }
-      if(adc >= m_clusterMidThreshold) { newAdc = m_clusterMidThreshold; }
-      if(adc >= m_clusterHighThreshold) { newAdc = m_clusterHighThreshold; }
+      auto    adc = mcDigit -> adcCount();
+      auto newAdc = ( adc >= m_clusterHighThreshold ? m_clusterHighThreshold :
+                      adc >= m_clusterMidThreshold  ? m_clusterMidThreshold  :
+                      adc >= m_clusterLowThreshold  ? m_clusterLowThreshold  : 0 );
       mcDigit -> setAdcCount( newAdc );
     
       plot( adc   , "force2bitADC_oldAdc", "force2bitADC oldADC" , 0. , 20. , 20);
@@ -294,8 +279,7 @@ StatusCode MCFTDigitCreator::execute() {
   
   // TEST : print Digit content after sorting
   if ( msgLevel( MSG::DEBUG) ) {
-    for (MCFTDigits::const_iterator iterDigit = digitCont->begin(); iterDigit!=digitCont->end();++iterDigit){
-      MCFTDigit* mcDigit = *iterDigit;
+    for (const auto& mcDigit :  *digitCont) {
       debug() <<"Channel ="<<mcDigit->channelID()<< " : " 
               <<"\t ADC ="<<mcDigit->adcCount() << endmsg;
     } 
