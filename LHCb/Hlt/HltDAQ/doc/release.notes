@@ -4,6 +4,8 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+!========================= HltDAQ v4r25 2016-02-05 =========================
+
 ! 2016-02-04 - Rosen Matev
  - Remove error message when Hlt2MonSvc is not there
 
