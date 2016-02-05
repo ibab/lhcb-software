@@ -5,6 +5,9 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2016-02-05 - Vanya BELYAEV 
+ - remove "dst-explorer"  alias
+ 
 ! 2016-01-28 - Vanya Belyaev
  - improments for histos&tuples 
  - more features to qmtest bender_tools_script 
