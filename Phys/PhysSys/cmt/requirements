@@ -3,6 +3,11 @@ version v21r0
 
 branches doc cmt
 
+##################################################
+# Patched package just for this release !
+use  HltDAQ    v4r25    Hlt
+##################################################
+
 #===================================================================
 
 use  DaVinciInterfaces          v2r26    Phys    # Current DV Maintainer

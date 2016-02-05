@@ -4,6 +4,10 @@
 gaudi_subdir(PhysSys v21r0)
 
 gaudi_depends_on_subdirs(Kernel/SelectionLine
+##################################################
+# Patched package just for this release !
+                         Hlt/HltDAQ
+##################################################
                          Phys/BBDecTreeTool
                          Phys/DaVinciInterfaces
                          Phys/DaVinciKernel
