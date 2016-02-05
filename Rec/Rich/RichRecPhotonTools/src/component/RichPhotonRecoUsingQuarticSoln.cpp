@@ -51,6 +51,7 @@ PhotonRecoUsingQuarticSoln( const std::string& type,
   declareProperty( "MinSphMirrTolIt", m_minSphMirrTolIt );
 
   // Corrections for the intrinsic biases
+  //                Aerogel       Rich1Gas    Rich2Gas
   m_ckBiasCorrs = { -0.000358914, -7.505e-5, -4.287e-5 };
 
   //setProperty( "OutputLevel", 2 );
@@ -159,32 +160,32 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 {
 
   // the geometrical track segment
-  const LHCb::RichTrackSegment & trSeg  = segment->trackSegment();
+  const auto & trSeg  = segment->trackSegment();
 
   // detection point
-  const Gaudi::XYZPoint& detectionPoint = pixel->globalPosition();
+  const auto & detectionPoint = pixel->globalPosition();
 
   // SmartIDs
-  const Rich::HPDPixelCluster& smartIDs = pixel->hpdPixelCluster();
+  const auto & smartIDs = pixel->hpdPixelCluster();
 
   // Detector information (RICH, radiator and HPD panel)
-  const Rich::DetectorType rich     = trSeg.rich();
-  const Rich::RadiatorType radiator = trSeg.radiator();
-  const Rich::Side         side     = m_rich[rich]->side( detectionPoint );
+  const auto rich     = trSeg.rich();
+  const auto radiator = trSeg.radiator();
+  const auto side     = m_rich[rich]->side( detectionPoint );
 
   // Emission point to use for photon reconstruction
   // operate directly on photon data member for efficiency
-  Gaudi::XYZPoint & emissionPoint = gPhoton.emissionPoint();
+  auto & emissionPoint = gPhoton.emissionPoint();
   emissPoint()->emissionPoint( segment, pixel, emissionPoint );
 
   // Photon direction at emission point
   // Again, operator directly on data member
-  Gaudi::XYZVector & photonDirection = gPhoton.emissionDir();
+  auto & photonDirection = gPhoton.emissionDir();
 
   // Final reflection points on sec and spherical mirrors
   // operate directly on photon data
-  Gaudi::XYZPoint & sphReflPoint = gPhoton.sphMirReflectionPoint();
-  Gaudi::XYZPoint & secReflPoint = gPhoton.flatMirReflectionPoint();
+  auto & sphReflPoint = gPhoton.sphMirReflectionPoint();
+  auto & secReflPoint = gPhoton.flatMirReflectionPoint();
 
   // fraction of segment path length accessible to the photon
   float fraction(1);
@@ -194,7 +195,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   const DeRichSphMirror * secSegment = nullptr;
 
   // flag to say if this photon candidate is un-ambiguous - default to false
-  bool unambigPhoton( false );
+  bool unambigPhoton = false;
 
   // find the reflection of the detection point in the sec mirror
   // (virtual detection point) starting with nominal values
@@ -311,7 +312,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 
       // -------------------------------------------------------------------------------
       // Is this an unambiguous photon - I.e. only one possible mirror combination
-      if ( (sphSegment1 == sphSegment2) && (secSegment1 == secSegment2) )
+      if ( ( sphSegment1 == sphSegment2 ) && ( secSegment1 == secSegment2 ) )
       {
         // Set pointers to the mirror detector objects
         sphSegment = sphSegment1;
@@ -327,7 +328,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     } // end radiator type if
 
     // if configured to do so reject ambiguous photons
-    if ( m_rejectAmbigPhots[radiator] && !unambigPhoton )
+    if ( UNLIKELY( m_rejectAmbigPhots[radiator] && !unambigPhoton ) )
     {
       //_ri_debug << radiator << " : Failed ambiguous photon test" << endmsg;
       return StatusCode::FAILURE;
@@ -339,7 +340,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // --------------------------------------------------------------------------------------
   // Active segment fraction cut
   // --------------------------------------------------------------------------------------
-  if ( fraction < m_minActiveFrac[radiator] )
+  if ( UNLIKELY( fraction < m_minActiveFrac[radiator] ) )
   {
     //_ri_debug << radiator << " : Failed active segment fraction cut" << endmsg;
     return StatusCode::FAILURE;

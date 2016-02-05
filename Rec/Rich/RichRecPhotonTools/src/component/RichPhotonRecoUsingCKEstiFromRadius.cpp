@@ -26,12 +26,12 @@ PhotonRecoUsingCKEstiFromRadius( const std::string& type,
     m_minCalibRingRadius ( Rich::NRadiatorTypes, -1 )
 {
   // Job options
-  declareProperty( "UseLightestHypoOnly", m_useLightestHypoOnly = false );
   declareProperty( "MinFracCKTheta", m_minFracCKtheta = { 1.0, 0.05, 0.05 } );
   declareProperty( "RejectAmbiguousPhotons", m_rejAmbigPhots = false );
 
   // Corrections for the intrinsic biases
-  m_ckBiasCorrs = { 0.0, 4.80e-6, 3.46e-5 };
+  //                Aerogel    Rich1Gas    Rich2Gas
+  m_ckBiasCorrs = { 0.0,      -6.687e-5,   1.787e-6 };
 
   //setProperty( "OutputLevel", 1 );
 }
@@ -56,12 +56,6 @@ StatusCode PhotonRecoUsingCKEstiFromRadius::initialize()
   acquireTool( "RichParticleProperties",   m_richPartProp  );
 
   m_pidTypes = m_richPartProp->particleTypes();
-  if ( m_useLightestHypoOnly )
-  {
-    m_pidTypes = { m_pidTypes.front() }; // Shrink list to only the first entry
-    Warning( "Forcing use of only lightest active mass hypothesis for calibration points",
-             StatusCode::SUCCESS );
-  }
   _ri_debug << "Particle types considered for calibration points = " << m_pidTypes
             << endmsg;
 
@@ -83,8 +77,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // track segment
   const auto & trSeg = segment->trackSegment();
 
-  // Detector information (RICH, radiator and HPD panel)
-  //const Rich::DetectorType rich     = trSeg.rich();
+  // Detector information
   const auto radiator = trSeg.radiator();
   const auto side     = pixel->panel().panel();
 
@@ -109,8 +102,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // x,y differences
   const auto diff_x = ( segPSide.x() - pixPRad.x() );
   const auto diff_y = ( segPSide.y() - pixPRad.y() );
-  // The track - pixel seperation^2
-  const auto track_pix_sep2 = std::pow(diff_x,2) + std::pow(diff_y,2);
+  // The track - pixel seperation
+  const auto track_pix_sep = std::sqrt( diff_x*diff_x + diff_y*diff_y );
 
   // estimate phi from these hits
   // use full atan2
@@ -119,61 +112,124 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   const auto phiCerenkov = (float) ( Gaudi::Units::pi + vdt::fast_atan2f(diff_y,diff_x) );
 
   // Find the best ring and points to use as the calibration data
-  const LHCb::RichRecRing * ring = nullptr;
-  LHCb::RichRecRing::ClosestPoints points;
-  float sep2_diff = std::numeric_limits<float>::max();
+  const LHCb::RichRecRing * ring      = nullptr;
+  const LHCb::RichRecRing * last_ring = nullptr;
+  const LHCb::RichRecPointOnRing * best_point = nullptr;
+  float sep_diff2 = std::numeric_limits<float>::max();
+  float sep_calib{0}, last_sep_calib{0};
+  float thetaCerenkov{-1};
+  bool unambigPhoton = false;
   for ( const auto& pid : m_pidTypes )
   {
 
     // Load the ring and select the point for this PID type
     const auto * ring_tmp = m_massHypoRings->massHypoRing( segment, pid );
 
-    // check how close to threshold the ring is. Do not use if too close.
-    if ( ring_tmp && ring_tmp->radius() > minCalibRingRadius(radiator) )
+    // Did we find a ring (i.e. above threshold)
+    if ( ring_tmp )
     {
-
-      // select the calibration point to use from this ring
-      const auto points_tmp = ring_tmp->getPointsClosestInAzimuth(phiCerenkov);
-
-      // if found see if this point is better than the last one tried
-      if ( points_tmp.first &&
-           sameSide( radiator, pixPRad, points_tmp.first->localPosition() ) ) // should check both ..
+      // check how close to threshold the ring is. Do not use if too close.
+      if ( ring_tmp->radius() > minCalibRingRadius(radiator) )
       {
-        // corrected local pixel (x,y)
-        const auto lPix_x = points_tmp.first->localPosition().x();
-        const auto lPix_y = points_tmp.first->localPosition().y();
-        // pixel - calibration point seperation^2
-        const auto pix_calib_sep2 = ( std::pow( pixPRad.x() - lPix_x, 2 ) +
-                                      std::pow( pixPRad.y() - lPix_y, 2 ) );
-        // Is this point a better calibration point to use ?
-        if ( pix_calib_sep2 < sep2_diff )
-        {
-          // updated decision variable
-          sep2_diff = pix_calib_sep2;
-          // update best ring and pixel pointers
-          ring      = ring_tmp;
-          points    = points_tmp;
-        }
-        else if ( ring )
-        {
-          // a ring is already found, and we are getting further away, so break out ...
-          break;
-        }
 
-      } // point found
+        // select the calibration point to use from this ring
+        const auto points = ring_tmp->getPointsClosestInAzimuth(phiCerenkov);
 
-    } // ring saturation check
+        // if found see if this point is better than the last one tried
+        if ( points.first && points.second &&
+             sameSide( radiator, pixPRad, points.first->localPosition()  ) &&
+             sameSide( radiator, pixPRad, points.second->localPosition() ) )
+        {
+          // get distance to each calibration point in phi
+          const auto lD = fabs( points.first->azimuth()  - phiCerenkov );
+          const auto hD = fabs( points.second->azimuth() - phiCerenkov );
+          const auto Dinv = 1.0 / ( lD + hD );
+
+          // corrected interpolated local calibration point position (x,y)
+          const auto& lP    = points.first ->localPosition();
+          const auto& hP    = points.second->localPosition();
+          const auto calp_x = ( ( lP.x() * hD ) + ( hP.x() * lD ) ) * Dinv;
+          const auto calp_y = ( ( lP.y() * hD ) + ( hP.y() * lD ) ) * Dinv;
+
+          // pixel - calibration point seperation ^ 2
+          const auto pix_calib_sep2 = ( std::pow( pixPRad.x() - calp_x, 2 ) +
+                                        std::pow( pixPRad.y() - calp_y, 2 ) );
+
+          // Is this point a better calibration point to use ?
+          if ( pix_calib_sep2 < sep_diff2 )
+          {
+            // First ring found ?
+            const bool firstFoundRing = ( ring == nullptr );
+
+            // updated decision variable
+            sep_diff2 = pix_calib_sep2;
+
+            // Best point pointer
+            best_point = ( lD < hD ? points.first : points.second );
+
+            // update calibration distance
+            last_sep_calib = sep_calib;
+            sep_calib = std::sqrt( std::pow( segPSide.x() - calp_x, 2 ) +
+                                   std::pow( segPSide.y() - calp_y, 2 ) );
+
+            // update best ring and pixel pointers
+            last_ring = ring;
+            ring      = ring_tmp;
+
+            // Ambiguous photon test, based on the mirrors used by both calibration points.
+            // Not quite the same as what is done in the Quartic tool (which tests
+            // reconstruction from the start and end of the track segment) but its better
+            // than doing nothing.
+            unambigPhoton =
+              ( ( points.first->primaryMirror()   == points.second->primaryMirror()   ) &&
+                ( points.first->secondaryMirror() == points.second->secondaryMirror() ) );
+
+            // Is pixel between (in ring radius) this ring and the last one
+            if ( !firstFoundRing                &&
+                 track_pix_sep >= sep_calib     &&
+                 track_pix_sep < last_sep_calib  )
+            {
+              // Interpolate between the two rings, then break out as this is the best we can do
+              const auto diffL = track_pix_sep  - sep_calib;
+              const auto diffH = last_sep_calib - track_pix_sep;
+              thetaCerenkov = ( ( diffL * last_ring->radius() ) +
+                                ( diffH *      ring->radius() ) ) / ( diffL + diffH );
+              break;
+            }
+            else
+            {
+              // Update CK theta value just using this ring
+              thetaCerenkov = ring->radius() * ( track_pix_sep / sep_calib );
+              // If this is the first found ring, and the point is further away than
+              // the calibration point, do not bother searching other (smaller) rings
+              // as they are only going to get further away.
+              if ( firstFoundRing && track_pix_sep > sep_calib ) { break; }
+            }
+
+          }
+          else if ( ring )
+          {
+            // a ring is already found, and we are getting further away, so break out ...
+            break;
+          }
+
+        } // point found
+
+      } // ring saturation check
+
+    }
+    else
+    {
+      // no ring was found. This means we are below threshold so there is no
+      // point in searching other heavier rings, so break out.
+      break;
+    }
 
   } // loop over PID types
 
   // If a good calibration point was found, use its info to fill the photon
   if ( ring )
   {
-
-    // Ambiguous photon test, based on the mirrors used be both calibration points
-    const bool unambigPhoton = 
-      ( ( points.first->primaryMirror()   == points.second->primaryMirror()   ) &&
-        ( points.first->secondaryMirror() == points.second->secondaryMirror() ) );
 
     // check for ambiguous photons ?
     if ( UNLIKELY( !unambigPhoton && m_rejAmbigPhots ) )
@@ -185,45 +241,21 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     else
     {
 
-      // get distance to each point in phi
-      const auto lPhiDist = fabs( points.first->azimuth()  - phiCerenkov );
-      const auto hPhiDist = fabs( points.second->azimuth() - phiCerenkov );
+      // Add bias correction to CK theta value
+      thetaCerenkov += ckThetaCorrection(radiator);
 
-      // which is the closest point ?
-      const auto * point = ( lPhiDist < hPhiDist ? points.first : points.second );
-
-      // Compute calibration distance^2
-      // just use the nearest point
-      //const auto sep2_calib =
-      //  ( std::pow( segPSide.x() - point->localPosition().x(), 2 ) +
-      //    std::pow( segPSide.y() - point->localPosition().y(), 2 ) );
-      // interpolate between the two points ...
-      const auto lsep2 =
-        ( std::pow( segPSide.x() - points.first->localPosition().x(), 2 ) +
-          std::pow( segPSide.y() - points.first->localPosition().y(), 2 ) );
-      const auto hsep2 =
-        ( std::pow( segPSide.x() - points.second->localPosition().x(), 2 ) +
-          std::pow( segPSide.y() - points.second->localPosition().y(), 2 ) );
-      const auto sep2_calib =
-        ( ( lsep2 * hPhiDist ) + ( hsep2 * lPhiDist ) ) / ( lPhiDist + hPhiDist );
-
-      // Compute CK theta from reference point + fudge factor correction
-      const float thetaCerenkov =
-        ( ckThetaCorrection(radiator) +
-          ( ring->radius() * std::sqrt(track_pix_sep2/sep2_calib) ) );
-
-      // --------------------------------------------------------------------------------------
+      // ------------------------------------------------------------------------
       // Set (remaining) photon parameters
-      // --------------------------------------------------------------------------------------
+      // ------------------------------------------------------------------------
       gPhoton.setCherenkovTheta         ( thetaCerenkov            );
       gPhoton.setCherenkovPhi           ( phiCerenkov              );
       gPhoton.setActiveSegmentFraction  ( fraction                 );
       gPhoton.setDetectionPoint         ( pixel->globalPosition()  );
       gPhoton.setSmartID                ( pixel->hpdPixelCluster().primaryID() );
       gPhoton.setUnambiguousPhoton      ( unambigPhoton            );
-      gPhoton.setPrimaryMirror          ( point->primaryMirror()   );
-      gPhoton.setSecondaryMirror        ( point->secondaryMirror() );
-      // --------------------------------------------------------------------------------------
+      gPhoton.setPrimaryMirror          ( best_point->primaryMirror()   );
+      gPhoton.setSecondaryMirror        ( best_point->secondaryMirror() );
+      // ------------------------------------------------------------------------
 
       // Print the photon
       //_ri_verbo << "Created photon " << gPhoton << endmsg;

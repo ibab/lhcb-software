@@ -106,9 +106,6 @@ namespace Rich
       /// Particle ID types to consider in the photon creation checks
       Rich::Particles m_pidTypes;
 
-      /// Option to only use lightest hypothesis for calibration points (default false)
-      bool m_useLightestHypoOnly = false;
-
       /// Min fraction of saturated CK theta angle for a ring to be used as a calibration source
       std::vector<double> m_minFracCKtheta;
 

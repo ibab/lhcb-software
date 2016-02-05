@@ -23,11 +23,12 @@ AdaptivePhotonReco::
 AdaptivePhotonReco( const std::string& type,
                     const std::string& name,
                     const IInterface* parent )
-  : PhotonRecoBase      ( type, name, parent       ),
-    m_maxCKThetaForFast ( Rich::NRadiatorTypes, -1 )
+  : PhotonRecoBase      ( type, name, parent          ),
+    m_maxCKThetaForFast ( Rich::NRadiatorTypes, -1    ),
+    m_fastRecoIsEnabled ( Rich::NRadiatorTypes, false )
 {
-  // Job options                                          Aero R1gas R2gas
-  declareProperty( "MaxFracCKTheta", m_maxFracCKtheta = { 0.0, 0.95, 0.95 } );
+  // Job options                                          Aero  R1gas R2gas
+  declareProperty( "MaxFracCKTheta", m_maxFracCKtheta = { -1.0, 0.95, 0.95 } );
 
   //setProperty( "Outputlevel", 1 );
 }
@@ -50,6 +51,12 @@ StatusCode AdaptivePhotonReco::initialize()
   acquireTool( "RichCherenkovAngle",     m_ckAngle        );
   acquireTool( "AdaptiveSlowPhotonReco", m_recoSlow, this );
   acquireTool( "AdaptiveFastPhotonReco", m_recoFast, this );
+
+  // Check if the fast reconstruction is enabled for each radiator
+  for ( const auto rad : Rich::radiators() )
+  {
+    m_fastRecoIsEnabled[rad] = ( m_maxFracCKtheta[rad] > 0 );
+  }
  
   return sc;
 }
@@ -63,25 +70,31 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                     const LHCb::RichRecPixel * pixel,
                     LHCb::RichGeomPhoton& gPhoton ) const
 {
-  // Expected Kaon CK theta
-  const auto kaonCKTheta = m_ckAngle->avgCherenkovTheta(segment,Rich::Kaon);
 
-  // First check to see if the fast or slow tool should be used based
-  // on how close to saturation the track is
-  if ( kaonCKTheta < maxCKThetaForFast(segment->trackSegment().radiator()) )
+  // which radiator ?
+  const auto rad = segment->trackSegment().radiator();
+  
+  // Is the use of the fast tool enabled for this radiators ?
+  if ( m_fastRecoIsEnabled[rad] )
   {
-    // First try the fast tool. If this fails (for ambiguous photons for 
-    // instance) try again with the slow tool.
-    const auto sc = m_recoFast->reconstructPhoton(segment,pixel,gPhoton);
-    if ( sc.isSuccess() ) return sc; 
+    
+    // Expected Kaon CK theta
+    const auto kaonCKTheta = m_ckAngle->avgCherenkovTheta(segment,Rich::Kaon);
+    
+    // First check to see if the fast or slow tool should be used based
+    // on how close to saturation the track is
+    if ( kaonCKTheta < maxCKThetaForFast(rad) )
+    {
+      // First try the fast tool. If this fails (for ambiguous photons for 
+      // instance) try again with the slow tool.
+      const auto sc = m_recoFast->reconstructPhoton(segment,pixel,gPhoton);
+      if ( sc.isSuccess() ) return sc; 
+    }
+    
   }
   
   // If we get here, run the slow tool
   return m_recoSlow->reconstructPhoton(segment,pixel,gPhoton);
-  
-  // Delegate the photon reconstruction
-  //return ( kaonCKTheta < maxCKThetaForFast(rad) ? 
-  //         m_recoFast : m_recoSlow ) -> reconstructPhoton(segment,pixel,gPhoton);  
 }
 
 //=============================================================================

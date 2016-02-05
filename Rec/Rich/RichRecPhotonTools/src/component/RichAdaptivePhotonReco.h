@@ -93,6 +93,10 @@ namespace Rich
       /// Cache (for speed) the maximum CK theta value for the fast tool.
       mutable std::vector<double> m_maxCKThetaForFast;
 
+      /** Cache (for speed) if the selective use of the fast reco tool
+       *  is enabled for a given radiator volume */
+      mutable std::vector<bool> m_fastRecoIsEnabled;
+
     };
 
   }

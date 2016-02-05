@@ -4,6 +4,12 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-02-05 - Chris Jones
+ - Improve the reconstruction in RichPhotonRecoUsingCKEstiFromRadius to 
+   interpolate both in Cherenkov phi, and (new) radius.
+ - Update the adaptive photon reconstruction to more efficiently disable when 
+   it is not active for a given radiator, by avoiding virtual function calls.
+
 !========================= RichRecPhotonTools v1r20 2016-01-28 =========================
 ! 2016-01-27 - Chris Jones
  - Move deBeam() method from RichPhotonRecoUsingQuarticSoln to shared
