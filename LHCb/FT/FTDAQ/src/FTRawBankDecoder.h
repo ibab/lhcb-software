@@ -19,17 +19,17 @@ public:
   /// Standard constructor
   FTRawBankDecoder( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~FTRawBankDecoder( ); ///< Destructor
+  ~FTRawBankDecoder( ) override = default; ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  StatusCode execute() override; ///< Algorithm execution
 
-protected:
 
 private:
-  StatusCode RetrieveModuleMat(const int quartSipmNb, const int quarter , int &locmod, int &locmat);
   
   std::string m_outputClusterLocation;
+
+  std::unique_ptr<FastClusterContainer<LHCb::FTLiteCluster,int>>
+  operator()(const std::vector<LHCb::RawBank*>& banks) const;
+
 };
 #endif // FTRAWBANKDECODER_H

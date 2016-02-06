@@ -3,6 +3,7 @@
 #define FTRAWBANKENCODER_H 1
 
 // Include files
+#include <cstdint>
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
@@ -18,22 +19,12 @@ public:
   /// Standard constructor
   FTRawBankEncoder( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~FTRawBankEncoder( ); ///< Destructor
-
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
+  StatusCode initialize() override;    ///< Algorithm initialization
+  StatusCode execute   () override;    ///< Algorithm execution
+  StatusCode finalize  () override;    ///< Algorithm finalization
 
 private:
-  unsigned int QuarterModule(const unsigned int module);
-
-
-  int m_nbBanks;
-  int m_nbSipmPerTELL40;
-  std::vector<std::vector<std::vector<unsigned int> > > m_sipmData;
-
+  std::vector<std::vector<std::vector<uint16_t> > > m_sipmData;
   std::string m_outputLocation; 
 
 };

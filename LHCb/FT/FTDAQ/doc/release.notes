@@ -3,6 +3,8 @@
 ! Responsible : 
 ! Purpose     : Code/Decode the FT raw data
 !-----------------------------------------------------------------------------
+! 2016-02-06 - Gerhard Raven
+ - modernize FTRawBank{En,De}coder
 
 !========================= FTDAQ v1r7p1 2015-10-12 =========================
 ! 2015-08-03 - Gerhard Raven

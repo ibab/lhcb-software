@@ -1,5 +1,6 @@
 #ifndef FTRAWBANKPARAMS_H 
 #define FTRAWBANKPARAMS_H 1
+#include <cstdint>
 
 namespace FTRawBank {
   enum shifts {
@@ -11,14 +12,12 @@ namespace FTRawBank {
     chargeShift   = 13
   };
   
-  enum maxima {
-    nbClusMaximum   = 15,  // 4 bits ??
-    fractionMaximum = 3,   // 2 bits allocted
-    cellMaximum     = 127, // 0 to 127, coded on 7 bits
-    sipmIdMaximum   = 3,   // 2 bits allocated
-    sizeMaximum     = 3,   // 2 bits allocated
-    chargeMaximum   = 7    // 3 bits allocated
-  };
+  static constexpr uint16_t nbClusMaximum   = 15;  // 4 bits ??
+  static constexpr uint16_t fractionMaximum = 3;   // 2 bits allocted
+  static constexpr uint16_t cellMaximum     = 127; // 0 to 127; coded on 7 bits
+  static constexpr uint16_t sipmIdMaximum   = 3;   // 2 bits allocated
+  static constexpr uint16_t sizeMaximum     = 3;   // 2 bits allocated
+  static constexpr uint16_t chargeMaximum   = 7;   // 3 bits allocated
 
   enum BankProperties {
     NbBanks = 48,
