@@ -1,5 +1,21 @@
 <?xml version="1.0" ?>
 <!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
 <extension class="GaudiTest.GaudiExeTest" kind="test">
-  <argument name="program">   <text>../python/BenderTutor/DoNothing.py</text></argument>
+  <argument name="program"> <text>../python/BenderTutor/DoNothing.py</text></argument>
+  <argument name="validator"><text>
+block = """
+This runs only if module is used as the script!
+ I run event 0
+ I run event 1
+ I run event 2
+ I run event 3
+ I run event 4
+ I run event 5
+ I run event 6
+ I run event 7
+ I run event 8
+ I run event 9
+"""
+findReferenceBlock(block)
+  </text></argument>
 </extension>
