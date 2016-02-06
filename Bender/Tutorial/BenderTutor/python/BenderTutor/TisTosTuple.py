@@ -106,7 +106,15 @@ class TisTosTuple(Algo):
 
         sc = self.tisTos_initialize ( triggers , lines )
         if sc.isFailure() : return sc
-     
+
+        ## self._l0tistos 
+        sc1 = self._l0tistos.setProperty ( 'TISFracHcal' ,  0.10 )
+        if sc1.isFailure() : ... 
+        sc1 = self._l0tistos.setProperty ( 'TISFracHcal' , '0.10' )
+        if sc1.isFailure() : ... 
+        sc1 = cpp.Gaudi.Utils.setProperty( self._l0tistos , 'TISFracHcal' , '0.10' ) 
+        if sc1.isFailure() : ... 
+        
         return SUCCESS
     
     ## the main 'analysis' method 

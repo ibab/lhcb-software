@@ -67,7 +67,7 @@ j = Job (
     name         = 'MyJob',
     #
     application  = Bender (
-    version      = 'v26r2'   ,
+    version      = 'v28r0'   ,
     module       = my_opts 
     ) ,
     #
