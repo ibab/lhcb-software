@@ -4,9 +4,6 @@
  *
  * Header file for algorithm ChargedProtoParticleTupleAlg
  *
- * CVS Log :-
- * $Id: ChargedProtoParticleTupleAlg.h,v 1.2 2007-05-31 14:24:03 cattanem Exp $
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-15
  */
@@ -56,7 +53,7 @@ private:
   std::string m_protoPath;    ///< Location in TES of ProtoParticles
 
   /// Use RICH tool to get MCParticle associations for Tracks (To avoid Linker details)
-  const Rich::Rec::MC::IMCTruthTool * m_truth;
+  const Rich::Rec::MC::IMCTruthTool * m_truth = nullptr;
 
 };
 

@@ -23,8 +23,7 @@ DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleTupleAlg )
 ChargedProtoParticleTupleAlg::
 ChargedProtoParticleTupleAlg( const std::string& name,
                               ISvcLocator* pSvcLocator )
-  : GaudiTupleAlg ( name , pSvcLocator ),
-    m_truth       ( NULL )
+  : GaudiTupleAlg ( name , pSvcLocator )
 {
   // context specific locations
   if ( context() == "HLT" || context() == "Hlt" )
@@ -109,6 +108,7 @@ StatusCode ChargedProtoParticleTupleAlg::execute()
     sc = sc && tuple->column( "RichDLLpi",     proto->info ( LHCb::ProtoParticle::RichDLLpi, 0 ) );
     sc = sc && tuple->column( "RichDLLk",      proto->info ( LHCb::ProtoParticle::RichDLLk,  0 ) );
     sc = sc && tuple->column( "RichDLLp",      proto->info ( LHCb::ProtoParticle::RichDLLp,  0 ) );
+    sc = sc && tuple->column( "RichDLLd",      proto->info ( LHCb::ProtoParticle::RichDLLd,  0 ) );
     sc = sc && tuple->column( "RichDLLbt",     proto->info ( LHCb::ProtoParticle::RichDLLbt, 0 ) );
     sc = sc && tuple->column( "RichUsedAero",     tmpRPID.usedAerogel()  );
     sc = sc && tuple->column( "RichUsedR1Gas",    tmpRPID.usedRich1Gas() );
@@ -118,6 +118,7 @@ StatusCode ChargedProtoParticleTupleAlg::execute()
     sc = sc && tuple->column( "RichAbovePiThres", tmpRPID.pionHypoAboveThres() );
     sc = sc && tuple->column( "RichAboveKaThres", tmpRPID.kaonHypoAboveThres() );
     sc = sc && tuple->column( "RichAbovePrThres", tmpRPID.protonHypoAboveThres() );
+    sc = sc && tuple->column( "RichAboveDeThres", tmpRPID.deuteronHypoAboveThres() );
     sc = sc && tuple->column( "RichBestPID",      (int)tmpRPID.bestParticleID() );
 
     // muon
