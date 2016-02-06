@@ -154,7 +154,7 @@ if __name__ == '__main__' :
     
     ## job configuration
     inputdata = [
-        'Gauss-14433050-2000ev-20140415.gen'
+        '/afs/cern.ch/work/i/ibelyaev/public/LFN/Gauss-14433050-2000ev-20140415.gen'
         ]
     
     configure( inputdata , castor = True )
