@@ -564,6 +564,30 @@ if not hasattr ( GaudiPython.Bindings.iAlgTool , '_old_init_' ) :
     logger.debug ( 'more decoration for iAlgTool: add interface methods') 
 
 
+
+##  print ut for tthe tools  
+def _itool_str_ ( self ) :
+
+
+    if not self._itool :
+        tname = self._name 
+        if 0 == tname.find('ToolSvc.') : tname = tname[8:]
+        return "iAlgTool('%s')" % tname 
+
+    tname = self._itool.name()
+    if 0 == tname.find('ToolSvc.') : tname = tname[8:]
+    ttype = self._itool.type()
+    iif   = type( self._itool ).__name__ 
+    if 0 == iif.find ( 'cppyy.' ) : iif = iif [6:] 
+    if 0 == iif.find ( 'cpp.'   ) : iif = iif [4:] 
+
+    if tname == ttype : 
+        return "iAlgTool('%s',interface=%s)" % ( tname , iif ) 
+    return "iAlgTool('%s/', interface=%s)" % ( ttype , tname , iif ) 
+        
+GaudiPython.Bindings.iAlgTool. __str__  = _itool_str_
+GaudiPython.Bindings.iAlgTool. __repr__ = _itool_str_
+
 if not hasattr ( GaudiPython.Bindings.iToolSvc , 'tool' ) :
 
     ## get the tool from tool service 
