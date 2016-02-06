@@ -92,7 +92,7 @@ private:
   ToolHandle<IOTRawBankDecoder> m_decoder ;
   std::vector<std::string> m_rawEventLocations ;
   bool m_selectEarliestHit ;
-  mutable LocalHelpers::DetectorHitData* m_hitdata ;
+  mutable std::unique_ptr<LocalHelpers::DetectorHitData> m_hitdata ;
 };
 
 
@@ -111,13 +111,13 @@ namespace LocalHelpers
     DetectorHitData() : m_isDecoded(false) {}
     void clear() {
       m_isDecoded = false ;
-      for(iterator imod = begin(); imod!= end(); ++imod)
-        imod->clear() ;
+      std::for_each( begin(), end(), [](LocalHelpers::ModuleHitData& mod) { mod.clear(); } );
     }
     size_t totalNumberOfHits() const {
-      size_t rc(0) ;
-      for(const_iterator imod = begin() ; imod != end(); ++imod) rc += imod->size() ;
-      return rc ;
+      return std::accumulate( begin(), end(), size_t(0),
+                              [](size_t n, const LocalHelpers::ModuleHitData& mod) {
+                                  return n + mod.size();
+      });
     }
     bool isDecoded() const { return m_isDecoded ; }
     void setIsDecoded(bool b=true) { m_isDecoded = b ; }
@@ -142,8 +142,7 @@ OTMultiBXRawBankDecoder::OTMultiBXRawBankDecoder( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
   : GaudiTool ( type, name , parent ),
-    m_decoder("OTRawBankDecoder/OTSingleBXRawBankDecoder"),
-    m_hitdata(0)
+    m_decoder("OTRawBankDecoder/OTSingleBXRawBankDecoder")
 {
   declareInterface<IOTRawBankDecoder>(this);
   declareProperty("RawBankDecoder",m_decoder);
@@ -194,7 +193,7 @@ StatusCode OTMultiBXRawBankDecoder::initialize()
   incSvc()->addListener( this, IncidentType::BeginEvent );
 
   // initialize the decoder data. this things basically contains the decoded event
-  m_hitdata = new LocalHelpers::DetectorHitData() ;
+  m_hitdata.reset(new LocalHelpers::DetectorHitData());
 
   return sc ;
 }
@@ -204,7 +203,7 @@ StatusCode OTMultiBXRawBankDecoder::initialize()
 //=============================================================================
 StatusCode OTMultiBXRawBankDecoder::finalize()
 {
-  if( m_hitdata ) delete m_hitdata ;
+  m_hitdata.reset();
   m_decoder.release().ignore() ;
   return GaudiTool::finalize() ;
 }
@@ -234,12 +233,11 @@ LHCb::OTLiteTimeRange OTMultiBXRawBankDecoder::decodeModule( const LHCb::OTChann
 StatusCode OTMultiBXRawBankDecoder::decode( LHCb::OTLiteTimeContainer& ottimes ) const
 {
   if( !m_hitdata->isDecoded() ) decodeAll() ;
-  size_t numhits = m_hitdata->totalNumberOfHits() ;
+  auto numhits = m_hitdata->totalNumberOfHits() ;
   ottimes.clear() ;
   ottimes.reserve( numhits ) ;
-  for( LocalHelpers::DetectorHitData::const_iterator imod = m_hitdata->begin();
-       imod != m_hitdata->end(); ++imod)
-    ottimes.insert(ottimes.end(), imod->begin(), imod->end() ) ;
+  for( const auto& mod : *m_hitdata )
+    ottimes.insert(ottimes.end(), mod.begin(), mod.end() ) ;
   return StatusCode::SUCCESS ;
 }
 
@@ -317,14 +315,15 @@ StatusCode OTMultiBXRawBankDecoder::decode( OTDAQ::RawEvent& otrawevent) const
 LHCb::OTLiteTime OTMultiBXRawBankDecoder::time( LHCb::OTChannelID channel ) const
 {
   if( !m_hitdata->isDecoded() ) decodeAll() ;
-  const LocalHelpers::ModuleHitData& moduledata = m_hitdata->module( channel ) ;
+  const LocalHelpers::ModuleHitData& moduledata = m_hitdata->module( channel );
   // if we would sort them, we could use a binary search ...
-  LHCb::OTLiteTimeContainer::const_iterator jhit =  moduledata.begin() ;
-  for( ; jhit != moduledata.end() && channel.straw() != jhit->channel().straw(); ++jhit) {}
-  LHCb::OTLiteTime rc ;
-  if( jhit != moduledata.end() ) rc = *jhit ;
-  else {
+  auto jhit = std::find_if(moduledata.begin(), moduledata.end(),
+                           [&](const LHCb::OTLiteTime& t) {
+                  return t.channel().straw()==channel.straw();
+  });
+  if ( jhit == moduledata.end() ) {
     error() << "Cannot find channel in list of hits" << endmsg ;
+    return LHCb::OTLiteTime{};
   }
-  return rc ;
+  return *jhit;
 }

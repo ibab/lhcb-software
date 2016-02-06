@@ -12,7 +12,6 @@
 #include "Kernel/OTChannelID.h"
 
 /// Interface ID
-static const InterfaceID IID_OTRawBankEncoder( "IOTRawBankEncoder", 1, 0 );
 
 /** @class IOTRawBankEncoder IOTRawBankEncoder.h OTDAQ/IOTRawBankEncoder.h
  *
@@ -24,11 +23,10 @@ static const InterfaceID IID_OTRawBankEncoder( "IOTRawBankEncoder", 1, 0 );
  *  @date   2008-05-22
  */
 
-class IOTRawBankEncoder : virtual public IAlgTool {
+class IOTRawBankEncoder : public extend_interfaces<IAlgTool> {
 
 public: 
-  /// Retrieve interface ID
-  static const InterfaceID& interfaceID() { return IID_OTRawBankEncoder ; }
+  DeclareInterfaceID( IOTRawBankEncoder, 2, 0 );
 
   virtual StatusCode encodeChannels( const std::vector<LHCb::OTChannelID>& channels ) const = 0;
   

@@ -38,39 +38,36 @@ namespace OTRawBankDecoderHelpers
  *  @date   2007-05-30
  */
 
-class OTRawBankDecoder : public Decoder::ToolBase,
-                         virtual public IOTRawBankDecoder,
-                         virtual public IIncidentListener
+class OTRawBankDecoder : public extends<Decoder::ToolBase,
+                                        IOTRawBankDecoder,
+                                        IIncidentListener>
 {
-  
-public: 
-  
+
+public:
+
   /// Standard constructor
   OTRawBankDecoder( const std::string& type,
                     const std::string& name,
                     const IInterface* parent);
-  
-  /// Destructor
-  virtual ~OTRawBankDecoder( ) ; ///< Destructor
-  
+
   /// Tool initialization
-  virtual StatusCode initialize();
- 
+  StatusCode initialize() override;
+
   /// Tool finalize
-  virtual StatusCode finalize(); 
-  
+  StatusCode finalize() override;
+
   /// Decode data for a single module
-  virtual LHCb::OTLiteTimeRange decodeModule( const LHCb::OTChannelID& moduleId ) const ;
-  
+  LHCb::OTLiteTimeRange decodeModule( const LHCb::OTChannelID& moduleId ) const override;
+
   /// Decode all gol headers
-  StatusCode decodeGolHeaders() const ;
+  StatusCode decodeGolHeaders() const override;
 
   /// Decode all gol headers in a particular RawEvent
   virtual StatusCode decodeGolHeaders(const LHCb::RawEvent& rawevent) const ;
 
   /// Decode all modules
   StatusCode decode( LHCb::OTLiteTimeContainer& ottimes ) const ;
-  
+
   /// Translate the raw bank in an ot-specific raw bank.
   StatusCode decode( OTDAQ::RawEvent& otevent ) const ;
 
@@ -81,31 +78,31 @@ public:
 
   /// Get the conversion factor
   double nsPerTdcCount() const { return m_nsPerTdcCount ; }
-  
+
   /// Get an OTLiteTime from a channel
   LHCb::OTLiteTime time( LHCb::OTChannelID channel ) const ;
-  
+
 protected:
-  virtual void handle ( const Incident& incident );
-  size_t decodeModule( OTRawBankDecoderHelpers::Module& ) const ;
-  StatusCode decodeGolHeadersV3(const LHCb::RawBank&, int bankversion) const ;
-  StatusCode decodeGolHeadersDC06(const LHCb::RawBank&, int bankversion) const ;
-  
+  void handle ( const Incident& incident ) override;
+  size_t decodeModule( const OTRawBankDecoderHelpers::Module& ) const;
+  StatusCode decodeGolHeadersV3(const LHCb::RawBank&, int bankversion) const;
+  StatusCode decodeGolHeadersDC06(const LHCb::RawBank&, int bankversion) const;
+
 private:
   // data
-  mutable OTRawBankDecoderHelpers::Detector* m_detectordata ; ///< Contains decoded data
-  DeOTDetector* m_otdet  ;                  ///< Pointer to OT geometry
-  IOTChannelMapTool* m_channelmaptool ;     ///< Pointer to IOTChannelMapTool
+  mutable std::unique_ptr<OTRawBankDecoderHelpers::Detector> m_detectordata; ///< Contains decoded data
+  DeOTDetector* m_otdet = nullptr;                  ///< Pointer to OT geometry
+  IOTChannelMapTool* m_channelmaptool = nullptr ;     ///< Pointer to IOTChannelMapTool
   std::vector<double> m_startReadOutGate;   ///< Start of readout gate
-  
-  std::pair<double,double> m_timewindow;    ///< ignore hits outside of this window, only if first < second; if not, use all
-  double m_timePerBX;                       ///< Time Per BX
-  double m_nsPerTdcCount ;                  ///< Conversion from tdc to ns (initialization uses m_countPerBx and m_timePerBx)
-  int  m_countsPerBX;                       ///< Counts per BX
-  int  m_numberOfBX;                        ///< Number of BX
-  int  m_forcebankversion;                  ///< Overwrite bank version in bank header
-  bool m_vetoOutOfTimeHitPairs;		    ///< veto out of time hit pairs?
-  
+
+  std::pair<double,double> m_timewindow = { 999*Gaudi::Units::ns,-999*Gaudi::Units::ns};    ///< ignore hits outside of this window, only if first < second; if not, use all
+  double m_timePerBX = 25*Gaudi::Units::ns;                       ///< Time Per BX
+  double m_nsPerTdcCount = -1. ;                  ///< Conversion from tdc to ns (initialization uses m_countPerBx and m_timePerBx)
+  int  m_countsPerBX = 64;                       ///< Counts per BX
+  int  m_numberOfBX = 3;                        ///< Number of BX
+  int  m_forcebankversion = OTBankVersion::UNDEFINED;                  ///< Overwrite bank version in bank header
+  bool m_vetoOutOfTimeHitPairs = true;		    ///< veto out of time hit pairs?
+
   friend class OTRawBankDecoderHelpers::Detector;
   friend class OTRawBankDecoderHelpers::Module;
 };

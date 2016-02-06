@@ -1,4 +1,3 @@
-// $Id: IOTRawBankDecoder.h,v 1.6 2008-12-01 21:36:20 wouter Exp $
 #ifndef OTDAQ_IOTRAWBANKDECODER_H
 #define OTDAQ_IOTRAWBANKDECODER_H 1
 
@@ -17,8 +16,6 @@ namespace LHCb {
   class RawEvent ;
 }
 
-/// Interface ID
-static const InterfaceID IID_OTRawBankDecoder( "IOTRawBankDecoder", 1, 0 );
 
 /** @class IOTRawBankDecoder IOTRawBankDecoder.h OTDAQ/IOTRawBankDecoder.h
  *
@@ -33,12 +30,12 @@ static const InterfaceID IID_OTRawBankDecoder( "IOTRawBankDecoder", 1, 0 );
  *  @date   2007-05-30
  */
 
-class IOTRawBankDecoder : virtual public IAlgTool
+class IOTRawBankDecoder : public extend_interfaces<IAlgTool>
 {
   
 public: 
-  /// Retrieve interface ID
-  static const InterfaceID& interfaceID() { return IID_OTRawBankDecoder ; }
+  /// Interface ID
+  DeclareInterfaceID( IOTRawBankDecoder, 2, 0 );
   
   /// Decode data for a single module
   virtual LHCb::OTLiteTimeRange decodeModule( const LHCb::OTChannelID& moduleId ) const = 0 ;
