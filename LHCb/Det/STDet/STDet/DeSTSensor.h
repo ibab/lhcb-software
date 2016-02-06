@@ -200,7 +200,7 @@ private:
   double m_vMinLocal;
   double m_vMaxLocal;
 
-  LHCb::Trajectory* m_midTraj;
+  std::unique_ptr<LHCb::Trajectory> m_midTraj;
 
   bool m_xInverted;
   bool m_yInverted;

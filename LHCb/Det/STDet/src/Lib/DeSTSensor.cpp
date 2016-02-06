@@ -36,7 +36,6 @@ DeSTSensor::DeSTSensor( const std::string& name ) :
   m_uMaxLocal(0.0),
   m_vMinLocal(0.0),
   m_vMaxLocal(0.0),
-  m_midTraj(0),
   m_xInverted(false),
   m_yInverted(false),
   m_deadWidth(0.0),
@@ -52,7 +51,7 @@ DeSTSensor::~DeSTSensor() {
 
 void DeSTSensor::clear() {
   
-  if (m_midTraj !=0 ) delete m_midTraj;
+  m_midTraj.reset();
 }
 
 std::ostream& DeSTSensor::printOut( std::ostream& os ) const{
@@ -198,7 +197,7 @@ StatusCode DeSTSensor::cacheInfo()
   // trajectory of middle  
   const Gaudi::XYZPoint g3 = globalPoint(xLower, 0., 0.);
   const Gaudi::XYZPoint g4 = globalPoint(xUpper, 0., 0.);
-  m_midTraj = new LineTraj(g3,g4);
+  m_midTraj.reset( new LineTraj(g3,g4) );
 
   // range ---> strip Length
   m_range = std::make_pair(-0.5*m_stripLength,0.5*m_stripLength);
