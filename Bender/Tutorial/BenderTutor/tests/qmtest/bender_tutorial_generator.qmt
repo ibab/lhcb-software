@@ -2,15 +2,5 @@
 <!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program">   <text>../python/BenderTutor/Generator.py</text></argument>
-  <argument name="validator"><text>
-block = """
-ApplicationMgr       INFO Application Manager Stopped successfully
-DaVinciInitAlg    SUCCESS ==================================================================
-DaVinciInitAlg    SUCCESS 100 events processed
-DaVinciInitAlg    SUCCESS ==================================================================
-GenTruth          SUCCESS Booked 1 Histogram(s) : 1D=1
-"""
-findReferenceBlock(block)
-  </text></argument>  
 </extension>
 
