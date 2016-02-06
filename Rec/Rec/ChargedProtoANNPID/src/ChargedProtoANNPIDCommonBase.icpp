@@ -158,11 +158,13 @@ ChargedProtoANNPIDCommonBase<PBASE>::getInput( const std::string& name ) const
   else if ( "RichAbovePiThres" == name ) { input = new InRichAbovePiThres(); }
   else if ( "RichAboveKaThres" == name ) { input = new InRichAboveKaThres(); }
   else if ( "RichAbovePrThres" == name ) { input = new InRichAbovePrThres(); }
+  else if ( "RichAboveDeThres" == name ) { input = new InRichAboveDeThres(); }
   else if ( "RichDLLe"         == name ) { input = new InRichDLL(Rich::Electron); }
   else if ( "RichDLLmu"        == name ) { input = new InRichDLL(Rich::Muon); }
   else if ( "RichDLLpi"        == name ) { input = new InRichDLL(Rich::Pion); }
   else if ( "RichDLLk"         == name ) { input = new InRichDLL(Rich::Kaon); }
   else if ( "RichDLLp"         == name ) { input = new InRichDLL(Rich::Proton); }
+  else if ( "RichDLLd"         == name ) { input = new InRichDLL(Rich::Deuteron); }
   else if ( "RichDLLbt"        == name ) { input = new InRichDLL(Rich::BelowThreshold); }
 
   // Muon variables
