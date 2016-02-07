@@ -32,7 +32,7 @@ from   Ostap.Utils   import timing
 # =============================================================================
 from AnalysisPython.Logger import getLogger
 if '__main__' == __name__ or '__builtin__' == __name__ : 
-    logger = getLogger( 'Ostap.TestData' )
+    logger = getLogger( 'Ostap.TestKisa' )
 else : 
     logger = getLogger( __name__ )
 # =============================================================================

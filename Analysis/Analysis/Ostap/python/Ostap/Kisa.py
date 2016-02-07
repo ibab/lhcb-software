@@ -32,6 +32,7 @@ __all__     = (
     ) 
 # =============================================================================
 import GaudiMP.Parallel as Parallel  
+##import Ostap.Parallel as Parallel  
 # =============================================================================
 # logging 
 # =============================================================================
@@ -43,14 +44,14 @@ logger.debug ( 'Multiprocessing functionality for Ostap')
 # =============================================================================
 
 # =============================================================================
-## The simplest object for more efficient projection of long TChains
+## The simple task object for more efficient projection of loooong TChains
 #  into histogarms
 #  @see GaudiMP.Parallel
 #  @see GaudiMP.Parallel.Task
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-09-23
 class ProjectTask(Parallel.Task) :
-    """ The simplest object for efficient projection of long TChains
+    """ The simple task  object for efficient projection of loooong TChains
     into histogarms  
     """
     ## constructor: chain name, historgam , variable , cuts 
@@ -113,7 +114,7 @@ class ProjectTask(Parallel.Task) :
         result.Delete () 
 
 # =============================================================================  
-## make a projection of the (long) chain into histogram using
+## make a projection of the loooong chain into histogram using
 #  multiprocessing functionality for per-file parallelisation
 #  @code
 #
@@ -127,9 +128,7 @@ class ProjectTask(Parallel.Task) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-09-23
 def  project ( chain , histo , what , cuts ) :
-    """
-    Make a projection of the (long) chain into histogram
-    
+    """Make a projection of the loooong chain into histogram
     >>> chain = ... ## large chain
     >>> histo = ... ## histogram template 
     >>> project ( chain , histo , 'mass' , 'pt>10' )
@@ -153,16 +152,17 @@ import ROOT
 ROOT.TChain._project = project
 
 # =============================================================================
-## The simplest object for more efficient firll fo RooDataSet from TChain 
+## The simple task object for more efficient fill of RooDataSet from TChain 
 #  @see GaudiMP.Parallel
 #  @see GaudiMP.Parallel.Task
 #  @see Ostap.SelectorWithVars
-#  For 12-core machine, clear speed-up factor of about 10 is achieved 
+#  For 12-core machine, clear speed-up factor of about 8 is achieved 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-09-23 
 class  FillTask(Parallel.Task) :
     """
-    The simplest object for more efficient firll fo RooDataSet from TChain 
+    The single task object for more efficient fill of RooDataSet from TChain 
+    - for 12-core machine, clear speed-up factor of about 8 is achieved 
     """
     ## 
     def __init__ ( self ,  variables , selection ) :
@@ -178,26 +178,35 @@ class  FillTask(Parallel.Task) :
     ## the actual processing 
     def process ( self , params ) :
 
-        
         import ROOT
-        import Ostap.PyRoUts
+                    
+        tree,fname = params
+        tree = ROOT.TChain( tree )
+        tree.Add ( fname )
+
+        from AnalysisPython.Logger import logWarning
+        with logWarning() : 
+            
+            import Ostap.PyRoUts
+            from   Ostap.Selectors import SelectorWithVars
+            
+        selector = SelectorWithVars ( self.variables ,
+                                      self.selection ,
+                                      silence = True )
         
         tree,fname = params
         tree = ROOT.TChain( tree )
         tree.Add ( fname )
-        
-        from Ostap.Selectors import SelectorWithVars
-        sel = SelectorWithVars ( self.variables ,
-                                 self.selection ,
-                                 silence = True ) 
-        
-        tree.process ( sel )
-        self.output = sel.data
-        
-        sel.data    = None
-        del sel 
-        
 
+        tree.process ( selector , 1000 )
+        self.output =  selector.data
+        
+        del selector.data
+        del      selector
+        
+        logger.debug ( 'Processed %s chain and filled %d entries ' % ( fname , len( self.output ) ) ) 
+
+    
     def finalize ( self ) : pass 
 
     ## methge resulsts/datasets 
@@ -205,15 +214,17 @@ class  FillTask(Parallel.Task) :
         #
         if not isinstance ( self.output , ROOT.RooDataSet ) :  
             self.output = result
-            return
-        #
-        self.output.append ( result )
-        result.Delete () 
+        else :
+            self.output.append ( result )
+            result.Delete () 
+            if result : del result
+            
+        logger.debug ( 'Merging: %d entries ' % len( self.output ) )
 
 
 
 # ==============================================================================
-## Fill dataset from long TChain using per-file parallelisation
+## Fill dataset from looooong TChain using per-file parallelisation
 #  @code
 #  >>> chain =
 #  >>> vars  = ...
@@ -222,18 +233,17 @@ class  FillTask(Parallel.Task) :
 #  @see GaudiMP.Parallel
 #  @see GaudiMP.Parallel.Task
 #  @see Ostap.SelectorWithVars
-#  For 12-core machine, clear speed-up factor of about 10 is achieved 
+#  For 12-core machine, clear speed-up factor of about 8 is achieved 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-09-23 
 def  fillDataSet ( chain , variables , selection ) :
-    """
-    Fill dataset from long TChain using per-file parallelisation
-    
+    """Fill dataset from loooong TChain using per-file parallelisation
     >>> chain =
     >>> vars  = ...
     >>> dset  = fillDataSet ( chain , vars , 'pt>10' )
-    
+    - for 12-core machine, clear speed-up factor of about 8 is achieved 
     """
+    
     task  = FillTask ( variables , selection )
     wmgr  = Parallel.WorkManager()
     
