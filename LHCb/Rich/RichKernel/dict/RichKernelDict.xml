@@ -1,8 +1,7 @@
 <lcgdict>
 
   <class name  = "Rich::HPDPixelCluster"               />
-  <class name  = "Rich::HPDPixelClusters"               />
-  <class name  = "Rich::HPDPixelClusters::ConstSharedPtn" />
+  <class name  = "Rich::HPDPixelClusters"              />
 
   <class name  = "Rich::DAQ::HPDIdentifier"            />
 

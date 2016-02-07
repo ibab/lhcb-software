@@ -38,7 +38,7 @@ namespace Rich
   //-----------------------------------------------------------------------------------------------
   /** @class HPDPixelCluster RichPixelCluster.h RichKernel/RichPixelCluster.h
    *
-   *  Utility class used to represent a single cluster of HPD pixels
+   *  Utility class used to represent a single cluster of HPD pixels.
    *
    *  @author Chris Jones
    *  @date   07/02/2007
