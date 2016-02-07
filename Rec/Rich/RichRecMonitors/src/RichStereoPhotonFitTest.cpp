@@ -22,20 +22,11 @@ DECLARE_ALGORITHM_FACTORY( StereoPhotonFitTest )
 // Standard constructor, initializes variables
 StereoPhotonFitTest::StereoPhotonFitTest( const std::string& name,
                                           ISvcLocator* pSvcLocator )
-  : HistoAlgBase        ( name, pSvcLocator ),
-    m_fitter            ( NULL ),
-    m_trSelector        ( NULL ),
-    m_ckAngle           ( NULL ),
-    m_ckRes             ( NULL ),
-    m_richRecMCTruth    ( NULL )
+  : HistoAlgBase( name, pSvcLocator )
 {
-  std::vector<double> t1 = boost::assign::list_of(0.1)(0.03)(0.01);
-  std::vector<double> t2 = boost::assign::list_of(0.3)(0.08)(0.05);
-  std::vector<double> t3 = boost::assign::list_of(0.01)(0.004)(0.002);
-  
-  declareProperty( "ChThetaRecHistoLimitMin", m_ckThetaMin = t1 );
-  declareProperty( "ChThetaRecHistoLimitMax", m_ckThetaMax = t2 );
-  declareProperty( "CKResHistoRange",         m_ckResRange = t3 );
+  declareProperty( "ChThetaRecHistoLimitMin", m_ckThetaMin = { 0.1,  0.03,  0.01  } );
+  declareProperty( "ChThetaRecHistoLimitMax", m_ckThetaMax = { 0.3,  0.08,  0.05  } );
+  declareProperty( "CKResHistoRange",         m_ckResRange = { 0.01, 0.004, 0.002 } );
 }
 
 // Destructor
@@ -61,7 +52,7 @@ StatusCode StereoPhotonFitTest::initialize()
 // Main execution
 StatusCode StereoPhotonFitTest::execute()
 {
-  debug() << "Execute" << endmsg;
+  _ri_debug << "Execute" << endmsg;
 
   // Check event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
@@ -70,38 +61,35 @@ StatusCode StereoPhotonFitTest::execute()
   if ( richTracks()->empty() )
   {
     if ( !trackCreator()->newTracks() ) return StatusCode::FAILURE;
-    debug() << "No tracks found : Created " << richTracks()->size()
-            << " RichRecTracks " << richSegments()->size()
-            << " RichRecSegments" << endmsg;
+    _ri_debug << "No tracks found : Created " << richTracks()->size()
+              << " RichRecTracks " << richSegments()->size()
+              << " RichRecSegments" << endmsg;
   }
 
   // Rich Histo ID
   const Rich::HistoID hid;
 
   // Iterate over segments
-  for ( LHCb::RichRecSegments::iterator iSeg = richSegments()->begin();
-        iSeg != richSegments()->end(); ++iSeg )
+  for ( auto * segment : *richSegments() )
   {
-    LHCb::RichRecSegment * segment = *iSeg;
-
-    // track selection
-    if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
 
     // Radiator info
-    const Rich::RadiatorType rad = segment->trackSegment().radiator();
+    const auto rad = segment->trackSegment().radiator();
 
     // skip aerogel for the moment ...
     if ( rad == Rich::Aerogel ) continue;
 
+    // track selection
+    if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
+
     // mass hypo
-    const Rich::ParticleIDType pid = segment->richRecTrack()->currentHypothesis();
+    const auto pid = segment->richRecTrack()->currentHypothesis();
 
     // do the fit
     IStereoFitter::Configuration config(pid);
     const IStereoFitter::Result fitR = m_fitter->Fit( segment, config );
 
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << "RichRecSegment " << segment->key()
+    _ri_debug << "RichRecSegment " << segment->key()
               << " " << rad
               << " " << pid
               << " : FitResult= " << fitR
@@ -124,17 +112,15 @@ StatusCode StereoPhotonFitTest::execute()
     if ( !segment->richRecPhotons().empty() )
     {
       const double nSigma(3.0);
-      for ( LHCb::RichRecSegment::Photons::const_iterator iPhot
-              = segment->richRecPhotons().begin();
-            iPhot != segment->richRecPhotons().end(); ++iPhot )
+      for ( const auto * phot : segment->richRecPhotons() )
       {
-        if ( fabs( (*iPhot)->geomPhoton().CherenkovTheta() - thetaExp ) <
+        if ( fabs( phot->geomPhoton().CherenkovTheta() - thetaExp ) <
              nSigma * expCKres )
         {
           ++nPhots;
-          segAvgCKtheta += (*iPhot)->geomPhoton().CherenkovTheta();
+          segAvgCKtheta += phot->geomPhoton().CherenkovTheta();
           // true CK photon ?
-          const LHCb::MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(*iPhot);
+          const auto * mcPhot = m_richRecMCTruth->trueOpticalPhoton(phot);
           if ( mcPhot )
           {
             ++nPhotsMC;

@@ -61,10 +61,17 @@ namespace Rich
 
       private: // data
 
-        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;   ///< Pointer to RichRecMCTruthTool interface
-        const ICherenkovAngle * m_ckAngle;         ///< Rich Cherenkov angle calculator tool
-        const ICherenkovResolution * m_ckAngleRes; ///< Cherenkov angle resolution tool
-        const ITrackSelector * m_trSelector; ///< Track selector
+        /// Pointer to RichRecMCTruthTool interface
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth = nullptr; 
+
+        /// Rich Cherenkov angle calculator tool
+        const ICherenkovAngle * m_ckAngle = nullptr; 
+
+        /// Cherenkov angle resolution tool
+        const ICherenkovResolution * m_ckAngleRes = nullptr; 
+
+        /// Track selector
+        const ITrackSelector * m_trSelector = nullptr; 
 
       };
 

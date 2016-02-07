@@ -22,9 +22,6 @@
 #include "RichRecBase/IRichCherenkovResolution.h"
 #include "MCInterfaces/IRichRecMCTruthTool.h"
 
-// boost
-#include "boost/assign/list_of.hpp"
-
 // Event
 #include "Event/MCRichOpticalPhoton.h"
 
@@ -62,19 +59,19 @@ namespace Rich
       private: // data
 
         /// Pointer to the Stereographic refitting tool
-        const IStereoFitter * m_fitter;
+        const IStereoFitter * m_fitter = nullptr;
   
         /// Track selector
-        const ITrackSelector * m_trSelector;
+        const ITrackSelector * m_trSelector = nullptr;
 
         /// Pointer to RichCherenkovAngle tool
-        const ICherenkovAngle * m_ckAngle;
+        const ICherenkovAngle * m_ckAngle = nullptr;
 
         /// Pointer to Cherenkov angle resolution tool
-        const ICherenkovResolution * m_ckRes;
+        const ICherenkovResolution * m_ckRes = nullptr;
 
         /// Pointer to RichRecMCTruthTool interface
-        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;  
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth = nullptr;  
 
         std::vector<double> m_ckThetaMax; ///< Max theta limit for histos for each radiator
         std::vector<double> m_ckThetaMin; ///< Min theta limit for histos for each radiator

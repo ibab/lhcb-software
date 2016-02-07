@@ -65,9 +65,9 @@ namespace Rich
       private:
 
         /// Track selector
-        const ITrackSelector * m_trSelector;
+        const ITrackSelector * m_trSelector = nullptr;
 
-        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth = nullptr; ///< Pointer to RichRecMCTruthTool interface
 
         /// The PID locations to store results for
         std::vector<std::string> m_pidLocations;

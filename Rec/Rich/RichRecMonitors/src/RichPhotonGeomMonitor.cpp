@@ -82,12 +82,12 @@ StatusCode PhotonGeomMonitor::execute()
     if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
 
     // MC type
-    const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
+    const auto mcType = m_richRecMCTruth->mcParticleType( segment );
 
     // Radiator info
-    const Rich::RadiatorType rad  = segment->trackSegment().radiator();
+    const auto rad  = segment->trackSegment().radiator();
     // RICH info
-    const Rich::DetectorType rich = segment->trackSegment().rich();
+    const auto rich = segment->trackSegment().rich();
 
     // Expected Cherenkov theta angle for true particle type
     // if MC type is not known, assume pion (maybe type should be a job option ??)
@@ -100,7 +100,7 @@ StatusCode PhotonGeomMonitor::execute()
     const auto & photons = photonCreator()->reconstructPhotons( segment );
     for ( const auto * photon : photons )
     {
-      const LHCb::RichRecPixel * pixel = photon->richRecPixel();
+      const auto * pixel = photon->richRecPixel();
 
       // Cherenkov angles
       const double thetaRec = photon->geomPhoton().CherenkovTheta();

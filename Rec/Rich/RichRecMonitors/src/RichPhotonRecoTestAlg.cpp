@@ -25,11 +25,10 @@ DECLARE_ALGORITHM_FACTORY( PhotonRecoTestAlg )
 PhotonRecoTestAlg::PhotonRecoTestAlg( const std::string& name,
                                       ISvcLocator* pSvcLocator)
   : HistoAlgBase      ( name, pSvcLocator ),
-    m_photonReco      ( NULL ),
     m_photonRecoName  ( "RichDetPhotonReco" )
 {
   declareProperty( "PhotonRecoTool", m_photonRecoName );
-  m_radiators.assign(NULL);
+  m_radiators.assign(nullptr);
 }
 
 // Destructor
@@ -81,7 +80,7 @@ StatusCode PhotonRecoTestAlg::execute()
   const LHCb::RichTrackSegment::StateErrors nullErrs;
 
   LHCb::RichRecTrack trk;
-  LHCb::RichTrackSegment * seg(NULL);
+  LHCb::RichTrackSegment * seg(nullptr);
 
   TrackSegments Segs;
   Rich::RadIntersection::Vector intersects;
@@ -170,24 +169,24 @@ StatusCode PhotonRecoTestAlg::execute()
   Segs.push_back( new LHCb::RichRecSegment(seg,&trk,1,0,1) );
 
   // test photon reconstruction
-  for ( TrackSegments::const_iterator iS = Segs.begin(); iS != Segs.end(); ++iS )
+  for ( const auto * seg : Segs )
   {
-    for ( Points::const_iterator iD = dataPoints.begin(); iD != dataPoints.end(); ++iD )
+    for ( const auto & point : dataPoints )
     {
-      if ( ( (*iD).z() < 5000 && (*iS)->trackSegment().entryPoint().z() < 5000 ) ||
-           ( (*iD).z() > 5000 && (*iS)->trackSegment().entryPoint().z() > 5000 ) )
+      if ( ( point.z() < 5000 && seg->trackSegment().entryPoint().z() < 5000 ) ||
+           ( point.z() > 5000 && seg->trackSegment().entryPoint().z() > 5000 ) )
       {
         LHCb::RichGeomPhoton photon;
         LHCb::RichRecPixel pix;
-        pix.setGlobalPosition(*iD);
-        debug() << "Data Point " << *iD << endmsg;
-        debug() << "Track Segment " << **iS << endmsg;
-        const StatusCode sc = m_photonReco->reconstructPhoton( *iS, &pix, photon );
+        pix.setGlobalPosition(point);
+        debug() << "Data Point " << point << endmsg;
+        debug() << "Track Segment " << *seg << endmsg;
+        const StatusCode sc = m_photonReco->reconstructPhoton( seg, &pix, photon );
         debug() << "Status " << sc << " Photon " << photon << endmsg;
       }
     }
     // finally, clean up by deleting temporary segments
-    delete *iS;
+    delete seg;
   }
 
 

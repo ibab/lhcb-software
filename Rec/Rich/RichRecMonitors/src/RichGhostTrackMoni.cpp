@@ -22,15 +22,10 @@ DECLARE_ALGORITHM_FACTORY( GhostTrackMoni )
 // Standard constructor, initializes variables
 GhostTrackMoni::GhostTrackMoni( const std::string& name,
                                 ISvcLocator* pSvcLocator )
-  : TupleAlgBase        ( name, pSvcLocator ),
-    m_trSelector        ( NULL ),
-    m_richRecMCTruth    ( NULL ),
-    m_tkSignal          ( NULL ),
-    m_ckAngle           ( NULL ),
-    m_ckAngleRes        ( NULL ),
-    m_nSigma            ( Rich::NRadiatorTypes, 2 )
+  : TupleAlgBase ( name, pSvcLocator ),
+    m_nSigma     ( Rich::NRadiatorTypes, 2 )
 {
-  declareProperty( "PhotonNSigma",    m_nSigma );
+  declareProperty( "PhotonNSigma", m_nSigma );
 }
 
 // Destructor
@@ -62,30 +57,27 @@ StatusCode GhostTrackMoni::execute()
   {
 
     // loop over tracks
-    for ( LHCb::RichRecTracks::const_iterator iT = richTracks()->begin();
-          iT != richTracks()->end(); ++iT )
+    for ( auto * tk : *richTracks() )
     {
       // is this track a ghost ?
-      const LHCb::MCParticle * mcP = m_richRecMCTruth->mcParticle(*iT);
-      const bool isGhost = (mcP == NULL);
+      const auto * mcP = m_richRecMCTruth->mcParticle(tk);
+      const bool isGhost = ( mcP == nullptr );
 
       // Count reco photons
       CountVects nExpected, nReco;
 
       // loop over radiators
-      for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad )
+      for ( const auto rad : Rich::radiators() )
       {
-        const Rich::RadiatorType rad = static_cast<Rich::RadiatorType>(iRad);
 
         // Do we have a track segment for this radiator ?
-        LHCb::RichRecSegment * seg  = (*iT)->segmentInRad(rad);
+        auto * seg  = tk->segmentInRad(rad);
         if ( seg )
         {
 
           // Loop over all particle codes
-          for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
+          for ( const auto hypo : Rich::particles() )
           {
-            const Rich::ParticleIDType hypo = static_cast<Rich::ParticleIDType>(iHypo);
             
             // store expected number of photons
             nExpected.data(rad)[hypo] = m_tkSignal->nObservableSignalPhotons(seg,hypo);
@@ -95,11 +87,10 @@ StatusCode GhostTrackMoni::execute()
    
             // Loop over photons for this segment and add info on those passing the selection
             unsigned int nPhots(0);
-            const LHCb::RichRecSegment::Photons & photons = photonCreator()->reconstructPhotons( seg );
-            for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = photons.begin();
-                  iPhot != photons.end(); ++iPhot )
+            const auto & photons = photonCreator()->reconstructPhotons( seg );
+            for ( const auto * photon : photons )
             {
-              const double ckDiff = fabs( expCKtheta - (*iPhot)->geomPhoton().CherenkovTheta() );
+              const double ckDiff = fabs( expCKtheta - photon->geomPhoton().CherenkovTheta() );
               if ( ckDiff < m_nSigma[rad] * m_ckAngleRes->ckThetaResolution(seg,hypo) )
               {
                 ++nPhots;
@@ -120,7 +111,7 @@ StatusCode GhostTrackMoni::execute()
 
       sc = sc && tuple->column( "IsGhost", (int)isGhost );
 
-      sc = sc && tuple->column( "RecoVertPtot", (*iT)->vertexMomentum() );
+      sc = sc && tuple->column( "RecoVertPtot", tk->vertexMomentum() );
 
       sc = sc && tuple->array( "NExpectAero",  nExpected.data(Rich::Aerogel).begin(),  nExpected.data(Rich::Aerogel).end()  );
       sc = sc && tuple->array( "NExpectR1Gas", nExpected.data(Rich::Rich1Gas).begin(), nExpected.data(Rich::Rich1Gas).end() );
@@ -144,11 +135,4 @@ StatusCode GhostTrackMoni::execute()
   }
 
   return StatusCode::SUCCESS;
-}
-
-// Finalize
-StatusCode GhostTrackMoni::finalize()
-{
-  // Execute base class method
-  return TupleAlgBase::finalize();
 }

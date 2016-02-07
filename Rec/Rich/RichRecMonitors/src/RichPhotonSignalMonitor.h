@@ -62,11 +62,20 @@ namespace Rich
 
       private: // data
 
-        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
-        const IExpectedTrackSignal * m_tkSignal;   ///< Pointer to RichExpectedTrackSignal tool
-        const IGeomEff * m_geomEffic; ///< Pointer to ray-tracing RichGeomEff tool
-        const ITrackEffectiveRefractiveIndex * m_refIndex; ///< Refractive index tool
-        const ITrackSelector * m_trSelector;  ///< Track selector
+        /// Pointer to RichRecMCTruthTool interface
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth = nullptr; 
+
+        /// Pointer to RichExpectedTrackSignal tool
+        const IExpectedTrackSignal * m_tkSignal = nullptr; 
+
+        /// Pointer to ray-tracing RichGeomEff tool
+        const IGeomEff * m_geomEffic = nullptr; 
+
+        /// Refractive index tool
+        const ITrackEffectiveRefractiveIndex * m_refIndex = nullptr; 
+
+        /// Track selector
+        const ITrackSelector * m_trSelector = nullptr;  
 
       };
 

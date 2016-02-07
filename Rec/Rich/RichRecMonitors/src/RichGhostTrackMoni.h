@@ -61,7 +61,6 @@ namespace Rich
 
         virtual StatusCode initialize();    // Algorithm initialization
         virtual StatusCode execute   ();    // Algorithm execution
-        virtual StatusCode finalize  ();    // Algorithm finalization
 
       private: // classes
 
@@ -85,19 +84,19 @@ namespace Rich
       private: // data
 
         /// Track selector
-        const ITrackSelector * m_trSelector;
+        const ITrackSelector * m_trSelector = nullptr;
 
         /// Pointer to RichRecMCTruthTool interface
-        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth = nullptr;
 
         /// Pointer to RichExpectedTrackSignal tool
-        const IExpectedTrackSignal * m_tkSignal;
+        const IExpectedTrackSignal * m_tkSignal = nullptr;
 
         /// Rich Cherenkov angle calculator tool
-        const ICherenkovAngle * m_ckAngle;
+        const ICherenkovAngle * m_ckAngle = nullptr;
 
         /// Cherenkov angle resolution tool
-        const ICherenkovResolution * m_ckAngleRes;
+        const ICherenkovResolution * m_ckAngleRes = nullptr;
 
         /// Number of sigmas to select photons, for each radiator
         std::vector<double> m_nSigma;

@@ -69,16 +69,16 @@ namespace Rich
       private: // data
 
         /// Pointer to RichRecMCTruthTool interface
-        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;
+        const Rich::Rec::MC::IMCTruthTool * m_richRecMCTruth = nullptr;
 
         /// Pointer to RichMCTruthTool
-        const Rich::MC::IMCTruthTool * m_truth;
+        const Rich::MC::IMCTruthTool * m_truth = nullptr;
 
         /// Raw Buffer Decoding tool
-        const Rich::DAQ::IRawBufferToSmartIDsTool * m_decoder;
+        const Rich::DAQ::IRawBufferToSmartIDsTool * m_decoder = nullptr;
 
         /// Pointer to RICH system detector element
-        const DeRichSystem * m_richSys;
+        const DeRichSystem * m_richSys = nullptr;
 
       };
 

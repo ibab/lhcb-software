@@ -4,6 +4,11 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2016-02-07- Chris Jones
+ - Modernise a few more monitors.
+ - Add some additional histograms to RichPhotonRecoCompare to investigate
+   'bad' photons.
+
 !========================= RichRecMonitors v2r37 2016-01-28 =========================
 ! 2016-01-14 - Chris Jones
  - Add a few more plots to RichCherenkovAngleMonitor to help understand Rec-MC

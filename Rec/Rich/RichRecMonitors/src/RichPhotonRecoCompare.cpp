@@ -52,13 +52,21 @@ StatusCode PhotonRecoCompare::execute()
   MAX_CKTHETA_RAD;
   MIN_CKTHETA_RAD;
   CKTHETADIFF_RANGE;
+  PD_GLOBAL_POSITIONS;
+  PD_LOCAL_POSITIONS;
+  RADIATOR_GLOBAL_POSITIONS_X_EXIT;
+  RADIATOR_GLOBAL_POSITIONS_Y_EXIT;
+  RADIATOR_GLOBAL_POSITIONS_Z;
   const Rich::HistoID hid;
 
   // min and max P for histos
   //const double maxP = m_trSelector->maxPCut() * Gaudi::Units::GeV;
   //const double minP = m_trSelector->minPCut() * Gaudi::Units::GeV;
-  const double maxP = 100 * Gaudi::Units::GeV;
-  const double minP = 0   * Gaudi::Units::GeV;
+  constexpr double maxP = 100 * Gaudi::Units::GeV;
+  constexpr double minP = 0   * Gaudi::Units::GeV;
+
+  // Max deviation in reconstructed CK theta difference (Aero,R1gas,R2gas)
+  const std::vector<double> maxDev = { 0.0, 5e-4, 5e-4 };
 
   // Iterate over segments
   for ( auto * segment : *richSegments() )
@@ -70,7 +78,8 @@ StatusCode PhotonRecoCompare::execute()
     const auto pTot = std::sqrt(segment->trackSegment().bestMomentum().Mag2());
 
     // Radiator info
-    const auto rad = segment->trackSegment().radiator();
+    const auto rad  = segment->trackSegment().radiator();
+    const auto rich = segment->trackSegment().rich();
 
     // MC type
     const auto mcType = m_richRecMCTruth->mcParticleType( segment );
@@ -90,10 +99,9 @@ StatusCode PhotonRecoCompare::execute()
       {
 
         // Get the standard photon info from the candidate
-        const LHCb::RichGeomPhoton & stdPhot = photon->geomPhoton();
+        const auto & stdPhot = photon->geomPhoton();
 
         // Create on the fly a comparison photon using the baseline tool
-        // starting off as a clone of the above
         LHCb::RichGeomPhoton basePhot;
         const auto sc = m_reco->reconstructPhoton( photon->richRecSegment(),
                                                    photon->richRecPixel(),
@@ -107,14 +115,14 @@ StatusCode PhotonRecoCompare::execute()
           const auto baseCKTheta = basePhot.CherenkovTheta();
           const auto mcCKTheta   = mcPhot->cherenkovTheta();
           // differences
-          const auto stdMCDiff  = stdCKTheta  - mcCKTheta;
-          const auto baseMCDiff = baseCKTheta - mcCKTheta;
+          const auto stdMCDiff   = stdCKTheta  - mcCKTheta;
+          const auto baseMCDiff  = baseCKTheta - mcCKTheta;
           const auto stdBaseDiffDiff = fabs(stdMCDiff) - fabs(baseMCDiff);
 
           // Emission point
           //const auto& stdEmissPtn  = stdPhot.emissionPoint();
-          //const auto& baseEmissPtn = stdPhot.emissionPoint();
-          //const auto& mcEmissPtn   = mcPhot->emissionPoint();
+          const auto& baseEmissPtn = stdPhot.emissionPoint();
+          const auto& mcEmissPtn   = mcPhot->emissionPoint();
 
           // plots
 
@@ -129,14 +137,14 @@ StatusCode PhotonRecoCompare::execute()
             -> fill( mcCKTheta, stdBaseDiffDiff );
           richHisto1D( hid(rad,"stdBaseMCDiffDiff"),
                        "|StdRec-MC| - |BaseRec-MC| CK Theta V P",
-                       -ckRange[rad],ckRange[rad], nBins1D() )
+                       -0.25*ckRange[rad],0.25*ckRange[rad], nBins1D() )
             -> fill( stdBaseDiffDiff );
           richHisto2D( hid(rad,"stdMCDiffVbaseMCDIff"),
                        "|StdRec-MC| CK Theta Versus |BaseRec-MC| CK Theta",
                        minCkTheta[rad], maxCkTheta[rad], nBins1D(),
                        minCkTheta[rad], maxCkTheta[rad], nBins1D() )
-            -> fill( baseCKTheta, stdCKTheta );   
-          
+            -> fill( baseCKTheta, stdCKTheta );
+
           // true PID type
           richProfile1D( hid(rad,mcType,"stdBaseMCDiffDiffVP"),
                          "|StdRec-MC| - |BaseRec-MC| CK Theta V P",
@@ -148,7 +156,7 @@ StatusCode PhotonRecoCompare::execute()
             -> fill( mcCKTheta, stdBaseDiffDiff );
           richHisto1D( hid(rad,mcType,"stdBaseMCDiffDiff"),
                        "|StdRec-MC| - |BaseRec-MC| CK Theta V P",
-                       -ckRange[rad],ckRange[rad], nBins1D() )
+                       -0.25*ckRange[rad],0.25*ckRange[rad], nBins1D() )
             -> fill( stdBaseDiffDiff );
           richHisto2D( hid(rad,mcType,"stdMCDiffVbaseMCDIff"),
                        "|StdRec-MC| CK Theta Versus |BaseRec-MC| CK Theta",
@@ -156,10 +164,115 @@ StatusCode PhotonRecoCompare::execute()
                        minCkTheta[rad], maxCkTheta[rad], nBins1D() )
             -> fill( baseCKTheta, stdCKTheta );
 
+          // Look in detail at photons which differ a lot
+          if ( stdBaseDiffDiff > maxDev[rad] )
+          {
+
+            // Track momentum
+            richHisto1D( hid(rad,"BadPhotons/Ptot"), "Bad Photons | Ptot",
+                         minP, maxP, nBins1D() ) -> fill( pTot );
+            richHisto1D( hid(rad,mcType,"BadPhotons/Ptot"), "Bad Photons | Ptot",
+                         minP, maxP, nBins1D() ) -> fill( pTot );
+
+            // CK theta
+            richHisto1D( hid(rad,"BadPhotons/CKtheta"), "Bad Photons | Cherenkov Theta",
+                         minCkTheta[rad], maxCkTheta[rad], nBins1D() ) -> fill( mcCKTheta );
+            richHisto1D( hid(rad,mcType,"BadPhotons/CKtheta"), "Bad Photons | Cherenkov Theta",
+                         minCkTheta[rad], maxCkTheta[rad], nBins1D() ) -> fill( mcCKTheta );
+
+            // Pixel for this photon
+            const auto * pixel = photon->richRecPixel();
+
+            // global position
+            const auto & gPos = pixel->globalPosition();
+            // local position on HPD panels
+            const auto & lPos = pixel->localPosition();
+
+            // Position plots - global
+            richHisto1D( hid(rad,"BadPhotons/globalX"), "Bad Photons | Global Pixel x",
+                         xMinPDGlo[rich], xMaxPDGlo[rich], nBins1D() ) -> fill( gPos.x() );
+            richHisto1D( hid(rad,mcType,"BadPhotons/globalX"), "Bad Photons | Global Pixel x",
+                         xMinPDGlo[rich], xMaxPDGlo[rich], nBins1D() ) -> fill( gPos.x() );
+            richHisto1D( hid(rad,"BadPhotons/globalY"), "Bad Photons | Global Pixel y",
+                         yMinPDGlo[rich], yMaxPDGlo[rich], nBins1D() ) -> fill( gPos.y() );
+            richHisto1D( hid(rad,mcType,"BadPhotons/globalY"), "Bad Photons | Global Pixel y",
+                         yMinPDGlo[rich], yMaxPDGlo[rich], nBins1D() ) -> fill( gPos.y() );
+            richHisto1D( hid(rad,"BadPhotons/globalZ"), "Bad Photons | Global Pixel z",
+                         zMinPDGlo[rich], zMaxPDGlo[rich], nBins1D() ) -> fill( gPos.z() );
+            richHisto1D( hid(rad,mcType,"BadPhotons/globalZ"), "Bad Photons | Global Pixel z",
+                         zMinPDGlo[rich], zMaxPDGlo[rich], nBins1D() ) -> fill( gPos.z() );
+            richHisto2D( hid(rad,"BadPhotons/globalXY"), "Bad Photons | Global Pixel x v y",
+                         xMinPDGlo[rich], xMaxPDGlo[rich], nBins2D(),
+                         yMinPDGlo[rich], yMaxPDGlo[rich], nBins2D() ) -> fill( gPos.x(), gPos.y() );
+            richHisto2D( hid(rad,mcType,"BadPhotons/globalXY"), "Bad Photons | Global Pixel x v y",
+                         xMinPDGlo[rich], xMaxPDGlo[rich], nBins2D(),
+                         yMinPDGlo[rich], yMaxPDGlo[rich], nBins2D() ) -> fill( gPos.x(), gPos.y() );
+
+            // Position plots - local
+            richHisto1D( hid(rad,"BadPhotons/localX"), "Bad Photons | Local Pixel x",
+                         xMinPDLoc[rich], xMaxPDLoc[rich], nBins1D() ) -> fill( lPos.x() );
+            richHisto1D( hid(rad,mcType,"BadPhotons/localX"), "Bad Photons | Local Pixel x",
+                         xMinPDLoc[rich], xMaxPDLoc[rich], nBins1D() ) -> fill( lPos.x() );
+            richHisto1D( hid(rad,"BadPhotons/localY"), "Bad Photons | Local Pixel y",
+                         yMinPDLoc[rich], yMaxPDLoc[rich], nBins1D() ) -> fill( lPos.y() );
+            richHisto1D( hid(rad,mcType,"BadPhotons/localY"), "Bad Photons | Local Pixel y",
+                         yMinPDLoc[rich], yMaxPDLoc[rich], nBins1D() ) -> fill( lPos.y() );
+            richHisto1D( hid(rad,"BadPhotons/localZ"), "Bad Photons | Local Pixel z",
+                         zMinPDLoc[rich], zMaxPDLoc[rich], nBins1D() ) -> fill( lPos.z() );
+            richHisto1D( hid(rad,mcType,"BadPhotons/localZ"), "Bad Photons | Local Pixel z",
+                         zMinPDLoc[rich], zMaxPDLoc[rich], nBins1D() ) -> fill( lPos.z() );
+            richHisto2D( hid(rad,"BadPhotons/localXY"), "Bad Photons | Local Pixel x v y",
+                         xMinPDLoc[rich], xMaxPDLoc[rich], nBins2D(),
+                         yMinPDLoc[rich], yMaxPDLoc[rich], nBins2D() ) -> fill( lPos.x(), lPos.y() );
+            richHisto2D( hid(rad,mcType,"BadPhotons/localXY"), "Bad Photons | Local Pixel x v y",
+                         xMinPDLoc[rich], xMaxPDLoc[rich], nBins2D(),
+                         yMinPDLoc[rich], yMaxPDLoc[rich], nBins2D() ) -> fill( lPos.x(), lPos.y() );
+
+            // base reco emission point plots
+            richHisto1D( hid(rad,"BadPhotons/baseEmissX"), "Bad Photons | Base Emission point x",
+                         -xRadExitGlo[rad], xRadExitGlo[rad], nBins1D() ) -> fill( baseEmissPtn.x() );
+            richHisto1D( hid(rad,mcType,"BadPhotons/baseEmissX"), "Bad Photons | Base Emission point x",
+                         -xRadExitGlo[rad], xRadExitGlo[rad], nBins1D() ) -> fill( baseEmissPtn.x() );
+            richHisto1D( hid(rad,"BadPhotons/baseEmissY"), "Bad Photons | Base Emission point y",
+                         -yRadExitGlo[rad], yRadExitGlo[rad], nBins1D() ) -> fill( baseEmissPtn.y() );
+            richHisto1D( hid(rad,mcType,"BadPhotons/baseEmissY"), "Bad Photons | Base Emission point y",
+                         -yRadExitGlo[rad], yRadExitGlo[rad], nBins1D() ) -> fill( baseEmissPtn.y() );
+            richHisto1D( hid(rad,"BadPhotons/baseEmissZ"), "Bad Photons | Base Emission point z",
+                         zRadEntGlo[rad], zRadExitGlo[rad], nBins1D() ) -> fill( baseEmissPtn.z() );
+            richHisto1D( hid(rad,mcType,"BadPhotons/baseEmissZ"), "Bad Photons | Base Emission point z",
+                         zRadEntGlo[rad], zRadExitGlo[rad], nBins1D() ) -> fill( baseEmissPtn.z() );
+
+            richHisto2D( hid(rad,"BadPhotons/BaseEmissXY"), "Bad Photons | Base emission point x v y",
+                         -xRadExitGlo[rad], xRadExitGlo[rad], nBins2D(),
+                         -yRadExitGlo[rad], yRadExitGlo[rad], nBins2D() ) -> fill( baseEmissPtn.x(),
+                                                                                   baseEmissPtn.y() );
+
+            // mc reco emission point plots
+            richHisto1D( hid(rad,"BadPhotons/mcEmissX"), "Bad Photons | MC Emission point x",
+                         -xRadExitGlo[rad], xRadExitGlo[rad], nBins1D() ) -> fill( mcEmissPtn.x() );
+            richHisto1D( hid(rad,mcType,"BadPhotons/mcEmissX"), "Bad Photons | MC Emission point x",
+                         -xRadExitGlo[rad], xRadExitGlo[rad], nBins1D() ) -> fill( mcEmissPtn.x() );
+            richHisto1D( hid(rad,"BadPhotons/mcEmissY"), "Bad Photons | MC Emission point y",
+                         -yRadExitGlo[rad], yRadExitGlo[rad], nBins1D() ) -> fill( mcEmissPtn.y() );
+            richHisto1D( hid(rad,mcType,"BadPhotons/mcEmissY"), "Bad Photons | MC Emission point y",
+                         -yRadExitGlo[rad], yRadExitGlo[rad], nBins1D() ) -> fill( mcEmissPtn.y() );
+            richHisto1D( hid(rad,"BadPhotons/mcEmissZ"), "Bad Photons | MC Emission point z",
+                         zRadEntGlo[rad], zRadExitGlo[rad], nBins1D() ) -> fill( mcEmissPtn.z() );
+            richHisto1D( hid(rad,mcType,"BadPhotons/mcEmissZ"), "Bad Photons | MC Emission point z",
+                         zRadEntGlo[rad], zRadExitGlo[rad], nBins1D() ) -> fill( mcEmissPtn.z() );
+
+            richHisto2D( hid(rad,"BadPhotons/mcEmissXY"), "Bad Photons | MC emission point x v y",
+                         -xRadExitGlo[rad], xRadExitGlo[rad], nBins2D(),
+                         -yRadExitGlo[rad], yRadExitGlo[rad], nBins2D() ) -> fill( mcEmissPtn.x(),
+                                                                                   mcEmissPtn.y() );
+
+          }
+
+
         }
-        
+
       }
-      
+
     }
 
   }

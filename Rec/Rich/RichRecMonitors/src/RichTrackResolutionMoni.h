@@ -65,9 +65,9 @@ namespace Rich
 
       private: // data
 
-        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;   ///< Pointer to RichRecMCTruthTool interface
-        const Rich::MC::IMCTrackInfoTool * m_mcTkInfo;       ///< MC track information
-        const ITrackSelector * m_trSelector; ///< Track selector
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth = nullptr; ///< Pointer to RichRecMCTruthTool interface
+        const Rich::MC::IMCTrackInfoTool * m_mcTkInfo = nullptr; ///< MC track information
+        const ITrackSelector * m_trSelector = nullptr; ///< Track selector
 
       };
 

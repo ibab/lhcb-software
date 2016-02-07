@@ -14,6 +14,7 @@
 
 // STL
 #include <sstream>
+#include <vector>
 
 // base class
 #include "RichRecBase/RichRecTupleAlgBase.h"

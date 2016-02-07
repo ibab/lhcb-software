@@ -78,16 +78,16 @@ namespace Rich
       private: // data
 
         /// Pointer to RichRecMCTruthTool interface
-        const Rich::Rec::MC::IMCTruthTool * m_richRecMCTruth;
+        const Rich::Rec::MC::IMCTruthTool * m_richRecMCTruth = nullptr;
 
         /// Pointer to MC truth tool
-        const Rich::MC::IMCTruthTool * m_mcTool;
+        const Rich::MC::IMCTruthTool * m_mcTool = nullptr;
 
         /// Pointer to RichSmartID tool
-        const ISmartIDTool * m_idTool;
+        const ISmartIDTool * m_idTool = nullptr;
 
         /// Pointer to RICH system detector element
-        const DeRichSystem * m_richSys;
+        const DeRichSystem * m_richSys = nullptr;
 
         /// Number of bins in 2D histos
         unsigned int m_n2DBins;

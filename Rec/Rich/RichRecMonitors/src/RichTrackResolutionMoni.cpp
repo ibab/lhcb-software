@@ -25,13 +25,7 @@ DECLARE_ALGORITHM_FACTORY( TrackResolutionMoni )
 // Standard constructor, initializes variables
 TrackResolutionMoni::TrackResolutionMoni( const std::string& name,
                                           ISvcLocator* pSvcLocator )
-  : Rich::Rec::TupleAlgBase ( name, pSvcLocator ),
-    m_richRecMCTruth    ( NULL ),
-    m_mcTkInfo          ( NULL ),
-    m_trSelector        ( NULL )
-{
-  // job opts
-}
+  : Rich::Rec::TupleAlgBase ( name, pSvcLocator ) { }
 
 // Destructor
 TrackResolutionMoni::~TrackResolutionMoni() {}
@@ -63,8 +57,7 @@ StatusCode TrackResolutionMoni::execute()
   {
     if ( !trackCreator()->newTracks() )
       return Error( "Problem creating RichRecTracks" );
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << "No tracks found : Created " << richTracks()->size()
+    _ri_debug << "No tracks found : Created " << richTracks()->size()
               << " RichRecTracks " << richSegments()->size()
               << " RichRecSegments" << endmsg;
   }
@@ -109,10 +102,9 @@ StatusCode TrackResolutionMoni::execute()
       const Rich::RadiatorType rad = tkSeg.radiator();   // which radiator
       ++nSegs[rad]; // count segments per radiator
 
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << "Selected " << segment->richRecTrack()->trackID().trackType()
-                  << " RichRecSegment in " << rad << endmsg;
-
+      _ri_verbo << "Selected " << segment->richRecTrack()->trackID().trackType()
+                << " RichRecSegment in " << rad << endmsg;
+      
       // Ray traced hit point on PDPanel
       const Gaudi::XYZPoint & pdPoint = segment->pdPanelHitPoint();
 
@@ -312,9 +304,8 @@ StatusCode TrackResolutionMoni::execute()
   } // end segment loop
 
     // Fill final plots
-  for ( int irad = 0; irad < Rich::NRadiatorTypes; ++irad )
+  for ( const auto rad : Rich::radiators() )
   {
-    const Rich::RadiatorType rad = (Rich::RadiatorType)irad;
     plot1D( nSegs[rad], hid(rad,"nSegs"), "# segments per event", -0.5,100.5,101 );
     plot1D( 0 == nSegs[rad] ? 0 : static_cast<float>(nMCSegs[rad])/static_cast<float>(nSegs[rad]),
             hid(rad,"segFrMC"), "Fraction of segments with MC info", 0,1 );

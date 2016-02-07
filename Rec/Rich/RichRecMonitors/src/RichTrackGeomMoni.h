@@ -73,16 +73,17 @@ namespace Rich
 
       private: // data
 
-        const IRayTracing * m_rayTrace;        ///< Pointer RichDetector ray tracing tool
-        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
-        const IGeomTool * m_geomTool;     ///< Pointer to the Geometry tool
-        const IGeomEff * m_geomEffic; ///< Pointer to RichGeomEff tool
-        const Rich::MC::IMCTrackInfoTool * m_mcTkInfo; ///< MC track information
+        const IRayTracing * m_rayTrace = nullptr; ///< Pointer RichDetector ray tracing tool
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth = nullptr; ///< Pointer to RichRecMCTruthTool interface
+        const IGeomTool * m_geomTool = nullptr;     ///< Pointer to the Geometry tool
+        const IGeomEff * m_geomEffic = nullptr; ///< Pointer to RichGeomEff tool
+        const Rich::MC::IMCTrackInfoTool * m_mcTkInfo = nullptr; ///< MC track information
+
         /// Pointer to RichSmartID tool
-        const ISmartIDTool * m_idTool;
+        const ISmartIDTool * m_idTool = nullptr;
 
         /// Track selector
-        const ITrackSelector * m_trSelector;
+        const ITrackSelector * m_trSelector = nullptr;
 
         // working variables for average PD positions
         Rich::Map<LHCb::RichSmartID, double> m_xHits;

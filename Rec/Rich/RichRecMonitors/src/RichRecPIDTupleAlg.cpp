@@ -15,9 +15,7 @@ DECLARE_ALGORITHM_FACTORY( PIDTupleAlg )
 //=============================================================================
 PIDTupleAlg::PIDTupleAlg( const std::string& name,
                           ISvcLocator* pSvcLocator)
-  : Rich::Rec::TupleAlgBase ( name , pSvcLocator ),
-    m_trSelector            ( NULL ),
-    m_richRecMCTruth        ( NULL )
+  : Rich::Rec::TupleAlgBase ( name , pSvcLocator )
 {
   m_pidLocations.push_back( LHCb::RichPIDLocation::Offline );
   m_pidLocations.push_back( LHCb::RichPIDLocation::HLT     );
@@ -57,9 +55,9 @@ StatusCode PIDTupleAlg::execute()
   if ( richTracks()->empty() )
   {
     if ( !trackCreator()->newTracks() ) return StatusCode::FAILURE;
-    debug() << "No tracks found : Created " << richTracks()->size()
-            << " RichRecTracks " << richSegments()->size()
-            << " RichRecSegments" << endmsg;
+    _ri_debug << "No tracks found : Created " << richTracks()->size()
+              << " RichRecTracks " << richSegments()->size()
+              << " RichRecSegments" << endmsg;
   }
 
   // Load the associations
@@ -70,14 +68,14 @@ StatusCode PIDTupleAlg::execute()
   const std::vector<float> dummyDLLs(Rich::NParticleTypes,0);
 
   // loop over track map
-  for ( PIDMap::const_iterator iMap = m_pidMap.begin(); iMap != m_pidMap.end(); ++iMap )
+  for ( const auto & ipid : m_pidMap )
   {
 
     // get the tuple
     Tuple tuple = nTuple("RichPID", "Rich PID Information");
 
     // MCParticle information
-    const LHCb::MCParticle * mcPart = iMap->first;
+    const LHCb::MCParticle * mcPart = ipid.first;
     tuple->column( "MCParticleType", mcPart ? mcPart->particleID().pid() : 0 );
     tuple->column( "MCParticleP",    mcPart ? mcPart->p()  : -99999 );
     tuple->column( "MCParticlePt",   mcPart ? mcPart->pt() : -99999 );
@@ -88,7 +86,7 @@ StatusCode PIDTupleAlg::execute()
     {
       const std::string sn = boost::lexical_cast<std::string>(n);
       // find a pid
-      const LHCb::RichPID * pid = (iMap->second)[n];
+      const LHCb::RichPID * pid = (ipid.second)[n];
       // Add best ID
       tuple->column( "BestID"+sn, pid ? (int)pid->bestParticleID() : -1 );
       // Add the DLL values
@@ -115,30 +113,27 @@ StatusCode PIDTupleAlg::fillTrackTable()
 
   // Loop over all PID locations
   unsigned int n(0);
-  for ( std::vector<std::string>::const_iterator iLoc = m_pidLocations.begin();
-        iLoc != m_pidLocations.end(); ++iLoc, ++n )
+  for ( auto iLoc = m_pidLocations.begin(); iLoc != m_pidLocations.end(); ++iLoc, ++n )
   {
     // try and load this location
-    const LHCb::RichPIDs* pids = get<LHCb::RichPIDs>( *iLoc );
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << "Loaded " << pids->size() << " RichPIDs from " << *iLoc << endmsg;
+    const auto * pids = get<LHCb::RichPIDs>( *iLoc );
+    _ri_verbo << "Loaded " << pids->size() << " RichPIDs from " << *iLoc << endmsg;
     // loop over RichPIDs
-    for ( LHCb::RichPIDs::const_iterator iPID = pids->begin();
-          iPID != pids->end(); ++iPID )
+    for ( const auto * PID : *pids )
     {
       // the reco track
-      const LHCb::Track * track = (*iPID)->track();
+      const LHCb::Track * track = PID->track();
       // apply track selection
       if ( !m_trSelector->trackSelected(track) ) continue;
       // associated MC
       const LHCb::MCParticle * mcPart = m_richRecMCTruth->mcParticle( track );
-      verbose() << " -> Track " << track << " MCParticle " << mcPart << endmsg;
+      _ri_verbo << " -> Track " << track << " MCParticle " << mcPart << endmsg;
       // fill map
       if ( mcPart )
       {
         PIDVector & vect = m_pidMap[mcPart];
-        if ( vect.empty() ) { vect = PIDVector(m_pidLocations.size(),NULL); }
-        vect[n] = *iPID;
+        if ( vect.empty() ) { vect = PIDVector(m_pidLocations.size(),nullptr); }
+        vect[n] = PID;
       }
     }
   }

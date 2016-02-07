@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::Rec::TrackRayTraceTest
  *
- *  CVS Log :-
- *  $Id: RichTrackRayTraceTest.h,v 1.6 2008-01-03 15:30:18 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -72,13 +69,13 @@ namespace Rich
     private: // data
 
       /// Pointer RichDetector ray tracing tool
-      const IRayTracing * m_rayTrace;
+      const IRayTracing * m_rayTrace = nullptr;
 
       /// Pointer to RichSmartID tool
-      const ISmartIDTool * m_idTool;
+      const ISmartIDTool * m_idTool = nullptr;
 
       /// Track selector
-      const ITrackSelector * m_trSelector;
+      const ITrackSelector * m_trSelector = nullptr;
 
     };
 

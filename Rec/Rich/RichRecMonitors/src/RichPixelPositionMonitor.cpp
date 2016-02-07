@@ -27,11 +27,7 @@ DECLARE_ALGORITHM_FACTORY( PixelPositionMonitor )
 // Standard constructor, initializes variables
   PixelPositionMonitor::PixelPositionMonitor( const std::string& name,
                                               ISvcLocator* pSvcLocator)
-    : HistoAlgBase     ( name, pSvcLocator ),
-      m_richRecMCTruth ( NULL ),
-      m_mcTool         ( NULL ),
-      m_idTool         ( NULL ),
-      m_richSys        ( NULL )
+    : HistoAlgBase( name, pSvcLocator )
 {
   declareProperty( "N2DBins", m_n2DBins = 500 );
 }
@@ -48,8 +44,8 @@ StatusCode PixelPositionMonitor::initialize()
 
   // Acquire instances of tools
   acquireTool( "RichRecMCTruthTool", m_richRecMCTruth );
-  acquireTool( "RichMCTruthTool", m_mcTool,   NULL, true );
-  acquireTool( "RichSmartIDTool", m_idTool,   NULL, true );
+  acquireTool( "RichMCTruthTool", m_mcTool, nullptr, true );
+  acquireTool( "RichSmartIDTool", m_idTool, nullptr, true );
 
   // RichDet
   m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
@@ -84,12 +80,9 @@ StatusCode PixelPositionMonitor::execute()
   // Iterate over pixels
   debug() << "All Pixels " << richPixels()->size() << " :-" << endmsg;
   std::vector<unsigned int> nPixs( Rich::NRiches, 0 );
-  for ( LHCb::RichRecPixels::const_iterator iPix = richPixels()->begin();
-        iPix != richPixels()->end();
-        ++iPix )
+  for ( auto * pixel : *richPixels() )
   {
-    const LHCb::RichRecPixel * pixel = *iPix;
-
+ 
     // global position
     const Gaudi::XYZPoint & gPos = pixel->globalPosition();
     // local position on HPD panels

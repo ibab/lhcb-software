@@ -22,12 +22,7 @@ DECLARE_ALGORITHM_FACTORY( PhotonSignalMonitor )
 // Standard constructor, initializes variables
 PhotonSignalMonitor::PhotonSignalMonitor( const std::string& name,
                                           ISvcLocator* pSvcLocator )
-  : HistoAlgBase        ( name, pSvcLocator ),
-    m_richRecMCTruth    ( NULL ),
-    m_tkSignal          ( NULL ),
-    m_geomEffic         ( NULL ),
-    m_refIndex          ( NULL ),
-    m_trSelector        ( NULL )
+  : HistoAlgBase( name, pSvcLocator )
 {
   // job opts
 }
@@ -69,42 +64,38 @@ StatusCode PhotonSignalMonitor::execute()
   const double maxRefInd[]    = { 1.0312,  1.00150,  1.00046 };
 
   // Iterate over segments
-  for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
-        iSeg != richSegments()->end(); ++iSeg )
+  for ( auto * segment : *richSegments() )
   {
-    LHCb::RichRecSegment * segment = *iSeg;
-
     // apply track selection
     if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
 
     // Radiator info
-    const Rich::RadiatorType rad = segment->trackSegment().radiator();
+    const auto rad = segment->trackSegment().radiator();
 
     // MC type
-    const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
+    const auto mcType = m_richRecMCTruth->mcParticleType( segment );
     if ( mcType == Rich::Unknown ) continue;
 
     // Loop over all particle codes
-    for ( Particles::const_iterator hypo = particles().begin();
-          hypo != particles().end(); ++hypo )
+    for ( const auto hypo : particles() )
     {
       // Expected number of emitted photons
-      const double emitPhots = m_tkSignal->nEmittedPhotons( segment, *hypo );
-      plot1D( emitPhots, hid(rad,*hypo,"nEmitPhots"), "Expected # emitted photons", 0, 100 );
+      const double emitPhots = m_tkSignal->nEmittedPhotons( segment, hypo );
+      plot1D( emitPhots, hid(rad,hypo,"nEmitPhots"), "Expected # emitted photons", 0, 100 );
 
       // Expected number of observable signal photons
-      const double sigPhots = m_tkSignal->nObservableSignalPhotons( segment, *hypo );
-      plot1D( sigPhots, hid(rad,*hypo,"nSigPhots"), "Expected # signal photons", 0,  100 );
+      const double sigPhots = m_tkSignal->nObservableSignalPhotons( segment, hypo );
+      plot1D( sigPhots, hid(rad,hypo,"nSigPhots"), "Expected # signal photons", 0,  100 );
 
       // Geometrical Efficiency
-      const double geomEff = m_geomEffic->geomEfficiency(segment,*hypo);
-      plot1D( geomEff, hid(rad,*hypo,"geomEff"), "Geom. Eff.", 0, 1 );
+      const double geomEff = m_geomEffic->geomEfficiency(segment,hypo);
+      plot1D( geomEff, hid(rad,hypo,"geomEff"), "Geom. Eff.", 0, 1 );
 
       // Scattered Geometrical Efficiency
       if ( Rich::Aerogel == rad )
       {
-        const double geomEffScat = m_geomEffic->geomEfficiencyScat(segment,*hypo);
-        plot1D( geomEffScat, hid(rad,*hypo,"geomEffScat"), "Scattered Geom. Eff.", 0, 1 );
+        const double geomEffScat = m_geomEffic->geomEfficiencyScat(segment,hypo);
+        plot1D( geomEffScat, hid(rad,hypo,"geomEffScat"), "Scattered Geom. Eff.", 0, 1 );
       }
 
       // Plot the expected spectra (energy, refIndex etc.)
@@ -126,13 +117,13 @@ StatusCode PhotonSignalMonitor::execute()
         // ref index for this energy bin
         const double refInd = m_refIndex->refractiveIndex( segment, energy );
         // energy spectra
-        plot1D( energy, hid(rad,*hypo,"energySpectra"), "Photon energy spectra",
+        plot1D( energy, hid(rad,hypo,"energySpectra"), "Photon energy spectra",
                 spectra.minEnergy(), spectra.maxEnergy(), spectra.energyBins(), 
-                (spectra.energyDist(*hypo))[iEnBin] );
+                (spectra.energyDist(hypo))[iEnBin] );
         // ref index spectra
-        plot1D( refInd, hid(rad,*hypo,"refIndexSpectra"), "Refractive index spectra",
+        plot1D( refInd, hid(rad,hypo,"refIndexSpectra"), "Refractive index spectra",
                 minRefIn, maxRefIn, spectra.energyBins(), 
-                (spectra.energyDist(*hypo))[iEnBin] );
+                (spectra.energyDist(hypo))[iEnBin] );
       }
 
     }

@@ -25,15 +25,7 @@ DECLARE_ALGORITHM_FACTORY( PhotonRecoEffMonitor )
 // Standard constructor, initializes variables
 PhotonRecoEffMonitor::PhotonRecoEffMonitor( const std::string& name,
                                             ISvcLocator* pSvcLocator )
-  : HistoAlgBase        ( name, pSvcLocator ),
-    m_richRecMCTruth    ( NULL ),
-    m_ckAngle           ( NULL ),
-    m_geomTool          ( NULL ),
-    m_forcedPhotCreator ( NULL ),
-    m_trSelector        ( NULL )
-{
-  // job opts
-}
+  : HistoAlgBase ( name, pSvcLocator ) { }
 
 // Destructor
 PhotonRecoEffMonitor::~PhotonRecoEffMonitor() {}
@@ -86,42 +78,40 @@ StatusCode PhotonRecoEffMonitor::execute()
   const double tkHitSepMax[]  = { 500.0,   120.0,   200.0   };
 
   // Iterate over segments
-  for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
-        iSeg != richSegments()->end(); ++iSeg )
+  for ( auto * segment : *richSegments() )
   {
-    LHCb::RichRecSegment * segment = *iSeg;
 
     // apply track selection
     if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
 
     // MC type
-    const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
+    const auto mcType = m_richRecMCTruth->mcParticleType( segment );
     if ( mcType == Rich::Unknown ) continue;
 
     // which rich
-    const Rich::DetectorType rich = segment->trackSegment().rich();
+    const auto rich = segment->trackSegment().rich();
     // Radiator info
-    const Rich::RadiatorType rad = segment->trackSegment().radiator();
+    const auto rad = segment->trackSegment().radiator();
 
     // total number of reconstructed photons
-    const unsigned int nRecoPhots = segment->richRecPhotons().size();
+    const auto nRecoPhots = segment->richRecPhotons().size();
     // number of reconstructed and non-reconstructed true photons
     unsigned int nRecoPhotsTrue(0), notRecoPhotsTrue(0);
 
     // loop over pixels in same RICH as segment
-    IPixelCreator::PixelRange range = pixelCreator()->range(rich);
-    for ( IPixelCreator::PixelRange::const_iterator iPix = range.begin();
-          iPix != range.end(); ++iPix )
+    auto pixels = pixelCreator()->range(rich);
+    for ( auto * pixel : pixels )
     {
-      LHCb::RichRecPixel * pixel = *iPix;
-      const Gaudi::XYZPoint & locPos = pixel->radCorrLocalPositions().position(rad);
+    
+      // local pixel position
+      const auto & locPos = pixel->radCorrLocalPositions().position(rad);
 
       // Is this a true Cherenkov Photon
-      const LHCb::MCParticle * trueCKPhotonMCP = m_richRecMCTruth->trueCherenkovPhoton(segment,pixel);
+      const auto * trueCKPhotonMCP = m_richRecMCTruth->trueCherenkovPhoton(segment,pixel);
       if ( trueCKPhotonMCP )
       {
         // Find the reco-photon for this combination
-        LHCb::RichRecPhoton * recPhot = photonCreator()->checkForExistingPhoton(segment,pixel);
+        auto * recPhot = photonCreator()->checkForExistingPhoton(segment,pixel);
         if ( recPhot )
         {
           ++nRecoPhotsTrue;
@@ -156,7 +146,7 @@ StatusCode PhotonRecoEffMonitor::execute()
             profile1D( sepAngle, sep, hid(rad,"CannotReco/nonRecPhiVsep"), "Non reco. sep V CK phi", -M_PI,M_PI );
 
             // get MC photon
-            const LHCb::MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(segment,pixel);
+            const auto * mcPhot = m_richRecMCTruth->trueOpticalPhoton(segment,pixel);
             if ( mcPhot )
             {
               plot1D( mcPhot->cherenkovTheta(), hid(rad,"CannotReco/nonRecoCKthetaMC"),
@@ -190,7 +180,7 @@ StatusCode PhotonRecoEffMonitor::execute()
             profile1D( sepAngle, sep, hid(rad,"CanReco/nonRecPhiVsep"), "Non reco. sep V CK phi", -M_PI,M_PI );
 
             // get MC photon
-            const LHCb::MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(segment,pixel);
+            const auto * mcPhot = m_richRecMCTruth->trueOpticalPhoton(segment,pixel);
             if ( mcPhot )
             {
               plot1D( mcPhot->cherenkovTheta(), hid(rad,"CanReco/nonRecoCKthetaMC"),

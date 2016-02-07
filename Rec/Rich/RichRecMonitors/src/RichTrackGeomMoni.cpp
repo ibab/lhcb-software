@@ -22,17 +22,7 @@ DECLARE_ALGORITHM_FACTORY ( TrackGeomMoni )
 // Standard constructor, initializes variables
 TrackGeomMoni::TrackGeomMoni( const std::string& name,
                               ISvcLocator* pSvcLocator )
-  : HistoAlgBase        ( name, pSvcLocator ),
-    m_rayTrace          ( 0 ),
-    m_richRecMCTruth    ( 0 ),
-    m_geomTool          ( 0 ),
-    m_geomEffic         ( 0 ),
-    m_mcTkInfo          ( NULL ),
-    m_idTool            ( NULL ),
-    m_trSelector        ( NULL )
-{
-  // job opts
-}
+  : HistoAlgBase ( name, pSvcLocator ) { }
 
 // Destructor
 TrackGeomMoni::~TrackGeomMoni() {}
@@ -45,12 +35,12 @@ StatusCode TrackGeomMoni::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRayTracing",       m_rayTrace, NULL, true );
+  acquireTool( "RichRayTracing",       m_rayTrace, nullptr, true );
   acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
   acquireTool( "RichRecGeometry",      m_geomTool       );
   acquireTool( "RichGeomEff",          m_geomEffic      );
   acquireTool( "RichMCTrackInfoTool",  m_mcTkInfo       );
-  acquireTool( "RichSmartIDTool",      m_idTool,   NULL, true );
+  acquireTool( "RichSmartIDTool",      m_idTool,   nullptr, true );
   acquireTool( "TrackSelector",        m_trSelector,  this );
 
   // initialise variables
@@ -65,7 +55,7 @@ StatusCode TrackGeomMoni::initialize()
 // Main execution
 StatusCode TrackGeomMoni::execute()
 {
-  debug() << "Execute" << endmsg;
+  _ri_debug << "Execute" << endmsg;
 
   // Check event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
@@ -74,9 +64,9 @@ StatusCode TrackGeomMoni::execute()
   if ( richTracks()->empty() )
   {
     if ( !trackCreator()->newTracks() ) return StatusCode::FAILURE;
-    debug() << "No tracks found : Created " << richTracks()->size()
-            << " RichRecTracks " << richSegments()->size()
-            << " RichRecSegments" << endmsg;
+    _ri_debug << "No tracks found : Created " << richTracks()->size()
+              << " RichRecTracks " << richSegments()->size()
+              << " RichRecSegments" << endmsg;
   }
 
   // Ray-tracing configuration object
@@ -97,35 +87,32 @@ StatusCode TrackGeomMoni::execute()
   FLAT_MIRROR_GLOBAL_POSITIONS;
 
   // Iterate over segments
-  for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
-        iSeg != richSegments()->end(); ++iSeg )
+  for ( auto * segment : *richSegments() )
   {
-    LHCb::RichRecSegment * segment = *iSeg;
 
-    debug() << "Looking at RichRecSegment " << segment->key() << endmsg;
+    _ri_debug << "Looking at RichRecSegment " << segment->key() << endmsg;
 
     // apply track selection
     if ( !m_trSelector->trackSelected( segment->richRecTrack() ) ) continue;
 
     // Track type
-    const Rich::Rec::Track::Type trType = segment->richRecTrack()->trackID().trackType();
+    const auto trType = segment->richRecTrack()->trackID().trackType();
 
     // track segment
-    const LHCb::RichTrackSegment & trackSeg = segment->trackSegment();
+    const auto & trackSeg = segment->trackSegment();
 
-    const Rich::DetectorType rich = trackSeg.rich();    // which rich detector
-    const Rich::RadiatorType rad  = trackSeg.radiator(); // which radiator
+    const auto rich = trackSeg.rich();    // which rich detector
+    const auto rad  = trackSeg.radiator(); // which radiator
 
     // HPD panel impact points (ray traced)
-    const Gaudi::XYZPoint & pdPoint    = segment->pdPanelHitPoint();
-    const Gaudi::XYZPoint & pdPointLoc = segment->pdPanelHitPointLocal();
+    const auto & pdPoint    = segment->pdPanelHitPoint();
+    const auto & pdPointLoc = segment->pdPanelHitPointLocal();
 
     // Pointer to parent MCParticle
-    const LHCb::MCParticle * trackMCPart =
-      m_richRecMCTruth->mcParticle( segment->richRecTrack() );
+    const auto * trackMCPart = m_richRecMCTruth->mcParticle( segment->richRecTrack() );
 
     // radiator entry/exit information
-    const Gaudi::XYZVector & trackDir = trackSeg.bestMomentum();
+    const auto & trackDir = trackSeg.bestMomentum();
 
     // entry/exit point histograms
     plot1D( trackSeg.entryPoint().z(), hid(rad,"entryZ"), "Track entrance z",
@@ -197,12 +184,12 @@ StatusCode TrackGeomMoni::execute()
             1.1*yMinPDLoc[rich],1.1*yMaxPDLoc[rich],0,1.05 );
 
     // Get associated RichMCSegment
-    const LHCb::MCRichSegment * mcSegment = m_richRecMCTruth->mcRichSegment(segment);
+    const auto * mcSegment = m_richRecMCTruth->mcRichSegment(segment);
     if ( mcSegment )
     {
       // shortcuts to entry and exit points
-      const Gaudi::XYZPoint & mcEntP = mcSegment->entryPoint();
-      const Gaudi::XYZPoint & mcExtP = mcSegment->exitPoint();
+      const auto & mcEntP = mcSegment->entryPoint();
+      const auto & mcExtP = mcSegment->exitPoint();
       // entry/exit coordinates
       plot1D( mcEntP.z(), hid(rad,"mcEntryZ"), "MC Track entrance z",
               zRadEntGlo[rad],zRadExitGlo[rad] );

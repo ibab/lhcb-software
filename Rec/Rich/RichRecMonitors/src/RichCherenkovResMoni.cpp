@@ -26,14 +26,7 @@ DECLARE_ALGORITHM_FACTORY( CherenkovResMoni )
 // Standard constructor, initializes variables
 CherenkovResMoni::CherenkovResMoni( const std::string& name,
                                     ISvcLocator* pSvcLocator )
-  : HistoAlgBase        ( name, pSvcLocator ),
-    m_richRecMCTruth    ( NULL ),
-    m_ckAngle           ( NULL ),
-    m_ckAngleRes        ( NULL ),
-    m_trSelector        ( NULL )
-{
-  // job opts
-}
+  : HistoAlgBase( name, pSvcLocator ) { }
 
 // Destructor
 CherenkovResMoni::~CherenkovResMoni() {}
@@ -74,10 +67,8 @@ StatusCode CherenkovResMoni::execute()
   const bool mcTrackOK = m_richRecMCTruth->trackToMCPAvailable();
 
   // Iterate over segments
-  for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
-        iSeg != richSegments()->end(); ++iSeg )
+  for ( auto * segment : *richSegments() )
   {
-    LHCb::RichRecSegment * segment = *iSeg;
 
     // apply track selection
     if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
@@ -88,10 +79,10 @@ StatusCode CherenkovResMoni::execute()
     if ( mcType == Rich::Unknown ) continue;
 
     // track segment
-    const LHCb::RichTrackSegment & trackSeg = segment->trackSegment();
+    const auto & trackSeg = segment->trackSegment();
 
     // radiator
-    const Rich::RadiatorType rad = trackSeg.radiator();
+    const auto rad = trackSeg.radiator();
 
     // Segment momentum
     const double ptot = std::sqrt(segment->trackSegment().bestMomentum().Mag2());
@@ -101,10 +92,9 @@ StatusCode CherenkovResMoni::execute()
     const double expCKang = m_ckAngle->avgCherenkovTheta(segment,mcType);
 
     // Loop over all particle codes
-    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
+    for ( const auto hypo : Rich::particles() )
     {
-      const Rich::ParticleIDType hypo = static_cast<Rich::ParticleIDType>(iHypo);
-
+ 
       // CK resolution
       const double ckres = m_ckAngleRes->ckThetaResolution(segment,hypo);
       // CK angle
@@ -129,24 +119,21 @@ StatusCode CherenkovResMoni::execute()
     } // particle ID codes
 
       // loop over photons
-    const LHCb::RichRecSegment::Photons & photons = photonCreator()->reconstructPhotons( segment );
-    for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = photons.begin();
-          iPhot != photons.end();
-          ++iPhot )
+    const auto & photons = photonCreator()->reconstructPhotons( segment );
+    for ( auto * photon : photons )
     {
-      LHCb::RichRecPhoton * photon = *iPhot;
 
       // Reco angles
       const double thetaRec  = photon->geomPhoton().CherenkovTheta();
       const double ckExpPull = ( expCKres>0 ? (thetaRec-expCKang)/expCKres : -999 );
 
       // Is this a true photon ?
-      const LHCb::MCParticle * photonParent = m_richRecMCTruth->trueCherenkovPhoton(photon);
+      const auto * photonParent = m_richRecMCTruth->trueCherenkovPhoton(photon);
       if ( photonParent )
       {
 
         // diffs and pulls
-        const double recoCKerr  = fabs(thetaRec-expCKang);
+        const double recoCKerr = fabs(thetaRec-expCKang);
 
         richHisto1D( hid(rad,mcType,"recoCKang"), "Reconstructed CK angle | MC true photons",
                      minCkTheta[rad], maxCkTheta[rad], nBins1D() )->fill(thetaRec);
@@ -176,7 +163,7 @@ StatusCode CherenkovResMoni::execute()
         }
 
         // Get MC photon
-        const LHCb::MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(photon);
+        const auto * mcPhot = m_richRecMCTruth->trueOpticalPhoton(photon);
         if ( mcPhot )
         {
           // MC Cherenkov angles
