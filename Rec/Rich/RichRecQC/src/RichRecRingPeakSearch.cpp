@@ -25,15 +25,12 @@ RingPeakSearch::RingPeakSearch( const std::string& name,
                                 ISvcLocator* pSvcLocator )
   : HistoAlgBase ( name, pSvcLocator )
 {
-  using namespace boost::assign;
-
   setProperty( "NBins1DHistos", 50 );
 
   declareProperty( "RingLocation", m_ringLoc = "Rec/Rich/Markov/RingsIsolated",
                    "The TES location of RichRecRings" );
   declareProperty( "MaxFitVariance",
                    m_maxFitVariance = std::vector<double>(3, 100) );
-
 }
 
 // Destructor

@@ -67,19 +67,20 @@ namespace Rich
     private: // data
 
       /// Raw Buffer Decoding tool
-      const Rich::DAQ::IRawBufferToSmartIDsTool * m_decoder;
-      const Rich::ISmartIDTool * m_idTool;
+      const Rich::DAQ::IRawBufferToSmartIDsTool * m_decoder = nullptr;
+      const Rich::ISmartIDTool * m_idTool = nullptr;
 
-      mutable const Rich::IHPDOccupancyTool * m_HpdOccupancyTool;
+      mutable const Rich::IHPDOccupancyTool * m_HpdOccupancyTool = nullptr;
 
       /// Pointer to RICH system detector element
-      const DeRichSystem * m_richSys;
+      const DeRichSystem * m_richSys = nullptr;
 
       std::vector<AIDA::IProfile1D*> m_perCentHistos;
       std::vector<AIDA::IHistogram2D*> m_HpdPanelHistos;
+
       //std::vector<AIDA::IHistogram2D*> m_hitMaps;
-      AIDA::IHistogram1D* m_goodBadEvents;
-      AIDA::IProfile1D* m_thresholdHisto;
+      AIDA::IHistogram1D* m_goodBadEvents = nullptr;
+      AIDA::IProfile1D* m_thresholdHisto = nullptr;
 
       int m_operationMode; // 0=absolute, 1=relative
 
@@ -89,12 +90,12 @@ namespace Rich
       double m_relThreshold;    //< relative threshold
       double m_secondThreshold; //< lower threshold relative to higher
 
-      int m_events;           //< keep track of events
-      int m_skipEvents;       //< events to skip
+      unsigned long long m_events{0};  //< keep track of events
+      unsigned long long m_skipEvents;       //< events to skip
 
       bool m_dumpEvents;      //< dump events in histograms
-      int m_dumpedEvents;     //< dumped events counter
-      int m_maxDumpedEvents;  //< max number of dumped events
+      unsigned long long m_dumpedEvents{0};     //< dumped events counter
+      unsigned long long m_maxDumpedEvents;  //< max number of dumped events
 
       bool m_stopSequence;    //< control sequence filter (only bad events pass)
 

@@ -85,10 +85,10 @@ namespace Rich
     private:
 
       /// Raw Buffer Decoding tool
-      const Rich::DAQ::IRawBufferToSmartIDsTool * m_SmartIDDecoder;
+      const Rich::DAQ::IRawBufferToSmartIDsTool * m_SmartIDDecoder = nullptr;
 
       /// Pointer to RICH system detector element
-      const DeRichSystem * m_RichSys;
+      const DeRichSystem * m_RichSys = nullptr;
 
       ///< The TAE location(s) to monitor
       std::vector<std::string> m_taeEvents;

@@ -21,9 +21,6 @@
 // Kernel
 #include "RichRecBase/FastRingFitter.h"
 
-// boost
-#include "boost/assign/list_of.hpp"
-
 namespace Rich
 {
   namespace Rec

@@ -38,7 +38,7 @@ StatusCode ODINMoni::prebookHistograms()
 StatusCode ODINMoni::execute()
 {
   // Get the ODIN
-  LHCb::ODIN * odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
+  const auto * odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
   
   // plot of trigger types
   richHisto1D( HID("TriggerType") ) ->fill( odin->triggerType() ); 

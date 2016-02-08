@@ -111,35 +111,34 @@ StatusCode TrackSelEff::execute()
   for ( const auto & loc : trackLocs )
   {
     // Load these tracks
-    const LHCb::Tracks * trTracks = get<LHCb::Tracks>(loc);
+    const auto * trTracks = get<LHCb::Tracks>(loc);
 
     // Loop over the raw tracks
     unsigned int nGhost(0), nReal(0), nGhostR(0), nRealR(0), nTotal(0), nTotalR(0);
-    for ( LHCb::Tracks::const_iterator iT = trTracks->begin();
-          iT != trTracks->end(); ++iT )
+    for ( const auto * tk : *trTracks )
     {
       // Track OK ?
-      if ( !(*iT) ) { Warning("Null Track"); continue; }
+      if ( !tk ) { Warning("Null Track"); continue; }
       // Is the raw track selected for this monitor
-      if ( !m_trSelector->trackSelected(*iT) ) continue;
+      if ( !m_trSelector->trackSelected(tk) ) continue;
       // count all raw selected tracks
       ++nTotal;
 
       // Does this track have a RichRecTrack associated ?
-      const LHCb::RichRecTrack * rTrack = getRichTrack(*iT);
+      const auto * rTrack = getRichTrack(tk);
       if ( rTrack ) ++nTotalR;
 
       // Fill real data plots
-      fillTrackPlots( *iT, rTrack, "All/" );
+      fillTrackPlots( tk, rTrack, "All/" );
 
       // MC only plots
-      const LHCb::MCParticle * mcP = ( mcTrackOK ?
-                                       m_richRecMCTruth->mcParticle(*iT,m_mcAssocWeight) : NULL );
+      const auto * mcP = ( mcTrackOK ?
+                           m_richRecMCTruth->mcParticle(tk,m_mcAssocWeight) : nullptr );
       if ( mcTrackOK )
       {
         if ( mcP ) { ++nReal; } else { ++nGhost; }
         if ( rTrack ) { if ( mcP ) { ++nRealR; } else { ++nGhostR; } }
-        fillTrackPlots( *iT, rTrack, mcP ? "Real/" : "Ghost/" );
+        fillTrackPlots( tk, rTrack, mcP ? "Real/" : "Ghost/" );
       }
 
     } // loop over tracks
@@ -170,7 +169,7 @@ void TrackSelEff::fillTrackPlots( const LHCb::Track * track,
   const double cloneDist = track->info(LHCb::Track::CloneDist,5.5e3);
 
   // Efficiencies plots
-  const double richEff = ( rTrack != NULL ? 100.0 : 0.0 );
+  const double richEff = ( rTrack != nullptr ? 100.0 : 0.0 );
   richProfile1D( tkClass+"effVP"          ) -> fill ( track->p(),  richEff );
   richProfile1D( tkClass+"effVPt"         ) -> fill ( track->pt(), richEff );
   richProfile1D( tkClass+"effVChi2PDOF"   ) -> fill ( track->chi2PerDoF(), richEff );
@@ -179,7 +178,7 @@ void TrackSelEff::fillTrackPlots( const LHCb::Track * track,
   richProfile1D( tkClass+"effVCloneDist"  ) -> fill ( cloneDist, richEff );
 
   // plot selection variables
-  const std::string tag = ( rTrack != NULL ? tkClass+"Selected/" : tkClass+"Rejected/" );
+  const std::string tag = ( rTrack != nullptr ? tkClass+"Selected/" : tkClass+"Rejected/" );
   richHisto1D( tag+"P"          ) -> fill ( track->p()  );
   richHisto1D( tag+"Pt"         ) -> fill ( track->pt() );
   richHisto1D( tag+"Chi2PDOF"   ) -> fill ( track->chi2PerDoF() );
@@ -190,7 +189,7 @@ void TrackSelEff::fillTrackPlots( const LHCb::Track * track,
 
 const LHCb::RichRecTrack * TrackSelEff::getRichTrack( const LHCb::Track * track ) const
 {
-  const LHCb::RichRecTrack * rT = NULL;
+  const LHCb::RichRecTrack * rT = nullptr;
 
   // Check Track pointer is OK
   if ( track )

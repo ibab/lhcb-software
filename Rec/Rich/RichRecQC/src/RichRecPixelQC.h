@@ -69,7 +69,7 @@ namespace Rich
         virtual StatusCode finalize  ();    // Algorithm finalization
 
       protected:
-        
+
         /// Pre-Book all (non-MC) histograms
         virtual StatusCode prebookHistograms();
 
@@ -80,27 +80,22 @@ namespace Rich
         {
         public:
           /// Default constructor
-          MCFlags() :
-            isBkg(false),isHPDQCK(false),isGasCK(false),isN2CK(false),
-            isChargedTk(false),isChargeShare(false),isAeroFiltCK(false),isSiBackScatter(false),
-            isHPDIntReflect(false),
-            isSignal(false),isAerogelCK(false),isRich1GasCK(false),isRich2GasCK(false),
-            isRadScint(false) { }
+          MCFlags() = default;
           // data members
-          bool isBkg;           ///< Hit is background, of any sort
-          bool isHPDQCK;        ///< Hit is from CK radiation from the HPD quartz windows
-          bool isGasCK;         ///< Hit is from CK radiation from the gas volume quartz windows
-          bool isN2CK;          ///< Hit is from CK radiation from N2
-          bool isChargedTk;     ///< Hit is from a charged track hitting the HPD
-          bool isChargeShare;   ///< Hit is from charge sharing in the HPD silicon detector
-          bool isAeroFiltCK;    ///< Hit is from CK radiator in the aerogel Filter
-          bool isSiBackScatter; ///< Hit is from back-scattering from the silicon chip
-          bool isHPDIntReflect; ///< Hit is from internal reflections inside the HPD
-          bool isSignal;        ///< Hit is from (unscattered) CK radiation from one of the main radiators
-          bool isAerogelCK;     ///< Hit is from (unscattered) CK radiation from the aerogel radiator
-          bool isRich1GasCK;    ///< Hit is from (unscattered) CK radiation from the Rich1 gas radiator
-          bool isRich2GasCK;    ///< Hit is from (unscattered) CK radiation from the Rich2 gas radiator
-          bool isRadScint;       ///< Hit is from Radiator Scintillation
+          bool isBkg{false};           ///< Hit is background, of any sort
+          bool isHPDQCK{false};        ///< Hit is from CK radiation from the HPD quartz windows
+          bool isGasCK{false};         ///< Hit is from CK radiation from the gas volume quartz windows
+          bool isN2CK{false};          ///< Hit is from CK radiation from N2
+          bool isChargedTk{false};     ///< Hit is from a charged track hitting the HPD
+          bool isChargeShare{false};   ///< Hit is from charge sharing in the HPD silicon detector
+          bool isAeroFiltCK{false};    ///< Hit is from CK radiator in the aerogel Filter
+          bool isSiBackScatter{false}; ///< Hit is from back-scattering from the silicon chip
+          bool isHPDIntReflect{false}; ///< Hit is from internal reflections inside the HPD
+          bool isSignal{false};        ///< Hit is from (unscattered) CK radiation from one of the main radiators
+          bool isAerogelCK{false};     ///< Hit is from (unscattered) CK radiation from the aerogel radiator
+          bool isRich1GasCK{false};    ///< Hit is from (unscattered) CK radiation from the Rich1 gas radiator
+          bool isRich2GasCK{false};    ///< Hit is from (unscattered) CK radiation from the Rich2 gas radiator
+          bool isRadScint{false};      ///< Hit is from Radiator Scintillation
         };
 
         /// Stores tallys opf various types
@@ -121,22 +116,23 @@ namespace Rich
               nhpdintreflect    ( Rich::NRiches,        0 ),
               signal            ( Rich::NRiches,        0 ),
               radHits           ( Rich::NRadiatorTypes, 0 ),
-              radScint          ( Rich::NRiches,   0 ){}
-
+              radScint          ( Rich::NRiches,        0 ) { }
+          // count type
+          using Tally = std::vector<unsigned long long>;
           // data members
-          std::vector<unsigned int> pixels;   ///< Total number of pixels hit
-          std::vector<unsigned int> bkgs;     ///< Total number of background hits
-          std::vector<unsigned int> npdqcks;  ///< Total number of HPD quartz window CK hits
-          std::vector<unsigned int> ngasck;   ///< Total number of gas volume quartz window CK hits
-          std::vector<unsigned int> n2ck;     ///< Total number of N2 CK hits
-          std::vector<unsigned int> ntrack;   ///< Total number of charged track on HPD hits
-          std::vector<unsigned int> nchargeshare; ///< Total number of silicon charge share hits
-          std::vector<unsigned int> naerofilter; ///< Total number of aerogel filter CK hits
-          std::vector<unsigned int> nbackscatter; ///< Total number of back-scattered hits
-          std::vector<unsigned int> nhpdintreflect; ///< Total number of HPD internal reflection hits
-          std::vector<unsigned int> signal;   ///< Total number of signal hits
-          std::vector<unsigned int> radHits;  ///< Total number of signal hits for each radiator
-          std::vector<unsigned int> radScint; ///< Total number of hits from Scintillation
+          Tally pixels;   ///< Total number of pixels hit
+          Tally bkgs;     ///< Total number of background hits
+          Tally npdqcks;  ///< Total number of HPD quartz window CK hits
+          Tally ngasck;   ///< Total number of gas volume quartz window CK hits
+          Tally n2ck;     ///< Total number of N2 CK hits
+          Tally ntrack;   ///< Total number of charged track on HPD hits
+          Tally nchargeshare; ///< Total number of silicon charge share hits
+          Tally naerofilter; ///< Total number of aerogel filter CK hits
+          Tally nbackscatter; ///< Total number of back-scattered hits
+          Tally nhpdintreflect; ///< Total number of HPD internal reflection hits
+          Tally signal;   ///< Total number of signal hits
+          Tally radHits;  ///< Total number of signal hits for each radiator
+          Tally radScint; ///< Total number of hits from Scintillation
         };
 
       private: // methods
@@ -150,25 +146,25 @@ namespace Rich
       private: // data
 
         /// Pointer to RichRecMCTruthTool interface
-        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth = nullptr;
 
         /// Pointer to RichMCTruthTool
-        const Rich::MC::IMCTruthTool * m_truth;
+        const Rich::MC::IMCTruthTool * m_truth = nullptr;
 
         /// Raw Buffer Decoding tool
-        const Rich::DAQ::IRawBufferToSmartIDsTool * m_decoder;
+        const Rich::DAQ::IRawBufferToSmartIDsTool * m_decoder = nullptr;
 
         /// Pointer to RICH system detector element
-        const DeRichSystem * m_richSys;
+        const DeRichSystem * m_richSys = nullptr;
 
         // tallies
 
         Tallys m_recoTally; ///< tally for reconstructed pixels
         Tallys m_rawTally;  ///< tally for all raw pixels
 
-        unsigned int m_nEvts; ///< Total number of events processed
+        unsigned long long m_nEvts{0}; ///< Total number of events processed
 
-        unsigned int m_maxPixels; ///< Maximum pixels 
+        unsigned int m_maxPixels; ///< Maximum pixels
 
       };
 

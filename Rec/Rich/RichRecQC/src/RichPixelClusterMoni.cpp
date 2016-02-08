@@ -22,8 +22,7 @@ DECLARE_ALGORITHM_FACTORY( PixelClusterMoni )
 // Standard constructor, initializes variables
 PixelClusterMoni::PixelClusterMoni( const std::string& name,
                                     ISvcLocator* pSvcLocator )
-  : HistoAlgBase ( name, pSvcLocator )
-{ }
+  : HistoAlgBase ( name, pSvcLocator ) { }
 
 // Destructor
 PixelClusterMoni::~PixelClusterMoni() { }
@@ -44,10 +43,9 @@ StatusCode PixelClusterMoni::prebookHistograms()
 {
 
   // Pre book detector level histograms
-  for ( Rich::Detectors::const_iterator rich = Rich::detectors().begin();
-        rich != Rich::detectors().end(); ++rich )
+  for ( const auto rich : Rich::detectors() )
   { 
-    richHisto1D( Rich::HistogramID( "clusterSize", *rich ), 
+    richHisto1D( Rich::HistogramID( "clusterSize", rich ), 
                  "Pixel Cluster Sizes",
                  -0.5, 100.5, 101 );
   }
@@ -66,21 +64,18 @@ StatusCode PixelClusterMoni::execute()
   const Rich::HistoID hid;
 
   // Loop over pixels
-  for ( LHCb::RichRecPixels::const_iterator iP = richPixels()->begin();
-        iP != richPixels()->end(); ++iP )
+  for ( const auto * P : *richPixels() )
   {
-
     // Which detector
-    const Rich::DetectorType rich = (*iP)->detector();
+    const auto rich = P->detector();
 
     // Associated Cluster
-    const Rich::HPDPixelCluster & cluster = (*iP)->associatedCluster();
+    const auto & cluster = P->associatedCluster();
     if ( 0 == cluster.size() ) { Warning("Empty cluster !").ignore(); continue; }
 
     // cluster size histogram
     const double weight = 1.0 / (double)cluster.size(); // since will be filled size() times ...
-    richHisto1D( Rich::HistogramID("clusterSize",rich) ) -> fill( cluster.size(), weight );
-    
+    richHisto1D( Rich::HistogramID("clusterSize",rich) ) -> fill( cluster.size(), weight ); 
   }
 
   return StatusCode::SUCCESS;

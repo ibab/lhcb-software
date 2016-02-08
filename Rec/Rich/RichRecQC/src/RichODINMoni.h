@@ -4,9 +4,6 @@
  *
  *  Header file for algorithm class : Rich::DAQ::ODINMoni
  *
- *  CVS Log :-
- *  $Id: RichODINMoni.h,v 1.6 2009-08-05 23:14:59 jonrob Exp $
- *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
@@ -58,8 +55,6 @@ namespace Rich
 
       /// Pre-Book all (non-MC) histograms
       virtual StatusCode prebookHistograms();
-
-    private: // data
 
     };
 

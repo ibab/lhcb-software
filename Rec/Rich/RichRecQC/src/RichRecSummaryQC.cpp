@@ -55,7 +55,7 @@ StatusCode SummaryQC::initialize()
 // Main execution
 StatusCode SummaryQC::execute()
 {
-  debug() << "Execute" << endmsg;
+  _ri_debug << "Execute" << endmsg;
 
   // Try and load the Summary data
   const auto * sumTracks = getIfExists<LHCb::RichSummaryTracks>(m_summaryLoc);
@@ -139,9 +139,8 @@ StatusCode SummaryQC::execute()
     // update running tallies
   ++m_nEvts;
   m_nTracks += nTracks;
-  for ( int irad = 0; irad < Rich::NRadiatorTypes; ++irad )
+  for ( const auto rad : Rich::radiators() )
   {
-    const Rich::RadiatorType rad = (Rich::RadiatorType)irad;
     m_nSegments[rad]    += nSegments[rad];
     m_nSegmentsMC[rad]  += nSegmentsMC[rad];
     m_nPhotons[rad]     += nPhotons[rad];

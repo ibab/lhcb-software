@@ -81,7 +81,7 @@ StatusCode TracklessRingMoni::execute()
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // Retrieve rings
-  const LHCb::RichRecRings * rings = getIfExists<LHCb::RichRecRings>( m_ringLoc );
+  const auto * rings = getIfExists<LHCb::RichRecRings>( m_ringLoc );
   if ( !rings ) 
   {
     return Warning( "No rings found at "+m_ringLoc, StatusCode::SUCCESS );
@@ -93,26 +93,26 @@ StatusCode TracklessRingMoni::execute()
 
   // loop
   Rich::Map<Rich::RadiatorType,unsigned int> ringsPerRad;
-  for ( LHCb::RichRecRing * ring : *rings )
+  for ( auto * ring : *rings )
   {
     // Radiator info
-    const Rich::RadiatorType rad = ring->radiator();
+    const auto rad = ring->radiator();
 
     // Ring knows if it is associated or not
-    LHCb::RichRecSegment * nearestSeg = ring->richRecSegment();
+    auto * nearestSeg = ring->richRecSegment();
 
     // Is MC available
     const bool mcTrackOK = richRecMCTool()->trackToMCPAvailable();
     // Get the Cherenkov angle for the nearest segment and ring radius
     Rich::ParticleIDType mcType = Pion;
     bool hasTrackMC = false;
-    const LHCb::MCParticle * segmentMCP(NULL);
+    const LHCb::MCParticle * segmentMCP(nullptr);
     if ( mcTrackOK )
     {
       // True particle
       segmentMCP = richRecMCTool()->mcParticle(nearestSeg);
       mcType     = richRecMCTool()->mcParticleType(nearestSeg);
-      hasTrackMC  = ( segmentMCP != NULL );
+      hasTrackMC  = ( segmentMCP != nullptr );
       if ( Rich::Unknown  == mcType ) mcType = Pion;
       if ( Rich::Electron == mcType ) continue; // skip electrons which are reconstructed badly.
     }
@@ -161,7 +161,7 @@ StatusCode TracklessRingMoni::execute()
     if ( richRecMCTool()->pixelMCHistoryAvailable() )
     {
       const IMCTruthTool::MCPartAssocInfo mcinfo = richRecMCTool()->mcParticle(ring,m_mcAssocFrac);
-      if ( mcinfo.mcParticle != NULL )
+      if ( mcinfo.mcParticle != nullptr )
       {
         // refitted radius
         if ( refitOK )

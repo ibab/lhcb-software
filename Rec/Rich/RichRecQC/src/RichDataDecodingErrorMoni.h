@@ -82,13 +82,13 @@ namespace Rich
     private: // data
 
       /// Raw Buffer Decoding tool
-      const Rich::DAQ::IRawBufferToSmartIDsTool * m_decoder;
+      const Rich::DAQ::IRawBufferToSmartIDsTool * m_decoder = nullptr;
 
       /// Pointer to RICH system detector element
-      const DeRichSystem * m_RichSys;
+      const DeRichSystem * m_RichSys = nullptr;
 
       /// Pointer to the ODIN data object
-      const LHCb::ODIN * m_odin;
+      const LHCb::ODIN * m_odin = nullptr;
 
     };
 

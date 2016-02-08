@@ -78,10 +78,10 @@ namespace Rich
     private: // data
 
       /// Raw Buffer Decoding tool
-      const Rich::DAQ::IRawBufferToSmartIDsTool * m_decoder;
+      const Rich::DAQ::IRawBufferToSmartIDsTool * m_decoder = nullptr;
 
       /// Pointer to RICH system detector element
-      const DeRichSystem * m_richSys;
+      const DeRichSystem * m_richSys = nullptr;
 
       /// Flag to turn on the creation of individual PD # hit plots
       bool m_pdNumHits;

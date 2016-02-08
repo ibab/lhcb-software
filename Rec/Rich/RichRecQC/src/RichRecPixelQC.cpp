@@ -22,11 +22,7 @@ DECLARE_ALGORITHM_FACTORY( PixelQC )
 // Standard constructor, initializes variables
 PixelQC::PixelQC( const std::string& name,
                   ISvcLocator* pSvcLocator)
-  : HistoAlgBase        ( name, pSvcLocator ),
-    m_richRecMCTruth    ( NULL ),
-    m_truth             ( NULL ),
-    m_richSys           ( NULL ),
-    m_nEvts             ( 0    ) 
+  : HistoAlgBase( name, pSvcLocator )
 {
   declareProperty( "MaxPixels", m_maxPixels = 10000 );
 }
@@ -43,8 +39,8 @@ StatusCode PixelQC::initialize()
 
   // Acquire instances of tools
   acquireTool( "RichRecMCTruthTool", m_richRecMCTruth   );
-  acquireTool( "RichMCTruthTool",    m_truth,   NULL, true );
-  acquireTool( "RichSmartIDDecoder", m_decoder, NULL, true );
+  acquireTool( "RichMCTruthTool",    m_truth,   nullptr, true );
+  acquireTool( "RichSmartIDDecoder", m_decoder, nullptr, true );
 
   // RichDet
   m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
@@ -55,15 +51,14 @@ StatusCode PixelQC::initialize()
 StatusCode PixelQC::prebookHistograms()
 {
 
-  for ( Rich::Detectors::const_iterator rich = Rich::detectors().begin();
-        rich != Rich::detectors().end(); ++rich )
+  for ( const auto rich : Rich::detectors() )
   {
-    richHisto1D( Rich::HistogramID("nTotalPixsPerHPD",*rich),
+    richHisto1D( Rich::HistogramID("nTotalPixsPerHPD",rich),
                  "Average overall HPD occupancy (nHits>0)",
                  0.5, 150.5, 150 );
-    richHisto1D( Rich::HistogramID("nTotalPixs",*rich), 
+    richHisto1D( Rich::HistogramID("nTotalPixs",rich), 
                  "Overall occupancy (nHits>0)", 0, m_maxPixels, nBins1D() );
-    richHisto1D( Rich::HistogramID("nActiveHPDs",*rich), 
+    richHisto1D( Rich::HistogramID("nActiveHPDs",rich), 
                  "# Active HPDs (nHits>0)", -0.5, 300.5, 301 );
   }
 
@@ -82,8 +77,8 @@ StatusCode PixelQC::execute()
     const StatusCode sc = pixelCreator()->newPixels();
     if ( sc.isFailure() )
     { return Error( "Problem creating RichRecPixels", sc ); }
-    debug() << "No Pixels found : Created "
-            << richPixels()->size() << " RichRecPixels" << endmsg;
+    _ri_debug << "No Pixels found : Created "
+              << richPixels()->size() << " RichRecPixels" << endmsg;
   }
 
   // count events
@@ -93,45 +88,41 @@ StatusCode PixelQC::execute()
   const Rich::HistoID hid;
 
   // Count pixels, signal pixels and active HPDs per RICH
-  std::vector<unsigned int> pixels ( Rich::NRiches, 0 );
-  std::vector<unsigned int> signal ( Rich::NRiches, 0 );
-  std::vector<unsigned int> hpds   ( Rich::NRiches, 0 );
+  Tallys::Tally pixels ( Rich::NRiches, 0 );
+  Tallys::Tally signal ( Rich::NRiches, 0 );
+  Tallys::Tally hpds   ( Rich::NRiches, 0 );
 
   // Obtain data from raw decoding
-  const DAQ::L1Map & data = m_decoder->allRichSmartIDs();
+  const auto & data = m_decoder->allRichSmartIDs();
 
   // Loop over L1 boards
-  for ( Rich::DAQ::L1Map::const_iterator iL1 = data.begin();
-        iL1 != data.end(); ++iL1 )
+  for ( const auto & L1 : data )
   {
     // loop over ingresses for this L1 board
-    for ( Rich::DAQ::IngressMap::const_iterator iIn = (*iL1).second.begin();
-          iIn != (*iL1).second.end(); ++iIn )
+    for ( const auto & In : L1.second )
     {
       // Loop over HPDs in this ingress
-      for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
-            iHPD != (*iIn).second.hpdData().end(); ++iHPD )
+      for ( const auto & HPD : In.second.hpdData() )
       {
 
         // HPD ID
-        const LHCb::RichSmartID hpd = (*iHPD).second.hpdID();
-        if ( hpd.isValid() && !(*iHPD).second.header().inhibit() )
+        const auto hpd = HPD.second.hpdID();
+        if ( hpd.isValid() && !HPD.second.header().inhibit() )
         {
 
           // Vector of SmartIDs
-          const LHCb::RichSmartID::Vector & rawIDs = (*iHPD).second.smartIDs();
+          const auto & rawIDs = HPD.second.smartIDs();
           // RICH
-          const Rich::DetectorType rich = hpd.rich();
+          const auto rich = hpd.rich();
 
           // Count active HPDs (at least 1 hit)
           if ( !rawIDs.empty() ) { ++hpds[rich]; }
 
           // Loop over raw RichSmartIDs
-          for ( LHCb::RichSmartID::Vector::const_iterator iR = rawIDs.begin();
-                iR != rawIDs.end(); ++iR )
+          for ( const auto & R : rawIDs )
           {
             // flags
-            const MCFlags flags = getHistories( *iR );
+            const MCFlags flags = getHistories(R);
             // count
             ++m_rawTally.pixels[rich];
             if ( flags.isBkg           ) { ++m_rawTally.bkgs[rich]; }
@@ -151,19 +142,16 @@ StatusCode PixelQC::execute()
           } // raw channel ids
 
           // Get the reconstructed pixels for this HPD
-          IPixelCreator::PixelRange range = pixelCreator()->range(hpd);
+          auto pixelRange = pixelCreator()->range(hpd);
           unsigned int nHPDHits(0), nHPDSignalHits(0);
           // loop over reconstructed pixels
-          for ( IPixelCreator::PixelRange::const_iterator iPixel = range.begin();
-                iPixel != range.end(); ++iPixel )
+          for ( const auto * pixel : pixelRange )
           {
             // for each pixel loop over the smartIDs
-            for ( LHCb::RichSmartID::Vector::const_iterator iS = 
-                    (*iPixel)->hpdPixelCluster().smartIDs().begin();
-                  iS != (*iPixel)->hpdPixelCluster().smartIDs().end(); ++iS )
+            for ( const auto & S : pixel->hpdPixelCluster().smartIDs() )
             {
               // flags
-              const MCFlags flags = getHistories( *iS );
+              const MCFlags flags = getHistories(S);
               // count
               ++nHPDHits;
               ++pixels[rich];
@@ -229,28 +217,27 @@ PixelQC::MCFlags PixelQC::getHistories( const LHCb::RichSmartID id ) const
   Summaries summaries;
   m_truth->getMcHistories( id, summaries );
   // loop over summaries and set various flags
-  for ( Summaries::const_iterator iS = summaries.begin();
-        iS != summaries.end(); ++iS )
+  for ( const auto * S : summaries )
   {
-    if ( (*iS)->history().isBackground() )
+    if ( S->history().isBackground() )
     {
       flags.isBkg = true;
-      if ( (*iS)->history().hpdQuartzCK()      ) { flags.isHPDQCK        = true; }
-      if ( (*iS)->history().gasQuartzCK()      ) { flags.isGasCK         = true; }
-      if ( (*iS)->history().nitrogenCK()       ) { flags.isN2CK          = true; }
-      if ( (*iS)->history().chargedTrack()     ) { flags.isChargedTk     = true; }
-      if ( (*iS)->history().chargeShareHit()   ) { flags.isChargeShare   = true; }
-      if ( (*iS)->history().aeroFilterCK()     ) { flags.isAeroFiltCK    = true; }
-      if ( (*iS)->history().hpdSiBackscatter() ) { flags.isSiBackScatter = true; }
-      if ( (*iS)->history().hpdReflection()    ) { flags.isHPDIntReflect = true; }
-      if ( (*iS)->history().radScintillation() ) { flags.isRadScint      = true; }
+      if ( S->history().hpdQuartzCK()      ) { flags.isHPDQCK        = true; }
+      if ( S->history().gasQuartzCK()      ) { flags.isGasCK         = true; }
+      if ( S->history().nitrogenCK()       ) { flags.isN2CK          = true; }
+      if ( S->history().chargedTrack()     ) { flags.isChargedTk     = true; }
+      if ( S->history().chargeShareHit()   ) { flags.isChargeShare   = true; }
+      if ( S->history().aeroFilterCK()     ) { flags.isAeroFiltCK    = true; }
+      if ( S->history().hpdSiBackscatter() ) { flags.isSiBackScatter = true; }
+      if ( S->history().hpdReflection()    ) { flags.isHPDIntReflect = true; }
+      if ( S->history().radScintillation() ) { flags.isRadScint      = true; }
     }
     else
     {
       flags.isSignal = true;
-      if ( (*iS)->history().aerogelHit()   ) { flags.isAerogelCK  = true; }
-      if ( (*iS)->history().c4f10Hit()     ) { flags.isRich1GasCK = true; }
-      if ( (*iS)->history().cf4Hit()       ) { flags.isRich2GasCK = true; }
+      if ( S->history().aerogelHit()   ) { flags.isAerogelCK  = true; }
+      if ( S->history().c4f10Hit()     ) { flags.isRich1GasCK = true; }
+      if ( S->history().cf4Hit()       ) { flags.isRich2GasCK = true; }
     }
   }
 

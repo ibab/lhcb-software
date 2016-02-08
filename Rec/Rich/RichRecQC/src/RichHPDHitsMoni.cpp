@@ -25,9 +25,7 @@ DECLARE_ALGORITHM_FACTORY( HPDHitsMoni )
 // Standard constructor, initializes variables
   HPDHitsMoni::HPDHitsMoni( const std::string& name,
                             ISvcLocator* pSvcLocator)
-    : HistoAlgBase ( name, pSvcLocator ),
-      m_decoder    ( NULL ),
-      m_richSys    ( NULL )
+    : HistoAlgBase ( name, pSvcLocator )
 {
   declareProperty( "EnablePDNumHits", m_pdNumHits = true );
   declareProperty( "EnablePDHitMaps", m_pdHitMaps = true );
@@ -44,7 +42,7 @@ StatusCode HPDHitsMoni::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichSmartIDDecoder", m_decoder, NULL, true );
+  acquireTool( "RichSmartIDDecoder", m_decoder, nullptr, true );
 
   // RichDet
   m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
@@ -199,7 +197,7 @@ void HPDHitsMoni::initMap( HPDCountMap & hpdMap )
   // clear the map
   hpdMap.clear();
   // get list of all active HPDs
-  const LHCb::RichSmartID::Vector & hpds = m_richSys->activePDRichSmartIDs();
+  const auto & hpds = m_richSys->activePDRichSmartIDs();
   // Loop over all HPDs and (re)set count to zero
   for ( const auto& hpd : hpds ) { hpdMap[hpd] = 0; }
 }

@@ -31,12 +31,7 @@ DECLARE_ALGORITHM_FACTORY( HPDFlashMoni )
 // Standard constructor, initializes variables
   HPDFlashMoni::HPDFlashMoni( const std::string& name,
                               ISvcLocator* pSvcLocator)
-    : HistoAlgBase ( name, pSvcLocator ),
-      m_decoder         ( NULL ),
-      m_HpdOccupancyTool( NULL ),
-      m_richSys         ( NULL ),
-      m_events          (  0   ),
-      m_dumpedEvents    (  0   )
+    : HistoAlgBase ( name, pSvcLocator )
 {
   // properties
   declareProperty( "FixedUpperThreshold",    m_fixedUpperThreshold  = 400 );
@@ -64,8 +59,8 @@ StatusCode HPDFlashMoni::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichSmartIDDecoder", m_decoder, NULL, true );
-  acquireTool( "RichSmartIDTool",    m_idTool,  NULL, true );
+  acquireTool( "RichSmartIDDecoder", m_decoder, nullptr, true );
+  acquireTool( "RichSmartIDTool",    m_idTool,  nullptr, true );
 
   m_HpdOccupancyTool =
     tool<IHPDOccupancyTool>("Rich::HPDOccupancyTool","HPDOccupancy",this);
@@ -129,39 +124,33 @@ StatusCode HPDFlashMoni::execute()
   m_events++;
   if ( m_events < m_skipEvents ) return StatusCode::SUCCESS;
 
-  int goodEvent(0);
+  unsigned int goodEvent(0);
   std::vector<int> aboveThreshold1(4,0);
   std::vector<int> aboveThreshold2(4,0);
   std::vector<LHCb::RichSmartID::Vector> hpdIDs(4);
 
   // Obtain RichSmartIDs from raw decoding
-  const DAQ::L1Map & data = m_decoder->allRichSmartIDs();
+  const auto & data = m_decoder->allRichSmartIDs();
 
   // Loop over L1 boards
-  for ( Rich::DAQ::L1Map::const_iterator iL1 = data.begin();
-        iL1 != data.end(); ++iL1 )
+  for ( const auto & L1 : data )
   {
     // loop over ingresses for this L1 board
-    for ( Rich::DAQ::IngressMap::const_iterator iIn = (*iL1).second.begin();
-          iIn != (*iL1).second.end(); ++iIn )
+    for ( const auto & In : L1.second )
     {
       // Loop over HPDs in this ingress
-      for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
-            iHPD != (*iIn).second.hpdData().end(); ++iHPD )
+      for ( const auto & HPD : In.second.hpdData() )
       {
         // Valid HPD ID
-        if ( !(*iHPD).second.hpdID().isValid() ) { continue; }
+        if ( !HPD.second.hpdID().isValid() ) { continue; }
         // inhibited HPD ?
-        if ( (*iHPD).second.header().inhibit() ) { continue; }
+        if ( HPD.second.header().inhibit() ) { continue; }
 
         // HPD info
-        const LHCb::RichSmartID hpd     = (*iHPD).second.hpdID();
-        //const DAQ::HPDHardwareID hardID = m_richSys->hardwareID(hpd);
-        //const DAQ::Level0ID l0ID        = m_richSys->level0ID(hpd);
-        //const DAQ::HPDCopyNumber copyN  = m_richSys->copyNumber(hpd);
+        const auto hpd = HPD.second.hpdID();
 
         // Vector of SmartIDs
-        const LHCb::RichSmartID::Vector & rawIDs = (*iHPD).second.smartIDs();
+        const auto & rawIDs = HPD.second.smartIDs();
         const int nHits = rawIDs.size();
         const int panelIndex = hpd.rich()*2+hpd.panel();
 

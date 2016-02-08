@@ -21,9 +21,7 @@ using namespace Rich::DAQ;
 //=============================================================================
 RawDataSize::RawDataSize( const std::string& name,
                           ISvcLocator* pSvcLocator)
-  : HistoAlgBase       ( name, pSvcLocator ),
-    m_SmartIDDecoder   ( NULL  ),
-    m_RichSys          ( NULL  )
+  : HistoAlgBase( name, pSvcLocator )
 {
   declareProperty( "TAEEvents",                  m_taeEvents              = {""}  );
   declareProperty( "FillDetailedL1Plots",        m_detailedL1Plots        = true  );
@@ -59,8 +57,8 @@ StatusCode RawDataSize::initialize()
 
 StatusCode RawDataSize::prebookHistograms()
 {
-  const unsigned int nL1sMax = m_RichSys->level1HardwareIDs().size();
-  const unsigned int nHPDs   = m_RichSys->nPDs();
+  const auto nL1sMax = m_RichSys->level1HardwareIDs().size();
+  const auto nHPDs   = m_RichSys->nPDs();
 
   // # Headers per L1 board
   richProfile1D( HID("L1s/HeadersVL1CopyNumber"),
@@ -98,7 +96,7 @@ void RawDataSize::initHPDMap( HPDWordMap & hpdMap )
   // clear the map
   hpdMap.clear();
   // get list of all HPDs
-  const LHCb::RichSmartID::Vector & hpds = m_RichSys->allPDRichSmartIDs();
+  const auto & hpds = m_RichSys->allPDRichSmartIDs();
   // Loop over all HPDs and (re)set count to zero
   for ( const auto& hpd : hpds ) { hpdMap[hpd] = 0; }
 }
@@ -139,7 +137,7 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
   if ( rawEvent )
   {
     // Get the banks for the Rich
-    const LHCb::RawBank::Vector & richBanks = rawEvent->banks( LHCb::RawBank::Rich );
+    const auto & richBanks = rawEvent->banks( LHCb::RawBank::Rich );
 
     // Loop over data banks
     for ( const auto* bank : richBanks )
@@ -150,7 +148,7 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
     } // raw banks
 
     // get the decoded data for this tae event
-    const Rich::DAQ::L1Map & l1Map = m_SmartIDDecoder->allRichSmartIDs(taeEvent);
+    const auto & l1Map = m_SmartIDDecoder->allRichSmartIDs(taeEvent);
 
     // HPD word counts
     HPDWordMap hpdWordMap;
@@ -160,20 +158,20 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
     // loop over decoded data
     for ( const auto& l1Data : l1Map )
     {
-      const Rich::DAQ::Level1HardwareID l1HardID = l1Data.first;
-      const Rich::DAQ::Level1CopyNumber l1CopyN  = m_RichSys->copyNumber(l1HardID);
-      const Rich::DAQ::IngressMap & ingressMap   = l1Data.second;
+      const auto l1HardID     = l1Data.first;
+      const auto l1CopyN      = m_RichSys->copyNumber(l1HardID);
+      const auto & ingressMap = l1Data.second;
 
       // Number words for this L1 board
       // Start with 1 word per HPD ingress header
-      unsigned int nL1HeaderWords = ingressMap.size();
-      unsigned int nL1Words       = nL1HeaderWords;
+      auto nL1HeaderWords = ingressMap.size();
+      auto nL1Words       = nL1HeaderWords;
 
       for ( const auto& ingress : ingressMap )
       {
-        const Rich::DAQ::IngressInfo & ingressInfo = ingress.second;
-        const Rich::DAQ::HPDMap           & hpdMap = ingressInfo.hpdData();
-        const Rich::DAQ::L1IngressID ingressID = ingressInfo.ingressHeader().ingressID();
+        const auto & ingressInfo = ingress.second;
+        const auto & hpdMap      = ingressInfo.hpdData();
+        const auto ingressID     = ingressInfo.ingressHeader().ingressID();
 
         // Number words for this L1 ingress
         // Start with 1 for the header
@@ -181,15 +179,15 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
 
         for ( const auto& hpd : hpdMap )
         {
-          const Rich::DAQ::HPDInfo & hpdInfo           = hpd.second;
-          const LHCb::RichSmartID  & hpdID             = hpdInfo.hpdID();
-          const Rich::DAQ::HPDInfo::Header & hpdHeader = hpdInfo.header();
-          const Rich::DAQ::HPDInfo::Footer & hpdFooter = hpdInfo.footer();
+          const auto & hpdInfo   = hpd.second;
+          const auto & hpdID     = hpdInfo.hpdID();
+          const auto & hpdHeader = hpdInfo.header();
+          const auto & hpdFooter = hpdInfo.footer();
 
           // header+footer words for this HPD
-          const unsigned int nHPDHeaderwords = ( hpdHeader.nHeaderWords() +
-                                                 hpdFooter.nFooterWords() );
-          unsigned int nHPDwords = nHPDHeaderwords;
+          const auto nHPDHeaderwords = ( hpdHeader.nHeaderWords() +
+                                         hpdFooter.nFooterWords() );
+          auto nHPDwords = nHPDHeaderwords;
 
           // count data words only for valid HPD data blocks
           const bool hpdOK = !hpdHeader.inhibit() && hpdID.isValid();
@@ -214,8 +212,8 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
         // Fill detailed plots
         if ( UNLIKELY(m_detailedL1IngressPlots) )
         {
-          const Rich::DAQ::Level1LogicalID l1LogID = m_RichSys->level1LogicalID(l1HardID);
-          const Rich::DetectorType rich            = m_RichSys->richDetector(l1HardID);
+          const auto l1LogID = m_RichSys->level1LogicalID(l1HardID);
+          const auto rich    = m_RichSys->richDetector(l1HardID);
           std::ostringstream ID, title;
           ID << "L1s/" << rich
              << "/L1-HardID" << l1HardID << "LogID" << l1LogID << "Ingress" << ingressID;
@@ -232,8 +230,8 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
       richProfile1D( HID("L1s/HeadersVL1CopyNumber") ) -> fill ( l1CopyN.data(), nL1HeaderWords );
       if ( m_detailedL1Plots )
       {
-        const Rich::DAQ::Level1LogicalID l1LogID = m_RichSys->level1LogicalID(l1HardID);
-        const Rich::DetectorType rich            = m_RichSys->richDetector(l1HardID);
+        const auto l1LogID = m_RichSys->level1LogicalID(l1HardID);
+        const auto rich    = m_RichSys->richDetector(l1HardID);
         std::ostringstream ID, title;
         ID << "L1s/" << rich
            << "/L1-HardID" << l1HardID << "LogID" << l1LogID;
@@ -262,14 +260,14 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
         // use a try block in case of DB lookup errors
         try
         {
-          const Rich::DAQ::HPDCopyNumber copyN = m_RichSys->copyNumber(hpd.first);
+          const auto copyN = m_RichSys->copyNumber(hpd.first);
           // fill plots
           richProfile1D(HID("hpds/SizeVHPDCopyNumber"))->fill(copyN.data(),hpd.second);
           if ( UNLIKELY(m_detailedHPDPlots) )
           {
-            const Rich::DAQ::HPDHardwareID hpdHardID = m_RichSys->hardwareID(hpd.first);
-            const Rich::DAQ::Level0ID l0ID           = m_RichSys->level0ID(hpd.first);
-            const Rich::DetectorType rich            = hpd.first.rich();
+            const auto hpdHardID = m_RichSys->hardwareID(hpd.first);
+            const auto l0ID      = m_RichSys->level0ID(hpd.first);
+            const auto rich      = hpd.first.rich();
             std::ostringstream title, ID;
             title << "# Words (32bit) | "
                   << hpd.first << " L0ID=" << l0ID << " hardID=" << hpdHardID;
@@ -323,16 +321,16 @@ void RawDataSize::writeToTextFile() const
 
         // Get HPD data
         const Rich::DAQ::HPDCopyNumber hpdCopyN(bin-1); // convert bin number to copy number
-        const LHCb::RichSmartID hpdSmartID         = m_RichSys->richSmartID(hpdCopyN);
-        const Rich::DAQ::HPDHardwareID hpdHardID   = m_RichSys->hardwareID(hpdSmartID);
-        const Rich::DAQ::Level0ID l0ID             = m_RichSys->level0ID(hpdSmartID);
-        const Rich::DAQ::Level1HardwareID l1HardID = m_RichSys->level1HardwareID(l0ID);
-        const Rich::DAQ::Level1LogicalID  l1LogID  = m_RichSys->level1LogicalID(l1HardID);
-        const Rich::DAQ::Level1Input l1Input       = m_RichSys->level1InputNum(hpdSmartID);
+        const auto hpdSmartID = m_RichSys->richSmartID(hpdCopyN);
+        const auto hpdHardID  = m_RichSys->hardwareID(hpdSmartID);
+        const auto l0ID       = m_RichSys->level0ID(hpdSmartID);
+        const auto l1HardID   = m_RichSys->level1HardwareID(l0ID);
+        const auto l1LogID    = m_RichSys->level1LogicalID(l1HardID);
+        const auto l1Input    = m_RichSys->level1InputNum(hpdSmartID);
 
         // HPD occ data from histogram
-        const double hpdOcc    ( hist->GetBinContent(bin) );
-        const double hpdOccErr ( hist->GetBinError(bin)   );
+        const auto hpdOcc    ( hist->GetBinContent(bin) );
+        const auto hpdOccErr ( hist->GetBinError(bin)   );
 
         // write data to file
         file << hpdCopyN.data() << " "

@@ -20,13 +20,9 @@ using namespace Rich::DAQ;
 DECLARE_ALGORITHM_FACTORY( DataDecodingErrorMoni )
 
 // Standard constructor, initializes variables
-  DataDecodingErrorMoni::DataDecodingErrorMoni( const std::string& name,
-                                                ISvcLocator* pSvcLocator )
-    : HistoAlgBase ( name, pSvcLocator ),
-      m_decoder    ( NULL ),
-      m_RichSys    ( NULL ),
-      m_odin       ( NULL )
-{ }
+DataDecodingErrorMoni::DataDecodingErrorMoni( const std::string& name,
+                                              ISvcLocator* pSvcLocator )
+  : HistoAlgBase ( name, pSvcLocator ) { }
 
 // Destructor
 DataDecodingErrorMoni::~DataDecodingErrorMoni() { }
@@ -39,7 +35,7 @@ StatusCode DataDecodingErrorMoni::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichSmartIDDecoder", m_decoder, NULL, true );
+  acquireTool( "RichSmartIDDecoder", m_decoder, nullptr, true );
 
   // RichDet
   m_RichSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
@@ -111,7 +107,7 @@ StatusCode DataDecodingErrorMoni::execute()
 AIDA::IProfile1D *
 DataDecodingErrorMoni::getHisto( const int l1ID )
 {
-  AIDA::IProfile1D * histo(NULL);
+  AIDA::IProfile1D * histo(nullptr);
   if ( l1ID < 0 )
   {
     histo = richProfile1D( HID("decodingErrors") );
@@ -136,7 +132,7 @@ DataDecodingErrorMoni::makePlots( const Rich::DAQ::IngressMap & inMap,
 
   // Get the Histos as needed
   AIDA::IProfile1D   * h1D = getHisto(l1ID);
-  AIDA::IHistogram2D * h2D = ( l1ID == -1 ? NULL :
+  AIDA::IHistogram2D * h2D = ( l1ID == -1 ? nullptr :
                                richHisto2D( HID("decodingErrorsByBoard") ) );
 
   // Get L1 Copy Number

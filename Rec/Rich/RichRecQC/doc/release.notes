@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2016-02-08 - Chris Jones
+ - C++11 clean up of the remaining monitors in the package not already updated.
+
 ! 2016-01-28 - Chris Jones
  - Fix RichPIDQC to remove hard coded assumptions on the number of PID types
    (was 6). This broke when deuteron was added as an option. Now taken (as

@@ -25,8 +25,6 @@ DECLARE_ALGORITHM_FACTORY( DataDBCheck )
 DataDBCheck::DataDBCheck( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : Rich::HistoAlgBase ( name , pSvcLocator ),
-    m_SmartIDDecoder   ( NULL  ),
-    m_RichSys          ( NULL  ),
     m_taeEvents        ( 1, "" )
 {
   declareProperty( "RawEventLocations", m_taeEvents );
@@ -47,7 +45,7 @@ StatusCode DataDBCheck::initialize()
   if ( sc.isFailure() ) return sc;
 
   // get tools
-  acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, NULL, true );
+  acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, nullptr, true );
 
   // RichDet
   m_RichSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
@@ -61,32 +59,29 @@ StatusCode DataDBCheck::initialize()
 StatusCode DataDBCheck::execute()
 {
   // get the raw data
-  const L1Map & l1Map = m_SmartIDDecoder->allRichSmartIDs(m_taeEvents);
+  const auto & l1Map = m_SmartIDDecoder->allRichSmartIDs(m_taeEvents);
 
   L0IDInfoCount l0Count;
 
   // Loop over data
-  for ( L1Map::const_iterator iL1Map = l1Map.begin();
-        iL1Map != l1Map.end(); ++iL1Map )
+  for ( const auto & L1 : l1Map )
   {
-    const Level1HardwareID & l1HardID = iL1Map->first;
-    const Level1LogicalID   l1LogID   = m_RichSys->level1LogicalID(l1HardID);
-    const IngressMap & ingressMap     = iL1Map->second;
-    for ( IngressMap::const_iterator iIngressMap = ingressMap.begin();
-          iIngressMap != ingressMap.end(); ++iIngressMap )
+    const auto & l1HardID   = L1.first;
+    const auto   l1LogID    = m_RichSys->level1LogicalID(l1HardID);
+    const auto & ingressMap = L1.second;
+    for ( const auto & In : ingressMap )
     {
-      const L1IngressID & l1IngressID = iIngressMap->first;
-      const IngressInfo & ingressInfo = iIngressMap->second;
-      const HPDMap & hpdMap = ingressInfo.hpdData();
-      for ( HPDMap::const_iterator iHPDMap = hpdMap.begin();
-            iHPDMap != hpdMap.end(); ++iHPDMap )
+      const auto & l1IngressID = In.first;
+      const auto & ingressInfo = In.second;
+      const auto & hpdMap      = ingressInfo.hpdData();
+      for ( const auto & HPD : hpdMap )
       {
-        const Level1Input & l1Input       = iHPDMap->first;
-        const HPDInfo & hpdInfo           = iHPDMap->second;
-        const LHCb::RichSmartID  & hpdID  = hpdInfo.hpdID();
-        const HPDInfo::Header & hpdHeader = hpdInfo.header();
-        const Level0ID l0ID               = hpdHeader.l0ID();  
-        const Rich::DetectorType  rich    = hpdID.rich();
+        const auto & l1Input   = HPD.first;
+        const auto & hpdInfo   = HPD.second;
+        const auto & hpdID     = hpdInfo.hpdID();
+        const auto & hpdHeader = hpdInfo.header();
+        const auto   l0ID      = hpdHeader.l0ID();  
+        const auto   rich      = hpdID.rich();
 
         // Only do the DB checks on valid data
         if ( hpdHeader.inhibit() || !hpdID.isValid() ) continue;
@@ -96,10 +91,10 @@ StatusCode DataDBCheck::execute()
         {
 
           // look up information from DB for this HPD
-          const HPDHardwareID    db_hpdHardID = m_RichSys->hardwareID(hpdID);
-          const Level1HardwareID db_l1HardID  = m_RichSys->level1HardwareID(hpdID);
-          const Level1Input      db_l1Input   = m_RichSys->level1InputNum(hpdID);
-          const Level0ID         db_l0ID      = m_RichSys->level0ID(hpdID);
+          const auto db_hpdHardID = m_RichSys->hardwareID(hpdID);
+          const auto db_l1HardID  = m_RichSys->level1HardwareID(hpdID);
+          const auto db_l1Input   = m_RichSys->level1InputNum(hpdID);
+          const auto db_l0ID      = m_RichSys->level0ID(hpdID);
 
           // compare to that in the data itself
           compare( "Level1HardwareID-Data-DB", hpdID, l0ID, l1HardID, db_l1HardID );
@@ -108,18 +103,18 @@ StatusCode DataDBCheck::execute()
 
           // Internal consistency checks
           // Get l1HardID from RICH and l1LogicalID
-          const Level1HardwareID new_l1HardID = m_RichSys->level1HardwareID(rich,l1LogID);
+          const auto new_l1HardID = m_RichSys->level1HardwareID(rich,l1LogID);
           compare( "Level1HardwareID-DB-DB", hpdID, l0ID, new_l1HardID, l1HardID );
           // HPD hardware ID
-          const HPDHardwareID new_hpdHardID = m_RichSys->pdHardwareID(l1HardID,l1Input);
+          const auto new_hpdHardID = m_RichSys->pdHardwareID(l1HardID,l1Input);
           compare( "HPDHardwareID-DB-DB", hpdID, l0ID, new_hpdHardID, db_hpdHardID );
-          const L1InputWithinIngress l1InputWithinIngress = l1Input.l1InputWithinIngress();
+          const auto l1InputWithinIngress = l1Input.l1InputWithinIngress();
           // L1 input
           const Level1Input new_l1Input(l1IngressID,l1InputWithinIngress);
           compare( "L1Input-DB-DB", hpdID, l0ID, l1Input, new_l1Input );
 
           // Is this L0ID already in the map... If so this is an error.
-          L0IDInfoCount::const_iterator iID = l0Count.find(l0ID);
+          const auto iID = l0Count.find(l0ID);
           if ( iID != l0Count.end() )
           {
             // Construct and send the warning
