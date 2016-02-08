@@ -815,17 +815,18 @@ void io_sig_handler(int num)
 {
     fd_set	rfds;
     int	conn_id, ret, selret, count;
-	struct timeval	timeout;
-
+#ifndef __linux__
+    struct timeval timeout;
+#endif
 	if(num){}
 	do
 	{
-		timeout.tv_sec = 0;		/* Don't wait, just poll */
-		timeout.tv_usec = 0;
 		list_to_fds( &rfds );
 #ifdef __linux__
 		selret = poll(Pollfds, Pollfd_size, 0);
 #else
+		timeout.tv_sec = 0;		/* Don't wait, just poll */
+		timeout.tv_usec = 0;
 		selret = select(FD_SETSIZE, &rfds, NULL, NULL, &timeout);
 #endif
 		if(selret > 0)
@@ -864,9 +865,9 @@ void tcpip_task( void *dummy)
 	/* wait for an IO signal, find out what is happening and
 	 * call the right routine to handle the situation.
 	 */
-	fd_set	rfds, *pfds;
+	fd_set	rfds;
 #ifndef __linux__
-	fd_set efds;
+	fd_set efds, *pfds;
 #endif
 	int	conn_id, ret, count;
 #ifndef WIN32
@@ -883,7 +884,7 @@ void tcpip_task( void *dummy)
 #ifdef WIN32
 		pfds = &efds;
 #else
-		pfds = &rfds;
+		//pfds = &rfds;
 #endif
 		MY_FD_SET( DIM_IO_path[0], pfds );
 #ifdef __linux__
