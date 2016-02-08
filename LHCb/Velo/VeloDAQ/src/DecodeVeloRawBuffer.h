@@ -1,4 +1,4 @@
-#ifndef DECODEVELORAWBUFFER_H 
+#ifndef DECODEVELORAWBUFFER_H
 #define DECODEVELORAWBUFFER_H 1
 
 #include <string>
@@ -35,7 +35,7 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
 
-  enum AlgStatusType{ 
+  enum AlgStatusType{
     OK = 0,
     BadTELL1IDMapping = 1,
     UnsupportedBufferVersion = 2,
@@ -44,19 +44,19 @@ public:
     HeaderErrorBit = 5,
     Other = 99
   };
-    
+
 
 private:
 
-  /** Decode raw buffer to lite clusters  
+  /** Decode raw buffer to lite clusters
    * This decodes the raw buffer to VeloLiteClusters and
    * adds a VeloLiteCluster::FastContainer to the TES.
    *
    * @see VeloLiteCluster
    */
-  StatusCode decodeToVeloLiteClusters(const std::vector<LHCb::RawBank*>& banks);
+  StatusCode decodeToVeloLiteClusters(const std::vector<LHCb::RawBank*>& banks) const;
 
-  /** Decode raw buffer to clusters  
+  /** Decode raw buffer to clusters
    * This decodes the raw buffer to VeloClusters and
    * adds themn to the TES.
    *
@@ -64,39 +64,39 @@ private:
    */
   StatusCode decodeToVeloClusters(const std::vector<LHCb::RawBank*>& banks);
 
-  /** Write VeloClusters to stdout   
-   * 
+  /** Write VeloClusters to stdout
+   *
    *  @see VeloCluster
    */
-  void dumpVeloClusters(const LHCb::VeloClusters* clusters) const;
+  void dumpVeloClusters(const LHCb::VeloClusters& clusters) const;
 
   /** Create empty banks
    *
    * Creates empty cluster and lite cluster banks on the TES.
-   * This called as a failsafe option in case the raw event 
+   * This called as a failsafe option in case the raw event
    * is missing.
    * */
-  void createEmptyBanks(); 
+  void createEmptyBanks() const;
 
   /** Add DecodeVeloRawBuffer to list of failed algorithms
-   *  if procAbort = true set the ProcStatus to "aborted" to show 
+   *  if procAbort = true set the ProcStatus to "aborted" to show
    *  this event should be removed from physics streams
    */
   void failEvent(const std::string &ErrorText,
                  const std::string &ProcText,
                  AlgStatusType status,
-                 bool procAborted);  
+                 bool procAborted) const;
 
-  /** Replace the full clusters for a specific sensor with faked 
+  /** Replace the full clusters for a specific sensor with faked
    *  clusters from the lite container
    */
-  StatusCode replaceFullFromLite(LHCb::VeloClusters *clusters,
+  StatusCode replaceFullFromLite(LHCb::VeloClusters& clusters,
                                  unsigned int nSensor,
-                                 const std::vector<LHCb::RawBank*>& banks);
+                                 const std::vector<LHCb::RawBank*>& banks) const;
 
   /// Add a fake lite cluster to the full cluster container
   void makeFakeCluster(LHCb::VeloLiteCluster const &liteCluster,
-                       LHCb::VeloClusters* fakeClusters);
+                       LHCb::VeloClusters& fakeClusters) const;
 
 private:
 
@@ -108,7 +108,7 @@ private:
   bool m_dumpVeloClusters;
 
   unsigned int m_forcedBankVersion; ///< user forced bank version
-  
+
   std::string m_veloLiteClusterLocation;
   std::string m_veloClusterLocation;
 
@@ -117,9 +117,9 @@ private:
   bool m_assumeChipChannelsInRawBuffer;
 
   /// helpers
-  const DeVelo* m_velo;
+  const DeVelo* m_velo = nullptr;
 
-  /// maximum permissible number of VELO clusters, 
+  /// maximum permissible number of VELO clusters,
   /// more than this will force an IncidentType::AbortEvent
   unsigned int m_maxVeloClusters;
 
@@ -129,7 +129,7 @@ private:
   unsigned int m_errorCount;
 
   /// if true, clusters will be decoded even in the presence of errors
-  bool m_ignoreErrors;
+  bool m_ignoreErrors = false;
 
   /// if true hide the errors from multiple cluster using the same strip
   bool m_hideWarnings;
@@ -137,7 +137,7 @@ private:
   /// Check when decoding lite clusters that the bank length is correct
   bool m_doLengthCheck;
 
-  IIncidentSvc* m_incidentSvc;  ///< Pointer to the incident service.
+  IIncidentSvc* m_incidentSvc = nullptr;  ///< Pointer to the incident service.
 
   /// default raw event locations: not set in options to allow comparison
   std::vector<std::string> m_defaultRawEventLocations;

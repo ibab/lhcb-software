@@ -13,7 +13,7 @@ int VeloDAQ::decodeRawBankToClustersV2(
     const SiDAQ::buffer_word* bank, 
     const DeVeloSensor* sensor,
     const bool assumeChipChannels,
-    LHCb::VeloClusters* clusters,
+    LHCb::VeloClusters& clusters,
     int& byteCount,
     bool ignoreErrors)
 {
@@ -25,7 +25,7 @@ int VeloDAQ::decodeRawBankToClustersV2(
 
   // make sure we have enough capacity in the container
   // to avoid unnecessary relocations
-  clusters->reserve(clusters->size()+decoder.nClusters());
+  clusters.reserve(clusters.size()+decoder.nClusters());
 
   // decode the clusterpositions, create  clusters and
   // append them to the container
@@ -72,7 +72,7 @@ int VeloDAQ::decodeRawBankToClustersV2(
     }
 
     // got all we need, now append new cluster
-    clusters->insert(new LHCb::VeloCluster(lc,adcs),vcid);
+    clusters.insert(new LHCb::VeloCluster(lc,adcs),vcid);
   }
 
   // fetch number of decoded bytes, including 4 byte header, without
@@ -87,7 +87,7 @@ int VeloDAQ::decodeRawBankToClustersV3(
     const SiDAQ::buffer_word* bank, 
     const DeVeloSensor* sensor,
     const bool assumeChipChannels,
-    LHCb::VeloClusters* clusters,
+    LHCb::VeloClusters& clusters,
     int& byteCount, 
     std::string& errorMsg,
     bool ignoreErrors )
@@ -100,7 +100,7 @@ int VeloDAQ::decodeRawBankToClustersV3(
 
   // make sure we have enough capacity in the container
   // to avoid unnecessary relocations
-  clusters->reserve(clusters->size()+decoder.nClusters());
+  clusters.reserve(clusters.size()+decoder.nClusters());
 
   // decode the clusterpositions, create  clusters and
   // append them to the container
@@ -148,8 +148,8 @@ int VeloDAQ::decodeRawBankToClustersV3(
 
     
     // DEBUG: check for "this should never happen"
-    LHCb::VeloCluster* clu =  clusters->object(vcid);
-    if ( 0 != clu ) {
+    LHCb::VeloCluster* clu =  clusters.object(vcid);
+    if ( clu ) {
       std::ostringstream errmsg;
       errmsg << "Cluster of size " << clu->size() << " already in container. " 
           << "Strip = " << vcid.strip() << ", sensor = " << vcid.sensor()  
@@ -159,7 +159,7 @@ int VeloDAQ::decodeRawBankToClustersV3(
     }
 
     // got all we need, now append new cluster
-    clusters->insert(new LHCb::VeloCluster(lc,adcs),vcid);
+    clusters.insert(new LHCb::VeloCluster(lc,adcs),vcid);
     
   }
 

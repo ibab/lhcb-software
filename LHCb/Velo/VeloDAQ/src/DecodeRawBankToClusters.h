@@ -29,7 +29,7 @@ namespace VeloDAQ {
       const SiDAQ::buffer_word* bank, 
       const DeVeloSensor* sensor,
       const bool assumeChipChannels,
-      LHCb::VeloClusters* clusters,
+      LHCb::VeloClusters& clusters,
       int& byteCount,
       bool ignoreErrors=false); 
   
@@ -54,7 +54,7 @@ namespace VeloDAQ {
       const SiDAQ::buffer_word* bank, 
       const DeVeloSensor* sensor,
       const bool assumeChipChannels,
-      LHCb::VeloClusters* clusters,
+      LHCb::VeloClusters& clusters,
       int& byteCount,
       std::string& errorMsg,
       bool ignoreErrors=false); 

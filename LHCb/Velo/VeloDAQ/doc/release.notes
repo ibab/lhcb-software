@@ -2,6 +2,16 @@
 ! Package     : VeloDAQ
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
+! 2016-02-08 - Gerhard Raven
+ - C++11 modernization:
+  o prefer pass-by-reference over pass-by-pointer if nullptr is not a valid argument
+  o add const where possible
+  o prefer emplace_back over push_back
+  o prefer STL algorithms over raw loops
+  o prefer range-based loops
+  o prefer direct member initialization
+  o prefer FastClusterContainer::resize over pop_back in loop
+  o prefer std::unique_ptr over raw pointer + explicit delete
 
 !========================= VeloDAQ v6r12p1 2015-10-12 =========================
 ! 2015-08-03 - Gerhard Raven

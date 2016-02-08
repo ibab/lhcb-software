@@ -1,4 +1,3 @@
-// $Id: VeloRawBankDecoder.h,v 1.3 2006-02-23 15:41:50 krinnert Exp $
 #ifndef VELORAWBANKDECODER_H 
 #define VELORAWBANKDECODER_H 1
 

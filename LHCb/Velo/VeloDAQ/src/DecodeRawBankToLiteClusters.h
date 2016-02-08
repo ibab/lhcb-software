@@ -24,9 +24,9 @@ namespace VeloDAQ {
    */
   int decodeRawBankToLiteClusters(
       const SiDAQ::buffer_word* bank, 
-      const DeVeloSensor* sensor,
+      const DeVeloSensor& sensor,
       const bool assumeChipChannels,
-      LHCb::VeloLiteCluster::FastContainer* clusters,
+      LHCb::VeloLiteCluster::FastContainer& clusters,
       int & bytesCount,
       bool ignoreErrors); 
 
@@ -46,8 +46,8 @@ namespace VeloDAQ {
    */
   int decodeRawBankToLiteClusters(
       const SiDAQ::buffer_word* bank, 
-      const DeVeloSensor* sensor,
-      LHCb::VeloLiteCluster::FastContainer* clusters,
+      const DeVeloSensor& sensor,
+      LHCb::VeloLiteCluster::FastContainer& clusters,
       bool ignoreErrors); 
 }
 #endif // VELODAQ_DECODERAWBANKTOLITECLUSTERS_H
