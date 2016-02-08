@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef DEFTLAYER_H
 #define DEFTLAYER_H 1
 
@@ -15,11 +14,8 @@ class DeFTLayer : public DetectorElement {
 public: 
 
   /// Standard constructor
-  DeFTLayer( const std::string& name = "" );
+  DeFTLayer( std::string name = "" );
   
-  /// Destructor
-  virtual ~DeFTLayer( );
-
   /** Initialization method 
    *  @return Status of initialization
    */ 

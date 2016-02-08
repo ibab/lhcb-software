@@ -24,11 +24,8 @@ class DeFTStation : public DetectorElement {
 public: 
 
   /// Standard constructor
-  DeFTStation( const std::string& name = "" );
+  DeFTStation( std::string name = "" );
   
-  /// Destructor
-  virtual ~DeFTStation( );
-
   /** Initialization method 
    *  @return Status of initialization
    */ 

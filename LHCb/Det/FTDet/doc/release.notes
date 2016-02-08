@@ -3,6 +3,9 @@
 ! Purpose     : Interface to the xml description
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
+! 2016-02-08 - Gerhard Raven
+ - remove trivial destructors
+
 ! 2016-02-04 - Gerhard Raven
  - modernize DeFTDetector, DeFTFibreMat, DeFTBiLayer, DeFTTestAlg
    o qualify implementation of virtual functions with  override

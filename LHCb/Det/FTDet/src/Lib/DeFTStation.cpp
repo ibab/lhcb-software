@@ -14,16 +14,11 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeFTStation::DeFTStation( const std::string& name ) :
-  DetectorElement ( name )
+DeFTStation::DeFTStation( std::string name ) :
+  DetectorElement ( std::move(name) )
 {
 
 }
-
-//=============================================================================
-// Destructor
-//=============================================================================
-DeFTStation::~DeFTStation(){} 
 
 //=============================================================================
 // classID function

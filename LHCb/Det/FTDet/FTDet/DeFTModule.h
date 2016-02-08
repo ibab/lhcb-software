@@ -26,9 +26,6 @@ public:
   /// Standard constructor
   DeFTModule( const std::string& name = "" );
   
-  /// Destructor
-  virtual ~DeFTModule( );
-
   /** Initialization method 
    *  @return Status of initialization
    */ 
