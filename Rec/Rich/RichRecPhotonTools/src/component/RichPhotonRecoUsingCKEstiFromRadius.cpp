@@ -112,12 +112,10 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   const auto phiCerenkov = (float) ( Gaudi::Units::pi + vdt::fast_atan2f(diff_y,diff_x) );
 
   // Find the best ring and points to use as the calibration data
-  const LHCb::RichRecRing * ring      = nullptr;
-  const LHCb::RichRecRing * last_ring = nullptr;
-  const LHCb::RichRecPointOnRing * best_point = nullptr;
+  const LHCb::RichRecRing *ring{nullptr}, *last_ring{nullptr};
+  const LHCb::RichRecPointOnRing *best_point{nullptr};
   float sep_diff2 = std::numeric_limits<float>::max();
-  float sep_calib{0}, last_sep_calib{0};
-  float thetaCerenkov{-1};
+  float sep_calib{0}, last_sep_calib{0}, thetaCerenkov{-1};
   bool unambigPhoton = false;
   for ( const auto& pid : m_pidTypes )
   {
@@ -185,9 +183,9 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                 ( points.first->secondaryMirror() == points.second->secondaryMirror() ) );
 
             // Is pixel between (in ring radius) this ring and the last one
-            if ( !firstFoundRing                &&
-                 track_pix_sep >= sep_calib     &&
-                 track_pix_sep < last_sep_calib  )
+            if ( !firstFoundRing                 &&
+                 track_pix_sep >= sep_calib      &&
+                 track_pix_sep <  last_sep_calib  )
             {
               // Interpolate between the two rings, then break out as this is the best we can do
               const auto diffL = track_pix_sep  - sep_calib;
