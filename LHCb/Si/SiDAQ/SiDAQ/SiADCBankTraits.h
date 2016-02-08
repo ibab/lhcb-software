@@ -1,4 +1,3 @@
-// $Id: SiADCBankTraits.h,v 1.1 2006-02-22 17:21:15 krinnert Exp $
 #ifndef SIDAQ_SIADCBANKTRAITS_H 
 #define SIDAQ_SIADCBANKTRAITS_H 1
 

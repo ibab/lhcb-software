@@ -1,4 +1,3 @@
-// $Id: SiRawBankDecoder.h,v 1.5 2006-03-10 14:48:26 krinnert Exp $
 #ifndef SIRAWBANKDECODER_H 
 #define SIRAWBANKDECODER_H 1
 
@@ -47,7 +46,7 @@ class SiRawBankDecoder;
  *  @date   2006-02-22
  */
 template<class CLUSTERWORD>
-class SiRawBankDecoder {
+class SiRawBankDecoder final {
 public: 
 
   // live and death
@@ -93,8 +92,6 @@ public:
     return *this;
   }
 
-  ~SiRawBankDecoder() { ; } 
-
   // shortcuts
   
   /** @class SiRawBankDecoder::SiDecodedCluster SiRawBankDecoder.h
@@ -128,32 +125,13 @@ public:
    *  @author Kurt Rinnert
    *  @date   2006-02-22
    */
-  class pos_iterator
+  class pos_iterator final
   {
   public:
     
     // live and death
     
-    pos_iterator() { ; }
-    pos_iterator(const pos_iterator& init) : 
-      m_pos(init.m_pos),
-      m_decoder(init.m_decoder),
-      m_cluster(init.m_cluster)
-    { ; } 
-
-    ~pos_iterator() { ; }
-
-    // operators
-
-    /// assignment
-    const pos_iterator& operator=(const pos_iterator& rhs) 
-    { 
-      m_pos     = rhs.m_pos; 
-      m_decoder = rhs.m_decoder;
-      m_cluster = rhs.m_cluster; 
-
-      return *this;
-    }
+    pos_iterator() = default;
 
     /**  Increment
      *   The implementatio of this increment operator
@@ -243,45 +221,13 @@ public:
    *  @author Kurt Rinnert
    *  @date   2006-02-22
    */
-  class posadc_iterator
+  class posadc_iterator final
   {
   public:
     
     // live and death
     
-    posadc_iterator() : 
-      m_pos(0),
-      m_nClu(0),
-      m_nADC(0)
-    { ; }
-
-    posadc_iterator(const posadc_iterator& init) : 
-      m_pos(init.m_pos),
-      m_nClu(init.m_nClu),
-      m_nADC(init.m_nADC),
-      m_ADC32(init.m_ADC32),
-      m_offset(init.m_offset),
-      m_decoder(init.m_decoder),
-      m_cluster(init.m_cluster)
-    { ; } 
-
-    ~posadc_iterator() { ; }
-
-    // operators
-
-    /// assignment
-    const posadc_iterator& operator=(const posadc_iterator& rhs) 
-    { 
-      m_pos         = rhs.m_pos; 
-      m_nClu        = rhs.m_nClu;
-      m_nADC        = rhs.m_nADC;
-      m_ADC32       = rhs.m_ADC32;
-      m_offset      = rhs.m_offset; 
-      m_decoder     = rhs.m_decoder;
-      m_cluster     = rhs.m_cluster; 
-
-      return *this;
-    }
+    posadc_iterator() = default;
 
     /**  Increment
      *   The implementatio of this increment operator
@@ -381,11 +327,10 @@ public:
 
 
   private:
-    mutable unsigned int m_pos;
-    mutable unsigned int m_nClu;
-    mutable unsigned int m_nADC;
-    mutable unsigned int m_ADC32;
-    mutable unsigned int m_n32BitWords;
+    mutable unsigned int m_pos = 0;
+    mutable unsigned int m_nClu = 0;
+    mutable unsigned int m_nADC = 0;
+    mutable unsigned int m_ADC32 = 0;
     unsigned int m_offset;
     const SiRawBankDecoder* m_decoder;
     mutable  SiDecodedCluster m_cluster; 
@@ -393,7 +338,6 @@ public:
     friend class SiRawBankDecoder;
   };
   friend class posadc_iterator;
-
 
   // accessors
 
@@ -462,7 +406,6 @@ template<class CLUSTERWORD>
 inline void SiRawBankDecoder<CLUSTERWORD>::pos_iterator::decode() const
 {
   if (m_pos < m_decoder->m_nClusters) m_cluster = CLUSTERWORD((m_decoder->m_bank[1+m_pos/2] >> ((m_pos%2) << 4) & 0x0000FFFF));
-  return;
 }
 
 template<class CLUSTERWORD>
@@ -473,7 +416,6 @@ SiRawBankDecoder<CLUSTERWORD>::pos_iterator::operator++() const
     ++m_pos;
     decode();
   }
-
   return *this; 
 }
 
@@ -483,9 +425,6 @@ template<class CLUSTERWORD>
 inline SiRawBankDecoder<CLUSTERWORD>::posadc_iterator::posadc_iterator
 (unsigned int pos, const SiRawBankDecoder<CLUSTERWORD>* decoder) : 
       m_pos(pos),
-      m_nClu(0),
-      m_nADC(0),
-      m_ADC32(0),
       m_offset(1+ decoder->m_nClusters/2 + decoder->m_nClusters%2),
       m_decoder(decoder)
 { 
@@ -496,7 +435,6 @@ template<class CLUSTERWORD>
 inline void SiRawBankDecoder<CLUSTERWORD>::posadc_iterator::decode() const
 {
   if (m_pos < m_decoder->m_nClusters) doDecode(typename CLUSTERWORD::adc_bank_type());
-  return;
 }
 
 template<class CLUSTERWORD>
@@ -504,7 +442,6 @@ inline void SiRawBankDecoder<CLUSTERWORD>::posadc_iterator::doDecode(SiDAQ::adc_
 {
   m_cluster.second.clear();
   doDecodeCommon();
-  return;
 }
 
 template<class CLUSTERWORD>
@@ -514,11 +451,10 @@ inline void SiRawBankDecoder<CLUSTERWORD>::posadc_iterator::doDecode(SiDAQ::adc_
 
  // fetch the neighbour sum first
   m_ADC32 = (m_nADC%4 ? m_ADC32 : m_decoder->m_bank[m_offset+m_nADC/4]);
-  m_cluster.second.push_back(SiADCWord((m_ADC32 >> ((m_nADC%4)<<3)) & 0x000000FF));
+  m_cluster.second.emplace_back((m_ADC32 >> ((m_nADC%4)<<3)) & 0x000000FF);
   ++m_nADC;
 
   doDecodeCommon();
-  return;
 }
 
 template<class CLUSTERWORD>
@@ -526,21 +462,19 @@ void SiRawBankDecoder<CLUSTERWORD>::posadc_iterator::doDecodeCommon() const
 {
   // get the first adc count *without* checking the end-of-cluster bit
   m_ADC32 = (m_nADC%4 ? m_ADC32 : m_decoder->m_bank[m_offset+m_nADC/4]);
-  m_cluster.second.push_back(SiADCWord((m_ADC32 >> ((m_nADC%4)<<3)) & 0x000000FF));
+  m_cluster.second.emplace_back((m_ADC32 >> ((m_nADC%4)<<3)) & 0x000000FF);
   ++m_nADC;
 
   // only move on if the end-of-cluster bit is not set
   while (!m_cluster.second.back().endCluster()) {
     m_ADC32 = (m_nADC%4 ? m_ADC32 : m_decoder->m_bank[m_offset+m_nADC/4]);
-    m_cluster.second.push_back(SiADCWord((m_ADC32 >> ((m_nADC%4)<<3)) & 0x000000FF));
+    m_cluster.second.emplace_back((m_ADC32 >> ((m_nADC%4)<<3)) & 0x000000FF);
     ++m_nADC;
   }
 
   // get cluster position
   m_cluster.first = CLUSTERWORD((m_decoder->m_bank[1+m_pos/2] >> ((m_pos%2) << 4)) & 0x0000FFFF);
   ++m_nClu;
-
-  return;
 }
 
 template<class CLUSTERWORD>
@@ -551,7 +485,6 @@ SiRawBankDecoder<CLUSTERWORD>::posadc_iterator::operator++() const
     ++m_pos;
     decode();
   }
-  
   return *this; 
 }
 

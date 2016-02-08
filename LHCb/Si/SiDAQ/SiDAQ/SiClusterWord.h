@@ -1,4 +1,3 @@
-// $Id: SiClusterWord.h,v 1.6 2006-02-23 15:27:07 mneedham Exp $
 #ifndef _SiClusterWord_H
 #define _SiClusterWord_H 1
 
@@ -15,7 +14,7 @@
 #include <iostream>
 
 template <class bitPolicy>
-class SiClusterWord{
+class SiClusterWord final {
 
 public:
 
@@ -41,11 +40,7 @@ public:
   m_value(value){}
 
   /** Default Constructor */
-  SiClusterWord()
-    : m_value(0) {}
-
-  /** Destructor */
-  ~SiClusterWord() {}
+  SiClusterWord() = default;
 
   /** cast to short*/
   operator short() const;
@@ -94,7 +89,7 @@ public:
  
 private:
 
-  unsigned short m_value; /// Packed word
+  unsigned short m_value = 0; /// Packed word
 };
 
 template <class bitPolicy>
@@ -102,8 +97,7 @@ SiClusterWord<bitPolicy>::SiClusterWord(unsigned int aChan,
                              double interStripPos,
                              unsigned int clusterSize,
                              bool highThreshold )
-:m_value(0){
- 
+{
   // constructer
   unsigned int position = (unsigned int)(interStripPos*(1<<bitPolicy::interStripPrecision));
   unsigned int sBit =0;
@@ -153,8 +147,7 @@ inline unsigned int SiClusterWord<bitPolicy>::pseudoSize() const{
   unsigned int cSize  = 1 + ((m_value & bitPolicy::sizeMask) >> bitPolicy::sizeBits);
   if (cSize == 1){
     if (fracStripBits() > 0) cSize = 2;
-  }
-  else {
+  } else {
     cSize = 3;
   }
   return cSize;

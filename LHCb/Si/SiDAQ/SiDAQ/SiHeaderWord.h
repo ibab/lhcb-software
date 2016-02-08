@@ -1,4 +1,3 @@
-// $Id: SiHeaderWord.h,v 1.7 2008-06-18 15:37:49 mneedham Exp $
 #ifndef _SiHeaderWord_H
 #define _SiHeaderWord_H 1
 
@@ -14,7 +13,7 @@
  */
 
 
-class SiHeaderWord {
+class SiHeaderWord final {
 
 public:
 
@@ -36,9 +35,6 @@ public:
   */
   explicit SiHeaderWord(unsigned int value = 0):
     m_value(value){}
-
-  /** Destructer **/
-  ~SiHeaderWord(){}
 
   /** cast to int */ 
   operator int() const; 
@@ -78,7 +74,7 @@ private:
   enum bits {clusterBits = 0, pcnBits = 16, errorBits = 24};
   enum masks {clusterMask = 0x00ffff , pcnMask =  0xff0000, errorMask = 0x1000000}; 
 
-  unsigned int m_value;
+  unsigned int m_value = 0;
 
 };
 

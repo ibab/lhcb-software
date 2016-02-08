@@ -1,4 +1,3 @@
-// $Id: SiADCWord.h,v 1.5 2006-02-23 10:36:10 mneedham Exp $
 #ifndef _SiADCWord_H
 #define _SiADCWord_H 1
 
@@ -14,7 +13,7 @@
 
 #include <iostream>
 
-class SiADCWord{
+class SiADCWord final {
 
 public:
 
@@ -31,11 +30,7 @@ public:
   m_value(value){}
 
   /** Default Constructor */
-  SiADCWord()
-    : m_value(0) {}
-
-  /** Destructor */
-  ~SiADCWord() {}
+  SiADCWord() = default;
 
   /** cas to char */
   operator char() const;
@@ -70,12 +65,12 @@ private:
   
   enum mask {adcMask = 0x7f , endMask = 0x80 };
 
-  unsigned char m_value; /// Packed word
+  unsigned char m_value = 0; /// Packed word
 };
 
 
 inline SiADCWord::SiADCWord(double adc, bool endCluster)
-:m_value(0){
+{
 
   // constructer
   unsigned int endC = (unsigned int)(endCluster);

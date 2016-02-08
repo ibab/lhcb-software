@@ -1,6 +1,14 @@
 Package         : SiDAQ
 Package manager : Matt Needham
 !-------------------------------------------------------------------------
+! 2016-02-08 - Gerhard Raven
+ - C++11 modernization
+   o add 'final' qualifier to internal classes
+   o prefer direct member initialization
+   o remove trivial destructors (which otherwise inhibit implicit generation
+     of move constructor and move assignment)
+   o prefer emplace_back over push_back 
+   o prefer cstdint over sys/types.h
 
 !========================= SiDAQ v2r3 2014-03-17 =========================
 ! 2014-03-10 - Kurt Rinnert
