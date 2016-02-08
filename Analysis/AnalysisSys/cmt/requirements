@@ -1,11 +1,11 @@
 package AnalysisSys
-version v14r3
+version v15r0
 
 branches doc cmt
 
 ####################################################################
 
-use  AnalysisConf               v2r5     Phys   # Patrick Koppenburg
+use  AnalysisConf               v2r6     Phys   # DaVinci coordinator
 use  DSTWriters                 v4r22    Phys   # Chris Jones
 use  DSTWriterTests             v2r6     Phys   # Chris Jones
 use  DaVinciMonitors            v1r24    Phys   # Patrick Koppenburg
@@ -32,14 +32,14 @@ use  DaVinciAngleCalculators    v1r0     Phys   # ?
 use  DecayTreeTupleBase         v1r5     Phys
 use  DecayTreeTupleReco         v1r5     Phys   
 use  DecayTreeTupleDalitz       v1r3     Phys
-use  DecayTreeTupleJets         v1r3     Phys
+use  DecayTreeTupleJets         v1r4     Phys
 use  DecayTreeTupleMC           v1r6     Phys
 use  DecayTreeTupleTrigger      v1r10    Phys
 use  DecayTreeTupleMuonCalib    v1r6     Phys
 use  DecayTreeTupleTracking     v1r4     Phys
 use  DecayTreeTupleANNPID       v1r2     Phys
 use  DecayTreeTupleHerschel     v1r2     Phys
-use  DecayTreeTuple             v5r4     Phys 
+use  DecayTreeTuple             v5r5     Phys 
 
 ####################################################################
 
@@ -49,7 +49,7 @@ use  HltSelChecker              v12r4    Hlt    # Patrick Koppenburg
 
 use  AnalysisPython             v2r39    Phys     # Vanya Belyaev
 use  PyAna                      v1r3p1   Analysis # Vanya Belyaev
-use  Ostap                      v1r12    Analysis # Vanya Belyaev
+use  Ostap                      v1r13    Analysis # Vanya Belyaev
 
 ####################################################################
 
@@ -68,12 +68,12 @@ use  MicroDSTExample            v2r15   Ex         # Chris Jones
 ####################################################################
 
 use  TrackSmearing              v1r6p1  Phys   # Alex Shires
-use  DaVinciTrackRefitting      v2r3    Phys   # Matt Needham
-use  DaVinciTrackScaling        v1r5    Phys   # Vanya Belyaev
+use  DaVinciTrackRefitting      v2r4    Phys   # Matt Needham
+use  DaVinciTrackScaling        v1r6    Phys   # Vanya Belyaev
 
 ####################################################################
 
-use  TeslaTools                 v1r17   Phys   # Sean Benson
+use  TeslaTools                 v1r18   Phys   # Sean Benson
 
 ####################################################################
 

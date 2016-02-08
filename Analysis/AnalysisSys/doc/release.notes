@@ -3,6 +3,49 @@ Package             : AnalysisSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb analysis packages
 
+</PRE><H1><A NAME=v15r0>2016-02-08 Analysis v15r0</A></H1><PRE>
+
+Development release for 2016 data taking.
+It is based on Gaudi v27r0, LHCb v40r0, Rec v19r0 and Phys v21r0, and uses LCG_83 with ROOT 6.06.00.
+
+- Packages updated :
+  Analysis/Ostap v1r13, Phys/AnalysisConf v2r6, Phys/DaVinciTrackRefitting v2r4, Phys/DaVinciTrackScaling v1r6,
+  Phys/DecayTreeTuple v5r5, Phys/DecayTreeTupleJets v1r4, Phys/TeslaTools v1r18.
+
+- In Analysis/Ostap v1r13 :
+  . Many new additions and improvements, and a few buglet fixes. See package release note for details.
+
+- In Phys/AnalysisConf v2r6 :
+  . Configuration.py : RedoMCLinks change NodeKiller setting from "Link/Rec" to "Link/Rec/Track"
+    to avoid removing the Calo Linkers.
+
+- In Phys/DaVinciTrackRefitting v2r4 :
+  . Added functionality for integration and qm test to refitter.
+  . Configure ghost probability to run in DaVinci
+    -> requires Tr/TrackTools r200091 or later.
+  . Added proof of principle of qmtest for track refitting
+   (running on Stripping 23 DST)
+   to be done: S23 MDST, other strippings, integration test,
+  . Removed the QMTest tests/qmtest/davincitrackrefitting.qms/ as it required
+    DaVinci (at least in its present form), which caused the test to fail.
+    For now moved to a new directory under the DaVinciTests package.
+    The necessary options file under options/ remains here. Can always be changed.
+
+- In Phys/DaVinciTrackScaling v1r6 :
+  . Replaced outputLevel with msgLevel.
+
+- In Phys/DecayTreeTuple v5r5 :
+  . Fixed string in TupleToolAllTracks to retrieve LoKi::PVReFitter tool.
+
+- In Phys/DecayTreeTupleJets v1r4 :
+  . Fixed TupleToolJetTag, hacked for BDTTag.
+  . Added all var in Base.
+
+- In Phys/TeslaTools v1r18 :
+  . Fix to related info restoration via TCK.
+  . Use shared containers for CaloHypos and CaloClusters.
+  . Update Hypo and cluster restoration.
+
 </PRE><H1><A NAME=v14r3>2015-12-04 Analysis v14r4</A></H1><PRE>
 
 Release of two kinds :
