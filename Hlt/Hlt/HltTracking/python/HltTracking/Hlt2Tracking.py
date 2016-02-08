@@ -83,6 +83,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                                                              # This one disables separate fitting of Hlt2 Forward, Match
                                                              # and Downstream tracks. Leave DoCleanups true for Hlt1 track filtering
                 , "NewDownstreamAlg"                : True  # TODO: Remove this option after some grace period
+                , "FitTTracks"                      : True
                 , "RichHypos"                       : HltRichDefaultHypos
                 , "RichRadiators"                   : HltRichDefaultRadiators
                 , "RichTrackCuts"                   : HltRichDefaultTrackCuts
@@ -1210,6 +1211,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
             hlt2TracksToMerge    =    []
             hlt2TracksToMerge   +=    [ self.__hlt2ForwardTracking().outputSelection()]
             hlt2TracksToMerge   +=    [ self.__hlt2MatchTracking().outputSelection()  ]
+            if self.getProp("FitTTracks"):
+                hlt2TracksToMerge   +=    [ self.__hlt2SeedTracking().outputSelection() ]
             if  self.getProp("CreateBestTracks"):
                 trackRecoSequence       +=    [self.__hlt2DownstreamTracking()]
                 hlt2TracksToMerge   +=    [ self.__hlt2DownstreamTracking().outputSelection()  ]
@@ -1233,10 +1236,12 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 bestTrackCreator.TracksOutContainer = ""
                 bestTrackCreator.TracksOutContainers["Long"] = self.__trackLocationByType("Long")
                 bestTrackCreator.TracksOutContainers["Downstream"] = self.__trackLocationByType("Downstream")
+                if self.getProp("FitTTracks"):
+                    bestTrackCreator.TracksOutContainers["Ttrack"] = self.__trackLocationByType("Ttrack")
                 if HltRecoConf().getProp("ApplyGHOSTPROBCutInTBTC"):
                     bestTrackCreator.AddGhostProb = True
                     bestTrackCreator.MaxGhostProb = HltRecoConf().getProp("MaxTrGHOSTPROB")
-                hlt2TrackingOutput = [ self.__trackLocationByType("Long"), self.__trackLocationByType("Downstream") ]
+                hlt2TrackingOutput = [ self.__trackLocationByType("Long"), self.__trackLocationByType("Downstream"), self.__trackLocationByType("Ttrack") ]
                 trackRecoSequence        +=      [bestTrackCreator]
                 from Configurables import HltRecoConf
                 if HltRecoConf().getProp("AddGhostProb") and not HltRecoConf().getProp("ApplyGHOSTPROBCutInTBTC"):

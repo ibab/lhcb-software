@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2016-02-08 - Sascha Stahl
+ - HltRecoConf: Calculate ProbNN by default.
+ - Hlt2Tracking: Implement fit of T-tracks for Calo reconstruction.
+
 ! 2016-02-04 - Sascha Stahl
  - Hlt1TrackFilterGhostProb: Set NCandCommonHits to 1 in case it does not exist,
    this is in line with the value set in PatMatch and the smallest possible
