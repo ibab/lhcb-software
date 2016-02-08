@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2016-02-08 - Adam Davis
+ - Add more debugging tools for PatLongLivedTracking
+
 !========================= TrackMCTools v3r12p2 2015-11-23 =========================
 ! 2015-11-08 - Gerhard Raven
  - replace endreq with endmsg

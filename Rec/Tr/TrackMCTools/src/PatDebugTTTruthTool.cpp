@@ -8,7 +8,7 @@
 #include "Event/MCParticle.h"
 #include "Event/STCluster.h"
 #include "Event/Track.h"
-
+#include "TfKernel/RecoFuncs.h" 
 #include "STDet/DeSTDetector.h"
 
 // local
@@ -42,7 +42,8 @@ StatusCode PatDebugTTTruthTool::initialize()
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
   m_tracker = getDet<DeSTDetector>(DeSTDetLocation::TT);
-
+  m_flags["ReconstructibleAsLong"] = false;//AD 2-1-16
+  m_flags["ReconstructibleAsDown"] = false;//AD 2-1-16
   return sc;
 }
 
@@ -215,6 +216,16 @@ bool PatDebugTTTruthTool::isTrueTrack( const LHCb::Track* track, const PatTTHits
   
 }
 //=============================================================================
+//Overload Is this a good track
+//=============================================================================
+bool PatDebugTTTruthTool::isTrueTrack( const LHCb::Track* track, const Tf::TTStationHitManager<PatTTHit>::HitRange& hits){
+  PatTTHits m_hits;
+  for(auto hit: hits) m_hits.push_back(hit);
+  return isTrueTrack(track,m_hits);
+  
+}
+
+//=============================================================================
 //  Put chi2, number of hits and momentum in a tuple
 //=========================================================================
 void PatDebugTTTruthTool::chi2Tuple( const double p, const double chi2, const unsigned int nHits){
@@ -223,6 +234,46 @@ void PatDebugTTTruthTool::chi2Tuple( const double p, const double chi2, const un
   tuple->column("p", p );
   tuple->column("nHits", nHits );
   tuple->column("chi2", chi2 );
+  //add the eff vs step from this tool.
+  for(auto flag : m_flags){//AD
+    tuple->column(flag.first, flag.second);//AD
+  }//AD
   tuple->write();
   
+}
+
+//AD 2-1-16
+
+void PatDebugTTTruthTool::initializeSteps(std::vector<std::string> steps){
+  for(auto step : steps){//AD, loop over steps to do, and initialize to false. This adds to the map m_flags.
+    m_flags[step] = false;
+  }
+  return;
+}
+
+void PatDebugTTTruthTool::recordStepInProcess(std::string step,bool result){
+  if(!m_flags[step]){
+    m_flags[step]|=result;
+  }
+  //don't change things if we already have the right answer.
+  debug()<<"Recorded for step "<<step<<" result"<<result<<endmsg;
+}
+
+void PatDebugTTTruthTool::resetflags(){
+  for(auto flag : m_flags){//note, this resets also the Reconstructible flags.
+    flag.second=false;//I think this is right
+  }
+  return;
+}
+
+void PatDebugTTTruthTool::ForceMCHits(PatTTHits& hits, LHCb::Track* track){
+  //modify the input containter to return only the hits which are MC tached
+  PatTTHits tmp;
+  for(auto hit: hits){
+    if(!isTrueHit( track, hit))continue;
+    tmp.push_back(hit);
+  }
+  hits.clear();
+  for(auto hit: tmp){hits.push_back(hit);}
+  return;
 }

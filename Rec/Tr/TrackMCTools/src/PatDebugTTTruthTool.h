@@ -6,7 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTupleTool.h"
 #include "PatKernel/IPatDebugTTTool.h"            // Interface
-
+#include <TfKernel/TTStationHitManager.h>
 class DeSTDetector;
 
 /** @class PatDebugTTTruthTool PatDebugTTTruthTool.h
@@ -37,16 +37,28 @@ public:
   virtual double fracGoodHits( const LHCb::Track* track, const PatTTHits& hits);
   
   virtual bool isTrueTrack( const LHCb::Track* track, const PatTTHits& hits);
+
+  virtual bool isTrueTrack( const LHCb::Track* track, const Tf::TTStationHitManager<PatTTHit>::HitRange& hits);//AD, overload
   
   virtual void chi2Tuple( const double p, const double chi2, const unsigned int nHits);
   
+  //added by AD 2/1/16 for efficiency vs step
 
+  virtual void initializeSteps(std::vector<std::string> steps);//initialize all steps in the process  
+
+  virtual void recordStepInProcess(std::string step, bool result);//record the result of a step in the process
+  
+  virtual void resetflags();//reset all flags
+
+  virtual void ForceMCHits(PatTTHits& hits, LHCb::Track* track);//Special. Force only MC matched hits in the track.
+  
 
 protected:
 
 private:
 
   DeSTDetector* m_tracker;
+  std::map<std::string,bool> m_flags;
 
 };
 #endif // PATDEBUGTTTRUTHTOOL_H
