@@ -77,6 +77,7 @@ namespace LHCb {
  * - DebugTool: Name of the debug tool  
  * - PrintTracks: Print the tracks?     
  * - TimingMeasurement: Do timing measurements? 
+ * - ForceMCTrack: Do you want to force the downstream track to only have true hits?
  *
  *  @author Michel De Cian. Sascha Stahl and Olivier Callot for the original PatDownstream
  *  @date   2015-06-03
@@ -252,7 +253,8 @@ private:
   std::string   m_debugToolName;
   bool          m_printTracks;   
   bool          m_doTiming; 
-
+  bool          m_forceMCTrack;
+  
   // -- internal helper variables
   std::array<double,7>    m_magPars;                                              
   std::array<double,3>    m_momPars;                                              

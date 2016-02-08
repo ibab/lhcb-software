@@ -125,6 +125,8 @@ PatLongLivedTracking::PatLongLivedTracking( const std::string& name,
   declareProperty( "DebugTool",                      m_debugToolName        = "PatDebugTTTruthTool"                       );
   declareProperty( "PrintTracks",                    m_printTracks          = false                                       );
   declareProperty( "TimingMeasurement",              m_doTiming             = false                                       );
+  declareProperty( "ForceMCTrack",                   m_forceMCTrack         = true                                        );
+  
 }
 //=============================================================================
 // Destructor
@@ -144,6 +146,21 @@ StatusCode PatLongLivedTracking::initialize() {
   
   if ( m_withDebugTool ) {
     m_debugTool = tool<IPatDebugTTTool>( m_debugToolName );
+    //AD add efficiency vs step. This is recorded for every seed track, as this is the starting point.
+    std::vector<std::string> steps;
+    steps.push_back("initEvent");
+    steps.push_back("fisher");
+    steps.push_back("BeampipeCut");
+    steps.push_back("Preselection");
+    steps.push_back("fitXProjection");
+    steps.push_back("AddUHits");
+    steps.push_back("AddVHits");
+    steps.push_back("FitAndRemove");
+    steps.push_back("AcceptCandidate");
+    steps.push_back("AddOverlapRegions");
+    m_debugTool->initializeSteps(steps);
+    steps.clear();//end AD
+    
   }  
 
   info() << "========================================================= "                        << endmsg
@@ -250,7 +267,8 @@ StatusCode PatLongLivedTracking::execute() {
       }
     }
   }
-  
+  if ( m_withDebugTool ){ m_debugTool->resetflags();}//AD
+    
   //==========================================================================
   // Prepare hits in TT, optional: remove used in PatForward.
   //========================================================================== 
@@ -293,11 +311,12 @@ StatusCode PatLongLivedTracking::execute() {
   if ( UNLIKELY( m_printing ) )  ttCoords = m_ttHitManager->hits();
   
   for ( LHCb::Track* tr : myInTracks ) {
-  
+    if( UNLIKELY(m_withDebugTool) ){m_debugTool->recordStepInProcess("initEvent",m_debugTool->isTrueTrack(tr,ttCoords));}//AD, add debug step here to see if seed is reco'ble ad downstream
+    
     // -- simple Fisher discriminant to reject bad seed tracks
     const double fisher = evaluateFisher( tr );
     if( fisher < m_seedCut ) continue;
-    
+    if( UNLIKELY(m_withDebugTool) ){m_debugTool->recordStepInProcess("fisher",m_debugTool->isTrueTrack(tr,ttCoords));}//AD check fisher
     if ( 0 <= m_seedKey && m_seedKey == tr->key() ) m_printing = true;
     
     PatDownTrack track( tr, m_zTT, m_magPars, m_momPars, m_yParams, magScaleFactor*(-1) );
@@ -306,7 +325,7 @@ StatusCode PatLongLivedTracking::execute() {
     
     // -- Veto particles coming from the beam pipe.
     if( insideBeampipe( track ) ) continue;
-    
+    if( UNLIKELY(m_withDebugTool) ){m_debugTool->recordStepInProcess("BeampipeCut",m_debugTool->isTrueTrack(tr,ttCoords));}//AD
     const double deltaP = track.momentum() * track.state()->qOverP() - 1.;
   
     // --
@@ -339,7 +358,7 @@ StatusCode PatLongLivedTracking::execute() {
     
     // -- Get hits in TT around a first track estimate
     getPreSelection( track );
-   
+    if( UNLIKELY(m_withDebugTool) ){m_debugTool->recordStepInProcess("Preselection",m_debugTool->isTrueTrack(tr,ttCoords));}//AD
     // -- Need at least 3 hits and at least 1 stereo and 1 x hit
     if( 3 > m_preSelHits[0].size() +  m_preSelHits[1].size() + m_preSelHits[2].size() + m_preSelHits[3].size() ) continue;
     if( 1 > m_preSelHits[0].size() +  m_preSelHits[3].size() ) continue;
@@ -392,7 +411,7 @@ StatusCode PatLongLivedTracking::execute() {
         track.hits().push_back( myHit );
         m_goodXTracks.push_back( track );
       }
-      
+      if( UNLIKELY(m_withDebugTool) ){m_debugTool->recordStepInProcess("fitXprojection",m_debugTool->isTrueTrack(tr,track.hits()));}//AD
       
       // -- Take all xTracks into account whose chi2 is close to the best
       // -- until MaxXTracks is reached
@@ -411,17 +430,19 @@ StatusCode PatLongLivedTracking::execute() {
         
         addUHits( xTrack, m_maxXUTracks );
         unsigned int maxJ = std::min( (unsigned int)m_maxXUTracks, (unsigned int)m_goodXUTracks.size() );
-        
+        if( UNLIKELY(m_withDebugTool) ){m_debugTool->recordStepInProcess("addUHits",m_debugTool->isTrueTrack(tr,xTrack.hits()));}//AD
         // -- Loop over good xu tracks
         for(unsigned int j = 0; j < maxJ; j++){
           
           PatDownTrack& xuTrack = m_goodXUTracks[j];
           
           addVHits( xuTrack );
+          if( UNLIKELY(m_withDebugTool) ){m_debugTool->recordStepInProcess("AddVHits",m_debugTool->isTrueTrack(tr,xuTrack.hits()));}//AD
           fitAndRemove( xuTrack, false );
-          
+          if( UNLIKELY(m_withDebugTool) ){m_debugTool->recordStepInProcess("FitAndRemove",m_debugTool->isTrueTrack(tr,xuTrack.hits()));}//AD
           // -- Check if candidate is better than the old one
           if ( !acceptCandidate( xuTrack, maxPoints ) ) continue;
+          if( UNLIKELY(m_withDebugTool) ){m_debugTool->recordStepInProcess("AcceptCandidate",m_debugTool->isTrueTrack(tr,xuTrack.hits()));}//AD
           m_trackCandidates.push_back( std::move(xuTrack) );
           ++nbOK;
         }
@@ -430,9 +451,12 @@ StatusCode PatLongLivedTracking::execute() {
         // -- but with larger search window
         if( xTrack.hits().size() > 1 && maxPoints < 4 && m_goodXUTracks.empty() ){
           addVHits( xTrack );
+          if( UNLIKELY(m_withDebugTool) ){m_debugTool->recordStepInProcess("AddVHits",m_debugTool->isTrueTrack(tr,xTrack.hits()));}//AD
           fitAndRemove( xTrack, false );
+          if( UNLIKELY(m_withDebugTool) ){m_debugTool->recordStepInProcess("FitAndRemove",m_debugTool->isTrueTrack(tr,xTrack.hits()));}//AD
           // -- Check if candidate is better than the old one
           if ( !acceptCandidate( xTrack, maxPoints ) ) continue;
+          if( UNLIKELY(m_withDebugTool) ){m_debugTool->recordStepInProcess("AcceptCandidate",m_debugTool->isTrueTrack(tr,xTrack.hits()));}//AD
           m_trackCandidates.push_back( std::move(xTrack) );
           ++nbOK;
         }
@@ -448,7 +472,7 @@ StatusCode PatLongLivedTracking::execute() {
     for( PatDownTrack& track : m_trackCandidates ){
     
       addOverlapRegions( track );
-
+      if( UNLIKELY(m_withDebugTool) ){m_debugTool->recordStepInProcess("AddOverlapRegions",m_debugTool->isTrueTrack(tr,track.hits()));}//AD
       if( m_withDebugTool && m_debugTool ){
         info() << "This track is: " << m_debugTool->isTrueTrack( track.track(), track.hits() ) << endmsg;
         m_debugTool->fracGoodHits( track.track(), track.hits() );
@@ -633,7 +657,7 @@ void PatLongLivedTracking::getPreSelection( PatDownTrack& track ) {
         
         PatTTHit* hit = *itHit;
         
-        if( UNLIKELY( m_debugTool && !m_debugTool->isTrueHit( track.track(), hit ) ) ) continue;
+        if( UNLIKELY( m_debugTool && m_forceMCTrack && !m_debugTool->isTrueHit( track.track(), hit ) ) ) continue;
         
         
         if( UNLIKELY( hit->hit()->ignore()) ) continue;
