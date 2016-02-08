@@ -5,9 +5,6 @@ gaudi_subdir(DaVinciSys v39r0)
 
 gaudi_depends_on_subdirs(DaVinciTests
                          ##############################
-                         # Patched packages just for this version
-                         GaudiConf
-                         ##############################
                          # Temporarily moved in from Stripping, for S23 release
                          Phys/StrippingCache
                          ##############################

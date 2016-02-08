@@ -8,9 +8,6 @@ Development release for 2016 data taking.
 It is based on Gaudi v27r0, LHCb v40r0, Rec v19r0, Phys v21r0, Analysis v15r0 and Stripping v9r11p2.
 Uses LCG_83 with ROOT 6.06.00.
 
-- Packages patched :
-  GaudiConf v19r16.
-
 - Packages updated :
   DaVinciTests v3r2, Phys/DaVinci v39r0, Phys/Tesla v1r14.
 

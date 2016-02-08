@@ -4,8 +4,6 @@ version v39r0
 branches doc cmt
 
 ##############################
-# Patches just for this version
-GaudiConf             v19r16
 # Temporarily moved in from Stripping, for S23 release
 # To be decided if longer term this stays in the DaVinci 
 # project, or moves elsewhere.
