@@ -288,11 +288,10 @@ RichG4Cerenkov::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 
 	G4double maxCos = BetaInverse / nMax; 
 	G4double maxSin2 = (1.0 - maxCos) * (1.0 + maxCos);
+
   // Now for adding background in RICH2
-  G4double aR2Rnd_minBetaInverse= 1.0;
-  G4double aR2Rnd_maxCos =  aR2Rnd_minBetaInverse/nMax;
-  G4double aR2Rnd_maxSin2 = (1.0 - aR2Rnd_maxCos) * (1.0 + aR2Rnd_maxCos);
-  G4double aR2Rnd_curBetaInverse =  1.0 + ( G4UniformRand() * (nMax -1.0) ) ;
+  G4double aR2Rnd_minCos =  1.0;
+  G4double aR2Rnd_maxCos =  1.0/nMax;
 
   // end for adding background in RICH2
 
@@ -305,7 +304,6 @@ RichG4Cerenkov::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 		G4double cosTheta, sin2Theta;
 		
 		// sample an energy
-    if( i < (NumPhotons - nAddPhotRich2) ){
       
 		  do {
 			  rand = G4UniformRand();	
@@ -319,37 +317,28 @@ RichG4Cerenkov::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 		  } while (rand*maxSin2 > sin2Theta);
 
 
-    }else {
-      // for adding background to RICH2
-      // adding protection against infinite loops.
-        unsigned long long nLoops(0);
-        const unsigned long long maxLoops(1e7);      
-		  do {
-			  rand = G4UniformRand();	
-			  sampledEnergy = Pmin + rand * dp; 
-			  sampledRI = Rindex->Value(sampledEnergy);
-
-			  //cosTheta = BetaInverse / sampledRI;  
-        cosTheta = aR2Rnd_curBetaInverse / sampledRI;  
-
+    if( i >= (NumPhotons - nAddPhotRich2) ){
+      // for adding background to RICH2 
+      // create a theta randomly in the Beta range       
+        rand = G4UniformRand();	
+        cosTheta = rand *(aR2Rnd_minCos- aR2Rnd_maxCos) + aR2Rnd_maxCos ;
 			  sin2Theta = (1.0 - cosTheta)*(1.0 + cosTheta);
-			  rand = G4UniformRand();	
 
-		  } while ( (rand*aR2Rnd_maxSin2 > sin2Theta)  && (++nLoops < maxLoops)  );
-      // end adding background to RICH2
-      if ( nLoops >= maxLoops ){
-        // keep the theta values to physically allowed values when max loop is reached.
+        // keep the theta values to physically allowed values.
         if( cosTheta  > 1.0) { 
           cosTheta=1.0;
           sin2Theta=0.0;
          }
         
-        G4cout << "RichG4Cerenkov Random hits : WARNING - Maximum # loops " << maxLoops
-               << " reached ..." << "Costheta sin2theta "<<cosTheta<<"  "<< sin2Theta<<G4endl;
-      }
-      
+      // end adding background to RICH2
+      //  G4cout<<"test print: rich2 random hits energy costheta theta " 
+      //         <<i<<"  "<<sampledEnergy<<"   "
+      //         << cosTheta <<"  "<<acos(cosTheta)<<G4endl;
 
     }
+    
+    
+    
     
     
     
@@ -447,6 +436,7 @@ RichG4Cerenkov::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 		//aParticleChange.AddSecondary(aSecondaryTrack);
 
 	}
+  
   
    // test analysis by SE. Not needed for regular production running.
   // RichG4CherenkovProdFeaturesHisto(aTrack);

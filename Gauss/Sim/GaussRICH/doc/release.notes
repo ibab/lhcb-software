@@ -3,6 +3,9 @@
 ! Responsible	: Sajan Easo
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
+!2016-02-02 - Sajan Easo
+ - Modified the way the Random hits are created in RICH2 so that 
+   cpu time is improved.
 
 ! 2015-11-15 - Marco Clemencic
  - Fixed compilation with CLHEP 2.
