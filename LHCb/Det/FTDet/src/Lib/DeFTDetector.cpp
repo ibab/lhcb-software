@@ -7,7 +7,6 @@
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
 
-#include <boost/lexical_cast.hpp>
 
 /** @file DeFTDetector.cpp
  *
@@ -310,11 +309,14 @@ const DeFTFibreMat* DeFTDetector::findFibreMat ( const LHCb::FTChannelID id ) co
     if(modulev2==10||modulev2==11) module=6;
     else if(modulev2<=4) module=modulev2+1;
     else module=(9-modulev2)+1;    //modulev2>=5 and != 10 or 11
-    std::bitset<2> bT(station);
-    std::bitset<2> bL(layer);
-    std::bitset<2> bQ(quarter);
-    std::bitset<3> bM(module);
-    fibreMatID=boost::lexical_cast<unsigned int>(bT.to_string()+bL.to_string()+bQ.to_string()+bM.to_string());
+    
+    //fibreMatID (9 bits): station(2 bits) + layer(2 bits) + quarter(2 bits) + module(3 bits) MSB to LSB
+    DeFTFibreMat::FibreMatID_V5 fmID;
+    fmID.bf.station=station;
+    fmID.bf.layer=layer;
+    fmID.bf.quarter=quarter;
+    fmID.bf.module=module;
+    fibreMatID=fmID.ui;
   }
 
   /// Find the fibreMat using a binary search

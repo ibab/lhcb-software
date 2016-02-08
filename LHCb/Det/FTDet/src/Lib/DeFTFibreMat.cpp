@@ -1,5 +1,3 @@
-#include <boost/lexical_cast.hpp>
-
 // DetDesc
 #include "DetDesc/SolidSubtraction.h"
 #include "DetDesc/SolidChild.h"
@@ -130,16 +128,19 @@ StatusCode DeFTFibreMat::initialize(){
     // simplified from hardware format, but same conventions
     // T station (1-3), L layer (0-3), Q quarter (0-3),
     // M module in quarter (1-6, full Left:1->5, 5->1 full right, holes: 6)
-    const unsigned int nFMbits=9;
-    std::bitset<nFMbits> bset(std::to_string(m_FibreMatID));
-    std::bitset<nFMbits> bT(bset.to_string(),0,2);
-    std::bitset<nFMbits> bL(bset.to_string(),2,2);
-    std::bitset<nFMbits> bQ(bset.to_string(),4,2);
-    std::bitset<nFMbits> bM(bset.to_string(),6,3);
-    int dT=bT.to_ulong();
-    int dL=bL.to_ulong();
-    int dQ=bQ.to_ulong();
-    int dM=bM.to_ulong();
+    //things could be faster here: change DDDB fibrematID   ////DBL
+      
+    //get FibreMatID in "TTLLQQMMM" integer binary form from DB (yes: integer binary "110111001" = (int)110111001 and not 441)...)
+    std::string strbinFibreMatID = std::to_string(this->params()->param<int>("FibreMatID"));
+    std::bitset<fmID_nbits_all> bsetfmID(strbinFibreMatID);
+    m_FibreMatID=bsetfmID.to_ulong();     //set fibremat FibreMatID (uint)
+    //find station, etc.
+    FibreMatID_V5 fmID;
+    fmID.ui=m_FibreMatID;
+    unsigned int dT=fmID.bf.station;
+    unsigned int dL=fmID.bf.layer;
+    unsigned int dQ=fmID.bf.quarter;
+    unsigned int dM=fmID.bf.module;
 
     //temporary hack to stick to old convention
     //(and for compatibility with other codes also...)

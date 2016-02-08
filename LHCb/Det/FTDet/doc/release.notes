@@ -3,6 +3,14 @@
 ! Purpose     : Interface to the xml description
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
+
+! 2016-02-08 - Luigi Del Buono
+ - Optimized as I could the temporary hack (due to hardware numbering convention changes not propagated in
+   the rest of the code and representation of FibreMatIDs in DDDB) in
+   DeFTDetector::findFibreMat(const LHCb::FTChannelID id) to retrieve fibremats
+   corresponding to a hit identified by its FTChannelID (problem pointed out by Thomas Nikodem).
+   This entailed small changes in DeFTDetector.cpp and DeFTFibreMat.*
+   
 ! 2016-02-08 - Gerhard Raven
  - remove trivial destructors
 

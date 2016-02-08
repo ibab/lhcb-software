@@ -42,7 +42,7 @@ NTupleSvc().Output = ["FILE1 DATAFILE='/afs/cern.ch/user/d/delbuono/cmtuser/Bool
 #DDDBConf().DbRoot = "/afs/cern.ch/user/d/delbuono/cmtuser/DDDB-20141016_SIM-20140204-vc-md100_42st5/lhcb.xml"
 #DDDBConf().DbRoot = "/afs/cern.ch/user/d/delbuono/cmtuser/DDDBupgrade_FTv5/lhcb.xml"
 #DDDBConf().DbRoot = "/afs/cern.ch/user/d/delbuono/cmtuser/DDDB_FTv2_20150424_s20140204_lhcbv38r6/lhcb.xml"
-#DDDBConf().DbRoot = "/afs/cern.ch/user/d/delbuono/cmtuser/DDDB_FTv5_20150424_s20140204_lhcbv38r6/lhcb.xml"
+DDDBConf().DbRoot = "/afs/cern.ch/user/d/delbuono/cmtuser/DDDB_FTv5_20150424_s20140204_lhcbv38r6/lhcb.xml"
 
 
 #Polci
@@ -58,19 +58,20 @@ NTupleSvc().Output = ["FILE1 DATAFILE='/afs/cern.ch/user/d/delbuono/cmtuser/Bool
 #datasetName = 'bev_5000ev-May2015-v5'
 #EventSelector().Input = ["DATAFILE='/afs/cern.ch/user/d/delbuono/cmtuser/Gauss_v48r1p1/" + datasetName + ".sim'"]
 
+#DBL v2 v5
 #EventSelector().Input = [
-#"DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v5_noptcut/0/Gauss-13104012-1000ev-20151008.sim'",
-#"DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v5_noptcut/1/Gauss-13104012-1000ev-20151008.sim'",
-#"DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v5_noptcut/2/Gauss-13104012-1000ev-20151008.sim'",
-#"DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v5_noptcut/3/Gauss-13104012-1000ev-20151008.sim'",
-#"DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v5_noptcut/4/Gauss-13104012-1000ev-20151008.sim'"
+#"DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v2_noptcut/0/Gauss-13104012-1000ev-20151008.sim'",
+#"DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v2_noptcut/1/Gauss-13104012-1000ev-20151008.sim'",
+#"DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v2_noptcut/2/Gauss-13104012-1000ev-20151008.sim'",
+#"DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v2_noptcut/3/Gauss-13104012-1000ev-20151008.sim'",
+#"DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v2_noptcut/4/Gauss-13104012-1000ev-20151008.sim'"
 #]
 EventSelector().Input = [
-"DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v2_noptcut/0/Gauss-13104012-1000ev-20151008.sim'",
-"DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v2_noptcut/1/Gauss-13104012-1000ev-20151008.sim'",
-"DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v2_noptcut/2/Gauss-13104012-1000ev-20151008.sim'",
-"DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v2_noptcut/3/Gauss-13104012-1000ev-20151008.sim'",
-"DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v2_noptcut/4/Gauss-13104012-1000ev-20151008.sim'"
+"DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v5_noptcut/0/Gauss-13104012-1000ev-20151008.sim'",
+"DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v5_noptcut/1/Gauss-13104012-1000ev-20151008.sim'",
+"DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v5_noptcut/2/Gauss-13104012-1000ev-20151008.sim'",
+"DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v5_noptcut/3/Gauss-13104012-1000ev-20151008.sim'",
+"DATAFILE='/afs/cern.ch/work/d/delbuono/public/Scifi/sims/FT_v5_noptcut/4/Gauss-13104012-1000ev-20151008.sim'"
 ]
 
 #Yasmin november

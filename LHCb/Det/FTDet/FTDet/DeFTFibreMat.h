@@ -296,6 +296,26 @@ public:
                                   unsigned int grossCellID) const;
 
 
+  /// Public local types
+  //description of fibremat ID binary encoding in geom >= V5 (LSB to MSB)
+  static const unsigned int fmID_nbits_module  = 3;
+  static const unsigned int fmID_nbits_quarter = 2;
+  static const unsigned int fmID_nbits_layer   = 2;
+  static const unsigned int fmID_nbits_station = 2;
+  static const unsigned int fmID_nbits_all     = fmID_nbits_module+fmID_nbits_quarter+fmID_nbits_layer+fmID_nbits_station;
+  struct bfmID_V5 {
+    unsigned int module  : fmID_nbits_module;    //from LSB to MSB bits
+    unsigned int quarter : fmID_nbits_quarter;
+    unsigned int layer   : fmID_nbits_layer;
+    unsigned int station : fmID_nbits_station;
+    unsigned int filling : (sizeof(unsigned int)*CHAR_BIT-fmID_nbits_all);
+  };
+  union FibreMatID_V5 {
+    unsigned int ui;
+    bfmID_V5 bf;
+  };
+
+
   /// Make the Test algo a friend so that it can call private methods
   friend class DeFTTestAlg;
 
