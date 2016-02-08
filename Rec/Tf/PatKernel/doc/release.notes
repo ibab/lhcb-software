@@ -3,6 +3,8 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2016-02-08 - Adam Davis
+ - Add more debugging tools for PatLongLivedTracking
 
 !========================= PatKernel v2r10p1 2015-10-13 =========================
 ! 2015-08-12 - Gerhard Raven

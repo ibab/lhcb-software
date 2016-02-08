@@ -4,7 +4,7 @@
 
 // Include files
 #include "PatKernel/PatTTHit.h"
-
+#include "TfKernel/TTStationHitManager.h"
 // Forward declarations
 class MsgStream;
 
@@ -40,9 +40,20 @@ public:
   virtual double fracGoodHits( const LHCb::Track* track, const PatTTHits& hits) = 0;
   
   virtual bool isTrueTrack( const LHCb::Track* track, const PatTTHits& hits) = 0;
+  virtual bool isTrueTrack( const LHCb::Track* track, const Tf::TTStationHitManager<PatTTHit>::HitRange& hits) = 0;
 
   virtual void chi2Tuple( const double p, const double chi2, const unsigned int nHits) = 0;
   
+  //added by AD 2/1/16 for efficiency vs step
+
+  virtual void initializeSteps(std::vector<std::string> steps) = 0;//initialize all steps in the process  
+
+  virtual void recordStepInProcess(std::string step, bool result) = 0;//record the result of a step in the process
+  
+  virtual void resetflags() = 0;//reset all flags
+
+  virtual void ForceMCHits(PatTTHits& hits, LHCb::Track* track) = 0;//Special. Force only MC matched hits in the track.
+
 protected:
 
 private:
