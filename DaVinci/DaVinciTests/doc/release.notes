@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2016-02-08 - Eduardo Rodrigues
+ - Added test tests/qmtest/trackrefitting.qms, moved from
+   Phys/DaVinciTrackRefitting/ in the Analysis project.
+
 ! 2016-01-29 - Vanya Belyaev 
  - add new test gaudipython_algs.py
    that demonstrate
