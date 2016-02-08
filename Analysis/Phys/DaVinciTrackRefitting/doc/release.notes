@@ -4,6 +4,12 @@
 ! Purpose     : Provide tools for refitting on DST
 !-----------------------------------------------------------------------------
 
+! 2016-02-08 - Eduardo Rodrigues
+ - Removed the QMTest tests/qmtest/davincitrackrefitting.qms/ as it required
+   DaVinci (at least in its present form). For now moved to a new directory
+   under the DaVinciTests package.
+   The necessary options file under options/ remains here. Can always be changed.
+
 ! 2016-01-25 - Paul Seyfert
  - added proof of principle of qmtest for track refitting
    (running on Stripping 23 DST)
