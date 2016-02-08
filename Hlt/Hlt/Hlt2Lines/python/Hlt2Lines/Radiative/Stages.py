@@ -300,18 +300,14 @@ class FilterBDTGammaGamma(Hlt2ParticleFilter):
     Filter for the BDT lines.
     """
     def __init__(self, type, inputs, props):
-        varmap={}
+        varmap = props['BDT_VARMAP']
         if type is "None":
-            varmap  = self.prepGammaGammaMapNone(varmap)
             nickname="B2GammaGamma"
         elif type is "LL":
-            varmap  = self.prepGammaGammaMapConvLL(varmap)
             nickname = "B2GammaGamma%s" % type
         elif type is "DD":
-            varmap  = self.prepGammaGammaMapConvDD(varmap)
             nickname = "B2GammaGamma%s" % type
         elif type is "Double":
-            varmap  = self.prepGammaGammaMapConvDouble(varmap)
             nickname = "B2GammaGamma%s" % type
         #params  = '/afs/cern.ch/user/s/sbenson/cmtuser/MooreDev_HEAD/ParamFiles/data/Hlt2B2GammaGamma_%s_v2.bbdt' % type
         bdttool = self.__classifier(props['BDT_PARAMS'], varmap, "TrgBBDT", type=type)
@@ -343,81 +339,4 @@ class FilterBDTGammaGamma(Hlt2ParticleFilter):
                           Key = key, Source = ('LoKi::Hybrid::DictTransform'+'<BBDecTreeTransform>/BBDecTree'+type))
         return classifier
 
-    def prepGammaGammaMapNone(self, varmap):
-        """
-        Format the variable map for the BBDecTreeTool.
-        """
-        from copy import deepcopy
-        varmap = deepcopy(varmap)
-        pt = "log( PT/MeV )"
-        ptsum = "log( SUMTREE(PT, (ABSID == 22), 0.0)/MeV )"
-        ptasym = "(MAXTREE((ABSID == 22),PT/MeV)-MINTREE((ABSID == 22),PT/MeV)) / (MAXTREE((ABSID == 22), PT/MeV)+MINTREE((ABSID == 22), PT/MeV))"
-        isPhoton = "MINTREE( (ABSID == 22) & ISBASIC, PPINFO(LHCb.ProtoParticle.IsPhoton,1000))"
-        E1 = "MINTREE( (ABSID == 22) & ISBASIC, PPINFO(LHCb.ProtoParticle.CaloShapeE1,1000))"
-        INE = "MINTREE( (ABSID == 22) & ISBASIC, PPINFO(LHCb.ProtoParticle.IsNotE,1000))"
-        varmap["BPT"] = pt
-        varmap["SUMPT"] = ptsum
-        varmap["PTASYM"] = ptasym
-        varmap["ISPHOTON"] = isPhoton
-        varmap["E1"] = E1
-        varmap["INE"] = INE
-        return varmap
-
-    def prepGammaGammaMapConvLL(self, varmap):
-        """
-        Format the variable map for the BBDecTreeTool.
-        """
-        from copy import deepcopy
-        varmap = deepcopy(varmap)
-        ptsum = "log( SUMTREE(PT, (ABSID == 22), 0.0)/MeV)"
-        ptasym = "(MAXTREE((ABSID == 22),PT/MeV)-MINTREE((ABSID == 22),PT/MeV)) / (MAXTREE((ABSID == 22), PT/MeV)+MINTREE((ABSID == 22), PT/MeV))"
-        minDLLe = "MINTREE((ABSID == 11),PPINFO(LHCb.ProtoParticle.CombDLLe,1000))"
-        isPhoton = "MINTREE( (ABSID == 22) & ISBASIC, PPINFO(LHCb.ProtoParticle.IsPhoton,1000))"
-        E1 = "MINTREE( (ABSID == 22) & ISBASIC, PPINFO(LHCb.ProtoParticle.CaloShapeE1,1000))"
-        mass = "MAXTREE((ABSID==22) & (NDAUGHTERS>0), M)"
-        varmap["SUMPT"] = ptsum
-        varmap["PTASYM"] = ptasym
-        varmap["CONVM"] = mass
-        varmap["ISPHOTON"] = isPhoton
-        varmap["E1"] = E1
-        varmap["DLLE"] = minDLLe
-        return varmap
-
-    def prepGammaGammaMapConvDD(self, varmap):
-        """
-        Format the variable map for the BBDecTreeTool.
-        """
-        from copy import deepcopy
-        varmap = deepcopy(varmap)
-        ptsum = "log( SUMTREE(PT, (ABSID == 22), 0.0)/MeV)"
-        ptasym = "(MAXTREE((ABSID == 22),PT/MeV)-MINTREE((ABSID == 22),PT/MeV)) / (MAXTREE((ABSID == 22), PT/MeV)+MINTREE((ABSID == 22), PT/MeV))"
-        minDLLe = "MINTREE((ABSID == 11),PPINFO(LHCb.ProtoParticle.CombDLLe,1000))"
-        isPhoton = "MINTREE( (ABSID == 22) & ISBASIC, PPINFO(LHCb.ProtoParticle.IsPhoton,1000))"
-        E1 = "MINTREE( (ABSID == 22) & ISBASIC, PPINFO(LHCb.ProtoParticle.CaloShapeE1,1000))"
-        varmap["SUMPT"] = ptsum
-        varmap["PTASYM"] = ptasym
-        varmap["DLLE"] = minDLLe
-        varmap["ISPHOTON"] = isPhoton
-        varmap["E1"] = E1
-        return varmap
-
-    def prepGammaGammaMapConvDouble(self, varmap):
-        """
-        Format the variable map for the BBDecTreeTool.
-        """
-        from copy import deepcopy
-        varmap = deepcopy(varmap)
-        pt = "log( PT/MeV )"
-        ptsum = "log( SUMTREE(PT, (ABSID == 22), 0.0)/MeV)"
-        ptasym = "(MAXTREE((ABSID == 22),PT/MeV)-MINTREE((ABSID == 22),PT/MeV)) / (MAXTREE((ABSID == 22), PT/MeV)+MINTREE((ABSID == 22), PT/MeV))"
-        minDLLe = "MINTREE((ABSID == 11),PPINFO(LHCb.ProtoParticle.CombDLLe,1000))"
-        mass = "MAXTREE((ABSID==22) & (NDAUGHTERS>0), M)"
-        vtx = "MAXTREE((ABSID==22) & (NDAUGHTERS>0), VFASPF(VCHI2))"
-        varmap["BPT"] = pt
-        varmap["SUMPT"] = ptsum
-        varmap["PTASYM"] = ptasym
-        varmap["CONVM"] = mass
-        varmap["CONVVTX"] = vtx
-        varmap["DLLE"] = minDLLe
-        return varmap
 # EOF

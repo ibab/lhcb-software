@@ -8,6 +8,13 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-02-08 - Carla Marin
+ - Changed the way the BDT variable map is passed to the B2GammaGamma lines.
+   So far it was hardcoded in Stages, now it is defined through the cut
+   dictionary and hence can be modified from HltSettings. Modified files are:
+	  M           python/Hlt2Lines/Radiative/B2GammaGamma.py
+	  M           python/Hlt2Lines/Radiative/Stages.py
+
 ! 2016-02-01 - Mike Sokoloff
 
    change BPVDIRA_MIN cut in D2HHHKsLines.py and the the Q_M_MIN/MAX

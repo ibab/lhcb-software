@@ -51,6 +51,7 @@ class B2GammaGammaLines(RadiativeLineBuilder):
                 'RadiativeB2GammaGammaDouble' : [TrackGEC(), PV3D('Hlt2'), BDTFilter_Double],
                 'RadiativeB2GammaGamma'       : [TrackGEC(), PV3D('Hlt2'), BDTFilter_None]}
 
+        
     @staticmethod
     def get_cuts():
         from GaudiKernel.SystemOfUnits import MeV
@@ -68,6 +69,12 @@ class B2GammaGammaLines(RadiativeLineBuilder):
                 'B_PT'      : 3000.0*MeV,
                 'B_P'       : 5000.0*MeV,
                 'BDT_PARAMS': '$PARAMFILESROOT/data/Hlt2B2GammaGamma_None_v2.bbdt',
+                'BDT_VARMAP': {'BPT'     : "log( PT/MeV )",
+                               'SUMPT'   : "log( SUMTREE(PT, (ABSID == 22), 0.0)/MeV )",
+                               'PTASYM'  : "(MAXTREE((ABSID == 22),PT/MeV)-MINTREE((ABSID == 22),PT/MeV)) / (MAXTREE((ABSID == 22), PT/MeV)+MINTREE((ABSID == 22), PT/MeV))",
+                               'ISPHOTON': "MINTREE( (ABSID == 22) & ISBASIC, PPINFO(LHCb.ProtoParticle.IsPhoton,1000))",
+                               'E1'      : "MINTREE( (ABSID == 22) & ISBASIC, PPINFO(LHCb.ProtoParticle.CaloShapeE1,1000))",
+                               'INE'     : "MINTREE( (ABSID == 22) & ISBASIC, PPINFO(LHCb.ProtoParticle.IsNotE,1000))"},
                 'BDT_MIN'   : 1.0
                 }
         cuts['B2GammaGammaLL'] = {
@@ -77,6 +84,12 @@ class B2GammaGammaLines(RadiativeLineBuilder):
                 'B_PT'      : 2500.0*MeV,
                 'B_P'       : 4000.0*MeV,
                 'BDT_PARAMS': '$PARAMFILESROOT/data/Hlt2B2GammaGamma_LL_v2.bbdt',
+                'BDT_VARMAP': {'SUMPT'   : "log( SUMTREE(PT, (ABSID == 22), 0.0)/MeV)",
+                               'PTASYM'  : "(MAXTREE((ABSID == 22),PT/MeV)-MINTREE((ABSID == 22),PT/MeV)) / (MAXTREE((ABSID == 22), PT/MeV)+MINTREE((ABSID == 22), PT/MeV))",
+                               "DLLE"    : "MINTREE((ABSID == 11),PPINFO(LHCb.ProtoParticle.CombDLLe,1000))",
+                               "ISPHOTON": "MINTREE( (ABSID == 22) & ISBASIC, PPINFO(LHCb.ProtoParticle.IsPhoton,1000))",
+                               "E1"      : "MINTREE( (ABSID == 22) & ISBASIC, PPINFO(LHCb.ProtoParticle.CaloShapeE1,1000))",
+                               "CONVM"   : "MAXTREE((ABSID==22) & (NDAUGHTERS>0), M)"},
                 'BDT_MIN'   : 1.0
                 }
         cuts['B2GammaGammaDD'] = {
@@ -86,6 +99,11 @@ class B2GammaGammaLines(RadiativeLineBuilder):
                 'B_PT'      : 2500.0*MeV,
                 'B_P'       : 4000.0*MeV,
                 'BDT_PARAMS': '$PARAMFILESROOT/data/Hlt2B2GammaGamma_DD_v2.bbdt',
+                'BDT_VARMAP': {'SUMPT'   : "log( SUMTREE(PT, (ABSID == 22), 0.0)/MeV)",
+                               'PTASYM'  : "(MAXTREE((ABSID == 22),PT/MeV)-MINTREE((ABSID == 22),PT/MeV)) / (MAXTREE((ABSID == 22), PT/MeV)+MINTREE((ABSID == 22), PT/MeV))",
+                               'DLLE'    : "MINTREE((ABSID == 11),PPINFO(LHCb.ProtoParticle.CombDLLe,1000))",
+                               'ISPHOTON': "MINTREE( (ABSID == 22) & ISBASIC, PPINFO(LHCb.ProtoParticle.IsPhoton,1000))",
+                               'E1'      : "MINTREE( (ABSID == 22) & ISBASIC, PPINFO(LHCb.ProtoParticle.CaloShapeE1,1000))"},
                 'BDT_MIN'   : 1.0
                 }
         cuts['B2GammaGammaDouble'] = {
@@ -96,7 +114,13 @@ class B2GammaGammaLines(RadiativeLineBuilder):
                 'B_P'       : 5000.0*MeV,
                 'B_VTX'     : 25.0,
                 'BDT_PARAMS': '$PARAMFILESROOT/data/Hlt2B2GammaGamma_Double_v2.bbdt',
-                'BDT_MIN'   : 1.0,
+                'BDT_VARMAP': {'BPT'    : "log( PT/MeV )",
+                               'SUMPT'  : "log( SUMTREE(PT, (ABSID == 22), 0.0)/MeV)",
+                               'PTASYM' : "(MAXTREE((ABSID == 22),PT/MeV)-MINTREE((ABSID == 22),PT/MeV)) / (MAXTREE((ABSID == 22), PT/MeV)+MINTREE((ABSID == 22), PT/MeV))",
+                               'CONVM'  : "MAXTREE((ABSID==22) & (NDAUGHTERS>0), M)",
+                               'CONVVTX': "MAXTREE((ABSID==22) & (NDAUGHTERS>0), VFASPF(VCHI2))",
+                               'DLLE'   : "MINTREE((ABSID == 11),PPINFO(LHCb.ProtoParticle.CombDLLe,1000))"},
+                'BDT_MIN'   : 1.0
                 }
         return cuts
 
