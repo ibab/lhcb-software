@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-02-08 - Kevin Dungs
+ - Add a subfolder for lepton flavour violating decays. So far contains one
+   line for J/ψ→µe. Will need some fine tuning.
+
 ! 2016-02-08 - Carla Marin
  - Changed the way the BDT variable map is passed to the B2GammaGamma lines.
    So far it was hardcoded in Stages, now it is defined through the cut
