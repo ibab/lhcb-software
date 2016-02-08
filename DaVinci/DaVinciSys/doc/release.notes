@@ -3,6 +3,36 @@ Package             : DaVinciSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v39r0>2016-02-08 DaVinci v39r0</A></H1><PRE>
+Development release for 2016 data taking.
+It is based on Gaudi v27r0, LHCb v40r0, Rec v19r0, Phys v21r0, Analysis v15r0 and Stripping v9r11p2.
+Uses LCG_83 with ROOT 6.06.00.
+
+- Packages patched :
+  GaudiConf v19r16.
+
+- Packages updated :
+  DaVinciTests v3r2, Phys/DaVinci v39r0, Phys/Tesla v1r14.
+
+- In DaVinciTests v3r2 :
+  . Use Stripping24 in FSR tests.
+    Fixes issue with removal of property in LSAdaptPV3DFitter.
+  . Add new test gaudipython_algs.py that demonstrate
+    1) a bit counterintuitive measing of IAlgorithm::isInitialized
+    2) problem (segmentation violation) woth creation of ALG_* functors
+       from python.  [It works via Hybrid tools]
+    The test produces segmentation fault without  patch in $LOKICORE/src/AlgFunctors (r200652)
+    but workd smoothly with this patch.
+    TRUE SOLUTION for $LOKICORE/src/AlgFunctors.cpp is needed.
+  . Added test tests/qmtest/trackrefitting.qms, moved from
+    Phys/DaVinciTrackRefitting/ in the Analysis project.
+
+- In Phys/DaVinci v39r0 :
+  . Development release in preparation for 2016 data-taking and simulation.
+
+- In Phys/Tesla v1r14 :
+  . Added packing of calo clusters and hypos.
+
 </PRE><H1><A NAME=v38r1p1>2016-01-19 DaVinci v38r1p1</A></H1><PRE>
 
 Release of two kinds :

@@ -1,16 +1,12 @@
 ################################################################################
 # Package: DaVinciSys
 ################################################################################
-gaudi_subdir(DaVinciSys v38r1p1)
+gaudi_subdir(DaVinciSys v39r0)
 
 gaudi_depends_on_subdirs(DaVinciTests
                          ##############################
                          # Patched packages just for this version
-                         Hlt/HltDAQ
-                         Event/HltEvent
-                         Muon/MuonID
-                         Tr/TrackExtrapolators
-                         Tr/TrackTools
+                         GaudiConf
                          ##############################
                          # Temporarily moved in from Stripping, for S23 release
                          Phys/StrippingCache
