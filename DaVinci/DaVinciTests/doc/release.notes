@@ -4,6 +4,8 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+!======================= DaVinciTests v3r2 2016-02-08 ========================
+
 ! 2016-02-08 - Eduardo Rodrigues
  - Added test tests/qmtest/trackrefitting.qms, moved from
    Phys/DaVinciTrackRefitting/ in the Analysis project.
@@ -20,7 +22,6 @@
 
   TRUE SOLUTION for $LOKICORE/src/AlgFunctors.cpp is needed
   
-
 ! 2016-01-06 - Rosen Matev
  - Use Stripping24 in FSR tests.
    Fixes issue with removal of property in LSAdaptPV3DFitter.
