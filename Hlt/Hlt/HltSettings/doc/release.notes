@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-02-08 - Carla Marin
+ - Add draft settings file for 2016 radiative lines by svn cp from the
+   September2015 file.
+ - Add the BDT variable map to the cut dictionary for B2GammaGamma lines.
+
 ! 2016-02-01 - Mike Sokoloff
   in python/HltSettings/CharmHad/CharmHad_25ns_Draft2016.py 
   modified BPVDIRA_MIN threshold for D2HHHKs lines and
