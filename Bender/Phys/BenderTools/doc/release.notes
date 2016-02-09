@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2016-02-09 - Vanya Belyaev
+ - add qmtest for TURBO.MDST 
+
+! 2016-02-09 - Vanya Belyaev
  - make TURBO.MDST known for Bender
 
 ! 2016-02-05 - Vanya BELYAEV 
