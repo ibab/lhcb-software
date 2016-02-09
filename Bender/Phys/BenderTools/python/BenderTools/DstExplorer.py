@@ -275,6 +275,10 @@ def configure ( config ) :
         config.RootInTES = '/Event/BOTTOM'
         logger.info ('RootInTES is set according to BOTTOM.MDST'   )
         daVinci.InputType = 'MDST'
+    elif hasInFile ( files , 'TURBO.MDST'    ) and not config.RootInTES :
+        config.RootInTES = '/Event/Turbo'
+        logger.info ('RootInTES is set according to TURBO.MDST'    )
+        daVinci.InputType = 'MDST'
     
     if config.RootInTES and  0  != config.RootInTES.find ( '/Event' ) :
         config.RootInTES  = '/Event/' + config.RootInTES        
