@@ -3,14 +3,14 @@ Package             : AnalysisSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb analysis packages
 
-</PRE><H1><A NAME=v15r0>2016-02-08 Analysis v15r0</A></H1><PRE>
+</PRE><H1><A NAME=v15r0>2016-02-09 Analysis v15r0</A></H1><PRE>
 
 Development release for 2016 data taking.
 It is based on Gaudi v27r0, LHCb v40r0, Rec v19r0 and Phys v21r0, and uses LCG_83 with ROOT 6.06.00.
 
 - Packages updated :
-  Analysis/Ostap v1r13, Phys/AnalysisConf v2r6, Phys/DaVinciTrackRefitting v2r4, Phys/DaVinciTrackScaling v1r6,
-  Phys/DecayTreeTuple v5r5, Phys/DecayTreeTupleJets v1r4, Phys/TeslaTools v1r18.
+  Analysis/Ostap v1r13, Phys/AnalysisConf v2r6, Phys/AnalysisPython v2r40, Phys/DaVinciTrackRefitting v2r4,
+  Phys/DaVinciTrackScaling v1r6, Phys/DecayTreeTuple v5r5, Phys/DecayTreeTupleJets v1r4, Phys/TeslaTools v1r18.
 
 - In Analysis/Ostap v1r13 :
   . Many new additions and improvements, and a few buglet fixes. See package release note for details.
@@ -18,6 +18,11 @@ It is based on Gaudi v27r0, LHCb v40r0, Rec v19r0 and Phys v21r0, and uses LCG_8
 - In Phys/AnalysisConf v2r6 :
   . Configuration.py : RedoMCLinks change NodeKiller setting from "Link/Rec" to "Link/Rec/Track"
     to avoid removing the Calo Linkers.
+
+- In Phys/AnalysisPython v2r40 :
+  . Logger:
+    1) Decrease the default logging threshold.
+    2) Add context manager to control the logging.
 
 - In Phys/DaVinciTrackRefitting v2r4 :
   . Added functionality for integration and qm test to refitter.
