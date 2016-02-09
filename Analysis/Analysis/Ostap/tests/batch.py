@@ -6,4 +6,5 @@ h1  = ROOT.TH1D('h1','',10,0,10)
 for i in h1 : h1[i] = VE(i,i)
 h1 *= 10
 h1.Draw()
+print ' here print canvas!!!'
 canvas >> 'batch'

@@ -71,7 +71,7 @@ from AnalysisPython.Logger import getLogger
 _my_name_ = __name__
 if _my_name_ in ( '__main__' , '__builtins__' ) : _my_name_ = 'Ostap'
 # =============================================================================
-logger = getLogger( _my_name_ )
+logger = getLogger( _my_name_ , level = 2 )
 # =============================================================================
 ## parse arguments 
 def parse_args ( ) :
@@ -169,14 +169,14 @@ if arguments.Quiet :
     
     import logging
     logger.info ( '(silent) Interactive Ostap session (steroid-enhanced PyROOT)')
-    logging.disable ( logging.INFO )
+    logging.disable ( logging.WARNING - 1 )
 
 else:
     
     import logging
-    level = logging.DEBUG-3 if arguments.Verbose else logging.DEBUG
-    logging.disable ( level  ) 
-    
+    level = logging.DEBUG-5  if arguments.Verbose else logging.INFO-1
+    logging.disable ( level  )
+
     import Ostap.Line
     logger.info ( "Welcome to Ostap\n" + Ostap.Line.line )
     logger.info ( __doc__ )

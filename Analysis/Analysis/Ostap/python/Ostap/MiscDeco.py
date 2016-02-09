@@ -49,7 +49,7 @@ def _cnv_print_ ( cnv , fname , exts = ( 'pdf' , 'png' , 'eps', 'C' ) ) :
     """A bit simplified version for TCanvas print
     >>> canvas.print ( 'fig' )    
     """
-    # 
+    #
     from Ostap.Utils import rootWarning 
     n,d,e = fname.rpartition('.')
     if d and e.lower() in all_extensions : 

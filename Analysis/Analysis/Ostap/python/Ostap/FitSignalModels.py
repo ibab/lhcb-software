@@ -1896,6 +1896,8 @@ class Bugg_pdf(MASS) :
                          bugg_m  , bugg_g2  ) 
         
         self.bugg_g2 = self.sigma
+        self.gamam   = self.sigma
+        ##
         sname  = self.gamma.GetName  ()
         stitle = self.gamma.GetTitle ()
         gname  = sname .replace ( 'sigma' , 'gamma2_Bugg' )

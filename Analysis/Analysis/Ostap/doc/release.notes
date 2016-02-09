@@ -8,6 +8,10 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2016-02-09 - Vanya Belyaev
+ - FitSignalModels.py
+   Bugg_pgf - fix a bug in Bugg's function  (thanks to Katya Govorkova)
+
 ! 2016-02-07 - Vanya BELYAEV 
  - add new test TestKisa2.py. The test is not activated now,
    it will wait pathos' suite (pathos, multiprocess, pox, dill and ppft)
