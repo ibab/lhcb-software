@@ -157,7 +157,7 @@ private:
   public:
     /// Constructor.
     SuperCluster();
-
+   
     // Members.
     bool                used; ///< Flag if used.
     bool          ecal, hcal; ///< Flags whether contains ECAL or HCAL energy.
@@ -281,6 +281,10 @@ private:
   // Calorimeter property members.
   /// Flag to perform neutral recovery using expected calorimeter response.
   bool m_sprRecover;
+  /// If (expected track calorimeter energy) / (calorimeter energy) is
+  /// greater than this when building a SuperCluster, set the expected
+  /// energy to zero.
+  double m_sprRatioMax;
   /// ID to assign SuperClusters from neutral recovery.
   int m_sprPid;
   /// Mass to assign SuperClusters from neutral recovery.

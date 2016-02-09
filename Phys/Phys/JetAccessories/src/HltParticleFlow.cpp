@@ -59,6 +59,10 @@ HltParticleFlow::HltParticleFlow(const string &name, ISvcLocator *svc)
   declareProperty("SprRecover", m_sprRecover = true, 
 		  "Flag to perform neutral recovery using expected calorimeter "
 		  "response.");
+  declareProperty("SprRatio", m_sprRatioMax = 1.8, 
+		  "If (expected track calorimeter energy) / (calorimeter "
+		  "energy) is greater than this when building a SuperCluster, "
+		  "set the expected energy to zero.");
   declareProperty("SprPid", m_sprPid = 22,
 		  "ID to assign SuperClusters from neutral recovery.");
   declareProperty("SprM", m_sprM = 0 * Gaudi::Units::MeV, 
@@ -216,7 +220,6 @@ StatusCode HltParticleFlow::initialize() {
 StatusCode HltParticleFlow::execute() {
   // Clear the stored Tracks and CaloClusters from the previous event.
   m_trks.clear(); m_calsSprs.clear();
-
   // Create the output containers.
   m_prts = new Particles(); m_pros = new ProtoParticles();
   m_hyps = new CaloHypos(); m_cals = new CaloClusters();
@@ -268,8 +271,9 @@ StatusCode HltParticleFlow::execute() {
     debug() << "Adding SuperClusters from neutral recovery." << endmsg;
     for (unordered_map<const CaloCluster*, SuperClusterPtr>::iterator calSpr =
 	   m_calsSprs.begin(); calSpr != m_calsSprs.end(); ++calSpr) {
-      if (!calSpr->second || calSpr->second->used || calSpr->second->vec.E() 
-	  <= 0) {calSpr->second->used = true; continue;}
+      if (!calSpr->second) continue;
+      if(calSpr->second->used || calSpr->second->vec.E() <= 0) {
+	calSpr->second->used = true; continue;}
       create(calSpr->second);
       calSpr->second->used = true;
     }
@@ -364,7 +368,7 @@ void HltParticleFlow::add(const ProtoParticle *pro, const Input &in) {
     for (unsigned int idx = 0; idx < m_proBestKeys.size(); ++idx) {
       val = pro->info(m_proBestKeys[idx], -1);
       if (val < m_proBestMins[idx]) continue;
-      if (val < max) continue;
+      if (val <= max) continue;
       max = val; best = idx;
     } m = m_proBestMs[best]; pid = m_proBestPids[best];
   }
@@ -508,7 +512,7 @@ void HltParticleFlow::use(const ProtoParticle *pro, const Particle *prt) {
 // Mark a Track and associated CaloClusters as used.
 void HltParticleFlow::use(const Track *trk, const Particle *prt) {
   m_trks.insert(trk);
-   if (trk->type() == Track::Velo) return;
+  if (trk->type() == Track::Velo) return;
   SuperClusterPtr spr(0); Gaudi::LorentzVector vec(0, 0, 0, 0);
   if (prt) spr = SuperClusterPtr(new SuperCluster());
   if (m_trksEcal) use(trk, vec, spr, spr ? &spr->ecal : 0,
@@ -528,7 +532,7 @@ void HltParticleFlow::use(const Track *trk, const Particle *prt) {
     else if (spr->hcal)         e += p*m_hcalHadE.Eval(p);
     else                        e += p*m_ecalHadE.Eval(p);
   }
-  if (e < vec.E()) vec *= e/vec.E();
+  vec *= (e / vec.E() < m_sprRatioMax) ? e/vec.E() : 0;
   spr->vec -= vec;
 }
 
@@ -541,7 +545,7 @@ void HltParticleFlow::use(const Track *trk, Gaudi::LorentzVector &vec,
   if (cals.size() == 0) return;
   for (Calo2Track::ITrClusTable::Range::const_iterator cal = cals.begin();
        cal != cals.end(); ++cal) {
-    if (chi2Max >= 0 && cal->weight() < chi2Max) continue;
+    if (chi2Max >= 0 && cal->weight() > chi2Max) continue;
     if (calo) {sum(vec, cal->to()); (*calo) = true;}
     use(cal->to(), spr);
     if (best) break;
@@ -555,11 +559,12 @@ void HltParticleFlow::use(const CaloCluster *cal, SuperClusterPtr spr) {
   if (calSpr == m_calsSprs.end()) {
     if (spr && cal) sum(spr->vec, cal); m_calsSprs[cal] = spr; return;}
   if (!spr) return;
-  if (!calSpr->second) {calSpr->second = spr; return;}
-  while (calSpr->second->spr) calSpr->second = calSpr->second->spr;
-  if (spr != calSpr->second) {
-    spr->vec += calSpr->second->vec; calSpr->second->used = true;
-    calSpr->second->spr = spr;
+  if (calSpr->second) {
+    while (calSpr->second->spr) calSpr->second = calSpr->second->spr;
+    if (spr != calSpr->second) {
+      spr->vec += calSpr->second->vec; calSpr->second->used = true;
+      calSpr->second->spr = spr;
+    }
   }
   calSpr->second = spr;
 }
