@@ -3,9 +3,9 @@ Package             : DaVinciSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
-</PRE><H1><A NAME=v39r0>2016-02-08 DaVinci v39r0</A></H1><PRE>
+</PRE><H1><A NAME=v39r0>2016-02-09 DaVinci v39r0</A></H1><PRE>
 Development release for 2016 data taking.
-It is based on Gaudi v27r0, LHCb v40r0, Rec v19r0, Phys v21r0, Analysis v15r0 and Stripping v9r11p2.
+It is based on Gaudi v27r0, LHCb v40r0, Rec v19r0, Phys v21r0, Analysis v15r0 and Stripping v10r0.
 Uses LCG_83 with ROOT 6.06.00.
 
 - Packages updated :
