@@ -26,8 +26,7 @@ h = book  ('path/to/my/histo', ## path in Histogram Transient Store
            0                 , ## low edge
            100               ) ## high edge
 
-print 'TUPLE TYPE:', type(t)
-## event loop 
+## start event loop 
 for i in range(20) :
     
     run(1)
