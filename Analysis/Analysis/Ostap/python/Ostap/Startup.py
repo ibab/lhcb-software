@@ -63,7 +63,7 @@ def with_ipython() :
         return False 
 
 
-## check if the file is acually empty
+## check if the file is actually "empty"
 def _empty_ ( fname ) :
     
     import os 
