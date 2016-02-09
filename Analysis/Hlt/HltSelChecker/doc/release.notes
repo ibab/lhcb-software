@@ -3,6 +3,9 @@
 ! Responsible : P. Koppenburg
 ! Purpose     : Checking and debugging of Hlt2
 !-----------------------------------------------------------------------------
+
+!======================= HltSelChecker v12r5 2016-02-09 ======================
+
 ! 2015-08-20 - Gerhard Raven
  - prefer std::to_string over _itoa from GaudiKernel
  - replace usage of DispatchANNSvc with TCKANNSvc
