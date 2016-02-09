@@ -29,7 +29,7 @@ using namespace boost::assign;
 
 #define PHOENIX_LIMIT 6
 #include <boost/spirit/home/classic.hpp>
-#include <boost/spirit/home/phoenix.hpp>
+#include <boost/phoenix.hpp>
 
 DECLARE_ALGORITHM_FACTORY(OTModuleClbrMon)
 
@@ -91,7 +91,7 @@ OTModuleClbrMon::OTModuleClbrMon(const std::string& name, ISvcLocator* pSvcLocat
   declareProperty("xmlFileName"   ,  m_xmlFileName  = "results.xml" );
 
   //boost::filesystem::path full_path("/afs/cern.ch/user/l/lgrillo/databases_for_online/OT/results.xml");
-  
+
   // Check options - reset to default if wrong or missing
   #if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
   std::vector<double> dtOpts= list_of(-5.0)(45.0)(200);
@@ -263,8 +263,8 @@ StatusCode OTModuleClbrMon::initialize()
   }
 
 
-  //-- TMP Monitoring hists ..."                                                                                                                   
-           
+  //-- TMP Monitoring hists ..."
+
   hdt0 = new TH1D("hdt0", "hdt0", 432, 0, 432);
   ht0 = new TH1D("ht0", "ht0", 432, 0, 432);
   hdt0proj = new TH1D("hdt0proj", "hdt0proj", 100, -10, 10);
@@ -601,19 +601,19 @@ StatusCode OTModuleClbrMon::finalize()
       }
     }
   }
-    
-  //Loop over the station layer quarter module                                                                                                    
+
+  //Loop over the station layer quarter module
 
   std::cout << "Loop ..." << std::endl;
   for(int s = 0; s < 3; s++){
     for(int l = 0; l < 4; l++){
       for(int q = 0; q < 4; q++){
 
-	// used only for Alex's monitorning                                                                                                                                
+	// used only for Alex's monitorning
 	//double t0_ = 0.0;
 	//double dt0_ = 0.0;
 	//double dt0err_ = 0.1;
-	
+
 
         for(int m = 8; m >= 0; m--){
 
@@ -653,9 +653,9 @@ StatusCode OTModuleClbrMon::finalize()
 
 	  int modulen = m + 9 * (q + 4 * (l + 4 * s));
 
-          //if(hist == 0 || hist->GetEntries() < 1000 || (s == 0 && m == 0))//this is the normal condition  
-          //if(hist == 0 || hist->GetEntries() < 1 || (s == 0 && m == 0))//this is the normal condition  
-	  if(s == 0 && m == 0) //this is for debug                                                                                                                            
+          //if(hist == 0 || hist->GetEntries() < 1000 || (s == 0 && m == 0))//this is the normal condition
+          //if(hist == 0 || hist->GetEntries() < 1 || (s == 0 && m == 0))//this is the normal condition
+	  if(s == 0 && m == 0) //this is for debug
             {
               if(hist != 0 && !(s == 0 && m == 0)) std::cout << histName << " :: N = " << hist->GetEntries() << std::endl;
               hdt0->SetBinContent(hdt0->FindBin(modulen), 0.0);
@@ -730,24 +730,24 @@ StatusCode OTModuleClbrMon::finalize()
 	    sc_1_L= fit_single_hist(hist_otis1_L,s,l,q, m, "1L", residual_1L, residual_1L_err, outFile);
 	    sc_2_L= fit_single_hist(hist_otis2_L,s,l,q, m, "2L", residual_2L, residual_2L_err, outFile);
 	    sc_3_L= fit_single_hist(hist_otis3_L,s,l,q, m, "3L", residual_3L, residual_3L_err, outFile);
-	    
+
 	    sc_0_R= fit_single_hist(hist_otis0_R,s,l,q, m, "0L", residual_0R, residual_0R_err, outFile);
 	    sc_1_R= fit_single_hist(hist_otis1_R,s,l,q, m, "1L", residual_1R, residual_1R_err, outFile);
 	    sc_2_R= fit_single_hist(hist_otis2_R,s,l,q, m, "2L", residual_2R, residual_2R_err, outFile);
 	    sc_3_R= fit_single_hist(hist_otis3_R,s,l,q, m, "3L", residual_3R, residual_3R_err, outFile);
-	    
+
 	    test_OTIS[s][l][q][m][0] = 0.5*(residual_0L + residual_0R);
 	    test_OTIS[s][l][q][m][1] = 0.5*(residual_1L + residual_1R);
 	    test_OTIS[s][l][q][m][2] = 0.5*(residual_2L + residual_2R);
 	    test_OTIS[s][l][q][m][3] = 0.5*(residual_3L + residual_3R);
-	    
+
 	    if(Apply_Calibration){
 	      for (int a = 0; a<4;a++){
 		test_OTIS[s][l][q][m][a] = test_OTIS[s][l][q][m][a]+t0s[s][l][q][m];
 	      }
 	    }
-	    
-	    
+
+
 	  }
           else if(OTIS_calibration){
 	    test_OTIS[s][l][q][m][0] = residual_01L;
@@ -760,19 +760,19 @@ StatusCode OTModuleClbrMon::finalize()
 		test_OTIS[s][l][q][m][a] = test_OTIS[s][l][q][m][a]+t0s[s][l][q][m];
 	      }
 	    }
-	    
+
           }
 	  else{
-	    if( m==8 && (q == 0 || q == 2) && hist23L->GetEntries()==0 && hist23R->GetEntries()==0){ //only 2 half monlayer contributions 
+	    if( m==8 && (q == 0 || q == 2) && hist23L->GetEntries()==0 && hist23R->GetEntries()==0){ //only 2 half monlayer contributions
 	      test[s][l][q][m] = 0.5*(residual_01L + residual_01R);
-	      
+
 	      dt0err = 0.5*(sqrt((residual_01L_err*residual_01L_err)+(residual_01R_err*residual_01R_err)));
-	      
+
 	    }
 	    else{
 	      test[s][l][q][m] = 0.25*(residual_01L + residual_01R + residual_23L+ residual_23R);
-	      
-	      
+
+
 	      dt0err = 0.25*(sqrt((residual_01L_err*residual_01L_err)+(residual_01R_err*residual_01R_err)
 				  +(residual_23L_err*residual_23L_err)+(residual_23R_err*residual_23R_err)));
 	    }
@@ -785,7 +785,7 @@ StatusCode OTModuleClbrMon::finalize()
 	    ht0->SetBinError(ht0->FindBin(modulen), dt0err);
 
 
-	    //if(fabs(dt0) > 1) std::cout << histName << " :: dt0 = " << dt0 << std::endl; 
+	    //if(fabs(dt0) > 1) std::cout << histName << " :: dt0 = " << dt0 << std::endl;
 	    std::cout << histName << " :: dt0 = " << dt0 << std::endl;
 
 	    if(Apply_Calibration){
@@ -802,7 +802,7 @@ StatusCode OTModuleClbrMon::finalize()
   /*
   for(int s = 0; s < 3; s++){
       for(int l = 0; l < 4; l++){
-	for(int q = 0; q < 4; q++){	  
+	for(int q = 0; q < 4; q++){
 	  for(int m = 8; m >= 0; m--){
 
 	    double t0_ = 0.0;
@@ -812,13 +812,13 @@ StatusCode OTModuleClbrMon::finalize()
 	    int modulen = m + 9 * (q + 4 * (l + 4 * s));
 
 	    //std::cout<< "inner looop"<<std::endl;//debug
-	    
+
 	    //    if(m_histModuleDriftTimeResidual[s][l][q][m] == 0 || m_histModuleDriftTimeResidual[s][l][q][m]->GetEntries() < 1000  || (s == 0 && m == 0))
 	    if(m_histModuleDriftTimeResidual[s][l][q][m] == 0 || m_histModuleDriftTimeResidual[s][l][q][m]->GetEntries() < 0  || (s == 0 && m == 0))//for debug only
 	      {
 		if (verbose)
 		  std::cout<< "no data enough"<<std::endl;
-		
+
 		if(m == 8) t0_ = -mtoff[modulen];
 		if(verbose){
 		  if(!(s == 0 && m == 0)){
@@ -835,21 +835,21 @@ StatusCode OTModuleClbrMon::finalize()
 		hdt0->SetBinError(hdt0->FindBin(modulen), dt0err_);
 		ht0->SetBinContent(ht0->FindBin(modulen), t0_ + (28.0 + 2.0 * s));
 		ht0->SetBinError(ht0->FindBin(modulen), dt0err_);
-		
+
 		if(verbose)
 		  std::cout << "if cond"<< modulen<<" "<< dt0_<< " "<< dt0err_ << std::endl;
 
 		//fake_t0s[s][l][q][m]= 0.0;
 		fake_t0s[s][l][q][m]=  t0_ + mtoff[modulen] +0.0;
-	    
+
 		if(verbose){
-		  std::cout<< "FAKE t0s = " << fake_t0s[s][l][q][m] << " s= "<< s << " l = "<< l<< " q = "<< q <<" m = "<< m <<std::endl; 
-		  std::cout<< "READ t0s = " << t0s[s][l][q][m] << " s= "<< s << " l = "<< l<< " q = "<< q <<" m = "<< m <<std::endl; 
+		  std::cout<< "FAKE t0s = " << fake_t0s[s][l][q][m] << " s= "<< s << " l = "<< l<< " q = "<< q <<" m = "<< m <<std::endl;
+		  std::cout<< "READ t0s = " << t0s[s][l][q][m] << " s= "<< s << " l = "<< l<< " q = "<< q <<" m = "<< m <<std::endl;
 		}
 
 		continue;
 	      }
-	      
+
 	    if(verbose){
 	      std::cout<< "good module, enough data"<<std::endl;
 	      std::cout<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual01L[s][l][q][m]->GetEntries() << std::endl;
@@ -905,9 +905,9 @@ StatusCode OTModuleClbrMon::finalize()
 
 	    //std::cout<<"assigning dt0err "<<std::endl;
 
-            //double dt0err = m_histModuleDriftTimeResidual[s][l][q][m]->GetFunction("gaus")->GetParError(1);                                                
+            //double dt0err = m_histModuleDriftTimeResidual[s][l][q][m]->GetFunction("gaus")->GetParError(1);
             dt0err = m_histModuleDriftTimeResidual[s][l][q][m]->GetFunction("gaus")->GetParError(1);
-            //double dt0err = 0.1;                                                                                                                           
+            //double dt0err = 0.1;
 
 	    //std::cout<<"calculating t0 for monitoring"<<  t0s[s][l][q][m] + test[s][l][q][m] <<std::endl;
 
@@ -949,10 +949,10 @@ StatusCode OTModuleClbrMon::finalize()
 	      std::cout<< "newT0s[s][l][q][m] = "<<t0s[s][l][q][m]<<std::endl;
 	      std::cout<< "test[s][l][q][m] = "<<test[s][l][q][m]<<std::endl;
 
-	    // std::cout<< "FAKE t0s = " << fake_t0s[s][l][q][m]<<std::endl; 
-	    //std::cout<< "FAKE t0s = " << fake_t0s[s][l][q][m] << " s= "<< s << " l = "<< l<< " q = "<< q <<" m = "<< m <<std::endl; 
-	    //std::cout<< "READ t0s = " << t0s[s][l][q][m] << " s= "<< s << " l = "<< l<< " q = "<< q <<" m = "<< m <<std::endl; 
-		
+	    // std::cout<< "FAKE t0s = " << fake_t0s[s][l][q][m]<<std::endl;
+	    //std::cout<< "FAKE t0s = " << fake_t0s[s][l][q][m] << " s= "<< s << " l = "<< l<< " q = "<< q <<" m = "<< m <<std::endl;
+	    //std::cout<< "READ t0s = " << t0s[s][l][q][m] << " s= "<< s << " l = "<< l<< " q = "<< q <<" m = "<< m <<std::endl;
+
 	  }
 	}
       }
@@ -1005,14 +1005,14 @@ StatusCode OTModuleClbrMon::readCondDB(double read_t0s[3][4][4][9])
      std::string alignLoc ="/dd/Conditions/Calibration/OT/CalibrationModules"+stationNames[s]+layerNames[l]+quarterNames[q]+"/"+stationNames[s]+layerNames[l]+quarterNames[q]+moduleNames[m];
 
      Condition *myCond = get<Condition>( detSvc(), alignLoc );
-  
- 
+
+
      //if(simulation){
 	std::vector<double> TZeroVec = myCond->paramAsDoubleVect( "TZero" );
 	Module_t0=0;
 	for(size_t i = 0; i<TZeroVec.size();i++){
 	  //std::cout << "t0 per straw = "<<TZeroVec.at(i)<<std::endl; // for check
-	  Module_t0 +=TZeroVec.at(i); 
+	  Module_t0 +=TZeroVec.at(i);
 	}
 	read_t0s[s][l][q][m] = Module_t0/(TZeroVec.size()*1.0);//in simcond the t0 are on straw bases, I make an average - for now - to make it module basis
 	//}
@@ -1023,7 +1023,7 @@ StatusCode OTModuleClbrMon::readCondDB(double read_t0s[3][4][4][9])
      }
    }
 
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -1036,18 +1036,18 @@ StatusCode OTModuleClbrMon::read_Globalt0(double read_t0s[3][4][4][9])
    for(int s = 0; s < 3; s++) for(int l = 0; l < 4; l++) for(int q = 0; q < 4; q++)
    {
      for(int m = 8; m >= 0; m--){
-       
+
        std::string alignLoc ="/dd/Conditions/Calibration/OT/CalibrationGlobal";
-       
+
        Condition *myCond = get<Condition>( detSvc(), alignLoc );
-       
+
        //double global_t0 = myCond->paramAsDouble( "TZero" );
        read_t0s[s][l][q][m] = myCond->paramAsDouble( "TZero" );
-       
+
      }
    }
 
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -1088,8 +1088,8 @@ StatusCode OTModuleClbrMon::readCondXMLs(double t0s[3][4][4][9])
 
       int m; std::string param;
 
-     
-      rule<phrase_scanner_t> xmlRule =
+
+      boost::spirit::classic::rule<phrase_scanner_t> xmlRule =
           !("<?xml" >> *(anychar_p - '>') >> '>') // header: <?xml ... >
           >> !("<!DOCTYPE" >> *(anychar_p - '>') >> '>') // header <!DOCTYPE ... >
           >> "<DDDB>"
@@ -1137,13 +1137,13 @@ StatusCode OTModuleClbrMon::readCondXMLs(double t0s[3][4][4][9])
           >> "</catalog>"
           >> "</DDDB>"
           >> end_p;
-      
+
       /*
       rule<phrase_scanner_t> xmlRule =
-	!("<?xml" >> *(anychar_p - '>') >> '>') // header: <?xml ... >                                                                                                  
-	>> !("<!DOCTYPE" >> *(anychar_p - '>') >> '>') // header <!DOCTYPE ... >                                                                                        
+	!("<?xml" >> *(anychar_p - '>') >> '>') // header: <?xml ... >
+	>> !("<!DOCTYPE" >> *(anychar_p - '>') >> '>') // header <!DOCTYPE ... >
 	>> "<DDDB>"
-	>> "<catalog" >> *(anychar_p - '>') >> '>' // <catalog ... >                                                                                                    
+	>> "<catalog" >> *(anychar_p - '>') >> '>' // <catalog ... >
 	>> +(
               lexeme_d[
                   "<condition"
@@ -1155,7 +1155,7 @@ StatusCode OTModuleClbrMon::readCondXMLs(double t0s[3][4][4][9])
 			)
 		       | (anychar_p - '>')
 		       )
-                  >> '>' // <condition ... name="...M{m + 1}" ... >                                                                     
+                  >> '>' // <condition ... name="...M{m + 1}" ... >
               ]
               >> +(
                   lexeme_d[
@@ -1167,9 +1167,9 @@ StatusCode OTModuleClbrMon::readCondXMLs(double t0s[3][4][4][9])
 			    >> '\"'
 			    )
 			   | (anychar_p - '>')
-			   ) >> '>' // <paramVector ... name="{param}" ... >                                                            
+			   ) >> '>' // <paramVector ... name="{param}" ... >
                   ]
-                  >> +real_p // vector of values                  
+                  >> +real_p // vector of values
                       [
 		       if_(ref(param) == "TRParameters")
 		       [ boost::phoenix::push_back(ref(cRt)   [ref(m)], arg1) ],
@@ -1224,7 +1224,7 @@ StatusCode OTModuleClbrMon::writeCondXMLs(double t0s[3][4][4][9])
 {
   std::string prefix = "CalibrationModules";
 
-  std::cout<< "WRITING XMLs" <<std::endl;       
+  std::cout<< "WRITING XMLs" <<std::endl;
 
   for(int s = 0; s < 3; s++)
     for(int l = 0; l < 4; l++)
@@ -1238,7 +1238,7 @@ StatusCode OTModuleClbrMon::writeCondXMLs(double t0s[3][4][4][9])
           if(file.fail())
             {
 	      printf("Can't open file: '%s'\n", fileName.c_str());
-              
+
 	      continue;
             }
 
@@ -1255,21 +1255,21 @@ StatusCode OTModuleClbrMon::writeCondXMLs(double t0s[3][4][4][9])
 	      {
 		if(verbose)
 		  std::cout<< "WRITING m = "<< m<< "t0 = "<< t0s[s][l][q][m]<< "written num"<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<<std::endl;
-		
+
 		std::string moduleId = quarterId + moduleNames[m];
-		
+
 		file << "  <condition classID=\"5\" name=\"" << moduleId << "\">\n";
-		
+
 		file << "    <paramVector name=\"STParameters\" type=\"double\" comment=\"SigmaT parameters in ns\">\n";
 		if(m < 7) file << "     " << 2.7 << " " << (3.7 - 2.7) << "\n";
 		else      file << "     " << 2.6 << " " << 0 << " " << 4.0 * 0.15 << "\n";
 		//else      file << "     " << 2.6 << " " << (3.2 - 2.6 - 4.0 * 0.15) << " " << 4.0 * 0.15 << "\n";
 		file << "    </paramVector>\n";
-		
+
 		file << "    <paramVector name=\"TRParameters\" type=\"double\" comment=\"RT parameters in ns\">\n";
 		file << "     " << 0 << " " << (35.5 - 4.0 * 3.6) << " " << (4.0 * 3.6) << "\n";
 		file << "    </paramVector>\n";
-		
+
 		file << "    <paramVector name=\"TZero\" type=\"double\" comment=\"T0s of straws in module\">\n";
 		//file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << "\n";
 		/*
@@ -1298,44 +1298,44 @@ StatusCode OTModuleClbrMon::writeCondXMLs(double t0s[3][4][4][9])
 		//              file << "    <paramVector name=\"WalkParameters\" type=\"double\" comment=\"Walk parameters\">\n";
 		//              file << "      " << 0 << " " << 1.10 << " " << 400 << " " << 0.15 << "\n";
 		//file << "    </paramVector>\n";
-		
+
 		file << "  </condition>\n";
 	      }
 	  }
-	  else{	 
+	  else{
 	    for(int m = 0; m < 9; m++)
 	      {
 		std::string moduleId = quarterId + moduleNames[m];
-		
+
 		file << "  <condition classID=\"5\" name=\"" << moduleId << "\">\n";
-		
+
 		file << "    <paramVector name=\"STParameters\" type=\"double\" comment=\"SigmaT parameters in ns\">\n";
 		if(m < 7) file << "     " << 2.7 << " " << (3.7 - 2.7) << "\n";
 		else      file << "     " << 2.6 << " " << 0  << " " << 4.0 * 0.15 << "\n";
 		file << "    </paramVector>\n";
-		
+
 		file << "    <paramVector name=\"TRParameters\" type=\"double\" comment=\"RT parameters in ns\">\n";
 		file << "     " << 0 << " " << (35.5 - 4.0 * 3.6) << " " << (4.0 * 3.6) << "\n";
 		file << "    </paramVector>\n";
-		
+
 		file << "    <paramVector name=\"TZero\" type=\"double\" comment=\"T0s of straws in module\">\n";
 		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << "\n";
 		file << "    </paramVector>\n";
 		file << "    <paramVector name=\"WalkParameters\" type=\"double\" comment=\"Walk parameters\">\n";
 		file << "      " << 0 << " " << 1.10 << " " << 400 << " " << 0.15 << "\n";
 		file << "    </paramVector>\n";
-		
+
 		file << "  </condition>\n";
 	      }
 	  }
 
           file << "</catalog>\n";
           file << "</DDDB>\n";
-	  
+
           file.flush();
           file.close();
         }
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -1405,18 +1405,18 @@ StatusCode OTModuleClbrMon::writeCondXMLs(double t0s[3][4][4][9][4])
 	    for(int m = 0; m < 9; m++)
 	      {
 		std::string moduleId = quarterId + moduleNames[m];
-		
+
 		file << "  <condition classID=\"5\" name=\"" << moduleId << "\">\n";
-		
+
 		file << "    <paramVector name=\"STParameters\" type=\"double\" comment=\"SigmaT parameters in ns\">\n";
 		if(m < 7) file << "     " << 2.7 << " " << (3.7 - 2.7) << "\n";
 		else      file << "     " << 2.6 << " " << 0  << " " << 4.0 * 0.15 << "\n";
 		file << "    </paramVector>\n";
-		
+
 		file << "    <paramVector name=\"TRParameters\" type=\"double\" comment=\"RT parameters in ns\">\n";
 		file << "     " << 0 << " " << (35.5 - 4.0 * 3.6) << " " << (4.0 * 3.6) << "\n";
 		file << "    </paramVector>\n";
-		
+
 		file << "    <paramVector name=\"TZero\" type=\"double\" comment=\"T0s of straws in module\">\n";
 		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m][0] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m][1] + 0.5) << " "
 		     << 0.001 * (int)(1000.0 * t0s[s][l][q][m][2] + 0.5) << " " << 0.001 * (int)(1000.0 * t0s[s][l][q][m][3] + 0.5) << "\n";
@@ -1427,10 +1427,10 @@ StatusCode OTModuleClbrMon::writeCondXMLs(double t0s[3][4][4][9][4])
 		file << "  </condition>\n";
 	      }
 	  }
-	  
+
 	  file << "</catalog>\n";
 	  file << "</DDDB>\n";
-	  
+
 	  file.flush();
 	  file.close();
 	}
@@ -1448,72 +1448,72 @@ StatusCode OTModuleClbrMon::writeCondDBXMLs(double t0s[3][4][4][9])
   //  boost::filesystem::path dir( m_xmlFilePath ) ;
   //boost::filesystem::path filen( m_xmlFileName );
   //boost::filesystem::path full_path = dir/filen ;
-  
+
   //boost::filesystem::path dir("/afs/cern.ch/user/l/lgrillo/databases_for_online/OT") ;
   // boost::filesystem::path filen("results.xml");
   //  boost::filesystem::path full_path = dir/filen ;
   // boost::filesystem::path full_path("/afs/cern.ch/user/l/lgrillo/databases_for_online/OT/results.xml");
   boost::filesystem::path full_path(m_xmlFilePath);
-  
+
   if ( msgLevel(MSG::DEBUG) ) debug() << "Writing new XML for online to " << full_path << endmsg ;
-  
+
   std::ofstream file;
-  
-  // if( !boost::filesystem::exists( full_path ) ) {     
+
+  // if( !boost::filesystem::exists( full_path ) ) {
   //   warning() << "full path doesn not exist!?!" << endmsg;
   //   boost::filesystem::create_directories( dir ) ;
   // }
-  
+
   file.open( full_path.string().c_str(), std::ios::app ) ;  // always in append mode
-  
+
   for(int s = 0; s < 3; s++)
     for(int l = 0; l < 4; l++)
       for(int q = 0; q < 4; q++)
         {
 	  std::string quarterId = stationNames[s] + layerNames[l] + quarterNames[q];
-	  
+
           file << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
           file << "<!DOCTYPE DDDB SYSTEM \"conddb:/DTD/structure.dtd\">\n";
 	  file << "\n";
           file << "<DDDB>\n";
           file << "<catalog name=\"" << prefix << quarterId << "\">\n";
-	  
+
 	  for(int m = 0; m < 9; m++)
 	    {
 	      std::string moduleId = quarterId + moduleNames[m];
-	      
+
 	      file << "  <condition classID=\"5\" name=\"" << moduleId << "\">\n";
-	      
+
 	      file << "    <paramVector name=\"STParameters\" type=\"double\" comment=\"SigmaT parameters in ns\">\n";
 	      if(m < 7) file << "     " << 2.7 << " " << (3.7 - 2.7) << "\n";
 	      else      file << "     " << 2.6 << " " << 0  << " " << 4.0 * 0.15 << "\n";
 	      file << "    </paramVector>\n";
-	      
+
 	      file << "    <paramVector name=\"TRParameters\" type=\"double\" comment=\"RT parameters in ns\">\n";
 	      file << "     " << 0 << " " << (35.5 - 4.0 * 3.6) << " " << (4.0 * 3.6) << "\n";
 	      file << "    </paramVector>\n";
-	      
+
 	      file << "    <paramVector name=\"TZero\" type=\"double\" comment=\"T0s of straws in module\">\n";
 	      file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << "\n";
 	      file << "    </paramVector>\n";
 	      file << "    <paramVector name=\"WalkParameters\" type=\"double\" comment=\"Walk parameters\">\n";
 	      file << "      " << 0 << " " << 1.10 << " " << 400 << " " << 0.15 << "\n";
 	      file << "    </paramVector>\n";
-	      
+
 	      file << "  </condition>\n";
 	    }
 	}
-  
+
   file << "</DDDB>\n";
-  
+
   //logging << "<condition classID=\"6\" name=\"AverageHPDOccupancies\">\n";
   //logging << "<paramVector name=\"Occupancies\" type=\"std::string\" comment=\"Average HPD occupancy\">"
   //          << occS << "</paramVector>\n";
   //logging << "</condition>\n";
   //logging << "\n" ;
-  
+
   file.close();
-  
+
 
   return StatusCode::SUCCESS;
 }
@@ -1521,10 +1521,10 @@ StatusCode OTModuleClbrMon::writeCondDBXMLs(double t0s[3][4][4][9])
 
 StatusCode OTModuleClbrMon::fit_single_hist(TH1D* hist, int s, int l, int q, int m, double& result)
 {
-  //char histName[256];                                                                                      
+  //char histName[256];
   //sprintf(histName, "OTModuleClbrMon/%s/%s/%s/%s/%s", stationNames[s].c_str(), layerNames[l].c_str(), quarterNames[q].c_str(), moduleNames[m].c_str(), name);
-  //TH1D* hist = (TH1D*)file->Get(histName);                                                                 
- 
+  //TH1D* hist = (TH1D*)file->Get(histName);
+
   //  if(hist == 0 || hist->GetEntries() < 100)
     if(hist == 0 || hist->GetEntries() < 1)//to debug
     {
@@ -1563,8 +1563,8 @@ StatusCode OTModuleClbrMon::fit_single_hist(TH1D* hist, int s, int l, int q, int
     Error("Histogram not found " );
     return StatusCode::FAILURE;
 
-  }else if(hist->GetEntries() < 100) 
-    //}else if(hist->GetEntries() < 1)//to debug  
+  }else if(hist->GetEntries() < 100)
+    //}else if(hist->GetEntries() < 1)//to debug
     {
       if(!(q % 2 == 0 && m == 8))
         {
@@ -1599,7 +1599,7 @@ StatusCode OTModuleClbrMon::fit_single_hist(TH1D* hist, int s, int l, int q, int
       hist_name = stationNames[s] + "_" + layerNames[l] + "_" + quarterNames[q] + "_"+ moduleNames[m] + contr;
 
     hist->SetName(hist_name.c_str());
-    hist->Write(); 
+    hist->Write();
 
   }
 

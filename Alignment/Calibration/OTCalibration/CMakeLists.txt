@@ -11,12 +11,12 @@ gaudi_depends_on_subdirs(Event/TrackEvent
 			 OT/OTDAQ)
 
 find_package(GSL)
+find_package(Boost)
 find_package(ROOT COMPONENTS Hist Tree Matrix Graf Minuit)
 
 gaudi_add_module(OTCalibration
                  src/*.cpp
                  INCLUDE_DIRS GSL ROOT
-                 LINK_LIBRARIES GSL ROOT DAQEventLib TrackEvent GaudiAlgLib TrackFitEvent AlignKernel)
+                 LINK_LIBRARIES Boost GSL ROOT DAQEventLib TrackEvent GaudiAlgLib TrackFitEvent AlignKernel)
 
 gaudi_install_python_modules()
-
