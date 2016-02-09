@@ -9,6 +9,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2016-02-09 - Vanya Belyaev
+ - improve history files 
+
+! 2016-02-09 - Vanya Belyaev
  - FitSignalModels.py
    Bugg_pgf - fix a bug in Bugg's function  (thanks to Katya Govorkova)
 
