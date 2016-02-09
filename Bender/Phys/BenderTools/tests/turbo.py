@@ -1,10 +1,10 @@
-#!/usr/bin/env bender 
+#!/usr/bin/env bender
 # -*- coding: utf-8 -*-
 # =============================================================================
 # $Id$
 # =============================================================================
 ## @file
-#  very simple "bender" scripts, read TURBO stream  
+#  very simple "bender" script: read TURBO stream  
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2016-02-09
@@ -17,7 +17,6 @@ __version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 # =============================================================================
-
 
 for i in  range(10) :
     

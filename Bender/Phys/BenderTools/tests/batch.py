@@ -4,7 +4,7 @@
 # $Id$
 # =============================================================================
 ## @file
-#  very simple "bender" scripts for batch processing 
+#  very simple "bender" script for batch processing 
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2016-01-27
