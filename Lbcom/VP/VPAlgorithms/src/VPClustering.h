@@ -20,11 +20,9 @@ class VPClustering : public GaudiAlgorithm {
  public:
   /// Standard constructor
   VPClustering(const std::string& name, ISvcLocator* pSvcLocator);
-  /// Destructor
-  virtual ~VPClustering();
 
-  virtual StatusCode initialize();  ///< Algorithm initialization
-  virtual StatusCode execute();     ///< Algorithm execution
+  StatusCode initialize() override;  ///< Algorithm initialization
+  StatusCode execute() override;     ///< Algorithm execution
 
  private:
 
@@ -34,11 +32,9 @@ class VPClustering : public GaudiAlgorithm {
   std::string m_clusterLocation;
 
   /// Detector element
-  DeVP* m_vpDet;
+  DeVP* m_vpDet = nullptr;
 
   bool m_debug;
-
-  bool isEdge(LHCb::VPDigit* digit) const;
 
 };
 
