@@ -47,7 +47,7 @@ use  HltSelChecker              v12r4    Hlt    # Patrick Koppenburg
 
 ####################################################################
 
-use  AnalysisPython             v2r39    Phys     # Vanya Belyaev
+use  AnalysisPython             v2r40    Phys     # Vanya Belyaev
 use  PyAna                      v1r3p1   Analysis # Vanya Belyaev
 use  Ostap                      v1r13    Analysis # Vanya Belyaev
 
