@@ -9,11 +9,19 @@ Development release for 2016 data taking.
 It is based on Gaudi v27r0, LHCb v40r0, Rec v19r0 and Phys v21r0, and uses LCG_83 with ROOT 6.06.00.
 
 - Packages updated :
-  Analysis/Ostap v1r13, Phys/AnalysisConf v2r6, Phys/AnalysisPython v2r40, Phys/DaVinciTrackRefitting v2r4,
-  Phys/DaVinciTrackScaling v1r6, Phys/DecayTreeTuple v5r5, Phys/DecayTreeTupleJets v1r4, Phys/TeslaTools v1r18.
+  Analysis/Ostap v1r13, Hlt/HltSelChecker v12r5, MicroDST/MicroDSTConf v2r13, Phys/AnalysisConf v2r6,
+  Phys/AnalysisPython v2r40, Phys/DaVinciTrackRefitting v2r4, Phys/DaVinciTrackScaling v1r6,
+  Phys/DecayTreeTuple v5r5, Phys/DecayTreeTupleJets v1r4, Phys/TeslaTools v1r18.
 
 - In Analysis/Ostap v1r13 :
   . Many new additions and improvements, and a few buglet fixes. See package release note for details.
+
+- In Hlt/HltSelChecker v12r5 :
+  . Replaced usage of DispatchANNSvc with TCKANNSvc.
+  . Prefer std::to_string over _itoa from GaudiKernel.
+
+- In MicroDST/MicroDSTConf v2r13 :
+  . Removed configuration of obsolete ANNDispatchSvc.
 
 - In Phys/AnalysisConf v2r6 :
   . Configuration.py : RedoMCLinks change NodeKiller setting from "Link/Rec" to "Link/Rec/Track"

@@ -43,7 +43,7 @@ use  DecayTreeTuple             v5r5     Phys
 
 ####################################################################
 
-use  HltSelChecker              v12r4    Hlt    # Patrick Koppenburg
+use  HltSelChecker              v12r5    Hlt    # Patrick Koppenburg
 
 ####################################################################
 
@@ -57,7 +57,7 @@ use  MicroDSTBase        	v3r5     MicroDST # Chris Jones
 use  MicroDSTInterfaces  	v1r7p2   MicroDST # Chris Jones
 use  MicroDSTTools      	v2r14    MicroDST # Chris Jones
 use  MicroDSTAlgorithm   	v5r10    MicroDST # Chris Jones
-use  MicroDSTConf               v2r12    MicroDST # Chris Jones
+use  MicroDSTConf               v2r13    MicroDST # Chris Jones
 
 ####################################################################
 
