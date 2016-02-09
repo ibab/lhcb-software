@@ -17,49 +17,45 @@
  *  @date   9/2/2009
  */
 
-class SiAmplifierResponseBase : public GaudiTool, 
-                            virtual public ISiAmplifierResponse {
+class SiAmplifierResponseBase : public extends<GaudiTool, ISiAmplifierResponse> {
 
-public: 
+public:
 
   /** Constructer */
-  SiAmplifierResponseBase(const std::string& type, 
+  SiAmplifierResponseBase(const std::string& type,
               const std::string& name,
               const IInterface* parent);
 
-  /** destructer */
-  virtual ~SiAmplifierResponseBase();
-
   /** Initialize */
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
 
   /** calculate Beetle response
   * @param time in nanoseconds
-  * @return response 
+  * @return response
   */
-  virtual double response(const double time) const;
-  
+  double response(const double time) const override;
+
   /** The response is only valid for a certain capacitance, Vfs, etc.
   * This method allows you to find out when the curve is valid
   * @return validity info
   */
-  virtual ISiAmplifierResponse::Info validity() const; 
+  ISiAmplifierResponse::Info validity() const override;
 
   /** calculate the remainder ie signal left after 25 ns
-  * @param time time of sampling on peak [default is zero ]  
-  * @return response 
+  * @param time time of sampling on peak [default is zero ]
+  * @return response
   */
-  virtual double remainder(double time = 0) const;
+  double remainder(double time = 0) const override;
 
   /** calculate the rise time [10 - 90 %]
   * @return ristime
   */
-  virtual double risetime() const ;
+  double risetime() const override;
 
 protected:
 
   /// sample the spline function
-  void sample(std::vector<double>& times, std::vector<double>& val) const; 
+  void sample(std::vector<double>& times, std::vector<double>& val) const;
 
    /// Internal method to convert the spline type from string to GaudiMath type
   GaudiMath::Interpolation::Type typeFromString() const;
@@ -71,10 +67,10 @@ protected:
   void printForRoot() const;
 
   /// helper to print array
-  void printArray(const std::vector<double>& values, 
+  void printArray(const std::vector<double>& values,
 		  const std::string& name) const;
 
-  GaudiMath::SimpleSpline* m_responseSpline; ///< The fitted spline
+  std::unique_ptr<GaudiMath::SimpleSpline> m_responseSpline; ///< The fitted spline
 
   double m_tMin; ///< First entry in vector of times
   double m_tMax; ///< Last entry in vector of times

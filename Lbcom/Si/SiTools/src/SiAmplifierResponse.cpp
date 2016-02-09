@@ -6,19 +6,14 @@
 
 DECLARE_TOOL_FACTORY( SiAmplifierResponse )
 
-SiAmplifierResponse::SiAmplifierResponse( const std::string& type, 
-                                          const std::string& name, 
-                                          const IInterface* parent ): 
+SiAmplifierResponse::SiAmplifierResponse( const std::string& type,
+                                          const std::string& name,
+                                          const IInterface* parent ):
   SiAmplifierResponseBase( type, name, parent )
 {
   // constructer
-  declareProperty("times",       m_times                                     );
-  declareProperty("values",      m_values                                    );  
-}
-
-SiAmplifierResponse::~SiAmplifierResponse()
-{
-  // destructer
+  declareProperty("times",  m_times  );
+  declareProperty("values", m_values );
 }
 
 StatusCode SiAmplifierResponse::initialize()
@@ -27,7 +22,7 @@ StatusCode SiAmplifierResponse::initialize()
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
   // Check if the data is provided and the times and values are of equal length
-  if (m_times.size() == 0) return Error("No data !", StatusCode::FAILURE);
+  if (m_times.empty()) return Error("No data !", StatusCode::FAILURE);
   if (m_times.size() != m_values.size()) {
     return Error("inconsistant data !", StatusCode::FAILURE);
   }
@@ -37,16 +32,11 @@ StatusCode SiAmplifierResponse::initialize()
   m_tMax = m_times.back();
 
   // Fit the spline to the data
-  m_responseSpline = new GaudiMath::SimpleSpline( m_times, m_values,
-                                                  typeFromString() );
-  // dump to screen 
-  if (m_printToScreen == true) {
-    printToScreen();
-  }
-  if (m_printForRoot == true) {
-    printForRoot();
-  }
+  m_responseSpline.reset(new GaudiMath::SimpleSpline( m_times, m_values,
+                                                  typeFromString() ));
+  // dump to screen
+  if (m_printToScreen) printToScreen();
+  if (m_printForRoot ) printForRoot();
 
   return sc;
 }
-

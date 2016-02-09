@@ -4,11 +4,10 @@
 // local
 #include "SiAmplifierResponseBase.h"
 
-SiAmplifierResponseBase::SiAmplifierResponseBase( const std::string& type, 
-                                          const std::string& name, 
-                                          const IInterface* parent ): 
-  GaudiTool( type, name, parent ),
-  m_responseSpline(0)
+SiAmplifierResponseBase::SiAmplifierResponseBase( const std::string& type,
+                                          const std::string& name,
+                                          const IInterface* parent ):
+  base_class( type, name, parent )
 {
   // constructer
   declareProperty("splineType",  m_splineType  = "Cspline"                   );
@@ -17,15 +16,9 @@ SiAmplifierResponseBase::SiAmplifierResponseBase( const std::string& type,
   declareProperty("capacitance", m_capacitance = 18 * Gaudi::Units::picofarad);
   declareProperty("dt", m_printDt = 2.0 * Gaudi::Units::ns) ;
   declareProperty("printToScreen", m_printToScreen = false);
-  declareProperty("printForRoot", m_printForRoot = false); 
+  declareProperty("printForRoot", m_printForRoot = false);
   // need a line here to get the interface
-  declareInterface<ISiAmplifierResponse>(this); 
-}
-
-SiAmplifierResponseBase::~SiAmplifierResponseBase()
-{
-  // destructer
-  if (0 != m_responseSpline) delete m_responseSpline;
+  declareInterface<ISiAmplifierResponse>(this);
 }
 
 StatusCode SiAmplifierResponseBase::initialize()
@@ -33,7 +26,7 @@ StatusCode SiAmplifierResponseBase::initialize()
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
-  // Fill the ISiAmplifierResponse::Info object. Used to find out for which 
+  // Fill the ISiAmplifierResponse::Info object. Used to find out for which
   // parameters the spline curve is valid.
   m_info.capacitance = m_capacitance;
   m_info.vfs = m_vfs;
@@ -54,7 +47,7 @@ ISiAmplifierResponse::Info SiAmplifierResponseBase::validity() const
 }
 
 GaudiMath::Interpolation::Type SiAmplifierResponseBase::typeFromString() const
-{  
+{
   GaudiMath::Interpolation::Type aType;
   using namespace GaudiMath::Interpolation;
   if      (m_splineType == "Cspline")          aType = Cspline;
@@ -74,25 +67,25 @@ void SiAmplifierResponseBase::sample(std::vector<double>& times, std::vector<dou
   while(t < m_tMax) {
     times.push_back(t);
     values.push_back(response(t));
-    t += m_printDt; 
+    t += m_printDt;
   } // loop times
 }
 
 void SiAmplifierResponseBase::printToScreen() const {
 
   std::vector<double> times; std::vector<double> values;
-  sample(times,values); 
+  sample(times,values);
   info() << "Printing response function" << endmsg;
-  info() << "Type: " << m_type << endmsg; 
+  info() << "Type: " << m_type << endmsg;
   info() << "Vfs: " << m_vfs << endmsg;
   info() << "Assumed Capacitance: "   << m_capacitance/Gaudi::Units::picofarad << " pF "<< endmsg;
-  info() << "risetime [10-90]" << risetime()/Gaudi::Units::ns << endmsg;  
-  info() << "remainder sampling on peak " << remainder() << endmsg; 
+  info() << "risetime [10-90]" << risetime()/Gaudi::Units::ns << endmsg;
+  info() << "remainder sampling on peak " << remainder() << endmsg;
   for (unsigned int i = 0 ; i < times.size() ; ++i){
     info() << "Time " << times[i] << " value " << values[i] << endmsg;
   } // loop i
 
-} 
+}
 
 void SiAmplifierResponseBase::printForRoot() const {
 
@@ -102,35 +95,35 @@ void SiAmplifierResponseBase::printForRoot() const {
   std::cout << "void plotGraph(){" << std::endl;
   printArray(times, "times");
   printArray(values, "values");
-  std::cout << "TGraph* aGraph = new TGraph(" << values.size() 
+  std::cout << "TGraph* aGraph = new TGraph(" << values.size()
             << ",times,values);" << std::endl;
   std::cout << "aGraph->Draw(\"APL\");" << std::endl;;
-  std::cout <<"}" << std::endl;; 
+  std::cout <<"}" << std::endl;;
 }
 
-void SiAmplifierResponseBase::printArray(const std::vector<double>& values, 
+void SiAmplifierResponseBase::printArray(const std::vector<double>& values,
                                   const std::string& name) const{
-  
-  std::cout << "float " << name << "[" << values.size() << "] = {" ; 
+
+  std::cout << "float " << name << "[" << values.size() << "] = {" ;
   for (unsigned int i = 0; i < values.size(); ++i ){
     std::cout << values[i];
-    if (i != values.size()-1 ) std::cout << "," ; 
-  } // i          
-  std::cout << "};" << std::endl;    
+    if (i != values.size()-1 ) std::cout << "," ;
+  } // i
+  std::cout << "};" << std::endl;
 }
 
 double SiAmplifierResponseBase::remainder(double time) const{
   // find the maximum time
   double tMax = findValue(1.0);
   return response(time + tMax + 25.0*Gaudi::Units::ns);
-} 
+}
 
 double SiAmplifierResponseBase::findValue(double value) const{
 
   // scan across and find the value
   double time = m_tMin;
   do {
-    time += 0.05;  
+    time += 0.05;
   }  while ( value -response(time) > 1e-3  );
   return time;
 }

@@ -30,17 +30,14 @@ public:
               const std::string& name,
               const IInterface* parent);
 
-  /** destructer */
-  virtual ~SiZuriFunction();
-
   /** initialize */
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
 
 
  private:
 
   /// the actual Zurich function
-  double zuriFun(const double t) const;
+  double zuriFun(double t) const;
 
   std::pair<double,double> findMax() const;
 

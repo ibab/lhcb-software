@@ -17,18 +17,15 @@
 
 class SiAmplifierResponse : public SiAmplifierResponseBase {
 
-public: 
+public:
 
   /** Constructer */
-  SiAmplifierResponse(const std::string& type, 
+  SiAmplifierResponse(const std::string& type,
               const std::string& name,
               const IInterface* parent);
 
-  /** destructer */
-  virtual ~SiAmplifierResponse();
-
   /** initialize */
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
 
 
 };

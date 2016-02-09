@@ -18,11 +18,6 @@ SiZuriFunction::SiZuriFunction( const std::string& type,
   declareProperty("m_couplingOffset", m_couplingOffset = 0.0* Gaudi::Units::ns);
 }
 
-SiZuriFunction::~SiZuriFunction()
-{
-  // destructer
-}
-
 StatusCode SiZuriFunction::initialize()
 {
   StatusCode sc = SiAmplifierResponseBase::initialize();
@@ -31,7 +26,7 @@ StatusCode SiZuriFunction::initialize()
   // find the maximum....
   m_tMin = 0.0;
   m_tMax = m_tRange;
-  std::pair<double, double> max = findMax();
+  auto max = findMax();
 
   // fill the arrays from the zuriFun...
   double t = 0.0;
@@ -47,32 +42,23 @@ StatusCode SiZuriFunction::initialize()
 
   // Fit the spline to the data
   if (m_type == "signal") {
-    m_responseSpline = new GaudiMath::SimpleSpline( m_times, m_values,
-                                                    typeFromString() );
-  }
-  else{
-    // differenciate if cap coupling
-    GaudiMath::SimpleSpline* tempSpline = new GaudiMath::SimpleSpline(
-                                                    m_times, m_values,                                                              typeFromString() );
+    m_responseSpline.reset( new GaudiMath::SimpleSpline( m_times, m_values,
+                                                    typeFromString() ) );
+  } else{
+    // differentiate if cap coupling
+    GaudiMath::SimpleSpline tempSpline{ m_times, m_values, typeFromString()};
     m_times.clear(); m_values.clear();
-    double t = m_tMin;
-    while(t < m_tMax) {
+    for ( double t = m_tMin; t < m_tMax; t += m_printDt ) {
       m_times.push_back(t);
-      m_values.push_back(tempSpline->deriv(t+m_couplingOffset));
-      t += m_printDt;
+      m_values.push_back(tempSpline.deriv(t+m_couplingOffset));
     } // loop times and make derivative
-    delete tempSpline;
-    m_responseSpline = new GaudiMath::SimpleSpline( m_times, m_values,
-                                                    typeFromString() );
+    m_responseSpline.reset( new GaudiMath::SimpleSpline( m_times, m_values,
+                                                    typeFromString() ) );
   }
 
   // dump to screen
-  if (m_printToScreen == true) {
-    printToScreen();
-  }
-  if (m_printForRoot == true) {
-    printForRoot();
-  }
+  if (m_printToScreen) printToScreen();
+  if (m_printForRoot) printForRoot();
 
   return sc;
 }
@@ -92,9 +78,7 @@ double SiZuriFunction::zuriFun(const double t) const{
 
 std::pair<double,double> SiZuriFunction::findMax() const{
 
-  // its this simple
+  // it is this simple
   double tMax = (3. - sqrt(3.)) * m_riseTime;
   return {tMax, zuriFun(tMax)};
 }
-
-
