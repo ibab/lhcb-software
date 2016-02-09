@@ -3,6 +3,11 @@ Package     : StrippingSys
 Package Coordinator : Andrea.Contu@cern.ch, Ricardo.Vazquez.Gomez@cern.ch
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v10r0 2016-02-09 ===========================
+
+- Trivial release to follow the new software stack atop LHCb v40r0.
+  No packages updated.
+
 !========================= StrippingSys v9r12p1 2016-01-19 =========================
 *StrippingConf
  - Fix to RelatedInfoFilter

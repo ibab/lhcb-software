@@ -1,5 +1,5 @@
 package  StrippingSys
-version  v9r12p1
+version  v10r0
 
 branches doc cmt tests
 
@@ -31,9 +31,6 @@ use  StrippingUtils              v1r11    Phys   # Stripping Coordinators
 use  TMVASelections              v1r8     Phys   # Stripping Coordinators
 
 ####################################################################
-
-#Patched just for this version
-use   MuonID                     v9r19    Muon
 
 # Declare this as a container package
 apply_pattern container_package

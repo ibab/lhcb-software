@@ -1,7 +1,7 @@
 ################################################################################
 # Package: StrippingSys
 ################################################################################
-gaudi_subdir(StrippingSys v9r12p1)
+gaudi_subdir(StrippingSys v10r0)
 
 gaudi_depends_on_subdirs(Phys/CommonParticles
                          Phys/CommonParticlesArchive
@@ -18,10 +18,6 @@ gaudi_depends_on_subdirs(Phys/CommonParticles
                          Phys/StrippingUtils
                          Phys/TMVASelections
                          Phys/IsolationTools
-                         ########################################
-                         # Patched packages just for this version
-                         Muon/MuonID
-                    
 )
 
 gaudi_add_test(QMTest QMTEST)
