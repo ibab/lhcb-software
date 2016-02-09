@@ -4,6 +4,9 @@ Package Coordinator : Wouter Hulsbergen
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+!2016-02-09 - Maurizio Martinelli
+- Added an empty __init__.py file to avoid cmake warning
+
 !2016-01-15 - Maurizio Martinelli
 - Fixed compilation errors (pow->std::pow; auto_ptr->unique_ptr; some typedef changed)
 
