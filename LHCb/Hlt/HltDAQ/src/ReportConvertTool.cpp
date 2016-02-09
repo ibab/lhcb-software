@@ -561,17 +561,16 @@ void ReportConvertTool::CaloHypoObject2Summary( HltObjectSummary::Info* info, co
     Warning( "I have not been told a verision number to use, assuming the latest", StatusCode::SUCCESS, 20 );
     m_version = m_LatestVersion;
   }
-  
+ 
   if(turbo==true) used_map = m_calohypo_unordered_map2_Turbo;
   else used_map = m_calohypo_unordered_map2;
-
   for(it_unordered_map calo_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); calo_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); calo_it++){
     switch( calo_it->second.second )
     {
       case 0: info->insert( calo_it->first, float( object->e() ) ); break;
-      case 1: info->insert( calo_it->first, float( object->position()->x() ) ); break;
-      case 2: info->insert( calo_it->first, float( object->position()->y() ) ); break;
-      case 3: info->insert( calo_it->first, float( object->position()->z() ) ); break;
+      case 1: info->insert( calo_it->first, float( (object->position() ? object->position()->x() : -1.0) ) ); break;
+      case 2: info->insert( calo_it->first, float( (object->position() ? object->position()->y() : -1.0) ) ); break;
+      case 3: info->insert( calo_it->first, float( (object->position() ? object->position()->z() : -1.0) ) ); break;
       case 4: info->insert( calo_it->first, float( object->lh() ) ); break;
       case 5: info->insert( calo_it->first, float( object->hypothesis() ) ); break;
     }
@@ -1079,6 +1078,7 @@ void ReportConvertTool::CaloHypoObjectFromSummary( const HltObjectSummary::Info*
   double e=0;
   double x=0;
   double y=0;
+  double z=0;
   
   for(it_unordered_map calo_it = (used_map.at( findBestPrevious( used_map, m_version ) )).begin(); calo_it!=(used_map.at( findBestPrevious( used_map, m_version ) )).end(); calo_it++){
     switch( calo_it->second.second )
@@ -1086,14 +1086,17 @@ void ReportConvertTool::CaloHypoObjectFromSummary( const HltObjectSummary::Info*
       case 0: e = (*info)[ calo_it->first ]; break;
       case 1: x = (*info)[ calo_it->first ]; break;
       case 2: y = (*info)[ calo_it->first ]; break;
-      case 3: object->position()->setZ( (*info)[ calo_it->first ] ); break;
+      case 3: z = (*info)[ calo_it->first ]; break;
       case 4: object->setLh( (*info)[ calo_it->first ] ); break;
       case 5: object->setHypothesis( static_cast<LHCb::CaloHypo::Hypothesis>( (*info)[ calo_it->first ] ) ); break;
     }
   }
-  xye(0) = x; 
-  xye(1) = y; 
-  xye(2) = e;
+  if(fabs(z+1.0)<0.01){
+    xye(0) = x; 
+    xye(1) = y; 
+    xye(2) = e;
+    object->position()->setZ( z );
+  }
  
 }
 

@@ -4,6 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+
+! 2016-02-09 - Sean Benson
+ - protection against missing calo hypo position.
+
 ! 2016-02-05 - Marco Clemencic
  - Fixed compilation with CMT and Gaudi v27r0.
 
