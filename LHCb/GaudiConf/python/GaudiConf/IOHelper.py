@@ -329,6 +329,7 @@ class IOHelper(object):
 
     def debugIO(self):
         '''Information: print properties of all configured svc streams and selectors'''
+        from pprint import pprint
         print "=========================="
         print "Debugging Persistencies"
         print self.activePersistencies()
@@ -339,7 +340,7 @@ class IOHelper(object):
                 print svc
                 continue
             print svc.getFullName()
-            print svc.getValuedProperties()
+            pprint(svc.getValuedProperties())
         print "=========================="
         print "Debugging Persistency Services"
         for svc in self.activeServices():
@@ -347,7 +348,7 @@ class IOHelper(object):
                 print svc
                 continue
             print svc.getFullName()
-            print svc.getValuedProperties()
+            pprint(svc.getValuedProperties())
         print "=========================="
         print "Debugging Streams"
         for stream in self.activeStreams():
@@ -356,12 +357,15 @@ class IOHelper(object):
                 continue
 
             print stream.getFullName()
-            print stream.getValuedProperties()
+            # ignore DataInputs, DataOutputs properties (only in Gaudi v27r0)
+            pprint(dict((k, v)
+                   	for k, v in stream.getValuedProperties().items()
+                        if k not in ('DataInputs', 'DataOutputs')))
         print "=========================="
         print "Debugging Input"
         from Gaudi.Configuration import EventSelector
         print EventSelector().getFullName()
-        print EventSelector().getValuedProperties()
+        pprint(EventSelector().getValuedProperties())
         print "=========================="
 
     def postConfigDebug(self):

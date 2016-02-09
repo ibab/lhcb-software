@@ -3,6 +3,12 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2016-02-09 - Marco Clemencic
+ - Improved GaudiConf.QMTest.LHCbExclusions
+   - small refactoring
+   - excluded more messages
+ - Made IOHelper debug output more stable
+
 !========================= GaudiConf v19r16 2016-02-05 =========================
 
 ! 2016-02-03 - Sean Benson
@@ -46,7 +52,7 @@
 !========================= GaudiConf v19r14 2015-10-22 =========================
 ! 2015-10-22 - Gloria Corti
  - In DigiConf packing of MCHits for xdigi events is now done only when
-   the packing is requested. 
+   the packing is requested.
    Bug fix, see https://its.cern.ch/jira/browse/LHCBGAUSS-544
 
 !========================= GaudiConf v19r13 2015-10-13 =========================

@@ -17,88 +17,87 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set><text>../../options/merge-small-files-test.py</text></set></argument>
   <argument name="timeout"><integer>3600</integer></argument>
+  <argument name="reference"><text>../refs/merge-small-files.ref</text></argument>
   <argument name="validator"><text>
-myname="fsralgs.mergesmallfiles"
 import re
-retstr=""
+myname = "fsralgs.mergesmallfiles"
+retstr = ""
 ########################################
 #check the produced file, and the stdout
 ########################################
-f=open('../refs/merge-small-files.ref')
-refblock=f.read().strip().split('\n')
-f.close()
-result_lines=[line for line in stdout.strip().split('\n') if (("FSRCleaner" in line or "MergeFSR" in line) and "ToolSvc." not in line)]
-missing_lines=[line for line in refblock if line not in result_lines]
-extra_lines=[line for line in result_lines if line not in refblock]
 
 #################################################################
 #Check that the merger lines are the same in reference and result
 #################################################################
+from GaudiConf.QMTest.LHCbExclusions import preprocessor, LineSkipper
+from GaudiTest import FilePreprocessor
 
-if (len(missing_lines)+ len(extra_lines))!=0:
-  causes.append('Stdout modifications (check reference files) ')
-  retstr=retstr+"\nStdout modifications:"
-  for line in missing_lines:
-    retstr=retstr+"\n\t - "+line
-  for line in extra_lines:
-    retstr=retstr+"\n\t + "+line
-  try:
-    f2=open('../refs/merge-small-files.ref.new',"w")
-  except IOError:
-    causes.append('could not open reference file')
-  if f2 is not None:
-    f2.write('\n'.join(result_lines))
-    f2.close()
+class KeepLines(FilePreprocessor):
+    def __init__(self, strings = [], regexps = []):
+        import re
+        self.strings = strings
+        self.regexps = map(re.compile,regexps)
+
+    def __processLine__(self, line):
+        for s in self.strings:
+            if line.find(s) >= 0: return line
+        for r in self.regexps:
+            if r.search(line): return line
+        return None
+
+validateWithReference(preproc = KeepLines(['FSRCleaner', 'MergeFSR']) + preprocessor + LineSkipper(['ToolSvc.']))
 
 #################################################################
 #Check that the file size is as I expect
 #################################################################
 import os
-size=-1
+size = -1
 try:
-  size=os.path.getsize("merged.dst")
-  result['merged_dst_size'] = '%f MB' % (size/1024/1024)
+    size = os.path.getsize("merged.dst")
+    result['merged_dst_size'] = '%f MB' % (size/1024/1024)
 except OSError:
-  causes.append('Could not locate merged DST')
-  retstr=retstr+'\n'+'Could not locate merged DST'
-if (size/1024/1024)>3.0:
-  causes.append('Merged DST size too large')
-  retstr=retstr+'\n\n'+'Merged DST size too large '+str(size/1024/1024) + " MB. Note that anything over 3.0 MB represents a serious problem. Don't just ignore it!"
+    causes.append('Could not locate merged DST')
+    retstr += '\nCould not locate merged DST'
+if (size/1024/1024) > 3.0:
+    causes.append('Merged DST size too large')
+    retstr += ('\n\nMerged DST size too large ' + str(size/1024/1024) +
+               " MB. Note that anything over 3.0 MB represents a serious problem. Don't just ignore it!")
 
 #################################################################
 #Check that the VMEM usage is as I expect
 #################################################################
 
-memory=-1
+memory = -1
 
-sum=None
+sum = None
 try:
-  from XMLSummaryBase import summary
-  sum=summary.Summary()
-  sum.parse("summary.xml")
-  for child in sum.children("usage")[0].children():
-    if child.attrib()["useOf"]=="MemoryMaximum":
-      memory=child.value()
-      result['maximum_vmem'] = '%f GB' % (memory/1024/1024)
+    from XMLSummaryBase import summary
+    sum = summary.Summary()
+    sum.parse("summary.xml")
+    for child in sum.children("usage")[0].children():
+        if child.attrib()["useOf"] == "MemoryMaximum":
+            memory = child.value()
+            result['maximum_vmem'] = '%f GB' % (memory/1024/1024)
 except ImportError:
-  causes.append('XMLsummary python error')
-  retstr=retstr+'\n'+"XMLSummary Summary class could not be imported"
+    causes.append('XMLsummary python error')
+    retstr += '\nXMLSummary Summary class could not be imported'
 except IOError:
-  causes.append('XMLsummary missing')
-  retstr=retstr+'\n'+"XMLSummary missing"
+    causes.append('XMLsummary missing')
+    retstr += '\nXMLSummary missing'
 except IndexError:
-  causes.append('XMLsummary Memory Maximum missing')
-  retstr=retstr+'\n'+"XMLsummary Memory Maximum missing\n"+sum.xml()
+    causes.append('XMLsummary Memory Maximum missing')
+    retstr += '\nXMLsummary Memory Maximum missing\n' + sum.xml()
 
-if memory==-1:
-  causes.append('XMLsummary Memory Maximum missing')
-  retstr=retstr+'\n'+"XMLsummary Memory Maximum missing\n"+sum.xml()
-if (memory/1024/1024)>1.2:
-  causes.append('VMem usage too high')
-  retstr=retstr+'\n\n'+'VMem usage too high, '+str(memory/1024/1024)+" GB. Note that anything over 1.2 GB represents a serious problem. Don't just ignore it!"
+if memory == -1:
+    causes.append('XMLsummary Memory Maximum missing')
+    retstr += '\nXMLsummary Memory Maximum missing\n' + sum.xml()
+if (memory/1024/1024) > 1.2:
+    causes.append('VMem usage too high')
+    retstr += ('\n\nVMem usage too high, ' + str(memory/1024/1024) +
+               " GB. Note that anything over 1.2 GB represents a serious problem. Don't just ignore it!")
 
-if len(retstr):
-  result[myname]=result.Quote(retstr)
+if retstr:
+  result[myname] = result.Quote(retstr)
 
 </text></argument>
 </extension>

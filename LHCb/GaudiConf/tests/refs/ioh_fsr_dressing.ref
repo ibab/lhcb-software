@@ -10,17 +10,17 @@ Debugging Persistency Services
 ==========================
 Debugging Streams
 RecordStream/FileRecord5
-{'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'", 'DataOutputs': DataObjectDescriptorCollection(''), 'DataInputs': DataObjectDescriptorCollection('')}
+{'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'"}
 RecordStream/FileRecord4
-{'Output': "DATAFILE='FishyStuff.dst' SVC='RootCnvSvc' OPT='REC'", 'DataOutputs': DataObjectDescriptorCollection(''), 'DataInputs': DataObjectDescriptorCollection('')}
+{'Output': "DATAFILE='FishyStuff.dst' SVC='RootCnvSvc' OPT='REC'"}
 RecordStream/RubbishRecord
-{'DataInputs': DataObjectDescriptorCollection(''), 'DataOutputs': DataObjectDescriptorCollection(''), 'EvtDataSvc': 'CrappyNonexistingService'}
+{'EvtDataSvc': 'CrappyNonexistingService'}
 RecordStream/FileRecord3
-{'Output': "DATAFILE='FishyStuff.dst' TYP='POOL_ROOTTREE' OPT='REC'", 'DataOutputs': DataObjectDescriptorCollection(''), 'DataInputs': DataObjectDescriptorCollection('')}
+{'Output': "DATAFILE='FishyStuff.dst' TYP='POOL_ROOTTREE' OPT='REC'"}
 RecordStream/FileRecord2
-{'Output': "DATAFILE='FishyStuff.dst' TYP='NOTYPE' OPT='REC'", 'DataOutputs': DataObjectDescriptorCollection(''), 'DataInputs': DataObjectDescriptorCollection('')}
+{'Output': "DATAFILE='FishyStuff.dst' TYP='NOTYPE' OPT='REC'"}
 RecordStream/FileRecord
-{'Output': "DATAFILE='FishyStuff.dst' TYP='NOTYPE' OPT='REC'", 'DataOutputs': DataObjectDescriptorCollection(''), 'DataInputs': DataObjectDescriptorCollection('')}
+{'Output': "DATAFILE='FishyStuff.dst' TYP='NOTYPE' OPT='REC'"}
 ==========================
 Debugging Input
 EventSelector/EventSelector
@@ -36,17 +36,34 @@ Debugging Persistency Services
 ==========================
 Debugging Streams
 RecordStream/FileRecord5
-{'DataOutputs': DataObjectDescriptorCollection(''), 'ItemList': ['/FileRecords#999'], 'EvtConversionSvc': 'FileRecordPersistencySvc', 'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'", 'EvtDataSvc': 'FileRecordDataSvc', 'DataInputs': DataObjectDescriptorCollection('')}
+{'EvtConversionSvc': 'FileRecordPersistencySvc',
+ 'EvtDataSvc': 'FileRecordDataSvc',
+ 'ItemList': ['/FileRecords#999'],
+ 'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'"}
 RecordStream/FileRecord4
-{'DataOutputs': DataObjectDescriptorCollection(''), 'ItemList': ['/FileRecords#999'], 'EvtConversionSvc': 'FileRecordPersistencySvc', 'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'", 'EvtDataSvc': 'FileRecordDataSvc', 'DataInputs': DataObjectDescriptorCollection('')}
+{'EvtConversionSvc': 'FileRecordPersistencySvc',
+ 'EvtDataSvc': 'FileRecordDataSvc',
+ 'ItemList': ['/FileRecords#999'],
+ 'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'"}
 RecordStream/RubbishRecord
-{'EvtDataSvc': 'FileRecordDataSvc', 'DataInputs': DataObjectDescriptorCollection(''), 'ItemList': ['/FileRecords#999'], 'DataOutputs': DataObjectDescriptorCollection(''), 'EvtConversionSvc': 'FileRecordPersistencySvc'}
+{'EvtConversionSvc': 'FileRecordPersistencySvc',
+ 'EvtDataSvc': 'FileRecordDataSvc',
+ 'ItemList': ['/FileRecords#999']}
 RecordStream/FileRecord3
-{'DataOutputs': DataObjectDescriptorCollection(''), 'ItemList': ['/FileRecords#999'], 'EvtConversionSvc': 'FileRecordPersistencySvc', 'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'", 'EvtDataSvc': 'FileRecordDataSvc', 'DataInputs': DataObjectDescriptorCollection('')}
+{'EvtConversionSvc': 'FileRecordPersistencySvc',
+ 'EvtDataSvc': 'FileRecordDataSvc',
+ 'ItemList': ['/FileRecords#999'],
+ 'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'"}
 RecordStream/FileRecord2
-{'DataOutputs': DataObjectDescriptorCollection(''), 'ItemList': ['/FileRecords#999'], 'EvtConversionSvc': 'FileRecordPersistencySvc', 'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'", 'EvtDataSvc': 'FileRecordDataSvc', 'DataInputs': DataObjectDescriptorCollection('')}
+{'EvtConversionSvc': 'FileRecordPersistencySvc',
+ 'EvtDataSvc': 'FileRecordDataSvc',
+ 'ItemList': ['/FileRecords#999'],
+ 'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'"}
 RecordStream/FileRecord
-{'DataOutputs': DataObjectDescriptorCollection(''), 'ItemList': ['/FileRecords#999'], 'EvtConversionSvc': 'FileRecordPersistencySvc', 'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'", 'EvtDataSvc': 'FileRecordDataSvc', 'DataInputs': DataObjectDescriptorCollection('')}
+{'EvtConversionSvc': 'FileRecordPersistencySvc',
+ 'EvtDataSvc': 'FileRecordDataSvc',
+ 'ItemList': ['/FileRecords#999'],
+ 'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'"}
 ==========================
 Debugging Input
 EventSelector/EventSelector
@@ -64,17 +81,34 @@ Debugging Persistency Services
 ==========================
 Debugging Streams
 RecordStream/FileRecord5
-{'DataOutputs': DataObjectDescriptorCollection(''), 'ItemList': ['/FileRecords#999'], 'EvtConversionSvc': 'FileRecordPersistencySvc', 'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'", 'EvtDataSvc': 'FileRecordDataSvc', 'DataInputs': DataObjectDescriptorCollection('')}
+{'EvtConversionSvc': 'FileRecordPersistencySvc',
+ 'EvtDataSvc': 'FileRecordDataSvc',
+ 'ItemList': ['/FileRecords#999'],
+ 'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'"}
 RecordStream/FileRecord4
-{'DataOutputs': DataObjectDescriptorCollection(''), 'ItemList': ['/FileRecords#999'], 'EvtConversionSvc': 'FileRecordPersistencySvc', 'Output': "DATAFILE='FishyStuff.dst' SVC='RootCnvSvc' OPT='REC'", 'EvtDataSvc': 'FileRecordDataSvc', 'DataInputs': DataObjectDescriptorCollection('')}
+{'EvtConversionSvc': 'FileRecordPersistencySvc',
+ 'EvtDataSvc': 'FileRecordDataSvc',
+ 'ItemList': ['/FileRecords#999'],
+ 'Output': "DATAFILE='FishyStuff.dst' SVC='RootCnvSvc' OPT='REC'"}
 RecordStream/RubbishRecord
-{'EvtDataSvc': 'CrappyNonexistingService', 'DataInputs': DataObjectDescriptorCollection(''), 'ItemList': ['/FileRecords#999'], 'DataOutputs': DataObjectDescriptorCollection(''), 'EvtConversionSvc': 'FileRecordPersistencySvc'}
+{'EvtConversionSvc': 'FileRecordPersistencySvc',
+ 'EvtDataSvc': 'CrappyNonexistingService',
+ 'ItemList': ['/FileRecords#999']}
 RecordStream/FileRecord3
-{'DataOutputs': DataObjectDescriptorCollection(''), 'ItemList': ['/FileRecords#999'], 'EvtConversionSvc': 'FileRecordPersistencySvc', 'Output': "DATAFILE='FishyStuff.dst' TYP='POOL_ROOTTREE' OPT='REC'", 'EvtDataSvc': 'FileRecordDataSvc', 'DataInputs': DataObjectDescriptorCollection('')}
+{'EvtConversionSvc': 'FileRecordPersistencySvc',
+ 'EvtDataSvc': 'FileRecordDataSvc',
+ 'ItemList': ['/FileRecords#999'],
+ 'Output': "DATAFILE='FishyStuff.dst' TYP='POOL_ROOTTREE' OPT='REC'"}
 RecordStream/FileRecord2
-{'DataOutputs': DataObjectDescriptorCollection(''), 'ItemList': ['/FileRecords#999'], 'EvtConversionSvc': 'FileRecordPersistencySvc', 'Output': "DATAFILE='FishyStuff.dst' TYP='NOTYPE' OPT='REC'", 'EvtDataSvc': 'FileRecordDataSvc', 'DataInputs': DataObjectDescriptorCollection('')}
+{'EvtConversionSvc': 'FileRecordPersistencySvc',
+ 'EvtDataSvc': 'FileRecordDataSvc',
+ 'ItemList': ['/FileRecords#999'],
+ 'Output': "DATAFILE='FishyStuff.dst' TYP='NOTYPE' OPT='REC'"}
 RecordStream/FileRecord
-{'DataOutputs': DataObjectDescriptorCollection(''), 'ItemList': ['/FileRecords#999'], 'EvtConversionSvc': 'FileRecordPersistencySvc', 'Output': "DATAFILE='FishyStuff.dst' TYP='NOTYPE' OPT='REC'", 'EvtDataSvc': 'FileRecordDataSvc', 'DataInputs': DataObjectDescriptorCollection('')}
+{'EvtConversionSvc': 'FileRecordPersistencySvc',
+ 'EvtDataSvc': 'FileRecordDataSvc',
+ 'ItemList': ['/FileRecords#999'],
+ 'Output': "DATAFILE='FishyStuff.dst' TYP='NOTYPE' OPT='REC'"}
 ==========================
 Debugging Input
 EventSelector/EventSelector
@@ -90,17 +124,34 @@ Debugging Persistency Services
 ==========================
 Debugging Streams
 RecordStream/FileRecord5
-{'DataOutputs': DataObjectDescriptorCollection(''), 'ItemList': ['/FileRecords#999'], 'EvtConversionSvc': 'FileRecordPersistencySvc', 'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'", 'EvtDataSvc': 'FileRecordDataSvc', 'DataInputs': DataObjectDescriptorCollection('')}
+{'EvtConversionSvc': 'FileRecordPersistencySvc',
+ 'EvtDataSvc': 'FileRecordDataSvc',
+ 'ItemList': ['/FileRecords#999'],
+ 'Output': "DATAFILE='FishyStuff.dst' SVC='FileRecordCnvSvc' OPT='REC'"}
 RecordStream/FileRecord4
-{'DataOutputs': DataObjectDescriptorCollection(''), 'ItemList': ['/FileRecords#999'], 'EvtConversionSvc': 'FileRecordPersistencySvc', 'Output': "DATAFILE='FishyStuff.dst' SVC='RootCnvSvc' OPT='REC'", 'EvtDataSvc': 'FileRecordDataSvc', 'DataInputs': DataObjectDescriptorCollection('')}
+{'EvtConversionSvc': 'FileRecordPersistencySvc',
+ 'EvtDataSvc': 'FileRecordDataSvc',
+ 'ItemList': ['/FileRecords#999'],
+ 'Output': "DATAFILE='FishyStuff.dst' SVC='RootCnvSvc' OPT='REC'"}
 RecordStream/RubbishRecord
-{'EvtDataSvc': 'CrappyNonexistingService', 'DataInputs': DataObjectDescriptorCollection(''), 'ItemList': ['/FileRecords#999'], 'DataOutputs': DataObjectDescriptorCollection(''), 'EvtConversionSvc': 'FileRecordPersistencySvc'}
+{'EvtConversionSvc': 'FileRecordPersistencySvc',
+ 'EvtDataSvc': 'CrappyNonexistingService',
+ 'ItemList': ['/FileRecords#999']}
 RecordStream/FileRecord3
-{'DataOutputs': DataObjectDescriptorCollection(''), 'ItemList': ['/FileRecords#999'], 'EvtConversionSvc': 'FileRecordPersistencySvc', 'Output': "DATAFILE='FishyStuff.dst' TYP='POOL_ROOTTREE' OPT='REC'", 'EvtDataSvc': 'FileRecordDataSvc', 'DataInputs': DataObjectDescriptorCollection('')}
+{'EvtConversionSvc': 'FileRecordPersistencySvc',
+ 'EvtDataSvc': 'FileRecordDataSvc',
+ 'ItemList': ['/FileRecords#999'],
+ 'Output': "DATAFILE='FishyStuff.dst' TYP='POOL_ROOTTREE' OPT='REC'"}
 RecordStream/FileRecord2
-{'DataOutputs': DataObjectDescriptorCollection(''), 'ItemList': ['/FileRecords#999'], 'EvtConversionSvc': 'FileRecordPersistencySvc', 'Output': "DATAFILE='FishyStuff.dst' TYP='NOTYPE' OPT='REC'", 'EvtDataSvc': 'FileRecordDataSvc', 'DataInputs': DataObjectDescriptorCollection('')}
+{'EvtConversionSvc': 'FileRecordPersistencySvc',
+ 'EvtDataSvc': 'FileRecordDataSvc',
+ 'ItemList': ['/FileRecords#999'],
+ 'Output': "DATAFILE='FishyStuff.dst' TYP='NOTYPE' OPT='REC'"}
 RecordStream/FileRecord
-{'DataOutputs': DataObjectDescriptorCollection(''), 'ItemList': ['/FileRecords#999'], 'EvtConversionSvc': 'FileRecordPersistencySvc', 'Output': "DATAFILE='FishyStuff.dst' TYP='NOTYPE' OPT='REC'", 'EvtDataSvc': 'FileRecordDataSvc', 'DataInputs': DataObjectDescriptorCollection('')}
+{'EvtConversionSvc': 'FileRecordPersistencySvc',
+ 'EvtDataSvc': 'FileRecordDataSvc',
+ 'ItemList': ['/FileRecords#999'],
+ 'Output': "DATAFILE='FishyStuff.dst' TYP='NOTYPE' OPT='REC'"}
 ==========================
 Debugging Input
 EventSelector/EventSelector
