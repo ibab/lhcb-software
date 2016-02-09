@@ -47,7 +47,8 @@ class MooreOnline(LHCbConfigurableUser):
         , 'DataType' : '2012'
         , "CheckOdin" : True
         , "HltLevel" : 'Hlt1'
-        }
+        , 'DimMonitoring' : True
+    }
 
     def _configureDBSnapshot(self):
         from Configurables import CondDB
@@ -74,20 +75,23 @@ class MooreOnline(LHCbConfigurableUser):
         #done in LHCbApp
         #EventPersistencySvc().CnvServices.append( RawDataCnvSvc('RawDataCnvSvc') )
         EventLoopMgr().Warnings = False
-
-        from Configurables import MonitorSvc
-        MonitorSvc().disableDimPropServer  = 1
-        MonitorSvc().disableDimCmdServer   = 1
-        MonitorSvc().disableMonRate        = 0
-        MonitorSvc().CounterUpdateInterval = 15
-
+        
         app = ApplicationMgr()
 
-        # setup the histograms and the monitoring service
-        from Configurables import UpdateAndReset
-        if not self.getProp('Simulation'):
-            app.TopAlg = [ UpdateAndReset() ] + app.TopAlg
-        app.ExtSvc.append( 'MonitorSvc' )
+        if self.getProp('DimMonitoring'):
+            from Configurables import MonitorSvc
+            MonitorSvc().disableDimPropServer  = 1
+            MonitorSvc().disableDimCmdServer   = 1
+            MonitorSvc().disableMonRate        = 0
+            MonitorSvc().CounterUpdateInterval = 15
+
+
+            # setup the histograms and the monitoring service
+            from Configurables import UpdateAndReset
+            if not self.getProp('Simulation'):
+                app.TopAlg = [ UpdateAndReset() ] + app.TopAlg
+            app.ExtSvc.append( 'MonitorSvc' )
+
         HistogramPersistencySvc().OutputFile = ''
         HistogramPersistencySvc().Warnings = False
         from Configurables import RootHistCnv__PersSvc

@@ -4,6 +4,9 @@
 ! Purpose     : Holding the master configurable which sets up Moore for the online
 !=================================================================================
 
+! 2016-02-09 - Roel Aaij
+ - Add option to MooreOnlineConf to disable DIM based monitoring.
+
 !========================= MooreOnlineConf v1r11 2015-09-01 =========================
 
 !========================= MooreOnlineConf v1r10 2015-07-29 =========================
