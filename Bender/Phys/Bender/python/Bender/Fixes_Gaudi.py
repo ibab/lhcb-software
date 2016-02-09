@@ -621,6 +621,22 @@ if not hasattr ( GaudiPython.Bindings.iToolSvc , 'tool' ) :
     logger.debug ( 'Decoration for iToolSvc.tool') 
     
     
+
+# =============================================================================
+## printout of status code 
+def _sc_print_ ( sc ) :
+    """Print the Status Code
+    >>> st = ...
+    >>> print st
+    """
+    if   sc.isSuccess     () : return 'SUCCESS'
+    elif sc.isRecoverable () : return 'RECOVERABLE'
+    elif 1 != sc.getCode  () : return 'FAILURE[%d]' % sc.getCode()
+    return 'FAILURE'
+
+cpp.StatusCode .__repr__ = _sc_print_
+cpp.StatusCode .__str__  = _sc_print_
+
     
 
 # =============================================================================

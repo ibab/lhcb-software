@@ -118,7 +118,38 @@ def setPreAction ( action ) :
     """
     global __Bender_Pre_Action
     __Bender_Pre_Action = action
+
+
+# =============================================================================
+## @class Action
+#  simple ``action''/contect-manager for ``run''-fuction
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2016-02-15
+class Action(object) :
+    """ Simple ``action''/context-manager for ``run''-fuction
+    """
+    def __init__ ( self              ,
+                   preAction  = None ,
+                   postAction = None ) :
         
+        self.preAction  = preAction  if preAction  else pre_Action  ()
+        self.postAction = postAction if postAction else post_Action ()
+
+    ## context manager: ENTER 
+    def __enter__ ( self ) :
+
+        if self.preAction :
+            logger.debug ('Execute pre-action')
+            self.preAction()
+        return self
+    
+    ## context manager: EXIT
+    def __exit__ ( self , *_ ) :
+        
+        if self.postAction :
+            logger.debug ('Execute post-action')
+            self.postAction()
+                       
 # =============================================================================
 ## run N events
 #  @code
@@ -127,27 +158,18 @@ def setPreAction ( action ) :
 def run ( nEvents     =   -1 ,
           postAction  = None ,
           preAction   = None ) :
-    """Run gaudi
-
+    """Run gauidi  ( invoke 
     >>> run(50)
-    
     """
-    ## apply "pre-action", if defined 
-    if   preAction    : preAction ()
-    elif pre_Action() :
-        action = pre_Action()
-        action() 
+    with Action ( preAction , postAction ) :
         
-    ## get the application manager
-    _g = appMgr() 
-    st = _g.run ( nEvents )
-    
-    ## apply "post-action", if defined 
-    if   postAction    : postAction ()
-    elif post_Action() :
-        action = post_Action()
-        action() 
-        
+        ## get the application manager
+        _g = appMgr() 
+        st = _g.run ( nEvents )
+        if st.isSuccess() and not get('/Event') :
+            logger.warning('No more events in event selection...')
+            st.setCode ( 2 )
+            
     return st 
 
 # =============================================================================
@@ -180,7 +202,6 @@ def setData ( files            ,
     
     """
 
-    from GaudiPython.Bindings import _gaudi
         
     if   type ( files    ) is str   : files    =      [ files    ]
     elif type ( files    ) is tuple : files    = list ( files    ) 
@@ -192,6 +213,8 @@ def setData ( files            ,
     if not issubclass ( type ( catalogs ) , list ) :
         catalogs = [ c for c in catalogs ] 
     
+    from GaudiPython.Bindings import _gaudi
+
     if not _gaudi :               ## here we deal with configurables!
 
         from Configurables import Gaudi__RootCnvSvc
@@ -321,7 +344,7 @@ def get  ( path , selector = lambda s : s ) :
 #  dumpHistos ( alg , 30 , 20 )
 #  @endcode 
 def dumpHistos ( o , *args ) :
-    """Dump all histogram from the given component
+    """Dump all histogram from the given component:
     >>> dump( 'MakeKs' )
     >>> alg = ...
     >>> dumpHistos ( alg , 30 , 20 )
@@ -364,7 +387,7 @@ class DisabledAlgos(object) :
 #  skip ( 10 ) 
 #  @endcode 
 def skip ( nEvents ) : 
-    """Skip events
+    """Skip N-events
     >>> skip ( 50 )    
     """
     from GaudiPython.Bindings import gbl as cpp 
@@ -382,14 +405,13 @@ def skip ( nEvents ) :
 #  @endcode
 #  @thanks Thomas RUF 
 def rewind ( ) :
-    """Rewind
+    """Rewind:
     >>> rewind() 
     >>> run(1)    ## needed to actually get the 1st event after rewind 
     """
     _g =    appMgr()
     with DisabledAlgos () :
         _g.evtSel().rewind() 
-
     
 # =============================================================================
 if __name__ == '__main__' :

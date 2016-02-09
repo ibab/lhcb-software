@@ -68,8 +68,29 @@ def with_ipython() :
         __IPYTHON__
         return True
     except NameError :
-        return False 
+        return False
+    
+## check if the file is actually empty
+def _empty_ ( fname ) :
+    
+    import os 
+    if not os.path.exists ( fname ) or 0 == os.path.getsize( fname ) : return True
 
+    try :
+        
+        ## find at least one non-empty line not starting from '#'
+        with open ( fname , 'r' ) as f :
+            for l in f :
+                if not l  or  '#' == l [0] : continue
+                l1 = l.strip()
+                if     l1 and '#' != l1[0] : return False 
+            
+        return True
+        
+    except IOError :
+        pass
+    
+ 
 try:
 
     import datetime
@@ -93,16 +114,16 @@ try:
                 fname   = '%s.%d' %  ( base , version     )
                 fnamep1 = '%s.%d' %  ( base , version + 1 )
                 
-            if os.path.exists ( fname ) and  0 == os.path.getsize( fname ) :
+            if os.path.exists ( fname ) and _empty_ ( fname ) :
                 os.remove ( fname )
                 return
 
             if os.path.exists ( fnamep1 ) :
-                if 0 == os.path.getsize( fnamep1 ) : os.remove ( fnamep1 )
+                if  _empty_   ( fnamep1 ) : os.remove ( fnamep1 )
                 else : _rename_ ( base , version + 1 )
                 
             if os.path.exists ( fname ) :
-                if 0 == os.path.getsize( fname ) : os.remove ( fname )
+                if _empty_    ( fname ) : os.remove ( fname )
                 else : os.rename ( fname , fnamep1 )
                 
         _rename_ ( __history__  )
@@ -130,16 +151,17 @@ try:
 
             try :
                 
-                import IPython
+                import IPython, getpass
                 ip  = IPython.get_ipython()
+                me  = getpass.getuser() 
                 with open ( fname , 'w' ) as f :
-                    f.write( '# Bender session started %s\n' % start_time.strftime('%c')  ) 
+                    f.write( '# Bender session by %s started at %s\n' % ( me , start_time.strftime('%c' ) ) ) 
                     for record in ip.history_manager.get_range() :
                         f.write( record[2] + '\n' )
                     end_time = datetime.datetime.now()   
-                    f.write( '# Bender session   ended %s\n' % end_time.strftime('%c')  )
+                    f.write( '# Bender session by %s   ended at %s\n' % ( me ,   end_time.strftime('%c' ) ) ) 
                 
-                if os.path.exists( fname ) and os.path.isfile ( fname ) and 0 != os.path.getsize ( fname ) : 
+                if os.path.exists( fname ) and os.path.isfile ( fname ) and not _empty_ ( fname ) : 
                     logger.info ( 'Bender history file: %s' % __history__ )
                 return
             
@@ -148,7 +170,7 @@ try:
             
         ## use 'old-style' history 
         readline.write_history_file ( fname ) 
-        if os.path.exists( fname ) and os.path.isfile ( fname ) and 0 != os.path.getsize ( fname ) : 
+        if os.path.exists( fname ) and os.path.isfile ( fname ) and not _empty_ ( fname ) : 
             logger.info ( 'Bender history file: %s' % __history__ )
         
 
