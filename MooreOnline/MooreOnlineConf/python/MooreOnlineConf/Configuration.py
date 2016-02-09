@@ -47,7 +47,7 @@ class MooreOnline(LHCbConfigurableUser):
         , 'DataType' : '2012'
         , "CheckOdin" : True
         , "HltLevel" : 'Hlt1'
-        , 'DimMonitoring' : True
+        , 'EnableUpdateAndReset' : True
     }
 
     def _configureDBSnapshot(self):
@@ -78,19 +78,18 @@ class MooreOnline(LHCbConfigurableUser):
         
         app = ApplicationMgr()
 
-        if self.getProp('DimMonitoring'):
-            from Configurables import MonitorSvc
-            MonitorSvc().disableDimPropServer  = 1
-            MonitorSvc().disableDimCmdServer   = 1
-            MonitorSvc().disableMonRate        = 0
-            MonitorSvc().CounterUpdateInterval = 15
+        # setup the histograms and the monitoring service
+        from Configurables import MonitorSvc
+        MonitorSvc().disableDimPropServer  = 1
+        MonitorSvc().disableDimCmdServer   = 1
+        MonitorSvc().disableMonRate        = 0
+        MonitorSvc().CounterUpdateInterval = 15
+        app.ExtSvc.append( 'MonitorSvc' )
 
-
-            # setup the histograms and the monitoring service
+        if self.getProp('EnableUpdateAndReset'):
             from Configurables import UpdateAndReset
             if not self.getProp('Simulation'):
                 app.TopAlg = [ UpdateAndReset() ] + app.TopAlg
-            app.ExtSvc.append( 'MonitorSvc' )
 
         HistogramPersistencySvc().OutputFile = ''
         HistogramPersistencySvc().Warnings = False

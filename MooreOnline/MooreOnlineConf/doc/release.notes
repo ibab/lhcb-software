@@ -5,7 +5,7 @@
 !=================================================================================
 
 ! 2016-02-09 - Roel Aaij
- - Add option to MooreOnlineConf to disable DIM based monitoring.
+ - Add option to MooreOnlineConf to disable the UpdateAndReset algorithm.
 
 !========================= MooreOnlineConf v1r11 2015-09-01 =========================
 
