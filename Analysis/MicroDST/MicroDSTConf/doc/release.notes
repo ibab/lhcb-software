@@ -4,6 +4,9 @@
 ! Responsible : Juan PALACIOS
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
+
+!======================== MicroDSTConf v2r13 2016-02-09 ======================
+
 ! 2015-08-20 - Gerhard Raven
  - remove configuration of obsolete ANNDispatchSvc
 
