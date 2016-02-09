@@ -1,7 +1,7 @@
 #!/usr/bin/env bender 
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: PyRoUts.py 200161 2016-01-24 14:41:23Z ibelyaev $
+# $Id$
 # =============================================================================
 ## @file
 #  very simple "bender" scripts for batch processing 
@@ -9,11 +9,11 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2016-01-27
 #  
-#                    $Revision: 200161 $
-#  Last modification $Date: 2016-01-24 15:41:23 +0100 (Sun, 24 Jan 2016) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
-__version__ = "$Revision: 200161 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 # =============================================================================
