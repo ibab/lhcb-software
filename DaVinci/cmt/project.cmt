@@ -1,7 +1,7 @@
 project DAVINCI
 
 use ANALYSIS  ANALYSIS_v15r0
-use STRIPPING STRIPPING_v9r12p1
+use STRIPPING STRIPPING_v10r0
 
 build_strategy with_installarea
 setup_strategy root
