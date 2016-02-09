@@ -3,6 +3,8 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
+! 2016-02-09 - Gerhard Raven
+ - add FastClusterContainer::emplace_back
 
 ! 2016-01-28 - Chris Jones
  - Update (from Ulrik Egede) to support Deuteron RICH PID type.

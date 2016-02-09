@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <vector>
 #include <algorithm>
+#include <type_traits>
 // ============================================================================
 // Gaudi
 // ============================================================================
@@ -31,13 +32,14 @@
 template <typename VISIBLE, typename INTERNAL>
 class FastClusterContainer final : public ObjectContainerBase
 {
-private:
   // ==========================================================================
   /// static compile-time assertion
   static_assert( sizeof(VISIBLE) == sizeof(INTERNAL), "Cannot remap data of difference size!" ) ;
+  // static_assert( std::is_trivially_destructible<VISIBLE>::value, "visible type must be trivially destructable");
+  static_assert( !std::has_virtual_destructor<VISIBLE>::value, "visible type must not have a virtual destructor");
   // ==========================================================================
-private:
   typedef typename std::vector<VISIBLE>       VD;
+
 public:
   typedef typename VD::value_type             value_type;
   typedef typename VD::iterator               iterator;
@@ -109,6 +111,9 @@ public:
   const_reference back() const               { return ext().back();        }
   /// insert element at end
   void push_back(const VISIBLE& val)         { ext().push_back(val);}
+  /// emplace element at end
+  template <typename ... Args>
+  void emplace_back(Args&&... args)          { ext().emplace_back(std::forward<Args>(args)...);}
   /// erase element at end
   void pop_back()                            { m_data.pop_back();      }
 
