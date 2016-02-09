@@ -31,14 +31,11 @@ public:
   /// constructer
   STDQSummaryAlg(const std::string& name, ISvcLocator *svcloc );
 
-  /// destructor
-  virtual ~STDQSummaryAlg();
-
   /// execute
-  StatusCode execute();
+  StatusCode execute() override;
 
   /// finalize
-  StatusCode finalize();
+  StatusCode finalize() override;
 
 private:
   /// write run summary into storage vector (m_dataStorage)
@@ -71,7 +68,7 @@ private:
     void writeTxtEntrySci(std::ofstream& str, TYPE data);
 
   
-  int m_lastRunNumber;            ///< RunNumber of last event
+  int m_lastRunNumber = -1;            ///< RunNumber of last event
   std::string m_summaryLocation;  ///< data location
   std::string m_clusterLocation;  ///< data location 
  
@@ -79,7 +76,7 @@ private:
   std::vector<STDQCounters::DataRow> m_dataStorage;
   
   /// Class with all boost::accumulators.
-  STDQCounters *Counters;
+  std::unique_ptr<STDQCounters> Counters;
   int m_minADC, m_maxADC;
 
   bool m_writeTxtFile;
