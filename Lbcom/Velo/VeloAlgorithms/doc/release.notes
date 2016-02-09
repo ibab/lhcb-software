@@ -2,6 +2,14 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Tomasz Szumlak
 !--------------------------------------------------------------------------
+! 2016-02-09 - Gerhard Raven
+ - C++11 modernization:
+  o prefer direct member initialization
+  o prefer range-based for loops
+  o prefer std::unique_ptr over raw pointer + explicit delete
+  o prefer call-by-reference over call-by-pointer in case nullptr is an invalid 
+    argument
+  o avoid repeated (redundant) lookups in maps
 
 !========================= VeloAlgorithms v5r8 2015-11-23 =========================
 ! 2015-10-24 - Gerhard Raven

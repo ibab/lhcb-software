@@ -114,7 +114,7 @@ private:
   unsigned int m_bankBodySize;
   bool m_printInfo;
   bool m_isDebug;
-  std::map<unsigned int, SimTell1ZSProcessEngine*> m_zsEngines;
+  std::map<unsigned int, std::unique_ptr<SimTell1ZSProcessEngine>> m_zsEngines;
   VeloTELL1::TELL1ClusterVec m_clusters;
   VeloTELL1::CLUSTER_MEMORY m_clustersMem;  /// list of created clusters
 

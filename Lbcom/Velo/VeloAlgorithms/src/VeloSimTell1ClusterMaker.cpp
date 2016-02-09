@@ -33,20 +33,9 @@ VeloSimTell1ClusterMaker::VeloSimTell1ClusterMaker( const std::string& name,
 : VeloSimTell1Algorithm ( name , pSvcLocator ),
   m_rawEvent ( 0 ),
   m_rawEventLoc ( LHCb::RawEventLocation::Default ),
-  m_adcs ( ),
-  m_adcsMem ( ),
-  m_zsEnableMap ( ),
-  m_hitThresholdMap ( ),
-  m_lowThresholdMap ( ),
-  m_sumThresholdMap ( ),
-  m_boundaryStripMap ( ),
   m_eventNumber ( 0 ),
-  m_sensors ( ),
   m_bankBodySize ( 0 ),
-  m_isDebug ( msgLevel(MSG::DEBUG) ),
-  m_zsEngines ( ),
-  m_clusters ( ),
-  m_clustersMem ( )
+  m_isDebug ( msgLevel(MSG::DEBUG) )
 {
 
   // names and types
@@ -228,7 +217,7 @@ StatusCode VeloSimTell1ClusterMaker::execute() {
   }
 
   //
-  return ( StatusCode::SUCCESS );
+  return StatusCode::SUCCESS;
 }
 //=============================================================================
 //  Finalize
@@ -236,13 +225,9 @@ StatusCode VeloSimTell1ClusterMaker::execute() {
 StatusCode VeloSimTell1ClusterMaker::finalize() {
 
   if(m_isDebug) debug() << "==> Finalize" << endmsg;
-  // must be called after all other actions
-  std::map<unsigned int, SimTell1ZSProcessEngine*>::iterator zsIt;
-  zsIt=m_zsEngines.begin();
-  for( ; zsIt!=m_zsEngines.end(); ++zsIt){
-    if(zsIt->second!=NULL) delete zsIt->second;
-  }
+  m_zsEngines.clear();
   //
+  // must be called after all other actions
   return VeloSimTell1Algorithm::finalize();
 }
 //=============================================================================
@@ -296,7 +281,8 @@ StatusCode VeloSimTell1ClusterMaker::runClusterMaker()
     if(sens->isReadOut()){
       VeloTELL1::sdataVec data=(*sensIt)->data();
       // --> check if there is any additional data source
-      if(m_zsEngines.find(tell1)==m_zsEngines.end()){
+      auto iengine = m_zsEngines.find(tell1);
+      if(iengine==m_zsEngines.end()){
         if(m_isDebug)
           debug()<< " --> found new data source, will add processing engine "
               <<endmsg;
@@ -305,11 +291,12 @@ StatusCode VeloSimTell1ClusterMaker::runClusterMaker()
         }else if(m_dbConfig==VeloTELL1::DYNAMIC){
           this->addEngineInDynamicMode(tell1);
         }
+        iengine = m_zsEngines.find(tell1);
       }
-      m_zsEngines[tell1]->setInData(data);
-      m_zsEngines[tell1]->setOutClusters(m_clusters);
-      m_zsEngines[tell1]->setOutADCS(m_adcs);
-      m_zsEngines[tell1]->runZeroSuppression();
+      iengine->second->setInData(data);
+      iengine->second->setOutClusters(m_clusters);
+      iengine->second->setOutADCS(m_adcs);
+      iengine->second->runZeroSuppression();
     }
     // store clusters, adcs and corresponding counters in memory
     m_clustersMem.push_back(m_clusters);
@@ -586,20 +573,20 @@ void VeloSimTell1ClusterMaker::addEngineInStaticMode(unsigned int tell1,
 {
   if(m_isDebug) debug()<< " --> addEngineInStaticMode() " <<endmsg;
   //
-  m_zsEngines[tell1]=new SimTell1ZSProcessEngine();
-  m_zsEngines[tell1]->setProcessEnable(m_zsEnableMap[0]);
-  m_zsEngines[tell1]->setHitThresholds(m_hitThresholdMap[0]);
-  m_zsEngines[tell1]->setLowThresholds(m_lowThresholdMap[0]);
-  m_zsEngines[tell1]->setSumThresholds(m_sumThresholdMap[0]);
+  auto r = m_zsEngines.emplace(tell1, std::unique_ptr<SimTell1ZSProcessEngine>(new SimTell1ZSProcessEngine()));
+  auto& engine = r.first->second;
+  engine->setProcessEnable(m_zsEnableMap[0]);
+  engine->setHitThresholds(m_hitThresholdMap[0]);
+  engine->setLowThresholds(m_lowThresholdMap[0]);
+  engine->setSumThresholds(m_sumThresholdMap[0]);
   if(sens->isR()||sens->isPileUp()){
     // processing R sensor set start strip sequence for R
-    m_zsEngines[tell1]->setBoundaryStrips(m_boundaryStripsR);
+    engine->setBoundaryStrips(m_boundaryStripsR);
   }else if(sens->isPhi()){
     // processing Phi sensor
-    m_zsEngines[tell1]->setBoundaryStrips(m_boundaryStripsPhi);
+    engine->setBoundaryStrips(m_boundaryStripsPhi);
   }
   //
-  return;
 }
 //=============================================================================
 void VeloSimTell1ClusterMaker::addEngineInDynamicMode(unsigned int tell1)
@@ -607,13 +594,12 @@ void VeloSimTell1ClusterMaker::addEngineInDynamicMode(unsigned int tell1)
   if(m_isDebug) debug()<< " --> addEngineInDynamicMode() " <<endmsg;
   //
   // pedestal processing objects
-  m_zsEngines[tell1]=new SimTell1ZSProcessEngine();
-  m_zsEngines[tell1]->setProcessEnable(m_zsEnableMap[tell1]);
-  m_zsEngines[tell1]->setHitThresholds(m_hitThresholdMap[tell1]);
-  m_zsEngines[tell1]->setLowThresholds(m_lowThresholdMap[tell1]);
-  m_zsEngines[tell1]->setSumThresholds(m_sumThresholdMap[tell1]);
-  m_zsEngines[tell1]->setBoundaryStrips(m_boundaryStripMap[tell1]);
-  //
-  return;
+  auto r = m_zsEngines.emplace(tell1, std::unique_ptr<SimTell1ZSProcessEngine>(new SimTell1ZSProcessEngine()));
+  auto& engine = r.first->second;
+  engine->setProcessEnable(m_zsEnableMap[tell1]);
+  engine->setHitThresholds(m_hitThresholdMap[tell1]);
+  engine->setLowThresholds(m_lowThresholdMap[tell1]);
+  engine->setSumThresholds(m_sumThresholdMap[tell1]);
+  engine->setBoundaryStrips(m_boundaryStripMap[tell1]);
 }
 //--
