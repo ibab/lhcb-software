@@ -26,7 +26,8 @@ def configure(**kwargs) :
     mooreOnline.EnableRunChangeHandler = None
     mooreOnline.UseDBSnapshot = False
     mooreOnline.CheckOdin = False
-
+    mooreOnline.EnableUpdateAndReset = False
+    
     # Add the timing auditor by hand with output level INFO, as Moore is never
     # going to do it for us if the rest is at WARNING
     from Gaudi.Configuration import ApplicationMgr, AuditorSvc
@@ -116,6 +117,5 @@ def configure(**kwargs) :
         if not found:
             print "# WARNING: skipping setting '"+k+":"+v+"' because no configurable has that option"
 
-    user_package.configure()
-
+    user_package.configure()    
     OnlineEnv.end_config(False)

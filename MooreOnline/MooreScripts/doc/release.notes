@@ -4,6 +4,9 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2016-02-09 - Roel Aaij
+ - Disable UpdateAndReset in the timing test.
+
 !========================= MooreScripts v1r13 2015-11-14 =========================
 
 ! 2015-11-05 - Roel Aaij
