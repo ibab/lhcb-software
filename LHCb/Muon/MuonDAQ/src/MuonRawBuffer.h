@@ -43,10 +43,10 @@ private:
   StatusCode getTileAndTDC(const LHCb::RawBank* r,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC);
   StatusCode getPads(const LHCb::RawBank* r,std::vector<LHCb::MuonTileID>& pads);
 public: 
- StatusCode getTile( LHCb::RawEvent* raw,std::vector<LHCb::MuonTileID>& tile,std::string offset);
-  StatusCode getTileAndTDC( LHCb::RawEvent* raw,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC,std::string offset);
-  StatusCode getPads( LHCb::RawEvent* raw,std::vector<LHCb::MuonTileID>& pads,std::string offset);
-   StatusCode getNZSupp( LHCb::RawEvent* raw,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC,std::string offset);
+  StatusCode getTile( LHCb::RawEvent* raw,std::vector<LHCb::MuonTileID>& tile,const std::string& offset);
+  StatusCode getTileAndTDC( LHCb::RawEvent* raw,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC,const std::string& offset);
+  StatusCode getPads( LHCb::RawEvent* raw,std::vector<LHCb::MuonTileID>& pads,const std::string& offset);
+  StatusCode getNZSupp( LHCb::RawEvent* raw,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC,const std::string& offset);
   StatusCode getNZSupp(const LHCb::RawBank* r,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC);
   StatusCode dumpNZSupp(const LHCb::RawBank* r,unsigned int ode_num);
   MuonPPEventInfo getPPInfo(const LHCb::RawBank* r,unsigned int pp_num);
@@ -87,14 +87,14 @@ private:
   StatusCode decodePadsDC06(const LHCb::RawBank* r);
   StatusCode decodePadsV1(const LHCb::RawBank* r);
   StatusCode decodeNZSupp(const LHCb::RawBank* r);
-  StatusCode decodeNZSupp(unsigned int tell1Number);
+  StatusCode decodeNZSupp(int tell1Number);
   StatusCode DecodeDataPad(const LHCb::RawBank* r);
   
   StatusCode DecodeData(const LHCb::RawBank* r);
   StatusCode checkBankSize(const LHCb::RawBank* rawdata);
   StatusCode checkAllHeaders(LHCb::RawEvent* raw);
   void fillTell1Header(unsigned int tell1,unsigned int data);
-  void setTESOffset(std::string offset="");
+  void setTESOffset(const std::string& offset="");
   void restoreTESOffset();
   void initStatus();	  
   void initStatusNZS();	  

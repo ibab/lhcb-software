@@ -1,5 +1,5 @@
 // $Id: MuonRec.h,v 1.2 2008-04-02 11:52:05 asatta Exp $
-#ifndef MUONREC_MUONREC_H 
+#ifndef MUONREC_MUONREC_H
 #define MUONREC_MUONREC_H 1
 
 // Include files
@@ -27,44 +27,40 @@ public:
   /// Standard constructor
   MuonRec( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~MuonRec( ); ///< Destructor
-
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
+  StatusCode initialize() override;    ///< Algorithm initialization
+  StatusCode execute   () override;    ///< Algorithm execution
+  StatusCode finalize  () override;    ///< Algorithm finalization
 
 private:
 
   /// Copy MuonTileID from digits to coords with no logical map (1:1 copy)
-  StatusCode addCoordsNoMap(LHCb::MuonCoords *coords, 
+  StatusCode addCoordsNoMap(LHCb::MuonCoords *coords,
                             std::vector<std::pair<LHCb::MuonTileID ,
                             unsigned int> > & digit,
-                            const int & station,
-                            const int & region);
+                            int station,
+                            int region) const;
 
   /// Copy MuonTileID from digits to coord by crossing the digits
-  StatusCode addCoordsCrossingMap(LHCb::MuonCoords *coords, 
-                                  std::vector<std::pair<LHCb::MuonTileID, 
+  StatusCode addCoordsCrossingMap(LHCb::MuonCoords *coords,
+                                  std::vector<std::pair<LHCb::MuonTileID,
                                   unsigned int> > &digit,
-                                  const int & station,
-                                  const int & region);
+                                  int station,
+                                  int region) const;
 
   /// fills in the two readout layouts by querying the DeMuonRegion
-  StatusCode makeStripLayouts(int station , int region, 
+  StatusCode makeStripLayouts(int station , int region,
                               MuonLayout &layout1,
-                              MuonLayout &layout2);
+                              MuonLayout &layout2) const;
 
   // Number of stations
-  int m_NStation;
+  int m_NStation = 0;
   // Number of regions
-  int m_NRegion;
-  DeMuonDetector* m_muonDetector;
-  IMuonRawBuffer* m_muonBuffer;  
-  bool m_forceResetDAQ;
-  int  m_Exccounter;  
+  int m_NRegion = 0;
+  DeMuonDetector* m_muonDetector = nullptr;
+  IMuonRawBuffer* m_muonBuffer = nullptr;
+  bool m_forceResetDAQ = false;
+  mutable int  m_Exccounter = 0;
   std::string m_coordOutputLocation;
-  
+
 };
 #endif // MUONREC_MUONREC_H
