@@ -2,6 +2,9 @@
 ! Responsible : Silvia Borghi, Marco Gersabeck
 !=============================================================================
 
+! 2016-02-09 - Maurizio Martinelli
+- Added an empty __init__.py file to avoid cmake warning
+
 !========================= VeloAlignment v4r13 2015-07-29 =========================
 ! 2015-07-27 - Maurizio Martinelli
  - Solved some compilation errors due to less permissive configuration.
@@ -37,28 +40,28 @@
 
 !========================= VeloAlignment v4r10 2010-10-08 =========================
 
-! 08/09/2010 - Silvia Borghi  
+! 08/09/2010 - Silvia Borghi
   - VAlign.cpp : add check if Velo cluster exists
   - AlignSensors.cpp: update residual evaluation (to consider the z position
                       of the strip, instead the one of the sensor)
-                      Use phi in half frame instead of global frame in 
+                      Use phi in half frame instead of global frame in
 	                    kalman method
                       Use the errors stored in cluster tool instead of
                       pitch /sqrt(12)
   - VeloAlignMonitor.py: change the default of the options
   - AlignSensors.py: delete obsolete option
-  - options/plotVeloSensPosition.py Draw the position in the global frame 
-    of the point (xpos,ypos,0) in local frame for each sensor using the 
+  - options/plotVeloSensPosition.py Draw the position in the global frame
+    of the point (xpos,ypos,0) in local frame for each sensor using the
     alignment defined in the option file
   - scripts directory contains some python scripts to compare or combine
     Velo alignment constants in Detectors.xml and Modules. xml
-    - CompareDetectorXml.py compare the alignment constants in 2 xml file 
+    - CompareDetectorXml.py compare the alignment constants in 2 xml file
                             in Detectors.xml
-    - CompareModuleXml.py compare the alignment constants in 2 xml file 
+    - CompareModuleXml.py compare the alignment constants in 2 xml file
                           in Modules.xml
-    - CombineDetectorXml.py combine the alignment constants of 2 xml file 
+    - CombineDetectorXml.py combine the alignment constants of 2 xml file
                             in Detectors.xml
-    - CombineModuleXml.py combine the alignment constants of 2 xml file 
+    - CombineModuleXml.py combine the alignment constants of 2 xml file
                           in Modules.xml
     - generateMisalignDetectorXml.py add random misalignment to the constants
                                      of Detectors.xml
@@ -67,7 +70,7 @@
 ! 03/05/2010 - Wouter Hulsbergen
   - resolved compilor warning
 
-! 28/04/2010 - Silvia Borghi  
+! 28/04/2010 - Silvia Borghi
   - VAlign.cpp, VAlign.h: add cuts on track selection
 													add variable to ntuple
   - TrackStore.cpp: read error from clusterTool
@@ -96,7 +99,7 @@
   - tag for use with LHCb v27r3 and REC v7r3
 
 !=============================================================================
-! 30/06/2009 - Silvia Borghi  
+! 30/06/2009 - Silvia Borghi
   - VAlign.cpp, VAlign.h: fixes, add default for properties, add debugs"
   - TrackStore.cpp: fix a bug in comparison of maximum number of points
                     add a check for VeloCluster
@@ -152,18 +155,18 @@
 !=============================================================================
 ! 16/04/2008 - Marco Gersabeck  ** v4r1 **
 
-  - Align.cpp(h): New method updateConditions to update alignment conditions 
+  - Align.cpp(h): New method updateConditions to update alignment conditions
                   in memory at the end of the algorithm to enable the use of
                   WriteAlignmentConditions
 
-  - AlignSensors.cpp/h/otps: 
+  - AlignSensors.cpp/h/otps:
                   o Use of VeloClusterPotitionTool for calculation of inter-
                     strip position
                   o Do fit in Velo half frame instead of global frame to enable
                     use when VELO open
                   o Only update constants when delta in either x or y is significant,
                     i.e. delta/error > MinDeltaSig (new option)
-                  
+
 
 !=============================================================================
 ! 23/01/2008 - Marco Gersabeck  ** v4r0 **
@@ -179,8 +182,8 @@
 !=============================================================================
 ! 04/09/2007 - Sebastien Viret  ** v3r0 **
 
-  New version in preparation of the integration of VeloAlignment into the 
-  Alignment project	
+  New version in preparation of the integration of VeloAlignment into the
+  Alignment project
 
   Changes are:
 
@@ -196,15 +199,15 @@
 			the ACDC option of PatVeloGeneric. Suppress obsoletes options.
 
                         GetTrackSlope() method is suppressed and ported to the VeloTrack class.
- 
+
   - MilleConfig.cpp(h) : Minor changes, except that we have now 3 global params instead of 4
-			 for the box alignment (cosmetic change mainly...). 
+			 for the box alignment (cosmetic change mainly...).
 
   - PVHisto.cpp(h) : Suppress GetTrackSlope() (see VeloTrack())
 
   - VeloTrack.cpp(h) : Added GetTrackSlope() here, inorder to avoid duplication.
 
-  This version has been tested successfully with Brunel v31r8, using events 
+  This version has been tested successfully with Brunel v31r8, using events
   misaligned with the new CondDB. It's now using AlignmentInterfaces package
   instead of AlignmentTools.
 
@@ -214,18 +217,18 @@
   New optimisation of the code. In particular, the AlignTrack.xml file has been
   replaced by a simpler VeloTrack.h class, now sitting in /src/ directory.
 
-  This version NEEDS 'AlignmentTools v2r5' or higher to work. A new memory 
-  allocation technique has been setup. 
+  This version NEEDS 'AlignmentTools v2r5' or higher to work. A new memory
+  allocation technique has been setup.
 
 
 !=============================================================================
 ! 07/03/2007 - Sebastien Viret  ** v2r3 **
 
-  This release presents the final version of boxes alignment, mixing primary vertices 
+  This release presents the final version of boxes alignment, mixing primary vertices
   and overlaps in one single fit. It needs the latest version of Millepede (v2r4),
   with the new non-linear treatment. Major modifications are in Milleconfig.cpp method.
 
-  Information on 'how-to' run this code (including analysis macros), might be found 
+  Information on 'how-to' run this code (including analysis macros), might be found
   at the following address:
 
   http://ppewww.physics.gla.ac.uk/LHCb/VeloAlign/VeloApplication_7.html
@@ -257,22 +260,22 @@
 
   * This version now includes both STEP1 (internal alignment by tracks) and STEP2
 	(box alignment with primary vertices and (or) overlaps) alignment. This implies mainly
-	changes in Milleconfig and TrackStore. 
+	changes in Milleconfig and TrackStore.
 
   * This is also the first version fully adapted to all DC06 changes (new TEM,...).
 
-  * Alignment monitoring via NTuple has been improved. There is now the possibility to get 
+  * Alignment monitoring via NTuple has been improved. There is now the possibility to get
 	a independant sample of 1000 tracks in order to check the residuals. Monitoring ntuples
-	could be requested via joboptions file. 
+	could be requested via joboptions file.
 
   * Options files have been slightly simplified and are fully commented
 
   However this version is still a preliminary one (in part. for STEP2) and is mainly
-	dedicated to ACDC system tests.    
+	dedicated to ACDC system tests.
 
   For more information on how to use this package :
 
-	http://ppewww.ph.gla.ac.uk/LHCb/VeloAlign/	
+	http://ppewww.ph.gla.ac.uk/LHCb/VeloAlign/
 
   Package has been tested with : LHCb   v21r2
                                  Brunel v30r5
@@ -290,5 +293,3 @@
 
   Environment requested to compile: LHCb   v19r3
                                     Brunel v28r2
-
-
