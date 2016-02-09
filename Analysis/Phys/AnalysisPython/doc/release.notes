@@ -5,6 +5,8 @@
 !               GaudiPython analyses.
 !-----------------------------------------------------------------------------
 
+!====================== AnalysisPython v2r40 2016-02-09 ======================
+
 ! 2016-01-24 - Vanya Belyaev
  - Logger:
    1) decrease the default logging threshold
