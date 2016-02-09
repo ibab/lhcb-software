@@ -1,4 +1,3 @@
-// $Id: L0MuonMonitorBase.h,v 1.7 2010-03-08 15:00:34 jucogan Exp $
 #ifndef COMPONENT_L0MUONMONITORBASE_H 
 #define COMPONENT_L0MUONMONITORBASE_H 1
 
@@ -74,29 +73,17 @@ protected:
   int m_triggerType;
   
 
-  inline bool quarterInUse(int qua) 
+  inline bool quarterInUse(int qua) const
   {
-    std::vector<int>::iterator i;
-    for (i=m_quarters.begin(); i<m_quarters.end(); ++i){
-      if ((*i)==qua) return true;
-    }
-    return false;
+    return std::find(m_quarters.begin(),m_quarters.end(),qua)!=m_quarters.end();
   }
-  inline bool regionInUse(int reg) 
+  inline bool regionInUse(int reg) const
   {
-    std::vector<int>::iterator i;
-    for (i=m_regions.begin(); i<m_regions.end(); ++i){
-      if ((*i)==reg) return true;
-    }
-    return false;
+    return std::find(m_regions.begin(), m_regions.end(),reg)!=m_regions.end();
   }
-  inline bool stationInUse(int sta) 
+  inline bool stationInUse(int sta) const
   {
-    std::vector<int>::iterator i;
-    for (i=m_stations.begin(); i<m_stations.end(); ++i){
-      if ((*i)==sta) return true;
-    }
-    return false;
+    return std::find(m_stations.begin(),m_stations.end(),sta)!=m_stations.end();
   }
 
 };

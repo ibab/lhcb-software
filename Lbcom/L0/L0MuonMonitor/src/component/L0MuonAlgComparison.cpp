@@ -36,11 +36,6 @@ L0MuonAlgComparison::L0MuonAlgComparison( const std::string& name,
   
 }
 //=============================================================================
-// Destructor
-//=============================================================================
-L0MuonAlgComparison::~L0MuonAlgComparison() {} 
-
-//=============================================================================
 // Initialization
 //=============================================================================
 StatusCode L0MuonAlgComparison::initialize() {
@@ -148,25 +143,25 @@ StatusCode L0MuonAlgComparison::compare(std::string location, bool histo, int ts
   if (!exist<LHCb::L0MuonCandidates>( location0 )) 
     return Error("L0MuonCandidates not found at "+location0,StatusCode::FAILURE,100);  
   LHCb::L0MuonCandidates* original0 = get<LHCb::L0MuonCandidates>( location0 );
-  LHCb::L0MuonCandidates* cands0 = new LHCb::L0MuonCandidates();
-  filterCand(original0,cands0);
+  LHCb::L0MuonCandidates cands0;
+  filterCand(*original0,cands0);
 
   std::string location1 = location + m_extension_1;
   if (!exist<LHCb::L0MuonCandidates>( location1 ))  
     return Error("L0MuonCandidates not found at "+location1,StatusCode::FAILURE,100);  
   LHCb::L0MuonCandidates* original1 = get<LHCb::L0MuonCandidates>( location1 );
-  LHCb::L0MuonCandidates* cands1 = new LHCb::L0MuonCandidates();
-  filterCand(original1,cands1);
+  LHCb::L0MuonCandidates cands1;
+  filterCand(*original1,cands1);
 
   LHCb::L0MuonCandidates::const_iterator it0;
   LHCb::L0MuonCandidates::const_iterator it1;
 
-  debug()<<"Nb of candidates : 0= "<<cands0->size()<<"  - 1= "<<cands1->size()<<endmsg;
+  debug()<<"Nb of candidates : 0= "<<cands0.size()<<"  - 1= "<<cands1.size()<<endmsg;
   
-  LHCb::L0MuonCandidates* cands_only0 = new LHCb::L0MuonCandidates();
-  for ( it0= cands0->begin(); it0<cands0->end();++it0) {
+  LHCb::L0MuonCandidates cands_only0;
+  for ( it0= cands0.begin(); it0!=cands0.end();++it0) {
     bool found=false;
-    for ( it1= cands1->begin(); it1<cands1->end();++it1) {
+    for ( it1= cands1.begin(); it1<cands1.end();++it1) {
       if (**it1==**it0) {
         found=true;
         break;
@@ -174,7 +169,7 @@ StatusCode L0MuonAlgComparison::compare(std::string location, bool histo, int ts
     }
     if (!found) {
       m_diff=true;
-      cands_only0->add((*it0));
+      cands_only0.add((*it0));
       ++m_counters[NOT_FOUND];
       sc = StatusCode::FAILURE;
       LHCb::MuonTileID mid= ((*it0)->muonTileIDs(2))[0];
@@ -195,14 +190,13 @@ StatusCode L0MuonAlgComparison::compare(std::string location, bool histo, int ts
       debug()<<"Candidate found !!! "<<endmsg;
     }
   }
-  if (histo) m_candHistosPU0->fillHistos(cands_only0,ts);
-  if (histo) m_candHistosPU0->fillHistos(cands_only0->size(),ts);
-  delete cands_only0;
+  if (histo) m_candHistosPU0->fillHistos(&cands_only0,ts);
+  if (histo) m_candHistosPU0->fillHistos(cands_only0.size(),ts);
   
-  LHCb::L0MuonCandidates* cands_only1 = new LHCb::L0MuonCandidates();
-  for ( it1= cands1->begin(); it1<cands1->end();++it1) {
+  LHCb::L0MuonCandidates cands_only1;
+  for ( it1= cands1.begin(); it1<cands1.end();++it1) {
     bool found=false;
-    for ( it0= cands0->begin(); it0<cands0->end();++it0) {
+    for ( it0= cands0.begin(); it0!=cands0.end();++it0) {
       if (**it1==**it0) {
         found=true;
         break;
@@ -210,7 +204,7 @@ StatusCode L0MuonAlgComparison::compare(std::string location, bool histo, int ts
     }
     if (!found) {
       m_diff=true;
-      cands_only1->add((*it1));
+      cands_only1.add(*it1);
       ++m_counters[ADDITIONAL];
       sc = StatusCode::FAILURE;
       LHCb::MuonTileID mid= ((*it1)->muonTileIDs(2))[0];
@@ -222,8 +216,7 @@ StatusCode L0MuonAlgComparison::compare(std::string location, bool histo, int ts
         int ipu = ((pu.nY()%2)*2) +  (pu.nX()%2);
         info()<<"Candidate not found in 1st processing ... evt # "<<m_counters[TOTAL]
               <<" Q"<<(qua+1)<< " R"<<(reg+1)<<" PB"<<iboard<<" PU"<<ipu<<endmsg;
-      }
-      else {
+      } else {
         info()<<"Candidate not found in 2nd processing ... evt # "<<m_counters[TOTAL]
               <<" mid M3 not valid => "<<(*it1)<<endmsg;
         
@@ -233,15 +226,10 @@ StatusCode L0MuonAlgComparison::compare(std::string location, bool histo, int ts
     }
   }
   if (histo) {
-    m_candHistosPU1->fillHistos(cands_only1,ts);
-    m_candHistosPU1->fillHistos(cands_only1->size(),ts);
+    m_candHistosPU1->fillHistos(&cands_only1,ts);
+    m_candHistosPU1->fillHistos(cands_only1.size(),ts);
   }
   
-  delete cands_only1;
-  
-  delete cands0;
-  delete cands1;
-
   if( (msgLevel(MSG::INFO) && sc==StatusCode::FAILURE) || msgLevel(MSG::DEBUG) ) {
     printCand(location0);
     printCand(location1);
@@ -249,75 +237,66 @@ StatusCode L0MuonAlgComparison::compare(std::string location, bool histo, int ts
   return StatusCode::SUCCESS;
 }
 
-void L0MuonAlgComparison::filterCand(LHCb::L0MuonCandidates* originals, LHCb::L0MuonCandidates* filtered)
+void L0MuonAlgComparison::filterCand(const LHCb::L0MuonCandidates& originals, LHCb::L0MuonCandidates& filtered) const
 {
   
-  filtered->clear();
-  for (LHCb::L0MuonCandidates::const_iterator it=originals->begin(); it<originals->end();++it) {  
-    std::vector<LHCb::MuonTileID> mids=(*it)->muonTileIDs(2);
+  filtered.clear();
+  for (const auto& orig : originals) {
+    std::vector<LHCb::MuonTileID> mids=orig->muonTileIDs(2);
     int qua=mids[0].quarter();
     if (!quarterInUse(qua)) continue;
     int reg=mids[0].region();
     if (!regionInUse(reg)) continue;
-    filtered->insert(*it);
-    
+    filtered.insert(orig);
   }
     
 }
 
-void L0MuonAlgComparison::printCand(std::string location){
+void L0MuonAlgComparison::printCand(std::string location) const{
 
-  if (!exist<LHCb::L0MuonCandidates>( location )) return;
-  LHCb::L0MuonCandidates* cands = get<LHCb::L0MuonCandidates>( location );
+  LHCb::L0MuonCandidates* cands = getIfExists<LHCb::L0MuonCandidates>( location );
+  if (!cands) return;
 
-  LHCb::L0MuonCandidates* filtered = new LHCb::L0MuonCandidates();
-  filterCand(cands,filtered);
+  LHCb::L0MuonCandidates filtered;
+  filterCand(*cands,filtered);
 
-  std::cout<<boost::format("%-30s %3d candidates found  ") % location % filtered->size();
+  std::cout<<boost::format("%-30s %3d candidates found  ") % location % filtered.size();
   std::cout<<std::endl;
-  if (filtered->size()>8) {
-    for (std::vector<int>::iterator iq=m_quarters.begin(); iq<m_quarters.end(); ++iq) {
-      LHCb::L0MuonCandidates* candsQ = new LHCb::L0MuonCandidates();
-      for (LHCb::L0MuonCandidates::const_iterator it=filtered->begin(); it<filtered->end();++it) {
-        int qua=(((*it)->muonTileIDs(2))[0].quarter());
-        if ( (*iq)==qua) candsQ->add(*it);
+  if (filtered.size()>8) {
+    for (const auto& q : m_quarters) {
+      LHCb::L0MuonCandidates candsQ;
+      for (const auto& c : filtered ) {
+        int qua=((c->muonTileIDs(2))[0].quarter());
+        if ( q==qua) candsQ.add(c);
       }
-      if (candsQ->size()>0) printCand(candsQ,location);
-      delete candsQ;
+      if (!candsQ.empty()) printCand(candsQ,location);
     }
   } else {
     printCand(filtered,location);
   }
-  
-
-  delete filtered;
 }
 
-void L0MuonAlgComparison::printCand(LHCb::L0MuonCandidates* filtered, std::string tab)
+void L0MuonAlgComparison::printCand(const LHCb::L0MuonCandidates& filtered, std::string tab) const
 {
-  
-  if (filtered->size()>8) {
-    LHCb::L0MuonCandidates* cands8 = new LHCb::L0MuonCandidates();
+  if (filtered.size()>8) {
+    LHCb::L0MuonCandidates cands8;
     int ncands=0;
-    for (LHCb::L0MuonCandidates::const_iterator it=filtered->begin(); it<filtered->end();++it) {
+    for (const auto& c : filtered) {
       ++ncands;
-      cands8->add(*it);
-      if (0==((ncands)%8)) 
-      {
+      cands8.add(c);
+      if (0==((ncands)%8)) {
         printCand(cands8,tab);
-        cands8->clear();
+        cands8.clear();
         ncands=0;
       }
     }
     if (0!=((ncands)%8)) printCand(cands8,tab);
-    cands8->clear();
-    delete cands8;
-    return;
+    cands8.clear();
   }
 
   std::cout<<boost::format("%-30s PT  ") % tab;
-  for (LHCb::L0MuonCandidates::const_iterator it=filtered->begin(); it<filtered->end();++it) {      
-    std::cout<<boost::format("%21d - ") %  ((*it)->encodedPt());
+  for (const auto& c : filtered) {
+    std::cout<<boost::format("%21d - ") %  c->encodedPt();
   }
   std::cout<<std::endl;
 
@@ -325,9 +304,9 @@ void L0MuonAlgComparison::printCand(LHCb::L0MuonCandidates* filtered, std::strin
     
     unsigned int max=1;
     std::cout<<boost::format("%-30s M%1d  ") % tab % (sta+1);
-    for (LHCb::L0MuonCandidates::const_iterator it=filtered->begin(); it<filtered->end();++it) {      
-      std::vector<LHCb::MuonTileID> mids=(*it)->muonTileIDs(sta);
-      if (mids.size()==0) {
+    for (const auto& c : filtered) {
+      auto mids=c->muonTileIDs(sta);
+      if (mids.empty()) {
         std::cout<<boost::format("????????????????????? - ");
         continue;
       }
@@ -337,12 +316,11 @@ void L0MuonAlgComparison::printCand(LHCb::L0MuonCandidates* filtered, std::strin
     std::cout<<std::endl;
     for (unsigned int i=1;i<max;++i){
       std::cout<<boost::format("%-30s     ") % tab;
-      for (LHCb::L0MuonCandidates::const_iterator it=filtered->begin(); it<filtered->end();++it) {      
-        std::vector<LHCb::MuonTileID> mids=(*it)->muonTileIDs(sta);
+      for (const auto& c : filtered ) {
+        std::vector<LHCb::MuonTileID> mids=c->muonTileIDs(sta);
         if (mids.size()>i){   
           printMuonTile(mids[i]);
-        }
-        else
+        } else
           std::cout<<boost::format("%21s - ") % "";
       }
       std::cout<<std::endl;
@@ -351,7 +329,7 @@ void L0MuonAlgComparison::printCand(LHCb::L0MuonCandidates* filtered, std::strin
 }
 
 
-void L0MuonAlgComparison::printMuonTile(LHCb::MuonTileID mid)
+void L0MuonAlgComparison::printMuonTile(LHCb::MuonTileID mid) const
 {
   int pb = 3*mid.region()+int(mid.nX()/(mid.layout().xGrid()))+((int(mid.nY()/(mid.layout().yGrid()))<<1)&2)-1;
   int pu = int(mid.nX()/(mid.layout().xGrid()/2))%2+(((int(mid.nY()/(mid.layout().yGrid()/2))%2)<<1)&2);

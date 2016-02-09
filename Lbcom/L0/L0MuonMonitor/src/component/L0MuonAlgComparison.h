@@ -1,4 +1,3 @@
-// $Id: L0MuonAlgComparison.h,v 1.6 2010-03-08 15:04:10 jucogan Exp $
 #ifndef COMPONENT_L0MUONALGCOMPARISON_H 
 #define COMPONENT_L0MUONALGCOMPARISON_H 1
 
@@ -24,31 +23,27 @@ public:
   /// Standard constructor
   L0MuonAlgComparison( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~L0MuonAlgComparison( ); ///< Destructor
+  StatusCode initialize() override;    ///< Algorithm initialization
+  StatusCode execute   () override;    ///< Algorithm execution
+  StatusCode finalize  () override;    ///< Algorithm finalization
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+private:
 
   enum Counter {FOUND, NOT_FOUND, ADDITIONAL, PROCESSED, TOTAL, BUNCHES, NCounters};
   
 
-protected:
-
-private:
-
   unsigned int m_counters[NCounters];
   
-  void printCand(std::string location);
-  void printCand(LHCb::L0MuonCandidates* cand, std::string tab="");
+  void printCand(std::string location) const;
+  void printCand(const LHCb::L0MuonCandidates& cand, std::string tab="") const;
   
   StatusCode compare(std::string loc, bool histo=false, int ts=0);
 
   std::string m_extension_0;
   std::string m_extension_1;
   
-  void filterCand(LHCb::L0MuonCandidates* originals, LHCb::L0MuonCandidates* filtered);
-  void printMuonTile(LHCb::MuonTileID mid);
+  void filterCand(const LHCb::L0MuonCandidates& originals, LHCb::L0MuonCandidates& filtered) const;
+  void printMuonTile(LHCb::MuonTileID mid) const;
 
   L0MuonCandHistos*     m_candHistosPU0;
   L0MuonCandHistos*     m_candHistosPU1;

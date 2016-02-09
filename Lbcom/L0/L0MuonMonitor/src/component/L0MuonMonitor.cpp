@@ -383,8 +383,7 @@ StatusCode L0MuonMonitor::compareTiles(std::vector<std::pair<LHCb::MuonTileID,do
                  <<" in PU "<<itol->containerID(MuonLayout(2,2)).toString()<<endmsg;
         }
       }
-      std::pair<LHCb::MuonTileID,double> tdt = std::pair<LHCb::MuonTileID,double > (mid,time);
-      l0muontiles_and_time.push_back(tdt);
+      l0muontiles_and_time.emplace_back(mid,time);
     }
     
     // Get Muon Hits
@@ -427,8 +426,7 @@ StatusCode L0MuonMonitor::compareTiles(std::vector<std::pair<LHCb::MuonTileID,do
       if (!quarterInUse(mid.quarter())) continue;
       if (!stationInUse(mid.station())) continue;
       if (!regionInUse(mid.region())  ) continue;
-      std::pair<LHCb::MuonTileID,double> tdt = std::pair<LHCb::MuonTileID,double >(mid,time);
-      muontiles_and_time.push_back(tdt);
+      muontiles_and_time.emplace_back(mid,time);
     }
   } // End of loop over time slots
 
@@ -451,8 +449,7 @@ StatusCode L0MuonMonitor::compareTiles(std::vector<std::pair<LHCb::MuonTileID,do
 
     } // End of loop over the muon hits
     LHCb::MuonTileID mid=itl0muon_and_time->first;
-    std::pair<LHCb::MuonTileID,double> tdt = std::pair<LHCb::MuonTileID,double> (mid,deltaT);
-    tiles_and_deltaT.push_back(tdt);
+    tiles_and_deltaT.emplace_back(mid,deltaT);
     // if deltaT is still equal to -15, it means the l0muon hit has not been found in the muon
     if (deltaT==-15) mismatch=true;
     if ( (deltaT>=1) || (deltaT<=-1) ){
@@ -475,8 +472,7 @@ StatusCode L0MuonMonitor::compareTiles(std::vector<std::pair<LHCb::MuonTileID,do
     if (!found) {
       double deltaT=+15.;
       LHCb::MuonTileID mid=itmuon_and_time->first;
-      std::pair<LHCb::MuonTileID,double> tdt = std::pair<LHCb::MuonTileID,double> (mid,deltaT);
-      tiles_and_deltaT.push_back(tdt);
+      tiles_and_deltaT.emplace_back(mid,deltaT);
       mismatch=true;
       std::map<LHCb::MuonTileID,int>::iterator itile_mismatch=m_tiles_mismatch.find(mid);
       if (itile_mismatch==m_tiles_mismatch.end()) m_tiles_mismatch[mid]=0;
@@ -533,7 +529,6 @@ StatusCode L0MuonMonitor::compareTiles(std::vector<std::pair<LHCb::MuonTileID,do
           }
         }
         LHCb::MuonTileID mid=itl0muon_and_time->first;
-        std::pair<LHCb::MuonTileID,double> tdt = std::pair<LHCb::MuonTileID,double> (mid,deltaT);
         if (deltaT==-15) {
           debug()<<"mismatch - L0Muon : "<<mid.toString()<<" @ "<<itl0muon_and_time->second;
           debug()<<" NOT FOUND IN MUON"
