@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-02-09 - Mike Sokoloff
+  added a BHad subdirectory for exclusive decays
+  initial use case is B --> p,p,pbar,pbar
+
 ! 2016-02-08 - Kevin Dungs
  - Add a subfolder for lepton flavour violating decays. So far contains one
    line for J/ψ→µe. Will need some fine tuning.
