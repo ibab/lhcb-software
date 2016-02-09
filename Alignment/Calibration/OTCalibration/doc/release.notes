@@ -5,6 +5,7 @@
 
 !2016-02-09 - Maurizio Martinelli
 - Fixed an error due to missing Boost dependency
+- Added an empty __init__.py file to avoid cmake warning
 
 !2016-01-19 - Lucia Grillo
 - Fixed few warnings
