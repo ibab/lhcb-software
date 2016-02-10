@@ -33,7 +33,7 @@
 #
 
 set(LOKI_FUNCTORS_CACHE_POST_ACTION_OPTS
-    ${CMAKE_CURRENT_LIST_DIR}/LoKiFunctorsCachePostActionOpts.py
+    ${CMAKE_CURRENT_LIST_DIR}/LoKiFunctorsCacheHltPostActionOpts.py
     CACHE FILEPATH "Special options file for LoKi Functors cache generation.")
 mark_as_advanced(LOKI_FUNCTORS_CACHE_POST_ACTION_OPTS)
 
