@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2016-02-10 - Michel De Cian
+ - Fix two bugs in PatLongLivedTracking, and change chi2-cut in x-layers fit.
+
 ! 2016-02-08 - Adam Davis
  - Add more debugging tools to PatLongLivedTracking
 !========================= PatAlgorithms v4r45 2016-01-28 =========================

@@ -235,7 +235,8 @@ private:
   unsigned int  m_maxXTracks;
   double        m_maxChi2DistXTracks;
   unsigned int  m_maxXUTracks;
-  double        m_maxChi2XProjection;
+  double        m_fitXProjChi2Offset;
+  double        m_fitXProjChi2Const;
   double        m_overlapTol;
   double        m_yTol;
   double        m_seedCut;

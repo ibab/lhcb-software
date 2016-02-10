@@ -106,8 +106,9 @@ PatLongLivedTracking::PatLongLivedTracking( const std::string& name,
   declareProperty( "MaxXTracks",                     m_maxXTracks           = 2                                           );
   declareProperty( "MaxChi2DistXTracks",             m_maxChi2DistXTracks   = 0.2                                         );
   declareProperty( "MaxXUTracks",                    m_maxXUTracks          = 2                                           );
-  declareProperty( "MinChi2XProjection",             m_maxChi2XProjection   = 200                                         );
-  
+  declareProperty( "FitXProjChi2Offset",             m_fitXProjChi2Offset   = 4.0                                         );
+  declareProperty( "FitXProjChi2Const",              m_fitXProjChi2Const    = 40000.0                                     );
+    
   // -- Tolerance for adding overlap hits
   declareProperty( "OverlapTol",                     m_overlapTol           = 2.0*Gaudi::Units::mm                        );
   declareProperty( "YTol",                           m_yTol                 = 2.0*Gaudi::Units::mm                        );
@@ -173,7 +174,7 @@ StatusCode PatLongLivedTracking::initialize() {
          << " MaxXTracks         = " << m_maxXTracks          << endmsg
          << " MaxChi2DistXTracks = " << m_maxChi2DistXTracks  << endmsg
          << " MaxXUTracks        = " << m_maxXUTracks         << endmsg
-         << " MaxChi2XProjection = " << m_maxChi2XProjection  << endmsg
+         << " MaxChi2XProjection = " << m_fitXProjChi2Const   << "/p + " << m_fitXProjChi2Offset<< endmsg
          << " OverlapTol         = " << m_overlapTol          << endmsg
          << " SeedCut            = " << m_seedCut             << endmsg
          << " MaxChi2            = " << m_maxChi2             << endmsg
@@ -901,13 +902,13 @@ void PatLongLivedTracking::xFit( PatDownTrack& track ) {
   const double w2 = hit2->hit()->weight();
 
 
-  mat[0] = w1 + w2;
-  mat[1] = w1 * (hit1->z() - track.zMagnet()) +  w2 * (hit2->z() - track.zMagnet());
-  mat[2] = w1 * (hit1->z() - track.zMagnet())*(hit1->z() - track.zMagnet()) 
+  mat[0] += w1 + w2;
+  mat[1] += w1 * (hit1->z() - track.zMagnet()) +  w2 * (hit2->z() - track.zMagnet());
+  mat[2] += w1 * (hit1->z() - track.zMagnet())*(hit1->z() - track.zMagnet()) 
     + w2 * (hit2->z() - track.zMagnet())*(hit2->z() - track.zMagnet());
   
-  rhs[0] = w1 *  track.distance( hit1 ) + w2 *  track.distance( hit2 );
-  rhs[1] = w1 *  track.distance( hit1 ) * (hit1->z() - track.zMagnet()) 
+  rhs[0] += w1 *  track.distance( hit1 ) + w2 *  track.distance( hit2 );
+  rhs[1] += w1 *  track.distance( hit1 ) * (hit1->z() - track.zMagnet()) 
     +  w2 *  track.distance( hit2 ) * (hit2->z() - track.zMagnet());
   
   CholeskyDecomp<double, 2> decomp(mat);
@@ -1302,12 +1303,13 @@ void PatLongLivedTracking::fitXProjection( PatDownTrack& track, PatTTHit* firstH
 
   m_goodXTracks.clear();
   
+  const double maxChi2 = m_fitXProjChi2Offset + m_fitXProjChi2Const/std::abs(track.momentum());
 
   // Catch if there is no second hit in other station
   PatDownTrack newTrack( track );
   
   PatTTHits::const_iterator itEnd = m_matchingXHits.end();
-  for( PatTTHits::const_iterator iHit = m_matchingXHits.begin(); iHit != itEnd; ++itEnd) {
+  for( PatTTHits::const_iterator iHit = m_matchingXHits.begin(); iHit != itEnd; ++iHit) {
     PatTTHit* hit = *iHit;
     
     newTrack.startNewXCandidate( firstHit );
@@ -1316,8 +1318,8 @@ void PatLongLivedTracking::fitXProjection( PatDownTrack& track, PatTTHit* firstH
     
     // -- It is sorted according to the projection
     // -- the chi2 will therefore only increase
-    if( newTrack.chi2() > m_maxChi2XProjection) break;
-
+    if( newTrack.chi2() > maxChi2) break;
+    
     // -- We can only move the last one
     // -- as the tracks before are 'recycled'
     if( m_goodXTracks.size() < m_maxXTracks-1){
