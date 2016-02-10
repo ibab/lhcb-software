@@ -1,9 +1,13 @@
-! $Id$ 
+! $Id$
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
+
+! 2016-02-10 - Roel Aaij
+ - Do not insert "dir()" function in case of debug; this causes cache misses
+   when using the generated C++ of functors.
 
 !=================== LoKiArrayFunctors v11r5 2015-11-25 =======================
 
@@ -20,19 +24,19 @@
 
 ! 2015-06-23 - Vanya Belyaev
  - add new functor LoKi::DeltaAngle ( alias "ALV" ) for
-                        Jessica PRISCIANDARO and Diego MARTINEZ SANTOS 
-    to get a cosine angle between two daughter particles in lab-frame 
+                        Jessica PRISCIANDARO and Diego MARTINEZ SANTOS
+    to get a cosine angle between two daughter particles in lab-frame
 
      *
      *  @code
-     *  
+     *
      *  xxx.CombinationCut = "         ALV ( 1 , 2 )   < 0.999999   "
      *
      *  xxx.MotherCut      = " PFUNA ( ALV ( 1 , 2 ) ) < 0.999999   "
      *
      *  xxx.MotherCut      = " PCUTA ( ALV ( 1 , 2 )   < 0.999999 ) "
      *
-     *  @endcode 
+     *  @endcode
 
 
 ! 2015-06-22 - Eduardo Rodrigues
@@ -55,16 +59,16 @@
 
 ! 2015-03-24 - Vanya Belyaev
 
- - wrongmass 
-   make use of LoKi::Particles::WrongMass 
+ - wrongmass
+   make use of LoKi::Particles::WrongMass
 
 ! 2015-03-18 - Vanya Belyaev
- - add missing tool... 
+ - add missing tool...
 
 ! 2015-03-17 - Vanya Belyaev
- - ALLSAMEBPV: implement more complicated logic, 
-   - check if property ReFitPVs for the algorithm is activated 
-   - check if some elements do not provide the proper PV-association 
+ - ALLSAMEBPV: implement more complicated logic,
+   - check if property ReFitPVs for the algorithm is activated
+   - check if some elements do not provide the proper PV-association
 
 ! 2015-03-17 - Vanya Belyaev
 
@@ -72,31 +76,31 @@
 
    see https://indico.cern.ch/event/355682/
    see https://indico.cern.ch/event/355682/contribution/1/material/slides/
-   
+
 ! 2015-03-12 - Vanya Belyaev
  - add "SpecialValue"
 
 !================== LoKiArrayFunctors v11r0p1 2015-03-04 ======================
 
 ! 2015-03-04 - Vanya Belyaev
- - fix sad line duplication in AOVERLAP 
+ - fix sad line duplication in AOVERLAP
 
 !=================== LoKiArrayFunctors v11r0 2015-02-24 =======================
 
 ! 2015-02-14 - Vanya Belyaev
- - add AOVERLAP functor for Michael Kolpin 
+ - add AOVERLAP functor for Michael Kolpin
 
 ! 2015-02-03 - Vanya Belyaev
- - more steps towards to autogeneration of C++ code   
+ - more steps towards to autogeneration of C++ code
 
 ! 2015-01-27 - Vanya Belyaev
- - more steps towards to autogeneration of C++ code  
+ - more steps towards to autogeneration of C++ code
 
 ! 2015-01-22 - Vanya Belyaev
- - more steps towards to autogeneration of C++ code 
- 
+ - more steps towards to autogeneration of C++ code
+
 ! 2015-01-21 - Vanya Belyaev
- - step towards to autogeneration of C++ code 
+ - step towards to autogeneration of C++ code
 
 !========================= LoKiArrayFunctors v10r6 2014-10-30 =========================
 
@@ -111,7 +115,7 @@
 !========================= LoKiArrayFunctors v10r5 2014-02-20 =========================
 
 ! 2014-02-01 - Vanya Belyaev
- - Add dictionaries for new FuncOps__ 
+ - Add dictionaries for new FuncOps__
 
 ! 2014-01-17 - Vanya Belyaev
  - DOCA* make use of updated IDistanceCalculator interface.
@@ -124,7 +128,7 @@
 !========================= LoKiArrayFunctors v10r4 2013-10-29 =========================
 
 ! 2013-10-24 Sebastian Neubert
- - Made the tool handle of HybridEngineActor a stack. Allows to handle a chain 
+ - Made the tool handle of HybridEngineActor a stack. Allows to handle a chain
    of tools.
 
 !========================= LoKiArrayFunctors v10r3 2013-10-02 =========================
@@ -137,7 +141,7 @@
  - Small fix: replaced endmsg with std::endl in DummyTransform.
 
 ! 2013-08-02 Sebastian Neubert
- - Simplified the DictTransform policy to use 
+ - Simplified the DictTransform policy to use
    std::ostream instead of MsgStream to make dependencies lighter
    and enable easy unit testing of the policy classes.
 
@@ -159,7 +163,7 @@
    Dict2TupleTool can write a Dict into the ntuple
    DictTransformTool is a template class that provides the infrastructure to implement
    arbitrary transformations on dictionaries. Transformations such as MVAClassifiers
-   have to implement the corresponding policy as demonstrated in DummyTransform.cpp 
+   have to implement the corresponding policy as demonstrated in DummyTransform.cpp
 
 !========================= LoKiArrayFunctors v10r1 2013-05-07 =========================
 
@@ -176,34 +180,34 @@
  - fif doca-chi2 issue:
 
     ACHI2DOCA(i,j) returns chid(doca) between ith and jth particles.
-    ADOCACHI2      returns the maimal value 
-  
+    ADOCACHI2      returns the maimal value
+
     Thanks to David Alasdair Dossett for reporting the problem.
 
- - cmt/requirements 
+ - cmt/requirements
     version increment to v10r1
 
 !========================== LoKiArrayFunctors v10r0 2010-04-04 ================
 
 ! 2011-03-18 - Vanya Belyaev
 
- - add protection against double lock 
+ - add protection against double lock
 
 ! 2011-03-10 - Vanya Belyaev
 
  - kill the bad concept of 'Element'-functor
- - cmt/requirements 
+ - cmt/requirements
     version increment to v10r0
 
 !========================== LoKiArrayFunctors v9r3 2010-08-19 =================
 
 ! 2010-08-05 - Vanya Belyaev
 
- - add ASUM metafunctor 
+ - add ASUM metafunctor
 
- - cmt/requirements 
+ - cmt/requirements
 
-   version increment to v9r3 
+   version increment to v9r3
 
 !========================== LoKiArrayFunctors v9r2 2010-06-24 =================
 
@@ -219,102 +223,102 @@
 
 ! 2010-05-27 - Vanya Belyaev
 
- - add ProtoParticle-methods for hybrid factory 
+ - add ProtoParticle-methods for hybrid factory
 
- - LoKi::Hybrid::ProtoParticleFilter 
+ - LoKi::Hybrid::ProtoParticleFilter
 
-    hybriud implementation of IProtoPArticlefilter 
+    hybriud implementation of IProtoPArticlefilter
 
- - cmt/requirements 
+ - cmt/requirements
 
-    version increment to v9r2 
- 
+    version increment to v9r2
+
 !========================== LoKiArrayFunctors v9r1 2010-05-24 =================
 
 ! 2010-05-14 - Vanya Belyaev
 
  - HybridFilterCriterion
-     use also IParticleFilter 
+     use also IParticleFilter
 
  - cmt/requirements
-    version increment to v9r1 
+    version increment to v9r1
 
 !========================== LoKiArrayFunctors v9r0 2010-04-30 =================
 
 ! 2010-04-13 - Vanya Belyaev
- - replace LoKi::Range with Gaudi::Range 
+ - replace LoKi::Range with Gaudi::Range
 
 ! 2010-04-06 - Vanya Belyaev
- - replace LoKi::Range with Gaudi::Range 
- - new decorators 
- - version increment to v9r0 
+ - replace LoKi::Range with Gaudi::Range
+ - new decorators
+ - version increment to v9r0
 
 !========================== LoKiArrayFunctors v8r8 2010-01-20 =================
 ! 2009-12-18 - Vanya BELYAEV
- - add proper fianlize/reset functor action for all tools 
- - cmt/requirements 
-     version increment to v8r8 
+ - add proper fianlize/reset functor action for all tools
+ - cmt/requirements
+     version increment to v8r8
 
 !========================== LoKiArrayFunctors v8r7 2009-12-11 =================
 ! 2009-11-30 - Vanya Belyaev
 
- - add helper functions (on request by Alvaro Neto) to evaluate the 
-   certain functor for chaughter particles, which maximizes/minimizes 
+ - add helper functions (on request by Alvaro Neto) to evaluate the
+   certain functor for chaughter particles, which maximizes/minimizes
    he value of another functor. E.g. P of the daughter particle with maximal PT
 
-      aval_max ( P , PT ) 
-      aval_min ( P , PT ) 
+      aval_max ( P , PT )
+      aval_min ( P , PT )
 
-  The optional cuts can be applied, e.g. use only charged basic particles: 
- 
-      aval_max ( P , PT , HASTRACK ) 
-      aval_min ( P , PT , HASTRACK ) 
+  The optional cuts can be applied, e.g. use only charged basic particles:
+
+      aval_max ( P , PT , HASTRACK )
+      aval_min ( P , PT , HASTRACK )
 
   The return valeu for the case of empty selection can be specified:
 
-      aval_max ( P , PT , HASTRACK , -1.e+30 ) 
-      aval_min ( P , PT , HASTRACK , +1.e+50 ) 
+      aval_max ( P , PT , HASTRACK , -1.e+30 )
+      aval_min ( P , PT , HASTRACK , +1.e+50 )
 
    (the default values are:  LoKi::Constants::(Negative/Positive)Infinity
 
- - cmt/requirements 
+ - cmt/requirements
 
-    version increment to v8r7 
-  
+    version increment to v8r7
+
 !========================== LoKiArrayFunctors v8r6 2009-11-22 =================
 ! 2009-11-21 - Vanya Belyaev
 
  - PlotTool.cpp
 
-    the fix for properties 
+    the fix for properties
 
 ! 2009-11-20 - Vanya Belyaev
 
- - TupleTool, PlotTool, PrintTool, 
-   HybridFilterParticles 
-   HybridFilterCriterion 
+ - TupleTool, PlotTool, PrintTool,
+   HybridFilterParticles
+   HybridFilterCriterion
    HybridParticleArrayFilter
 
-   add the property "Preambulo" 
+   add the property "Preambulo"
 
 
 ! 2009-11-17 - Vanya Belyaev
 
- - modify hybrid factory to accept (V)CutVal(s) 
+ - modify hybrid factory to accept (V)CutVal(s)
 
      needed for "embedded-monitoring"
 
 
 ! 2009-11-16 - Vanya Belyaev
 
- - move Phys/ATypes.h into LoKiPhys package 
+ - move Phys/ATypes.h into LoKiPhys package
 
  - python/LoKiArrayfunctors/functions.py
 
-     add ADOCA functor 
-     add AFUNV, ACUTV adapters 
+     add ADOCA functor
+     add AFUNV, ACUTV adapters
 
- - cmt/requirements 
+ - cmt/requirements
 
       version increment to v8r6
 
@@ -324,29 +328,29 @@
  - Remove obsolete file src/Components/LoKiArrayFunctors_dll.cpp
 
 ! 2009-08-20 - Vanya BELYAEV
- - fix for changed IVertexFit interface 
+ - fix for changed IVertexFit interface
 
 ! 2009-08-18 - Vanya BELYAEV
  - HybridFilterCriterion
-      fix for removed FilterCriterionBase 
- 
+      fix for removed FilterCriterionBase
+
  - cmt/requirements
-      version increment to v8r5 
+      version increment to v8r5
 
 !========================== LoKiArrayFunctors v8r4 2009-05-25 ===================
 ! 2009-05-09 - Vanya BELYAEV
- - remove unnesessary std::unary/binary_function bases 
+ - remove unnesessary std::unary/binary_function bases
  - cmt/requirements
-   version increment to v8r4 
+   version increment to v8r4
 
 !========================== LoKiArrayFunctors v8r3 2009-05-06 ===================
 ! 2009-05-04 - Vanya BELYAEV
- - remove some unnecessary dictionaries 
+ - remove some unnecessary dictionaries
  - add "fake" dictionaries to pelase new ROOT/Gaudi in :
       dict/LoKiArrayFunctiorsDict.h
-      dict/LoKiArrayFunctors.xml  
+      dict/LoKiArrayFunctors.xml
 
-   TO BE REOMVED 
+   TO BE REOMVED
 
 
 ! 2009-04-24 - Vanya BELYAEV
@@ -370,33 +374,33 @@
 !======================== LoKiArrayFunctors v8r1 2009-01-08 ===================
 ! 2008-11-28 - Vanya BELYAEV
  - add QMTest
- - use new decorators 
- - version incremen tto v8r1 
+ - use new decorators
+ - version incremen tto v8r1
 
 !======================== LoKiArrayFunctors v8r0 2008-11-17 ===================
 ! 2008-11-02 - Vanya BELYAEV
- - more fixes ... 
+ - more fixes ...
 
 ! 2008-10-31 - Ivan BELYAEV
- - fixes for LCG-preview 
+ - fixes for LCG-preview
 
 ! 2008-10-19 - Vanya BELYAEV
- - adaptation for new LoKiCore v8r0 
+ - adaptation for new LoKiCore v8r0
 
-     use new structure of decorators 
+     use new structure of decorators
 
- - cmt/requirements 
+ - cmt/requirements
      version increment to v8r0
 
 !======================== LoKiArrayFunctors v7r4 2008-05-29 ===================
 ! 2008-05-28 - Vanya BELYAEV
  - src/Components/TupleTool.cpp
-     a) fix a stupid errot/type for "initialize" 
+     a) fix a stupid errot/type for "initialize"
      b) use the conventions proposed by Vava for the column name: "head+'_'+name"
 
- - cmt/requirements 
-     version increment to v7r4 
-  
+ - cmt/requirements
+     version increment to v7r4
+
 ! 2008-05-28 - Marco Cattaneo
  - In PrintTool.cpp: fix a compiler warning
  - Fix several doxygen typos
@@ -405,78 +409,78 @@
 
 !======================== LoKiArrayFunctors v7r3 2008-05-05 ===================
 ! 2008-05-04 - Vanya BELYAEV
- - remove all occurences of IGeomDispCalculatro tool and substitute 
-   them with IDistanceCalculator 
+ - remove all occurences of IGeomDispCalculatro tool and substitute
+   them with IDistanceCalculator
 
  - cmt/requirements
-    incrmeent version to v7r3 
+    incrmeent version to v7r3
 
 !======================== LoKiArrayFunctors v7r2 2008-04-16 ===================
 
 ! 2008-04-16 - Vanya BELYAEV
 
- - LoKi/AParticles.h, src/AParticle.cpp 
+ - LoKi/AParticles.h, src/AParticle.cpp
 
     add new functors DelatMass and AbsDeltaMass
 
 - LoKi/AParticleCuts.h
 
-    add shortcuts for new functions: DAMASS and ADAMASS 
+    add shortcuts for new functions: DAMASS and ADAMASS
 
  - python/LoKiArrayFunctors/functions.h
 
-    1) add the symbols DAMASS & ADAMASS 
-    2) add the function PDGM, whcih coudl be used to get the 
-       PDG mass fo the given particle name, particle pid or 
+    1) add the symbols DAMASS & ADAMASS
+    2) add the function PDGM, whcih coudl be used to get the
+       PDG mass fo the given particle name, particle pid or
        given (gen/mc)-particle
 
 
-  
-! 2008-04-10 - Vanya BELYAEV 
- - src/Components/PrintTool.cpp 
+
+! 2008-04-10 - Vanya BELYAEV
+ - src/Components/PrintTool.cpp
    debug the tool. many fixes
 
 ! 2008-04-09 - Vanya BELYAEV
- - dict/LoKiArrayFunctorsDict.h 
-     add missing __rshift__ method 
- - python/LoKiArrayFunctors/functions.py 
-     add AALL, ANONE, ATRUE and AFALSE instances 
+ - dict/LoKiArrayFunctorsDict.h
+     add missing __rshift__ method
+ - python/LoKiArrayFunctors/functions.py
+     add AALL, ANONE, ATRUE and AFALSE instances
 
 ! 2008-03-31 - Vanya BELYAEV
  - src/Component/PrintTool.cpp
-    the simple "LoKi::Hybrid" based implementation on IPrintDecay interface 
+    the simple "LoKi::Hybrid" based implementation on IPrintDecay interface
     as PlotTool & TupleTool, it is supposed to be very useful debugging tool
-    for LoKi::Hybrid 
- 
+    for LoKi::Hybrid
+
 ! 2008-03-30 - Vanya BELYAEV
- - new default list of modules to be loaded 
+ - new default list of modules to be loaded
 
 ! 2008-03-19 - Vanya BELYAEV
  - src/Component/TupleTool.cpp
-    add new tool: LoKi::Hybrid::TupleTool, 
-    the implementation of IParticleTupleTool abstract interface 
+    add new tool: LoKi::Hybrid::TupleTool,
+    the implementation of IParticleTupleTool abstract interface
 
 !======================== LoKiArrayFunctors v7r2 2008-03-19 ===================
 ! 2008-03-18 - Vanya BELYAEV
  - src/Component/PlotTool.cpp
-    add new tool: LoKi::Hybrid::PlotTool, 
+    add new tool: LoKi::Hybrid::PlotTool,
     the implementation of IPlotTool abstract interface
 
     ATTENTION:
 
-    For the default configuration the tool produces crash 
+    For the default configuration the tool produces crash
     at the end of the job. The crash required the fix in ToolSvc.
-    The temporary solution: one needs to disable the printout 
+    The temporary solution: one needs to disable the printout
     of the histogram summary:
 
        MyAlg.MyPlotTool.HistoPrint = False ;
 
- - cmt/requirements 
-   version increment to v7r2 
+ - cmt/requirements
+   version increment to v7r2
 
 !======================== LoKiArrayFunctors v7r1 2008-02-19 ===================
 ! 2008-02-19 - Vanya BELYAEV
- - enhancement of all "hybrid" stuff to take care about 'functional' functors 
+ - enhancement of all "hybrid" stuff to take care about 'functional' functors
 
 ! 2008-02-11 - Vanya BELYAEV
  - many tiny fixes for new Gaudi/ROOT/Reflex
@@ -487,43 +491,43 @@
 ! 2007-12-02 - Vanya BELYAEV
  - the major upgrde for new major version of LoKi v7r0 ("The powerful streamers")
  - cmt/requirements
-   version increment to v7r0 
+   version increment to v7r0
 
 !======================== LoKiArrayFunctors v6r1 2007-10-07 ===================
 ! 2007-10-07 - Vanya BELYAEV
- - cmt/requirements 
-    increment version to v6r1 
-    use new pattern for python modules 
+ - cmt/requirements
+    increment version to v6r1
+    use new pattern for python modules
 
 !========================== LoKiArrayFunctors v6r0 2007-09-17 ===================
 ! 2007-08-20 - Vanya BELYAEV
- - increment the major version to v6r0 
+ - increment the major version to v6r0
 
 ! 2007-07-26 - Vanya BELYAEV
  - src/Component/HybridFilterParticles.cpp
-    new tool LoKi::Hybrid::FilterParticles - 
-    the first "hybrid" implementation of IFilterParticles interface 
+    new tool LoKi::Hybrid::FilterParticles -
+    the first "hybrid" implementation of IFilterParticles interface
  - src/Component/HybridParticleArrayFilter.cpp
-    new tool LoKi::Hybrid::ParticleArrayFilter - 
-    the first "hybrid" implementation of IParticleArrayFilter interface 
+    new tool LoKi::Hybrid::ParticleArrayFilter -
+    the first "hybrid" implementation of IParticleArrayFilter interface
 
 ! 2007-07-26 - Vanya BELYAEV
- - new functor LoKi::AParticles::WrongMass, whcih allows to get the 
-   invarinat mass of the combination using the specified 
+ - new functor LoKi::AParticles::WrongMass, whcih allows to get the
+   invarinat mass of the combination using the specified
    mass-hypotheses for daughter particles.
- - add all "hybrid"-stuff from LoKiHybrid package 
+ - add all "hybrid"-stuff from LoKiHybrid package
 
 
 ! 2007-07-04 - Vanya BELYAEV
  - python/LoKiArrayFunctors/functions.py
-   fix the errors and typos 
- - cmt/requirements 
-   version increment to v1r1 
+   fix the errors and typos
+ - cmt/requirements
+   version increment to v1r1
 
 !========================== LoKiArrayFunctors v1r0 2007-06-18 ===================
 ! 2007-06-10 - Vanya BELYAEV
- - new package 
+ - new package
 
 ! -----------------------------------------------------------------------------
-! The END 
+! The END
 ! -----------------------------------------------------------------------------

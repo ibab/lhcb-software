@@ -513,7 +513,7 @@ namespace LoKi
       template <class TYPE1,class TYPE2>
       inline StatusCode _get
       ( const std::string&                                            pycode  ,
-        LoKi::Functor<TYPE1,TYPE2>*&                                  local   , 
+        LoKi::Functor<TYPE1,TYPE2>*&                                  local   ,
         typename LoKi::Assignable<LoKi::Functor<TYPE1,TYPE2> >::Type& output  ,
         const std::string&                                            context ) ;
       // ======================================================================
@@ -568,7 +568,7 @@ namespace LoKi
 template <class TYPE1,class TYPE2>
 inline StatusCode LoKi::Hybrid::Tool::_get
 ( const std::string&                                            pycode  ,
-  LoKi::Functor<TYPE1,TYPE2>*&                                  local   , 
+  LoKi::Functor<TYPE1,TYPE2>*&                                  local   ,
   typename LoKi::Assignable<LoKi::Functor<TYPE1,TYPE2> >::Type& output  ,
   const std::string&                                            context )
 {
@@ -582,17 +582,17 @@ inline StatusCode LoKi::Hybrid::Tool::_get
   //
   // // clear the placeholder:
   // if ( 0 != local ) { delete local ; local = 0 ; }
-  // // execute the code 
+  // // execute the code
   // sc = executeCode ( code ) ;
-  // if ( sc.isFailure() ) 
-  // { return Error ( "Error from LoKi::Hybrid::Base::executeCode"      ) ; } // RETURN 
-  // if ( 0 == local     ) 
-  // { return Error ( "Invalid object for the code '" + pycode + "'"    ) ; } // RETURN 
-  // // assign the result 
+  // if ( sc.isFailure() )
+  // { return Error ( "Error from LoKi::Hybrid::Base::executeCode"      ) ; } // RETURN
+  // if ( 0 == local     )
+  // { return Error ( "Invalid object for the code '" + pycode + "'"    ) ; } // RETURN
+  // // assign the result
   // output = *local ;                                                        // ASSIGN
   //
   //
-  // use the base class method 
+  // use the base class method
   StatusCode sc = LoKi::Hybrid::Base::_get_ ( code , local , output ) ;
   if ( sc.isFailure() )
   { return Error ( "Invalid object for the code '" + pycode + "'"    ) ; } // RETURN
@@ -688,9 +688,6 @@ StatusCode LoKi::Hybrid::Tool::initialize ()
 {
   StatusCode sc = LoKi::Hybrid::Base::initialize() ;
   if ( sc.isFailure() ) { return sc ; }
-  // perform some printout in "debug" mode
-  if ( msgLevel( MSG::DEBUG ) )
-  { m_lines.insert( m_lines.begin() , "print dir()" ) ; }
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
