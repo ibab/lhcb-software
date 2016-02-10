@@ -4,10 +4,14 @@
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
 
+! 2016-02-10 - Roel Aaij
+ - Do not insert "dir()" function in case of debug; this causes cache misses
+   when using the generated C++ of functors.
+
 !========================= LoKiHlt v3r21 2016-01-27 =========================
 ! 2015-11-29 - Vanya Belyaev
  - fix warnings for duplicate selection rules (new ROOT)
- - add swap functions to event and run-lists 
+ - add swap functions to event and run-lists
 
 !========================= LoKiHlt v3r20p1 2015-10-12 =========================
 ! 2015-08-03 - Gerhard Raven
@@ -15,21 +19,21 @@
 
 !========================= LoKiHlt v3r20 2015-04-20 =========================
 ! 2015-03-17 - Vanya Belyaev
- - fix compliation warning 
+ - fix compliation warning
 
 ! 2015-03-13 - Vanya Belyaev
- - HDRFilter : add two special cases 
-     1) Hlt2*Hlt1* name  for filtering of Hlt1 decisions 
-     2) stripping case 
+ - HDRFilter : add two special cases
+     1) Hlt2*Hlt1* name  for filtering of Hlt1 decisions
+     2) stripping case
 
 ! 2015-03-06 - Vanya Belyaev
- - HDRFilter: 
-   make default location dependent on the name 
-   Check in initialzation consitency of name/code/location 
+ - HDRFilter:
+   make default location dependent on the name
+   Check in initialzation consitency of name/code/location
 
 !========================= LoKiHlt v3r19 2015-02-23 =========================
 ! 2015-01-15 -> 2015-01-19 - Vanya Belyaev
- - steps towards autogeneration of C++ code 
+ - steps towards autogeneration of C++ code
 
 !========================= LoKiHlt v3r18 2015-01-14 =========================
 ! 2015-1-12 - Gerhard Raven
@@ -50,10 +54,10 @@
  - Hlt functors:
     - use std:: algorithms whenever possible
     - fix logic in DecisionButRegex
-    - speed up CountErrorBitsRegex by reversing the order of tests 
+    - speed up CountErrorBitsRegex by reversing the order of tests
 
 ! 2014-11-12 - Marco Cattaneo
- - Remove duplicate dictionary for enum LHCb::L0DUDecision::Type, 
+ - Remove duplicate dictionary for enum LHCb::L0DUDecision::Type,
    already in L0Event
 
 !========================= LoKiHlt v3r16 2014-10-14 =========================

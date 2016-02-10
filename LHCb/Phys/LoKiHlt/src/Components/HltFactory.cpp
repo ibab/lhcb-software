@@ -251,7 +251,8 @@ inline StatusCode LoKi::Hybrid::HltFactory::_get
   // use the base class method 
   StatusCode sc = LoKi::Hybrid::Base::_get_ ( code , local , output ) ;
   if ( sc.isFailure() )
-  { return Error ( "Invalid object for the code '" + pycode + "'"    ) ; } // RETURN
+  { return Error ( "Invalid object for the code '" + pycode + "' (hash: " +
+    std::to_string(LoKi::Cache::makeHash(code)) + ")" ) ; } // RETURN
   //
   return StatusCode::SUCCESS ;
 }    
@@ -311,7 +312,6 @@ StatusCode LoKi::Hybrid::HltFactory::initialize ()
 {
   StatusCode sc = LoKi::Hybrid::Base::initialize() ;
   if ( sc.isFailure() ) { return sc ; }  
-  if ( msgLevel ( MSG::DEBUG ) ) { m_lines.insert( m_lines.begin() , "dir()") ; }
   return StatusCode::SUCCESS ;
 } 
 // ============================================================================
