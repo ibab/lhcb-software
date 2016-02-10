@@ -14,6 +14,7 @@ from CharmSpectroscopyLines import CharmSpectroscopyLines
 from ChargedHyperonLines import ChargedHyperonLines
 from D2HHHHHLines import CharmHadD2HHHHHLines
 from XiccLines import CharmHadXiccLines
+from PromptH2LamLamLines import PromptH2LamLamLines
 
 
 from Configurables import HltANNSvc
@@ -36,6 +37,7 @@ CharmSpectroscopyLines = CharmSpectroscopyLines()
 HyperonLines = ChargedHyperonLines()
 D2HHHHHLines = CharmHadD2HHHHHLines()
 XiccLines = CharmHadXiccLines()
+PromptH2LamLamLines = PromptH2LamLamLines()
 
 
 
@@ -304,6 +306,7 @@ theseslots.update(CharmSpectroscopyLines.localcuts())
 theseslots.update(HyperonLines.localcuts())
 theseslots.update(D2HHHHHLines.localcuts())
 theseslots.update(XiccLines.slots())
+theseslots.update(PromptH2LamLamLines.localcuts())
 
 class CharmHadLines(Hlt2LinesConfigurableUser):
     from copy import deepcopy
@@ -357,6 +360,7 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
             self.__lines__.update(HyperonLines.locallines())
             self.__lines__.update(D2HHHHHLines.locallines())
             self.__lines__.update(XiccLines.stages())
+            self.__lines__.update(PromptH2LamLamLines.locallines())
 
         return self.__lines__[nickname] if nickname else self.__lines__
 
@@ -365,7 +369,7 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
             self._relatedInfo = {}
             for mod in (D2HHHLines, D2V0HLines, D2V0V0Lines, D02HHLines, D2HHPi0Lines, D02HHHHLines,
                         D2HHHKsLines, Hc2HHHHLines, XSecLines, D2HHHPi0Lines, D2HHLines, D2HHKsLines,
-                        CharmSpectroscopyLines, HyperonLines, D2HHHHHLines, XiccLines):
+                        CharmSpectroscopyLines, HyperonLines, D2HHHHHLines, XiccLines,PromptH2LamLamLines):
                 if hasattr(mod, 'relatedInfo'):
                     self._relatedInfo.update(mod.relatedInfo())
 
