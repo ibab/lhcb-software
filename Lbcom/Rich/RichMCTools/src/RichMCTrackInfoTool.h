@@ -68,8 +68,8 @@ namespace Rich
 
     private: // private data
 
-      const IRayTracing * m_rayTrace;     ///< Pointer to ray tracing tool
-      const ISmartIDTool * m_smartIDTool; ///< Pointer to RichSmartID tool
+      const IRayTracing  * m_rayTrace    = nullptr; ///< Pointer to ray tracing tool
+      const ISmartIDTool * m_smartIDTool = nullptr; ///< Pointer to RichSmartID tool
 
       /// Ray-tracing configuration object
       LHCb::RichTraceMode m_traceMode;

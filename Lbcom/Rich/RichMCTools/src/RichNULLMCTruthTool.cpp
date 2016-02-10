@@ -47,7 +47,7 @@ bool NULLMCTruthTool::mcParticles( const LHCb::RichSmartID,
 
 const LHCb::MCRichDigit * NULLMCTruthTool::mcRichDigit( const LHCb::RichSmartID ) const
 {
-  return NULL;
+  return nullptr;
 }
 
 Rich::ParticleIDType
@@ -59,13 +59,13 @@ NULLMCTruthTool::mcParticleType( const LHCb::MCParticle * ) const
 const LHCb::MCRichTrack *
 NULLMCTruthTool::mcRichTrack( const LHCb::MCParticle * ) const
 {
-  return NULL;
+  return nullptr;
 }
 
 const LHCb::MCRichOpticalPhoton *
 NULLMCTruthTool::mcOpticalPhoton( const LHCb::MCRichHit * ) const
 {
-  return NULL;
+  return nullptr;
 }
 
 bool NULLMCTruthTool::isBackground ( const Rich::HPDPixelCluster& ) const

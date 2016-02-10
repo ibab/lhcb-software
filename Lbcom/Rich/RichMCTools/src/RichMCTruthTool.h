@@ -12,6 +12,9 @@
 #ifndef RICHMCTOOLS_RICHMCTRUTHTOOL_H
 #define RICHMCTOOLS_RICHMCTRUTHTOOL_H 1
 
+// STL
+#include <memory>
+
 // from Gaudi
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -40,10 +43,6 @@
 
 // Interfaces
 #include "MCInterfaces/IRichMCTruthTool.h"
-
-// boost
-//#include "boost/lambda/bind.hpp"
-//#include "boost/lambda/lambda.hpp"
 
 namespace Rich
 {
@@ -79,9 +78,6 @@ namespace Rich
 
       // Initialization of the tool after creation
       StatusCode initialize();
-
-      // Finalization of the tool before deletion
-      StatusCode finalize();
 
       /** Implement the handle method for the Incident service.
        *  This is used to inform the tool of software incidents.
@@ -210,9 +206,6 @@ namespace Rich
       /// Returns the linker object for MCRichHits to MCRichOpticalPhotons
       MCRichHitToPhoton * mcPhotonLinks() const;
 
-      /// clean up current linker objects
-      void cleanUpLinkers();
-
       /** Loads the MCRichDigits from the TES
        *
        * @return Pointer to the MCRichDigits
@@ -243,32 +236,32 @@ namespace Rich
     private: // private data
 
       /// Flag to say MCRichDigits have been loaded for this event
-      mutable bool m_mcRichDigitsDone;
+      mutable bool m_mcRichDigitsDone{false};
 
       /// Flag to say MCRichDigitSummarys has been loaded for this event
-      mutable bool m_mcRichDigitSumsDone;
+      mutable bool m_mcRichDigitSumsDone{false};
 
       /// Flag to say mapping between RichSmartIDs and MCRichDigitSummary objects
       /// has been created for this event
-      mutable bool m_mcRichDigSumMapDone;
+      mutable bool m_mcRichDigSumMapDone{false};
 
       /// Flag to say MCRichHits have been loaded for this event
-      mutable bool m_mcRichHitsDone;
+      mutable bool m_mcRichHitsDone{false};
 
       /// Pointer to MCRichDigits
-      mutable LHCb::MCRichDigits * m_mcRichDigits;
+      mutable LHCb::MCRichDigits * m_mcRichDigits = nullptr;
 
       /// Pointer to MCRichDigitSummarys
-      mutable LHCb::MCRichDigitSummarys * m_mcRichDigitSums;
+      mutable LHCb::MCRichDigitSummarys * m_mcRichDigitSums = nullptr;
 
       /// Pointer to MCRichDigits
-      mutable LHCb::MCRichHits * m_mcRichHits;
+      mutable LHCb::MCRichHits * m_mcRichHits = nullptr;
 
       /// Linker for MCParticles to MCRichTracks
-      mutable MCPartToRichTracks * m_mcTrackLinks;
+      mutable std::unique_ptr<MCPartToRichTracks> m_mcTrackLinks;
 
       /// Linker for MCRichHits to MCRichOpticalPhotons
-      mutable MCRichHitToPhoton * m_mcPhotonLinks;
+      mutable std::unique_ptr<MCRichHitToPhoton> m_mcPhotonLinks;
 
       /// mapping from MCParticles to MCRichHits
       mutable MCPartToMCRichHits m_mcPToHits;
@@ -296,22 +289,17 @@ namespace Rich
 
     };
 
-    inline void MCTruthTool::cleanUpLinkers()
-    {
-      if ( m_mcTrackLinks  ) { delete m_mcTrackLinks;  m_mcTrackLinks  = 0; }
-      if ( m_mcPhotonLinks ) { delete m_mcPhotonLinks; m_mcPhotonLinks = 0; }
-    }
-
     inline void MCTruthTool::InitNewEvent()
     {
       m_mcRichDigitsDone       = false;
       m_mcRichDigitSumsDone    = false;
       m_mcRichHitsDone         = false;
       m_mcRichDigSumMapDone    = false;
-      m_mcRichDigitSums        = NULL;
+      m_mcRichDigitSums        = nullptr;
       m_mcPToHits.clear();
       m_smartIDsToHits.clear();
-      cleanUpLinkers();
+      m_mcTrackLinks .reset( nullptr );
+      m_mcPhotonLinks.reset( nullptr );
     }
 
   }

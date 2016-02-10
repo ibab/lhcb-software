@@ -17,8 +17,6 @@
 #include "Kernel/ParticleProperty.h"
 
 // namespace
-//using namespace boost;
-//using namespace boost::lambda;
 using namespace Rich::MC;
 
 DECLARE_TOOL_FACTORY( MCTruthTool )
@@ -27,16 +25,7 @@ DECLARE_TOOL_FACTORY( MCTruthTool )
 MCTruthTool::MCTruthTool( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
-  : Rich::ToolBase         ( type, name, parent ),
-    m_mcRichDigitsDone     ( false ),
-    m_mcRichDigitSumsDone  ( false ),
-    m_mcRichDigSumMapDone  ( false ),
-    m_mcRichHitsDone       ( false ),
-    m_mcRichDigits         ( NULL  ),
-    m_mcRichDigitSums      ( NULL  ),
-    m_mcRichHits           ( NULL  ),
-    m_mcTrackLinks         ( NULL  ),
-    m_mcPhotonLinks        ( NULL  )
+  : Rich::ToolBase( type, name, parent )
 {
   // interface
   declareInterface<IMCTruthTool>(this);
@@ -50,7 +39,7 @@ MCTruthTool::MCTruthTool( const std::string& type,
                    m_mcRichHitsLocation = LHCb::MCRichHitLocation::Default );
 }
 
-MCTruthTool::~MCTruthTool() { cleanUpLinkers(); }
+MCTruthTool::~MCTruthTool() { }
 
 StatusCode MCTruthTool::initialize()
 {
@@ -59,7 +48,8 @@ StatusCode MCTruthTool::initialize()
   if ( sc.isFailure() ) return sc;
 
   // Retrieve particle property service
-  LHCb::IParticlePropertySvc * ppSvc = svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true );
+  LHCb::IParticlePropertySvc * ppSvc =
+    svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true );
 
   // Setup the PDG code mappings
   m_localID[ 0 ]                                    = Rich::Unknown;
@@ -82,15 +72,6 @@ StatusCode MCTruthTool::initialize()
   sc = release(ppSvc);
 
   return sc;
-}
-
-StatusCode MCTruthTool::finalize()
-{
-  // clean up linkers
-  cleanUpLinkers();
-
-  // Execute base class method
-  return Rich::ToolBase::finalize();
 }
 
 // Method that handles various Gaudi "software events"
@@ -119,17 +100,16 @@ bool MCTruthTool::mcParticles( const LHCb::RichSmartID id,
   mcParts.clear();
 
   // First try via direct MCParticles references in MCRichDigitSummarys
-  MCRichDigitSummaryMap::const_iterator iEn = mcRichDigSumMap().find( id );
+  const auto iEn = mcRichDigSumMap().find( id );
   if ( iEn != mcRichDigSumMap().end() )
   {
     for ( const auto* sum : (*iEn).second )
     {
-      const LHCb::MCParticle * mcP = sum->mcParticle();
+      const auto * mcP = sum->mcParticle();
       // protect against null references
       if ( !mcP ) continue;
       // Add to vector, once per MCParticle
-      std::vector<const LHCb::MCParticle*>::const_iterator iFind =
-        std::find( mcParts.begin(), mcParts.end(), mcP );
+      const auto iFind = std::find( mcParts.begin(), mcParts.end(), mcP );
       if ( mcParts.end() == iFind ) mcParts.push_back( mcP );
     }
   }
@@ -140,11 +120,9 @@ bool MCTruthTool::mcParticles( const LHCb::RichSmartID id,
 
 const LHCb::MCRichDigit * MCTruthTool::mcRichDigit( const LHCb::RichSmartID id ) const
 {
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "Locating MCRichDigit for RichSmartID " << id << endmsg;
-  }
-  const LHCb::MCRichDigit * mcDigit = ( mcRichDigits() ? mcRichDigits()->object(id) : 0 );
+  _ri_debug << "Locating MCRichDigit for RichSmartID " << id << endmsg;
+  const LHCb::MCRichDigit * mcDigit = 
+    ( mcRichDigits() ? mcRichDigits()->object(id) : nullptr );
   if ( !mcDigit && msgLevel(MSG::DEBUG) )
   {
     debug() << "Failed to locate MCRichDigit from RichSmartID " << id << endmsg;
@@ -161,13 +139,13 @@ MCTruthTool::mcParticleType( const LHCb::MCParticle * mcPart ) const
 const LHCb::MCRichTrack *
 MCTruthTool::mcRichTrack( const LHCb::MCParticle * mcPart ) const
 {
-  return ( mcPart ? mcTrackLinks()->first( mcPart ) : 0 );
+  return ( mcPart ? mcTrackLinks()->first( mcPart ) : nullptr );
 }
 
 const LHCb::MCRichOpticalPhoton *
 MCTruthTool::mcOpticalPhoton( const LHCb::MCRichHit * mcHit ) const
 {
-  return ( mcPhotonLinks() ? mcPhotonLinks()->first(mcHit) : 0 );
+  return ( mcPhotonLinks() ? mcPhotonLinks()->first(mcHit) : nullptr );
 }
 
 bool MCTruthTool::isBackground ( const Rich::HPDPixelCluster& cluster ) const
@@ -209,7 +187,7 @@ bool MCTruthTool::isRadScintillation ( const Rich::HPDPixelCluster& cluster ) co
 bool MCTruthTool::isBackground ( const LHCb::RichSmartID id ) const
 {
   // try via summary objects
-  MCRichDigitSummaryMap::const_iterator iEn = mcRichDigSumMap().find( id );
+  const auto iEn = mcRichDigSumMap().find( id );
   if ( iEn != mcRichDigSumMap().end() )
   {
     // loop over summaries
@@ -232,7 +210,7 @@ bool MCTruthTool::isHPDReflection ( const LHCb::RichSmartID id ) const
 {
   // try via summary objects
   bool isSignal(false), isHPDRefl(false);
-  MCRichDigitSummaryMap::const_iterator iEn = mcRichDigSumMap().find( id );
+  const auto iEn = mcRichDigSumMap().find( id );
   if ( iEn != mcRichDigSumMap().end() )
   {
     // loop over summaries
@@ -254,7 +232,7 @@ bool MCTruthTool::isSiBackScatter ( const LHCb::RichSmartID id ) const
 {
   // try via summary objects
   bool isSignal(false), isSiRefl(false);
-  MCRichDigitSummaryMap::const_iterator iEn = mcRichDigSumMap().find( id );
+  const auto iEn = mcRichDigSumMap().find( id );
   if ( iEn != mcRichDigSumMap().end() )
   {
     // loop over summaries
@@ -276,7 +254,7 @@ bool MCTruthTool::isRadScintillation ( const LHCb::RichSmartID id ) const
 {
   // try via summary objects
   bool isSignal(false), isRadScint(false);
-  MCRichDigitSummaryMap::const_iterator iEn = mcRichDigSumMap().find( id );
+  const auto iEn = mcRichDigSumMap().find( id );
   if ( iEn != mcRichDigSumMap().end() )
   {
     // loop over summaries
@@ -310,7 +288,7 @@ MCTruthTool::isCherenkovRadiation( const LHCb::RichSmartID id,
 {
 
   // first, try via summary objects
-  MCRichDigitSummaryMap::const_iterator iEn = mcRichDigSumMap().find( id );
+  const auto iEn = mcRichDigSumMap().find( id );
   if ( iEn != mcRichDigSumMap().end() )
   {
     // loop over summaries
@@ -356,7 +334,7 @@ MCTruthTool::getMcHistories( const LHCb::RichSmartID id,
   if ( mcRichDigitSummaries() )
   {
     // try to find summaries
-    MCRichDigitSummaryMap::const_iterator iEn = mcRichDigSumMap().find( id );
+    const auto iEn = mcRichDigSumMap().find( id );
     if ( iEn != mcRichDigSumMap().end() )
     {
       // set histories
@@ -369,30 +347,21 @@ MCTruthTool::getMcHistories( const LHCb::RichSmartID id,
 
 const LHCb::MCRichDigits * MCTruthTool::mcRichDigits() const
 {
-  if ( !m_mcRichDigitsDone )
+  if ( UNLIKELY(!m_mcRichDigitsDone) )
   {
     m_mcRichDigitsDone = true;
-
     // try and load MCRichDigits
-    if ( exist<LHCb::MCRichDigits>(m_mcRichDigitsLocation) )
+    m_mcRichDigits = getIfExists<LHCb::MCRichDigits>(m_mcRichDigitsLocation);
+    if ( m_mcRichDigits )
     {
-      m_mcRichDigits = get<LHCb::MCRichDigits>(m_mcRichDigitsLocation);
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        debug() << "Successfully located " << m_mcRichDigits->size()
+      _ri_debug << "Successfully located " << m_mcRichDigits->size()
                 << " MCRichDigits at " << m_mcRichDigitsLocation << endmsg;
-      }
     }
     else
     {
-      m_mcRichDigits = NULL;
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        debug() << "Failed to locate MCRichDigits at " << m_mcRichDigitsLocation
+      _ri_debug << "Failed to locate MCRichDigits at " << m_mcRichDigitsLocation
                 << endmsg;
-      }
     }
-
   }
 
   return m_mcRichDigits;
@@ -401,30 +370,21 @@ const LHCb::MCRichDigits * MCTruthTool::mcRichDigits() const
 const LHCb::MCRichDigitSummarys *
 MCTruthTool::mcRichDigitSummaries() const
 {
-  if ( !m_mcRichDigitSumsDone )
+  if ( UNLIKELY(!m_mcRichDigitSumsDone) )
   {
     m_mcRichDigitSumsDone = true;
-
     // try and load MCRichDigitSummarys
-    if ( exist<LHCb::MCRichDigitSummarys>(m_mcRichDigitSumsLocation) )
+    m_mcRichDigitSums = getIfExists<LHCb::MCRichDigitSummarys>(m_mcRichDigitSumsLocation);
+    if ( m_mcRichDigitSums )
     {
-      m_mcRichDigitSums = get<LHCb::MCRichDigitSummarys>(m_mcRichDigitSumsLocation);
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        debug() << "Successfully located " << m_mcRichDigitSums->size()
+      _ri_debug << "Successfully located " << m_mcRichDigitSums->size()
                 << " MCRichDigitSummaries at " << m_mcRichDigitSumsLocation << endmsg;
-      }
     }
     else
     {
-      m_mcRichDigitSums = NULL;
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        debug() << "Failed to locate MCRichDigitSummaries at " << m_mcRichDigitSumsLocation
+      _ri_debug << "Failed to locate MCRichDigitSummaries at " << m_mcRichDigitSumsLocation
                 << endmsg;
-      }
     }
-
   }
   return m_mcRichDigitSums;
 }
@@ -432,7 +392,7 @@ MCTruthTool::mcRichDigitSummaries() const
 const MCTruthTool::MCRichDigitSummaryMap &
 MCTruthTool::mcRichDigSumMap() const
 {
-  if ( !m_mcRichDigSumMapDone )
+  if ( UNLIKELY(!m_mcRichDigSumMapDone) )
   {
     m_mcRichDigSumMapDone = true;
 
@@ -448,11 +408,8 @@ MCTruthTool::mcRichDigSumMap() const
       }
     }
 
-    if ( msgLevel(MSG::DEBUG) )
-    {
-      debug() << "Built RichSmartID->MCRichDigitSummary Map for " << m_mcRichDigSumMap.size()
+    _ri_debug << "Built RichSmartID->MCRichDigitSummary Map for " << m_mcRichDigSumMap.size()
               << " RichSmartIDs" << endmsg;
-    }
 
   }
   return m_mcRichDigSumMap;
@@ -460,27 +417,20 @@ MCTruthTool::mcRichDigSumMap() const
 
 const LHCb::MCRichHits * MCTruthTool::mcRichHits() const
 {
-  if ( !m_mcRichHitsDone )
+  if ( UNLIKELY(!m_mcRichHitsDone) )
   {
     m_mcRichHitsDone = true;
 
     // Try and load MC Rich Hits
-    if ( exist<LHCb::MCRichHits>(m_mcRichHitsLocation) )
+    m_mcRichHits = getIfExists<LHCb::MCRichHits>(m_mcRichHitsLocation);
+    if ( m_mcRichHits )
     {
-      m_mcRichHits = get<LHCb::MCRichHits>(m_mcRichHitsLocation);
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        debug() << "Successfully located " << m_mcRichHits->size()
+      _ri_debug << "Successfully located " << m_mcRichHits->size()
                 << " MCRichHits at " << m_mcRichHitsLocation << endmsg;
-      }
     }
     else
     {
-      m_mcRichHits = NULL;
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        debug() << "Failed to locate MCRichHits at " << m_mcRichHitsLocation << endmsg;
-      }
+      _ri_debug << "Failed to locate MCRichHits at " << m_mcRichHitsLocation << endmsg;
     }
 
   }
@@ -491,39 +441,33 @@ const LHCb::MCRichHits * MCTruthTool::mcRichHits() const
 MCTruthTool::MCRichHitToPhoton *
 MCTruthTool::mcPhotonLinks() const
 {
-  if ( !m_mcPhotonLinks )
+  if ( !m_mcPhotonLinks.get() )
   {
     const std::string loc = LHCb::MCRichHitLocation::Default+"2MCRichOpticalPhotons";
-    m_mcPhotonLinks = new MCRichHitToPhoton( evtSvc(), msgSvc(), loc );
+    m_mcPhotonLinks.reset( new MCRichHitToPhoton( evtSvc(), msgSvc(), loc ) );
     if ( m_mcPhotonLinks->notFound() )
     {
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        debug() << "Linker for MCRichHits to MCRichOpticalPhotons not found at '" << loc
+      _ri_debug << "Linker for MCRichHits to MCRichOpticalPhotons not found at '" << loc
                 << "'" << endmsg;
-      }
     }
   }
-  return m_mcPhotonLinks;
+  return m_mcPhotonLinks.get();
 }
 
 MCTruthTool::MCPartToRichTracks *
 MCTruthTool::mcTrackLinks() const
 {
-  if ( !m_mcTrackLinks )
+  if ( !m_mcTrackLinks.get() )
   {
     const std::string loc = LHCb::MCParticleLocation::Default+"2MCRichTracks";
-    m_mcTrackLinks = new MCPartToRichTracks( evtSvc(), msgSvc(), loc );
+    m_mcTrackLinks.reset( new MCPartToRichTracks( evtSvc(), msgSvc(), loc ) );
     if ( m_mcTrackLinks->notFound() )
     {
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        debug() << "Linker for MCParticles to MCRichTracks not found at '"
+      _ri_debug << "Linker for MCParticles to MCRichTracks not found at '"
                 << loc << "'" << endmsg;
-      }
     }
   }
-  return m_mcTrackLinks;
+  return m_mcTrackLinks.get();
 }
 
 const MCTruthTool::MCPartToMCRichHits &
@@ -537,21 +481,15 @@ MCTruthTool::mcPartToMCRichHitsMap() const
     {
       for ( const auto * hit : *mcRichHits() )
       {
-        const LHCb::MCParticle * mcP = hit->mcParticle();
+        const auto * mcP = hit->mcParticle();
         if ( mcP )
         {
-          if ( msgLevel(MSG::VERBOSE) )
-          {
-            verbose() << "Adding MCRichHit to list for MCParticle " << mcP->key() << endmsg;
-          }
+          _ri_verbo << "Adding MCRichHit to list for MCParticle " << mcP->key() << endmsg;
           m_mcPToHits[mcP].push_back( hit );
         }
       }
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        debug() << "Built MCParticle->MCRichHit Map for " << m_mcPToHits.size()
+      _ri_debug << "Built MCParticle->MCRichHit Map for " << m_mcPToHits.size()
                 << " RichSmartIDs" << endmsg;
-      }
     }
   }
   return m_mcPToHits;
@@ -570,25 +508,16 @@ MCTruthTool::smartIDToMCRichHitsMap() const
       {
         // For the moment, strip sub-pixel information
         // in the longer term, should do something more clever
-        const LHCb::RichSmartID pixelID = hit->sensDetID().pixelID();
-        if ( msgLevel(MSG::VERBOSE) )
-        {
-          verbose() << "Adding MCRichHit to list for Pixel ID " << pixelID << endmsg;
-        }
+        const auto pixelID = hit->sensDetID().pixelID();
+        _ri_verbo << "Adding MCRichHit to list for Pixel ID " << pixelID << endmsg;
         m_smartIDsToHits[pixelID].push_back( hit );
         // Add another entry for the HPD
-        const LHCb::RichSmartID hpdID = pixelID.pdID();
-        if ( msgLevel(MSG::VERBOSE) )
-        {
-          verbose() << "Adding MCRichHit to list for HPD ID " << hpdID << endmsg;
-        }
+        const auto hpdID = pixelID.pdID();
+        _ri_verbo << "Adding MCRichHit to list for HPD ID " << hpdID << endmsg;
         m_smartIDsToHits[hpdID].push_back( hit );
       }
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        debug() << "Built RichSmartID->MCRichHit Map for " << m_smartIDsToHits.size()
+      _ri_debug << "Built RichSmartID->MCRichHit Map for " << m_smartIDsToHits.size()
                 << " RichSmartIDs" << endmsg;
-      }
     }
   }
   return m_smartIDsToHits;
@@ -597,7 +526,7 @@ MCTruthTool::smartIDToMCRichHitsMap() const
 const SmartRefVector<LHCb::MCRichHit> &
 MCTruthTool::mcRichHits( const LHCb::MCParticle * mcp ) const
 {
-  MCPartToMCRichHits::const_iterator i = mcPartToMCRichHitsMap().find( mcp );
+  const auto i = mcPartToMCRichHitsMap().find( mcp );
   return ( i != mcPartToMCRichHitsMap().end() ? (*i).second : m_emptyContainer );
 }
 
@@ -607,12 +536,9 @@ MCTruthTool::mcRichHits( const Rich::HPDPixelCluster& cluster,
 {
   for ( const auto& S : cluster.smartIDs() )
   {
-    const SmartRefVector<LHCb::MCRichHit> & tmp_hits = mcRichHits(S);
-    for ( SmartRefVector<LHCb::MCRichHit>::const_iterator iH = tmp_hits.begin();
-          iH != tmp_hits.end(); ++iH )
-    {
-      hits.push_back(*iH);
-    }
+    const auto & chits = mcRichHits(S);
+    hits.reserve( hits.size() + chits.size() );
+    for ( const auto& H : chits ) { hits.push_back(H); }
   }
 }
 
@@ -620,32 +546,26 @@ const SmartRefVector<LHCb::MCRichHit> &
 MCTruthTool::mcRichHits( const LHCb::RichSmartID smartID ) const
 {
   // try working backwards
-  SmartIDToMCRichHits::const_iterator i = smartIDToMCRichHitsMap().find( smartID );
+  const auto i = smartIDToMCRichHitsMap().find( smartID );
   if ( i != smartIDToMCRichHitsMap().end() )
   {
-    if ( msgLevel(MSG::VERBOSE) )
-    {
-      verbose() << "Found " << (*i).second.size()
-                << " MCRichHits for PixelID " << smartID << endmsg;
-    }
+    _ri_verbo << "Found " << (*i).second.size()
+              << " MCRichHits for PixelID " << smartID << endmsg;
     return (*i).second;
   }
 
   // MC association failed
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "Failed to find MCRichHits associated to RichSmartID "
+  _ri_debug << "Failed to find MCRichHits associated to RichSmartID "
             << smartID << endmsg;
-  }
   return m_emptyContainer;
 }
 
 bool MCTruthTool::richMCHistoryAvailable() const
 {
-  return ( NULL != mcRichDigitSummaries() );
+  return ( nullptr != mcRichDigitSummaries() );
 }
 
 bool MCTruthTool::extendedMCAvailable() const
 {
-  return ( NULL != mcPhotonLinks() && NULL != mcTrackLinks() );
+  return ( nullptr != mcPhotonLinks() && nullptr != mcTrackLinks() );
 }

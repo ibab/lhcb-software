@@ -22,8 +22,6 @@ MCTrackInfoTool::MCTrackInfoTool( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : ToolBase      ( type, name, parent ),
-    m_rayTrace    ( NULL ),
-    m_smartIDTool ( NULL ),
     m_traceMode   ( LHCb::RichTraceMode::IgnoreHPDAcceptance )
 {
   declareInterface<IMCTrackInfoTool>(this);
@@ -37,7 +35,7 @@ StatusCode MCTrackInfoTool::initialize()
 
   // Acquire instances of tools
   acquireTool( "RichRayTracing",   m_rayTrace                );
-  acquireTool( "RichSmartIDTool",  m_smartIDTool, NULL, true );
+  acquireTool( "RichSmartIDTool",  m_smartIDTool, nullptr, true );
 
   // Configure the ray-tracing mode
   m_traceMode.setAeroRefraction ( true );

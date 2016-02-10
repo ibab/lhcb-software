@@ -4,6 +4,9 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+! 2016-02-10 - Chris Jones
+ - C++11 clean up.
+
 !========================= RichMCTools v3r19 2015-10-12 =========================
 ! 2015-09-24 - Chris Jones
  - C++ improvements
