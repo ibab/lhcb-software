@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2016-02-10 - Jessica Prisciandaro
+
+- Hlt1DiMuonNoL0 line updated. Fix to the other muon lines to avoid to run Complement Forward if PT>500  
+
 ! 2016-01-08 - Roel Aaij
  - Wrap the HPT tracking algorithms in a sequence that ignores filterPassed to
    avoid stopping if there are no high pT tracks.
