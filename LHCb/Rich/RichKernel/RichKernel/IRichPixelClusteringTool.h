@@ -12,6 +12,9 @@
 #ifndef RICHKERNEL_IRichPixelClusteringTool_H
 #define RICHKERNEL_IRichPixelClusteringTool_H 1
 
+// STL
+#include <memory>
+
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
@@ -51,14 +54,13 @@ namespace Rich
        *
        *  @param smartIDs Reference to vector of pixel RichSmartIDs to cluster
        *
-       *  @return A pointer to the set of clusters for this HPD
+       *  @return A smart unique pointer to the set of clusters for this HPD
        *
        *  @attention The user takes ownership of the returned object. 
-       *             It is up to the owner to delete the object when no longer needed.
        */
-      virtual const Rich::HPDPixelClusters *
+      virtual std::unique_ptr<const Rich::HPDPixelClusters>
       findClusters( LHCb::RichSmartID::Vector & smartIDs ) const = 0;
-
+      
     };
 
   }

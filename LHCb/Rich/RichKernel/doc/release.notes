@@ -4,6 +4,10 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2016-02-10 - Chris Jones
+ - Enforce memory management in the cluster object returned by 
+   IPixelClusteringTool by returning an std::unique_ptr instead of a raw pointer.
+
 ! 2016-02-07 - Chris Jones
  - Remove deleted typedef from dictionary generation.
 
