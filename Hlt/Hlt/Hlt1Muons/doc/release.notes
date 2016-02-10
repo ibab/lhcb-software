@@ -4,6 +4,10 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+! 2016-02-10 - Jessica Prisciandaro
+- MatchVeloTTMuon is modified: same extrapolation and add_Hits of VeloMuonMatch. Use VeloTT infos to determine how the particle is bent. 
+
+
 !========================= Hlt1Muons v1r14p1 2015-07-23 =========================
 
 ! 2015-07-10 - Francesco Dettori
