@@ -1255,6 +1255,33 @@ class DetachedV0V0Combiner(Hlt2Combiner):
                               tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
                               MotherCut = mc, Preambulo = [], nickname = nickname)
 
+## add a variation on the DetachedV0V0Combiner meant for prompt H-Dibaryon --> Lambda,Lambda
+## no minimum mass cut is required, so don't waste time with this comparison
+## also, no need/benefit for TOS, so remove tistos specification
+##
+##  more generally, a H above Lambda,Lambda threshold should decay "promptly",
+##  so the Lambdas should point to the PV, not away, and the "decay vertex"
+##  should be consistent with the PV. Change many _MIN cuts to _MAX cuts
+##
+
+class H2LambdaLambdaCombiner(Hlt2Combiner):
+    def __init__(self, name, decay, inputs, lldd = False, shared = False, nickname = None):
+        dc =    {'Lambda0'    : ( "(PT > %(Lam_ALL_PT_MIN)s) &"+
+                              "(MIPCHI2DV(PRIMARY) < %(Lam_ALL_MIPCHI2DV_MAX)s)" )
+                }
+        cc =    ("( AM < %(AM_MAX)s )" +
+                 " & ((APT1+APT2) > %(ASUMPT_MIN)s )" )
+        mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
+                 " & (BPVVDCHI2 < %(BPVVDCHI2_MAX)s )" +
+                 " & (BPVLTIME() < %(BPVLTIME_MAX)s )")
+        if lldd == True :
+            mc = "(INTREE((ABSID=='pi+') & (ISLONG)) & INTREE((ABSID=='pi+') & (ISDOWN))) & " + mc
+        from HltTracking.HltPVs import PV3D
+        Hlt2Combiner.__init__(self, name, decay, inputs, shared = shared,
+                              dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                              DaughtersCuts = dc, CombinationCut = cc,
+                              MotherCut = mc, Preambulo = [], nickname = nickname)
+
 
 ## Lifetime unbiased combiner class for D0 -> h h' decays
 class D02HHCombiner(Hlt2Combiner) : # { 
