@@ -50,7 +50,7 @@ StatusCode HPDPixelClusteringTool::initialize()
   return sc;
 }
 
-const Rich::HPDPixelClusters *
+std::unique_ptr<const Rich::HPDPixelClusters>
 HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) const
 {
   // make sure pixels are sorted ok
@@ -145,5 +145,5 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
 
   // finally, return a pointer to this cluster object
   // user takes ownership at this point
-  return pixelData;
+  return std::unique_ptr<const Rich::HPDPixelClusters>(pixelData);
 }

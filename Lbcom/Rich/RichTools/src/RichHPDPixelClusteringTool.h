@@ -36,7 +36,7 @@ namespace Rich
      *  An implementation of the HPD pixel clustering tool interface.
      *
      *  This implementation forms simple clusters of connected (direct neighbours) pixels
-     *      info() << mindeltaLL << endmsg;
+     *  
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date   21/03/2006
      *
@@ -61,9 +61,9 @@ namespace Rich
     public: // methods (and doxygen comments) inherited from interface
 
       /// Applies a pixel clusering algorithm to the given HPD RichSmartIDs
-      virtual const Rich::HPDPixelClusters *
+      virtual std::unique_ptr<const Rich::HPDPixelClusters>
       findClusters( LHCb::RichSmartID::Vector & smartIDs ) const;
-
+      
     private:
 
       /** @class SortALICEIDs RichHPDPixelClusteringTool.h
