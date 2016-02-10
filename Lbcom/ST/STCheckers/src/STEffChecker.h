@@ -42,27 +42,21 @@ class STEffChecker : public ST::HistoAlgBase {
 
 public:
  
-  /// constructer
+  /// constructor
   STEffChecker(const std::string& name, ISvcLocator *svcloc );
 
-  /// destructer
-  virtual ~STEffChecker();
-
   /// initialize
-  StatusCode initialize();
+  StatusCode initialize() override;
 
   /// execute
-  StatusCode execute();
+  StatusCode execute() override;
 
   /// finalize
-  StatusCode finalize();
+  StatusCode finalize() override;
 
 private:
 
   typedef LinkerTool<LHCb::STCluster, LHCb::MCHit> AsctTool;
-  typedef AsctTool::InverseType Table;
-  typedef Table::Range Range;
-  typedef Table::iterator iterator;
 
   virtual void initHistograms();
   
@@ -76,8 +70,7 @@ private:
   void unBookHistos();
   void eraseHistos(); 
 
-  Table* m_table;
-  
+  AsctTool::InverseType* m_table;
 
   std::string m_asctLocation;
   std::string m_clusterLocation;
@@ -107,6 +100,3 @@ private:
 };
 
 #endif // STEffChecker_H
-
-
-
