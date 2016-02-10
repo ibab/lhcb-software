@@ -45,6 +45,9 @@ class PromptH2LamLamLines():
         from Stages import CharmHadSharedSecondaryLambdaDD, CharmHadSharedSecondaryLambdaLL
 
         ## If either Lambda is DD,  use the DD dictionary, otherwise use LL.
+
+## First, let's do the H-dibaryon candidates
+
         H2LamLam_2LLComb = H2LambdaLambdaCombiner( 'Comb'
                 , decay = "[D0 -> Lambda0 Lambda0]cc"
                 , inputs = [ CharmHadSharedSecondaryLambdaLL ]
@@ -69,9 +72,38 @@ class PromptH2LamLamLines():
         H2LamLam_2DD = MassFilter('H2LamLam_DD', inputs = [H2LamLam_2DDComb])
 
 
+##  next, look at the corresponding Lambda,anti-Lambda candidates
+
+        H2LamLamBar_2LLComb = H2LambdaLambdaCombiner( 'Comb'
+                , decay = "D0 -> Lambda0 Lambda~0"
+                , inputs = [ CharmHadSharedSecondaryLambdaLL ]
+                , nickname = 'H2LamLam_LL' )
+
+        H2LamLamBar_2LL = MassFilter('H2LamLam_LL', inputs=[ H2LamLamBar_2LLComb ])
+
+
+        H2LamLamBar_LLDDComb = H2LambdaLambdaCombiner( 'Comb'
+                , decay = "D0 -> Lambda0 Lambda~0"
+                , inputs = [ CharmHadSharedSecondaryLambdaLL, CharmHadSharedSecondaryLambdaDD ]
+                , lldd = True, nickname = 'H2LamLam_DD')
+
+        H2LamLamBar_LLDD = MassFilter('H2LamLam_DD', inputs = [ H2LamLam_LLDDComb ])
+
+
+        H2LamLamBar_2DDComb = H2LambdaLambdaCombiner( 'Comb'
+                , decay = "D0 -> Lambda0 Lambda~0"
+                , inputs = [ CharmHadSharedSecondaryLambdaDD ]
+                , nickname = 'H2LamLam_DD' )
+
+        H2LamLamBar_2DD = MassFilter('H2LamLam_DD', inputs = [H2LamLamBar_2DDComb])
+
+
         stages = {
-                  'PromptH2LamLam_LamLLTurbo'        : [H2LamLam_2LL],
-                  'PromptH2LamLam_LamLL_LamDDTurbo'  : [H2LamLam_LLDD],
-                  'PromptH2LamLam_LamDDTurbo'        : [H2LamLam_2DD],
+                  'PromptH2LamLam_LamLLTurbo'           : [H2LamLam_2LL],
+                  'PromptH2LamLam_LamLL_LamDDTurbo'     : [H2LamLam_LLDD],
+                  'PromptH2LamLam_LamDDTurbo'           : [H2LamLam_2DD],
+                  'PromptH2LamLamBar_LamLLTurbo'        : [H2LamLamBar_2LL],
+                  'PromptH2LamLamBar_LamLL_LamDDTurbo'  : [H2LamLamBar_LLDD],
+                  'PromptH2LamLamBar_LamDDTurbo'        : [H2LamLamBar_2DD],
                  }
         return stages
