@@ -4,6 +4,10 @@
 ! Purpose     : Ross Young
 !-----------------------------------------------------------------------------
 
+! 2016-02-10 - Chris Jones
+ - Adapt to change in clustering tool interface, which now returns an 
+   std::unique_ptr managing the cluster object, to enforce memory management.
+
 !========================= RichIFBAnalysis v1r4p1 2015-10-13 =========================
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers

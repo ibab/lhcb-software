@@ -59,8 +59,8 @@ StatusCode HPDIonFeedbackMoni::initialize()
   if ( sc.isFailure() ) return sc;
 
   //Tools to get the data and to analyse it for clusters
-  acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, NULL, true );
-  acquireTool( "RichSmartIDTool", m_idTool,            NULL, true );
+  acquireTool( "RichSmartIDDecoder", m_SmartIDDecoder, nullptr, true );
+  acquireTool( "RichSmartIDTool", m_idTool,            nullptr, true );
   acquireTool( "RichHPDPixelClusterFinder", m_clusterTool, this );
 
   m_nEvts = 0;
@@ -232,7 +232,7 @@ void HPDIonFeedbackMoni::ExecuteIFB(const Rich::DetectorType RichNum, const Rich
 
   LHCb::RichSmartID::Vector hitMap(smartIDHits); // need local copy of hits to prevent altering the originals
 
-  const Rich::HPDPixelClusters * clusters = m_clusterTool->findClusters(hitMap);
+  std::unique_ptr<const Rich::HPDPixelClusters> clusters = m_clusterTool->findClusters(hitMap);
   const Rich::HPDPixelClusters::Cluster::PtnVector& clusVec = clusters->clusters();
 
   int colmax, rowmax;
@@ -308,9 +308,6 @@ void HPDIonFeedbackMoni::ExecuteIFB(const Rich::DetectorType RichNum, const Rich
 
     }
   }
-
-
-  delete clusters;
 
   return;
 }
