@@ -6,6 +6,8 @@
 
 ! 2016-02-10 - Roel Aaij
  - Fix C++ generation for Hlt1DiPhotonMaker and ToProtoParticles.
+ - Improve checking for existing relations table cache in UpgradeTool and
+   HelperTool.
 
 ! 2016-02-03 - Rosen Matev
  - Fix overloaded virtual method warning.

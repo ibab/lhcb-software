@@ -119,10 +119,14 @@ namespace LoKi
       // ======================================================================
       template<class OBJECT>
       LHCb::Relation1D<OBJECT, OBJECT>*
-      _createCache( const std::string& location ) const
+      _createCache( const std::string& location, bool create ) const
       {
          using OBJECTS = LHCb::Relation1D<OBJECT, OBJECT>;
+         if ( create ) {
          return alg()->getOrCreate<OBJECTS, OBJECTS>( location );
+         } else {
+            return alg()->getIfExists<OBJECTS>( location );
+      }
       }
     protected:
       // ======================================================================
@@ -151,7 +155,7 @@ namespace LoKi
       /// get the cache
       template<class Object>
         inline LHCb::Relation1D<Object, Object>* cache
-        ( std::string location ) const
+        ( std::string location, bool create = true ) const
       {
         using Cache = LHCb::Relation1D<Object, Object>*;
         if (location.empty()) 
@@ -163,7 +167,8 @@ namespace LoKi
         auto found = m_cached.find(location);
         if (found == end(m_cached)) 
         {
-          IRelationBase* relation = _createCache<Object>(location);
+          IRelationBase* relation = _createCache<Object>(location, create);
+          if ( !relation ) return nullptr;
           m_cached.emplace(std::make_pair(std::move(location), relation));
           return static_cast<Cache>(relation);
         } 

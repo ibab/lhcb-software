@@ -232,7 +232,10 @@ StatusCode LoKi::Hlt1::UpgradeTool::iupgrade
 
    // Check for complement upgrade
    if (!complement().empty()) {
-      auto cached = cache<LHCb::Track>(complement());
+      auto cached = cache<LHCb::Track>(complement(), false);
+      if (!cached) {
+         return Error(std::string("No complement cache found at ") + complement(), StatusCode::FAILURE, 10);
+      }
       auto result = checkCache(seed, cached);
       // Previous upgrade with result.
       if (result.second) {
