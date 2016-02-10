@@ -45,14 +45,14 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  , 'DiMuonHighMass_M'         : 2900.
                  , 'DiMuonHighMass_GEC'       : 'Loose'
                  , 'DiMuonNoL0_VxDOCA'     :  0.2
-                 , 'DiMuonNoL0_VxChi2'     :   25.
+                 , 'DiMuonNoL0_VxChi2'     :  25.
                  , 'DiMuonNoL0_P'          :  3000.
                  , 'DiMuonNoL0_PT'         :    80.
-                 , 'DiMuonNoL0_IP'         :    0.3 
-                 , 'DiMuonNoL0_TrChi2'     :    4.
+                 , 'DiMuonNoL0_IP'         :   0.3 
+                 , 'DiMuonNoL0_TrChi2'     :   4.
                  , 'DiMuonNoL0_M'          :    0.
                  , 'DiMuonNoL0_MSS'        : 220.   
-                 , 'DiMuonNoL0_IPChi2'     :    9.
+                 , 'DiMuonNoL0_IPChi2'     :  9.
                  , 'DiMuonNoL0_GEC'        : 'Tight'
                  , 'MultiMuonNoL0_P'          : 6000.
                  , 'MultiMuonNoL0_PT'         :  5000.
@@ -149,6 +149,9 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             Preambulo = self.singleMuon_preambulo( properties ),
             Code = """
             VeloTTCandidates
+            >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV ) ) 
+            >>  tee  ( monitor( TC_SIZE , 'n after P/PT' , LoKi.Monitoring.ContextSvc ) )                                   
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )  
             >>  MatchVeloTTMuon
             >>  tee  ( monitor( TC_SIZE > 0, '# MatchMuon', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
@@ -158,9 +161,6 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >>  FitTrack
             >>  tee  ( monitor( TC_SIZE > 0, '# pass fit', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nFitted' , LoKi.Monitoring.ContextSvc ) )
-            >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV ) )
-            >>  tee  ( monitor( TC_SIZE , 'n after P/PT' , LoKi.Monitoring.ContextSvc ) )
-            >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
             >>  ( TrCHI2PDOF < %(TrChi2)s )
             >>  IsMuon
             >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
@@ -200,6 +200,9 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             Preambulo = self.diMuon_preambulo( properties ),
             Code = """
             VeloTTCandidates
+            >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV ) )  
+            >>  tee  ( monitor( TC_SIZE , 'n after P/PT' , LoKi.Monitoring.ContextSvc ) )  
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )           
             >>  MatchVeloTTMuon
             >>  tee  ( monitor( TC_SIZE > 0, '# MatchMuon', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
@@ -209,9 +212,6 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >>  FitTrack
             >>  tee  ( monitor( TC_SIZE > 0, '# pass fit', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nFitted' , LoKi.Monitoring.ContextSvc ) )
-            >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV ) )
-            >>  tee  ( monitor( TC_SIZE , 'n after P/PT' , LoKi.Monitoring.ContextSvc ) )
-            >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
             >>  ( TrCHI2PDOF < %(TrChi2)s )
             >>  IsMuon
             >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
@@ -246,6 +246,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             Preambulo = self.diMuon_preambulo( properties ),
             Code = """
             VeloTTCandidates
+            >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV ) )  
             >>  MatchVeloTTMuon
             >>  tee  ( monitor( TC_SIZE > 0, '# MatchMuon', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
@@ -255,9 +256,6 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >>  FitTrack
             >>  tee  ( monitor( TC_SIZE > 0, '# pass fit', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nFitted' , LoKi.Monitoring.ContextSvc ) )
-            >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV ) )
-            >>  tee  ( monitor( TC_SIZE , 'n after P/PT' , LoKi.Monitoring.ContextSvc ) )
-            >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
             >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & ( Tr_HLTMIPCHI2( 'PV3D' ) > %(IPChi2)s ) )
             >>  tee  ( monitor( TC_SIZE , 'n after Tr/IPChi2' , LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE > 0, '# pass Tr/IPChi2', LoKi.Monitoring.ContextSvc ) )
@@ -308,7 +306,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >>  tee  ( monitor( TC_SIZE > 0, '# pass fit', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nFitted' , LoKi.Monitoring.ContextSvc ) )
             >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & ( Tr_HLTMIPCHI2( 'PV3D' ) > %(IPChi2)s ) )
-            >>  tee  ( monitor( TC_SIZE , 'n after Tr/IPChi2' , LoKi.Monitoring.ContextSvc ) )                                                              
+            >>  tee  ( monitor( TC_SIZE , 'n after Tr/IPChi2' , LoKi.Monitoring.ContextSvc ) )                               
             >>  tee  ( monitor( TC_SIZE > 0, '# pass Tr/IPChi2', LoKi.Monitoring.ContextSvc ) ) 
             >>  IsMuon 
             >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) ) 
