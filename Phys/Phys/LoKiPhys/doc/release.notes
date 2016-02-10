@@ -5,6 +5,13 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2016-02-10 - Vanya Belyaev
+ - add more signatures for child/children functions:
+   >>>  b = ...
+   >>>  c = b.child ( 'pi+' == ID )
+   >>>  for c in b.children ( BASIS & ( PT > 1 * GeV ) ) : print c
+
+
 !========================== LoKiPhys v11r7 2016-02-04 =========================
 
 ! 2016-01-30 - Vanya Belyaev

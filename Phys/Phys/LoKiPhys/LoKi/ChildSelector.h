@@ -117,6 +117,118 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
+    /** Trivial accessor to the daughter particles for the given particle.
+     *  @param  particle (const) pointer to mother particle 
+     *  @param  selector the selector 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2016-02-10
+     */
+    GAUDI_API 
+    const LHCb::Particle* child 
+    ( const LHCb::Particle*        particle , 
+      const Decays::iNode&         node     ) ;
+    /** Trivial accessor to the daughter particles for the given particle.
+     *  @param  particle (const) pointer to mother particle 
+     *  @param  selector the selector 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2016-02-10
+     */
+    GAUDI_API 
+    const LHCb::Particle* child 
+    ( const LHCb::Particle*        particle , 
+      const Decays::IDecay::iTree& node     ) ;    
+    /** Trivial accessor to the daughter particles for the given particle.
+     *  @param  particle (const) pointer to mother particle 
+     *  @param  selector the selector 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2016-02-10
+     */
+    GAUDI_API 
+    const LHCb::Particle* child 
+    ( const LHCb::Particle*         particle , 
+      const Decays::IDecay::Finder& node     ) ;
+    /** Trivial accessor to the daughter particles for the given particle.
+     *  @param  particle (const) pointer to mother particle 
+     *  @param  selector the selector 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2016-02-10
+     */
+    GAUDI_API 
+    const LHCb::Particle* child 
+    ( const LHCb::Particle*         particle , 
+      const std::string&            node     ) ;
+    /** Trivial accessor to the daughter particles for the given particle.
+     *  @param  particle (const) pointer to mother particle 
+     *  @param  selector the selector 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2016-02-10
+     */
+    GAUDI_API 
+    const LHCb::Particle* child 
+    ( const LHCb::Particle*         particle , 
+      const LoKi::Types::Cuts&      node     ) ;
+    // ========================================================================
+    /** accessor to certain children particles for the given particle 
+     *  @param  particle (INPUT) pointer to mother particle 
+     *  @param  selector (INPUT) the selector 
+     *  @return the container of found particles
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-05-29
+     */
+    GAUDI_API 
+    LHCb::Particle::ConstVector
+    children 
+    ( const LHCb::Particle*        particle , 
+      const Decays::iNode&         node     ) ;
+    /** accessor to certain children particles for the given particle 
+     *  @param  particle (INPUT) pointer to mother particle 
+     *  @param  selector (INPUT) the selector 
+     *  @return the container of found particles
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-05-29
+     */
+    GAUDI_API 
+    LHCb::Particle::ConstVector
+    children 
+    ( const LHCb::Particle*        particle , 
+      const Decays::IDecay::iTree& node     ) ;
+    /** accessor to certain children particles for the given particle 
+     *  @param  particle (INPUT) pointer to mother particle 
+     *  @param  selector (INPUT) the selector 
+     *  @return the container of found particles
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-05-29
+     */
+    GAUDI_API 
+    LHCb::Particle::ConstVector
+    children 
+    ( const LHCb::Particle*         particle ,  
+      const Decays::IDecay::Finder& node     ) ;
+    /** accessor to certain children particles for the given particle 
+     *  @param  particle (INPUT) pointer to mother particle 
+     *  @param  selector (INPUT) the selector 
+     *  @return the container of found particles
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-05-29
+     */
+    GAUDI_API 
+    LHCb::Particle::ConstVector
+    children 
+    ( const LHCb::Particle*         particle ,  
+      const std::string&            node     ) ;
+    /** accessor to certain children particles for the given particle 
+     *  @param  particle (INPUT) pointer to mother particle 
+     *  @param  selector (INPUT) the selector 
+     *  @return the container of found particles
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2010-05-29
+     */
+    GAUDI_API 
+    LHCb::Particle::ConstVector
+    children 
+    ( const LHCb::Particle*         particle ,  
+      const LoKi::Types::Cuts&      node     ) ;
+    // ========================================================================
   } //                                             end of namespace LoKi::Child
   // ==========================================================================
 } //                                                      end of namespace LoKi

@@ -112,6 +112,151 @@ LoKi::Child::child
   return selector.child ( particle ) ; 
 }
 // ============================================================================
+/* Trivial accessor to the daughter particles for the given particle.
+ *  @param  particle (const) pointer to mother particle 
+ *  @param  selector the selector 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2016-02-10
+ */
+// ============================================================================
+const LHCb::Particle* 
+LoKi::Child::child 
+( const LHCb::Particle*        particle , 
+  const Decays::iNode&         node     ) 
+{ return nullptr == particle ? nullptr : 
+    child ( particle , LoKi::Child::Selector ( node ) ) ; }    
+// ============================================================================
+/*  Trivial accessor to the daughter particles for the given particle.
+ *  @param  particle (const) pointer to mother particle 
+ *  @param  selector the selector 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2016-02-10
+ */
+// ============================================================================
+const LHCb::Particle* 
+LoKi::Child::child 
+( const LHCb::Particle*        particle , 
+  const Decays::IDecay::iTree& node     ) 
+{ return nullptr == particle ? nullptr : 
+    child ( particle , LoKi::Child::Selector ( node ) ) ; }    
+// ============================================================================
+/*  Trivial accessor to the daughter particles for the given particle.
+ *  @param  particle (const) pointer to mother particle 
+ *  @param  selector the selector 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2016-02-10
+ */
+// ============================================================================
+const LHCb::Particle* 
+LoKi::Child::child 
+( const LHCb::Particle*         particle , 
+  const Decays::IDecay::Finder& node     ) 
+{ return nullptr == particle ? nullptr : 
+    child ( particle , LoKi::Child::Selector ( node ) ) ; }    
+// ============================================================================
+/*  Trivial accessor to the daughter particles for the given particle.
+ *  @param  particle (const) pointer to mother particle 
+ *  @param  selector the selector 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2016-02-10
+ */
+// ============================================================================
+const LHCb::Particle* 
+LoKi::Child::child 
+( const LHCb::Particle*         particle , 
+  const std::string&            node     ) 
+{ return nullptr == particle ? nullptr : 
+    child ( particle , LoKi::Child::Selector ( node ) ) ; }
+// ============================================================================
+/* Trivial accessor to the daughter particles for the given particle.
+ *  @param  particle (const) pointer to mother particle 
+ *  @param  selector the selector 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2016-02-10
+ */
+// ============================================================================
+const LHCb::Particle* 
+LoKi::Child::child 
+( const LHCb::Particle*         particle , 
+  const LoKi::Types::Cuts&      node     ) 
+{ return nullptr == particle ? nullptr : 
+    child ( particle , LoKi::Child::Selector ( node ) ) ; }    
+// ============================================================================
+/* accessor to certain children particles for the given particle 
+ *  @param  particle (INPUT) pointer to mother particle 
+ *  @param  selector (INPUT) the selector 
+ *  @return the container of found particles
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date   2010-05-29
+ */
+// ============================================================================
+LHCb::Particle::ConstVector
+LoKi::Child::children 
+( const LHCb::Particle*        particle , 
+  const Decays::iNode&         node     ) 
+{ return nullptr == particle ? LHCb::Particle::ConstVector() 
+    : children ( particle , LoKi::Child::Selector ( node ) ) ; }
+// ============================================================================
+/*  accessor to certain children particles for the given particle 
+ *  @param  particle (INPUT) pointer to mother particle 
+ *  @param  selector (INPUT) the selector 
+ *  @return the container of found particles
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date   2010-05-29
+ */
+// ============================================================================
+LHCb::Particle::ConstVector
+LoKi::Child::children 
+( const LHCb::Particle*        particle , 
+  const Decays::IDecay::iTree& node     ) 
+{ return nullptr == particle ? LHCb::Particle::ConstVector()  
+    : children ( particle , LoKi::Child::Selector ( node ) ) ; }
+// ============================================================================
+/*  accessor to certain children particles for the given particle 
+ *  @param  particle (INPUT) pointer to mother particle 
+ *  @param  selector (INPUT) the selector 
+ *  @return the container of found particles
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date   2010-05-29
+ */
+// ============================================================================
+LHCb::Particle::ConstVector
+LoKi::Child::children 
+( const LHCb::Particle*         particle ,  
+  const Decays::IDecay::Finder& node     ) 
+{ return nullptr == particle ? LHCb::Particle::ConstVector()  
+    : children ( particle , LoKi::Child::Selector ( node ) ) ; }
+// ============================================================================
+/*  accessor to certain children particles for the given particle 
+ *  @param  particle (INPUT) pointer to mother particle 
+ *  @param  selector (INPUT) the selector 
+ *  @return the container of found particles
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date   2010-05-29
+ */
+// ============================================================================
+LHCb::Particle::ConstVector
+LoKi::Child::children 
+( const LHCb::Particle*         particle ,  
+  const std::string&            node     ) 
+{ return nullptr == particle ? LHCb::Particle::ConstVector()  
+    : children ( particle , LoKi::Child::Selector ( node ) ) ; }
+// ============================================================================
+/*  accessor to certain children particles for the given particle 
+ *  @param  particle (INPUT) pointer to mother particle 
+ *  @param  selector (INPUT) the selector 
+ *  @return the container of found particles
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date   2010-05-29
+ */
+// ============================================================================
+LHCb::Particle::ConstVector
+LoKi::Child::children 
+( const LHCb::Particle*         particle ,  
+  const LoKi::Types::Cuts&      node     ) 
+{ return nullptr == particle ? LHCb::Particle::ConstVector()  
+    : children ( particle , LoKi::Child::Selector ( node ) ) ; }
+// ============================================================================
 
 
 
