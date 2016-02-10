@@ -195,19 +195,16 @@ namespace Rich
     LHCb::RichRecPixel *
     PixelCreatorBase::buildPixel( const Rich::HPDPixelCluster& cluster ) const
     {
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        debug() << " -> Creating RichRecPixel from cluster " << cluster << endmsg;
-      }
+      _ri_debug << " -> Creating RichRecPixel from cluster " << cluster << endmsg;
 
       // the core cluster ID
-      const LHCb::RichSmartID id = cluster.primaryID();
+      const auto id = cluster.primaryID();
 
       // if single pixel cluster, use dedicated method
       if ( 1 == cluster.size() ) return buildPixel(id);
 
       // See if this RichRecPixel already exists
-      LHCb::RichRecPixel * pixel = ( bookKeep() && m_pixelDone[id] ? m_pixelExists[id] : nullptr );
+      auto * pixel = ( bookKeep() && m_pixelDone[id] ? m_pixelExists[id] : nullptr );
       if ( pixel ) return pixel;
 
       // Check this hit is OK
@@ -232,10 +229,7 @@ namespace Rich
           // save to TES container in tool
           savePixel( pixel );
 
-          if ( msgLevel(MSG::DEBUG) )
-          {
-            debug() << "Created pixel " << *pixel << endmsg;
-          }
+          _ri_debug << "Created pixel " << *pixel << endmsg;
 
         }
 
@@ -290,7 +284,7 @@ namespace Rich
                   // apply HPD pixel suppression
                   // NB : taking a copy of the smartIDs here since we might remove
                   // some, and we cannot change the raw data from smartIDdecoder()
-                  LHCb::RichSmartID::Vector smartIDs = HPD.second.smartIDs();
+                  auto smartIDs = HPD.second.smartIDs();
                   applyPixelSuppression( HPD.second.hpdID(), smartIDs );
 
                   // if any left, proceed and make pixels
@@ -298,7 +292,7 @@ namespace Rich
                   {
 
                     // which rich
-                    const Rich::DetectorType rich = HPD.second.hpdID().rich();
+                    const auto rich = HPD.second.hpdID().rich();
 
                     if ( UNLIKELY(m_noClusterFinding) )
                     {
@@ -307,20 +301,17 @@ namespace Rich
                       // note that the associated cluster is not set in this mode ...
                       for ( const auto & ID : smartIDs )
                       {
-                        LHCb::RichRecPixel * pixel = buildPixel(ID);
-                        if (pixel) pixel->setPhotonDetOccupancy(smartIDs.size());
+                        auto * pixel = buildPixel(ID);
+                        if ( pixel ) { pixel->setPhotonDetOccupancy(smartIDs.size()); }
                       }
 
                     }
                     else
                     {
                       // perform clustering on the remaining pixels in this HPD
-                      const HPDPixelClusters * clusters = hpdClusTool(rich)->findClusters( smartIDs );
-                      if ( msgLevel(MSG::DEBUG) )
-                      {
-                        debug() << "From " << smartIDs.size() << " RichSmartIDs found "
+                      const auto clusters = hpdClusTool(rich)->findClusters( smartIDs );
+                      _ri_debug << "From " << smartIDs.size() << " RichSmartIDs found "
                                 << clusters->clusters().size() << " clusters" << endmsg;
-                      }
 
                       // loop over the clusters
                       for ( const auto * clus : clusters->clusters() )
@@ -329,7 +320,7 @@ namespace Rich
                         if ( UNLIKELY(m_clusterHits[rich]) )
                         {
                           // make a single pixel for this cluster
-                          LHCb::RichRecPixel * pixel = buildPixel( clus->pixels() );
+                          auto * pixel = buildPixel( clus->pixels() );
                           if ( pixel ) 
                           {
                             pixel->setAssociatedCluster( clus->pixels() );
@@ -341,7 +332,7 @@ namespace Rich
                           // make a smartID for each channel in the cluster
                           for ( const auto & ID : clus->pixels().smartIDs() )
                           {
-                            LHCb::RichRecPixel * pixel = buildPixel( ID );
+                            auto * pixel = buildPixel( ID );
                             if ( pixel ) 
                             {
                               pixel->setAssociatedCluster( clus->pixels() );
@@ -351,9 +342,6 @@ namespace Rich
                         }
 
                       } // loop over clusters
-
-                      // cleanup
-                      delete clusters;
 
                     } // do clustering if
 
@@ -410,13 +398,13 @@ namespace Rich
       if ( !richPixels()->empty() )
       {
 
-        LHCb::RichRecPixels::iterator iPix = richPixels()->begin();
-        Rich::DetectorType rich      = (*iPix)->detector();
-        Rich::Side        panel      = (*iPix)->panel().panel();
-        LHCb::RichSmartID hpd        = (*iPix)->hpd().pdID();
-        Rich::DetectorType lastrich  = rich;
-        Rich::Side        lastpanel  = panel;
-        LHCb::RichSmartID lasthpd    = hpd;
+        auto iPix       = richPixels()->begin();
+        auto rich       = (*iPix)->detector();
+        auto panel      = (*iPix)->panel().panel();
+        auto hpd        = (*iPix)->hpd().pdID();
+        auto lastrich   = rich;
+        auto lastpanel  = panel;
+        auto lasthpd    = hpd;
 
         // set first HPD pixel iterator
         m_hpdIts[hpd].first = iPix;
@@ -465,7 +453,10 @@ namespace Rich
       if ( !m_pixels )
       {
 
-        if ( !exist<LHCb::RichRecPixels>(pixelLocation()) )
+        // Try to get pixels from TES
+        m_pixels = getIfExists<LHCb::RichRecPixels>( pixelLocation() );
+
+        if ( !m_pixels )
         {
 
           // Reinitialise the Pixel Container
@@ -478,14 +469,9 @@ namespace Rich
         else
         {
 
-          // get pixels from TES
-          m_pixels = get<LHCb::RichRecPixels>( pixelLocation() );
-          if ( msgLevel(MSG::DEBUG) )
-          {
-            debug() << "Found " << m_pixels->size() << " pre-existing RichRecPixels in TES at "
+          _ri_debug << "Found " << m_pixels->size() << " pre-existing RichRecPixels in TES at "
                     << pixelLocation() << endmsg;
-          }
-
+          
           if ( bookKeep() )
           {
             // Remake local pixel reference map
@@ -522,7 +508,7 @@ namespace Rich
     IPixelCreator::PixelRange
     PixelCreatorBase::range( const LHCb::RichSmartID pdID ) const
     {
-      HPDItMap::iterator i = m_hpdIts.find(pdID);
+      const auto i = m_hpdIts.find(pdID);
       return ( i == m_hpdIts.end() ?
                IPixelCreator::PixelRange(richPixels()->begin()) :
                IPixelCreator::PixelRange(i->second.first,i->second.second) );
@@ -545,8 +531,8 @@ namespace Rich
     void PixelCreatorBase::InitNewEvent()
     {
       m_hasBeenCalled = false;
-      m_allDone = false;
-      m_pixels  = 0;
+      m_allDone       = false;
+      m_pixels        = nullptr;
       if ( m_bookKeep )
       {
         m_pixelExists.clear();
@@ -557,11 +543,8 @@ namespace Rich
     void PixelCreatorBase::FinishEvent()
     {
       if ( m_hasBeenCalled ) ++m_Nevts;
-      if ( msgLevel(MSG::DEBUG) )
-      {
-        debug() << "Created " << richPixels()->size() << " RichRecPixels at "
+      _ri_debug << "Created " << richPixels()->size() << " RichRecPixels at "
                 << pixelLocation() << endmsg;
-      }
     }
 
   }
