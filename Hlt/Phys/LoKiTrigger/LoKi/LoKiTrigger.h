@@ -33,6 +33,10 @@
 //
 #include "LoKi/Hlt1CombinerConf.h"
 #include "LoKi/Hlt1Combiner.h"
+#include "LoKi/Hlt1DiPhotonMaker.h"
+#include "LoKi/ToParticles.h"
+#include "LoKi/ToProtoParticles.h"
+#include "LoKi/L0CaloToParticles.h"
 #include "LoKi/Hlt1Functions.h"
 #include "LoKi/Hlt1Wrappers.h"
 //
