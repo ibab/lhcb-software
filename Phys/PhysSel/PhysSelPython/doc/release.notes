@@ -5,6 +5,21 @@
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
 
+! 2016-02-10 - Vanya Belyaev
+ - add 'limit' selection, that checks the size of input selection  
+
+   >>> my_selection = ....
+   >>> my_selection_limit = LimitSelection ( my_selection , maxsize = 100 )
+
+ - remove 'name' from PrintSelection, name is constructed automatically
+  now the code could look a bit better:
+
+  >>> from PhysSelPython.Wrappers import LimitSelection, PrintSelection
+  >>> selection = ... 
+  >>> selection = LimitSelection ( selection , maxsize = 100 )
+  >>> selection = PrintSelection ( selection , PrintDecayTool = 'LoKi::PrintDecay' )
+
+
 !======================= PhysSelPython v9r8 2015-10-23 =======================
 
 ! 2015-10-22 - Ricardo Vazquez Gomez

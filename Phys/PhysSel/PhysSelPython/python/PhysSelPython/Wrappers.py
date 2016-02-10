@@ -30,7 +30,8 @@ __all__ = ('DataOnDemand',
            'NameError',
            'NonEmptyInputLocations',
            'IncompatibleInputLocations',
-           'PrintSelection'
+           'PrintSelection'   , 
+           'LimitSelection'        
            )
 
 from copy import copy
@@ -543,11 +544,10 @@ def SimpleSelection (
 #  selection =
 #    
 #  ## add ``Printer''
-#  selection = PrintSelection ( 'QUQU' , selection )
+#  selection = PrintSelection ( selection )
 #    
 #  @endcode 
 #
-#  @param name            unique selection name
 #  @param input           input selection
 #  @param printer         printer algorithm type
 #  @param InputDataSetter davinci....
@@ -555,7 +555,6 @@ def SimpleSelection (
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2015-03-18
 def PrintSelection (
-    name                       ,    ## UNIQUE seelction name 
     input                      ,    ## input selection 
     printer         =  None    ,    ## printer algorthm type
     InputDataSetter = 'Inputs' ,    ## it is just DaVinci. 
@@ -567,7 +566,7 @@ def PrintSelection (
     selection =
     
     ## add ``Printer''
-    selection = PrintSelection ( 'QUQU' , selection )
+    selection = PrintSelection ( selection )
     
     """
     if printer is None :
@@ -578,7 +577,8 @@ def PrintSelection (
     ## create new "algorithm"
     #
     algo = printer ( *args , **kwargs )
-
+    
+    name = '%s_PRINT' % input.name() 
     #
     ## finally construct valid "Selection"
     #
@@ -588,6 +588,54 @@ def PrintSelection (
         RequiredSelection = input           ,
         InputDataSetter   = InputDataSetter )
 
-# ========================================================================
+# ========================================================================#
+## special type of PassThroughSelection, that
+#  "limits" the size of selection
+#  @code
+#  my_selection = ....
+#  my_selection_limited = LimitedSelection ( my_selection , maxsize = 100 )
+#  another_selection = XXXSelection ( 'another_selection' ,
+#                                       ... ,
+#                       RequiredSelections = [ my_selection_limited ] )
+#  @endcode
+#  @see PassThroughSelection
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2016-02-10
+def LimitSelection ( input               ,                     
+                     maxsize             ,
+                     minsize      = 1    , 
+                     UseRootInTES = True ) :
+    """Special type of PassThroughSelection, that
+    'limits' the size of selection
+    >>> my_selection = ....
+    >>> my_selection_limit = LimitSelection ( my_selection , maxsize = 100 )
+    >>> another_selection  = XXXSelection ( 'another_selection' ,
+    ...                                        ... ,
+    ...                 RequiredSelections = [ my_selection_limit ] )
+    """
+    if 1 == minsize :
+        name = '%s_LIMIT_%d'
+        code = "CONTAINS('%s',%s)<=%d"
+        ##
+        name = name  % ( input.name()                          , maxsize )
+        code = code  % ( input.outputLocation() , UseRootInTES , maxsize )
+    else:
+        name = '%s_LIMIT_%d_%d'
+        code = "in_range(%d,CONTAINS('%s',%s),%d)"
+        ##
+        name = name  % ( input.name()           , minsize , maxsize )
+        code = code  % ( minsize ,
+                         input.outputLocation() , 
+                         UseRootInTES           , maxsize )
+    ##
+    from GaudiConfUtils.ConfigurableGenerators import LoKi__VoidFilter as _VFilter_
+    return PassThroughSelection (
+        name                                         ,
+        Algorithm         = _VFilter_(
+        Code = code , Preambulo = ['from LoKiCore.functions import in_range'] ,
+        ) ,
+        RequiredSelection = input                    )
+
+# =============================================================================
 # The END 
-# ========================================================================
+# =============================================================================
