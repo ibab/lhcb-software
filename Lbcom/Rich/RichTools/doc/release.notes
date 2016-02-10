@@ -7,8 +7,6 @@
 ! 2016-02-10 - Chris Jones
  - Return objects std::unique_ptr in HPDPixelClusteringTool to enforce
    smart pointer memory management in client code.
-
-! 2016-02-10 - Chris Jones
  - Prefer unique_ptr to raw pointer in HPDPixelClusterSuppressionTool
 
 ! 2016-01-28 - Chris Jones
