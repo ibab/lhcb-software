@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2016-02-10 - Chris Jones
+ - Prefer unique_ptr to raw pointer in HPDPixelClusterSuppressionTool
+
 ! 2016-01-28 - Chris Jones
  - Remove unneccessary info printout added in the last commit.
 

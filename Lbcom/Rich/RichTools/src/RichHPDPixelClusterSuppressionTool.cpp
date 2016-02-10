@@ -60,13 +60,13 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
   if ( suppress ) return true;
 
   // number of pixels before suppression
-  const unsigned int startSize = smartIDs.size();
+  const auto startSize = smartIDs.size();
 
   // if occ below min for clustering, just return false (no suppression)
   if ( startSize < m_minHPDocc ) return false;
 
   // find the clusters
-  const HPDPixelClusters * clusters = m_clustTool->findClusters( smartIDs );
+  std::unique_ptr<const HPDPixelClusters> clusters ( m_clustTool->findClusters(smartIDs) );
  
   // Print out clustering results
   _ri_verbo << hpdID << endmsg << *clusters << endmsg;
@@ -84,9 +84,6 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
     hpd << hpdID;
     Info( "Partially suppressed "+hpd.str(), StatusCode::SUCCESS, 0 );
   }
-
-  // cleanup
-  delete clusters;
 
   // return status
   return suppress;

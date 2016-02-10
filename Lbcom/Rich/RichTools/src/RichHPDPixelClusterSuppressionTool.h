@@ -12,11 +12,11 @@
 #ifndef RICHDAQ_RichHPDPixelClusterSuppressionTool_H
 #define RICHDAQ_RichHPDPixelClusterSuppressionTool_H 1
 
+// STL
+#include <memory>
+
 // base class
 #include "RichHighOccHPDSuppressionTool.h"
-
-// Kernel
-//#include "Kernel/MemPoolAlloc.h"
 
 // interfaces
 #include "RichKernel/IRichPixelClusteringTool.h"
