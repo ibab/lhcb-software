@@ -688,7 +688,7 @@ StatusCode OTModuleClbrAlg::readCondXMLs()
 
       int m; std::string param;
 
-      rule<phrase_scanner_t> xmlRule =
+      boost::spirit::classic::rule<phrase_scanner_t> xmlRule =
           !("<?xml" >> *(anychar_p - '>') >> '>') // header: <?xml ... >
           >> !("<!DOCTYPE" >> *(anychar_p - '>') >> '>') // header <!DOCTYPE ... >
           >> "<DDDB>"
