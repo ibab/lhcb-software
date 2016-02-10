@@ -351,9 +351,6 @@ StatusCode LoKi::Hybrid::TrackFunctorFactory::initialize ()
   StatusCode sc = LoKi::Hybrid::Base::initialize() ;
   if ( sc.isFailure() ) { return sc ; }  
   //
-  if ( msgLevel ( MSG::DEBUG ) ) 
-  { m_lines.insert ( m_lines.end() , "print dir()" ) ; }
-  //
   return StatusCode::SUCCESS ;
 } 
 // ============================================================================
