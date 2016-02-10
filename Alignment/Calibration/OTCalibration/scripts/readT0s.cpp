@@ -8,7 +8,7 @@
 
 #define PHOENIX_LIMIT 6
 #include <boost/spirit/home/classic.hpp>
-#include <boost/spirit/home/phoenix.hpp>
+#include <boost/phoenix.hpp>
 
 void readT0s(const std::string& path, double t0s[3][4][4][9])
 {
@@ -223,7 +223,7 @@ void readOTIS_T0s(const std::string& path, double t0s[3][4][4][9][4])
 
       if(parse(xml.c_str(), xmlRule, space_p).full != true) return;
     }
-       for(int m = 0; m < 9; m++){  
+       for(int m = 0; m < 9; m++){
 	for (int a= 0; a < 4 ; a++){
 	  double t0 = cT0[m][a];
 	  t0s[s][l][q][m][a] = t0;

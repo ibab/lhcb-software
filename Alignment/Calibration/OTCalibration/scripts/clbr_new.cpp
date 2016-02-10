@@ -16,7 +16,7 @@
 
 // #define PHOENIX_LIMIT 6
 // #include <boost/spirit/home/classic.hpp>
-// #include <boost/spirit/home/phoenix.hpp>
+// #include <boost/phoenix.hpp>
 
 #include <boost/assign.hpp>
 using namespace boost::assign;
@@ -93,40 +93,40 @@ TCanvas* createCanvas(const char* name, int w = 640, int h = 480)
 //       for(int q = 0; q < 4; q++)
 // 	{
 // 	  std::string quarterId = stationNames[s] + layerNames[l] + quarterNames[q];
-	  
+
 // 	  std::string fileName = quarterId + "@" + prefix + ".xml";
-	  
-// 	  // load file with condition for specific station-layer-quarter                                                                                                               
+
+// 	  // load file with condition for specific station-layer-quarter
 // 	  std::ifstream file(fileName.c_str());
 // 	  if(file.fail())
 // 	    {
 // 	      std::cout << "Can't open file: '" << fileName << "'" << std::endl;
 // 	      continue;
 // 	    }
-	  
+
 // 	  std::string xml;
-	  
-// 	  // read file to string                                                                                                                                                       
+
+// 	  // read file to string
 // 	  file.seekg(0, std::ios_base::end);
 // 	  xml.resize(file.tellg());
 // 	  file.seekg(0, std::ios_base::beg);
 // 	  file.read(&xml.at(0), xml.size());
 // 	  file.close();
-	  
+
 // 	  std::vector<double> cRt[9], cRtErr[9], cT0[9], cWalk[9];
 
 // 	  {
 // 	    using namespace boost::spirit::classic;
 // 	    using namespace boost::phoenix;
 // 	    using namespace boost::phoenix::arg_names;
-	    
+
 // 	    int m; std::string param;
-	  
+
 // 	    rule<phrase_scanner_t> xmlRule =
-// 	      !("<?xml" >> *(anychar_p - '>') >> '>') // header: <?xml ... >                                                                                                         
-// 	      >> !("<!DOCTYPE" >> *(anychar_p - '>') >> '>') // header <!DOCTYPE ... >                                                                                               
+// 	      !("<?xml" >> *(anychar_p - '>') >> '>') // header: <?xml ... >
+// 	      >> !("<!DOCTYPE" >> *(anychar_p - '>') >> '>') // header <!DOCTYPE ... >
 // 	      >> "<DDDB>"
-// 	      >> "<catalog" >> *(anychar_p - '>') >> '>' // <catalog ... >                                                                                                           
+// 	      >> "<catalog" >> *(anychar_p - '>') >> '>' // <catalog ... >
 // 	      >> +(
 // 		   lexeme_d[
 // 			    "<condition"
@@ -138,7 +138,7 @@ TCanvas* createCanvas(const char* name, int w = 640, int h = 480)
 // 				  )
 // 				 | (anychar_p - '>')
 // 				 )
-// 			    >> '>' // <condition ... name="...M{m + 1}" ... >                                                                                                              
+// 			    >> '>' // <condition ... name="...M{m + 1}" ... >
 //               ]
 // 		   >> +(
 // 			lexeme_d[
@@ -150,9 +150,9 @@ TCanvas* createCanvas(const char* name, int w = 640, int h = 480)
 // 				       >> '\"'
 // 				       )
 // 				      | (anychar_p - '>')
-// 				      ) >> '>' // <paramVector ... name="{param}" ... >           
+// 				      ) >> '>' // <paramVector ... name="{param}" ... >
 // 				 ]
-// 			>> +real_p // vector of values                                                                                                                                 
+// 			>> +real_p // vector of values
 // 			[
 // 			 if_(boost::phoenix::ref(param) == "TRParameters")
 // 			 [ boost::phoenix::push_back(boost::phoenix::ref(cRt)   [boost::phoenix::ref(m)], arg1) ],
@@ -170,11 +170,11 @@ TCanvas* createCanvas(const char* name, int w = 640, int h = 480)
 // 	      >> "</catalog>"
 // 	      >> "</DDDB>"
 // 	      >> end_p;
-	    
-	    
+
+
 // 	    if(parse(xml.c_str(), xmlRule, space_p).full != true) break;
 // 	  }
-	  
+
 // 	  // for(int m = 0; m < 9; m++){
 // 	  //   LHCb::OTChannelID id(s + 1, l, q, m + 1, 1);
 // 	  //   DeOTModule* module = detector->findModule(id);
@@ -188,8 +188,8 @@ TCanvas* createCanvas(const char* name, int w = 640, int h = 480)
 // 	  //     }
 // 	  //   else std::cout << "skip walk initialization: npars != 4" << std::endl;
 // 	  // }
-	  
-	  
+
+
 // 	  for(int m = 0; m < 9; m++){
 // 	    double t0 = cT0[m][0];
 // 	    t0s[s][l][q][m] = t0;

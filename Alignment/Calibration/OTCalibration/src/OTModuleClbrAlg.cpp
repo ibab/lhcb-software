@@ -23,7 +23,7 @@ using namespace boost::assign;
 
 #define PHOENIX_LIMIT 6
 #include <boost/spirit/home/classic.hpp>
-#include <boost/spirit/home/phoenix.hpp>
+#include <boost/phoenix.hpp>
 
 DECLARE_ALGORITHM_FACTORY(OTModuleClbrAlg)
 
