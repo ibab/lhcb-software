@@ -56,7 +56,7 @@
 // ============================================================================
 LoKi::Hlt1::ToProtoParticles::ToProtoParticles
 ( const std::string& location )
-  : LoKi::AuxFunBase ()
+  : LoKi::AuxFunBase ( std::tie ( location ) )
   , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
   , LoKi::Hlt1::HelperTool ( 1 )
   , m_sink ( location )

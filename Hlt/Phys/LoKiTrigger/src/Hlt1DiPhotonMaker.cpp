@@ -58,7 +58,7 @@ LoKi::Hlt1::Hlt1DiPhotonMaker::Hlt1DiPhotonMaker
   const double diphotonMassMin    ,
   const double diphotonMassMax    ,
   const double diphotonEtMin      )
-  : LoKi::AuxFunBase ( std::tie ( photonEtMin, photonEtSumMin,
+  : LoKi::AuxFunBase ( std::tie ( pid, location, photonEtMin, photonEtSumMin,
                                   diphotonMassMin, diphotonMassMax, diphotonEtMin ) )
   , LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
   , LoKi::Hlt1::CaloHelperTool ( 1 )
