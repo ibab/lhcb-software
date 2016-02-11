@@ -84,11 +84,11 @@ RelatedInfoRelationsPacker::unpack( const LHCb::PackedRelatedInfoMap & pmap,
   // Load the particles container
   const auto * link    = prels.linkMgr()->link(srcLink);
   const auto & srcName = ( link ? link->path() : "" );
-  auto * srcContainer = ( !srcName.empty() ? 
-                          parent().getIfExists<LHCb::Particles>(srcName) : nullptr );
+  const auto * srcContainer = ( !srcName.empty() ? 
+                                parent().getIfExists<LHCb::Particles>(srcName) : nullptr );
   if ( UNLIKELY(!srcContainer ) )
   {
-    parent().Warning( "Failed to load container '" + srcName + "'" ).ignore();
+    parent().Error( "Failed to load container '" + srcName + "'" ).ignore();
   }
   else
   {

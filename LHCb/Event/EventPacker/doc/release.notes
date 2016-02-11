@@ -7,7 +7,7 @@
 ! 2016-02-11 - Chris Jones
  - Fix a bug in the unpacking of related info objects caused by too 
    aggressive caching of information, that caused an attempt to access a 
-   container from a previous event, and thus a serg. fault, in some rare
+   container from a previous event, and thus a seg. fault, in some rare
    circumstances.
 
 ! 2016-02-02 - Chris Jones
