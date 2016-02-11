@@ -5,6 +5,13 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2016-02-11 - Francesco Dettori
+ - Adding two Hlt1Muon dedicated lines: 
+   Hlt1DiMuonNoIP - for not displaced dimuon searches
+	 Hlt1MultiDiMuonNoIP - for Multi Dimuon searches 
+   Tuning of the cuts in not final. 
+ - Reverting some earlier changes following discussion on ComplementForward
+
 ! 2016-02-10 - Jessica Prisciandaro
 
 - Hlt1DiMuonNoL0 line updated. Fix to the other muon lines to avoid to run Complement Forward if PT>500  

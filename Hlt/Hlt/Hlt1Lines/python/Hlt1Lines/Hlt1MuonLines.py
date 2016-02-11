@@ -44,6 +44,13 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  , 'DiMuonHighMass_TrChi2'    :    4.
                  , 'DiMuonHighMass_M'         : 2900.
                  , 'DiMuonHighMass_GEC'       : 'Loose'
+                 , 'DiMuonNoIP_VxDOCA'    :  0.1
+                 , 'DiMuonNoIP_VxChi2'    :    9.
+                 , 'DiMuonNoIP_P'         : 6000.
+                 , 'DiMuonNoIP_PT'        : 3000.
+                 , 'DiMuonNoIP_TrChi2'    :    4.
+                 , 'DiMuonNoIP_M'         :  2000000.
+                 , 'DiMuonNoIP_GEC'       : 'Loose'
                  , 'DiMuonNoL0_VxDOCA'     :  0.2
                  , 'DiMuonNoL0_VxChi2'     :  25.
                  , 'DiMuonNoL0_P'          :  3000.
@@ -57,9 +64,19 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  , 'MultiMuonNoL0_P'          : 6000.
                  , 'MultiMuonNoL0_PT'         :  5000.
                  , 'MultiMuonNoL0_IP'         :    100.
-                 , 'MultiMuonNoL0_TrChi2'     :    4.
+                 , 'MultiMuonNoL0_TrChi2'     :    3.
                  , 'MultiMuonNoL0_GT'         :  2.5
                  , 'MultiMuonNoL0_GEC'        : 'Loose'
+                 , 'MultiDiMuonNoIP_VxDOCA'     :  0.1
+                 , 'MultiDiMuonNoIP_VxChi2'     :    9.
+                 , 'MultiDiMuonNoIP_P'          : 6000.
+                 , 'MultiDiMuonNoIP_PT'         :  1000.
+                 , 'MultiDiMuonNoIP_TrChi2'     :    4.
+                 , 'MultiDiMuonNoIP_M'          :    0.
+                 , 'MultiDiMuonNoIP_MSS'        : 200000.
+                 , 'MultiDiMuonNoIP_IPChi2'     :    0.
+                 , 'MultiDiMuonNoIP_NMinDiMu'   :    1.
+                 , 'MultiDiMuonNoIP_GEC'        : 'Loose'
                  , 'CalibMuonAlignJpsi_ParticlePT'             : 800     # MeV
                  , 'CalibMuonAlignJpsi_ParticleP'              : 6000    # MeV
                  , 'CalibMuonAlignJpsi_TrackCHI2DOF'           : 2       # dimensionless
@@ -78,15 +95,19 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                                                   'DiMuonLowMass'    : ( 'Muon', 'DiMuon' ),
                                                   'DiMuonNoL0'       : ('Muon','DiMuon','Hadron','Photon', 'Electron'),
                                                   'DiMuonHighMass'   : ( 'Muon', 'DiMuon' ),
+                                                  'DiMuonNoIP'   : ( 'Muon', 'DiMuon' ),
                                                   'MultiMuonNoL0'    : ( 'Muon', 'DiMuon' ),
+                                                  'MultiDiMuonNoIP'    : ( 'Muon', 'DiMuon' ),
                                                   'CalibMuonAlignJpsi'    : ( 'Muon', 'DiMuon' ),
                                                   }
                  , 'Priorities'               : { 'SingleMuonHighPT' : 7,
                                                   'SingleMuonNoIP'   : 6,
                                                   'DiMuonLowMass'    : 5,
                                                   'DiMuonHighMass'   : 4,
+                                                  'DiMuonNoIP'       : 10,
                                                   'MultiMuonNoL0'    : 8,
                                                   'DiMuonNoL0'       : 22,
+                                                  'MultiDiMuonNoIP'    : 23,
                                                   'CalibMuonAlignJpsi'    : 9,
                                                   }
                  }
@@ -149,9 +170,6 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             Preambulo = self.singleMuon_preambulo( properties ),
             Code = """
             VeloTTCandidates
-            >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV ) ) 
-            >>  tee  ( monitor( TC_SIZE , 'n after P/PT' , LoKi.Monitoring.ContextSvc ) )                                   
-            >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )  
             >>  MatchVeloTTMuon
             >>  tee  ( monitor( TC_SIZE > 0, '# MatchMuon', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
@@ -161,6 +179,9 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >>  FitTrack
             >>  tee  ( monitor( TC_SIZE > 0, '# pass fit', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nFitted' , LoKi.Monitoring.ContextSvc ) )
+            >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV ) ) 
+            >>  tee  ( monitor( TC_SIZE , 'n after P/PT' , LoKi.Monitoring.ContextSvc ) )                                   
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )  
             >>  ( TrCHI2PDOF < %(TrChi2)s )
             >>  IsMuon
             >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
@@ -200,9 +221,6 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             Preambulo = self.diMuon_preambulo( properties ),
             Code = """
             VeloTTCandidates
-            >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV ) )  
-            >>  tee  ( monitor( TC_SIZE , 'n after P/PT' , LoKi.Monitoring.ContextSvc ) )  
-            >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )           
             >>  MatchVeloTTMuon
             >>  tee  ( monitor( TC_SIZE > 0, '# MatchMuon', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
@@ -212,6 +230,9 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >>  FitTrack
             >>  tee  ( monitor( TC_SIZE > 0, '# pass fit', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nFitted' , LoKi.Monitoring.ContextSvc ) )
+            >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV ) )  
+            >>  tee  ( monitor( TC_SIZE , 'n after P/PT' , LoKi.Monitoring.ContextSvc ) )  
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )           
             >>  ( TrCHI2PDOF < %(TrChi2)s )
             >>  IsMuon
             >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
@@ -246,7 +267,6 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             Preambulo = self.diMuon_preambulo( properties ),
             Code = """
             VeloTTCandidates
-            >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV ) )  
             >>  MatchVeloTTMuon
             >>  tee  ( monitor( TC_SIZE > 0, '# MatchMuon', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
@@ -256,6 +276,9 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >>  FitTrack
             >>  tee  ( monitor( TC_SIZE > 0, '# pass fit', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nFitted' , LoKi.Monitoring.ContextSvc ) )
+            >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV ) )  
+            >>  tee  ( monitor( TC_SIZE , 'n after P/PT' , LoKi.Monitoring.ContextSvc ) )  
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )           
             >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & ( Tr_HLTMIPCHI2( 'PV3D' ) > %(IPChi2)s ) )
             >>  tee  ( monitor( TC_SIZE , 'n after Tr/IPChi2' , LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE > 0, '# pass Tr/IPChi2', LoKi.Monitoring.ContextSvc ) )
@@ -377,6 +400,61 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  PV3D('Hlt1'),
                  self.optionalHPT_tracking(properties['name']),
                  unit ]
+
+
+    def multiDiMuon_streamer( self, properties ):
+        """
+        MultiDiMuon streamer starts from VeloTTCandidates but uses ComplementForward
+        accessing directly long tracks if the velo segment was already upgraded.
+        IsMuon is used for Long tracks, MatchVeloTTMuon for VeloTT and Velo ones.
+        """
+        from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
+        from Configurables import LoKi__HltUnit as HltUnit
+        from HltTracking.HltPVs import PV3D
+        unit = HltUnit(
+            'Hlt1%(name)sStreamer' % properties,
+            ##OutputLevel = 1 ,
+            Preambulo = self.diMuon_preambulo( properties ),
+            Code = """
+            VeloTTCandidates
+            >>  MatchVeloTTMuon
+            >>  tee  ( monitor( TC_SIZE > 0, '# MatchMuon', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
+            >>  ComplementForward
+            >>  tee  ( monitor( TC_SIZE > 0, '# Complement', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nComp' , LoKi.Monitoring.ContextSvc ) )
+            >>  FitTrack
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass fit', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nFitted' , LoKi.Monitoring.ContextSvc ) )
+            >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV ) )
+            >>  tee  ( monitor( TC_SIZE , 'n after P/PT' , LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
+            >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & ( Tr_HLTMIPCHI2( 'PV3D' ) > %(IPChi2)s ) )
+            >>  tee  ( monitor( TC_SIZE , 'n after Tr/IPChi2' , LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass Tr/IPChi2', LoKi.Monitoring.ContextSvc ) )
+            >>  IsMuon
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nIsMuon' , LoKi.Monitoring.ContextSvc ) )
+            >>  MakeDiMuons
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass vertex', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nVertices' , LoKi.Monitoring.ContextSvc ) )
+            >>  ( RV_MASS ( 'mu+' , 'mu-' ) > %(M)s * MeV )
+            >>  ( ( QProd == -1 ) | ( RV_MASS ( 'mu+' , 'mu-' ) > %(MSS)s * MeV ) )
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass mass', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nDiMuons' , LoKi.Monitoring.ContextSvc ) )
+            >>  SINK( 'Hlt1%(name)sDecision' )
+            >>  TC_SIZE > %(NMinDiMu)s
+            """ % properties
+            )
+        gec = properties[ 'GEC' ]
+
+        return [ Hlt1GECUnit( gec ),
+                 PV3D('Hlt1'),
+                 self.optionalHPT_tracking(properties['name']),
+                 unit ]
+
+
+
     
     def MuMu_Unit( self, properties ) :
         # Let's start with pions and ask ismuon first... this should be changed putting it in shared particles
@@ -508,8 +586,10 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                      ( 'SingleMuonNoIP',   self.singleMuon_streamer ),
                      ( 'DiMuonLowMass',    self.diMuonDetached_streamer ),
                      ( 'DiMuonHighMass',   self.diMuon_streamer ),
+                     ( 'DiMuonNoIP',   self.diMuon_streamer ),
                      ( 'DiMuonNoL0',       self.diMuonNoL0_streamer ),
-                     ( 'MultiMuonNoL0',    self.multiMuon_streamer ) ]
+                     ( 'MultiMuonNoL0',    self.multiMuon_streamer ) ,
+                     ( 'MultiDiMuonNoIP',    self.multiDiMuon_streamer ) ]
         for line, streamer in to_build:
             self.build_line( line, streamer )
 
