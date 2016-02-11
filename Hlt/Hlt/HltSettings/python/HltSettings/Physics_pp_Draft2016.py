@@ -181,6 +181,13 @@ class Physics_pp_Draft2016( object ):
                                                , 'DiMuonHighMass_TrChi2'    :    3
                                                , 'DiMuonHighMass_M'         : 2700
                                                , 'DiMuonHighMass_GEC'       : 'Loose'
+                                               , 'DiMuonNoIP_VxDOCA'    :  0.1
+                                               , 'DiMuonNoIP_VxChi2'    :    9.
+                                               , 'DiMuonNoIP_P'         : 20000.
+                                               , 'DiMuonNoIP_PT'        : 1000.
+                                               , 'DiMuonNoIP_TrChi2'    :  3.
+                                               , 'DiMuonNoIP_M'         :  0.
+                                               , 'DiMuonNoIP_GEC'       : 'Loose'
                                                , 'DiMuonNoL0_VxDOCA'     :  0.2
                                                , 'DiMuonNoL0_VxChi2'     :   25.
                                                , 'DiMuonNoL0_P'          : 3000.
@@ -193,15 +200,28 @@ class Physics_pp_Draft2016( object ):
                                                , 'MultiMuonNoL0_PT'         :  500
                                                , 'MultiMuonNoL0_TrChi2'     :    3.
                                                , 'MultiMuonNoL0_GT'         :    2.5
+                                               , 'MultiMuonNoL0_GEC'        : 'Loose'
+                                               , 'MultiDiMuonNoIP_VxDOCA'     :  0.1
+                                               , 'MultiDiMuonNoIP_VxChi2'     :    9.
+                                               , 'MultiDiMuonNoIP_P'          : 10000.
+                                               , 'MultiDiMuonNoIP_PT'         :  500.
+                                               , 'MultiDiMuonNoIP_TrChi2'     :    3.
+                                               , 'MultiDiMuonNoIP_M'          :    0.
+                                               , 'MultiDiMuonNoIP_MSS'        : 200000.
+                                               , 'MultiDiMuonNoIP_IPChi2'     :    -1
+                                               , 'MultiDiMuonNoIP_NMinDiMu'   :    1.
+                                               , 'MultiDiMuonNoIP_GEC'        : 'Loose'
                                                ,'L0Channels'               : {'SingleMuonHighPT' : ( 'Muon', 'MuonEW'),
                                                                               'SingleMuonNoIP'   : ( 'Muon', ),
                                                                               'DiMuonLowMass'    : ( 'Muon', 'DiMuon' ),
                                                                               'DiMuonHighMass'   : ( 'Muon', 'DiMuon' ),
+                                                                              'DiMuonNoIP'   : ( 'Muon', 'DiMuon' ),
+                                                                              'MultiDiMuonNoIP'   : ( 'Muon', 'DiMuon' ),
                                                                               'DiMuonNoL0'       : None,
                                                                               'MultiMuonNoL0'    : None
                                                                              }
                                                , 'Prescale'                 : { 'Hlt1NoPVPassThrough': 1.0,
-                                                                                'Hlt1SingleMuonNoIP' : 0.1,
+                                                                                'Hlt1SingleMuonNoIP' : 1.0,
                                                                                 'Hlt1DiMuonNoL0'  : 0.01,
                                                                                 'Hlt1MultiMuonNoL0'  : 0.01
                                                                                 }
@@ -352,9 +372,8 @@ class Physics_pp_Draft2016( object ):
         lines =  [ 'Hlt1TrackMuon'
                  , 'Hlt1TrackMuonNoSPD'
                  , 'Hlt1SingleMuonHighPT'
-                 , 'Hlt1SingleMuonNoIP', 'Hlt1DiMuonNoL0'
-                 , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
-                 , 'Hlt1MultiMuonNoL0'
+                 , 'Hlt1SingleMuonNoIP', 'Hlt1DiMuonNoL0', 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
+                 , 'Hlt1MultiMuonNoL0', 'Hlt1DiMuonNoIP', 'Hlt1MultiDiMuonNoIP'
                  , 'Hlt1B2GammaGamma'
                  , 'Hlt1B2PhiPhi_LTUNB'
                  , 'Hlt1SingleElectronNoIP'
