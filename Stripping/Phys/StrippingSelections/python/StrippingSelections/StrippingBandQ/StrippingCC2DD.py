@@ -29,7 +29,7 @@ default_config =  {
 ######## D0 / D~0 -> K pi cuts
                    'D0MassWin'     : "60*MeV",
                    'D0PT'          : "1000*MeV",
-                   'D0VtxChi2Ndof' : 10,
+                   'D0VtxChi2Ndof' : 8,
                    'D0Bpvdira'     : -10.,
                    'D0Bpvdls'      : 4.,
                    'D0daughterBpvIpChi2'    : 4.,
@@ -44,7 +44,7 @@ default_config =  {
 ######## Dplus/Dminus -> Kpipi cuts, used also for D_s+/D_s- ->KKpi
                    'DpmMassWin'     : "60*MeV",
                    'DpmPT'          : "1000*MeV",
-                   'DpmVtxChi2Ndof' : 10,
+                   'DpmVtxChi2Ndof' : 8,
                    'DpmBpvdira'     : -10.,
                    'DpmBpvdls'      : 4.,
                    'DpmdaughterBpvIpChi2'    : 4.,
@@ -59,7 +59,7 @@ default_config =  {
 ######## Lambda_c+, Xi_c+ -> p+ K- pi+ cuts
                    'LcMassWin'     : "60*MeV",
                    'LcPT'          : "1000*MeV",
-                   'LcVtxChi2Ndof' : 10,
+                   'LcVtxChi2Ndof' : 8,
                    'LcBpvdira'     : -10.,
                    'LcBpvdls'      : 4.,               # standard cut
                    'LcdaughterBpvIpChi2'    : 4.,
@@ -70,12 +70,12 @@ default_config =  {
 ### ProbNN conditions
                    'LcdaughterKaonProbNNk'  : 0.1,
                    'LcdaughterPionProbNNpi' : 0.1,
-                   'LcdaughterProtonProbNNp': 0.1,
+                   'LcdaughterProtonProbNNp': 0.15,
 
 ######## Xi_c0, Omega_c0 -> p+ K- K- pi+ cuts
                    'XcMassWin'     : "60*MeV",
                    'XcPT'          : "1000*MeV",
-                   'XcVtxChi2Ndof' : 10,
+                   'XcVtxChi2Ndof' : 8,
                    'XcBpvdira'     : -10.,
                    'XcBpvdls'      : -10.,             # no cut
                    'XcdaughterBpvIpChi2'    : 2.,      # loose cut
@@ -86,7 +86,7 @@ default_config =  {
 ### ProbNN conditions
                    'XcdaughterKaonProbNNk'  : 0.1,
                    'XcdaughterPionProbNNpi' : 0.1,
-                   'XcdaughterProtonProbNNp': 0.1,
+                   'XcdaughterProtonProbNNp': 0.15,
 
 ######## psi(3779) -> D D  cuts
 #                   'CCMassCut'     : "(AM<5000*MeV)",

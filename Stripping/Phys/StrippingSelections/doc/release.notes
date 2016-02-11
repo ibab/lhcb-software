@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-02-10 - Lucio Anderlini
+ - BandQ/CC2DD cuts tightened a bit (vertexChi2, proton PID)
+
 ! 2016-02-03 - Ramon Niet
  - changes in StrippingB2CC/StrippingBd2JpsieeKS.py:
    removed IPCHI2 cuts on K* daughters for prescaled Line which is needed
