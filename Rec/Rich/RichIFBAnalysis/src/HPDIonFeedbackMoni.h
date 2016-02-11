@@ -47,15 +47,17 @@ namespace Rich
 
     private:
 
-      //std::vector<IFBrate> m_IFBvect;
-      const Rich::DAQ::IRawBufferToSmartIDsTool * m_SmartIDDecoder;
-      const Rich::ISmartIDTool * m_idTool;
-      const Rich::DAQ::IPixelClusteringTool * m_clusterTool;
-
       void ExecuteIFB(const Rich::DetectorType RichNum, const Rich::Side PanNum, const unsigned int HPDCol,
                       const unsigned int HPDRow, unsigned int ionfeedbackCut,
                       const LHCb::RichSmartID::Vector  &smartIDHits );
       void ExecuteQuickHitmap(const Rich::DetectorType RichNum, const LHCb::RichSmartID::Vector &smartIDHits);
+
+    private:
+
+      //std::vector<IFBrate> m_IFBvect;
+      const Rich::DAQ::IRawBufferToSmartIDsTool * m_SmartIDDecoder = nullptr;
+      const Rich::ISmartIDTool * m_idTool = nullptr;
+      const Rich::DAQ::IPixelClusteringTool * m_clusterTool = nullptr;
 
       unsigned int m_ionFeedbackCutLHCB;      ///< Minimum cluster-size to be defined as IFB (LHCb/PHYSICS mode)
       unsigned int m_ionFeedbackCutALICE; ///< Minimum cluster-size to be defined as IFB (ALICE mode)

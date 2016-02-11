@@ -4,6 +4,9 @@
 ! Purpose     : Ross Young
 !-----------------------------------------------------------------------------
 
+! 2016-02-11 - Chris Jones
+ - Modernise a bit, and make blind to the underlying type use for clusters.
+
 ! 2016-02-10 - Chris Jones
  - Adapt to change in clustering tool interface, which now returns an 
    std::unique_ptr managing the cluster object, to enforce memory management.
