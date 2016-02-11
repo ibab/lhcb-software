@@ -95,7 +95,8 @@ class PrmptDiMuon(Hlt2ParticleFilter):
 
     code = ''
     if highmass: code = '(M > %(M)s) &'
-    code += ("(MINTREE('mu+'==ABSID,BPVIPCHI2()) < %(MuIPChi2)s)" 
+    code += ("(MINTREE('mu+'==ABSID,PT) > %(MuPT)s) & (MINTREE('mu+'==ABSID,P) > %(MuP)s)" 
+             "& (MINTREE('mu+'==ABSID,BPVIPCHI2()) < %(MuIPChi2)s)" 
              "& (MINTREE('mu+'==ABSID,PROBNNmu) > %(MuProbNNmu)s)" 
              "& (PT > %(PT)s)"  
              "& (HASVERTEX)" 
