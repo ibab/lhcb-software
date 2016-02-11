@@ -118,7 +118,7 @@ HPDPixelClustersBuilder::
 splitClusters( const HPDPixelClusters::Cluster::PtnVector & clusters )
 {
   // loop over the clusters to break up
-  for ( auto * C : clusters )
+  for ( auto C : clusters )
   {
     // loop over the smartIDs for this cluster
     for ( const auto & S : C->pixels().smartIDs() )
@@ -128,6 +128,20 @@ splitClusters( const HPDPixelClusters::Cluster::PtnVector & clusters )
     }
     // remove and delete original cluster
     removeCluster( C );
+  }
+}
+
+void 
+HPDPixelClustersBuilder::removeCluster( HPDPixelClusters::Cluster * clus )
+{
+  const auto iF = 
+    std::find_if( m_hpdClus->clusters().begin(), 
+                  m_hpdClus->clusters().end(), 
+                  [clus]( const HPDPixelClusters::Cluster::SmartPtnVector::value_type & c ) 
+                  { return c.get() == clus; } );
+  if ( iF != m_hpdClus->clusters().end() )
+  {
+    m_hpdClus->clusters().erase( iF );
   }
 }
 
