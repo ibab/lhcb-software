@@ -12,10 +12,8 @@
 #include "CaloUtils/Calo2Track.h"
 #include "CaloUtils/CaloAlgUtils.h"
 #include "Relations/IRelationWeighted2D.h"
-#include "Kernel/Particle2Vertex.h"
 
 // Event.
-#include "Event/RecVertex.h"
 #include "Event/Particle.h"
 #include "Event/ProtoParticle.h"
 #include "Event/Track.h"
@@ -55,8 +53,8 @@ using namespace LHCb;
  * The PF algorithm itself does not filter input; the passed inputs
  * must already be filtered. Six classes of inputs can be passed with
  * class names 'Particle', 'ProtoParticle', 'Track', 'CaloCluster',
- * 'RecVertex', and 'IClusTrTable2D'. Inputs are set via the 'Inputs'
- * property which must be of the form [[<class name>, <object type>,
+ * and 'IClusTrTable2D'. Inputs are set via the 'Inputs' property
+ * which must be of the form [[<class name>, <object type>,
  * <location>], ...] where all three arguments for each input are
  * strings. Inputs of the first four classes are used to build the PF
  * output. With these four classes, if the object type is 'ban', the
@@ -83,11 +81,6 @@ using namespace LHCb;
  * For inputs of class 'Track' or 'CaloCluster', the object type
  * should be the particle name to assign these objects, where again
  * charge conjugation is automatically handeled.
- *
- * Only one input of class 'RecVertex' should be supplied and should
- * be given object type 'vertex'. This input is used when associating
- * Particles to primary vertices. If such a location is not supplied,
- * no association will be performed.
  *
  * The input class 'IClusTrTable2D' is used for matching CaloClusters
  * (ECAL or HCAL) to Tracks. Consequently, the corresponding object
@@ -228,15 +221,16 @@ private:
   void use(const CaloCluster *cal, SuperClusterPtr spr);
   
   // Check if the Tracks and/or CaloClusters of an object are used.
+  /// Check if a ProtoParticle is used.
   inline bool used(const ProtoParticle *pro);
+  /// Check if a Track is used.
   inline bool used(const Track *trk);
+  /// Check if a CaloCluster is used.
   inline bool used(const CaloCluster *cal);
 
   // Additional methods.
   /// Sum a Gaudi::LorentzVector and a CaloCluster.
   static inline void sum(Gaudi::LorentzVector &vec, const CaloCluster *cal);
-  /// Relate a Particle with a Track to a RecVertex.
-  inline void relate(const Particle *prt);
   /// Retrieve an Object #obj given Input #in.
   template<class Object> bool retrieve(Object &obj, const Input &in) {
     if (exist<Object>(in.loc)) {obj = get<Object>(in.loc); return true;}
@@ -313,22 +307,18 @@ private:
   // Tool members.
   IParticlePropertySvc *m_prtSvc; ///< Particle property service tool.
   IParticle2State      *m_prtSta; ///< Particle to State conversion tool.
-  IRelatedPVFinder     *m_prtVrt; ///< Particle to RecVertex relation tool.
 
   // Additional members (not properties).
-  VertexBase::ConstVector  m_vrts;     ///< Input RecVertex container.
-  Particles               *m_prts;     ///< Output Particle container.
-  ProtoParticles          *m_pros;     ///< Output ProtoParticle container.
-  CaloHypos               *m_hyps;     ///< Output CaloHypo container.
-  CaloClusters            *m_cals;     ///< Output CaloCluster container.
-  Particle2Vertex::WTable *m_prtsVrts; ///< Output Particle to RecVertex table.
+  Particles               *m_prts; ///< Output Particle container.
+  ProtoParticles          *m_pros; ///< Output ProtoParticle container.
+  CaloHypos               *m_hyps; ///< Output CaloHypo container.
+  CaloClusters            *m_cals; ///< Output CaloCluster container.
   vector<double> m_proBestMs;   ///< Masses for "best" PID ProtoParticle.
   vector<int>    m_proBestPids; ///< PIDs for "best" PID ProtoParticle.
   vector<Input> m_inPrts; ///< Vector of Particle inputs.
   vector<Input> m_inPros; ///< Vector of ProtoParticle inputs.
   vector<Input> m_inTrks; ///< Vector of Track inputs.
   vector<Input> m_inCals; ///< Vector of CaloCluster inputs.
-  Input  m_inVrts;     ///< RecVertex input.
   Input  m_inEcalTrks; ///< ECAL to Track map input.
   Input  m_inHcalTrks; ///< HCAL to Track map input.
   Input *m_inNow;      ///< Pointer to the current input.
