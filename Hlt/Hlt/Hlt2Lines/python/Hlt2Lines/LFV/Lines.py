@@ -24,13 +24,15 @@ class LFVLines(Hlt2LinesConfigurableUser):
                              'MuonProbNn': 0.9,
                              'MuonTrChi2DoF': 3,
                              'MuonTrGhostProb': 0.1,
-                             'MuonVertexChi2DoF': 3,
-                             'NSPD': 450}}
+                             'MuonVertexChi2DoF': 3},
+                 'SpdCut': {'NSPD': 350}}
 
     def __apply_configuration__(self):
         from Stages import SelJpsiMuE
         stages = {'LFVJpsiMuE': [SelJpsiMuE]}
 
         for name, algos in self.algorithms(stages):
-            Hlt2Line(name, prescale=self.prescale, algos=algos,
+            Hlt2Line(name,
+                     prescale=self.prescale,
+                     algos=algos,
                      postscale=self.postscale)
