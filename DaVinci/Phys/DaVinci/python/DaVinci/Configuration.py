@@ -25,7 +25,7 @@ class DaVinci(LHCbConfigurableUser) :
           "EvtMax"             :  -1             # Number of events to analyse
         , "SkipEvents"         :   0             # Number of events to skip at beginning for file
         , "PrintFreq"          : 1000            # The frequency at which to print event numbers
-        , "DataType"           : ''              # Data type, can be ['2008','2009','MC09','2010','2011','2012'] Forwarded to PhysConf. MUST be set.
+        , "DataType"           : ''              # Data type, can be ['2008','2009','MC09','2010','2011','2012','2015','2016'] Forwarded to PhysConf, AnalysisConf, DstConf and LHCbApp. MUST be set.
         , "Simulation"         : False           # set to True to use SimCond. Forwarded to PhysConf
         , "DDDBtag"            : ""              # Tag for DDDB. Default as set in DDDBConf for DataType
         , "CondDBtag"          : ""              # Tag for CondDB. Default as set in DDDBConf for DataType
@@ -60,7 +60,7 @@ class DaVinci(LHCbConfigurableUser) :
         "EvtMax"             : """ Number of events to analyse """
         , "SkipEvents"         : """ Number of events to skip at beginning for file """
         , "PrintFreq"          : """ The frequency at which to print event numbers """
-        , "DataType"           : """ Data type, can be ['2008','2009','MC09','2010','2011','2012','2015'] Forwarded to PhysConf, AnalysisConf and LHCbApp """
+        , "DataType"           : """ Data type, can be ['2008','2009','MC09','2010','2011','2012','2015','2016'] Forwarded to PhysConf, AnalysisConf, DstConf and LHCbApp """
         , "Simulation"         : """ set to True to use SimCond. Forwarded to PhysConf """
         , "DDDBtag"            : """ Tag for DDDB. Default as set in DDDBConf for DataType """
         , "CondDBtag"          : """ Tag for CondDB. Default as set in DDDBConf for DataType """
@@ -94,7 +94,7 @@ class DaVinci(LHCbConfigurableUser) :
         LumiIntegratorConf,
         LHCbApp           ]
 
-    __known_datatypes__  = [ "MC09", "2008", "2009", "2010", "2011", "2012", "2015", "Upgrade" ]
+    __known_datatypes__  = [ "MC09", "2008", "2009", "2010", "2011", "2012", "2015", "2016", "Upgrade" ]
     __known_prod_types__ = [ "None", "Stripping" ] 
 
     ## Known monitoring sequences run by default
