@@ -82,9 +82,11 @@ def dumpToFile ( objects , fbase  = 'ROOT_Objects_%d_%s.root' ) :
     return fname
 
 
-v1   = ROOT.RooRealVar( 'v1' , '',1)
-v2   = ROOT.RooRealVar( 'v2' , '',1)
-vars = ROOT.RooArgSet (  v1  ,    v2 )
+v1   = ROOT.RooRealVar ( 'v1' , '',1)
+v2   = ROOT.RooRealVar ( 'v2' , '',1)
+vars = ROOT.RooArgSet  (  v1  ,    v2 )
+varl = ROOT.RooArgList (  v1  ,    v2 )
+v3   = ROOT.RooFormulaVar( 'v3' , 'v1*v2', varl )
 
 objects = [
     
@@ -111,8 +113,9 @@ objects = [
     ROOT.RooRealVar    () ,
     ROOT.RooArgSet     () ,
     ROOT.RooArgList    () ,
-    v1 , v2 , vars ,
-    ROOT.RooDataSet    ( 'ds', '', vars )
+    v1 , v2 , vars , varl , v3 , 
+    ROOT.RooDataSet    ( 'ds', '', vars ) ,
+    ROOT.TTreeFormula()   
     ]
 
 def readFile ( fname ) :
