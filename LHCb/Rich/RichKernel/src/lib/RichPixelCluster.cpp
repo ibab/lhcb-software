@@ -160,7 +160,7 @@ HPDPixelClusters::getCluster( const LHCb::RichSmartID & id ) const
   const Cluster * clus = nullptr;
 
   // loop over clusters
-  for ( const auto * c : clusters() )
+  for ( const auto& c : clusters() )
   {
     // loop over hits in this cluster
     for ( const auto& i : c->pixels().smartIDs() )
@@ -168,7 +168,7 @@ HPDPixelClusters::getCluster( const LHCb::RichSmartID & id ) const
       if ( i == id )
       {
         // found the cluster...
-        clus = c;
+        clus = c.get();
         break;
       }
     }
@@ -181,7 +181,7 @@ HPDPixelClusters::getCluster( const LHCb::RichSmartID & id ) const
 
 MsgStream& HPDPixelClusters::fillStream( MsgStream& os ) const
 {
-  for ( const auto * clus : clusters() )
+  for ( const auto& clus : clusters() )
   {
     os << "ID=" << clus->id() << " " << clus->pixels();
   }

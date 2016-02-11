@@ -16,6 +16,7 @@
 #include <vector>
 #include <list>
 #include <ostream>
+#include <memory>
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
@@ -166,8 +167,10 @@ namespace Rich
 
     public: // definitions
 
-      /// collection of cluster pointers
-      using PtnVector = LHCb::Boost::PoolAllocList<Cluster*>;
+      /// Collection of cluster pointers
+      using PtnVector      = LHCb::Boost::PoolAllocList< Cluster*                 >;
+      /// Collection of cluster smart pointers (i.e. for ownership with memory management)
+      using SmartPtnVector = LHCb::Boost::PoolAllocList< std::unique_ptr<Cluster> >;
 
     public: // methods
 
@@ -232,13 +235,13 @@ namespace Rich
     HPDPixelClusters( ) = default;
 
     /// Destructor
-    ~HPDPixelClusters() { for ( auto * i : m_allclus ) { delete i; } }
+    ~HPDPixelClusters() = default;
 
     /// Read access to the vector of clusters
-    inline const Cluster::PtnVector & clusters() const { return m_allclus; }
+    inline const Cluster::SmartPtnVector & clusters() const { return m_allclus; }
 
     /// Write access to the vector of clusters
-    inline       Cluster::PtnVector & clusters()       { return m_allclus; }
+    inline       Cluster::SmartPtnVector & clusters()       { return m_allclus; }
 
     /// Create a new vector of suppressed RichSmartIDs
     void suppressIDs( HPDPixelCluster::SmartIDVector & smartIDs,
@@ -260,12 +263,12 @@ namespace Rich
   public:
 
     /// Add a new cluster
-    inline void addCluster( Cluster * clus ) { m_allclus.push_back(clus); }
+    inline void addCluster( Cluster * clus ) { m_allclus.emplace_back(clus); }
 
   private: // data
 
     /// Vector of all created clusters
-    Cluster::PtnVector m_allclus;
+    Cluster::SmartPtnVector m_allclus;
 
   };
 
@@ -408,7 +411,8 @@ namespace Rich
   HPDPixelClustersBuilder::isOn( const int row, const int col ) const
   {
     return ( row>=0 && row<nPixelRows() &&
-             col>=0 && col<nPixelCols() && (m_data[row])[col] );
+             col>=0 && col<nPixelCols() && 
+             (m_data[row])[col] );
   }
 
   inline 
@@ -423,20 +427,22 @@ namespace Rich
   HPDPixelClustersBuilder::createNewCluster()
   {
     m_hpdClus->addCluster( new HPDPixelClusters::Cluster(++m_lastID) );
-    return m_hpdClus->clusters().back();
+    return m_hpdClus->clusters().back().get();
   }
 
   inline 
   void 
   HPDPixelClustersBuilder::removeCluster( HPDPixelClusters::Cluster * clus )
   {
-    const auto iF = std::find( m_hpdClus->clusters().begin(), 
-                               m_hpdClus->clusters().end(), clus );
+    const auto iF = 
+      std::find_if( m_hpdClus->clusters().begin(), 
+                    m_hpdClus->clusters().end(), 
+                    [clus]( const HPDPixelClusters::Cluster::SmartPtnVector::value_type & c ) 
+                    { return c.get() == clus; } );
     if ( iF != m_hpdClus->clusters().end() )
     {
-      m_hpdClus->clusters().erase( iF );
-      delete clus;
-    }
+       m_hpdClus->clusters().erase( iF );
+     }
   }
 
   inline 
