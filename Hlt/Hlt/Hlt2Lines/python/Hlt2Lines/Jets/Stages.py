@@ -9,7 +9,7 @@ class FilterSV(Hlt2ParticleFilter):
       pid  = "((ABSID=='K+') | (ID=='KS0') | (ABSID=='Lambda0'))"
 
       code = ("(MINTREE("+pid+",PT) > %(SV_TRK_PT)s)"
-              "& (MINTREE((ABSID=='K+'),TRGHOSTPROB) < %(GHOSTPROB)s) "
+              "& (MINTREE(ISBASIC,TRGHOSTPROB) < %(GHOSTPROB)s) "
               "& (MINTREE((ABSID=='K+'),MIPCHI2DV(PRIMARY)) > %(SV_TRK_IPCHI2)s)"  
               "& (HASVERTEX) & (VFASPF(VCHI2PDOF) < %(SV_VCHI2)s)" 
               "& (BPVVDCHI2 > %(SV_FDCHI2)s)") 
@@ -42,8 +42,8 @@ class SVSVCombiner(Hlt2Combiner) :
 class SVMuCombiner(Hlt2Combiner) :
   def __init__(self, inputs):
 
-      cc = "(fabs(ACHILD(BPVPHI,1)-ACHILD(BPVPHI,2)) > (%(DPHI)s-1.0))"
-      Hlt2Combiner.__init__(self, 'JetsSVMuCombiner', "[D0 -> K*(892)0 mu+]cc", inputs,
+      cc = "(fabs(ACHILD(BPVPHI,(ABSID=='K*(892)0'))-ACHILD(PHI,(ABSID=='mu+'))) > (%(DPHI)s-1.0))"
+      Hlt2Combiner.__init__(self, 'JetsSVMuCombiner', ["D0 -> K*(892)0 mu+","D0 -> K*(892)0 mu-"], inputs,
                             dependencies = [PV3D('Hlt2')],
                             #CombinationCut = cc,
                             MotherCut = '(ALL)',
@@ -53,7 +53,7 @@ class SVMuCombiner(Hlt2Combiner) :
 class MuMuCombiner(Hlt2Combiner) :
   def __init__(self, inputs):
 
-      cc = "(fabs(ACHILD(BPVPHI,1)-ACHILD(BPVPHI,2)) > (%(DPHI)s-1.0))"
+      cc = "(fabs(ACHILD(PHI,1)-ACHILD(PHI,2)) > (%(DPHI)s-1.0))"
       Hlt2Combiner.__init__(self, 'JetsMuMuCombiner', ["[D0 -> mu+ mu+]cc","D0 -> mu+ mu-"], inputs,
                             dependencies = [PV3D('Hlt2')],
                             #CombinationCut = cc,
