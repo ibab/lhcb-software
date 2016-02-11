@@ -196,12 +196,6 @@ namespace LHCb
     /// Standard packing of quantities into integers ...
     StandardPacker m_pack;
 
-    // cached Pointer to the location container the FROM object (Particle)
-    mutable LHCb::Particles * m_srcContainer = nullptr;
-    
-    // Cached linked info
-    mutable int m_prevSrcLink{-1};
-
   };
 
   // -----------------------------------------------------------------------

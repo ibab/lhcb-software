@@ -81,27 +81,33 @@ RelatedInfoRelationsPacker::unpack( const LHCb::PackedRelatedInfoMap & pmap,
   int srcLink(0), srcKey(0);
   m_pack.indexAndKey64( pmap.reference, srcLink, srcKey );
 
-  // If new container, update cached info
-  if ( srcLink != m_prevSrcLink )
+  // Load the particles container
+  const auto * link    = prels.linkMgr()->link(srcLink);
+  const auto & srcName = ( link ? link->path() : "" );
+  auto * srcContainer = ( !srcName.empty() ? 
+                          parent().getIfExists<LHCb::Particles>(srcName) : nullptr );
+  if ( UNLIKELY(!srcContainer ) )
   {
-    m_prevSrcLink = srcLink;
-    const auto & srcName = prels.linkMgr()->link(srcLink)->path();
-    m_srcContainer = parent().get<LHCb::Particles>( srcName );
+    parent().Warning( "Failed to load container '" + srcName + "'" ).ignore();
   }
-
-  // Get the source object
-  auto * from = m_srcContainer->object( srcKey );
-
-  // Recreate the RelatedInfoMap
-  TO to;
-  to.reserve( pmap.last - pmap.first );
-  for ( auto jj = pmap.first; pmap.last > jj; ++jj )
+  else
   {
-    to.insert( prels.info()[jj] );
+    // Get the source object
+    auto * from = srcContainer->object(srcKey);
+    if ( from )
+    {
+      // Recreate the RelatedInfoMap
+      TO to;
+      to.reserve( pmap.last - pmap.first );
+      for ( auto jj = pmap.first; pmap.last > jj; ++jj )
+      {
+        to.insert( prels.info()[jj] );
+      }
+      // Save the relation
+      rels.relate( from, to );
+    }
   }
-
-  // Save the relation
-  rels.relate( from, to );
+  
 }
 
 StatusCode 
