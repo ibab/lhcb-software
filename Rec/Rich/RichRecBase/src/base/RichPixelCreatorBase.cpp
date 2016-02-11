@@ -314,7 +314,7 @@ namespace Rich
                                 << clusters->clusters().size() << " clusters" << endmsg;
 
                       // loop over the clusters
-                      for ( const auto * clus : clusters->clusters() )
+                      for ( const auto & clus : clusters->clusters() )
                       {
 
                         if ( UNLIKELY(m_clusterHits[rich]) )
