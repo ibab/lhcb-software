@@ -3,10 +3,14 @@ from GaudiKernel.SystemOfUnits import MeV, picosecond, mm
 Run1Topo = Run1TopoLines()
 slots = Run1Topo.slots()
 slots['Common'].update({
-        'TOS'               : ('Hlt1(Two)?Track(MVA)?(Muon)?'
-                               'Decision%TOS'),
+        'ALLTOS'            : 'Hlt1(Two)?Track(MVA)?(Muon)?Decision%TOS',
         'MUTOS'             : 'Hlt1TrackMuonDecision%TOS',
         'HTOS'              : 'Hlt1(Two)?TrackMVADecision%TOS',
+        'ETOS'              : 'Hlt1(Two)?TrackMVADecision%TOS',
+        'MUMUTOS'           : 'Hlt1(Two)?Track(MVA)?(Muon)?Decision%TOS',
+        'EETOS'             : 'Hlt1(Two)?TrackMVADecision%TOS',
+        'MUETOS'            : 'Hlt1(Two)?Track(MVA)?(Muon)?Decision%TOS',
+        'MUMUDDTOS'         : 'Hlt1TrackMVADecision%TOS',
         'GEC_MAX'           : 500,
         'USE_KS'            : True,
         'USE_LAMBDA'        : True,
@@ -19,6 +23,19 @@ slots['Common'].update({
         'MU_BDT_4BODY_MIN'  : 0.99,
         'BDT_MIN'           : 0.99,
         'MU_BDT_MIN'        : 0.99,
+        'E_BDT_2BODY_MIN'   : 0.99,
+        'E_BDT_3BODY_MIN'   : 0.99,
+        'E_BDT_4BODY_MIN'   : 0.99,
+        'MUMU_BDT_2BODY_MIN' : 0.99,
+        'MUMU_BDT_3BODY_MIN' : 0.99,
+        'MUMU_BDT_4BODY_MIN' : 0.99,
+        'EE_BDT_2BODY_MIN'  : 0.99,
+        'EE_BDT_3BODY_MIN'  : 0.99,
+        'EE_BDT_4BODY_MIN'  : 0.99,
+        'MUE_BDT_2BODY_MIN' : 0.99,
+        'MUE_BDT_3BODY_MIN' : 0.99,
+        'MUE_BDT_4BODY_MIN' : 0.99,
+        'MUMUDD_BDT_MIN'    : 0.99,
         'BDT_VARMAP'        : {
             "n"      : "NINTREE((ABSID=='K+')|(ID=='KS0')|(ABSID=='Lambda0'))",
             "mcor"   : "BPVCORRM",
@@ -35,6 +52,12 @@ slots['Common'].update({
                         "& (PT > 1*GeV) & (BPVIPCHI2() > 16))")
         },
         'BDT_PARAMS'        : 'hlt2_topo_run2_v1.bbdt',
+        'EPROBNNE'          : 0.1,
+        'MUMUPROBNNMU'      : 0.1,
+        'EEPROBNNE'         : 0.1,
+        'MUEPROBNNMU'       : 0.1,
+        'MUEPROBNNE'        : 0.1,
+        'MUMUDD_GHOSTPROB'  : 0.2,
         'TRK_PT_MIN'        : 200 * MeV,
         'TRK_P_MIN'         : 3000 * MeV,
         'TRK_CHI2_MAX'      : 3,
@@ -72,7 +95,8 @@ class TopoLines(Hlt2LinesConfigurableUser):
                             LambdaLLTrackFitted, LambdaDDTrackFitted)
         from Stages import FilterParts, FilterParts4
         gec   = props['GEC_MAX'] >= 0
-        parts = [FilterParts('Kaon', [BiKalmanFittedKaonsWithMuonID], gec)]
+        kparts = [FilterParts('Kaon', [BiKalmanFittedKaonsWithMuonID], gec)]
+        parts = list(kparts)
         if props['USE_KS']:
             parts.append(FilterParts('KsLL', [KsLLTF], gec))
             parts.append(FilterParts('KsDD', [KsDD], gec))
@@ -97,7 +121,29 @@ class TopoLines(Hlt2LinesConfigurableUser):
                 FilterMVA(n, self._stages['Topo%iBodyCombos' % n], props)]
             self._stages['TopoMu%iBody' % n] = [
                 FilterMVA(n, self._stages['Topo%iBodyCombos' % n], props,
-                          props['MU_BDT_%iBODY_MIN' % n],True)]
+                          props['MU_BDT_%iBODY_MIN' % n],'Mu')]
+            self._stages['TopoE%iBody' % n] = [
+                FilterMVA(n, self._stages['Topo%iBodyCombos' % n], props,
+                          props['E_BDT_%iBODY_MIN' % n],'E')]
+            self._stages['TopoMuMu%iBody' % n] = [
+                FilterMVA(n, self._stages['Topo%iBodyCombos' % n], props,
+                          props['MUMU_BDT_%iBODY_MIN' % n],'MuMu')]
+            self._stages['TopoEE%iBody' % n] = [
+                FilterMVA(n, self._stages['Topo%iBodyCombos' % n], props,
+                          props['EE_BDT_%iBODY_MIN' % n],'EE')]
+            self._stages['TopoMuE%iBody' % n] = [
+                FilterMVA(n, self._stages['Topo%iBodyCombos' % n], props,
+                          props['MUE_BDT_%iBODY_MIN' % n],'MuE')]
+
+
+        # DD dimuon + Hlt1TrackMVA 
+        from Stages import CombineDiMuonDD, CombineTrackDiMuonDDTos
+        from Inputs import BiKalmanFittedDownMuons
+        dimuDD = [CombineDiMuonDD([BiKalmanFittedDownMuons])]
+        self._stages['TopoDiMuonDDCombiner'] = dimuDD
+        combosDD = [CombineTrackDiMuonDDTos(dimuDD+kparts)]
+        self._stages['TopoMuMuDDCombos'] = combosDD
+        self._stages['TopoMuMuDD'] = [FilterMVA(2,combosDD,props,props['MUMUDD_BDT_MIN'],'MuMuDD')]
 
         # Return the stages.
         if nickname: return self._stages[nickname]

@@ -9,3 +9,5 @@ from Hlt2SharedParticles.TrackFittedBasicParticles import \
 from Hlt2SharedParticles.Ks import KsLLTF, KsDD
 from Hlt2SharedParticles.Lambda import LambdaLLTrackFitted
 from Hlt2SharedParticles.Lambda import LambdaDDTrackFitted
+from Hlt2SharedParticles.TrackFittedBasicParticles import \
+    BiKalmanFittedDownMuons

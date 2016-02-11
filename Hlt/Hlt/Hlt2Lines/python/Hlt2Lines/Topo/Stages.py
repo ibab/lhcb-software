@@ -46,8 +46,9 @@ class FilterMVA(Hlt2ParticleFilter):
     """
     Apply the MVA filter to an n-body combo (also applies 1 < MCOR < 10 GeV)
     """
-    def __init__(self, n, inputs, props, bdtcut_override=None, mu=False,
+    def __init__(self, n, inputs, props, bdtcut_override=None, which=False,
                  nickname=None, preambulo=None):
+
         params = props.get('BDT_%iBODY_PARAMS' % n)
         if params == None: params = props['BDT_PARAMS']
         params = '$PARAMFILESROOT/data/' + params
@@ -67,22 +68,32 @@ class FilterMVA(Hlt2ParticleFilter):
         if bdtcut_override == None:
             pc = ("(in_range(%(CMB_VRT_MCOR_MIN)s, BPVCORRM,"
                   " %(CMB_VRT_MCOR_MAX)s)) & " + bdt)
-        if mu:
-            pc = ("(NINTREE(HASPROTO & HASMUON & ISMUON) > 0)"
-                  "& (in_range(%(CMB_VRT_MCOR_MIN)s, BPVCORRM,"
+        if which:
+            pc = ("(in_range(%(CMB_VRT_MCOR_MIN)s, BPVCORRM,"
                   " %(CMB_VRT_MCOR_MAX)s)) & " + bdt)
+            if which is 'Mu': pc = "(NINTREE(HASPROTO & HASMUON & ISMUON) > 0) & " + pc
+            if which is 'E': pc = "(NINTREE(HASPROTO & ISLONG & (PROBNNe > %(EPROBNNE)s)) > 0) & " + pc
+            if which is 'MuMu': pc = "(NINTREE(HASPROTO & ISLONG & ISMUON & (PROBNNmu > %(MUMUPROBNNMU)s)) > 1) & " + pc
+            if which is 'EE': pc = "(NINTREE(HASPROTO & ISLONG & (PROBNNe > %(EEPROBNNE)s)) > 1) & " + pc
+            if which is 'MuE': 
+                pc = "(NINTREE(HASPROTO & ISLONG & ISMUON & (PROBNNmu > %(MUEPROBNNMU)s)) > 0) & " + \
+                     "(NINTREE(HASPROTO & ISLONG & (PROBNNe > %(MUEPROBNNE)s)) > 0) & " + pc
+            if which is 'MuMuDD':
+                pc = "(NINTREE(ID == 'KS0')==1) & " + bdt
+
+
         from HltTracking.HltPVs import PV3D
         name = 'TopoBDTFilter%d' % n
         if bdtcut_override: name += 'PreFilter'
-        if mu:  name = 'TopoMuBDTFilter%d' % n
+        if which:  name = 'Topo%sBDTFilter%d' % (which,n)
         if nickname == None: nickname = name
-        if mu is False and bdtcut_override is not None:
+        if not which and bdtcut_override is not None:
             Hlt2ParticleFilter.__init__(self, name, pc, inputs, shared = True,
                                         tools = [bdttool],
                                         dependencies = [PV3D('Hlt2')])
         else:
             tos = 'HTOS'
-            if mu: tos = 'MUTOS'
+            if which: tos = which.upper()+'TOS'
             Hlt2ParticleFilter.__init__(self, name, pc, inputs, shared = False,
                                         tools = [bdttool], tistos = tos,
                                         nickname = nickname,
@@ -141,7 +152,7 @@ class CombineTos(Hlt2Combiner):
         merged = [Hlt2MergedStage('Topo2BodyTos', inputs, shared = True)]
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, 'Topo2BodyTos', decays,
-                              merged, shared = True, tistos = 'TOS',
+                              merged, shared = True, tistos = 'ALLTOS',
                               dependencies = [PV3D('Hlt2')],
                               CombinationCut = cc, MotherCut = mc)
 
@@ -198,4 +209,42 @@ class Combine4(Hlt2Combiner):
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, 'Topo4Body', decays, merged,
                               shared = True, dependencies = [PV3D('Hlt2')],
+                              CombinationCut = cc, MotherCut = mc)
+
+
+class CombineDiMuonDD(Hlt2Combiner) :
+  def __init__(self, inputs):
+
+    dc = {}
+    dc['mu+'] = "(PT > %(TRK_PT_MIN)s) & (P > %(TRK_P_MIN)s) & (TRGHOSTPROB < %(MUMUDD_GHOSTPROB)s)"
+    cc = "(ACUTDOCACHI2(20, ''))"
+    mc = "(VFASPF(VCHI2PDOF) < 20) " 
+    from HltTracking.HltPVs import PV3D
+    Hlt2Combiner.__init__(self, 'TopoCombineDiMuonDD', "KS0 -> mu+ mu-", inputs,
+                          dependencies = [PV3D('Hlt2')],
+                          DaughtersCuts  = dc,
+                          CombinationCut = cc,
+                          MotherCut      = mc,
+                          Preambulo = [],
+                          shared = True)
+
+
+class CombineTrackDiMuonDDTos(Hlt2Combiner):
+    def __init__(self, inputs):
+        
+        decays = ['K*(892)0 -> K+ KS0','K*(892)0 -> K- KS0']        
+        cc = ("(APT > %(CMB_PRT_PT_MIN)s) "
+              "& (ACUTDOCACHI2(%(CMB_VRT_CHI2_MAX)s, '')) "
+              "& (AM < %(CMB_VRT_MCOR_MAX)s) ")
+        mc = ("(HASVERTEX)"
+              "& (VFASPF(VCHI2) < %(CMB_VRT_CHI2_MAX)s) ")
+              #"& (BPVVDCHI2 > %(CMB_VRT_VDCHI2_MIN)s) "
+              #"& (in_range(%(CMB_VRT_ETA_MIN)s, BPVETA,"
+              #" %(CMB_VRT_ETA_MAX)s)) ")
+        from Hlt2Lines.Utilities.Hlt2MergedStage import Hlt2MergedStage
+        merged = [Hlt2MergedStage('TopoTrackDiMuonDDTos', inputs, shared = True)]
+        from HltTracking.HltPVs import PV3D
+        Hlt2Combiner.__init__(self, 'TopoTrackDiMuonDDTos', decays,
+                              merged, shared = True, tistos = 'MUMUDDTOS',
+                              dependencies = [PV3D('Hlt2')],
                               CombinationCut = cc, MotherCut = mc)
