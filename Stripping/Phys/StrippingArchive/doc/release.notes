@@ -4,6 +4,9 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+2016-02-11 - Ricardo Vazquez Gomez
+ - Update StrippingCC2DD.py for S21rXp1 
+
 2016-02-03 - Ricardo Vazquez Gomez
  - Update Bd2JpsieeKS for S21rXp1
 
