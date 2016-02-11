@@ -88,7 +88,7 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
     clus = ( m_allowDiags ? m_clusterBuilder.getCluster(lastrow,lastcol) : nullptr );
 
     // last row and same column
-    HPDPixelClusters::Cluster * newclus1 = m_clusterBuilder.getCluster(lastrow,col);
+    auto * newclus1 = m_clusterBuilder.getCluster(lastrow,col);
     if ( newclus1 )
     {
       clus = ( clus && clus != newclus1 ?
@@ -96,7 +96,7 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
     }
 
     // last row and next column
-    HPDPixelClusters::Cluster * newclus2 =
+    auto * newclus2 =
       ( m_allowDiags ? m_clusterBuilder.getCluster(lastrow,nextcol) : nullptr );
     if ( newclus2 )
     {
@@ -105,7 +105,7 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
     }
 
     // this row and last column
-    HPDPixelClusters::Cluster * newclus3 = m_clusterBuilder.getCluster(row,lastcol);
+    auto * newclus3 = m_clusterBuilder.getCluster(row,lastcol);
     if ( newclus3 )
     {
       clus = ( clus && clus != newclus3 ?
@@ -125,10 +125,10 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
   if ( UNLIKELY(m_splitClusters) )
   {
     static HPDPixelClusters::Cluster::PtnVector clustersToSplit;
-    for ( auto * C : pixelData->clusters() )
+    for ( auto & C : pixelData->clusters() )
     {
       if ( C->size() < m_minClusSize || 
-           C->size() > m_maxClusSize ) { clustersToSplit.push_back(C); }
+           C->size() > m_maxClusSize ) { clustersToSplit.push_back(C.get()); }
     }
     if ( !clustersToSplit.empty() ) 
     {

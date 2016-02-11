@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2016-02-11 - Chris Jones
+ - Adapt pixel clustering tool to changes in memory management in the pixel
+   classes.
+
 ! 2016-02-10 - Chris Jones
  - Return objects std::unique_ptr in HPDPixelClusteringTool to enforce
    smart pointer memory management in client code.
