@@ -25,21 +25,12 @@ const double HltJetBuilder::m_jecLimPt[m_jecNPt + 1] = {5, 298};
 // Constructor.
 //=============================================================================
 HltJetBuilder::HltJetBuilder(const string &name, ISvcLocator *svc) 
-: GaudiHistoAlg(name , svc), 
-  m_lokBpvX(LoKi::Cuts::BPV(LoKi::Cuts::VX)),
-  m_lokBpvY(LoKi::Cuts::BPV(LoKi::Cuts::VY)),
-  m_lokBpvZ(LoKi::Cuts::BPV(LoKi::Cuts::VZ)),
-  m_lokBpvPhi(LoKi::Particles::PhiWithTheBestPV()),
-  m_lokBpvEta(LoKi::Particles::PseudoRapidityWithTheBestPV()),
-  m_lokTrkN(LoKi::Cuts::NINTREE(LoKi::Cuts::HASTRACK)),
-  m_fj(0) {
+  : DaVinciHistoAlgorithm(name , svc), m_fj(0) {
   // Declare the input/output properties.
-  declareProperty("Inputs", m_inLocs,
-		  "JB inputs of the form [<class name>, <object type>, "
-		  "<location>].");
-  declareProperty("Output", m_outLoc = "Phys/JB",
-		  "JB output location prefix; objects will be placed in "
-		  "<Output>/Particles, etc.");
+  declareProperty("InputBans", m_inBans,
+		  "Input locations of Particles to ban.");
+  declareProperty("InputTags", m_inTags,
+		  "Input locations of Particle to tag.");
 
   // Declare the jet properties.
   declareProperty("JetPid", m_jetPid = 98,
@@ -77,24 +68,8 @@ HltJetBuilder::HltJetBuilder(const string &name, ISvcLocator *svc)
 // Initialize.
 //=============================================================================
 StatusCode HltJetBuilder::initialize() {
-  // Create the inputs.
-  m_inPrts.clear(); m_inTags.clear();
-  for (unsigned int inLoc = 0; inLoc < m_inLocs.size(); ++inLoc) {
-    Input in(&inLoc, &m_inLocs[inLoc]);
-    if (!in.valid) warning() << in.warn << endmsg;
-    else if (in.name == "Particle") {
-      if (in.ban)      m_inBans.push_back(in);
-      else if (in.tag) m_inTags.push_back(in);
-      else             m_inPrts.push_back(in);
-    } else if (in.name == "RecVertex") {
-      if (!m_inVrts.valid) m_inVrts = in;
-      else warning() << "RecVertex location already specified, skipping input "
-	     " element " << inLoc << "." << endmsg;
-    } else warning() << "Skipping input element " << inLoc 
-		     << " with unknown class '" << in.name << "'." << endmsg;
-  }
-
   // Retrieve the FastJet tool and configure.
+  DaVinciHistoAlgorithm::initialize();
   if (!m_fj) m_fj = tool<IJetMaker>("LoKi::FastJetMaker", this);
   if (!m_fj) return Error("Could not retrieve FastJetMaker.");
   GaudiTool *fj = dynamic_cast<GaudiTool*>(m_fj);
@@ -123,21 +98,6 @@ StatusCode HltJetBuilder::initialize() {
 	  }
     m_jecPvs = 0;
   } else m_jecPvs = -1;
-
-  // Print the configuration, if requested.
-  verbose() << "\n"
-	    << "*-------------------------------------------------------*\n"
-	    << "*              HltJetBuilder Configuration              *\n"
-	    << "*-------------------------------------------------------*\n"
-	    << "Inputs:\n"
-	    << setw(4) << "idx" << setw(15) << "class name" << setw(16) 
-	    << "object type" << setw(40) << "location" << "\n";
-  for (unsigned int inLoc = 0; inLoc < m_inLocs.size(); ++inLoc) {
-    Input in(&inLoc, &m_inLocs[inLoc]);
-    if (in.valid && in.name != "RecVertex") in.print(verbose());
-  }
-  if (m_inVrts.valid) m_inVrts.print(verbose(), false);
-  verbose() << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -145,87 +105,60 @@ StatusCode HltJetBuilder::initialize() {
 // Execute.
 //=============================================================================
 StatusCode HltJetBuilder::execute() {
-  // Clear previous event and create output containers.
-  m_trks.clear(); m_cals.clear();
-  m_jets = new Particles();
-  put(m_jets, m_outLoc + "/Particles");
-
-  // Ban Tracks and CaloClusters from Particles.
-  for (vector<Input>::iterator in = m_inBans.begin(); in != m_inBans.end(); 
-       ++in) {
-    if (!exist<Particle::Range>(in->loc)) {
-      warning() << "Could not retrieve " << in->name << "s from " 
-		<< in->loc << "." << endmsg; continue;}
-    Particle::Range prts = get<Particle::Range>(in->loc);
-    for (Particle::Range::iterator prt = prts.begin(); prt != prts.end();
-	 ++prt) ban(*prt);
+  // Clear previous event, Ban Tracks and CaloClusters from Particles.
+  m_jets.clear(); m_trks.clear(); m_cals.clear();
+  Particle::Range prts;
+  for (unsigned int inLoc = 0; inLoc < m_inBans.size(); ++inLoc) {
+    prts = getIfExists<Particle::Range>(m_inBans[inLoc]);
+    for (Particle::Range::iterator prt = prts.begin(); prt != prts.end(); ++prt)
+      ban(*prt);
   }
 
-  // Assign the input Particles by best PV position.
-  vector<const Particle*> cntrPrts; VrtsPrts vrtsPrts;
-  for (vector<Input>::iterator in = m_inPrts.begin(); in != m_inPrts.end();
-       ++in) {
-    if (!exist<Particle::Range>(in->loc)) {
-      warning() << "Could not retrieve " << in->name << "s from " 
-		<< in->loc << "." << endmsg; continue;}
-    Particle::Range prts = get<Particle::Range>(in->loc);
-    for (Particle::Range::iterator prt = prts.begin(); prt != prts.end(); 
-	 ++prt) {
-      if (banned(*prt)) continue;
-      if (!m_jetVrt || m_lokTrkN(*prt) > 0) cntrPrts.push_back(*prt);
-      else {
-	Gaudi::XYZPoint vrt(m_lokBpvX(*prt), m_lokBpvY(*prt), m_lokBpvZ(*prt));
-	VrtsPrts::iterator vrtPrt = vrtsPrts.find(vrt);
-	if (vrtPrt == vrtsPrts.end()) 
-	  vrtsPrts[vrt] = vector<const Particle*>(1, *prt);
-	else vrtPrt->second.push_back(*prt);
-      }
-    }
-  }
-
-  // Determine the number of PVs.
-  if (m_jecPvs >= 0) {
-    if (m_inVrts.valid) {
-      if (exist<RecVertices>(m_inVrts.loc))
-	m_jecPvs = get<RecVertices>(m_inVrts.loc)->size();
-      else warning() << "Could not retrieve " << m_inVrts.name << "from "
-		     << m_inVrts.loc << "." << endmsg;
-    } else m_jecPvs = vrtsPrts.size();
+  // Assign the input Particles by best PV position (if requested).
+  vector<const Particle*> cntrPrts; VrtsPrts vrtsPrts; prts = particles();
+  for (Particle::Range::iterator prt = prts.begin(); prt != prts.end(); ++prt) {
+    if (banned(*prt)) continue;
+    if (!m_jetVrt || LoKi::Cuts::NINTREE(LoKi::Cuts::HASTRACK)(*prt) > 0) {
+      cntrPrts.push_back(*prt); continue;}
+    const VertexBase *vrt = bestVertex(*prt);
+    if (!vrt) {cntrPrts.push_back(*prt); continue;}
+    VrtsPrts::iterator vrtPrt = vrtsPrts.find(vrt);
+    if (vrtPrt == vrtsPrts.end()) 
+      vrtsPrts[vrt] = vector<const Particle*>(1, *prt);
+    else vrtPrt->second.push_back(*prt);
   }
 
   // Build the jets.
-  if (!m_jetVrt) build(&cntrPrts, 0);
-  else {
-    for (VrtsPrts::iterator vrtPrt = vrtsPrts.begin(); vrtPrt != vrtsPrts.end();
-	 ++vrtPrt) {
+  if (m_jecPvs >= 0) m_jecPvs = primaryVertices().size();
+  if (m_jetVrt) {
+    for (VrtsPrts::iterator vrtPrt = vrtsPrts.begin(); vrtPrt != 
+	   vrtsPrts.end(); ++vrtPrt) {
       vrtPrt->second.insert(vrtPrt->second.end(), cntrPrts.begin(),
 			    cntrPrts.end());
-      build(&vrtPrt->second, &vrtPrt->first);
+      build(&vrtPrt->second, vrtPrt->first);
     }
-  }
+  } else build(&cntrPrts, 0);
 
   // Tag the jets.
-  for (vector<Input>::iterator in = m_inTags.begin(); in != m_inTags.end();
-       ++in) {
-    if (!exist<Particle::Range>(in->loc)) {
-      warning() << "Could not retrieve " << in->name << "s from " 
-		<< in->loc << "." << endmsg; continue;}
-    Particle::Range prts = get<Particle::Range>(in->loc);
+  for (unsigned int inLoc = 0; inLoc < m_inTags.size(); ++inLoc) {
+    prts = getIfExists<Particle::Range>(m_inTags[inLoc]);
     for (Particle::Range::iterator prt = prts.begin(); prt != prts.end(); 
 	 ++prt) {
-      double prtPhi((*prt)->momentum().Phi()), prtEta((*prt)->momentum().Eta());
+      double phi((*prt)->momentum().Phi()), eta((*prt)->momentum().Eta());
       if ((*prt)->endVertex()) {
-	prtPhi = m_lokBpvPhi(*prt); prtEta = m_lokBpvEta(*prt);}
-      for (Particles::iterator jet = m_jets->begin(); jet != m_jets->end();
-	   ++jet) {
-	double jetPhi((*jet)->momentum().Phi());
-	double jetEta((*jet)->momentum().Eta());
-	double dphi(prtPhi - jetPhi), deta(prtEta - jetEta);
-	while (dphi > M_PI) dphi -= 2*M_PI;
-	while (dphi <= -M_PI) dphi += 2*M_PI;
-	bool tag = (*jet)->hasInfo(Particle::FirstJetIndex + 100 + in->index);
-	if (!tag && sqrt(dphi*dphi + deta*deta) < m_jetR)
-	  (*jet)->addInfo(Particle::FirstJetIndex + 100 + in->index, 1);
+	const VertexBase *vrt = bestVertex(*prt);
+	if (vrt) {Gaudi::XYZVector vec = (*prt)->endVertex()->position() - 
+	    vrt->position(); phi = vec.Phi(); eta = vec.Eta();}
+      }
+      for (vector<Particle*>::iterator jet = m_jets.begin(); 
+	   jet != m_jets.end(); ++jet) {
+	phi -= (*jet)->momentum().Phi();
+	eta -= (*jet)->momentum().Eta();
+	while (phi > M_PI) phi -= 2*M_PI;
+	while (phi <= -M_PI) phi += 2*M_PI;
+	bool tag = (*jet)->hasInfo(Particle::FirstJetIndex + 100 + inLoc);
+	if (!tag && sqrt(phi*phi + eta*eta) < m_jetR)
+	  (*jet)->addInfo(Particle::FirstJetIndex + 100 + inLoc, (*prt)->key());
       }
     }
   }
@@ -239,53 +172,22 @@ StatusCode HltJetBuilder::execute() {
 StatusCode HltJetBuilder::finalize() {return StatusCode::SUCCESS;}
 
 //=============================================================================
-// Input structure class for JB.
-//=============================================================================
-// Constructor.
-HltJetBuilder::Input::Input(const unsigned int *idx, const vector<string> *prp)
-  : valid(false), ban(false), tag(false) {
-  if (!idx) {warn += "Invalid pointer to index."; return;}
-  warn = "Skipping input element " + to_string(*idx) + ", ";
-  if (!prp) {warn += "invalid pointer to input list."; return;}
-  if (prp->size() != 3) {warn += "input list size " + to_string(prp->size()) 
-      + ", must be 3."; return;}
-
-  // Set the members.
-  string s0(prp->at(0)), s1(prp->at(1)), s2(prp->at(2));
-  if (s2.empty()) {warn += "empty location."; return;}
-  if (s0 == "Particle" && s1 == "ban") ban = true;
-  else if (s0 == "Particle" && s1 == "use") ban = false;
-  else if (s0 == "Particle" && s1 == "tag") tag = true;
-  else if (s0 == "RecVertex" && s1 == "vertex");
-  else {warn += "incompatible object type, " + s1 + " for class " 
-      + s0 +  "."; return;}
-  name = s0; type = s1; loc = s2; index = *idx; valid = true;
-}
-
-// Print the input configuration to #msg.
-void HltJetBuilder::Input::print(MsgStream &msg, bool idx) {
-  if (idx) msg << setw(4) << index << setw(15) << name << setw(16) << type 
-	       << setw(40) << loc << "\n";
-  else msg << setw(4) << " " << setw(15) << name << setw(16) << type 
-	   << setw(40) << loc << "\n";
-}
-
-//=============================================================================
 // Additional methods.
 //=============================================================================
 // Build jets from #prts and add to the TES.
 void HltJetBuilder::build(const vector<const Particle*> *prts,
-			  const Gaudi::XYZPoint *vrt) {
+			  const VertexBase *vrt) {
   vector<Particle*> jets;
   if (m_fj->makeJets(prts->begin(), prts->end(), jets).isFailure()) return;
   for (vector<Particle*>::iterator jet = jets.begin(); jet != jets.end();
        ++jet) {
     if (m_jetInfo || m_jecPvs >= 0) info(*jet);
     if (m_jecPvs >= 0) jec(*jet);
-    if (vrt) (*jet)->setReferencePoint(*vrt);
+    if (vrt) (*jet)->setReferencePoint(vrt->position());
     else (*jet)->setReferencePoint(Gaudi::XYZPoint(0, 0, 0));
-    if ((*jet)->momentum().Pt() >= m_jetPtMin) m_jets->insert(*jet);
-    else {delete (*jet)->endVertex(); delete *jet;}
+    if ((*jet)->momentum().Pt() >= m_jetPtMin) {
+      markParticle(*jet); m_jets.push_back(*jet);
+    } else {delete (*jet)->endVertex(); delete *jet;}
   }
 }
 

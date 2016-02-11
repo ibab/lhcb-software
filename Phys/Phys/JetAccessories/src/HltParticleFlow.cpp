@@ -14,14 +14,13 @@ DECLARE_ALGORITHM_FACTORY(HltParticleFlow)
 // Constructor.
 //=============================================================================
 HltParticleFlow::HltParticleFlow(const string &name, ISvcLocator *svc) 
-: GaudiHistoAlg(name , svc), m_prtSvc(0), m_prtSta(0), m_inNow(0) {
+: GaudiHistoAlg(name , svc), m_prtSvc(0), m_prtSta(0), m_prtVrt(0), m_inNow(0) {
   // Declare the input/output properties.
   declareProperty("Inputs", m_inLocs,
 		  "PF inputs of the form [<class name>, <object type>, "
 		  "<location>].");
-  declareProperty("Output", m_outLoc = "Phys/PF",
-		  "PF output location prefix; objects will be placed in "
-		  "<Output>/Particles, <Output>/ProtoParticles, etc.");
+  declareProperty("Output", m_outLoc = "Phys/PF/Particles",
+		  "PF output Particle location.");
 
   // Declare the ProtoParticle properties.
   declareProperty("ProBestNames", m_proBestNames,
@@ -121,7 +120,11 @@ StatusCode HltParticleFlow::initialize() {
     else if (in.name == "ProtoParticle") m_inPros.push_back(in);
     else if (in.name == "Track")         m_inTrks.push_back(in);
     else if (in.name == "CaloCluster")   m_inCals.push_back(in);
-    else if (in.name == "IClusTrTable2D") {
+    else if (in.name == "RecVertex") {
+      if (!m_inVrts.valid) m_inVrts = in;
+      else warning() << "RecVertex location already specified, skipping input "
+	     " element " << inLoc << "." << endmsg;
+    } else if (in.name == "IClusTrTable2D") {
       if (in.ecal) {
 	if (!m_inEcalTrks.valid) m_inEcalTrks = in;
 	else warning() << "ECAL IClusTrTable2D location already specified, "
@@ -135,6 +138,14 @@ StatusCode HltParticleFlow::initialize() {
 		     << " with unknown class '" << in.name << "'." << endmsg;
   }
   
+  // Initialize the IRelatedPVFinder, if needed.
+  if (m_inVrts.valid) {
+    if (!m_prtVrt) m_prtVrt = tool<IRelatedPVFinder>
+		     ("GenericParticle2PVRelator<_p2PVWithIPChi2, "
+		      "OfflineDistanceCalculatorName>/P2PVWithIPChi2", this);
+    if (!m_prtVrt) return Error("Could not retrieve RelatedPVFinder tool.");
+  }
+
   // Create the calorimeter response functions, if needed.
   if (m_sprRecover) {
     m_ecalElcE     = TF1("ecalElcE", m_ecalElcEStr.c_str());
@@ -176,6 +187,13 @@ StatusCode HltParticleFlow::initialize() {
     m_proBestPids.push_back(prp->pid().pid()*(prp->charge() >= 0 ? 1 : -1));
   }
 
+  // Determine the output location base.
+  if (m_outLoc.empty()) {
+    m_outLoc = this->name();
+    DaVinci::StringUtils::expandLocation(m_outLoc, "Phys");
+    m_outLoc += "/Particles";
+  } else DaVinci::StringUtils::removeEnding(m_outLoc, "/");
+
   // Print the configuration, if requested.
   verbose() << "\n"
 	    << "*-------------------------------------------------------*\n"
@@ -186,8 +204,10 @@ StatusCode HltParticleFlow::initialize() {
 	    << "object type" << setw(40) << "location" << "\n";
   for (unsigned int inLoc = 0; inLoc < m_inLocs.size(); ++inLoc) {
     Input in(&inLoc, &m_inLocs[inLoc], m_prtSvc);
-    if (in.valid && in.name != "IClusTrTable2D") in.print(verbose());
+    if (in.valid && in.name != "RecVertex" && in.name != "IClusTrTable2D")
+      in.print(verbose());
   }
+  if (m_inVrts.valid) m_inVrts.print(verbose(), false);
   if (m_inEcalTrks.valid) m_inEcalTrks.print(verbose(), false);
   if (m_inHcalTrks.valid) m_inHcalTrks.print(verbose(), false);
   verbose() << "\nProtoParticle best PIDs:\n"
@@ -204,15 +224,26 @@ StatusCode HltParticleFlow::initialize() {
 // Execute.
 //=============================================================================
 StatusCode HltParticleFlow::execute() {
-  // Clear the stored Tracks and CaloClusters from the previous event.
+  // Clear the event and create the output.
   m_trks.clear(); m_calsSprs.clear();
-  // Create the output containers.
   m_prts = new Particles(); m_pros = new ProtoParticles();
   m_hyps = new CaloHypos(); m_cals = new CaloClusters();
   put(m_prts, m_outLoc + "/Particles");
   put(m_pros, m_outLoc + "/ProtoParticles");
   put(m_hyps, m_outLoc + "/CaloHypos");
   put(m_cals, m_outLoc + "/CaloClusters");
+  if (m_prtVrt) {
+    m_prtsVrts = new Particle2Vertex::WTable();
+    put(m_prtsVrts, m_outLoc + "/Particle2VertexRelations");
+  }
+
+  // Retrieve the vertices, if needed.
+  if (m_prtVrt) {
+    RecVertices *vrts(0);
+    if (retrieve(vrts, m_inVrts))
+      m_vrts = VertexBase::ConstVector(vrts->begin(), vrts->end());
+    else m_vrts.clear();
+  }
 
   // Retrieve the Track to CaloCluster relation tables.
   m_trksEcal = 0; m_trksHcal = 0;
@@ -285,6 +316,7 @@ HltParticleFlow::Input::Input(const unsigned int *idx,
   else if (s0 == "ProtoParticle"  && s1 == "best") m = -1;
   else if (s0 == "IClusTrTable2D" && s1 == "ecal") ecal = true;
   else if (s0 == "IClusTrTable2D" && s1 == "hcal") ecal = false;
+  else if (s0 == "RecVertex" && s1 == "vertex");
   else if (s0 != "Particle") {
     const ParticleProperty *prp = svc->find(s1);
     if (!prp) {warn += "unknown particle name " + s1 + "."; return;} 
@@ -349,6 +381,7 @@ void HltParticleFlow::add(const ProtoParticle *pro, const Input &in) {
   Particle *prt(create(pro, pid, m));
   if (!prt) return;
   use(pro, m_sprRecover ? prt : 0);
+  if (m_prtVrt && pro->track()) relate(prt);
 }
 
 // Add a Track to the PF output Particles.
@@ -359,6 +392,7 @@ void HltParticleFlow::add(const Track *trk, const Input &in) {
   Particle *prt(create(trk, pid, m));
   if (!prt) return;
   use(trk, m_sprRecover ? prt : 0);
+  if (m_prtVrt) relate(prt);
 }
 
 // Add a CaloCluster to the PF output Particles.
@@ -571,4 +605,12 @@ void HltParticleFlow::sum(Gaudi::LorentzVector &vec, const CaloCluster *cal) {
   vec.SetPy(vec.Py() + cal->e()*cal->position().y()); 
   vec.SetPz(vec.Pz() + cal->e()*cal->position().z()); 
   vec.SetE(vec.E() + cal->e());
+}
+
+// Relate a Particle with a Track to a RecVertex.
+void HltParticleFlow::relate(const Particle *prt) {
+  const Particle2Vertex::LightWTable table =
+    m_prtVrt->relatedPVs(prt, m_vrts);
+  const Particle2Vertex::LightWTable::Range range = table.relations();
+  m_prtsVrts->merge(range);
 }
