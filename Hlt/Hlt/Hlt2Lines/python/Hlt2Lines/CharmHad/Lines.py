@@ -15,6 +15,7 @@ from ChargedHyperonLines import ChargedHyperonLines
 from D2HHHHHLines import CharmHadD2HHHHHLines
 from XiccLines import CharmHadXiccLines
 from PromptH2LamLamLines import PromptH2LamLamLines
+from D2KsKsHLines import CharmHadD2KsKsHLines
 from SecondaryH2LamPrPiLines import SecondaryH2LamPrPiLines
 
 
@@ -39,6 +40,7 @@ HyperonLines = ChargedHyperonLines()
 D2HHHHHLines = CharmHadD2HHHHHLines()
 XiccLines = CharmHadXiccLines()
 PromptH2LamLamLines = PromptH2LamLamLines()
+D2KsKsHLines = CharmHadD2KsKsHLines()
 SecondaryH2LamPrPiLines = SecondaryH2LamPrPiLines()
 
 
@@ -353,6 +355,7 @@ theseslots.update(HyperonLines.localcuts())
 theseslots.update(D2HHHHHLines.localcuts())
 theseslots.update(XiccLines.slots())
 theseslots.update(PromptH2LamLamLines.localcuts())
+theseslots.update(D2KsKsHLines.localcuts())
 theseslots.update(SecondaryH2LamPrPiLines.localcuts())
 
 class CharmHadLines(Hlt2LinesConfigurableUser):
@@ -408,6 +411,7 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
             self.__lines__.update(D2HHHHHLines.locallines())
             self.__lines__.update(XiccLines.stages())
             self.__lines__.update(PromptH2LamLamLines.locallines())
+            self.__lines__.update(D2KsKsHLines.locallines())
             self.__lines__.update(SecondaryH2LamPrPiLines.locallines())
 
         return self.__lines__[nickname] if nickname else self.__lines__
@@ -417,8 +421,8 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
             self._relatedInfo = {}
             for mod in (D2HHHLines, D2V0HLines, D2V0V0Lines, D02HHLines, D2HHPi0Lines, D02HHHHLines,
                         D2HHHKsLines, Hc2HHHHLines, XSecLines, D2HHHPi0Lines, D2HHLines, D2HHKsLines,
-                        CharmSpectroscopyLines, HyperonLines, D2HHHHHLines, XiccLines,PromptH2LamLamLines, 
-                        SecondaryH2LamPrPiLines):
+                        CharmSpectroscopyLines, HyperonLines, D2HHHHHLines,XiccLines,PromptH2LamLamLines,
+                        D2KsKsHLines, SecondaryH2LamPrPiLines):
                 if hasattr(mod, 'relatedInfo'):
                     self._relatedInfo.update(mod.relatedInfo())
 

@@ -8,6 +8,12 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-02-12 - Maurizio Martinelli
+ - Added D2KsKsHLines and reordered LoKi cuts in Charm 4-body combiner
+A                0   python/Hlt2Lines/CharmHad/D2KsKsHLines.py
+M           201346   python/Hlt2Lines/CharmHad/Lines.py
+M           201346   python/Hlt2Lines/CharmHad/Stages.py
+
 ! 2016-02-12 - Miguel Ramos Pernas
  - Add DiElectron lines
 
@@ -115,7 +121,7 @@ M           201329   python/Hlt2Lines/Radiative/Stages.py
  - Update default track chi2 cut for hadrons in LowMult lines
 
 ! 2015-11-11 - Dan Johnson
- - Fix a typo in the defaults for a prescale for an extremely under-used line in LowMult/Lines.py, for completeness. 
+ - Fix a typo in the defaults for a prescale for an extremely under-used line in LowMult/Lines.py, for completeness.
    Was always superseded by the correct version in the Settings
 
 ! 2015-10-23 - Roel Aaij
@@ -150,7 +156,7 @@ M           201329   python/Hlt2Lines/Radiative/Stages.py
 !========================= Hlt2Lines v10r3 2015-09-22 =========================
 
 ! 2015-09-16 - Simone Stracka
- - CharmHad/Stages.py: removed IPCHI2 cut from second particle in AttachParticle 
+ - CharmHad/Stages.py: removed IPCHI2 cut from second particle in AttachParticle
    class (second particle is neutral)
 
 ! 2015-09-09 - Albert Puig
@@ -174,7 +180,7 @@ M           201329   python/Hlt2Lines/Radiative/Stages.py
    - Eta and Pi0 in CharmSpectroscopy to use TagDecayWithNeutral
 
 ! 2015-08-29 - Mike Sokoloff
-   -  modified CharmHad/Stages.py and CharmHad/D2HHKsLines.py to 
+   -  modified CharmHad/Stages.py and CharmHad/D2HHKsLines.py to
    -  (i)  create "lifetime unbiased" D*+ --> D0,pi+; D0 --> HHKs lines
    -  (ii) filter "generic" D0 --> HHKs lines on mother mass
    -  (iii) remove untagged lines from "stages = "
@@ -215,7 +221,7 @@ M           201329   python/Hlt2Lines/Radiative/Stages.py
 !========================= Hlt2Lines v10r1 2015-08-05 =========================
 
 ! 2015-08-05 - Francesco Dettori
- - Adding Hlt2SingleMuonNoSPD to match correspondent Hlt1 line. 
+ - Adding Hlt2SingleMuonNoSPD to match correspondent Hlt1 line.
 
 ! 2015-08-03 - Patrick Spradlin
   - Moved implementation of the inclusive lines into Lines.py so that
@@ -232,7 +238,7 @@ M           201329   python/Hlt2Lines/Radiative/Stages.py
 !========================= Hlt2Lines v10r0 2015-07-26 =========================
 
 ! 2015-07-23 - Mika Vesterinen
-  - name change Hlt2NonBeamBeamNoBias ->  Hlt2NoBiasNonBeamBeam 
+  - name change Hlt2NonBeamBeamNoBias ->  Hlt2NoBiasNonBeamBeam
 
 ! 2015-07-21 - Pieter David
   - Update DisplVerticesLines to work with thresholds from HltSettings
@@ -252,17 +258,17 @@ M           201329   python/Hlt2Lines/Radiative/Stages.py
  - Moving the Turbo DiMuon lines to DiMuon/Lines.py
 
 ! 2015-07-19 - Jessica Prisciandaro
- -  DiMuonSoftLine: Cut on secondary vertex z position changed. DiMuonSoft/Stages.py modified 
+ -  DiMuonSoftLine: Cut on secondary vertex z position changed. DiMuonSoft/Stages.py modified
 
 ! 2015-07-18 - Mike Sokoloff
   - CharmHad: added knobs to DV4BCombiner class and added relevant dictionary entries
   - in D2HHHKsLines.py, D02HHHHLines.py, XSecLines.py and PID/Lines.py
- 
+
 ! 2015-07-18 - Sascha Stahl
  - CharmHad: Fixed bugs in Stages.py connected to PromptSpectroscopyFilter.
 
 ! 2015-07-17 - Jessica Prisciandaro
- - Fixed bug in DiMuonSoftLine. Removed cut on TTHits 
+ - Fixed bug in DiMuonSoftLine. Removed cut on TTHits
 
 ! 2015-07-17 Patrick Spradlin
   - Use updated lookup tables in the charm inclusive lines.
@@ -273,13 +279,13 @@ M           201329   python/Hlt2Lines/Radiative/Stages.py
 !  2015-07-17  Mike Sokoloff
    -  added minimum p and pT cuts for PromptSpectroscopyFilter in
    - the class definition (Stages.py) and the relevant dictionaries
-   - (CharmSpectroscopy.py)  
+   - (CharmSpectroscopy.py)
 
 !  2015-07-15/16  Mike Sokoloff
    -  modified CharmSpectroscopy.py to split D0 and D*+ --> D0,pi+
    -  lines into separate categories for D0 --> K,pi and D0 --> K,pi,pi,pi
    -  also fixed typos in some decay descriptors
-  
+
 !  2015-07-15  Mike Sokoloff
    - modified Inputs.py, Stages.py, and ChargedHyperons.py to build
    -  DDD charged hyperons in addition to LLL and DDL; also changed
@@ -287,7 +293,7 @@ M           201329   python/Hlt2Lines/Radiative/Stages.py
 
 ! 2015-07-16 - V. Gligorov
  - Switch muon tagged lines from D0+mu to Dstp+mu
- - Add Dstp tag to the D0->V0V0 lines 
+ - Add Dstp tag to the D0->V0V0 lines
 
 ! 2015-07-14 - V. Gligorov
  - Add muon-tagged prompt D0->hh for secondary studies
