@@ -907,7 +907,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
             annconf = ChargedProtoANNPIDConf(probNNSeqName)
             annconf.DataType = self.getProp( "DataType" )
             # Change the following once the right tune is published
-            annconf.NetworkVersions[self.getProp( "DataType" )] = "MC15TuneDev1"
+            annconf.NetworkVersions[self.getProp( "DataType" )] = "MC15TuneDev2"
             annconf.TrackTypes              = ["Long"]
             annconf.RecoSequencer = probNNSeq
             annconf.ProtoParticlesLocation = chargedProtosOutputLocation

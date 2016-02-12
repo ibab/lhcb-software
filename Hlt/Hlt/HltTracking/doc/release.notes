@@ -6,6 +6,7 @@
 
 ! 2016-02-12 Sascha Stahl
   - HltSharedTracking: Use SimplifiedExtrapolator in the common TrackStateProvider.
+  - Hlt2Tracking: Activate ANNPID tuning MC15TuneDev2
 
 ! 2016-02-12 - Roel Aaij
  - Add HltJetConf to used configurables of Hlt2Tracking to ensure proper order
