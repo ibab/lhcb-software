@@ -1628,7 +1628,72 @@ class CharmHad_25ns_Draft2016 :
                    , 'Xicc_BPVVDCHI2_MIN'   :   -1.0
                    , 'Xicc_acosBPVDIRA_MIN' : math.pi / 2.0
                    , 'TisTosSpec'           : "Hlt1.*Track.*Decision%TOS"
-                 }
+                 },
+ 'H2LamLam_LL' : {
+                 'Lam_ALL_PT_MIN'           :  1000.0 * MeV,
+                 'Lam_ALL_MIPCHI2DV_MAX'    :  16.0,
+                 'BPVVDCHI2_MAX'            :  16.0,
+                 'BPVLTIME_MIN'             :  -0.1 * picosecond,
+                 'BPVLTIME_MAX'             :  0.1 * picosecond,
+                 'ASUMPT_MIN'               :  2000 * MeV,
+                 'AM_MAX'                   :  2310 * MeV,
+                 'Mass_M_MIN'               :  1789.0 * MeV,
+                 'Mass_M_MAX'               :  2300.0 * MeV,
+                },
+ 'H2LamLam_DD' : {
+                 'Lam_ALL_PT_MIN'           :  1000.0 * MeV,
+                 'Lam_ALL_MIPCHI2DV_MAX'    :  16.0,
+                 'BPVVDCHI2_MAX'            :  16.0,
+                 'BPVLTIME_MIN'             :  0.2 * picosecond,
+                 'BPVLTIME_MAX'             :  0.2 * picosecond,
+                 'ASUMPT_MIN'               :  2000 * MeV,
+                 'AM_MAX'                   :  2310 * MeV,
+                 'Mass_M_MIN'               :  1789.0 * MeV,
+                 'Mass_M_MAX'               :  2300.0 * MeV,
+                },
+ 'LambdaPrPiLLLL' : {
+              'TisTosSpec'               : [],
+              'AM_MIN'                   :  2180. * MeV,
+              'AM_MAX'                   :  2240. * MeV,
+              'ASUMPT_MIN'               :  1500 * MeV,
+              'Mother_PT_MIN'            :  1800 * MeV,
+              'Mother_BPVDIRA_MIN'       :  0.9994,
+              'Mother_BPVVDCHI2_MIN'     :  20.0,
+              'Mother_VCHI2PDOF_MAX'     :  20.0,
+              'Mother_BPVLTIME_MIN'      :  0.1 * picosecond,
+              'LambdaDeltaZ_MIN'         :  -2.0 * mm,
+              'HHMaxDOCA'                :  0.200 * mm,
+              'HHMass_MAX'               :  1125. * MeV,
+              },
+ 'LambdaPrPiDDLL' : {
+              'TisTosSpec'               : [],
+              'AM_MIN'                   :  2180. * MeV,
+              'AM_MAX'                   :  2240. * MeV,
+              'ASUMPT_MIN'               :  1500 * MeV,
+              'Mother_PT_MIN'            :  1800 * MeV,
+              'Mother_BPVDIRA_MIN'       :  0.9994,
+              'Mother_BPVVDCHI2_MIN'     :  20.0,
+              'Mother_VCHI2PDOF_MAX'     :  20.0,
+              'Mother_BPVLTIME_MIN'      :  0.1 * picosecond,
+              'LambdaDeltaZ_MIN'         :  -2.0 * mm,
+              'HHMaxDOCA'                :  0.200 * mm,
+              'HHMass_MAX'               :  1125. * MeV,
+              },
+ 'LambdaPrPiDDDD' : {
+              'TisTosSpec'               : [],
+              'AM_MIN'                   :  2180. * MeV,
+              'AM_MAX'                   :  2240. * MeV,
+              'ASUMPT_MIN'               :  1500 * MeV,
+              'Mother_PT_MIN'            :  1800 * MeV,
+              'Mother_BPVDIRA_MIN'       :  0.9994,
+              'Mother_BPVVDCHI2_MIN'     :  20.0,
+              'Mother_VCHI2PDOF_MAX'     :  20.0,
+              'Mother_BPVLTIME_MIN'      :  0.1 * picosecond,
+              'LambdaDeltaZ_MIN'         :  -2.0 * mm,
+              'HHMaxDOCA'                :  0.200 * mm,
+              'HHMass_MAX'               :  1125. * MeV,
+              }
+
             }
         }   )
 
