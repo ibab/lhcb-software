@@ -56,7 +56,7 @@ class QuadMuonNoIP(Hlt2Combiner):
   def __init__(self, name, inputs):
 
     cc = "APT > %(PT)s"
-    mc =  ("(HASVERTEX)" +
+    mc =  ("(HASVERTEX)" 
            "& (VFASPF(VCHI2) < %(VChi2)s) ") 
     Hlt2Combiner.__init__(self, name, "B0 -> KS0 KS0", inputs,
                           dependencies = [PV3D('Hlt2')],
