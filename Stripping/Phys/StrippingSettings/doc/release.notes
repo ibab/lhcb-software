@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-02-12 Andrea Contu
+ - added configuration and dbase for S25
+
 ! 2015-02-12 Ricardo Vazquez Gomez
  - update dictionaries in RD for incremental stripping of Run 1
 
