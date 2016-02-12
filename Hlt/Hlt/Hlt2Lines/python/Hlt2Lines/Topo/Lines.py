@@ -1,5 +1,8 @@
 from Run1Lines import Run1TopoLines
 from GaudiKernel.SystemOfUnits import MeV, picosecond, mm
+
+# Topo Lines written by Phil Ilten and Mike Williams (mwill@mit.edu)
+
 Run1Topo = Run1TopoLines()
 slots = Run1Topo.slots()
 slots['Common'].update({
