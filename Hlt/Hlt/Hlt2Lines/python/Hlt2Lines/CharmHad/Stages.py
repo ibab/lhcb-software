@@ -749,11 +749,13 @@ class HHKshCombiner(Hlt2Combiner):
     def __init__(self, name, decay, inputs):
 
 ## HHKs mother cuts
-        mc =    ("(VFASPF(VCHI2PDOF) < %(D_VCHI2PDOF_MAX)s)" +
+        mc =    (
+                 "   (PT > %(D_PT_MIN)s )" +
+                 " & (CHI2VXNDOF < %(D_VCHI2PDOF_MAX)s)" +
                  " & (BPVDIRA > %(D_BPVDIRA_MIN)s )" +
                  " & (BPVVDCHI2 > %(D_BPVVDCHI2_MIN)s )" +
-                 " & (PT > %(D_PT_MIN)s )" +
-                 " & (BPVLTIME() > %(D_BPVLTIME_MIN)s )")
+                 " & (BPVLTIME() > %(D_BPVLTIME_MIN)s )"
+                )
 
         c12Cut = ("(AM <  %(HHMass_MAX)s)" +
                   " & (ADOCAMAX('') < %(HHMaxDOCA)s)")
@@ -1273,7 +1275,9 @@ class H2LambdaLambdaCombiner(Hlt2Combiner):
                  " & ((APT1+APT2) > %(ASUMPT_MIN)s )" )
         mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
                  " & (BPVVDCHI2 < %(BPVVDCHI2_MAX)s )" +
-                 " & (BPVLTIME() < %(BPVLTIME_MAX)s )")
+                 " & (BPVLTIME() > %(BPVLTIME_MIN)s )" +
+                 " & (BPVLTIME() < %(BPVLTIME_MAX)s )" 
+                ) 
         if lldd == True :
             mc = "(INTREE((ABSID=='pi+') & (ISLONG)) & INTREE((ABSID=='pi+') & (ISDOWN))) & " + mc
         from HltTracking.HltPVs import PV3D
@@ -2178,5 +2182,75 @@ class Xicc2HcHHHHCombiner(Hlt2Combiner) : # {
     # }
 # }
 
+## ------------------------------------------------------------------------- ##
+# The HHLambdaCombiner is designed for H-dibaryon --> Lambda,p,pi- below
+# threshold for Lambda,Lambda decay.  Such dibaryons are expected to have
+# have lifetimes a bit short than those of the Lamba as there are
+# two stange quarks which can decay rather than one. A similar combiner
+# might be useful for Lambda_b or Cascade_b^0 --> Lambda,pi-,pi+;
+# Lambda,K-,K+; or Lambda,p+,pi- decays. Am not sure if the topo
+# triggers use downstream Lambdas.
+
+from Configurables import DaVinci__N3BodyDecays as N3BodyDecays
+class HHLambdaCombiner(Hlt2Combiner):
+    def __init__(self, name, decay, inputs, nickname = None):
+
+## HHLambda mother cuts
+        mc =    (
+                 "   (PT > %(Mother_PT_MIN)s )" +
+                 " & (CHI2VXNDOF < %(Mother_VCHI2PDOF_MAX)s)" +
+                 " & (BPVDIRA > %(Mother_BPVDIRA_MIN)s )" +
+                 " & (BPVVDCHI2 > %(Mother_BPVVDCHI2_MIN)s )" +
+                 " & (BPVLTIME() > %(Mother_BPVLTIME_MIN)s )" +
+                 " & (CHILD(VFASPF(VZ),3)-VFASPF(VZ) > %(LambdaDeltaZ_MIN)s )")
+
+        c12Cut = ("(AM <  %(HHMass_MAX)s)" +
+                  " & (ADOCAMAX('') < %(HHMaxDOCA)s)")
+
+        cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
+                 " & ((APT1+APT2+APT3) > %(ASUMPT_MIN)s )")
+
+        from HltTracking.HltPVs import PV3D
+
+        Hlt2Combiner.__init__(self, name, decay, inputs,
+                     dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
+                     shared = True,
+                     tistos = 'TisTosSpec', combiner = N3BodyDecays,
+                     nickname = nickname,
+                     Combination12Cut =  c12Cut,
+                     CombinationCut = cc,
+                     MotherCut = mc, Preambulo = [])
+
+
+## ------------------------------------------------------------------------- ##
+##
+##  and now, some instantiations
+H2LambdaPrPi_LLLL  = HHLambdaCombiner('LamPrPiLLLL', decay="[D0 ->  Lambda0 p+ pi-]cc",
+                     inputs=[SharedTighterDetachedLcChild_p, SharedDetachedLcChild_p,
+                             CharmHadSharedSecondaryLambdaLL], nickname='LambdaPrPiLLLL')
+H2LambdaPrPi_DDLL  = HHLambdaCombiner('LamPrPiDDLL', decay="[D0 ->  Lambda0 p+ pi-]cc",
+                     inputs=[SharedTighterDetachedLcChild_p, SharedDetachedLcChild_p,
+                             CharmHadSharedSecondaryLambdaDD], nickname='LambdaPrPiDDLL')
+
+from Inputs import Hlt2DownProtons
+
+H2LambdaPrPi_DDDD  = HHLambdaCombiner('LamPrPiDDDD', decay="[D0 ->  Lambda0 p+ pi-]cc",
+                     inputs=[Hlt2DownProtons, Hlt2DownPions,
+                             CharmHadSharedSecondaryLambdaDD], nickname='LambdaPrPiDDDD')
+
+
+##  Let's do the same for Lambda,pi+,p
+H2LambdaPiPr_LLLL  = HHLambdaCombiner('LamPiPrLLLL', decay="[D0 ->  Lambda0 p- pi+]cc",
+                     inputs=[SharedTighterDetachedLcChild_p, SharedDetachedLcChild_p,
+                             CharmHadSharedSecondaryLambdaLL], nickname='LambdaPrPiLLLL')
+H2LambdaPiPr_DDLL  = HHLambdaCombiner('LamPiPrDDLL', decay="[D0 ->  Lambda0 p- pi+]cc",
+                     inputs=[SharedTighterDetachedLcChild_p, SharedDetachedLcChild_p,
+                             CharmHadSharedSecondaryLambdaDD], nickname='LambdaPrPiDDLL')
+
+from Inputs import Hlt2DownProtons
+
+H2LambdaPiPr_DDDD  = HHLambdaCombiner('LamPiPrDDDD', decay="[D0 ->  Lambda0 p- pi+]cc",
+                     inputs=[Hlt2DownProtons, Hlt2DownPions,
+                             CharmHadSharedSecondaryLambdaDD], nickname='LambdaPrPiDDDD')
 
 
