@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-02-12 - Miguel Ramos Pernas
+ - Add DiElectron lines
+
 ! 2016-02-12 - Carla Marin
  - Really add Hypb2L0HGamma module:
 A                    python/Hlt2Lines/Radiative/Hypb2L0HGamma.py
