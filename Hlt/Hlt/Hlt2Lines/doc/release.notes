@@ -8,10 +8,13 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-02-12 - Roel Aaij
+ - Update CaloTest folder to work and not throw warnings.
+ - Also add a line to the CaloTest folder to test running the particle flow.
 
 ! 2016-02-12 - Federico Redi
-      added a Majorana subdirectory for same sign muon searches
-      including down muons candidates
+ - Added the Majorana subdirectory containing lines for same sign muon
+   searches including downstream muon candidates.
 
 ! 2016-02-12 - Maurizio Martinelli
  - Added D2KsKsHLines and reordered LoKi cuts in Charm 4-body combiner
