@@ -9,6 +9,12 @@
 !----------------------------------------------------------------------------
 
 ! 2016-02-12 - Carla Marin
+ - Really add Hypb2L0HGamma module:
+A                    python/Hlt2Lines/Radiative/Hypb2L0HGamma.py
+ - Change all VFASPF(VCHI2PDOF) by CHI2VXNDOF in Stages:
+M           201338   python/Hlt2Lines/Radiative/Stages.py
+
+! 2016-02-12 - Carla Marin
  - Added line Hypb2L0HGamma to radiative module:
 ?                    python/Hlt2Lines/Radiative/Hypb2L0HGamma.py
 M           201329   python/Hlt2Lines/Radiative/Lines.py

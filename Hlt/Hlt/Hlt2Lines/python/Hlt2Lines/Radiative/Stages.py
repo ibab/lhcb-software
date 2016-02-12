@@ -135,7 +135,7 @@ class HHCombiner(Hlt2Combiner):
         daughters_cuts = {'pi+' : "ALL", 'K+' : "ALL"}
         combination_cut = ("(ACUTDOCACHI2(docachi2, ''))"
                            " & (ADAMASS('%(PARTICLE)s') < wide_mass)")
-        mother_cut = ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)"
+        mother_cut = ("(CHI2VXNDOF < %(VCHI2PDOF_MAX)s)"
                       " & (PT > %(PT_MIN)s)"
                       " & (ADMASS('%(PARTICLE)s') < %(MASS_WIN)s)")
         if not tistos:
@@ -159,7 +159,7 @@ class Lambda0Filter(Hlt2ParticleFilter):
     def __init__(self, name, inputs):
         lambda0_cut = """(PT > %(PT_MIN)s) &
                          (DOCA(1,2) < %(DOCA_MAX)s) &
-                         (VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s) &
+                         (CHI2VXNDOF < %(VCHI2PDOF_MAX)s) &
                          INTREE((ABSID=='p+') & (PIDp > %(P_PIDP_MIN)s)) &
                          (2 == NINTREE((ISBASIC) &
                                        (P > %(TRACK_P_MIN)s) &
@@ -215,7 +215,7 @@ class ChargedHyperonL0HCombiner(Hlt2Combiner):
                              "& (MIPCHI2DV(PRIMARY) > %(TRACK_IPCHI2_MIN)s)"}
         cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
                  " & ((APT1+APT2+APT3) > %(ASUMPT_MIN)s )" )
-        mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
+        mc =    ("(CHI2VXNDOF < %(VCHI2PDOF_MAX)s)" +
                  " & (P > %(PMIN)s )" +
                  " & (PT > %(PTMIN)s )" +
                  " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
@@ -251,7 +251,7 @@ class B2XGammaCombiner(RadiativeCombiner):
     def __init__(self, name, decay, vector_meson, converted=False):
         combination_cut = ("(ACUTDOCACHI2(docachi2, ''))"
                            " & (ADAMASS('%(PARTICLE)s') < wide_mass)")
-        mother_cut = ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)"
+        mother_cut = ("(CHI2VXNDOF < %(VCHI2PDOF_MAX)s)"
                       " & (PT > %(PT_MIN)s) "
                       " & (ADMASS('%(PARTICLE)s') < %(MASS_WIN)s)"
                       " & (BPVIPCHI2() < %(BPVIPCHI2_MAX)s)"
@@ -274,7 +274,7 @@ class B2XGammaUnbiasedCombiner(RadiativeCombiner):
         combination_cut = ("(ACUTDOCACHI2(docachi2, ''))"
                            " & (ADAMASS('%(PARTICLE)s') < wide_mass)"
                            " & (ASUM(PT)>%(SUM_PT_MIN)s)")
-        mother_cut = ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)"
+        mother_cut = ("(CHI2VXNDOF < %(VCHI2PDOF_MAX)s)"
                       " & (PT > %(PT_MIN)s) "
                       " & (ADMASS('%(PARTICLE)s') < %(MASS_WIN)s)"
                       " & (BPVLTIME()>%(TAU_MIN)s)")
@@ -340,7 +340,7 @@ class TopoCombiner(RadiativeCombiner):
             decay = 'B0 -> D*(2010)+ gamma'
         comb_cut = "(APT > %(APT_MIN)s) & (AM < %(CORRM_MAX)s)"
         mother_cut = """(HASVERTEX)
-                        & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)
+                        & (CHI2VXNDOF < %(VCHI2PDOF_MAX)s)
                         & (in_range(%(ETA_MIN)s, BPVETA, %(ETA_MAX)s))
                         & (in_range(%(CORRM_MIN)s, BPVCORRM, %(CORRM_MAX)s))
                         & (BPVDIRA > %(DIRA_MIN)s)
