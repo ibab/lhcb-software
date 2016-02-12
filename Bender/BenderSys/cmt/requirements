@@ -22,29 +22,21 @@
 #
 # =============================================================================
 package       BenderSys
-version       v27r0p1
+version       v28r0
 author        Vanya BELYAEV
-
-# =============================================================================
-# TEMPORARY stuff
-# =============================================================================
-#use           LHCbMath       v3r60   Kernel
-#use           AnalysisPython v2r39   Phys 
-#3use           Ostap          v1r11   Analysis
-# =============================================================================
 
 
 # =========== Bender Application itself =======================================
-use           Bender         v27r0p1 Phys 
+use           Bender         v28r0 Phys 
   
 # =========== Bender-based tools and scripts ==================================
-use           BenderTools    v27r0p1 Phys 
+use           BenderTools    v28r0 Phys 
 
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v27r0p1 Ex
+use           BenderExample  v28r0 Ex
 
 # =========== Bender tutorial =================================================
-use           BenderTutor    v26r2   Tutorial
+use           BenderTutor    v28r0   Tutorial
 
 # =========== template of user module/script ==================================
 use           BenderUser     v26r3   Phys 

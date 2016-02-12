@@ -23,6 +23,28 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v28r0> 2016-02-12 Bender v28r0 based on the DaVinci v39r0</A>
+<ul>						 
+<li>Based on the DaVinci v39r0</li>
+<li>Many changes and improvements for BenderScript</li>
+<li>remove <code>dst-explorer</code> </li>
+<li>fix all Bender-based scripts </li>
+<li>new options are added to <code>bender</code> script</li>
+<li>a lot of new commands is availabe for 
+     interactive <code>bender<code> sessions and scripts </li>
+<li> new ``with-context'' mode is added for execution of bender 
+     scripts. It allows to write really highly compact code, 
+     basically the contentof history file could directly executed</li>
+<li>completely rewrite all machinery of history files</li>
+<li>define default startup files  
+    ./.bender.py and $HOME/.bender.py - Bender will always 
+     read them </li>
+<li> Tutorials for Bender (updated) and for BenderScript (new)
+     are available at 
+     https://twiki.cern.ch/twiki/bin/view/LHCb/LHCbSoftwareTutorials
+<ul>						 
+
+
 <A NAME=v27r0p1> 2015-11-02 Bender v27r0[1 based on the DaVinci v38r0</A>
 <ul>						 
 <li>Based on the DaVinci v38r0</li>
