@@ -14,7 +14,7 @@
 #include <limits>
 
 // Include VDT here so it gets into all TMVA compilations
-//#include "vdt/exp.h"
+#include "vdt/exp.h"
 
 // TMVA IClassifierReader interface
 #include "TMVAIClassifierReader.h"
@@ -72,8 +72,6 @@ namespace ANNGlobalPID
       {
         return std::unique_ptr<IClassifierReader>( new TMVATYPE(inputs) ); 
       }
-      /// Destructor
-      //virtual ~TMVAFactory() { }
     };
     
   public:
@@ -87,6 +85,9 @@ namespace ANNGlobalPID
     // Seperated out to allow seperate compilation units (as the MVAs 
     // themselves can be heavy so compiling all at once does not scale well).
 
+    // NB. Remember any new methods added here for new tunes needs to
+    //     be called from the constructor in TMVAImpFactory.cpp
+
     /// Add MC12TuneV2 networks
     void addMC12TuneV2( );
 
@@ -98,6 +99,9 @@ namespace ANNGlobalPID
 
     /// Add Bs->MuMu Developmental V2 networks
     void addBs2MuMuDev2( );
+
+    /// Add MC15TuneV1 networks
+    void addMC15TuneV1( );
     
   private:
 
