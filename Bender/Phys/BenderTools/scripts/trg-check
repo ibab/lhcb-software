@@ -103,8 +103,14 @@ if 0 >= config.nEvents and -1 != config.nEvents : config.nEvents = 1000
 config.OutputLevel += 1 
 if config.Quiet :
     logger.info ( 'Script to collect/check trigger decisions for certain lines')
+    import logging
+    logging.disable ( logging.INFO  )
     config.OutputLevel = 5 
 else :
+    
+    import logging
+    logging.disable ( logging.DEBUG )
+
     logger.info ( 100*'*')
     logger.info ( __doc__ ) 
     logger.info ( 100*'*')
@@ -129,8 +135,6 @@ else                 : from Bender.Main     import *
 #
 gaudi = appMgr()
 
-print 'CONFIG:', config
-
 ## create algorithm 
 ALG    = chkTrg()
 ## .. and configure it 
@@ -138,8 +142,6 @@ kwargs = { 'Inputs'          : [ config.teslocation ] ,
            'PropertiesPrint' : True                   }
 if config.RootInTES : kwargs.update( { 'RootInTES' : config.RootInTES } )
 alg = ALG ( 'CheckTrg', **kwargs )
-
-print 'KWARGS: %s ' % kwargs
 
 #
 ## run events
