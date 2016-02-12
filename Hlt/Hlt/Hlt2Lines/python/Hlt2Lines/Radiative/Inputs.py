@@ -14,7 +14,9 @@ from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedPhotonsF
 from Hlt2SharedParticles.ConvPhoton import ConvPhotonLL as Hlt2DiElectron_LL
 from Hlt2SharedParticles.ConvPhoton import ConvPhotonDD as Hlt2DiElectron_DD
 from Hlt2SharedParticles.Lambda import LambdaLLTrackFitted as LambdaLL
-# from Hlt2SharedParticles.Lambda import LambdaDDTrackFitted as LambdaDD
+from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedDownKaons as Hlt2DownKaons
+from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedDownPions as Hlt2DownPions
+from Hlt2SharedParticles.Lambda import LambdaDDTrackFitted as LambdaDD
 
 # No PIDs
 # from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedRichProtons as Hlt2LooseProtons

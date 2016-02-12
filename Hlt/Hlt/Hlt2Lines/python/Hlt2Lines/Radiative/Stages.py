@@ -121,6 +121,12 @@ class ConvPhotonAll(Hlt2MergedStage):
                                             [ConvPhotonLL(), ConvPhotonDD()],
                                             shared=True)
 
+# Merge hyperons
+class HyperonAll(Hlt2MergedStage):
+    def __init__(self, name, inputs):
+        super(HyperonAll, self).__init__('Radiative_HyperonAll_%s' %name,
+                                         inputs)
+
 
 # Build the vector mesons
 class HHCombiner(Hlt2Combiner):
@@ -151,17 +157,17 @@ class HHCombiner(Hlt2Combiner):
 class Lambda0Filter(Hlt2ParticleFilter):
     """Filter L0."""
     def __init__(self, name, inputs):
-        lambda0_cut = """(DOCA(1,2) < %(DOCA_MAX)s) &
-                         (BPVVDCHI2>%(VDCHI2_MIN)s) &
+        lambda0_cut = """(PT > %(PT_MIN)s) &
+                         (DOCA(1,2) < %(DOCA_MAX)s) &
                          (VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s) &
-                         (PT > %(PT_MIN)s) &
+                         INTREE((ABSID=='p+') & (PIDp > %(P_PIDP_MIN)s)) &
                          (2 == NINTREE((ISBASIC) &
                                        (P > %(TRACK_P_MIN)s) &
                                        (PT > %(TRACK_PT_MIN)s) &
                                        (TRCHI2DOF < %(TRACK_TRCHI2DOF_MAX)s) &
                                        (MIPCHI2DV(PRIMARY) > %(TRACK_IPCHI2_MIN)s))) &
-                         INTREE((ABSID=='p+') & (PIDp > %(P_PIDP_MIN)s)) &
-                         (MIPDV(PRIMARY) > %(IP_MIN)s)"""
+                         (MIPDV(PRIMARY) > %(IP_MIN)s) &
+                         (BPVVDCHI2>%(VDCHI2_MIN)s)"""
         super(Lambda0Filter, self).__init__('Radiative_%s' % name,
                                             lambda0_cut,
                                             inputs,
@@ -169,7 +175,64 @@ class Lambda0Filter(Hlt2ParticleFilter):
                                             shared=True)
 
 
-# Build the B mesons
+class SecondaryLambdaFilter(Hlt2ParticleFilter) :                                
+    """
+    Filter Lambda candidates for building hyperons on
+           decay time wrt PV                    BPVLTIME
+           vertex position                      VFASPF
+    Always creates a shared instance of the filter.    
+    Configuration dictionaries must contain the following keys:
+        'DecayTime_MIN' :  lower limit on decay time wrt PV
+        'VZ_MIN'        :  lower limit vertex z position
+        'VZ_MAX'        :  upper limit vertex z position
+    """
+    def __init__(self, name, inputs):
+        cut = ("  (VFASPF(VZ) > %(VZ_MIN)s)"+
+               "& (VFASPF(VZ) < %(VZ_MAX)s)"+
+               "& (ADMASS('Lambda0') < %(MASSW)s)"+
+               "& (BPVLTIME() > %(DecayTime_MIN)s)" )
+        from HltTracking.HltPVs import PV3D
+        super(SecondaryLambdaFilter, self).__init__(name,
+                                                    cut,
+                                                    inputs,
+                                                    shared = True,
+                                                    dependencies = [PV3D('Hlt2')],
+                                                    UseP2PVRelations = False)
+
+#Build charged hyperons
+class ChargedHyperonL0HCombiner(Hlt2Combiner):  
+    def __init__(self, name, decay,inputs):
+        dc =    {'Lambda0' : "ALL",
+                 'pi+'     : "(MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)" + 
+                             "& (PT > %(TRPT_MIN)s)" +
+                             "& (P > %(TRP_MIN)s)" +
+                             "& (TRCHI2DOF < %(TRCHI2DOF_MAX)s)" +
+                             "& (MIPCHI2DV(PRIMARY) > %(TRACK_IPCHI2_MIN)s)",
+                 'K+'      : "(MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)" +
+                             "& (PT > %(TRPT_MIN)s)" +
+                             "& (P > %(TRP_MIN)s)" +
+                             "& (TRCHI2DOF < %(TRCHI2DOF_MAX)s)" +
+                             "& (MIPCHI2DV(PRIMARY) > %(TRACK_IPCHI2_MIN)s)"}
+        cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
+                 " & ((APT1+APT2+APT3) > %(ASUMPT_MIN)s )" )
+        mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
+                 " & (P > %(PMIN)s )" +
+                 " & (PT > %(PTMIN)s )" +
+                 " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & (BPVVDCHI2 > %(BPVVDCHI2_MIN)s )" +
+                 " & (BPVLTIME() > %(BPVLTIME_MIN)s )")
+        from HltTracking.HltPVs import PV3D
+        super(ChargedHyperonL0HCombiner, self).__init__(name,
+                                                        decay,
+                                                        inputs,
+                                                        dependencies = [PV3D('Hlt2')],
+                                                        tistos = [],
+                                                        DaughtersCuts = dc,
+                                                        CombinationCut = cc,
+                                                        MotherCut = mc)
+
+
+# Build the B hadrons
 class RadiativeCombiner(Hlt2Combiner):
     def __init__(self, name, decay, inputs, converted_photons, **combiner_args):
         if converted_photons:
@@ -190,9 +253,9 @@ class B2XGammaCombiner(RadiativeCombiner):
                            " & (ADAMASS('%(PARTICLE)s') < wide_mass)")
         mother_cut = ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)"
                       " & (PT > %(PT_MIN)s) "
-                      " & (BPVDIRA > cos_dira_angle)"
+                      " & (ADMASS('%(PARTICLE)s') < %(MASS_WIN)s)"
                       " & (BPVIPCHI2() < %(BPVIPCHI2_MAX)s)"
-                      " & (ADMASS('%(PARTICLE)s') < %(MASS_WIN)s)")
+                      " & (BPVDIRA > cos_dira_angle)")
         super(B2XGammaCombiner, self).__init__(name,
                                                decay,
                                                [vector_meson],
@@ -213,8 +276,8 @@ class B2XGammaUnbiasedCombiner(RadiativeCombiner):
                            " & (ASUM(PT)>%(SUM_PT_MIN)s)")
         mother_cut = ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)"
                       " & (PT > %(PT_MIN)s) "
-                      " & (BPVLTIME()>%(TAU_MIN)s)"
-                      " & (ADMASS('%(PARTICLE)s') < %(MASS_WIN)s)")
+                      " & (ADMASS('%(PARTICLE)s') < %(MASS_WIN)s)"
+                      " & (BPVLTIME()>%(TAU_MIN)s)")
         super(B2XGammaUnbiasedCombiner, self).__init__(name,
                                                        decay,
                                                        [vector_meson],
@@ -246,6 +309,28 @@ class Lb2L0GammaCombiner(RadiativeCombiner):
                                                  ParticleCombiners={ '' : 'ParticleAdder'})
 
 
+class Hypb2L0HGammaCombiner(RadiativeCombiner):
+    """Build the Xi_b- from photons and input Xi- baryons.
+
+    Use ParticleAdder.
+
+    """
+    def __init__(self, name, decay, p):
+        mother_cut = """(PT > %(PT_MIN)s) &
+                        (P > %(P_MIN)s) &
+                        (MTDOCACHI2(1) < %(MTDOCACHI2_MAX)s)"""
+        comb_cut = """(ASUM(PT) > %(SUM_PT_MIN)s) &
+                      (APT > %(PT_MIN)s) &
+                      (ADAMASS('%(PARTICLE)s') < %(MASS_WIN)s)"""
+        super(Hypb2L0HGammaCombiner, self).__init__(name,
+                                                    decay,
+                                                    [p],
+                                                    False,
+                                                    CombinationCut=comb_cut,
+                                                    MotherCut=mother_cut,
+                                                    ParticleCombiners={ '' : 'ParticleAdder'})
+
+
 class TopoCombiner(RadiativeCombiner):
     """Combine a photon and an nbody object a la topo."""
     def __init__(self, name, n_bodies, nbody_object, converted=False):
@@ -255,11 +340,11 @@ class TopoCombiner(RadiativeCombiner):
             decay = 'B0 -> D*(2010)+ gamma'
         comb_cut = "(APT > %(APT_MIN)s) & (AM < %(CORRM_MAX)s)"
         mother_cut = """(HASVERTEX)
-                        & (VFASPF(VCHI2) < %(VCHI2PDOF_MAX)s)
-                        & (BPVVDCHI2 > %(VDCHI2_MIN)s)
+                        & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)
                         & (in_range(%(ETA_MIN)s, BPVETA, %(ETA_MAX)s))
                         & (in_range(%(CORRM_MIN)s, BPVCORRM, %(CORRM_MAX)s))
-                        & (BPVDIRA > %(DIRA_MIN)s)"""
+                        & (BPVDIRA > %(DIRA_MIN)s)
+                        & (BPVVDCHI2 > %(VDCHI2_MIN)s)"""
         super(TopoCombiner, self).__init__(name,
                                            decay,
                                            [nbody_object],

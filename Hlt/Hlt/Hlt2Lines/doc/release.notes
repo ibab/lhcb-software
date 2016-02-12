@@ -8,6 +8,14 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-02-12 - Carla Marin
+ - Added line Hypb2L0HGamma to radiative module:
+?                    python/Hlt2Lines/Radiative/Hypb2L0HGamma.py
+M           201329   python/Hlt2Lines/Radiative/Lines.py
+M           201329   python/Hlt2Lines/Radiative/Inputs.py
+M           201329   python/Hlt2Lines/Radiative/Stages.py
+ - Reordered LoKi cuts from more to less CPU efficient in all stages
+
 ! 2016-02-09 - Mike Sokoloff
   added a BHad subdirectory for exclusive decays
   initial use case is B --> p,p,pbar,pbar

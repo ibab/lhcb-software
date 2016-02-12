@@ -15,6 +15,7 @@ from B2XGamma import B2XGammaLines
 from B2GammaGamma import B2GammaGammaLines
 from Lb2L0Gamma import Lb2L0GammaLines
 from Inclusive import RadiativeInclusiveLines
+from Hypb2L0HGamma import Hypb2L0HGammaLines
 
 cuts = {'Common': {'TrackTisTos' : 'Hlt1(Two)?TrackMVADecision%TOS',
                    'HTOS'        : 'Hlt1(Two)?TrackMVADecision%TOS',
@@ -34,7 +35,8 @@ cuts = {'Common': {'TrackTisTos' : 'Hlt1(Two)?TrackMVADecision%TOS',
 lines_to_run = [B2GammaGammaLines,
                 B2XGammaLines,
                 Lb2L0GammaLines,
-                RadiativeInclusiveLines]
+                RadiativeInclusiveLines,
+                Hypb2L0HGammaLines]
 
 for line_conf in lines_to_run:
     # Get cuts
