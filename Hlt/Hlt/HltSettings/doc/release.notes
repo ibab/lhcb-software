@@ -11,6 +11,8 @@
        'Hlt2CharmHadDp2KS0KS0KpTurbo', 'Hlt2CharmHadDsp2KS0KS0PipTurbo',
        'Hlt2CharmHadDsp2KS0KS0KpTurbo', 'Hlt2CharmHadLcp2KS0KS0PpTurbo',
   - Sorted list of lines alphabetically.
+  - !!!NOTE!!! relies on Hlt2Lines 201448:  line Hlt2CharmHadXicpToPpKmPip
+    renamed Hlt2CharmHadXicpToPpKmPipTurbo and flagged for Turbo.
 
 ! 2016-02-12 - Patrick Spradlin
  - !!!NOTE!!! relies on Hlt2Lines r201434.

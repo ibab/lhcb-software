@@ -259,7 +259,7 @@ class CharmHad_25ns_Draft2016 :
                  'Hlt2CharmHadXiccpp2Xic0PipPip_Xic0ToPpKmKmPipTurbo',
                  'Hlt2CharmHadXiccpp2XicpPim_Xicp2PpKmPipTurbo',
                  'Hlt2CharmHadXiccpp2XicpPip_Xicp2PpKmPipTurbo',
-                 'Hlt2CharmHadXicpToPpKmPip',
+                 'Hlt2CharmHadXicpToPpKmPipTurbo',
                  'Hlt2CharmHadXim2LamPim_DDD',
                  'Hlt2CharmHadXim2LamPim_DDL',
                  'Hlt2CharmHadXim2LamPim_LLL',
