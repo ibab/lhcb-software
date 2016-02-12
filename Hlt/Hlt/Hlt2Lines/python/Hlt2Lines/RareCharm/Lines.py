@@ -4,6 +4,8 @@
 #          B. Viaud   viaud@lal.in2p3.fr
 #  @date 2015-03-07
 #
+#  Edited by J. Harrison (jonathan.harrison@manchester.ac.uk) on 2016-02-12
+#
 #  Please contact the abovementioned responsibles before editing this file
 #
 ##
@@ -57,7 +59,20 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                             ,'Lambda_c_Sig_M_MAX'                   : 2370.0 * MeV
                             ,'Lambda_c_WideMass_M_MIN'              : 1700.0 * MeV
                             ,'Lambda_c_WideMass_M_MAX'              : 2300.0 * MeV
-                            #four body lines
+                            #three body lines for LFV/LNV
+                            ,'TrkChi2_HLL'               : 3.0
+                            ,'TrkPt_HLL'                 : 300.0 * MeV
+                            ,'TrkP_HLL'                  : 2000.0 * MeV
+                            ,'TrkPVIPChi2_HLL'           : 5.0     
+                            ,'DMassWin_HLL'              : 200.0 * MeV
+                            ,'DMAXDOCA_HLL'              : 0.15 * mm
+                            ,'DMassLow_HLL'              : 1763.0 * MeV
+                            ,'DimuonMass_HLL'            : 250.0 * MeV
+                            ,'DVCHI2DOF_HLL'             : 5
+                            ,'DIPCHI2_HLL'               : 25
+                            ,'BPVVD_HLL'         	 : 20.0
+                            ,'DDIRA_HLL'                 : 0.9999
+          		    #four body lines
                             ,'TrkPt_HHmumu'                 : 300.0 * MeV
                             , 'TrkP_HHmumu'                  : 3000.0 * MeV
                             , 'TrkPVIPChi2_HHmumu'           : 2.0      # unitless
@@ -112,9 +127,8 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                             , 'Pair_BPVVD_MIN_mueX'            :    0.0 * mm
                             , 'Pair_SumAPT_MIN_mueX'           : 0.0 * MeV
                             , 'Pair_BPVCORRM_MAX_mueX'         : 3500.0 * MeV
-                   }
-
-                 }
+                   	      },
+               }
 
     def stages(self, nickname=""):
         if hasattr(self, '_stages') and self._stages:
@@ -136,18 +150,26 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                             InPartFilterHXX_Protons,
                             InPartFilterHHXX_Kaons,
                             InPartFilterHHXX_Pions,
-                            D2PiMuMuComb,
-                            D2KMuMuComb,
+                            D2PiMuMuOSComb,
                             D2PiMuMuSSComb,
+                            D2PiMuMuWSComb,
+                            D2KMuMuOSComb,
                             D2KMuMuSSComb,
-                            D2PieeComb,
-                            D2KeeComb,
-                            D2PieeSSComb,
-                            D2KeeSSComb,
-                            D2PiMueComb,
-                            D2KMueComb,
-                            D2PiMueSSComb,
-                            D2KMueSSComb,
+                            D2KMuMuWSComb,
+                            D2PiEEOSComb,
+                            D2PiEESSComb,
+                            D2PiEEWSComb,
+                            D2KEEOSComb,
+                            D2KEESSComb,
+                            D2KEEWSComb,
+                            D2PiMuEOSComb,
+                            D2PiMuESSComb,
+                            D2PiMuEWSComb,
+                            D2PiEMuOSComb,
+                            D2KMuEOSComb,
+                            D2KMuESSComb,
+                            D2KMuEWSComb,
+                            D2KEMuOSComb,
                             Lc2PMuMuComb,
                             Lc2PMuMuSSComb,
                             Lc2PeeComb,
@@ -162,18 +184,6 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                             D02KKMueComb,
                             D02KPiMueComb,
                             D02KPiMuMuSSComb,
-                            D2PiMuMuFilter,
-                            D2KMuMuFilter,
-                            D2PiMuMuSSFilter,
-                            D2KMuMuSSFilter,
-                            D2PieeFilter,
-                            D2KeeFilter,
-                            D2PieeSSFilter,
-                            D2KeeSSFilter,
-                            D2PiMueFilter,
-                            D2KMueFilter,
-                            D2PiMueSSFilter,   # New
-                            D2KMueSSFilter,    # New
                             Lc2PMuMuFilter,
                             Lc2PMuMuSSFilter,
                             Lc2PeeFilter,
@@ -193,18 +203,26 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                    'D02KPi'  :  [ D02kpiComb ],
                    'D02KMu'  :  [ D02kmuComb ],
                    'D02EMu'  :  [ D02emuComb ],
-                   'D2PiMuMuFilter' : [ D2PiMuMuFilter ],
-                   'D2KMuMuFilter' : [ D2KMuMuFilter ],
-                   'D2PieeFilter' : [ D2PieeFilter ],
-                   'D2KeeFilter' : [ D2KeeFilter ],
-                   'D2PieeSSFilter' : [ D2PieeSSFilter ],
-                   'D2KeeSSFilter' : [ D2KeeSSFilter ],
-                   'D2PiMueFilter' : [ D2PiMueFilter ],
-                   'D2KMueFilter' : [ D2KMueFilter ],
-                   'D2PiMueSSFilter' : [ D2PiMueSSFilter ],
-                   'D2KMueSSFilter' : [ D2KMueSSFilter ],
-                   'D2PiMuMuSSFilter' : [ D2PiMuMuSSFilter ],
-                   'D2KMuMuSSFilter' : [ D2KMuMuSSFilter ],
+                   'D2PiMuMuOS' : [ D2PiMuMuOSComb ],
+                   'D2PiMuMuSS' : [ D2PiMuMuSSComb ],
+                   'D2PiMuMuWS' : [ D2PiMuMuWSComb ],
+                   'D2KMuMuOS' : [ D2KMuMuOSComb ],
+                   'D2KMuMuSS' : [ D2KMuMuSSComb ],
+                   'D2KMuMuWS' : [ D2KMuMuWSComb ],
+                   'D2PiEEOS' : [ D2PiEEOSComb ],
+                   'D2PiEESS' : [ D2PiEESSComb ],
+                   'D2PiEEWS' : [ D2PiEEWSComb ],
+                   'D2KEEOS' : [ D2KEEOSComb ],
+                   'D2KEESS' : [ D2KEESSComb ],
+                   'D2KEEWS' : [ D2KEEWSComb ],
+                   'D2PiMuEOS' : [ D2PiMuEOSComb ],
+                   'D2PiMuESS' : [ D2PiMuESSComb ],
+                   'D2PiMuEWS' : [ D2PiMuEWSComb ],
+                   'D2PiEMuOS' : [ D2PiEMuOSComb ],
+                   'D2KMuEOS' : [ D2KMuEOSComb ],
+                   'D2KMuESS' : [ D2KMuESSComb ],
+                   'D2KMuEWS' : [ D2KMuEWSComb ],
+                   'D2KEMuOS' : [ D2KEMuOSComb ],
                    'Lc2PMuMuFilter' : [ Lc2PMuMuFilter ],
                    'Lc2PMuMuSSFilter' : [ Lc2PMuMuSSFilter ],
                    'Lc2PeeFilter' : [ Lc2PeeFilter ],

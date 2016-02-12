@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-02-12 - Jon Harrison
+ - Updated D2HLL lines in RareCharm to better agree with stripping and added 6 new wrong sign lines
+
 ! 2016-02-12 - Michael Kolpin
  - Split TrackEffDiMuon lines in 'LowStat' and 'HighStat' lines to allow
    separate prescale. Regions are configurable.
