@@ -2,11 +2,15 @@
 
 #include <map>
 #include <string>
+#include <set>
 
 class StatusCode;
 namespace Gaudi { namespace Parsers {
 StatusCode parse(std::map<std::string, std::map<std::string,
                  std::map< std::string, std::string> > >& result,
+                 const std::string& input ) ;
+
+StatusCode parse(std::set<std::string>& result,
                  const std::string& input ) ;
 } }
 
@@ -34,20 +38,28 @@ StatusCode parse(std::map<std::string, std::map<std::string,
 
 using namespace std;
 
+namespace {
+
 template <typename T>
-class equals_t  {
-    T m_t;
-public:
-    explicit equals_t(T&& t) : m_t{std::forward<T>(t)} {}
+struct equals_t  {
+    T arg0;
 
     template <typename U>
-    bool operator()(const U& u) const { return u == m_t; }
+    bool operator()(const U& u) const { return arg0 == u; }
 };
 
 // note that in case of an r-value, we copy, in case of an l-value
 // or an l-value reference, we use a reference...
 template <typename T>
-equals_t<T> equals( T&& t) { return equals_t<T>{std::forward<T>(t)}; }
+equals_t<T> equals( T&& t ) { return equals_t<T>{std::forward<T>(t)}; }
+
+/// C++14 version:
+// template <typename T>
+// auto equals( T&& t ) { return [arg0=std::forward<T>(t)](const auto& arg) 
+//                               { return arg0 == arg; }; 
+// }
+}
+
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PropertyConfigSvc
@@ -345,8 +357,8 @@ PropertyConfigSvc::collectNodeRefs(const ConfigTreeNode::digest_type& nodeRef) c
         // structure is sorted by dependency, which is kind of nice ;-)
         std::copy_if( std::begin(node->nodes()), std::end(node->nodes()),
                       std::back_inserter(nrefs) ,
-                      [&nrefs](Tree2NodeMap_t::mapped_type::const_reference k ) {
-                          return std::none_of(std::begin(nrefs),std::end(nrefs),equals(k)) ;
+                      [&nrefs](Tree2NodeMap_t::mapped_type::const_reference k) {
+                          return std::none_of(std::begin(nrefs),std::end(nrefs),equals(k));
                       });
 
     }
@@ -418,7 +430,7 @@ PropertyConfigSvc::outOfSyncConfigs(const ConfigTreeNode::digest_type& configID,
             error() << "Failed to resolve " <<  i << endmsg;
             return StatusCode::FAILURE;
         }
-        if (std::any_of( std::begin(m_skip),std::end(m_skip),equals(config->name()))) {
+        if ( m_skip.find( config->name() ) != std::end(m_skip) ) {
             warning() << " skipping configuration of " << config->name()
                       << " because it is in the 'skip' list"
                       << endmsg;
@@ -757,6 +769,12 @@ namespace Gaudi { namespace Parsers {
 // 2011-08-26 : alexander.mazurov@gmail.com
 StatusCode parse(std::map<std::string, std::map<std::string,
                  std::map< std::string, std::string> > >& result,
+                 const std::string& input )
+{
+  return parse_(result, input);
+}
+
+StatusCode parse(std::set<std::string>& result,
                  const std::string& input )
 {
   return parse_(result, input);

@@ -1,10 +1,10 @@
-// $Id: PropertyConfigSvc.h,v 1.1 2010-05-05 13:20:44 graven Exp $
 #ifndef PROPERTYCONFIGSVC_H 
 #define PROPERTYCONFIGSVC_H 1
 
 // Include files
 #include <string>
 #include <map>
+#include <set>
 #include <vector>
 #include <memory>
 #include <iterator>
@@ -140,7 +140,7 @@ private:
   mutable ConfigPushed_t               m_configPushed;
   std::map<std::string,IAlgTool*>      m_toolmap;
   std::vector<std::string>             m_prefetch;    ///< configurations to load at initialization
-  std::vector<std::string>             m_skip;        ///< items NOT to configure with this service
+  std::set<std::string>                m_skip;        ///< items NOT to configure with this service
   std::string                          m_ofname;
   std::unique_ptr<std::ostream>        m_os;
   bool                                 m_createGraphVizFile;
