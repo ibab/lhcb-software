@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-02-12 - Francesco Dettori
+ - Added Hlt2Lines/Strange directory containing for the moment one line: 
+   StrangeKPiPiPi line. 
+
 ! 2016-02-12 - Roel Aaij
  - Update CaloTest folder to work and not throw warnings.
  - Also add a line to the CaloTest folder to test running the particle flow.
