@@ -24,6 +24,8 @@
 !
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/Bender v28r0 2016-02-12 ===========================
+
 ! 2016-02-12 - Vanya Belyaev
  - add a useful function irun     (run over event using 'generator')
    It can be rather useful for scripts:
@@ -41,12 +43,9 @@
     good_events = lambda : 2<= len(get('/Event/PSIX/Phys/SelDetachedPsisForBandQ/Particles'))
  
 
-
-
 ! 2016-02-06 - Vanya BELYAEV
- - improve printout foro ialgTool
+ - improve printout for iAlgTool
  
-
 ! 2016-02-05 - Vanya Belyaev
  - Fixes_Gaudi.py
    - iAlgTool: add posiibility to use interface methods
