@@ -3,6 +3,10 @@
 ! Responsible : Vladimir Gligorov, Mika Vesterinen, Roel Aaij
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+
+! 2016-02-12 - Sascha Stahl
+ - Update 2016 draft settings to include new TrackEffDimuon settings.
+
 ! 2016-02-12 - Jessica Prisciandaro
  - Add 2016 draft configuration for DiElecton:
 A                0   python/HltSettings/DiElectron

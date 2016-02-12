@@ -58,11 +58,11 @@ class Physics_pp_Draft2016( object ):
     def SubDirs(self):
         return {'August2015' : ['CcDiHadron', 'DPS', 'EW',
                             'Bc2JpsiX', 'DiMuon', 'DisplVertices',
-                            'TrackEff', 'TrackEffDiMuon', "Commissioning", 'RareStrange',
+                            'TrackEff', "Commissioning", 'RareStrange',
                             'TriMuon', 'B2HH', 'B2Kpi0','Phi','RareCharm'],
                 'September2015' : ['XcMuXForTau'],
                 'October2015' : ['LowMult', 'SingleMuon'],
-                'Draft2016' : [ 'PID', 'CharmHad' ,'Radiative','Topo','Exotica','Jets']}
+                'Draft2016' : [ 'PID', 'CharmHad' ,'Radiative','Topo', 'TrackEffDiMuon','Exotica','Jets']}
 
 
     def Thresholds(self) :
