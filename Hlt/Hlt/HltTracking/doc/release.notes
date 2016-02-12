@@ -4,6 +4,12 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2016-02-12 - Roel Aaij
+ - Add HltJetConf to used configurables of Hlt2Tracking to ensure proper order
+   of configuration
+ - Give access to all track locations and the calo processor setup by
+   Hlt2Tracking
+
 ! 2016-02-08 - Sascha Stahl
  - HltRecoConf: Calculate ProbNN by default.
  - Hlt2Tracking: Implement fit of T-tracks for Calo reconstruction.
