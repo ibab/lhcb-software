@@ -31,7 +31,8 @@ _known_strippings = [
   "Stripping22",
   "Stripping23",
   "Stripping23r1",
-  "Stripping24"
+  "Stripping24",
+  "Stripping25"
 ]
 
 _relinfo_obsolete_strippings = [
@@ -107,7 +108,8 @@ _stripping_help={"Stripping13"  : "2011 data taking, processing during the first
                  "Stripping23r1" : "Stripping of 13TeV data from Sept 2015 onwards",
                  "Stripping24" :  "Stripping of 13TeV after September technical stop",
                  "Stripping21r0p1" : "Incremental stripping of Legacy 2012 dataset, Reco14 + new Calo calibration",
-                 "Stripping21r1p1" : "Incremental stripping of Legacy 2011 dataset, Reco14 + new Calo calibration"
+                 "Stripping21r1p1" : "Incremental stripping of Legacy 2011 dataset, Reco14 + new Calo calibration",
+                 "Stripping25" : "Stripping of 2015 pA data"
                  }
 
 _strippingKeys = {}
