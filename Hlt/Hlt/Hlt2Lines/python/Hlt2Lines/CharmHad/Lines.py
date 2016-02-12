@@ -15,6 +15,7 @@ from ChargedHyperonLines import ChargedHyperonLines
 from D2HHHHHLines import CharmHadD2HHHHHLines
 from XiccLines import CharmHadXiccLines
 from PromptH2LamLamLines import PromptH2LamLamLines
+from SecondaryH2LamPrPiLines import SecondaryH2LamPrPiLines
 
 
 from Configurables import HltANNSvc
@@ -38,6 +39,7 @@ HyperonLines = ChargedHyperonLines()
 D2HHHHHLines = CharmHadD2HHHHHLines()
 XiccLines = CharmHadXiccLines()
 PromptH2LamLamLines = PromptH2LamLamLines()
+SecondaryH2LamPrPiLines = SecondaryH2LamPrPiLines()
 
 
 
@@ -287,7 +289,51 @@ theseslots = {   'Postscale' : {'Hlt2CharmHadD02KmKpTurbo'               : 0.1,
                                         , "D0CHI2"      : "CHILDFUN(VFASPF(VCHI2), 1)"
                                         , "DSTDOCA"     : "DOCAMAX"
                               }
-                  }
+                  },
+                ## Configuration for Secondary H --> Lambda,p,pi
+                'LambdaPrPiLLLL' : {
+                             'TisTosSpec'               : [],
+                             'AM_MIN'                   :  2180. * MeV,
+                             'AM_MAX'                   :  2240. * MeV,
+                             'ASUMPT_MIN'               :  1500 * MeV,
+                             'Mother_PT_MIN'            :  1800 * MeV,
+                             'Mother_BPVDIRA_MIN'       :  0.9994,
+                             'Mother_BPVVDCHI2_MIN'     :  20.0,
+                             'Mother_VCHI2PDOF_MAX'     :  20.0,
+                             'Mother_BPVLTIME_MIN'      :  0.1 * picosecond,
+                             'LambdaDeltaZ_MIN'         :  -2.0 * mm,
+                             'HHMaxDOCA'                :  0.200 * mm,
+                             'HHMass_MAX'               :  1125. * MeV
+                                          },
+                'LambdaPrPiDDLL' : {
+                             'TisTosSpec'               : [],
+                             'AM_MIN'                   :  2180. * MeV,
+                             'AM_MAX'                   :  2240. * MeV,
+                             'ASUMPT_MIN'               :  1500 * MeV,
+                             'Mother_PT_MIN'            :  1800 * MeV,
+                             'Mother_BPVDIRA_MIN'       :  0.9994,
+                             'Mother_BPVVDCHI2_MIN'     :  20.0,
+                             'Mother_VCHI2PDOF_MAX'     :  20.0,
+                             'Mother_BPVLTIME_MIN'      :  0.1 * picosecond,
+                             'LambdaDeltaZ_MIN'         :  -2.0 * mm,
+                             'HHMaxDOCA'                :  0.200 * mm,
+                             'HHMass_MAX'               :  1125. * MeV
+                                          },
+                'LambdaPrPiDDDD' : {
+                             'TisTosSpec'               : [],
+                             'AM_MIN'                   :  2180. * MeV,
+                             'AM_MAX'                   :  2240. * MeV,
+                             'ASUMPT_MIN'               :  1500 * MeV,
+                             'Mother_PT_MIN'            :  1800 * MeV,
+                             'Mother_BPVDIRA_MIN'       :  0.9994,
+                             'Mother_BPVVDCHI2_MIN'     :  20.0,
+                             'Mother_VCHI2PDOF_MAX'     :  20.0,
+                             'Mother_BPVLTIME_MIN'      :  0.1 * picosecond,
+                             'LambdaDeltaZ_MIN'         :  -2.0 * mm,
+                             'HHMaxDOCA'                :  0.200 * mm,
+                             'HHMass_MAX'               :  1125. * MeV
+                                          }
+
                 }
 
 theseslots.update(D2HHHLines.localcuts())
@@ -307,6 +353,7 @@ theseslots.update(HyperonLines.localcuts())
 theseslots.update(D2HHHHHLines.localcuts())
 theseslots.update(XiccLines.slots())
 theseslots.update(PromptH2LamLamLines.localcuts())
+theseslots.update(SecondaryH2LamPrPiLines.localcuts())
 
 class CharmHadLines(Hlt2LinesConfigurableUser):
     from copy import deepcopy
@@ -361,6 +408,7 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
             self.__lines__.update(D2HHHHHLines.locallines())
             self.__lines__.update(XiccLines.stages())
             self.__lines__.update(PromptH2LamLamLines.locallines())
+            self.__lines__.update(SecondaryH2LamPrPiLines.locallines())
 
         return self.__lines__[nickname] if nickname else self.__lines__
 
@@ -369,7 +417,8 @@ class CharmHadLines(Hlt2LinesConfigurableUser):
             self._relatedInfo = {}
             for mod in (D2HHHLines, D2V0HLines, D2V0V0Lines, D02HHLines, D2HHPi0Lines, D02HHHHLines,
                         D2HHHKsLines, Hc2HHHHLines, XSecLines, D2HHHPi0Lines, D2HHLines, D2HHKsLines,
-                        CharmSpectroscopyLines, HyperonLines, D2HHHHHLines, XiccLines,PromptH2LamLamLines):
+                        CharmSpectroscopyLines, HyperonLines, D2HHHHHLines, XiccLines,PromptH2LamLamLines, 
+                        SecondaryH2LamPrPiLines):
                 if hasattr(mod, 'relatedInfo'):
                     self._relatedInfo.update(mod.relatedInfo())
 
