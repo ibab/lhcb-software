@@ -8,7 +8,7 @@ __all__ = ( 'B2XLLConf', 'default_config' )
   B --> ll X selections where:
 
   ll = e+e- / mu+mu- / mu+e- / mu+e+ / e+e+ / mu+mu+
-  X  = rho0 / D0 /  D*+ / J/psi / psi(2S) / K*0 / phi / K+ / pi+ / proton / K1(1270)
+  X  = rho0 / D0 /  D*+ / J/psi / psi(2S) / K*0 / phi / K+ / pi+ / proton / K1(1270)0 / K1(1270)+
   and anti-particles of the above
 """
 
