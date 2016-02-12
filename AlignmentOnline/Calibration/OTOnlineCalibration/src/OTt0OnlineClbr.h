@@ -17,6 +17,7 @@
 
 // BOOST
 #include <boost/filesystem.hpp>
+#include <boost/optional/optional_io.hpp>
 
 // Gaudi
 #include <GaudiKernel/IIncidentSvc.h>
