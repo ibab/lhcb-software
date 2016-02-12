@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+!======================== DaVinci v39r0p1 2016-02-12 =========================
+
+! 2016-02-12 - Eduardo Rodrigues
+ - Patched development release in preparation for 2016 data-taking and simulation.
+
 ! 2016-02-11 - Eduardo Rodrigues
  - Added 2016 to the list of known data types.
 
