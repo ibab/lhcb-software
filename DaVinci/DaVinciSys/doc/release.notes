@@ -3,6 +3,9 @@ Package             : DaVinciSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v39r0p1>2016-02-12 DaVinci v39r0p1</A></H1><PRE>
+
+Patched development release identical to v39r0 apart from picking up the patched package Event/EventPacker v5r9p1.
 
 ! 2016-02-12 - Eduardo Rodrigues
  - A couple of tests updated to get rid of failures.
@@ -38,7 +41,7 @@ Uses LCG_83 with ROOT 6.06.00.
 
 Release of two kinds :
 - Development release for 2016 data taking.
-- Production release for the incremental restripping of Run-I data (S21r0p1 for 2012 and S21r1p1 for 2011).
+- Production release for the Stripping 24 campaign.
 It is based on Gaudi v26r4, LHCb v39r2, Rec v18r3, Phys v20r3, Analysis v14r3 and Stripping v9r12p1,
 and uses LCG_79 with ROOT 6.04.02.
 
@@ -48,7 +51,7 @@ Identical to v38r1 apart from a trivial fix to please SetupProject.
 
 Release of two kinds :
 - Development release for 2016 data taking.
-- Production release for the incremental restripping of Run-I data (S21r0p1 for 2012 and S21r1p1 for 2011).
+- Production release for the Stripping 24 campaign.
 It is based on Gaudi v26r4, LHCb v39r2, Rec v18r3, Phys v20r3, Analysis v14r3 and Stripping v9r12,
 and uses LCG_79 with ROOT 6.04.02.
 

@@ -1,9 +1,12 @@
 ################################################################################
 # Package: DaVinciSys
 ################################################################################
-gaudi_subdir(DaVinciSys v39r0)
+gaudi_subdir(DaVinciSys v39r0p1)
 
 gaudi_depends_on_subdirs(DaVinciTests
+                         ##############################
+                         # Patch just for this release!
+                         Event/EventPacker
                          ##############################
                          # Temporarily moved in from Stripping, for S23 release
                          Phys/StrippingCache
