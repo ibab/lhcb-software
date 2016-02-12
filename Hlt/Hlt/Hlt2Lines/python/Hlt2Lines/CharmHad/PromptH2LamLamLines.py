@@ -87,7 +87,7 @@ class PromptH2LamLamLines():
                 , inputs = [ CharmHadSharedSecondaryLambdaLL, CharmHadSharedSecondaryLambdaDD ]
                 , lldd = True, nickname = 'H2LamLam_DD')
 
-        H2LamLamBar_LLDD = MassFilter('H2LamLam_DD', inputs = [ H2LamLam_LLDDComb ])
+        H2LamLamBar_LLDD = MassFilter('H2LamLam_DD', inputs = [ H2LamLamBar_LLDDComb ])
 
 
         H2LamLamBar_2DDComb = H2LambdaLambdaCombiner( 'Comb'
