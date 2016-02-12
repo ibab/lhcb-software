@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-02-12 - Carla Marin
+ - Add cuts for Hypb2L0HGamma to radiative settings.
+
 ! 2016-02-08 - Sascha Stahl
  - Include Radiative_25ns_Draft2016.py in Physics_pp_Draft2016.
 

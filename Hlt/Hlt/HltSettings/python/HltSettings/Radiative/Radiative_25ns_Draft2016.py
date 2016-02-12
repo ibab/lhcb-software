@@ -32,7 +32,12 @@ class Radiative_25ns_Draft2016(object):
                  'Hlt2RadiativeB2GammaGammaDouble',
                  # Exclusive Lb -> L0 gamma
                  'Hlt2RadiativeLb2L0GammaLL',
-                 'Hlt2RadiativeLb2L0GammaEELL']
+                 'Hlt2RadiativeLb2L0GammaEELL',
+                 # Exclusive Hypb -> Hyp (L0 h) gamma
+                 'Hlt2RadiativeHypb2L0HGammaXi',
+                 'Hlt2RadiativeHypb2L0HGammaOm',
+                 'Hlt2RadiativeHypb2L0HGammaXiEE',
+                 'Hlt2RadiativeHypb2L0HGammaOmEE']
 
         return lines
 
@@ -279,6 +284,159 @@ class Radiative_25ns_Draft2016(object):
                                          'BPVIPCHI2_MAX': 12}}
         thresholds.update(lb2l0gamma)
 
+        ##########################################################################
+        # Hyp_b -> L0H gamma
+        ##########################################################################
+        hypb2l0hgamma = {'Ximinus2L0Pi_LLL':{
+                                    'VCHI2PDOF_MAX'            :  10.0,
+                                    'Trk_ALL_MIPCHI2DV_MIN'    :  16.0,
+                                    'TRPT_MIN'                 :  200 * MeV,
+                                    'TRP_MIN'                  :  1000 * MeV,
+                                    'TRCHI2DOF_MAX'            :  4,
+                                    'TRACK_IPCHI2_MIN'         :  20,
+                                    'BPVVDCHI2_MIN'            :  10.0,
+                                    'BPVLTIME_MIN'             :  2.0 * picosecond,
+                                    'BPVDIRA_MIN'              :  0.95,
+                                    'PMIN'                     :  10000 * MeV,
+                                    'PTMIN'                    :  1000 * MeV,
+                                    'ASUMPT_MIN'               :  500 * MeV,
+                                    'AM_MIN'                   :  1270 * MeV,
+                                    'AM_MAX'                   :  1370 * MeV,
+                                    'M_MIN'                    :  1290.0 * MeV,
+                                    'M_MAX'                    :  1355.0 * MeV,
+                                   },
+                'Ximinus2L0Pi_DDL':{
+                                    'VCHI2PDOF_MAX'            :  10.0,
+                                    'Trk_ALL_MIPCHI2DV_MIN'    :  16.0,
+                                    'TRPT_MIN'                 :  200 * MeV,
+                                    'TRP_MIN'                  :  1000 * MeV,
+                                    'TRCHI2DOF_MAX'            :  4,
+                                    'TRACK_IPCHI2_MIN'         :  20,
+                                    'BPVVDCHI2_MIN'            :  10.0,
+                                    'BPVLTIME_MIN'             :  2.0 * picosecond,
+                                    'BPVDIRA_MIN'              :  0.95,
+                                    'PMIN'                     :  10000 * MeV,
+                                    'PTMIN'                    :  1000 * MeV,
+                                    'ASUMPT_MIN'               :  500 * MeV,
+                                    'AM_MIN'                   :  1230 * MeV,
+                                    'AM_MAX'                   :  1400 * MeV,
+                                    'M_MIN'                    :  1270.0 * MeV,
+                                    'M_MAX'                    :  1370.0 * MeV,
+                                   },
+                 'Ximinus2L0Pi_DDD':{
+                                    'VCHI2PDOF_MAX'            :  10.0,
+                                    'Trk_ALL_MIPCHI2DV_MIN'    :  16.0,
+                                    'TRPT_MIN'                 :  200 * MeV,
+                                    'TRP_MIN'                  :  1000 * MeV,
+                                    'TRCHI2DOF_MAX'            :  4,
+                                    'TRACK_IPCHI2_MIN'         :  20,
+                                    'BPVVDCHI2_MIN'            :  10.0,
+                                    'BPVLTIME_MIN'             :  2.0 * picosecond,
+                                    'BPVDIRA_MIN'              :  0.95,
+                                    'PMIN'                     :  10000 * MeV,
+                                    'PTMIN'                    :  1000 * MeV,
+                                    'ASUMPT_MIN'               :  500 * MeV,
+                                    'AM_MIN'                   :  1230 * MeV,
+                                    'AM_MAX'                   :  1400 * MeV,
+                                    'M_MIN'                    :  1270.0 * MeV,
+                                    'M_MAX'                    :  1370.0 * MeV,
+                                   },
+                'Omegaminus2L0K_LLL':{
+                                    'VCHI2PDOF_MAX'            :  10.0,
+                                    'Trk_ALL_MIPCHI2DV_MIN'    :  16.0,
+                                    'TRPT_MIN'                 :  200 * MeV,
+                                    'TRP_MIN'                  :  1000 * MeV,
+                                    'TRCHI2DOF_MAX'            :  4,
+                                    'TRACK_IPCHI2_MIN'         :  20,
+                                    'BPVVDCHI2_MIN'            :  10.0,
+                                    'BPVLTIME_MIN'             :  2.0 * picosecond,
+                                    'BPVDIRA_MIN'              :  0.95,
+                                    'PMIN'                     :  10000 * MeV,
+                                    'PTMIN'                    :  1000 * MeV,
+                                    'ASUMPT_MIN'               :  500 * MeV,
+                                    'AM_MIN'                   :  1620 * MeV,
+                                    'AM_MAX'                   :  1720 * MeV,
+                                    'M_MIN'                    :  1640.0 * MeV,
+                                    'M_MAX'                    :  1705.0 * MeV,
+                                   },
+                'Omegaminus2L0K_DDL':{
+                                    'VCHI2PDOF_MAX'            :  10.0,
+                                    'Trk_ALL_MIPCHI2DV_MIN'    :  16.0,
+                                    'TRPT_MIN'                 :  200 * MeV,
+                                    'TRP_MIN'                  :  1000 * MeV,
+                                    'TRCHI2DOF_MAX'            :  4,
+                                    'TRACK_IPCHI2_MIN'         :  20,
+                                    'BPVVDCHI2_MIN'            :  10.0,
+                                    'BPVLTIME_MIN'             :  2.0 * picosecond,
+                                    'BPVDIRA_MIN'              :  0.95,
+                                    'PMIN'                     :  10000 * MeV,
+                                    'PTMIN'                    :  1000 * MeV,
+                                    'ASUMPT_MIN'               :  500 * MeV,
+                                    'AM_MIN'                   :  1590 * MeV,
+                                    'AM_MAX'                   :  1750 * MeV,
+                                    'M_MIN'                    :  1620.0 * MeV,
+                                    'M_MAX'                    :  1720.0 * MeV,
+                                   },
+                 'Omegaminus2L0K_DDD':{
+                                    'VCHI2PDOF_MAX'            :  10.0,
+                                    'Trk_ALL_MIPCHI2DV_MIN'    :  16.0,
+                                    'TRPT_MIN'                 :  200 * MeV,
+                                    'TRP_MIN'                  :  1000 * MeV,
+                                    'TRCHI2DOF_MAX'            :  4,
+                                    'TRACK_IPCHI2_MIN'         :  20,
+                                    'BPVVDCHI2_MIN'            :  10.0,
+                                    'BPVLTIME_MIN'             :  2.0 * picosecond,
+                                    'BPVDIRA_MIN'              :  0.95,
+                                    'PMIN'                     :  10000 * MeV,
+                                    'PTMIN'                    :  1000 * MeV,
+                                    'ASUMPT_MIN'               :  500 * MeV,
+                                    'AM_MIN'                   :  1590 * MeV,
+                                    'AM_MAX'                   :  1750 * MeV,
+                                    'M_MIN'                    :  1620.0 * MeV,
+                                    'M_MAX'                    :  1720.0 * MeV,
+                                   },
+                'Xibm2XimGamma': {'SUM_PT_MIN'    : 5000*MeV,
+                                 'PT_MIN'        : 1000*MeV,
+                                 'MASS_WIN'      : 1000*MeV,
+                                 'P_MIN'      : 20000*MeV,
+                                 'PARTICLE'      :  'Xi-',
+                                 'MTDOCACHI2_MAX': 9},
+                
+                'Ombm2OmmGamma': {'SUM_PT_MIN'    : 5000*MeV,
+                                 'PT_MIN'        : 1000*MeV,
+                                 'MASS_WIN'      : 1000*MeV,
+                                 'P_MIN'      : 20000*MeV,
+                                 'PARTICLE'     : 'Omega_b-',
+                                 'MTDOCACHI2_MAX': 9},
+                
+                'Xibm2XimGammaEE': {'PARTICLE'     : 'Xi_b-',
+                                   'VCHI2PDOF_MAX': 25,
+                                   'PT_MIN'       : 1000*MeV,
+                                   'MASS_WIN'     : 1000*MeV,
+                                   'BPVDIRA_MIN'  : 0.1,
+                                   'BPVIPCHI2_MAX': 16 },
+                
+                'Ombm2OmmGammaEE': {'PARTICLE'     : 'Omega_b-',
+                                   'VCHI2PDOF_MAX': 25,
+                                   'PT_MIN'       : 1000*MeV,
+                                   'MASS_WIN'     : 1000*MeV,
+                                   'BPVDIRA_MIN'  : 0.1,
+                                   'BPVIPCHI2_MAX': 16 },
+
+                'SharedSecondaryLambdaLL' : {
+                                 'DecayTime_MIN'           : 4.5 * picosecond,
+                                 'VZ_MIN'                  : -100. * mm,
+                                 'VZ_MAX'                  :  500. * mm,
+                                 'MASSW'                  :  20*MeV},
+                         
+                'SharedSecondaryLambdaDD' : {
+                                 'DecayTime_MIN'	   : 4.5 * picosecond,
+                                 'VZ_MIN'                  : 300. * mm,
+                                 'VZ_MAX'                  : 2500. * mm,
+                                 'MASSW'                  :  20*MeV}
+                }
+        thresholds.update(hypb2l0hgamma)
+        
         ##########################################################################
         # Prescales
         ##########################################################################
