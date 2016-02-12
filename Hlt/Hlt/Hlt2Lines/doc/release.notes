@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+
+! 2016-02-12 - Federico Redi
+      added a Majorana subdirectory for same sign muon searches
+      including down muons candidates
+
 ! 2016-02-12 - Maurizio Martinelli
  - Added D2KsKsHLines and reordered LoKi cuts in Charm 4-body combiner
 A                0   python/Hlt2Lines/CharmHad/D2KsKsHLines.py
