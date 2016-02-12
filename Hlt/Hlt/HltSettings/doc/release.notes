@@ -4,7 +4,15 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
-+! 2016-02-12 - Patrick Spradlin
+! 2016-02-12 - Patrick Spradlin
+ - Added new lines and configuration dictionaries to
+   CharmHad/CharmHad_25ns_Draft2016.py
+     + 'Hlt2CharmHadD02KmPipTurbo', 'Hlt2CharmHadDp2KS0KS0PipTurbo',
+       'Hlt2CharmHadDp2KS0KS0KpTurbo', 'Hlt2CharmHadDsp2KS0KS0PipTurbo',
+       'Hlt2CharmHadDsp2KS0KS0KpTurbo', 'Hlt2CharmHadLcp2KS0KS0PpTurbo',
+  - Sorted list of lines alphabetically.
+
+! 2016-02-12 - Patrick Spradlin
  - !!!NOTE!!! relies on Hlt2Lines r201434.
    Universal change of settings variables in CharmHad for DIRA cuts.
    Instead of specifying the cosine of the DIRA in settings, the angle itself
