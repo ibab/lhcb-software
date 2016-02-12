@@ -2,13 +2,13 @@ __author__  = 'Raja Nandakumar, Fergus Wilson, Stefania Ricciardi'
 __date__    = '04/11/2015'
 __version__ = '$Revision: 0 $'
 
-__all__ = ( 'B2XLLConf', 'default_config' ) 
+__all__ = ( 'B2XLLConf', 'default_config' )
 
 """
   B --> ll X selections where:
 
   ll = e+e- / mu+mu- / mu+e- / mu+e+ / e+e+ / mu+mu+
-  X  = rho0 / D0 /  D*+ / J/psi / psi(2S) / K*0 / phi / K+ / pi+ / proton
+  X  = rho0 / D0 /  D*+ / J/psi / psi(2S) / K*0 / phi / K+ / pi+ / proton / K1(1270)
   and anti-particles of the above
 """
 
@@ -137,6 +137,8 @@ class B2XLLConf(LineBuilder) :
         SelPsi2S  = self._psi2s2jpsihh( name="Psi2SFor"+self._name, jpsi=SelJPsis, pions=SelPions )
         SelDsPlus = self._dSPlus( name="DsPlusFor"+self._name, Pion=SelPions, Kaons=SelKaons )
         SelDsStars= self._dSStarPlus( name="DsStarFor"+self._name, DPlus=SelDsPlus, Gamma=Gammas )
+        SelKpipis = self._kpipiPlus( name="KpipiFor"+self._name, Kaons=SelKaons, Pions=SelPions)
+        SelKSpipis= self._kpipiZero( name="KSpipiFor"+self._name, Kaons=SelKs, Pions=SelPions)
 
         # 2 : Dileptons
         self._muonCut = "(HASMUON) & (ISMUON) & (PROBNNmu>%(ProbNNmu)s)" %config
@@ -159,14 +161,14 @@ class B2XLLConf(LineBuilder) :
         SelEE_SS  = self._filterDiLepton("SelEESSFor"  + self._name, dilepton = EE_SS, params  = config, idcut = None )
 
         # 3 : Combine
-        Wanted = [ SelKaons, SelPions, SelKstars, SelRhos, SelPhis, SelJPsis, SelProtons, SelDZeros, SelDPlus, SelDStars, SelOmega, Self0s, SelKStarPlus, SelDsPlus, SelDsStars ]
+        Wanted = [ SelKaons, SelPions, SelKstars, SelRhos, SelPhis, SelJPsis, SelProtons, SelDZeros, SelDPlus, SelDStars, SelOmega, Self0s, SelKStarPlus, SelDsPlus, SelDsStars, SelKpipis, SelKSpipis ]
         SelmmX = self._makeB2LLX(mmXLine_name, dilepton=SelMuMu, XPart=Wanted, params=config, masscut="ADAMASS('B+') <  %(BMassWindow)s *MeV"% config)
         SelmeX = self._makeB2LLX(meXLine_name, dilepton=SelMuE,  XPart=Wanted, params=config, masscut="ADAMASS('B+') <  %(BMassWindow)s *MeV" % config )
         SeleeX = self._makeB2LLX(eeXLine_name, dilepton=SelEE,   XPart=Wanted, params=config, masscut="ADAMASS('B+') <  %(BMassWindow)s *MeV" % config )
         SelmmX_SS = self._makeB2LLX(mmXSSLine_name, dilepton=SelMuMu_SS, XPart=Wanted, params=config, masscut="ADAMASS('B+') <  %(BMassWindow)s *MeV" % config )
         SelmeX_SS = self._makeB2LLX(meXSSLine_name, dilepton=SelMuE_SS,  XPart=Wanted, params=config, masscut="ADAMASS('B+') <  %(BMassWindow)s *MeV" % config )
         SeleeX_SS = self._makeB2LLX(eeXSSLine_name, dilepton=SelEE_SS,   XPart=Wanted, params=config, masscut="ADAMASS('B+') <  %(BMassWindow)s *MeV" % config )
-       
+
         # 4 : Declare Lines
         SPDFilter = {
             'Code'      : " ( recSummary(LHCb.RecSummary.nSPDhits,'Raw/Spd/Digits') < 600 )" ,
@@ -254,7 +256,7 @@ class B2XLLConf(LineBuilder) :
                 "(MIPCHI2DV(PRIMARY) > %(DiLeptonIPCHI2)s )" % params
 
         # add additional cut on PID if requested
-        if idcut: _Code += ( " & " + idcut ) 
+        if idcut: _Code += ( " & " + idcut )
         _Filter = FilterDesktop( Code = _Code )
         return Selection(name, Algorithm = _Filter, RequiredSelections = [ dilepton ] )
 
@@ -273,11 +275,11 @@ class B2XLLConf(LineBuilder) :
     def _myPi0s(self, name):
         """
         Filter Pi0 from Std Pi0
-        """  
+        """
         from StandardParticles import StdLooseResolvedPi0 as _pi0resolved
         from StandardParticles import StdLooseMergedPi0 as _pi0merged
         _filter_pi0resolved = FilterDesktop(Code="PT>800*MeV")
-        _filter_pi0merged = FilterDesktop(Code="PT>800*MeV")        
+        _filter_pi0merged = FilterDesktop(Code="PT>800*MeV")
         _selpi0resolved = Selection("Selection_"+name+"_pi0resolved", RequiredSelections=[_pi0resolved], Algorithm=_filter_pi0resolved)
         _selpi0merged = Selection("Selection_"+name+"_pi0merged", RequiredSelections=[_pi0merged], Algorithm=_filter_pi0merged)
         _sel = MergedSelection("Selection_"+name+"_pi0", RequiredSelections=[_selpi0resolved,_selpi0merged])
@@ -286,7 +288,7 @@ class B2XLLConf(LineBuilder) :
 #####################################################
     def _omega2PiPiPi0( self, name, Pions, Pi0):
         """
-        Make omega -> pi+ pi- pi0 
+        Make omega -> pi+ pi- pi0
         """
         _omega2pipipizero = CombineParticles()
         _omega2pipipizero.DecayDescriptor = "omega(782) -> pi+ pi- pi0"
@@ -315,7 +317,7 @@ class B2XLLConf(LineBuilder) :
     def _myKshort(self, name):
         """
         Filter kshort from StdLooseKshort
-        """  
+        """
         from StandardParticles import StdLooseKsDD as _ksdd
         from StandardParticles import StdLooseKsLL as _ksll
         _filter_ksdd = FilterDesktop(Code = "(ADMASS('KS0') < 50*MeV) & (BPVLTIME() > 0.5*ps)")
@@ -363,17 +365,41 @@ class B2XLLConf(LineBuilder) :
         return _selKSTAR2KPIZERO
 
 #####################################################
+    def _kpipiPlus( self, name, Kaons, Pions):
+        """
+        Make K1(1270)+ -> K+ pi- pi+
+        """
+        _kpipi = CombineParticles()
+        _kpipi.DecayDescriptors = ["[K_1(1270)+ -> K+ pi- pi+]cc"]
+        _kpipi.MotherCut = "in_range(500*MeV, M, 3000*MeV) & ( VFASPF(VCHI2PDOF) < 36 )"
+        _kpipiConf = _kpipi.configurable("Combine_"+name+"_KPiPi")
+        _selKPiPiPlus = Selection( "Selection_"+name+"_kpipi", Algorithm = _kpipiConf, RequiredSelections = [ Kaons, Pions ] )
+        return _selKPiPiPlus
+
+#####################################################
+    def _kpipiZero( self, name, Kaons, Pions):
+        """
+        Make K1(1270)0 -> KS pi- pi+
+        """
+        _kpipi = CombineParticles()
+        _kpipi.DecayDescriptors = ["K_1(1270)0 -> KS0 pi- pi+"]
+        _kpipi.MotherCut = "in_range(500*MeV, M, 3000*MeV) & ( VFASPF(VCHI2PDOF) < 36 )"
+        _kpipiConf = _kpipi.configurable("Combine_"+name+"_KSPiPi")
+        _selKPiPiZero = Selection( "Selection_"+name+"_kspipi", Algorithm = _kpipiConf, RequiredSelections = [ Kaons, Pions ] )
+        return _selKPiPiZero
+
+#####################################################
     def _makeB2LLX( self, name, dilepton, XPart, params, masscut = "(ADAMASS('B+')<1500*MeV)" ):
 
         """
-        CombineParticles / Selection for the B 
+        CombineParticles / Selection for the B
         """
 
         _Cut   = "((VFASPF(VCHI2/VDOF)< %(BVertexCHI2)s ) "\
                  "& (BPVIPCHI2()< %(BIPCHI2)s ) "\
                  "& (BPVDIRA> %(BDIRA)s ) "\
                  "& (BPVVDCHI2> %(BFlightCHI2)s ))" % params
-        
+
         _Decays =  ["[ B+ -> J/psi(1S) K+ ]cc",
                     "[ B+ -> J/psi(1S) pi+ ]cc",
                     "[ B+ -> J/psi(1S) p+ ]cc",
@@ -384,38 +410,40 @@ class B2XLLConf(LineBuilder) :
                     "[ B+ -> J/psi(1S) D*_s+ ]cc",
                     "[ B0 -> J/psi(1S) K*(892)0 ]cc",
                     "[ B0 -> J/psi(1S) D0 ]cc",
+                    "[ B+ -> J/psi(1S) K_1(1270)+ ]cc",
                     "B0 -> J/psi(1S) phi(1020)",
                     "B0 -> J/psi(1S) rho(770)0",
                     "B0 -> J/psi(1S) J/psi(1S)",
                     "B0 -> J/psi(1S) psi(2S)",
                     "B0 -> J/psi(1S) omega(782)",
                     "B0 -> J/psi(1S) f_0(980)",
+                    "B0 -> J/psi(1S) K_1(1270)0",
                     ]
 
         _Combine = CombineParticles(DecayDescriptors = _Decays,
                                     CombinationCut = masscut,
                                     MotherCut = _Cut )
 
-        _Merge   = MergedSelection("Merge"+name, 
+        _Merge   = MergedSelection("Merge"+name,
                                    RequiredSelections = XPart )
 
         return Selection(name,
                          Algorithm = _Combine,
-                         RequiredSelections = [ dilepton, _Merge ]) 
+                         RequiredSelections = [ dilepton, _Merge ])
 
 #####################################################
     def _makeMuE( self, name, params, samesign = False):
         """
-        Makes MuE combinations 
+        Makes MuE combinations
         """
-        from StandardParticles import StdLooseElectrons as Electrons 
+        from StandardParticles import StdLooseElectrons as Electrons
         from StandardParticles import StdLooseMuons as Muons
 
-        _MassCut = "(AM > 100*MeV)" 
-        
+        _MassCut = "(AM > 100*MeV)"
+
         _DecayDescriptor = "[J/psi(1S) -> mu+ e-]cc"
         if samesign: _DecayDescriptor = "[J/psi(1S) -> mu+ e+]cc"
-        
+
         _Combine = CombineParticles( DecayDescriptor = _DecayDescriptor,
                                      CombinationCut  = _MassCut,
                                      MotherCut       = "(VFASPF(VCHI2/VDOF) < 9)")
@@ -431,7 +459,7 @@ class B2XLLConf(LineBuilder) :
 #####################################################
     def _makeMuMu( self, name, params, samesign = False):
         """
-        Makes MuMu combinations 
+        Makes MuMu combinations
         """
         from StandardParticles import StdLooseMuons as Muons
         _MassCut = "(AM > 100*MeV)"
@@ -451,9 +479,9 @@ class B2XLLConf(LineBuilder) :
 #####################################################
     def _makeEE( self, name, params, samesign = False):
         """
-        Makes EE combinations 
+        Makes EE combinations
         """
-        from StandardParticles import StdLooseElectrons as Electrons 
+        from StandardParticles import StdLooseElectrons as Electrons
         _MassCut = "(AM > 100*MeV)"
         _DecayDescriptor = "J/psi(1S) -> e+ e-"
         if samesign: _DecayDescriptor = "[J/psi(1S) -> e+ e+]cc"

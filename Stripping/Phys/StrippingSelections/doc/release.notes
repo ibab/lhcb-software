@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-02-12 - Albert Puig
+ - Add B->K pi+pi-ll lines in StrippingB2XLL.
+
 ! 2016-02-10 - Lucio Anderlini
  - BandQ/CC2DD cuts tightened a bit (vertexChi2, proton PID)
 
