@@ -1,3 +1,4 @@
+// $Id$ 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -11,6 +12,7 @@
 #include "LHCbMath/MatrixTransforms.h"
 #include "LHCbMath/SymPosDefMatrixInverter.h"
 #include "LHCbMath/Kinematics.h"
+#include "LHCbMath/LHCbMath.h"
 // ============================================================================
 /** @file
  *  Implementation file for class Gaudi::Math::LorentVectorWithError
@@ -188,8 +190,40 @@ Gaudi::Math::LorentzVectorWithError::__add__
 }
 // ============================================================================
 Gaudi::Math::LorentzVectorWithError
+Gaudi::Math::LorentzVectorWithError::__add__
+( const Gaudi::Math::LorentzVectorWithError::VectorE& right ) const 
+{
+  LorentzVectorWithError tmp ( *this ) ;
+  return tmp += right ;
+}
+// ============================================================================
+Gaudi::Math::LorentzVectorWithError
+Gaudi::Math::LorentzVectorWithError::__add__
+( const Gaudi::Math::LorentzVectorWithError::Vector& right ) const 
+{
+  LorentzVectorWithError tmp ( *this ) ;
+  return tmp += right ;
+}
+// ============================================================================
+Gaudi::Math::LorentzVectorWithError
 Gaudi::Math::LorentzVectorWithError::__sub__
 ( const Gaudi::LorentzVector& right ) const 
+{
+  LorentzVectorWithError tmp ( *this ) ;
+  return tmp -= right ;
+}
+// ============================================================================
+Gaudi::Math::LorentzVectorWithError
+Gaudi::Math::LorentzVectorWithError::__sub__
+( const Gaudi::Math::LorentzVectorWithError::VectorE& right ) const 
+{
+  LorentzVectorWithError tmp ( *this ) ;
+  return tmp -= right ;
+}
+// ============================================================================
+Gaudi::Math::LorentzVectorWithError
+Gaudi::Math::LorentzVectorWithError::__sub__
+( const Gaudi::Math::LorentzVectorWithError::Vector& right ) const 
 {
   LorentzVectorWithError tmp ( *this ) ;
   return tmp -= right ;
@@ -293,70 +327,6 @@ double Gaudi::Math::LorentzVectorWithError::chi2
   return ROOT::Math::Similarity ( vct , s_cov2 ) ;
 }
 // ============================================================================
-// evaluate  sigma mass 
-// ============================================================================
-double Gaudi::Math::LorentzVectorWithError::sigmaMass () const 
-{ return Gaudi::Math::sigmamass ( vector4d() , cov2() ) ; }
-// ============================================================================
-// evaluate  sigma2 mass 
-// ============================================================================
-double Gaudi::Math::LorentzVectorWithError::sigma2Mass () const 
-{ return Gaudi::Math::sigma2mass ( vector4d() , cov2() ) ; }
-// ============================================================================
-// evaluate  sigma2 mass2 
-// ============================================================================
-double Gaudi::Math::LorentzVectorWithError::sigma2Mass2 () const 
-{ return Gaudi::Math::sigma2mass2 ( vector4d() , cov2() ) ; }
-// ============================================================================
-// evaluate  chi2-mass
-// ============================================================================
-double Gaudi::Math::LorentzVectorWithError::chi2mass ( const double m0 ) const 
-{ return Gaudi::Math::chi2mass( m0 , vector4d() , cov2() ) ; }
-// ============================================================================
-// evaluate  sigma^2 p 
-// ============================================================================
-double Gaudi::Math::LorentzVectorWithError::sigma2p () const 
-{ return Gaudi::Math::sigma2p ( vector4d() , cov2() ) ; }
-// ============================================================================
-// evaluate  sigma p 
-// ============================================================================
-double Gaudi::Math::LorentzVectorWithError::sigmap () const 
-{ return Gaudi::Math::sigmap  ( vector4d() , cov2() ) ; }
-// ============================================================================
-// evaluate  sigma^2 pt 
-// ============================================================================
-double Gaudi::Math::LorentzVectorWithError::sigma2pt () const 
-{ return Gaudi::Math::sigma2pt ( vector4d() , cov2() ) ; }
-// ============================================================================
-// evaluate  sigma pt 
-// ============================================================================
-double Gaudi::Math::LorentzVectorWithError::sigmapt  () const 
-{ return Gaudi::Math::sigmapt ( vector4d() , cov2() ) ; }
-// ============================================================================
-// get the mass with erorr 
-// ============================================================================
-Gaudi::Math::ValueWithError 
-Gaudi::Math::LorentzVectorWithError::massWithError() const 
-{ return Gaudi::Math::ValueWithError ( M() , sigma2Mass() ) ; }
-// ============================================================================
-// get the energy with erorr 
-// ============================================================================
-Gaudi::Math::ValueWithError 
-Gaudi::Math::LorentzVectorWithError::energyWithError() const
-{ return Gaudi::Math::ValueWithError ( E() , cov2()(3,3) ) ; }
-// ============================================================================
-// get the momentum with erorr 
-// ============================================================================
-Gaudi::Math::ValueWithError 
-Gaudi::Math::LorentzVectorWithError::momentumWithError() const
-{ return Gaudi::Math::ValueWithError ( P() , sigma2p() ) ; }
-// ============================================================================
-// get the transverse momentum with error 
-// ============================================================================
-Gaudi::Math::ValueWithError 
-Gaudi::Math::LorentzVectorWithError::ptWithError       () const 
-{ return Gaudi::Math::ValueWithError ( Pt() , sigma2pt() ) ; }
-// ============================================================================
 void Gaudi::Math::LorentzVectorWithError::asVector 
 ( Gaudi::Math::LorentzVectorWithError::Vector& data ) const 
 { Gaudi::Math::geo2LA ( vector4d() , data ) ; }
@@ -374,6 +344,14 @@ Gaudi::Math::LorentzVectorWithError::asVector () const
   Gaudi::Math::LorentzVectorWithError::VectorE data ;
   Gaudi::Math::geo2LA ( vector4d() , data.value() ) ;
   data.setCov2( cov2() ) ;
+  return data ;
+}
+// ============================================================================
+Gaudi::Math::LorentzVectorWithError::Vector 
+Gaudi::Math::LorentzVectorWithError::asVector4 () const 
+{
+  Gaudi::Math::LorentzVectorWithError::Vector data ;
+  Gaudi::Math::geo2LA ( vector4d() , data ) ;
   return data ;
 }
 // ============================================================================
@@ -414,8 +392,337 @@ Gaudi::Math::LorentzVectorWithError::__div__ ( const double v ) const
 }
 // ============================================================================
 
+// ============================================================================
+// set of helper functions 
+// ============================================================================
+namespace 
+{
+  // ==========================================================================
+  /// almost zero  ? 
+  const LHCb::Math::Zero<double>      s_zero  ;
+  /// almost equal ? 
+  const LHCb::Math::Equal_To<double>  s_equal ;
+  // ==========================================================================
+}
+// ============================================================================
+/*  calculate the mass with uncertainty 
+ *  @param mom 4-momentum 
+ *  @param cov covariance 
+ *  @return mass with uncertainty 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::Kinematics::mass 
+( const Gaudi::LorentzVector& mom , 
+  const Gaudi::SymMatrix4x4&  cov ) 
+{
+  const double m = mom.M() ;
+  return 
+    m <= 0 || s_zero ( m ) ? 
+    Gaudi::Math::ValueWithError ( m ) : 
+    Gaudi::Math::ValueWithError ( m , Gaudi::Math::sigma2mass ( mom , cov ) ) ;
+}
+// ============================================================================
+/*  calculate the scalar momentum (p) with uncertainty 
+ *  @param mom 4-momentum 
+ *  @param cov covariance 
+ *  @return p with uncertainty 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::Kinematics::momentum 
+( const Gaudi::LorentzVector& mom , 
+  const Gaudi::SymMatrix4x4&  cov ) 
+{
+  const double p = mom.P() ;
+  return 
+    p <= 0 || s_zero ( p ) ?  
+    Gaudi::Math::ValueWithError ( p ) : 
+    Gaudi::Math::ValueWithError ( p , Gaudi::Math::sigma2p ( mom , cov ) ) ;
+}
+// ============================================================================
+/*  calculate the rapidity (y) with uncertainty 
+ *  @param mom 4-momentum 
+ *  @param cov covariance 
+ *  @return y with uncertainty 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::Kinematics::rapidity 
+( const Gaudi::LorentzVector& mom , 
+  const Gaudi::SymMatrix4x4&  cov ) 
+{
+  const double y  = mom.Rapidity() ;
+  const double e  = std::abs ( mom.E  ()  ) ;
+  const double pz = std::abs ( mom.Pz ()  ) ;
+  return 
+    e <= pz || s_equal ( e , pz  ) ?  
+    Gaudi::Math::ValueWithError ( y ) : 
+    Gaudi::Math::ValueWithError ( y , Gaudi::Math::sigma2y ( mom , cov ) ) ;  
+}
+// ============================================================================
+/*  calculate the pseudo-rapidity (eta) with uncertainty 
+ *  @param mom 4-momentum 
+ *  @param cov covariance 
+ *  @return eta with uncertainty 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::Kinematics::pseudorapidity 
+( const Gaudi::LorentzVector& mom , 
+  const Gaudi::SymMatrix4x4&  cov ) 
+{
+  const double eta = mom.Eta   () ;
+  const double pt2 = mom.Perp2 () ;
+  if ( 0 >= pt2 || s_zero ( pt2 ) ) { return Gaudi::Math::ValueWithError ( eta ) ; }
+  const double p   = mom.P     () ;
+  if ( 0 >= p   || s_zero ( p   ) ) { return Gaudi::Math::ValueWithError ( eta ) ; }
+  //
+  const double pz  = mom.Pz    () ;
+  const double c   = - pz / ( pt2 * p ) ;
+  //
+  // get the vector d(Eta)/dp_i :
+  ROOT::Math::SVector<double,4> dEtadP_i;
+  dEtadP_i [0] =  c * mom.Px() ;
+  dEtadP_i [1] =  c * mom.Py() ;
+  dEtadP_i [2] =  1 / p ;
+  dEtadP_i [3] =  0.0 ;
+  //
+  const double s2eta = ROOT::Math::Similarity ( cov , dEtadP_i ) ;
+  return 
+    s2eta <= 0 || s_zero ( s2eta )  ? 
+    Gaudi::Math::ValueWithError ( eta         ) : 
+    Gaudi::Math::ValueWithError ( eta , s2eta ) ;
+}
+// ============================================================================
+/*  calculate the transverse momentum (pt) with uncertainty 
+ *  @param mom 4-momentum 
+ *  @param cov covariance 
+ *  @return pt with uncertainty 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::Kinematics::transverseMomentum  
+( const Gaudi::LorentzVector& mom , 
+  const Gaudi::SymMatrix4x4&  cov ) 
+{
+  const double pt = mom.Pt () ;
+  return 
+    pt <= 0 || s_zero ( pt  ) ?  
+    Gaudi::Math::ValueWithError ( pt ) : 
+    Gaudi::Math::ValueWithError ( pt , Gaudi::Math::sigma2pt ( mom , cov ) ) ;  
+}
+// ============================================================================
+/*  calculate the squared transverse mass  (mT2) with uncertainty 
+ *  \f$ m_T^2 = e^2 - p_z^2  = m^2 + p_T^2 \f$ 
+ *  @param mom 4-momentum 
+ *  @param cov covariance 
+ *  @return mT2 with uncertainty 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::Kinematics::transverseMass2
+( const Gaudi::LorentzVector& mom , 
+  const Gaudi::SymMatrix4x4&  cov ) 
+{
+  const double mt2 = mom.Mt2() ;
+  //
+  // get the vector d(Mt2)/dp_i :
+  ROOT::Math::SVector<double,4> dMt2dP_i;
+  dMt2dP_i [0] =  0.0 ;
+  dMt2dP_i [1] =  0.0 ;
+  dMt2dP_i [2] = -2 * mom.Pz() ;
+  dMt2dP_i [3] =  2 * mom.E () ;
+  //
+  const double s2mt2 = ROOT::Math::Similarity ( cov , dMt2dP_i ) ;
+  return 
+    s2mt2 <= 0 || s_zero ( s2mt2 )  ? 
+    Gaudi::Math::ValueWithError ( mt2         ) : 
+    Gaudi::Math::ValueWithError ( mt2 , s2mt2 ) ;
+}
+// ============================================================================
+/*  calculate the transverse mass  (mT) with uncertainty 
+ *  \f$ m_T  = \sqrt{e^2 - p_z^2}  = \sqrt{m^2 + p_T^2} \f$ 
+ *  @param mom 4-momentum 
+ *  @param cov covariance 
+ *  @return mT2 with uncertainty 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::Kinematics::transverseMass
+( const Gaudi::LorentzVector& mom , 
+  const Gaudi::SymMatrix4x4&  cov ) 
+{
+  const Gaudi::Math::ValueWithError mt2 = transverseMass2 ( mom , cov ) ;
+  return 
+    !s_zero ( mt2.value() ) ?    Gaudi::Math::signed_sqrt ( mt2 ) :
+    Gaudi::Math::ValueWithError ( LHCb::Math::signed_sqrt ( mt2.value() ) ) ;
+}
+// ============================================================================
+/*  calculate the squared transverse energy (eT2) with uncertainty 
+ *  \f$ e_T^2 = \frac{e^2p_t^2}{p^2} \f$ 
+ *  @param mom 4-momentum 
+ *  @param cov covariance 
+ *  @return eT2 with uncertainty 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::Kinematics::transverseEnergy2
+( const Gaudi::LorentzVector& mom , 
+  const Gaudi::SymMatrix4x4&  cov ) 
+{
+  const double et2 = mom.Et2() ;
+  //
+  const double p2  = mom.P2 () ;
+  if ( 0 >= p2 || s_zero ( p2 ) ) { return Gaudi::Math::ValueWithError ( et2 ) ; }
+  //
+  const double pt2 = mom.Perp2() ;
+  const double e   = mom.E    () ;
+  const double e2  = e * e       ;
+  const double c1  = 2 * e2 / p2 ;
+  const double c2  = pt2    / p2 ;
+  //
+  // get the vector d(Et2)/dp_i :
+  ROOT::Math::SVector<double,4> dEt2dP_i;
+  dEt2dP_i [0] =  c1 * ( 1 - c2 ) * mom.Px () ;
+  dEt2dP_i [1] =  c1 * ( 1 - c2 ) * mom.Py () ;
+  dEt2dP_i [2] =  c1 * ( 0 - c2 ) * mom.Pz () ;
+  dEt2dP_i [3] =  2 * e * c2 ;
+  //
+  const double s2et2 = ROOT::Math::Similarity ( cov , dEt2dP_i ) ;
+  return 
+    s2et2 <= 0 || s_zero ( s2et2 )  ? 
+    Gaudi::Math::ValueWithError ( et2         ) : 
+    Gaudi::Math::ValueWithError ( et2 , s2et2 ) ;
+}
+// ============================================================================
+/** calculate the transverse energy  (eT) with uncertainty 
+ *  \f$ e_T^2 = \frac{e p_t}{p} \f$ 
+ *  @param mom 4-momentum 
+ *  @param cov covariance 
+ *  @return eT with uncertainty 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::Kinematics::transverseEnergy
+( const Gaudi::LorentzVector& mom , 
+  const Gaudi::SymMatrix4x4&  cov ) 
+{
+  const Gaudi::Math::ValueWithError et2 = transverseEnergy2 ( mom , cov ) ;
+  return 
+    !s_zero ( et2.value() ) ?    Gaudi::Math::signed_sqrt ( et2 ) :
+    Gaudi::Math::ValueWithError ( LHCb::Math::signed_sqrt ( et2.value() ) ) ;
+}
+// ============================================================================
+/*  calculate the kinetic energy  (eK) with uncertainty 
+ *  \f$ e_K = e - m \f$ 
+ *  @param mom 4-momentum 
+ *  @param cov covariance 
+ *  @return eK with uncertainty 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::Kinematics::kineticEnergy
+( const Gaudi::LorentzVector& mom , 
+  const Gaudi::SymMatrix4x4&  cov ) 
+{
+  const double m2 = mom.M2() ;
+  if ( 0 >= m2 || s_zero ( m2 ) ) 
+  {
+    const double c2ee = cov( 3,3 ) ;
+    return 
+      0 >= c2ee || s_zero ( c2ee ) ?  
+      Gaudi::Math::ValueWithError ( mom.E()        ) : 
+      Gaudi::Math::ValueWithError ( mom.E() , c2ee ) ;
+  }
+  const double m   = std::sqrt  ( m2 ) ;
+  const double eK  = mom.E() - m       ;
+  //
+  // get the vector d(Ek)/dp_i :
+  ROOT::Math::SVector<double,4> dEkdP_i;
+  dEkdP_i [0] =      mom.Px() / m ;
+  dEkdP_i [1] =      mom.Py() / m ;
+  dEkdP_i [2] =      mom.Pz() / m ;
+  dEkdP_i [3] =  1 - mom.E () / m ;
+  //
+  const double s2ek = ROOT::Math::Similarity ( cov , dEkdP_i ) ;
+  return 
+    s2ek <= 0 || s_zero ( s2ek )  ? 
+    Gaudi::Math::ValueWithError ( eK        ) : 
+    Gaudi::Math::ValueWithError ( eK , s2ek ) ;
+}
+// ============================================================================
+/* calculate the phi (asymuthal angle) with uncertainy 
+ *  \f$ \tan \phi = \frac{p_y}{p_x} \f$ 
+ *  @param mom 4-momentum 
+ *  @param cov covariance 
+ *  @return phi with uncertainty 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::Kinematics::phi
+( const Gaudi::LorentzVector& mom , 
+  const Gaudi::SymMatrix4x4&  cov ) 
+{
+  const double phi = mom.Phi  () ;
+  const double pt2 = mom.Perp2() ;
+  //
+  if ( 0 >= pt2 || s_zero ( pt2 ) ) { return Gaudi::Math::ValueWithError ( phi ) ; }
+  //
+  // get the vector d(Phi)/dp_i :
+  ROOT::Math::SVector<double,4> dPhidP_i;
+  dPhidP_i [0] = - mom.Py() / pt2 ;
+  dPhidP_i [1] =   mom.Px() / pt2 ;
+  dPhidP_i [2] =   0.0 ;
+  dPhidP_i [3] =   0.0 ;
+  //
+  const double s2phi = ROOT::Math::Similarity ( cov , dPhidP_i ) ;
+  return 
+    s2phi <= 0 || s_zero ( s2phi )  ? 
+    Gaudi::Math::ValueWithError ( phi         ) : 
+    Gaudi::Math::ValueWithError ( phi , s2phi ) ;
+}
+// ============================================================================
+/*  calculate the theta (polar angle) with uncertainy 
+ *  \f$ \tan \theta = \frac{p_T}{p_z} \f$ 
+ *  @param mom 4-momentum 
+ *  @param cov covariance 
+ *  @return theta with uncertainty 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::Kinematics::theta
+( const Gaudi::LorentzVector& mom , 
+  const Gaudi::SymMatrix4x4&  cov ) 
+{
+  const double theta = mom.Theta  () ;
+  const double pt2   = mom.Perp2  () ;
+  if ( 0 >= pt2 || s_zero ( pt2 ) ) 
+  { return Gaudi::Math::ValueWithError ( theta ) ; }
+  const double p2    = mom.P2     () ;
+  if ( 0 >= p2  || s_zero ( p2  ) ) 
+  { return Gaudi::Math::ValueWithError ( theta ) ; }
+  //
+  const double pt    = mom.Pt     () ;
+  const double pz    = mom.Pz     () ;
+  const double c     = pz / ( p2 * pt ) ;
+  //
+  // get the vector d(Theta)/dp_i :
+  ROOT::Math::SVector<double,4> dThetadP_i;
+  dThetadP_i [0] =  c * mom.Px() ;
+  dThetadP_i [1] =  c * mom.Py() ;
+  dThetadP_i [2] =  - pt / p2    ;
+  dThetadP_i [3] =  0.0 ;
+  //
+  const double s2theta = ROOT::Math::Similarity ( cov , dThetadP_i ) ;
+  return 
+    s2theta <= 0 || s_zero ( s2theta )  ? 
+    Gaudi::Math::ValueWithError ( theta           ) : 
+    Gaudi::Math::ValueWithError ( theta , s2theta ) ;
+}
 
 
 // ============================================================================
 // The END 
 // ============================================================================
+

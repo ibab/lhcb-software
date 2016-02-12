@@ -5,6 +5,11 @@
 !               for geometry and matrix algebra
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
+
+! 2016-02-12 - Vanya Belyaev
+ - import and cleanup a bit LorenzVectorWithError 
+ - add calculation of uncertanities for several quantities  
+
 ! 2016-02-01 - Gerhard Raven
  - modernize MD5 code
 

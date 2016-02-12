@@ -634,6 +634,14 @@ namespace Gaudi
     GAUDI_API
     ValueWithError sqrt
     ( const ValueWithError& b ) ;
+    // ========================================================================
+    /** evaluate 'signed sqrt' 
+     *  @param a (INPUT) the value 
+     *  @return the signed-sqrt  
+     */
+    GAUDI_API
+    ValueWithError signed_sqrt 
+    ( const ValueWithError& a ) ;
     // ========================================================================    
     /** evaluate cbrt(b)
      *  @param b (INPUT) the parameter 

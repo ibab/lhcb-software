@@ -1608,6 +1608,22 @@ Gaudi::Math::ValueWithError Gaudi::Math::sqrt
   return Gaudi::Math::ValueWithError ( v , e2 ) ;
 }
 // ============================================================================
+/*  evaluate "signed-sqrt" (a)
+ *  @param a (INPUT) the value
+ *  @return the signed-sqrt value
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::signed_sqrt
+( const Gaudi::Math::ValueWithError& a )
+{ 
+  return 
+    0 >= a.cov2 () || _zero ( a.cov2() ) ? 
+    Gaudi::Math::ValueWithError ( LHCb::Math::signed_sqrt ( a.value() ) ) :
+    0 <= a.value() ? 
+    Gaudi::Math::sqrt ( a ) :
+    Gaudi::Math::sqrt ( Gaudi::Math::ValueWithError( -a.value() , a.cov2 () ) ) ;
+}
+// ============================================================================
 /*  evaluate cbrt(b)
  *  @param b (INPUT) the parameter
  *  @warning invalid and small covariances are ignored

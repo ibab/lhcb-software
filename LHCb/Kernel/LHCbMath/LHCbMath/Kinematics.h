@@ -102,17 +102,12 @@ namespace Gaudi
     ( const ROOT::Math::LorentzVector<C>&                           momentum   , 
       const ROOT::Math::SMatrix<T,4,4,ROOT::Math::MatRepSym<T,4> >& covariance ) 
     {
-      const double s2m2 = sigma2mass2 ( momentum , covariance ) ;
       const double m2   = momentum.M2 () ;
-#ifdef __INTEL_COMPILER         // Disable ICC remark
-  #pragma warning(disable:1572) // floating-point equality and inequality comparisons are unreliable
-  #pragma warning(push)
-#endif
-      if ( 0 != m2 ) { return 0.25 * s2m2 / m2 ; }                    // RETURN
-#ifdef __INTEL_COMPILER        // End disable ICC remark
-  #pragma warning(pop)
-#endif
-      return -1.E+24;                                                 // RETURN 
+      if ( m2   <= 0 ) { return 0 ; }                         // NB! RETURN 0
+      const double s2m2 = sigma2mass2 ( momentum , covariance ) ;
+      if ( s2m2 <= 0 ) { return 0 ; }                         // NB! RETURN 0  
+      //
+      return 0.25 * s2m2 / m2 ;
     }
     // ========================================================================
     template <class C, class T, class B, class R>
@@ -383,6 +378,58 @@ namespace Gaudi
     {
       const double s2pt = sigma2pt ( momentum , covariance ) ;
       return _sqrt_ ( s2pt ) ;
+    }
+    // ========================================================================
+    /** evaluate the dispersion of rapidity from the particle 4-vector and 
+     *  the covariance matrix
+     *
+     *  @code
+     *
+     *   const LHCb::Particle* p = ... ;
+     *   double s2y = sigma2y ( p -> momentum() , p -> momCovMatrix() ) ; 
+     *
+     *  @endcode
+     *  
+     *  @param momentum   (in) the particle momentum
+     *  @param covariance (in) 4x4 covarinnce matrix
+     *  @return the estimate for dispersion of pt
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2016-02-12
+     */
+    template <class C, class T>
+    inline double
+    sigma2y
+    ( const ROOT::Math::LorentzVector<C>&                           momentum   , 
+      const ROOT::Math::SMatrix<T,4,4,ROOT::Math::MatRepSym<T,4> >& covariance ) 
+    {
+      // get the vector d(Y)/dp_i :
+      ROOT::Math::SVector<T,4> dYdP_i;
+      const double ePpz = 0.5 / ( momentum.E() + momentum.Pz() ) ;
+      const double eMpz = 0.5 / ( momentum.E() - momentum.Pz() ) ;
+      dYdP_i [0] = 0.0 ; 
+      dYdP_i [1] = 0.0 ; 
+      dYdP_i [2] = ePpz + eMpz ;
+      dYdP_i [3] = ePpz - eMpz ;
+      //
+      return ROOT::Math::Similarity ( covariance , dYdP_i ) ;
+    }
+    // ========================================================================
+    template <class C, class T, class B, class R>
+    inline double
+    sigma2y
+    ( const ROOT::Math::LorentzVector<C>& momentum   , 
+      const ROOT::Math::Expr<B,T,4,4,R> & covariance ) 
+    {
+      // get the vector d(Y)/dp_i :
+      ROOT::Math::SVector<T,4> dYdP_i;
+      const double ePpz = 0.5 / ( momentum.E() + momentum.Pz() ) ;
+      const double eMpz = 0.5 / ( momentum.E() - momentum.Pz() ) ;
+      dYdP_i [0] = 0.0 ; 
+      dYdP_i [1] = 0.0 ; 
+      dYdP_i [2] = ePpz + eMpz ;
+      dYdP_i [3] = ePpz - eMpz ;
+      //
+      return ROOT::Math::Similarity ( covariance , dYdP_i ) ;
     }
     // ========================================================================
   } //                                             end of namespace Gaudi::Math

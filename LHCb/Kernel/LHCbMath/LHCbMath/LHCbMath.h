@@ -4,9 +4,6 @@
  *
  *  Collection of math related functions for general use in LHCb
  *
- *  CVS Log :-
- *  $Id$
- *
  *  @author Juan PALACIOS 
  *  @date   2005-11-21
  */
@@ -765,6 +762,13 @@ using namespace std;
     template <class TYPE> 
     void negate ( std::vector<TYPE>& vct ) 
     { negate ( vct.begin() , vct.end() ) ; }
+    // ========================================================================
+    /// signed sqrt 
+    inline double signed_sqrt ( const double value ) 
+    {
+      return 
+        0 < value ? std::sqrt ( value ) : -std::sqrt( std::abs ( value ) ) ;
+    }  
     // ========================================================================
   } //                                              end of namespace LHCb::Math 
   // ==========================================================================

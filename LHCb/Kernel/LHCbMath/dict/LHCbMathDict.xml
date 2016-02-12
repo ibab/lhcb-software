@@ -21,6 +21,7 @@
   <class name    = "Gaudi::Math::Point3DWithError"  />
   <class name    = "Gaudi::Math::Vector3DWithError" />
   <class name    = "Gaudi::Math::LorentzVectorWithError" />
+  <function pattern = "Gaudi::Math::Kinematics:*"  />
   <class name    = "Gaudi::Math::Functions"         />
   <class pattern = "Gaudi::Math::SVectorWithError*" />
   <class name    = "std::vector<Gaudi::Math::ValueWithError>" />
@@ -29,6 +30,8 @@
   <class name    = "Gaudi::Math::ParticleParams"     />
   <class name    = "Gaudi::Math::FitMass"            />
   
+
+
   <class name    = "Gaudi::Math::EigenSystems"            />
   <class name    = "Gaudi::Math::Chebyshev"               />
   <class name    = "Gaudi::Math::ChebyshevU"              />
@@ -174,6 +177,7 @@
   <function name = "Gaudi::Math::log"             />
   <function name = "Gaudi::Math::log10"           />
   <function name = "Gaudi::Math::sqrt"            />
+  <function name = "Gaudi::Math::signed_sqrt"     />
   <function name = "Gaudi::Math::sin"             />
   <function name = "Gaudi::Math::cos"             />
   <function name = "Gaudi::Math::tan"             />
