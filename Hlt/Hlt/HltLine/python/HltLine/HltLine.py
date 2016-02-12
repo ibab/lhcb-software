@@ -581,7 +581,11 @@ class bindMembers (object) :
 
     def _InputOutputLocationMatchMaker(self, line, alg) :
         if hasattr(alg,'Inputs') : # only Hlt2...
-            req_inputs = getattr(alg,'Inputs')
+            from Configurables import HltParticleFlow
+            if type(alg) == HltParticleFlow:
+                req_inputs = [i[2] for i in getattr(alg,'Inputs')]
+            else:
+                req_inputs = getattr(alg,'Inputs')
             known_inputs = []
             def _OutputLocationsGetter(alg) :
                     if hasattr(alg,'Members') :
@@ -598,6 +602,11 @@ class bindMembers (object) :
                         if locs : return locs
                     if hasattr(alg,'TracksOutContainer') : return [ getattr(alg,'TracksOutContainer') ]
                     if hasattr(alg,'Output2SourceId') : return getattr(alg,'Output2SourceId').keys()
+                    if hasattr(type(alg), 'OutputData') and alg.name()[:4].upper() in ('ECAL', 'HCAL'):
+                        od = alg.getProp('OutputData')
+                        if 'Hcal' in alg.name():
+                            od = od.replace('Ecal', 'Hcal')
+                        return [od]
                     #if hasattr(type(alg),'Output') and not hasattr(alg,'Output') :
                     #    log.warning('Algorithm %s of type %s did not specify Output'% (alg.name(),alg.getType()))
                     return [ alg.name() ]
@@ -801,7 +810,7 @@ class Hlt1Tool (object ) :
     def createConfigurable( self, parent ) :
         from GaudiConfUtils import configurableExists
         if configurableExists('.'.join( [ parent.getName() ,self.Name ])) :
-                raise NameError('Configurable %s already exists, oh dear!'%name)
+                raise NameError('Configurable %s already exists, oh dear!' % self.Name)
 
         parent.addTool(self.Type, name = self.Name)
         instance = getattr( parent, self.Name )

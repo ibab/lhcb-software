@@ -5,6 +5,9 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2016-02-12 - Roel Aaij
+ - Add input output detector heuristic for HltParticleFlow.
+
 !========================= HltLine v7r13 2015-12-17 =========================
 
 ! 2015-10-26 - Roel Aaij
