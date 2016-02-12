@@ -25,8 +25,6 @@
 #include "EvtGenBase/EvtPDL.hh"
 #include <math.h>
 #include <stdlib.h>
-#include <iostream>
-
 
 EvtHQET2FF::EvtHQET2FF(double hqetrho2, double hqetha1_1 , double hqetr1_1, double hqetr2_1) {
 
