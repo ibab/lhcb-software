@@ -15,7 +15,6 @@ __all__ = ( 'MinimalVelo'
           , 'VeloTTTracking'  
           )
 
-
 ############################################################################################
 # Option to decide which pattern to use
 ############################################################################################
@@ -42,13 +41,17 @@ STOfflineConf.DefaultConf().configureTools()
 from HltTrackNames import Hlt1TrackLoc, HltSharedTrackLoc, Hlt2TrackLoc
 
 from Configurables import TrackStateInitAlg, TrackStateInitTool
-from Configurables import ToolSvc, TrackMasterExtrapolator
+from Configurables import ToolSvc, TrackMasterExtrapolator, TrackStateProvider,TrackInterpolator
 from Configurables import SimplifiedMaterialLocator
 
-## Simplified Material for public MasterExtrapolator
+## Simplified Material for public MasterExtrapolator and TrackStateProvider
 ToolSvc().addTool(TrackMasterExtrapolator, "TrackMasterExtrapolator")
 ToolSvc().TrackMasterExtrapolator.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
-
+ToolSvc().addTool(TrackStateProvider, "TrackStateProvider")
+ToolSvc().TrackStateProvider.Extrapolator.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
+ToolSvc().TrackStateProvider.Interpolator.addTool(TrackMasterExtrapolator,name="Extrapolator")
+ToolSvc().TrackStateProvider.addTool(TrackInterpolator,"Interpolator")
+ToolSvc().TrackStateProvider.Interpolator.Extrapolator.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
 #### Velo Tracking
 
 # the full Velo reconstruction

@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2016-02-12 Sascha Stahl
+  - HltSharedTracking: Use SimplifiedExtrapolator in the common TrackStateProvider.
+
 ! 2016-02-12 - Roel Aaij
  - Add HltJetConf to used configurables of Hlt2Tracking to ensure proper order
    of configuration
