@@ -21,8 +21,8 @@ class ChargedProtoANNPIDConf(LHCbConfigurableUser):
                   ,"RecoSequencer" : None    # The sequencer to use
                   ,"OutputLevel" : INFO      # The printout level to use
                   ,"ProtoParticlesLocation" : None
-                  ,"NetworkVersions" : { "2016"    : "MC15TuneV1",
-                                         "2015"    : "MC15TuneV1",
+                  ,"NetworkVersions" : { "2016"    : "MC12TuneV2",
+                                         "2015"    : "MC12TuneV2",
                                          "2013"    : "MC12TuneV2",
                                          "2012"    : "MC12TuneV2", 
                                          "2011"    : "MC12TuneV2", 
