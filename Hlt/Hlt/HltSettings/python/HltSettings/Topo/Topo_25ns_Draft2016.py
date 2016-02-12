@@ -2,7 +2,7 @@ from GaudiKernel.SystemOfUnits import GeV, mm, MeV, picosecond
 
 class Topo_25ns_Draft2016 :
     """
-    Threshold settings for Hlt2 topological lines for 2015 25 ns data-taking.
+    Threshold settings for Hlt2 topological lines for 2016 25 ns data-taking.
 
     WARNING :: DO NOT EDIT WITHOUT PERMISSION OF THE AUTHORS
 
