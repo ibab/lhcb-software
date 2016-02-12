@@ -1,0 +1,23 @@
+#============================================================================
+# Created    : 2016-02-11
+# Maintainer : Roel Aaij
+#============================================================================
+package           HltJets
+version           v1r0
+
+# Structure
+#============================================================================
+branches          cmt doc python
+include_path      none
+
+# Used packages
+#============================================================================
+
+use GaudiKernel         v*
+use HltEvent            v*  Event
+use JetAccessories      v*  Phys
+use Python              v*  LCG_Interfaces
+
+# ======= the patterns ========================================================
+macro HltTrackingConfUserModules "HltJets.HltJetConf"
+apply_pattern install_python_modules

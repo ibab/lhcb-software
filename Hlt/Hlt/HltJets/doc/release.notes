@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/HltJets
+! Responsible : Roel Aaij
+! Purpose     : Configuration of Jet building in the HLT
+!-----------------------------------------------------------------------------
+
+! 2016-02-11 - Roel Aaij
+ - Initial commit
