@@ -1,4 +1,4 @@
-from GaudiKernel.SystemOfUnits import MeV, picosecond, mm
+from GaudiKernel.SystemOfUnits import MeV, GeV, picosecond, mm
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
 class JetsLines(Hlt2LinesConfigurableUser):
@@ -13,9 +13,14 @@ class JetsLines(Hlt2LinesConfigurableUser):
                      'SV_TRK_IPCHI2' : 16,
                      'SV_FDCHI2' : 25,
                      'MU_PT'     : 1000*MeV,
-                     'MU_PROBNNMU'  : 0.5}
-             }
-    
+                     'MU_PROBNNMU'  : 0.5},
+                 'JetBuilder' : {
+                     'JetPtMin' : 5 * GeV,
+                     'JetInfo' : False,
+                     'JetEcPath' : ""
+                     }
+                 }
+
     def stages(self, nickname = ''):
         if hasattr(self, '_stages') and self._stages:
             if nickname: return self._stages[nickname]
@@ -24,10 +29,11 @@ class JetsLines(Hlt2LinesConfigurableUser):
 
         from Hlt2Lines.Topo.Lines import TopoLines
         from Hlt2Lines.Utilities.Hlt2Stage import Hlt2ExternalStage
+        from Hlt2Lines.Utilities.Hlt2JetBuilder import Hlt2JetBuilder
 
         topo_lines = TopoLines()
         topo_sv = Hlt2ExternalStage(topo_lines, topo_lines.stages('Topo2BodyCombos')[0])
-     
+
 
         from Stages import FilterSV, FilterMuon, SVSVCombiner, SVMuCombiner, MuMuCombiner
 
@@ -38,7 +44,7 @@ class JetsLines(Hlt2LinesConfigurableUser):
         svmu = [SVMuCombiner(sv+muon)]
         mumu = [MuMuCombiner(muon)]
 
-        # TO-DO: 
+        # TO-DO:
         # once jet code is in, make jets and add SV and Mu tags to extrainfo;
         # make appropriate svsv, etc, required inputs so PF is only run when needed;
         # replace, eg svsv, below with the proper jets;
@@ -50,10 +56,13 @@ class JetsLines(Hlt2LinesConfigurableUser):
         self._stages['DiJetSVMu'] = svmu
         self._stages['DiJetMuMu'] = mumu
 
+        # Build the jets and add them to all lines
+        # TO-DO: give it it's proper place
+        jets = Hlt2JetBuilder('DiJetsJetBuilder', sv + muon, shared = True, nickname = 'JetBuilder')
 
         # Return the stages.
-        if nickname: return self._stages[nickname]
-        else: return self._stages
+        if nickname: return self._stages[nickname] + [jets]
+        else: return {k : v + [jets] for k, v in self._stages.iteritems()}
 
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line
@@ -61,10 +70,4 @@ class JetsLines(Hlt2LinesConfigurableUser):
         stages = self.stages()
         for (nickname, algos) in self.algorithms(stages):
             linename = nickname
-            print '--> Adding', linename 
             Hlt2Line(linename, prescale = self.prescale, algos = algos, postscale = self.postscale)
-
-
-        
-        
-        

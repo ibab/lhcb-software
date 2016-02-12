@@ -1,7 +1,8 @@
 from Hlt2Lines.Utilities.Hlt2Combiner import Hlt2Combiner
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
+from Hlt2Lines.Utilities.Hlt2JetBuilder import Hlt2JetBuilder
 from HltTracking.HltPVs import PV3D
-from Inputs import Hlt2Muons 
+from Inputs import Hlt2Muons
 
 class FilterSV(Hlt2ParticleFilter):
   def __init__(self, inputs):
@@ -10,15 +11,15 @@ class FilterSV(Hlt2ParticleFilter):
 
       code = ("(MINTREE("+pid+",PT) > %(SV_TRK_PT)s)"
               "& (MINTREE(ISBASIC,TRGHOSTPROB) < %(GHOSTPROB)s) "
-              "& (MINTREE((ABSID=='K+'),MIPCHI2DV(PRIMARY)) > %(SV_TRK_IPCHI2)s)"  
-              "& (HASVERTEX) & (VFASPF(VCHI2PDOF) < %(SV_VCHI2)s)" 
-              "& (BPVVDCHI2 > %(SV_FDCHI2)s)") 
+              "& (MINTREE((ABSID=='K+'),MIPCHI2DV(PRIMARY)) > %(SV_TRK_IPCHI2)s)"
+              "& (HASVERTEX) & (VFASPF(VCHI2PDOF) < %(SV_VCHI2)s)"
+              "& (BPVVDCHI2 > %(SV_FDCHI2)s)")
       Hlt2ParticleFilter.__init__(self, 'JetsSVFilter', code, inputs, shared=True,dependencies = [PV3D('Hlt2')])
 
 
 class FilterMuon(Hlt2ParticleFilter):
   def __init__(self):
-      
+
       inputs = [Hlt2Muons]
       code = ("(PT > %(MU_PT)s) &  (PROBNNmu > %(MU_PROBNNMU)s)"
               "& (TRGHOSTPROB < %(GHOSTPROB)s)")
@@ -38,7 +39,7 @@ class SVSVCombiner(Hlt2Combiner) :
                             Preambulo = [],
                             shared = True,ParticleCombiners={ '' : 'ParticleAdder'})
 
-  
+
 class SVMuCombiner(Hlt2Combiner) :
   def __init__(self, inputs):
 
@@ -60,6 +61,3 @@ class MuMuCombiner(Hlt2Combiner) :
                             MotherCut = '(ALL)',
                             Preambulo = [],
                             shared = True,ParticleCombiners={ '' : 'ParticleAdder'})
-
-
-  

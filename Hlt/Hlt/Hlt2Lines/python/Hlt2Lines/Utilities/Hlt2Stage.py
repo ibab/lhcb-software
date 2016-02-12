@@ -16,7 +16,7 @@ class Hlt2Stage(object):
         self.__depStages = {}
         self.__inputStages = {}
         self.__configurable = configurable
-        
+
         for arg, msg in ((self.__inputs, "inputs"), (self.__deps, "dependencies")):
             if not isinstance(arg, collections.Iterable) or isinstance(arg, basestring):
                 raise RuntimeError("Hlt2Stage: %s must be an iterable, not a %s." % (msg, inputs))
@@ -26,13 +26,13 @@ class Hlt2Stage(object):
 
     def _configurable(self):
         return self.__configurable
-            
+
     def _name(self):
         return self.__name
 
     def _nickname(self):
         return self.__nickname
-    
+
     def _inputs(self):
         return self.__inputs
 
@@ -47,7 +47,7 @@ class Hlt2Stage(object):
 
     def _shared(self):
         return self.__shared
-    
+
     def _localCuts(self, cuts):
         common = cuts.get('Common', {})
         return cuts.get(self._nickname(), common)
@@ -58,15 +58,14 @@ class Hlt2Stage(object):
             outs = [outs]
         stages += list(outs)
         return outs
-    
+
     def inputStages(self, stages, cuts):
         key = self._hashCuts(cuts)
         if key in self.__inputStages:
             inputs, deps = self.__inputStages[key]
             stages += deps
             return inputs
-        
-        from itertools import chain
+
         deps = []
         inputs = []
         for i in self._inputs():
@@ -95,7 +94,7 @@ class Hlt2ExternalStage(Hlt2Stage):
         super(Hlt2ExternalStage, self).__init__(stage._name(), [],
                                                 [], stage._nickname(),
                                                 stage._shared(), configurable)
-        
+
     def stage(self, stages, cuts):
         ## Return what we create directly and add dependencies to stages.
         ## Get a local instance of the cuts

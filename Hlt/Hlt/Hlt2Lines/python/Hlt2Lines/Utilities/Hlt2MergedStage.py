@@ -2,7 +2,8 @@ from Hlt2Stage import Hlt2Stage
 from Utilities import makeStages
 
 class Hlt2MergedStage(Hlt2Stage):
-    def __init__(self, name, inputs, dependencies = [], nickname = None, shared = False):
+    def __init__(self, name, inputs, dependencies = [],
+                 nickname = None, shared = False, **kwargs):
         """Create a MergedStage from inputs."""
         def __shared(i):
             if hasattr(i, '_shared'):
@@ -11,7 +12,7 @@ class Hlt2MergedStage(Hlt2Stage):
                 return i.Shared
             else:
                 return True
-            
+        self.__kwargs = {}
         self.__cache = {}
         
         if shared and not all(__shared(i) for i in inputs):
@@ -22,6 +23,18 @@ class Hlt2MergedStage(Hlt2Stage):
         super(Hlt2MergedStage, self).__init__(name, [], dependencies = dependencies,
                                               nickname = nickname, shared = shared)
 
+    def clone(self, name, **kwargs):
+        args = deepcopy(self.__kwargs)
+        args['name'] = name
+        args['shared'] = self._shared()
+        for arg, default in (('inputs', self._inputs()),
+                             ('dependencies', self._deps()),
+                             ('nickname', self._nickname())):
+            args[arg] = kwargs.pop(arg) if arg in kwargs else default
+        args.update(kwargs)
+
+        return Hlt2MergedStage(**args)
+        
     def outputStages(self, stages, cuts):
         # Return our inputs as outputs to indicate that those should be used as
         # directly as inputs to whatever this MergedStage is an input to,
@@ -87,7 +100,7 @@ class Hlt2MergedStage(Hlt2Stage):
         from HltLine.HltLine import Hlt2SubSequence
         stage = Hlt2SubSequence(self._name() + 'Merged', subs,
                                 shared = self._shared(),
-                                ModeOR = True, ShortCircuit = False)
+                                ModeOR = True, ShortCircuit = False, **self.__kwargs)
         deps = self.dependencies(cuts) + common
         self.__cache[key] = (stage, deps)
         stages += deps
