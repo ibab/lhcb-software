@@ -61,6 +61,7 @@ __version__ = '$Revision$'
 __all__     = (
     ##
     'run'               , ## run  N events
+    'irun'              , ## "generator" to run  N events 
     'skip'              , ## skip N events 
     'next'              , ## go to run event
     'rewind'            , ## rewind 
@@ -114,7 +115,7 @@ def setPostAction ( action ) :
 ## set new Pre-action 
 def setPreAction ( action ) :
     """
-    set new ``pre-action'' for Bender
+    Set new ``pre-action'' for Bender
     """
     global __Bender_Pre_Action
     __Bender_Pre_Action = action
@@ -158,7 +159,7 @@ class Action(object) :
 def run ( nEvents     =   -1 ,
           postAction  = None ,
           preAction   = None ) :
-    """Run gauidi  ( invoke 
+    """Run gauidi 
     >>> run(50)
     """
     with Action ( preAction , postAction ) :
@@ -172,6 +173,63 @@ def run ( nEvents     =   -1 ,
             
     return st 
 
+# ==============================================================================
+## Run over events till certain number of good events is found
+#  @code
+#  def accept_function () : ...
+#  ...
+#  for i in irun ( 100 , accept_function ) :
+#         hdr = get('/Event/Rec/Header')
+#         print hdr.runNumber(), hdr.eventNumber() 
+#  @endcode
+#  The command can be useful in scripts 
+def irun ( nEvents                    ,
+           accept     = lambda : True , 
+           postAction = None          ,
+           preAction  = None          ) :
+    """Run over events till certain number of good events is found
+    >>> def accept_function () : 
+    >>> for i in irun ( 100 , accept_function ) :
+    ...         hdr = get('/Event/Rec/Header')
+    ...         print hdr.runNumber(), hdr.eventNumber()
+
+    e.g. one can select events with at least 2 J/psi:
+    good_events = lambda : 2<= len(get('/Event/PSIX/Phys/SelDetachedPsisForBandQ/Particles'))
+    
+    The command can be useful in scripts 
+    """
+    with Action ( preAction , postAction ) :
+        
+        ## get application manager:        
+        _g = appMgr() 
+        from GaudiPython.Bindings import gbl as cpp 
+        sc   = cpp.StatusCode(cpp.StatusCode.SUCCESS)
+        evnt = True 
+        iev  = 0
+        nev  = 0 
+        while sc.isSuccess() and evnt and ( nEvents < 0 or iev < nEvents ) :
+            
+            sc      = _g.run(1)
+            evnt    = get('/Event')
+            if not evnt :
+                if sc.isSuccess() : sc.setCode(2)
+                break         ## BREAK! 
+
+            nev   += 1                  ## total number of events
+            
+            if 0 == nev %   10000 : 
+                logger.debug   ('irun: run over %d, found %s ' % ( nev , iev ) )                 
+            if 0 == nev %  100000 : 
+                logger.info    ('irun: run over %d, found %s ' % ( nev , iev ) ) 
+            if 0 == nev % 1000000: 
+                logger.warning ('irun: run over %d, found %s ' % ( nev , iev ) ) 
+                
+            ## check
+            if accept() :              ## GOOD EVENT!  
+                iev  += 1
+                yield evnt,iev,nev     ## retun 
+                
+    
 # =============================================================================
 ## go to next  event
 #  @code 
@@ -189,17 +247,11 @@ def setData ( files            ,
               catalogs = []    ,
               castor   = False ,
               grid     = None  ) :
-    """
-    Define the input data for Bender job:
-    
-    >>> files    = [ 'file1.dst' , 'file2.dst' ]
-    
-    >>> catalogs = ....
-    
-    >>> import USERSCRIPT
-    
-    >>> USERSCRIPT.setData ( files , catalogs )
-    
+    """ Define the input data for Bender job:    
+    >>> files    = [ 'file1.dst' , 'file2.dst' ]    
+    >>> catalogs = ....    
+    >>> import USERSCRIPT    
+    >>> USERSCRIPT.setData ( files , catalogs )    
     """
 
         
@@ -286,7 +338,9 @@ def appMgr( *varg , **kwarg ) :
     """
     from GaudiPython.Bindings import AppMgr 
     _g = AppMgr()
-    if not 'LoKiSvc' in _g.ExtSvc : _g.ExtSvc += [ 'LoKiSvc']
+    if not 'LoKiSvc' in _g.ExtSvc :
+        logger.debug ('appMgr: add LoKiSvc into the list of servcies')
+        _g.ExtSvc += [ 'LoKiSvc']
     return _g
 
 # =============================================================================
@@ -297,17 +351,13 @@ def appMgr( *varg , **kwarg ) :
 #  @endcode 
 def ls  ( *args , **kwargs ) :
     """Browse the Transient Store
-
     >>> run(1)
     >>> ls()
-
     >>> ls('/Event/MC')
-    >>> ls('/Event/MC', forceload = True)
-    
+    >>> ls('/Event/MC', forceload = True)    
     """
     _g  = appMgr()
     _es = _g.evtSvc()
-    
     return _es.ls ( *args , **kwargs ) 
 
 # =============================================================================
@@ -319,6 +369,8 @@ def ls  ( *args , **kwargs ) :
 #  @endcode 
 def get  ( path , selector = lambda s : s ) :
     """Get object from  the Transient Store
+    >>> o = get('/Event/MC')
+    >>> o = get('/Event/MC/Particles' , MCPT > 1 )
     """
     _g  = appMgr()
     _es = _g.evtSvc()

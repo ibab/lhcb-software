@@ -24,6 +24,25 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2016-02-12 - Vanya Belyaev
+ - add a useful function irun     (run over event using 'generator')
+   It can be rather useful for scripts:
+
+   Run over events till certain number of good events is found
+
+   def accept_function () :  ... 
+
+
+   for i in irun ( 100 , accept_function ) :
+    ...         hdr = get('/Event/Rec/Header')
+    ...         print hdr.runNumber(), hdr.eventNumber()
+
+    e.g. one can select events with at least 2 J/psi:
+    good_events = lambda : 2<= len(get('/Event/PSIX/Phys/SelDetachedPsisForBandQ/Particles'))
+ 
+
+
+
 ! 2016-02-06 - Vanya BELYAEV
  - improve printout foro ialgTool
  
