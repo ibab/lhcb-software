@@ -774,6 +774,7 @@ LFV = {
     "CONFIG": {
         "B2TauMuPrescale": 0,
         "B2eMuPrescale": 1,
+        "JPsi2eMuPrescale": 1,
         "B2eePrescale": 1,
         "B2hTauMuPrescale": 0,
         "B2heMuPrescale": 1,
@@ -837,6 +838,60 @@ LFV = {
                 "Location": "ConeIsoInfoBDT",
                 "Type": "RelInfoTrackIsolationBDT"
             }
+        ],
+        "RelatedInfoTools_JPsi2eMu": [
+            {
+                'Type': 'RelInfoBs2MuMuBIsolations',
+                'Variables' : ['BSMUMUCDFISO',
+                               'BSMUMUOTHERBMAG',
+                               'BSMUMUOTHERBANGLE',
+                               'BSMUMUOTHERBBOOSTMAG',
+                               'BSMUMUOTHERBBOOSTANGLE',
+                               'BSMUMUOTHERBTRACKS'],
+                'Location'  : 'BSMUMUVARIABLES',  ## For the B
+                'tracktype' : 3,
+                'makeTrackCuts' : False
+            },
+            { 
+                'Type' : 'RelInfoBs2MuMuTrackIsolations',
+                'Variables' : ['BSMUMUTRACKPLUSISO',
+                               'BSMUMUTRACKPLUSISOTWO',
+                               'ISOTWOBODYQPLUS',
+                               'ISOTWOBODYMASSISOPLUS',
+                               'ISOTWOBODYCHI2ISOPLUS',
+                               'ISOTWOBODYISO5PLUS'],
+                'DaughterLocations' : {
+                            '[J/psi(1S) -> e+ ^[mu-]cc]CC' :  'Muon_ISO',
+                            '[J/psi(1S) -> ^e+ [mu-]cc]CC' :  'Electron_ISO',
+                },
+                'tracktype'  : 3,
+                'angle'      : 0.27,
+                'fc'         : 0.60,
+                'doca_iso'   : 0.13,
+                'ips'        : 3.0,
+                'svdis'      : -0.15,
+                'svdis_h'    : 30.,
+                'pvdis'      : 0.5,
+                'pvdis_h'    : 40.,
+                'makeTrackCuts' : False,
+                'IsoTwoBody' : True
+            },
+            {
+                'Type': 'RelInfoVertexIsolation',
+                'Location':'VtxIsoInfo',
+            },
+            {
+                'Type': 'RelInfoConeVariables',
+                'Location':'ConeIsoInfo',
+            },
+            {
+                'Type': 'RelInfoVertexIsolationBDT',
+                'Location':'VtxIsoInfoBDT',
+            },
+            {
+                'Type': 'RelInfoTrackIsolationBDT',
+                'Location':'ConeIsoInfoBDT',
+            },
         ],
         "RelatedInfoTools_B2ee": [
             {
@@ -1069,6 +1124,16 @@ LFV = {
             "min_BPVDIRA": 0,
             "min_BPVVDCHI2": 225,
             "min_MIPCHI2DV": 25.0
+        },
+        'config_JPsi2eMu': {
+            'min_MIPCHI2DV': 36.,
+            'max_ADAMASS'  : 1000,
+            'max_TRCHI2DV' : 3.,
+            'max_TRGHOSTPROB'  : 0.3,
+            'max_AMAXDOCA' : 0.3,
+            'min_BPVDIRA'  : 0,
+            'min_BPVVDCHI2': 256,
+            'max_BPVIPCHI2': 25,
         },
         "config_Tau2MuEtaPrime": {
             "config_EtaPrime2pipigamma": {
