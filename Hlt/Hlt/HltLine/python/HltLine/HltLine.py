@@ -1280,7 +1280,7 @@ class Hlt2Member ( object ) :
         """
         from Configurables import FilterDesktop, CombineParticles, TisTosParticleTagger
         from Configurables import DaVinci__N3BodyDecays, DaVinci__N4BodyDecays, DaVinci__N5BodyDecays, DaVinci__N6BodyDecays, DaVinci__N7BodyDecays
-        from Configurables import DiElectronMaker, LoKi__VoidFilter, AddRelatedInfo
+        from Configurables import DiElectronMaker, LoKi__VoidFilter, AddRelatedInfo, HltJetBuilder
         ## (0) verify input
         # Type must be a (configurable) class name, and only
         # a limited set is allowed (which must be DVAlgorithms...)
@@ -1288,7 +1288,7 @@ class Hlt2Member ( object ) :
                          , DaVinci__N3BodyDecays, DaVinci__N4BodyDecays
                          , DaVinci__N5BodyDecays, DaVinci__N6BodyDecays
                          , DaVinci__N7BodyDecays, DiElectronMaker
-                         , LoKi__VoidFilter, AddRelatedInfo ] :
+                         , LoKi__VoidFilter, AddRelatedInfo, HltJetBuilder ] :
             raise AttributeError, "The type  %s is not known for Hlt2Member"%Type
         for key in Args :
             if  key not in Type.__slots__  :
@@ -1331,29 +1331,37 @@ class Hlt2Member ( object ) :
         ## clone the arguments
         line = deepcopy ( line )
         args = deepcopy ( args )
+        def _adapt(i,line) :
+            from Configurables import FilterDesktop, CombineParticles, NoPIDsParticleMaker, CombinedParticleMaker, HltParticleFlow
+            from Configurables import DaVinci__N3BodyDecays, DaVinci__N4BodyDecays, DaVinci__N5BodyDecays, DaVinci__N6BodyDecays, DaVinci__N7BodyDecays
+            if hasattr(i,'Output') :
+                return i.Output
+            elif type(i) is bindMembers :
+                return  i.outputSelection()
+            elif type(i) in [ CombineParticles, FilterDesktop, NoPIDsParticleMaker,CombinedParticleMaker,
+                              DaVinci__N3BodyDecays, DaVinci__N4BodyDecays, DaVinci__N5BodyDecays,
+                              DaVinci__N6BodyDecays, DaVinci__N7BodyDecays, HltParticleFlow ] :
+                return 'Hlt2/%s/Particles' % i.getName()
+            elif type(i) is Hlt2Member :
+                if i.Shared:
+                    return 'Hlt2/Hlt2' + i.subname() + '/Particles'
+                else:
+                    return 'Hlt2/Hlt2' + line + i.subname() + '/Particles'
+            else :
+                return re.sub('^%', 'Hlt2' + line, i )
+
         if 'Inputs' in args :
             # adapt input...  and put back...
             inputLocations = args.pop('Inputs')
-            def _adapt(i,line) :
-                from Configurables import FilterDesktop, CombineParticles, NoPIDsParticleMaker, CombinedParticleMaker
-                from Configurables import DaVinci__N3BodyDecays, DaVinci__N4BodyDecays, DaVinci__N5BodyDecays, DaVinci__N6BodyDecays, DaVinci__N7BodyDecays
-                if hasattr(i,'Output') :
-                    return i.Output
-                elif type(i) is bindMembers :
-                    return  i.outputSelection()
-                elif type(i) in [ CombineParticles, FilterDesktop, NoPIDsParticleMaker,CombinedParticleMaker, DaVinci__N3BodyDecays, DaVinci__N4BodyDecays, DaVinci__N5BodyDecays, DaVinci__N6BodyDecays, DaVinci__N7BodyDecays ] :
-                    return 'Hlt2/%s/Particles' % i.getName()
-                elif type(i) is Hlt2Member :
-                    if i.Shared:
-                        return 'Hlt2/Hlt2' + i.subname() + '/Particles'
-                    else:
-                        return 'Hlt2/Hlt2' + line + i.subname() + '/Particles'
-                else :
-                    return re.sub('^%', 'Hlt2' + line, i )
-
             inputLocations = [ _adapt(i,line) for i in inputLocations ]
             # deal with nested lists, keep order invariant
             args['Inputs'] = [ i for i in flatten(inputLocations) ]
+        if 'InputTags' in args :
+            # adapt input...  and put back...
+            inputLocations = args.pop('InputTags')
+            inputLocations = [ _adapt(i,line) for i in inputLocations ]
+            # deal with nested lists, keep order invariant
+            args['InputTags'] = [ i for i in flatten(inputLocations) ]
 
         _name = self.name( line )
         if 'Output' not in args:
@@ -1386,7 +1394,6 @@ class Hlt2Member ( object ) :
 class Hlt2SubSequence ( object ) :
     __slots__ = ( 'Name' , 'Members', 'Args', 'Shared' )
 
-    ### The standard constructor to create the  Hlt1Member instance:
     def __init__ ( self          ,    ## ...
                    name          ,    ## the specific part of the algorithm name
                    members       ,
@@ -1452,9 +1459,9 @@ class Hlt2SubSequence ( object ) :
                     raise AttributeError(('Members is not the same for previously created ') +
                         'SubSequence %s and new instance: %s %s' % (_name, prev.Members, self.Members))
                 for (pm, m) in zip(prev.Members, self.Members):
-                    if not pm.name().endswith(m.id()):
+                    if not pm.name().endswith(m.id() if hasattr(m, 'id') else m.name()):
                         raise AttributeError(('Name of member %s of previously created SubSequence' % pm.name()) +
-                                             ' is does not end the same as new member with name %s.' % m.name())
+                                              ' is does not end the same as new member with name %s.' % m.name())
                 return prev
             else:
                 raise NameError('Configurable %s already exists, oh dear!'%_name)
