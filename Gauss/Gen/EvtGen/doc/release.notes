@@ -4,6 +4,19 @@
 ! Purpose     :
 !-----------------------------------------------------------------------------
 
+! 2016-02-12 - John Back
+  - Added extensions to the EvtHQET2(FF) model for semitauonic decays from
+    Brian Hamilton. See https://its.cern.ch/jira/browse/LHCBGAUSS-636.
+
+! 2015-12-22 - Jack Wimberley
+  - Semileptonic decays have a minimum q^2 value equal to the lepton mass 
+    squared; for semitauonic decays this is non-negligible. Moreover, 
+    extrapolating form factors to the unphysical q^2 range often leads to 
+    very high fake decay probabilities in this region, which artificially 
+    increases the maximum probability used during Monte Carlo generation and 
+    hurts efficiency. This patch modifies the q^2 range in EvtSemiLeptonicAmp 
+    to its physical range.
+
 !========================== EvtGen v14r4 2015-12-18 ==========================
 
 ! 2015-12-02 - John Back

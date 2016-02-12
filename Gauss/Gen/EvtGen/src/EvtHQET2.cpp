@@ -20,6 +20,10 @@
 //
 //    Marco Bomben     March 10, 2003       Module created
 //
+//    Brian Hamilton     Feb 12, 2016       Added "extened" functionality
+//      <brian.hamilton -=AT=- cern.ch>       to include scalar amplitude
+//
+//
 //------------------------------------------------------------------------
 // 
 #include "EvtGenBase/EvtPatches.hh"
@@ -37,8 +41,8 @@
 using std::endl;
 
 EvtHQET2::EvtHQET2():
-  hqetffmodel(0)
-  ,calcamp(0)
+  hqetffmodel(0),
+  calcamp(0)
 {}
 
 EvtHQET2::~EvtHQET2() {
@@ -100,26 +104,46 @@ void EvtHQET2::init(){
 
   EvtSpinType::spintype d1type = EvtPDL::getSpinType(getDaug(0));
   if ( d1type==EvtSpinType::SCALAR) {
-    if ( getNArg()==2 ) {hqetffmodel = new EvtHQET2FF(getArg(0),getArg(1)); 
-    calcamp = new EvtSemiLeptonicScalarAmp;} 
-    else {
-    report(ERROR,"EvtGen") << "HQET2 model for scalar meson daughters needs 2 arguments. Sorry."<<endl;
-    ::abort();
-  }  
-  }
-  else if ( d1type==EvtSpinType::VECTOR) {
-    if ( getNArg()==4 ){ hqetffmodel = new EvtHQET2FF(getArg(0),getArg(1),getArg(2),getArg(3));
-    calcamp = new EvtSemiLeptonicVectorAmp; }
-    else  {
-    report(ERROR,"EvtGen") << "HQET2 model for vector meson daughtersneeds 4 arguments. Sorry."<<endl;
-    ::abort();
+
+    if ( getNArg()==2 ) {
+
+      hqetffmodel = new EvtHQET2FF(getArg(0),getArg(1)); 
+      calcamp = new EvtSemiLeptonicScalarAmp;
+
+    } else if ( getNArg()==3 ) {
+
+      hqetffmodel = new EvtHQET2FF(getArg(0),getArg(1),getArg(2)); 
+      calcamp = new EvtSemiLeptonicScalarAmp;
+
+    } else {
+
+      report(ERROR,"EvtGen") << "HQET2 model for scalar meson daughters needs 2 arguments for normal mode or 3 for extended. Sorry."<<endl;
+      ::abort();
     }
-  }
-  else{
+
+  } else if ( d1type==EvtSpinType::VECTOR) {
+
+    if ( getNArg()==4 ) { 
+
+      hqetffmodel = new EvtHQET2FF(getArg(0),getArg(1),getArg(2),getArg(3));
+      calcamp = new EvtSemiLeptonicVectorAmp; 
+
+    } else if ( getNArg()==5 ) {
+
+      hqetffmodel = new EvtHQET2FF(getArg(0),getArg(1),getArg(2),getArg(3),getArg(4));
+      calcamp = new EvtSemiLeptonicVectorAmp; 
+
+    } else {
+
+      report(ERROR,"EvtGen") << "HQET2 model for vector meson daughtersneeds 4 arguments for normal mode or 5 for extended. Sorry."<<endl;
+      ::abort();
+    }
+
+  } else {
+
     report(ERROR,"EvtGen") << "HQET2 model handles only scalar and vector meson daughters. Sorry."<<endl;
     ::abort();
   }
-
   
 }
 

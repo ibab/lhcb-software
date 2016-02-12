@@ -8,6 +8,9 @@
 //
 //    Marco Bomben   March 10, 2003         Module created
 //
+//    Brian Hamilton     Jan 10, 2016       Added "extened" functionality
+//      <brian.hamilton -=AT=- cern.ch>       to include scalar amplitude
+//
 //------------------------------------------------------------------------
 
 #ifndef EVTHQET2FF_HH
@@ -22,6 +25,8 @@ class EvtHQET2FF : public EvtSemiLeptonicFF {
 public:
   EvtHQET2FF(double hqetrho2, double hqetha1_1, double hqetr1_1, double hqetr2_1);
   EvtHQET2FF(double hqetrho2, double hqetv1_1);
+  EvtHQET2FF(double hqetrho2, double hqetha1_1, double hqetr1_1, double hqetr2_1, double hqetr0_1);
+  EvtHQET2FF(double hqetrho2, double hqetv1_1, double indelta);
   void getvectorff(EvtId parent,EvtId daught,
                        double t, double mass, double *a1f,
                        double *a2f, double *vf, double *a0f );
@@ -47,6 +52,9 @@ private:
   double r2_1;
   double ha1_1;
   double v1_1;
+  double r0_1;
+  double delta;
+  bool extended;
 };
 
 #endif
