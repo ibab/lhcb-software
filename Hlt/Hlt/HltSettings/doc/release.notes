@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-02-12 - Michael Kolpin
+ - Add 2016 draft configuration to TrackEffDiMuon using the updated split trigger lines
+
 ! 2016-02-12 - Carla Marin
  - Add folder for LFV settings with:
 A                0   python/HltSettings/LFV
