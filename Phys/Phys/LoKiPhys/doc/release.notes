@@ -5,6 +5,15 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2016-02-12 - Vanya Belyaev
+ - add more methods fr particles:
+     mass, pT, eT, mT, rapidity, pseudorapidity, phi and theta, etc...  
+     they return the correponding quantity and the corresponding uncertainty
+
+    In [3]: B.mass() / GeV 
+    Out[3]: ( 4.82868 +- 0.0402819 )
+
+
 ! 2016-02-10 - Vanya Belyaev
  - add more signatures for child/children functions:
    >>>  b = ...
