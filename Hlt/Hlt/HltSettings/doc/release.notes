@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 ! 2016-02-12 - Carla Marin
+ - Add folder for LFV settings with:
+A                0   python/HltSettings/LFV
+A                0   python/HltSettings/LFV/__init__.py
+A                0   python/HltSettings/LFV/LFV_25ns_Draft2016.py
+
+! 2016-02-12 - Carla Marin
  - Add cuts for Hypb2L0HGamma to radiative settings.
 
 ! 2016-02-08 - Sascha Stahl
