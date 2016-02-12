@@ -4,6 +4,11 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2016-02-12 - Chris Jones
+ - Move the method that creates new clusters into the HPDPixelClusters class,
+   such that it is more closely bind to the memory management and the 
+   eventual (implicit) deletion of the objects.
+
 ! 2016-02-11 - Chris Jones
  - Update RichPixelCluster classes to use std::unique_ptr for its internal
    memory management, in preference to doing it by hand with raw pointers.

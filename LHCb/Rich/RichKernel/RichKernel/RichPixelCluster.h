@@ -172,7 +172,7 @@ namespace Rich
       /// Collection of cluster smart pointers (i.e. for ownership with memory management)
       using SmartPtnVector = LHCb::Boost::PoolAllocList< std::unique_ptr<Cluster> >;
 
-    public: // methods
+    public: // Constructors etc.
 
       /// Default Constructor
       Cluster() = default;
@@ -192,8 +192,10 @@ namespace Rich
       /// Default Move operator
       Cluster& operator=( Cluster&& ) = default;
 
+    public: // methods
+
       /// Constructor from ID
-      Cluster( const int id ) : m_clusterID(id) { }
+      explicit Cluster( const int id ) : m_clusterID(id) { }
 
       /// Get cluster ID
       inline int id() const noexcept
@@ -237,6 +239,8 @@ namespace Rich
     /// Destructor
     ~HPDPixelClusters() = default;
 
+  public:
+
     /// Read access to the vector of clusters
     inline const Cluster::SmartPtnVector & clusters() const noexcept { return m_allclus; }
 
@@ -247,8 +251,18 @@ namespace Rich
     void suppressIDs( HPDPixelCluster::SmartIDVector & smartIDs,
                       const unsigned int maxSize ) const;
 
+  public:
+
     /// Get the cluster for a given HPD ID
     const Cluster * getCluster( const LHCb::RichSmartID & id ) const;
+
+    /// Create and return a new cluster with the given ID
+    inline Cluster * createNewCluster( const int id )
+    {
+      auto * clus = new HPDPixelClusters::Cluster(id);
+      m_allclus.emplace_back( clus );
+      return clus;
+    }
 
   public:
 
@@ -259,11 +273,6 @@ namespace Rich
     friend inline MsgStream& operator << ( MsgStream& os,
                                            const HPDPixelClusters & clus )
     { return clus.fillStream(os); }
-
-  public:
-
-    /// Add a new cluster
-    inline void addCluster( Cluster * clus ) { m_allclus.emplace_back(clus); }
 
   private: // data
 
@@ -349,8 +358,7 @@ namespace Rich
     /// Create a new cluster with given ID
     inline HPDPixelClusters::Cluster * createNewCluster()
     {
-      m_hpdClus->addCluster( new HPDPixelClusters::Cluster(++m_lastID) );
-      return m_hpdClus->clusters().back().get();
+      return m_hpdClus->createNewCluster( ++m_lastID );
     }
 
     /// Create a new cluster with given ID
@@ -405,7 +413,7 @@ namespace Rich
     HPDPixelClusters * m_hpdClus{nullptr};
 
     /// working variable, storing the last used cluster ID
-    unsigned int m_lastID{0};
+    int m_lastID{0};
 
     /// Are we in ALICE mode ?
     bool m_aliceMode{false};
