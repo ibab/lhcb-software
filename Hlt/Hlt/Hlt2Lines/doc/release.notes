@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-02-12 - Michael Kolpin
+ - Split TrackEffDiMuon lines in 'LowStat' and 'HighStat' lines to allow
+   separate prescale. Regions are configurable.
+
 ! 2016-02-12 - Francesco Dettori
  - Added Hlt2Lines/Strange directory containing for the moment one line: 
    StrangeKPiPiPi line. 
