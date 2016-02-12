@@ -120,17 +120,8 @@ def chkTrg  ( ) :
 
             self.setFilterPassed ( not particles.empty() )
 
-
             return SUCCESS 
 
-        ## finalization 
-        def finalize ( self ) :
-            """
-            Standard finalization 
-            """
-            #
-            Algo.tisTos_finalize ( self )
-            return Algo.finalize ( self )
 
     return CheckTrg
 
@@ -145,7 +136,7 @@ def configChkTrg ( config ) :
     from BenderTools.DstExplorer import configure
     configure ( config )
 
-    root = config.RootInTES 
+    root = config.RootInTES
     line = config.teslocation
     
     if root :
@@ -178,7 +169,7 @@ def configChkTrg ( config ) :
     #
     from PhysConf.Filters import LoKi_Filters
     if root : location = root + '/' + line 
-    else    : location = '/Event/' + line 
+    else    : location = '/Event/'  + line 
     logger.info("Use filter for non-empty location:'%s'"               % location )
     fltrs = LoKi_Filters ( VOID_Code  = " 0.5 < CONTAINS ('%s',True) " % location )
     from Configurables       import DaVinci
