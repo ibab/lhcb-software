@@ -77,7 +77,58 @@ related_info_tools_B2eMu = [{'Type' : 'RelInfoBs2MuMuBIsolations',
                             },
                             ] ## matches 'RelatedInfoTools'
 
-
+related_info_tools_JPsi2eMu = [{'Type' : 'RelInfoBs2MuMuBIsolations',
+                            'Variables' : ['BSMUMUCDFISO',
+                                           'BSMUMUOTHERBMAG',
+                                           'BSMUMUOTHERBANGLE',
+                                           'BSMUMUOTHERBBOOSTMAG',
+                                           'BSMUMUOTHERBBOOSTANGLE',
+                                           'BSMUMUOTHERBTRACKS'],
+                            'Location'  : 'BSMUMUVARIABLES',  ## For the B
+                            'tracktype' : 3,
+                            'makeTrackCuts' : False
+                            },
+                            {'Type' : 'RelInfoBs2MuMuTrackIsolations',
+                            'Variables' : ['BSMUMUTRACKPLUSISO',
+                                           'BSMUMUTRACKPLUSISOTWO',
+                                           'ISOTWOBODYQPLUS',
+                                           'ISOTWOBODYMASSISOPLUS',
+                                           'ISOTWOBODYCHI2ISOPLUS',
+                                           'ISOTWOBODYISO5PLUS'],
+                            'DaughterLocations' : {
+                            '[J/psi(1S) -> e+ ^[mu-]cc]CC' :  'Muon_ISO',
+                            '[J/psi(1S) -> ^e+ [mu-]cc]CC' :  'Electron_ISO',
+                            },
+    
+                            'tracktype'  : 3,
+                            'angle'      : 0.27,
+                            'fc'         : 0.60,
+                            'doca_iso'   : 0.13,
+                            'ips'        : 3.0,
+                            'svdis'      : -0.15,
+                            'svdis_h'    : 30.,
+                            'pvdis'      : 0.5,
+                            'pvdis_h'    : 40.,
+                            'makeTrackCuts' : False,
+                            'IsoTwoBody' : True
+                            },
+                            
+                            {'Type': 'RelInfoVertexIsolation',
+                            'Location':'VtxIsoInfo',
+                            },
+                            
+                            {'Type': 'RelInfoConeVariables',
+                            'Location':'ConeIsoInfo',
+                            },
+                            
+                            {'Type': 'RelInfoVertexIsolationBDT',
+                            'Location':'VtxIsoInfoBDT',
+                            },
+                            
+                            {'Type': 'RelInfoTrackIsolationBDT',
+                            'Location':'ConeIsoInfoBDT',
+                            },
+                            ] ## matches 'RelatedInfoTools'
 
 
 related_info_tools_B2ee = [{'Type' : 'RelInfoBs2MuMuBIsolations',
@@ -269,6 +320,7 @@ default_config = {
     'TauPrescale'           :1,
     'Tau2MuMuePrescale'     :1,
     'B2eMuPrescale'         :1,
+    'JPsi2eMuPrescale'      :1,
     'B2eePrescale'          :1,
     'B2heMuPrescale'        :1,
     'B2pMuPrescale'         :1,
@@ -277,6 +329,7 @@ default_config = {
     'B2hTauMuPrescale'      :1,
     'Tau2MuEtaPrimePrescale':1,
     'RelatedInfoTools_B2eMu': related_info_tools_B2eMu,
+    'RelatedInfoTools_JPsi2eMu': related_info_tools_JPsi2eMu,
     'RelatedInfoTools_B2ee' : related_info_tools_B2ee,
     'RelatedInfoTools_Tau2PhiMu' : related_info_tools_Tau2PhiMu,
     'RelatedInfoTools_Bu2KJPsiee' : related_info_tools_Bu2KJPsiee,
@@ -291,7 +344,16 @@ default_config = {
     'min_BPVVDCHI2': 225,
     'max_BPVIPCHI2': 25,
     },
-    
+    'config_JPsi2eMu'          : {
+    'min_MIPCHI2DV': 36.,
+    'max_ADAMASS'  : 1000*MeV,
+    'max_TRCHI2DV' : 3.,
+    'max_TRGHOSTPROB'  : 0.3,
+    'max_AMAXDOCA' : 0.3*mm,
+    'min_BPVDIRA'  : 0,
+    'min_BPVVDCHI2': 256,
+    'max_BPVIPCHI2': 25,
+    },
     
     'config_Tau2MuEtaPrime' : {
         'muplus_cuts'       : '(ISLONG) & (TRCHI2DOF < 3 )  & (MIPCHI2DV(PRIMARY) >  9.) & (PT > 300*MeV) & (TRGHOSTPROB < 0.3)',
@@ -325,6 +387,7 @@ class LFVLinesConf(LineBuilder) :
                               'TauPrescale',
                               'Tau2MuMuePrescale',
                               'B2eMuPrescale',
+                              'JPsi2eMuPrescale',
                               'B2eePrescale',
                               'B2heMuPrescale',
                               'B2pMuPrescale',
@@ -333,11 +396,13 @@ class LFVLinesConf(LineBuilder) :
                               'B2hTauMuPrescale',
                               'Tau2MuEtaPrimePrescale',
                               'RelatedInfoTools_B2eMu',
+                              'RelatedInfoTools_JPsi2eMu',
                               'RelatedInfoTools_B2ee',
                               'RelatedInfoTools_Tau2PhiMu',
                               'RelatedInfoTools_Bu2KJPsiee',
                               'RelatedInfoTools_Tau2MuEtaPrime',
                               'config_B2eMu',
+                              'config_JPsi2eMu',
                               'config_Tau2MuEtaPrime',
                               )
         
@@ -351,6 +416,7 @@ class LFVLinesConf(LineBuilder) :
             tau_name = name+'Tau2PhiMu'
             mme_name = name+'Tau2eMuMu'
             emu_name=name+'B2eMu'
+            JPsiemu_name=name+'JPsi2eMu'
             ee_name=name+'B2ee'
             hemu_name=name+'B2heMu'
             pmu_name=name+'B2hMu'
@@ -364,6 +430,7 @@ class LFVLinesConf(LineBuilder) :
             self.selTau2PhiMu = makeTau2PhiMu(tau_name)
             self.selTau2eMuMu = makeTau2eMuMu(mme_name)
             self.selB2eMu     = makeB2eMu(emu_name, config['config_B2eMu'])
+            self.selJPsi2eMu     = makeJPsi2eMu(JPsiemu_name, config['config_JPsi2eMu'])
             self.selB2ee      = makeB2ee(ee_name)
             self.selB2heMu    = makeB2heMu(hemu_name)
             self.selB2pMu     = makeB2pMu(pmu_name)
@@ -397,7 +464,14 @@ class LFVLinesConf(LineBuilder) :
                                            RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
                                            algos = [ self.selB2eMu ]
                                            )
-                                           
+            self.jpsi2eMuLine = StrippingLine(JPsiemu_name+'Line',
+                                           prescale = config['JPsi2eMuPrescale'],
+                                           postscale = config['Postscale'],
+                                           RelatedInfoTools = config['RelatedInfoTools_JPsi2eMu'],
+                                           MDSTFlag = True,
+                                           RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
+                                           algos = [ self.selJPsi2eMu ]
+                                           )
                                            
 
             '''
@@ -465,6 +539,7 @@ class LFVLinesConf(LineBuilder) :
             self.registerLine(self.tau2PhiMuLine)
             self.registerLine(self.tau2eMuMuLine)
             self.registerLine(self.b2eMuLine)
+            self.registerLine(self.jpsi2eMuLine)
             self.registerLine(self.b2eeLine)
             self.registerLine(self.b2heMuLine)
             self.registerLine(self.b2pMuLine)
@@ -612,11 +687,8 @@ def makeB2eMu(name, myconfig):
     
     #from Configurables import OfflineVertexFitter
     Bs2eMu = CombineParticles(
-
-
     
         DecayDescriptors = ["[B_s0 -> e+ mu-]cc","[B_s0 -> e+ mu+]cc"],
-    
         DaughtersCuts = {
           "mu+" : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV}) & (TRCHI2DOF < {max_TRCHI2DV}) & (TRGHOSTPROB< {max_TRGHOSTPROB})".format(**myconfig) ,
           "e+"  : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV})&(TRCHI2DOF < {max_TRCHI2DV})".format(**myconfig),
@@ -639,7 +711,39 @@ def makeB2eMu(name, myconfig):
                       Algorithm = Bs2eMu,
                       RequiredSelections = [ _stdLooseMuons,_stdLooseElectrons])
 
+def makeJPsi2eMu(name, myconfig):
+    """
+    Please contact Johannes Albrecht if you think of prescaling this line!
+    
+    Arguments:
+    name        : name of the Selection.
+    """
+    
+    #from Configurables import OfflineVertexFitter
+    JPsi2eMu = CombineParticles(
+    
+        DecayDescriptors = ["[J/psi(1S) -> e+ mu-]cc","[J/psi(1S) -> e+ mu+]cc"],
+        DaughtersCuts = {
+          "mu+" : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV}) & (TRCHI2DOF < {max_TRCHI2DV}) & (TRGHOSTPROB< {max_TRGHOSTPROB})".format(**myconfig) ,
+          "e+"  : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV})&(TRCHI2DOF < {max_TRCHI2DV})&(PIDe>-2)".format(**myconfig),
+        },
 
+        CombinationCut = "(ADAMASS('J/psi(1S)') < {max_ADAMASS})"\
+                            "& (AMAXDOCA('') < {max_AMAXDOCA})".format(**myconfig),
+
+        MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
+                              "& (ADMASS('J/psi(1S)') < {max_ADAMASS} )"\
+                              "& (BPVDIRA > {min_BPVDIRA}) "\
+                              "& (BPVVDCHI2 > {min_BPVVDCHI2})"\
+                              "& (BPVIPCHI2() < {max_BPVIPCHI2}) ".format(**myconfig),
+    )
+    
+    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
+    _stdLooseElectrons= DataOnDemand(Location = "Phys/StdLooseElectrons/Particles")
+
+    return Selection (name,
+                      Algorithm = JPsi2eMu,
+                      RequiredSelections = [ _stdLooseMuons,_stdLooseElectrons])
 
 def makeB2ee(name):
     """
