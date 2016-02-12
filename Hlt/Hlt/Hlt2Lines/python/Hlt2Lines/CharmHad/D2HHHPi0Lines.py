@@ -12,7 +12,7 @@
 #=============================================================================
 __author__  = "Maurizio MARTINELLI maurizio.martinelli@cern.ch ; Simone STRACKA simone.stracka@cern.ch"
 
-from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
+from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm, mrad
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
 class CharmHadD2HHHPi0Lines() :
@@ -38,7 +38,7 @@ class CharmHadD2HHHPi0Lines() :
             'Trk_2OF3_MIPCHI2DV_MIN'  : 5.0, # This can be tuned for reducing retention
             'VCHI2PDOF_MAX'           : 10.0,
             'BPVCORRM_MAX'            : 3500 * MeV,
-            'BPVDIRA_MIN'             : 0.999,
+            'acosBPVDIRA_MAX'         : 44.7 * mrad,
             'BPVVDCHI2_MIN'           : 20.0,
             'BPVLTIME_MIN'            : 0.3 * picosecond,
             'TisTosSpec'              : "Hlt1.*Track.*Decision%TOS"
@@ -55,7 +55,7 @@ class CharmHadD2HHHPi0Lines() :
             'BPVIPCHI2_MAX'         : 20.0,
             'DMASS_MIN'             : 1795.0 * MeV,
             'DMASS_MAX'             : 2035.0 * MeV,
-            'BPVDIRA_MIN'           : 0.999,
+            'acosBPVDIRA_MAX'       : 44.7 * mrad,
             'VCHI2PDOF_MAX'         : 20.0,
             'TisTosSpec'              : "Hlt1.*Track.*Decision%TOS"
         }

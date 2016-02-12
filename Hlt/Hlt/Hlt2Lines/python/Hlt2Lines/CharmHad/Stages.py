@@ -446,7 +446,7 @@ class DetachedD02HHCombiner(Hlt2Combiner) : # {
         'Pair_AMINDOCA_MAX' : upper limit on AMINDOCA('') in CombinationCut
         'D0_VCHI2PDOF_MAX'  : upper limit on VFASPF(VCHI2PDOF) in MotherCut
         'D0_BPVVDCHI2_MIN'  : lower limit on BPVVDCHI2 in MotherCut
-        'D0_BPVDIRA_MIN'    : lower limit on BPVDIRA in MotherCut
+        'D0_acosBPVDIRA_MAX': upper limit on acos(BPVDIRA) in MotherCut (rad)
         'TisTosSpec'        : configuration string of the Hlt1 TISTOS filter.
     """
     def __init__(self, name, decay, inputs, nickname = None, shared = False, **kwargs) : # {
@@ -468,7 +468,12 @@ class DetachedD02HHCombiner(Hlt2Combiner) : # {
 
         parentcuts = "(VFASPF(VCHI2PDOF) < %(D0_VCHI2PDOF_MAX)s)" \
                      "& (BPVVDCHI2> %(D0_BPVVDCHI2_MIN)s )" \
-                     "& (BPVDIRA > %(D0_BPVDIRA_MIN)s )"
+                     "& (BPVDIRA > lcldira )"
+
+        pream = [
+                "import math"
+                , "lcldira = math.cos( %(D0_acosBPVDIRA_MAX)s )"
+        ]
 
         from HltTracking.HltPVs import PV3D
         ## The name passed to the base class constructor determines the
@@ -482,7 +487,7 @@ class DetachedD02HHCombiner(Hlt2Combiner) : # {
                                DaughtersCuts = dc,
                                CombinationCut = combcuts,
                                MotherCut = parentcuts,
-                               Preambulo = [],
+                               Preambulo = pream,
                                **kwargs)
     # }
 # }
@@ -553,7 +558,7 @@ class DetachedHHHCombiner(Hlt2Combiner) : # {
         'AM_MAX'                : lower and upper limits on AM in CombinationCut
         'ASUMPT_MIN'            : lower limit on APT1+APT2+APT3 in CombinationCut
         'VCHI2PDOF_MAX'         : upper limit on VFASPF(VCHI2PDOF) in MotherCut
-        'BPVDIRA_MIN'           : lower limit on BPVDIRA in MotherCut
+        'acosBPVDIRA_MAX'       : upper limit on acos(BPVDIRA) in MotherCut (rad)
         'BPVVDCHI2_MIN'         : lower limit on BPVVDCHI2 in MotherCut
         'BPVLTIME_MIN'          : lower limit on BPVLTIME() in MotherCut
         'TisTosSpec'            : configuration string of the Hlt1 TISTOS filter.
@@ -570,9 +575,13 @@ class DetachedHHHCombiner(Hlt2Combiner) : # {
                  " & (ANUM(MIPCHI2DV(PRIMARY) > %(Trk_2OF3_MIPCHI2DV_MIN)s) >= 2)")
         ## P.S. -- Are cuts on both BPVVDCHI2 and BPVLTIME useful?
         mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
-                 " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
-                 " & (BPVVDCHI2 > %(BPVVDCHI2_MIN)s )" +
+                 " & (BPVDIRA > lcldira )" +
                  " & (BPVLTIME() > %(BPVLTIME_MIN)s )")
+
+        pream = [
+                "import math"
+                , "lcldira = math.cos( %(acosBPVDIRA_MAX)s )"
+        ]
 
         nickname = name if nickname == None else nickname
         from HltTracking.HltPVs import PV3D
@@ -581,7 +590,7 @@ class DetachedHHHCombiner(Hlt2Combiner) : # {
         Hlt2Combiner.__init__(self, "CharmHad" + name, decay, inputs,
                               nickname = nickname, dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                               shared = True, tistos = 'TisTosSpec', DaughtersCuts = dc,
-                              CombinationCut = cc, MotherCut = mc, Preambulo = [])
+                              CombinationCut = cc, MotherCut = mc, Preambulo = pream)
     # }
 # }
 
@@ -752,7 +761,7 @@ class HHKshCombiner(Hlt2Combiner):
         mc =    (
                  "   (PT > %(D_PT_MIN)s )" +
                  " & (CHI2VXNDOF < %(D_VCHI2PDOF_MAX)s)" +
-                 " & (BPVDIRA > %(D_BPVDIRA_MIN)s )" +
+                 " & (BPVDIRA > lcldira )" +
                  " & (BPVVDCHI2 > %(D_BPVVDCHI2_MIN)s )" +
                  " & (BPVLTIME() > %(D_BPVLTIME_MIN)s )"
                 )
@@ -762,6 +771,11 @@ class HHKshCombiner(Hlt2Combiner):
 
         cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
                  " & ((APT1+APT2+APT3) > %(ASUMPT_MIN)s )")
+
+        pream = [
+                "import math"
+                , "lcldira = math.cos( %(D_acosBPVDIRA_MAX)s )"
+        ]
 
         from HltTracking.HltPVs import PV3D
 
@@ -779,7 +793,7 @@ class HHKshCombiner(Hlt2Combiner):
                      nickname = 'D02HHKsh',
                      Combination12Cut =  c12Cut,
                      CombinationCut = cc,
-                     MotherCut = mc, Preambulo = [])
+                     MotherCut = mc, Preambulo = pream )
 
 
 ## ------------------------------------------------------------------------- ##
@@ -791,7 +805,7 @@ class LTUNB_HHKshCombiner(Hlt2Combiner):
 
 ## HHKs mother cuts
         mc =    ("(VFASPF(VCHI2PDOF) < %(D_VCHI2PDOF_MAX)s)" +
-                 " & (BPVDIRA > %(D_BPVDIRA_MIN)s )" +
+                 " & (BPVDIRA > lcldira )" +
                  " & (PT > %(D_PT_MIN)s )" +
                  " & (BPVLTIME() > %(D_BPVLTIME_MIN)s )")
 
@@ -800,6 +814,11 @@ class LTUNB_HHKshCombiner(Hlt2Combiner):
 
         cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
                  " & ((APT1+APT2+APT3) > %(ASUMPT_MIN)s )")
+
+        pream = [
+                "import math"
+                , "lcldira = math.cos( %(D_acosBPVDIRA_MAX)s )"
+        ]
 
         from HltTracking.HltPVs import PV3D
 
@@ -817,7 +836,7 @@ class LTUNB_HHKshCombiner(Hlt2Combiner):
                      nickname = 'LTUNB_D02HHKsh',
                      Combination12Cut =  c12Cut,
                      CombinationCut = cc,
-                     MotherCut = mc, Preambulo = [])
+                     MotherCut = mc, Preambulo = pream )
 
 ## ------------------------------------------------------------------------- ##
 class HKsKsCombiner(Hlt2Combiner):
@@ -886,13 +905,19 @@ class HHHCombiner(Hlt2Combiner):
         cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
                  " & ((APT1+APT2+APT3) > %(ASUMPT_MIN)s )" )
         mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
-                 " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & (BPVDIRA > lcldira )" +
                  " & (BPVLTIME() > %(BPVLTIME_MIN)s )")
+
+        pream = [
+                "import math"
+                , "lcldira = math.cos( %(acosBPVDIRA_MAX)s )"
+        ]
+
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name, decay, inputs, shared = shared,
                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                               tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
-                              MotherCut = mc, Preambulo = [], nickname = nickname)
+                              MotherCut = mc, Preambulo = pream, nickname = nickname)
 
 
 
@@ -908,7 +933,7 @@ class DV4BCombiner(Hlt2Combiner):
         'ACHI2DOCA_MAX' : Maximum Doca-chi2 of each two-body combination (should be >= VCHI2NDOF)
         'ASUMPT_MIN'    : Lower limit on the sum of the PTs of the daughters
         'VCHI2PDOF_MAX' : Upper limit on VFASPF(VCHI2PDOF) in MotherCut
-        'BPVDIRA_MIN'   : Lower limit on DIRA wrt bestPV in MotherCut
+        'acosBPVDIRA_MAX' : Upper limit on acos(DIRA) wrt bestPV in MotherCut
         'BPVLTIME_MIN'  : Lower limit on Lifetime wrt bestPV in MotherCut
         'TisTosSpec'    : Configuration string of the Hlt1 TISTOS filter.
         'AMOM_MIN'      : combination minimum  momentum
@@ -939,15 +964,20 @@ class DV4BCombiner(Hlt2Combiner):
         mc =    ("(CHI2VXNDOF < %(VCHI2PDOF_MAX)s)" +
                  " & (PT > %(DPT_MIN)s )" +
                  " & (P  > %(DMOM_MIN)s )"+
-                 " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & (BPVDIRA > lcldira )" +
                  " & (BPVLTIME() > %(BPVLTIME_MIN)s )" +
                  " & (BPVVDCHI2 > %(BPVVDCHI2_MIN)s )"  )
+        pream = [
+                "import math"
+                , "lcldira = math.cos( %(acosBPVDIRA_MAX)s )"
+        ]
+
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name, decay, inputs, shared = shared,
                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                               tistos = 'TisTosSpec', combiner = DaVinci__N4BodyDecays, DaughtersCuts = dc,
                               Combination12Cut = c12, Combination123Cut = c123, CombinationCut = cc,
-                              MotherCut = mc, Preambulo = [], nickname = nickname)
+                              MotherCut = mc, Preambulo = pream, nickname = nickname)
 
 ## Shared instances of DV4BCombiner
 ## ------------------------------------------------------------------------- ##
@@ -1032,13 +1062,18 @@ class HHHHCombiner(Hlt2Combiner):
         cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
                  " & ((APT1+APT2+APT3+APT4) > %(ASUMPT_MIN)s )" )
         mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
-                 " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & (BPVDIRA > lcldira )" +
                  " & (BPVLTIME() > %(BPVLTIME_MIN)s )")
+        pream = [
+                "import math"
+                , "lcldira = math.cos( %(acosBPVDIRA_MAX)s )"
+        ]
+
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name, decay, inputs,
                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                               tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
-                              MotherCut = mc, Preambulo = [])
+                              MotherCut = mc, Preambulo = pream)
 
 
 
@@ -1054,15 +1089,20 @@ class DetachedHHHHCombiner(Hlt2Combiner) :
                  " & (AHASCHILD((MIPCHI2DV(PRIMARY)) > %(Trk_1OF4_MIPCHI2DV_MIN)s))"+
                  " & (ANUM(MIPCHI2DV(PRIMARY) > %(Trk_2OF4_MIPCHI2DV_MIN)s) >= 2)")
         mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
-                 " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & (BPVDIRA > lcldira )" +
                  " & (BPVVDCHI2 > %(BPVVDCHI2_MIN)s )" +
                  " & (BPVLTIME() > %(BPVLTIME_MIN)s )")
+        pream = [
+                "import math"
+                , "lcldira = math.cos( %(acosBPVDIRA_MAX)s )"
+        ]
+
 
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, "CharmHad" + name + "_" + type(self).__name__, decay, inputs,
                               nickname = name, dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                               shared = True, tistos = 'TisTosSpec', DaughtersCuts = dc,
-                              CombinationCut = cc, MotherCut = mc, Preambulo = [])
+                              CombinationCut = cc, MotherCut = mc, Preambulo = pream)
 
 ## Shared instances of DetachedHHHHCombiner
 ## ------------------------------------------------------------------------- ##
@@ -1086,7 +1126,7 @@ class PentaCombiner(Hlt2Combiner):
         'ACHI2DOCA_MAX' : Maximum Doca-chi2 of each two-body combination (should be >= VCHI2NDOF)
         'ASUMPT_MIN'    : Lower limit on the sum of the PTs of the daughters
         'VCHI2PDOF_MAX' : Upper limit on VFASPF(VCHI2PDOF) in MotherCut
-        'BPVDIRA_MIN'   : Lower limit on DIRA wrt bestPV in MotherCut
+        'acosBPVDIRA_MAX' : Upper limit on acos(DIRA) wrt bestPV in MotherCut
         'BPVLTIME_MIN'  : Lower limit on Lifetime wrt bestPV in MotherCut'
         'PT_MIN'        : lower limit on Mother PT
         'IPCHI2_MAX'    : max Mother IPCHI2; can restrict to only "prompt" candidates
@@ -1109,16 +1149,21 @@ class PentaCombiner(Hlt2Combiner):
 ##  the mother cuts do not explicitly include a specific mass range
 ##  this will be specified in D2HHHHLines.py where a MassFilter is applied
         mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
-                 " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & (BPVDIRA > lcldira )" +
                  " & (BPVLTIME() > %(BPVLTIME_MIN)s )" +
                  " & (PT> %(PT_MIN)s)" +
                  " & (BPVIPCHI2() < %(IPCHI2_MAX)s )" )
+        pream = [
+                "import math"
+                , "lcldira = math.cos( %(acosBPVDIRA_MAX)s )"
+        ]
+
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name, decay, inputs, shared = shared,
                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                               tistos = 'TisTosSpec', combiner = DaVinci__N4BodyDecays, DaughtersCuts = dc,
                               Combination12Cut = c12, Combination123Cut = c123, CombinationCut = cc,
-                              MotherCut = mc, Preambulo = [], nickname = nickname)
+                              MotherCut = mc, Preambulo = pream, nickname = nickname)
 
 PentaPhiPimPp = PentaCombiner('CharmHadPentaPhiPimPpComb'
                 , decay = "[Xi_c0 -> K- K+  p+ pi-]cc"
@@ -1143,7 +1188,7 @@ class D2HHHHHCombiner(Hlt2Combiner):
         'ACHI2DOCA_MAX' : Maximum Doca-chi2 of each two-body combination (should be >= VCHI2NDOF)
         'ASUMPT_MIN'    : Lower limit on the sum of the PTs of the daughters
         'VCHI2PDOF_MAX' : Upper limit on VFASPF(VCHI2PDOF) in MotherCut
-        'BPVDIRA_MIN'   : Lower limit on DIRA wrt bestPV in MotherCut
+        'acosBPVDIRA_MAX' : Upper limit on acos(DIRA) wrt bestPV in MotherCut
         'BPVLTIME_MIN'  : Lower limit on Lifetime wrt bestPV in MotherCut'
         'PT_MIN'        : lower limit on Mother PT
         'IPCHI2_MAX'    : max Mother IPCHI2; can restrict to only "prompt" candidates
@@ -1171,17 +1216,22 @@ class D2HHHHHCombiner(Hlt2Combiner):
 ##  the mother cuts do not explicitly include a specific mass range
 ##  this will be specified in D2HHHHLines.py where a MassFilter is applied
         mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
-                 " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & (BPVDIRA > lcldira )" +
                  " & (BPVLTIME() > %(BPVLTIME_MIN)s )" +
                  " & (PT> %(PT_MIN)s)" +
                  " & (BPVIPCHI2() < %(IPCHI2_MAX)s )" )
+        pream = [
+                "import math"
+                , "lcldira = math.cos( %(acosBPVDIRA_MAX)s )"
+        ]
+
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name, decay, inputs, shared = shared,
                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                               tistos = 'TisTosSpec', combiner = DaVinci__N5BodyDecays, DaughtersCuts = dc,
                               Combination12Cut = c12, Combination123Cut = c123,
                               Combination1234Cut = c1234, CombinationCut = cc,
-                              MotherCut = mc, Preambulo = [] )
+                              MotherCut = mc, Preambulo = pream )
 ##  The DchXXXX lines are intended to cover both the D+ and D_s mass ranges.
 ##  Separate mass, decay time, PT cuts can be applied elsewhere (D2HHHHHLines.py)
 ##  to create disjoint or overlapping subsamples. The comments for each line
@@ -1248,14 +1298,19 @@ class DetachedV0HCombiner(Hlt2Combiner):
         cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
                  " & ((APT1+APT2) > %(ASUMPT_MIN)s )" )
         mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
-                 " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & (BPVDIRA > lcldira )" +
                  " & (BPVVDCHI2 > %(BPVVDCHI2_MIN)s )" +
                  " & (BPVLTIME() > %(BPVLTIME_MIN)s )")
+        pream = [
+                "import math"
+                , "lcldira = math.cos( %(acosBPVDIRA_MAX)s )"
+        ]
+
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name, decay, inputs, shared = shared,
                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                               tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
-                              MotherCut = mc, Preambulo = [], nickname = nickname)
+                              MotherCut = mc, Preambulo = pream, nickname = nickname)
 
 class ChargedHyperonLambdaHCombiner(Hlt2Combiner):
     def __init__(self, name, decay,inputs):
@@ -1265,14 +1320,19 @@ class ChargedHyperonLambdaHCombiner(Hlt2Combiner):
         cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
                  " & ((APT1+APT2+APT3) > %(ASUMPT_MIN)s )" )
         mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
-                 " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & (BPVDIRA > lcldira )" +
                  " & (BPVVDCHI2 > %(BPVVDCHI2_MIN)s )" +
                  " & (BPVLTIME() > %(BPVLTIME_MIN)s )")
+        pream = [
+                "import math"
+                , "lcldira = math.cos( %(acosBPVDIRA_MAX)s )"
+        ]
+
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name, decay, inputs,
                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                               tistos = [], DaughtersCuts = dc, CombinationCut = cc,
-                              MotherCut = mc, Preambulo = [])
+                              MotherCut = mc, Preambulo = pream)
 
 ## instantiate some charged hyperon combiners for specific final states
 
@@ -1305,16 +1365,21 @@ class DetachedV0V0Combiner(Hlt2Combiner):
         cc =    ("(in_range( %(AM_MIN)s, AM, %(AM_MAX)s ))" +
                  " & ((APT1+APT2) > %(ASUMPT_MIN)s )" )
         mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
-                 " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & (BPVDIRA > lcldira )" +
                  " & (BPVVDCHI2 > %(BPVVDCHI2_MIN)s )" +
                  " & (BPVLTIME() > %(BPVLTIME_MIN)s )")
         if lldd == True :
             mc = "(INTREE((ABSID=='pi+') & (ISLONG)) & INTREE((ABSID=='pi+') & (ISDOWN))) & " + mc
+        pream = [
+                "import math"
+                , "lcldira = math.cos( %(acosBPVDIRA_MAX)s )"
+        ]
+
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name, decay, inputs, shared = shared,
                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                               tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
-                              MotherCut = mc, Preambulo = [], nickname = nickname)
+                              MotherCut = mc, Preambulo = pream, nickname = nickname)
 
 ## add a variation on the DetachedV0V0Combiner meant for prompt H-Dibaryon --> Lambda,Lambda
 ## no minimum mass cut is required, so don't waste time with this comparison
@@ -1369,8 +1434,13 @@ class D02HHCombiner(Hlt2Combiner) : # {
                        "< %(Pair_AMINDOCA_MAX)s )"
 
         parentcuts = "(VFASPF(VCHI2PDOF) < %(D0_VCHI2PDOF_MAX)s)" \
-                     "& (BPVDIRA > %(D0_BPVDIRA_MIN)s )"  \
+                     "& (BPVDIRA > lcldira )" \
                      "& (BPVLTIME() > %(D0_BPVLTIME_MIN)s )"
+
+        pream = [
+                "import math"
+                , "lcldira = math.cos( %(D0_acosBPVDIRA_MAX)s )"
+        ]
 
         from HltTracking.HltPVs import PV3D
         ## The name passed to the base class constructor determines the
@@ -1384,7 +1454,7 @@ class D02HHCombiner(Hlt2Combiner) : # {
                                DaughtersCuts = dc,
                                CombinationCut = combcuts,
                                MotherCut = parentcuts,
-                               Preambulo = [],
+                               Preambulo = pream,
                                **kwargs)
 
 ## Shared instances of D02HHCombiner for LTUnb lines
@@ -1463,7 +1533,7 @@ class DetachedHHHChildCombiner(Hlt2Combiner):
         'Trk_2OF3_MIPCHI2DV_MIN' : Minimum IPChi2 of at least two daughters
         'Trk_ALL_MIPCHI2DV_MIN'  : Minimum IPChi2 of the daughters (for PIDCalib line)
         'VCHI2PDOF_MAX'          : Upper limit on VFASPF(VCHI2PDOF) in MotherCut
-        'BPVDIRA_MIN'            : Lower limit on DIRA wrt bestPV in MotherCut
+        'acosBPVDIRA_MAX'        : Upper limit on acos(DIRA) wrt bestPV in MotherCut
         'BPVVDCHI2_MIN'          : Lower limit on vertex distance chi2 wrt bestPV in MotherCut
         'BPVLTIME_MIN'           : Lower limit on Lifetime wrt bestPV in MotherCut
         'BPVCORRM_MAX'           : Upper limit on the corrected mass wrt bestPV in MotherCut
@@ -1481,15 +1551,20 @@ class DetachedHHHChildCombiner(Hlt2Combiner):
                  " & (AHASCHILD((MIPCHI2DV(PRIMARY)) > %(Trk_1OF3_MIPCHI2DV_MIN)s))"+
                  " & (ANUM(MIPCHI2DV(PRIMARY) > %(Trk_2OF3_MIPCHI2DV_MIN)s) >= 2)")
         mc =    ("(VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
-                 " & (BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & (BPVDIRA > lcldira )" +
                  " & (BPVVDCHI2 > %(BPVVDCHI2_MIN)s )" +
                  " & (BPVLTIME() > %(BPVLTIME_MIN)s )"+
                  " & (BPVCORRM < %(BPVCORRM_MAX)s)")
+        pream = [
+                "import math"
+                , "lcldira = math.cos( %(acosBPVDIRA_MAX)s )"
+        ]
+
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name, decay, inputs,
                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                               tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
-                              MotherCut = mc, Preambulo = [], nickname = nickname)
+                              MotherCut = mc, Preambulo = pream, nickname = nickname)
 
 
 # 2-body combiner to attach a neutral particle (child no. 2) to another candidate (child no. 1)
@@ -1504,16 +1579,21 @@ class AttachParticle(Hlt2Combiner):
                  )
         mc =    ("   ( in_range( %(DMASS_MIN)s, M, %(DMASS_MAX)s ) " +
                  " & ( BPVIPCHI2()< %(BPVIPCHI2_MAX)s )" +
-                 " & ( BPVDIRA > %(BPVDIRA_MIN)s )" +
+                 " & (BPVDIRA > lcldira )" +
                  " & ( VFASPF(VCHI2PDOF) < %(VCHI2PDOF_MAX)s)" +
                  " & ( BPVLTIME() > %(BPVLTIME_MIN)s ) )")
+        pream = [
+                "import math"
+                , "lcldira = math.cos( %(acosBPVDIRA_MAX)s )"
+        ]
+
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name,
                               decay, inputs,
                               nickname = nickname ,
                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                               tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
-                              MotherCut = mc, Preambulo = [])
+                              MotherCut = mc, Preambulo = pream)
 
 
 class D2HHHKsCombiner(Hlt2Combiner):
@@ -1524,12 +1604,18 @@ class D2HHHKsCombiner(Hlt2Combiner):
               "&(PT> %(PT_MIN)s)" +
               "&(BPVLTIME() > %(BPVLTIME_MIN)s)" +
               "&(BPVIPCHI2() < %(BPVIPCHI2_MAX)s )"+
-              "&(BPVDIRA > %(BPVDIRA_MIN)s )" )
+              "& (BPVDIRA > lcldira )" )
+
+        pream = [
+                "import math"
+                , "lcldira = math.cos( %(acosBPVDIRA_MAX)s )"
+        ]
+
         from HltTracking.HltPVs import PV3D
         Hlt2Combiner.__init__(self, name, decay, inputs,
                               dependencies = [TrackGEC('TrackGEC'), PV3D('Hlt2')],
                               tistos = 'TisTosSpec', DaughtersCuts = dc, CombinationCut = cc,
-                              MotherCut = mc, Preambulo = [])
+                              MotherCut = mc, Preambulo = pream)
 
 # D2HH combiners
 
@@ -2050,7 +2136,7 @@ class Xicc2HcHHCombiner(Hlt2Combiner) : # {
         'Xicc_VZ1VZdiff_MIN'   : Minimum difference between Hc vertex VZ and
                                  Xicc vertex VZ.
         'Xicc_BPVVDCHI2_MIN'   : Minimum vertex displacement BPVVDCHI2
-        'Xicc_acosBPVDIRA_MIN' :
+        'Xicc_acosBPVDIRA_MAX' :
         'TisTosSpec'        : configuration string of the Hlt1 TISTOS filter.
     """
     def __init__(self, name, decay, inputs, nickname = None, shared = False) : # {
@@ -2071,7 +2157,7 @@ class Xicc2HcHHCombiner(Hlt2Combiner) : # {
 
         pream = [
                 "import math"
-                , "lcldira = math.cos( %(Xicc_acosBPVDIRA_MIN)s )"
+                , "lcldira = math.cos( %(Xicc_acosBPVDIRA_MAX)s )"
         ]
 
         from HltTracking.HltPVs import PV3D
@@ -2114,7 +2200,7 @@ class Xicc2HcHHHCombiner(Hlt2Combiner) : # {
         'Xicc_VZ1VZdiff_MIN'   : Minimum difference between Hc vertex VZ and
                                  Xicc vertex VZ.
         'Xicc_BPVVDCHI2_MIN'   : Minimum vertex displacement BPVVDCHI2
-        'Xicc_acosBPVDIRA_MIN' :
+        'Xicc_acosBPVDIRA_MAX' :
         'TisTosSpec'        : configuration string of the Hlt1 TISTOS filter.
     """
     def __init__(self, name, decay, inputs, nickname = None, shared = False) : # {
@@ -2142,7 +2228,7 @@ class Xicc2HcHHHCombiner(Hlt2Combiner) : # {
 
         pream = [
                 "import math"
-                , "lcldira = math.cos( %(Xicc_acosBPVDIRA_MIN)s )"
+                , "lcldira = math.cos( %(Xicc_acosBPVDIRA_MAX)s )"
         ]
 
         from HltTracking.HltPVs import PV3D
@@ -2187,7 +2273,7 @@ class Xicc2HcHHHHCombiner(Hlt2Combiner) : # {
         'Xicc_VZ1VZdiff_MIN'   : Minimum difference between Hc vertex VZ and
                                  Xicc vertex VZ.
         'Xicc_BPVVDCHI2_MIN'   : Minimum vertex displacement BPVVDCHI2
-        'Xicc_acosBPVDIRA_MIN' :
+        'Xicc_acosBPVDIRA_MAX' :
         'TisTosSpec'        : configuration string of the Hlt1 TISTOS filter.
     """
     def __init__(self, name, decay, inputs, nickname = None, shared = False) : # {
@@ -2222,7 +2308,7 @@ class Xicc2HcHHHHCombiner(Hlt2Combiner) : # {
 
         pream = [
                 "import math"
-                , "lcldira = math.cos( %(Xicc_acosBPVDIRA_MIN)s )"
+                , "lcldira = math.cos( %(Xicc_acosBPVDIRA_MAX)s )"
         ]
 
         from HltTracking.HltPVs import PV3D

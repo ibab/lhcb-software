@@ -1,4 +1,4 @@
-from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond
+from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mrad
 
 def mass_cuts(motherMasses, massWindow = 75, aMassExtra = 10.) :
     if not hasattr(motherMasses, '__iter__') :
@@ -20,7 +20,7 @@ class CharmHadHc2HHHHLines() :
             'Xic0ToPpKmKmPip_LTUNBTurbo' : 
             dict(TisTosSpec = "Hlt1Track.*Decision%TIS",
                  BPVLTIME_MIN = 0.1*picosecond, 
-                 BPVDIRA_MIN = 0.95,
+                 acosBPVDIRA_MAX = 317.6 * mrad,
                  ASUMPT_MIN = 3000.*MeV,
                  **Xic0OmegacMassCuts),
             'Xic0ToPpKmKmPipTurbo' : 
@@ -34,7 +34,7 @@ class CharmHadHc2HHHHLines() :
                 Trk_1OF4_MIPCHI2DV_MIN = 8.0,
                 Trk_2OF4_MIPCHI2DV_MIN = 6.0,
                 #VCHI2PDOF_MAX = , # defined in Common.
-                BPVDIRA_MIN = 0.99995, 
+                acosBPVDIRA_MAX = 10.0 * mrad,
                 BPVVDCHI2_MIN = 10.0,
                 BPVLTIME_MIN = 0.1 * picosecond,
                 **Xic0OmegacMassCuts),
@@ -48,7 +48,7 @@ class CharmHadHc2HHHHLines() :
                  'ASUMPT_MIN'               :  1980.0 * MeV,
                  'ACHI2DOCA_MAX'            :  10.0,
                  'VCHI2PDOF_MAX'            :  12.0,
-                 'BPVDIRA_MIN'              :  0.9998,
+                 'acosBPVDIRA_MAX'          :  20.0 * mrad,
                  'BPVLTIME_MIN'             :  0.3*picosecond,
                  'PT_MIN'                   :  2000 * MeV,
                  'IPCHI2_MAX'               :  15.0,

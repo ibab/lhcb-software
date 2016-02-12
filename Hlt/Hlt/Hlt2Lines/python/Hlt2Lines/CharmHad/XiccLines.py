@@ -51,7 +51,7 @@ class CharmHadXiccLines : # {
                 , 'AM_MAX'               :  4.0 * GeV
                 , 'ASUMPT_MIN'           :  2.0 * GeV
                 , 'VCHI2PDOF_MAX'        : 20.0
-                , 'BPVDIRA_MIN'          :  0.0
+                , 'acosBPVDIRA_MAX'      : math.pi / 2.0
                 , 'BPVVDCHI2_MIN'        : -1.0
                 , 'BPVLTIME_MIN'         : -1.0e3 * picosecond
                 , 'TisTosSpec'           : "Hlt1.*Track.*Decision%TOS"
@@ -65,7 +65,7 @@ class CharmHadXiccLines : # {
                 , 'Xicc_VCHI2PDOF_MAX'   :   30.0
                 , 'Xicc_VZ1VZdiff_MIN'   :    0.01 * mm
                 , 'Xicc_BPVVDCHI2_MIN'   :   -1.0
-                , 'Xicc_acosBPVDIRA_MIN' : math.pi / 2.0
+                , 'Xicc_acosBPVDIRA_MAX' : math.pi / 2.0
                 , 'TisTosSpec'           : "Hlt1.*Track.*Decision%TOS"
             }
             , "Xicc2HcHHH"  : {
@@ -78,7 +78,7 @@ class CharmHadXiccLines : # {
                 , 'Xicc_VCHI2PDOF_MAX'   :   60.0
                 , 'Xicc_VZ1VZdiff_MIN'   :    0.01 * mm
                 , 'Xicc_BPVVDCHI2_MIN'   :   -1.0
-                , 'Xicc_acosBPVDIRA_MIN' : math.pi / 2.0
+                , 'Xicc_acosBPVDIRA_MAX' : math.pi / 2.0
                 , 'TisTosSpec'           : "Hlt1.*Track.*Decision%TOS"
             }
             , "Xicc2HcHHHH" : {
@@ -92,7 +92,7 @@ class CharmHadXiccLines : # {
                 , 'Xicc_VCHI2PDOF_MAX'   :   60.0
                 , 'Xicc_VZ1VZdiff_MIN'   :    0.01 * mm
                 , 'Xicc_BPVVDCHI2_MIN'   :   -1.0
-                , 'Xicc_acosBPVDIRA_MIN' : math.pi / 2.0
+                , 'Xicc_acosBPVDIRA_MAX' : math.pi / 2.0
                 , 'TisTosSpec'           : "Hlt1.*Track.*Decision%TOS"
             }
         }

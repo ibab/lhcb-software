@@ -18,7 +18,7 @@
 __author__  = [ 'Patrick Spradlin' ]
 
 
-from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
+from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm, mrad
 
 
 ## Temporary local definition of pion mass.  Here to ease the transition
@@ -38,8 +38,7 @@ class CharmHadD02HHLines : # {
                           'Pair_AMINDOCA_MAX'        : 0.10 * mm
                         , 'Trk_Max_APT_MIN'          : 1500.0 * MeV
                         , 'D0_BPVVDCHI2_MIN'         : 25.0       # neuter
-                        , 'D0_BPVDIRA_MIN'           : 0.99985    # neuter
-                        #, 'D0_acosBPVDIRA_MAX'       : 17.3 * mrad
+                        , 'D0_acosBPVDIRA_MAX'       : 17.3 * mrad
                         , 'D0_VCHI2PDOF_MAX'         : 10.0       # neuter
                         , 'D0_PT_MIN'                : 2000.0 * MeV
                         , 'Comb_AM_MIN'              : 1715.0 * MeV
@@ -77,7 +76,7 @@ class CharmHadD02HHLines : # {
                                         'Trk_Max_APT_MIN'          :  1200 * MeV,
                                         'D0_VCHI2PDOF_MAX'         :  10.0,
                                         'D0_BPVLTIME_MIN'          :  0.25 * picosecond,
-                                        'D0_BPVDIRA_MIN'           :  0.99,
+                                        'D0_acosBPVDIRA_MAX'       :  141.5 * mrad,
                                         'Pair_AMINDOCA_MAX'        :  0.1 * mm,
                                         'D0_PT_MIN'                :  2000 * MeV,
                                         'AM_MIN'                   :  1774 * MeV,

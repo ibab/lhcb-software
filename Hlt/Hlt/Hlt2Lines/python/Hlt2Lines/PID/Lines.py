@@ -2,9 +2,10 @@ __author__  = 'Olli Lupton'
 __date__    = '$Date: 2015-03-12$'
 __version__ = '$Revision: 0.0 $'
 
-from GaudiKernel.SystemOfUnits import GeV, MeV, mm
+from GaudiKernel.SystemOfUnits import GeV, MeV, mm, mrad
 from GaudiKernel.SystemOfUnits import picosecond as ps
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
+import math
 
 turboversions = [ 'TurboCalib', '' ]
 class PIDLines(Hlt2LinesConfigurableUser):
@@ -297,7 +298,7 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'Trk_ALL_MIPCHI2DV_MIN' : 9.0,
                                 'ASUMPT_MIN'            : 2.0 * GeV,
                                 'VCHI2PDOF_MAX'         : 10.0,
-                                'BPVDIRA_MIN'           : 0.9999,
+                                'acosBPVDIRA_MAX'       : 14.1 * mrad,
                                 'BPVVDCHI2_MIN'         : 50.0,
                                 'BPVLTIME_MIN'          : 0.2 * ps,
                                 'BPVIPCHI2_MAX'         : 10.0,
@@ -327,7 +328,7 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'Trk_ALL_MIPCHI2DV_MIN' : 9.0,
                                 'ASUMPT_MIN'            : 2.0 * GeV,
                                 'VCHI2PDOF_MAX'         : 10.0,
-                                'BPVDIRA_MIN'           : 0.9999,
+                                'acosBPVDIRA_MAX'       : 14.1 * mrad,
                                 'BPVVDCHI2_MIN'         : 50.0,
                                 'BPVLTIME_MIN'          : 0.2 * ps,
                                 'BPVIPCHI2_MAX'         : 10.0,
@@ -408,7 +409,7 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'Trk_1OF3_PT_MIN'         :  400.0 * MeV,
                                 'BPVVDCHI2_MIN'           :  50.0,
                                 'BPVLTIME_MIN'            :  0.1 * ps, # This is the cut applied to all Lc+, even if they're then associated with Lb
-                                'BPVDIRA_MIN'             :  0.0,
+                                'acosBPVDIRA_MAX'         :  math.pi / 2,
                                 'ASUMPT_MIN'              :  2000 * MeV,
                                 'MVETO_Kpipi_LOW'         :  (1870.0 - 135.0) * MeV, # 151122: kinematic veto on D+ -> K- pi+ pi+ pi0
                                 'MVETO_Kpipi_GT'          :  (1870.0 + 20.0) * MeV,
@@ -452,7 +453,7 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'ADOCA_MAX'                :  100.0 * mm,
                                 'ACHI2DOCA_MAX'            :  10.0,
                                 'VCHI2PDOF_MAX'            :  12.0,
-                                'BPVDIRA_MIN'              :  0.9999,
+                                'acosBPVDIRA_MAX'          :  14.1 * mrad,
                                 'BPVLTIME_MIN'             :  0.1 * ps,
                                 'Mass_M_MIN'               :  1790 * MeV,
                                 'Mass_M_MAX'               :  1940 * MeV,
@@ -475,7 +476,7 @@ class PIDLines(Hlt2LinesConfigurableUser):
                                 'Pair_AMINDOCA_MAX'        : 0.10 * mm,     # Not in stripping
                                 'Trk_Max_APT_MIN'          : 1000.0 * MeV,  # Not in stripping
                                 'D0_BPVVDCHI2_MIN'         : 49.0,          # Stripping has 49
-                                'D0_BPVDIRA_MIN'           : 0.9999,        # Stripping has 0.9999
+                                'D0_acosBPVDIRA_MAX'       : 14.1 * mrad,   # Stripping has 0.9999
                                 'D0_VCHI2PDOF_MAX'         : 10.0,          # Stripping has 13
                                 'BPVIPCHI2_MAX'            : 20.0,          # Added for 25ns running based on EM data
                                 'D0_PT_MIN'                : 1.5 * GeV,     # Stripping has 1.5

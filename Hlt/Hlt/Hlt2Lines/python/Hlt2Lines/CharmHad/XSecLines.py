@@ -1,4 +1,4 @@
-from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
+from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm, mrad
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
 # Lines for XSection measurements, specifically for the 2015 Early Measurement campaign
@@ -17,7 +17,7 @@ class CharmHadXSecLines() :
                                   'Pair_AMINDOCA_MAX'        : 0.10 * mm,
                                   'Trk_Max_APT_MIN'          : 500.0 * MeV, 
                                   'D0_BPVVDCHI2_MIN'         : 49.0,       # neuter
-                                  'D0_BPVDIRA_MIN'           : 0.99985,    # neuter
+                                  'D0_acosBPVDIRA_MAX'       : 17.3 * mrad,
                                   'D0_VCHI2PDOF_MAX'         : 10.0,       # neuter
                                   'D0_PT_MIN'                : 0.0 * MeV, 
                                   'Comb_AM_MIN'              : 1775.0 * MeV, 
@@ -42,7 +42,7 @@ class CharmHadXSecLines() :
                                  'ADOCA_MAX'                :  0.1 * mm,
                                  'ACHI2DOCA_MAX'            :  99999999.0,
                                  'VCHI2PDOF_MAX'            :  10.0,
-                                 'BPVDIRA_MIN'              :  0.99985,
+                                 'acosBPVDIRA_MAX'          :  17.3 * mrad,
                                  'BPVLTIME_MIN'             :  0.1*picosecond,
                                  'Mass_M_MIN'               :  1784.0 * MeV,
                                  'Mass_M_MAX'               :  1944.0 * MeV,
@@ -62,7 +62,7 @@ class CharmHadXSecLines() :
                                  'VCHI2PDOF_MAX'            :  25.0,
                                  'BPVVDCHI2_MIN'            :  16.0,
                                  'BPVLTIME_MIN'             :  0.15 * picosecond,
-                                 'BPVDIRA_MIN'              :  0.9994,
+                                 'acosBPVDIRA_MAX'          :  34.6 * mrad,
                                  'ASUMPT_MIN'               :  0 * MeV,
                                  'AM_MIN'                   :  1779 * MeV,
                                  'AM_MAX'                   :  1959 * MeV,
@@ -80,7 +80,7 @@ class CharmHadXSecLines() :
                                  'VCHI2PDOF_MAX'            :  25.0,
                                  'BPVVDCHI2_MIN'            :  16.0,
                                  'BPVLTIME_MIN'             :  0.15 * picosecond,
-                                 'BPVDIRA_MIN'              :  0.9994,
+                                 'acosBPVDIRA_MAX'          :  34.6 * mrad,
                                  'ASUMPT_MIN'               :  0 * MeV,
                                  'AM_MIN'                   :  1879 * MeV,
                                  'AM_MAX'                   :  2059 * MeV,
@@ -98,7 +98,7 @@ class CharmHadXSecLines() :
                                  'VCHI2PDOF_MAX'            :  25.0,
                                  'BPVVDCHI2_MIN'            :  4.0,
                                  'BPVLTIME_MIN'             :  0.075 * picosecond,
-                                 'BPVDIRA_MIN'              :  0.9994,
+                                 'acosBPVDIRA_MAX'          :  34.6 * mrad,
                                  'ASUMPT_MIN'               :  0 * MeV,
                                  'AM_MIN'                   :  2201 * MeV,
                                  'AM_MAX'                   :  2553 * MeV,

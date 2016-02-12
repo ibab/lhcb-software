@@ -14,7 +14,7 @@ __author__  = "Maurizio MARTINELLI maurizio.martinelli@cern.ch ; Simone STRACKA 
 
 import copy
 
-from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
+from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm, mrad
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
 class CharmHadD2HHHKsLines() :
@@ -43,7 +43,7 @@ class CharmHadD2HHHKsLines() :
             'ASUMPT_MIN'            :  2.0 * GeV,
             'VCHI2PDOF_MAX'         :  12.0,
             'BPVLTIME_MIN'          :  0.2 * picosecond,
-            'BPVDIRA_MIN'           :  0.99995,
+            'acosBPVDIRA_MAX'       :  10.0 * mrad,
             'BPVIPCHI2_MAX'         :  20.0,
             'Mass_M_MIN'            :  1795.0 * MeV,
             'Mass_M_MAX'            :  1935.0 * MeV,
@@ -70,7 +70,7 @@ class CharmHadD2HHHKsLines() :
                 'ADOCA_MAX'                :  100.0 * mm,
                 'ACHI2DOCA_MAX'            :  10.0,
                 'VCHI2PDOF_MAX'            :  12.0,
-                'BPVDIRA_MIN'              :  0.9998,
+                'acosBPVDIRA_MAX'          :  20.0 * mrad,
                 'BPVLTIME_MIN'             :  0.1*picosecond,
                 'Mass_M_MIN'               :  2206 * MeV,
                 'Mass_M_MAX'               :  2348 * MeV,
@@ -91,7 +91,7 @@ class CharmHadD2HHHKsLines() :
                 'ADOCA_MAX'                :  100.0 * mm,
                 'ACHI2DOCA_MAX'            :  10.0,
                 'VCHI2PDOF_MAX'            :  12.0,
-                'BPVDIRA_MIN'              :  0.9998,
+                'acosBPVDIRA_MAX'          :  20.0 * mrad,
                 'BPVLTIME_MIN'             :  0.1*picosecond,
                 'Mass_M_MIN'               :  2206 * MeV,
                 'Mass_M_MAX'               :  2348 * MeV,

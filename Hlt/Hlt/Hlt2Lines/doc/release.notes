@@ -8,6 +8,27 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-02-12 - Patrick Spradlin
+ - Universal change of settings variables in CharmHad for DIRA cuts.
+   Instead of specifying the cosine of the DIRA in settings, the angle itself
+   will be specified.
+        M       python/Hlt2Lines/CharmHad/D2HHHLines.py
+        M       python/Hlt2Lines/CharmHad/D2HHPi0Lines.py
+        M       python/Hlt2Lines/CharmHad/XSecLines.py
+        M       python/Hlt2Lines/CharmHad/ChargedHyperonLines.py
+        M       python/Hlt2Lines/CharmHad/D02HHLines.py
+        M       python/Hlt2Lines/CharmHad/D2HHHPi0Lines.py
+        M       python/Hlt2Lines/CharmHad/Hc2HHHHLines.py
+        M       python/Hlt2Lines/CharmHad/D2HHHHHLines.py
+        M       python/Hlt2Lines/CharmHad/D2V0V0Lines.py
+        M       python/Hlt2Lines/CharmHad/D2HHKsLines.py
+        M       python/Hlt2Lines/CharmHad/D2V0HLines.py
+        M       python/Hlt2Lines/CharmHad/D02HHHHLines.py
+        M       python/Hlt2Lines/CharmHad/XiccLines.py
+        M       python/Hlt2Lines/CharmHad/D2HHHKsLines.py
+        M       python/Hlt2Lines/CharmHad/Stages.py
+        M       python/Hlt2Lines/PID/Lines.py
+
 ! 2016-02-12 - Maurizio Martinelli
  - Updated D2KsKsHLines and CharmHad Stages to use both KS types in the same combiner
 

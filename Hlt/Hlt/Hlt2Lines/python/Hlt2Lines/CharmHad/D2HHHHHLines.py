@@ -1,4 +1,4 @@
-from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
+from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm, mrad
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
 class CharmHadD2HHHHHLines(Hlt2LinesConfigurableUser):
@@ -17,7 +17,7 @@ class CharmHadD2HHHHHLines(Hlt2LinesConfigurableUser):
                              'ACHI2DOCA_MAX'            :  15.0,
                              'ASUMPT_MIN'               :  2000 * MeV,
                              'VCHI2PDOF_MAX'            :  20.0,
-                             'BPVDIRA_MIN'              : 0.9994,
+                             'acosBPVDIRA_MAX'          : 34.6 * mrad,
                              'BPVLTIME_MIN'             : 0.3 * picosecond,
                              'PT_MIN'                   :  2500 * MeV,
                              'IPCHI2_MAX'               : 15.0
@@ -35,7 +35,7 @@ class CharmHadD2HHHHHLines(Hlt2LinesConfigurableUser):
                              'ACHI2DOCA_MAX'            :  15.0,
                              'ASUMPT_MIN'               :  2000 * MeV,
                              'VCHI2PDOF_MAX'            :  20.0,
-                             'BPVDIRA_MIN'              : 0.9994,
+                             'acosBPVDIRA_MAX'          : 34.6 * mrad,
                              'BPVLTIME_MIN'             : 0.3 * picosecond,
                              'PT_MIN'                   :  2500 * MeV,
                              'IPCHI2_MAX'               : 15.0
@@ -53,7 +53,7 @@ class CharmHadD2HHHHHLines(Hlt2LinesConfigurableUser):
                              'ACHI2DOCA_MAX'            :  15.0,
                              'ASUMPT_MIN'               :  2000 * MeV,
                              'VCHI2PDOF_MAX'            :  20.0,
-                             'BPVDIRA_MIN'              : 0.9994,
+                             'acosBPVDIRA_MAX'          : 34.6 * mrad,
                              'BPVLTIME_MIN'             : 0.3 * picosecond,
                              'PT_MIN'                   :  2500 * MeV,
                              'IPCHI2_MAX'               : 15.0
@@ -71,7 +71,7 @@ class CharmHadD2HHHHHLines(Hlt2LinesConfigurableUser):
                              'ACHI2DOCA_MAX'            :  15.0,
                              'ASUMPT_MIN'               :  2000 * MeV,
                              'VCHI2PDOF_MAX'            :  20.0,
-                             'BPVDIRA_MIN'              : 0.9994,
+                             'acosBPVDIRA_MAX'          : 34.6 * mrad,
                              'BPVLTIME_MIN'             : 0.1 * picosecond,
                              'PT_MIN'                   :  2500 * MeV,
                              'IPCHI2_MAX'               : 25.0
@@ -88,7 +88,7 @@ class CharmHadD2HHHHHLines(Hlt2LinesConfigurableUser):
                              'ACHI2DOCA_MAX'            :  15.0,
                              'ASUMPT_MIN'               :  2000 * MeV,
                              'VCHI2PDOF_MAX'            :  20.0,
-                             'BPVDIRA_MIN'              : 0.9994,
+                             'acosBPVDIRA_MAX'          : 34.6 * mrad,
                              'BPVLTIME_MIN'             : 0.1 * picosecond,
                              'PT_MIN'                   :  2500 * MeV,
                              'IPCHI2_MAX'               : 25.0
@@ -105,7 +105,7 @@ class CharmHadD2HHHHHLines(Hlt2LinesConfigurableUser):
                              'ACHI2DOCA_MAX'            :  15.0,
                              'ASUMPT_MIN'               :  2000 * MeV,
                              'VCHI2PDOF_MAX'            :  20.0,
-                             'BPVDIRA_MIN'              : 0.9994,
+                             'acosBPVDIRA_MAX'          : 34.6 * mrad,
                              'BPVLTIME_MIN'             : 0.1 * picosecond,
                              'PT_MIN'                   :  2500 * MeV,
                              'IPCHI2_MAX'               : 25.0
@@ -122,7 +122,7 @@ class CharmHadD2HHHHHLines(Hlt2LinesConfigurableUser):
                              'ACHI2DOCA_MAX'            :  15.0,
                              'ASUMPT_MIN'               :  2000 * MeV,
                              'VCHI2PDOF_MAX'            :  20.0,
-                             'BPVDIRA_MIN'              : 0.9994,
+                             'acosBPVDIRA_MAX'          : 34.6 * mrad,
                              'BPVLTIME_MIN'             : 0.1 * picosecond,
                              'PT_MIN'                   :  2500 * MeV,
                              'IPCHI2_MAX'               : 25.0
@@ -139,7 +139,7 @@ class CharmHadD2HHHHHLines(Hlt2LinesConfigurableUser):
                              'ACHI2DOCA_MAX'            :  15.0,
                              'ASUMPT_MIN'               :  2000 * MeV,
                              'VCHI2PDOF_MAX'            :  20.0,
-                             'BPVDIRA_MIN'              : 0.9994,
+                             'acosBPVDIRA_MAX'          : 34.6 * mrad,
                              'BPVLTIME_MIN'             : 0.1 * picosecond,
                              'PT_MIN'                   :  2500 * MeV,
                              'IPCHI2_MAX'               : 25.0
@@ -156,7 +156,7 @@ class CharmHadD2HHHHHLines(Hlt2LinesConfigurableUser):
                              'ACHI2DOCA_MAX'            :  15.0,
                              'ASUMPT_MIN'               :  2000 * MeV,
                              'VCHI2PDOF_MAX'            :  20.0,
-                             'BPVDIRA_MIN'              : 0.9994,
+                             'acosBPVDIRA_MAX'          : 34.6 * mrad,
                              'BPVLTIME_MIN'             : 0.1 * picosecond,
                              'PT_MIN'                   :  2500 * MeV,
                              'IPCHI2_MAX'               : 25.0

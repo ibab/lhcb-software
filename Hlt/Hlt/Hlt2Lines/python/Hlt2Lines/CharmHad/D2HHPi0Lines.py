@@ -13,7 +13,7 @@
 __author__  = "Simone STRACKA simone.stracka@cern.ch ; Maurizio MARTINELLI maurizio.martinelli@cern.ch"
 
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
-from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
+from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm, mrad
 
 ## Temporary local definition of particle masses.  Used to adapt TagDecay cut
 ## variables from from Delta M to Q.
@@ -42,7 +42,7 @@ class CharmHadD2HHPi0Lines() :
               'DMASS_MIN'         : 1745 * MeV,
               'DMASS_MAX'         : 1985 * MeV,
               'BPVIPCHI2_MAX'     : 50.0,
-              'BPVDIRA_MIN'       : 0.9995,
+              'acosBPVDIRA_MAX'   : 31.6 * mrad,
               'BPVLTIME_MIN'      : 0.2 * picosecond, 
               'VCHI2PDOF_MAX'     : 20,
             },
@@ -57,7 +57,7 @@ class CharmHadD2HHPi0Lines() :
               'DMASS_MIN'         : 1745 * MeV,
               'DMASS_MAX'         : 1985 * MeV,
               'BPVIPCHI2_MAX'     : 50.0,
-              'BPVDIRA_MIN'       : 0.9995,
+              'acosBPVDIRA_MAX'   : 31.6 * mrad,
               'BPVLTIME_MIN'      : 0.2 * picosecond, 
               'VCHI2PDOF_MAX'     : 20,
               },

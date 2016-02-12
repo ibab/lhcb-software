@@ -1,4 +1,4 @@
-from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
+from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm, mrad
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
 
@@ -11,7 +11,7 @@ class ChargedHyperonLines():
                                     'Trk_ALL_MIPCHI2DV_MIN'    :  16.0,
                                     'BPVVDCHI2_MIN'            :  10.0,
                                     'BPVLTIME_MIN'             :  2.0 * picosecond,
-                                    'BPVDIRA_MIN'              :  0.9994,
+                                    'acosBPVDIRA_MAX'          :  34.6 * mrad,
                                     'ASUMPT_MIN'               :  500 * MeV,
                                     'AM_MIN'                   :  1280 * MeV,
                                     'AM_MAX'                   :  1365 * MeV,
@@ -23,7 +23,7 @@ class ChargedHyperonLines():
                                     'Trk_ALL_MIPCHI2DV_MIN'    :  16.0,
                                     'BPVVDCHI2_MIN'            :  10.0,
                                     'BPVLTIME_MIN'             :  2.0 * picosecond,
-                                    'BPVDIRA_MIN'              :  0.9994,
+                                    'acosBPVDIRA_MAX'          :  34.6 * mrad,
                                     'ASUMPT_MIN'               :  500 * MeV,
                                     'AM_MIN'                   :  1280 * MeV,
                                     'AM_MAX'                   :  1365 * MeV,
@@ -35,7 +35,7 @@ class ChargedHyperonLines():
                                     'Trk_ALL_MIPCHI2DV_MIN'    :  16.0,
                                     'BPVVDCHI2_MIN'            :  10.0,
                                     'BPVLTIME_MIN'             :  2.0 * picosecond,
-                                    'BPVDIRA_MIN'              :  0.9994,
+                                    'acosBPVDIRA_MAX'          :  34.6 * mrad,
                                     'ASUMPT_MIN'               :  500 * MeV,
                                     'AM_MIN'                   :  1280 * MeV,
                                     'AM_MAX'                   :  1365 * MeV,
@@ -48,7 +48,7 @@ class ChargedHyperonLines():
                                     'Trk_ALL_MIPCHI2DV_MIN'    :  16.0,
                                     'BPVVDCHI2_MIN'            :  10.0,
                                     'BPVLTIME_MIN'             :  2.0 * picosecond,
-                                    'BPVDIRA_MIN'              :  0.9994,
+                                    'acosBPVDIRA_MAX'          :  34.6 * mrad,
                                     'ASUMPT_MIN'               :  500 * MeV,
                                     'AM_MIN'                   :  1630 * MeV,
                                     'AM_MAX'                   :  1715 * MeV,
@@ -60,7 +60,7 @@ class ChargedHyperonLines():
                                     'Trk_ALL_MIPCHI2DV_MIN'    :  16.0,
                                     'BPVVDCHI2_MIN'            :  10.0,
                                     'BPVLTIME_MIN'             :  2.0 * picosecond,
-                                    'BPVDIRA_MIN'              :  0.9994,
+                                    'acosBPVDIRA_MAX'          :  34.6 * mrad,
                                     'ASUMPT_MIN'               :  500 * MeV,
                                     'AM_MIN'                   :  1630 * MeV,
                                     'AM_MAX'                   :  1715 * MeV,
@@ -72,7 +72,7 @@ class ChargedHyperonLines():
                                     'Trk_ALL_MIPCHI2DV_MIN'    :  16.0,
                                     'BPVVDCHI2_MIN'            :  10.0,
                                     'BPVLTIME_MIN'             :  2.0 * picosecond,
-                                    'BPVDIRA_MIN'              :  0.9994,
+                                    'acosBPVDIRA_MAX'          :  34.6 * mrad,
                                     'ASUMPT_MIN'               :  500 * MeV,
                                     'AM_MIN'                   :  1630 * MeV,
                                     'AM_MAX'                   :  1715 * MeV,

@@ -1,4 +1,4 @@
-from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
+from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm, mrad
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
 ## Temporary local definition of particle masses.  Used to adapt TagDecay cut
@@ -14,7 +14,7 @@ class CharmHadD2V0V0Lines():
                                  'KS0_ALL_MIPCHI2DV_MIN'    :  9.0,
                                  'BPVVDCHI2_MIN'            :  20.0,
                                  'BPVLTIME_MIN'             :  0.2 * picosecond,
-                                 'BPVDIRA_MIN'              :  0.9994,
+                                 'acosBPVDIRA_MAX'          :  34.6 * mrad,
                                  'ASUMPT_MIN'               :  1500 * MeV,
                                  'AM_MIN'                   :  1779 * MeV,
                                  'AM_MAX'                   :  1959 * MeV,
@@ -27,7 +27,7 @@ class CharmHadD2V0V0Lines():
                                  'KS0_ALL_MIPCHI2DV_MIN'    :  4.0,
                                  'BPVVDCHI2_MIN'            :  10.0,
                                  'BPVLTIME_MIN'             :  0.2 * picosecond,
-                                 'BPVDIRA_MIN'              :  0.9994,
+                                 'acosBPVDIRA_MAX'          :  34.6 * mrad,
                                  'ASUMPT_MIN'               :  2000 * MeV,
                                  'AM_MIN'                   :  1779 * MeV,
                                  'AM_MAX'                   :  1959 * MeV,

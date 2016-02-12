@@ -13,7 +13,7 @@
 #=============================================================================
 __author__  = "Maurizio MARTINELLI maurizio.martinelli@cern.ch ; Simone STRACKA simone.stracka@cern.ch, Mike SOKOLOFF msokolof@cern.ch"
 
-from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
+from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm, mrad
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 import copy
 
@@ -50,7 +50,7 @@ class CharmHadD02HHHHLines() :
                 'ADOCA_MAX'                :  100.0 * mm,
                 'ACHI2DOCA_MAX'            :  10.0,
                 'VCHI2PDOF_MAX'            :  12.0,
-                'BPVDIRA_MIN'              :  0.9998,
+                'acosBPVDIRA_MAX'          :  20.0 * mrad,
                 'BPVLTIME_MIN'             :  0.1*picosecond,
                 'Mass_M_MIN'               :  1700 * MeV,
                 'Mass_M_MAX'               :  2100 * MeV,

@@ -1,7 +1,7 @@
 ## Exclusive reconstruction of D+ -> KS0 h+ and Lambda_c+ -> Lambda h+ modes.
 ##
 ## @author unclaimed
-from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
+from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm, mrad
 
 class CharmHadD2V0HLines():
     def localcuts(self):
@@ -11,7 +11,7 @@ class CharmHadD2V0HLines():
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  36.0,
                                  'BPVVDCHI2_MIN'            :  30.0,
                                  'BPVLTIME_MIN'             :  0.25 * picosecond,
-                                 'BPVDIRA_MIN'              :  0.99985,
+                                 'acosBPVDIRA_MAX'          :  17.3 * mrad,
                                  'ASUMPT_MIN'               :  2000 * MeV,
                                  'AM_MIN'                   :  1779 * MeV,
                                  'AM_MAX'                   :  2059 * MeV,
@@ -23,7 +23,7 @@ class CharmHadD2V0HLines():
                                  'Trk_ALL_MIPCHI2DV_MIN'    :  16.0,
                                  'BPVVDCHI2_MIN'            :  20.0,
                                  'BPVLTIME_MIN'             :  0.15 * picosecond,
-                                 'BPVDIRA_MIN'              :  0.99985,
+                                 'acosBPVDIRA_MAX'          :  17.8 * mrad,
                                  'ASUMPT_MIN'               :  2000 * MeV,
                                  'AM_MIN'                   :  2201 * MeV,
                                  'AM_MAX'                   :  2371 * MeV,
