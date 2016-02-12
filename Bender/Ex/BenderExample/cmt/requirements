@@ -22,7 +22,7 @@
 # =============================================================================
 package          BenderExample
 author           Vanya BELYAEV
-version          v27r0p1
+version          v28r0
 
 # ============== structure ===================================================
 branches         cmt doc python

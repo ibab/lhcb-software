@@ -22,10 +22,10 @@
 ! ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 ! -----------------------------------------------------------------------------
 
+!  ====================== Ex/BenderExample v28r0 2015-02-12 ==================
+
 ! 2015-11-08 - Vanya Belyaev
-
  - add FakeParticle examples and qmtest 
-
 
 !  ====================== Ex/BenderExample v27r0p1 2015-11-02 ================
 
