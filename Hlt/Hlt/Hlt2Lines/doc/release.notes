@@ -28,6 +28,7 @@
         M       python/Hlt2Lines/CharmHad/D2HHHKsLines.py
         M       python/Hlt2Lines/CharmHad/Stages.py
         M       python/Hlt2Lines/PID/Lines.py
+ - Flagged XicpToPpKmPip line for Turbo and renamed the line appropriately.
 
 ! 2016-02-12 - Maurizio Martinelli
  - Updated D2KsKsHLines and CharmHad Stages to use both KS types in the same combiner

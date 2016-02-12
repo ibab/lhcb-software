@@ -411,7 +411,7 @@ class CharmHadD2HHHLines() :
                   'LcpToPpKpPimTurbo'        : [LcpToPimPpKp],
 
                   ## Xi_c+ -> p K- pi+, DO NOT SEND TO TURBO.
-                  'XicpToPpKmPip'            : [Xic2HHH_XicpToKmPpPip],
+                  'XicpToPpKmPipTurbo'       : [Xic2HHH_XicpToKmPpPip],
 
                   # Now the three CF lifetime unbiased lines
                   'DpToKmPipPip_LTUNBTurbo'  : [DpToKmPipPip_LTUNB],
