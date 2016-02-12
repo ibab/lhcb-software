@@ -3,6 +3,6 @@
 # Maintainer : Marco Cattaneo
 #============================================================================
 package           QMTestFiles
-version           v1r2
+version           v1r3
 branches          cmt doc data
 include_path      none
