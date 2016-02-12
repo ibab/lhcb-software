@@ -4,6 +4,14 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
++! 2016-02-12 - Patrick Spradlin
+ - !!!NOTE!!! relies on Hlt2Lines r201434.
+   Universal change of settings variables in CharmHad for DIRA cuts.
+   Instead of specifying the cosine of the DIRA in settings, the angle itself
+   will be specified.
+        M       python/HltSettings/CharmHad/CharmHad_25ns_Draft2016.py
+        M       python/HltSettings/PID/PID_25ns_Draft2016.py
+
 ! 2016-02-12 - Sascha Stahl
  - Update 2016 draft settings to include new TrackEffDimuon settings.
 
