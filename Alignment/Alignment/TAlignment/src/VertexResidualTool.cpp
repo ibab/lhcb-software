@@ -1,5 +1,6 @@
 #include "IVertexResidualTool.h"
 #include "TrackInterfaces/ITrackSelector.h"
+#include "TrackInterfaces/ITrackExtrapolator.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/ToolHandle.h"
@@ -7,13 +8,15 @@
 #include "Event/Node.h"
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"
+// TAlignment
+#include "ITrackResidualTool.h"
 
 class ITrackExtrapolator ;
 namespace LHCb {
-  class RecVertex ; 
+  class RecVertex ;
 }
 
-namespace 
+namespace
 {
   // helper structure to hold nformation needed to apply a mass constraint
   struct MassConstraint
@@ -28,8 +31,8 @@ namespace Al
 {
   class ITrackResidualTool ;
   struct TrackContribution ;
-  
-  class VertexResidualTool : public GaudiTool,  
+
+  class VertexResidualTool : public GaudiTool,
 			     virtual public IVertexResidualTool,
 			     virtual public IIncidentListener
   {
@@ -43,7 +46,7 @@ namespace Al
     // initialize
     virtual StatusCode initialize();
     // finalize
-    virtual StatusCode finalize(); 
+    virtual StatusCode finalize();
     // incident service handle
     void handle( const Incident& incident ) ;
     // process a vertex (primary vertex of twoprongvertex)
@@ -70,11 +73,11 @@ namespace Al
     mutable ResidualContainer m_residuals ;
     bool m_debugLevel ;
   } ;
-  
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-  
+
 #include <iostream>
 #include <algorithm>
 #include "GaudiKernel/ToolFactory.h"
@@ -85,15 +88,15 @@ namespace Al
 #include "TrackKernel/TrackStateVertex.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "ITrackResidualTool.h"
-#include <boost/assign/list_of.hpp> 
-#include <boost/foreach.hpp> 
+#include <boost/assign/list_of.hpp>
+#include <boost/foreach.hpp>
 #include "GaudiKernel/ParticleProperty.h"
 #include "Kernel/ParticleID.h"
 
 
 namespace Al
 {
-  
+
   DECLARE_TOOL_FACTORY( VertexResidualTool )
 
   VertexResidualTool::VertexResidualTool(const std::string& type,
@@ -113,7 +116,7 @@ namespace Al
     declareProperty("MaxVertexChi2PerDoF",m_chiSquarePerDofCut = 10 ) ;
     declareProperty("MaxMassConstraintChi2", m_maxMassConstraintChi2 = 16 ) ;
   }
-  
+
   StatusCode VertexResidualTool::initialize()
   {
     StatusCode sc = GaudiTool::initialize();
@@ -122,7 +125,7 @@ namespace Al
     }
     m_trackresidualtool.retrieve().ignore() ;
     m_extrapolator.retrieve().ignore() ;
-    incSvc()->addListener(this, IncidentType::EndEvent);    
+    incSvc()->addListener(this, IncidentType::EndEvent);
     m_propertysvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc",true) ;
     m_debugLevel = msgLevel( MSG::DEBUG ) ;
     return sc ;
@@ -130,10 +133,10 @@ namespace Al
 
   StatusCode VertexResidualTool::finalize()
   {
-    return m_trackresidualtool.release() && m_extrapolator.release() && 
+    return m_trackresidualtool.release() && m_extrapolator.release() &&
       /*m_trackselectorhandle.release() && */ GaudiTool::finalize() ;
   }
-  
+
   void VertexResidualTool::handle( const Incident& incident )
   {
     if ( IncidentType::EndEvent == incident.type() ) {
@@ -143,7 +146,7 @@ namespace Al
       m_residuals.clear() ;
     }
   }
-  
+
   const Al::MultiTrackResiduals* VertexResidualTool::get(const LHCb::RecVertex& vertex) const
   {
     // loop over the list of vertices, collect tracks in the vertex
@@ -163,7 +166,7 @@ namespace Al
     const MassConstraint* mconstraint(0) ;
     rc = compute( trackresiduals, vertex.position(), mconstraint ) ;
     if(rc) m_residuals.push_back(rc) ;
-    
+
     delete mconstraint ;
     return rc ;
   }
@@ -204,7 +207,7 @@ namespace Al
 	assert(0) ;
       }
     }
-    
+
     if(success) {
       rc = compute( trackresiduals, p.referencePoint(), &mconstraint ) ;
       if(rc) m_residuals.push_back(rc) ;
@@ -213,7 +216,7 @@ namespace Al
   }
 
   struct TrackContribution
-  { 
+  {
     typedef std::vector< Gaudi::TrackProjectionMatrix > ProjectionMatrix ;
     const Al::TrackResiduals* trackresiduals ;
     LHCb::State               inputstate ;  // state at vertex before vertex fit
@@ -233,7 +236,7 @@ namespace Al
     // first we need to propagate all tracks to the vertex and keep
     // track of the correlation between the state at the vertex and
     // the reference state inside the TrackResiduals object
-    
+
     typedef std::vector<TrackContribution> Contributions ;
     Contributions states ;
     double totalchisq(0) ;
@@ -248,7 +251,7 @@ namespace Al
       tc.offset = numresiduals ;
       tc.trackresiduals = *itrack ;
       StatusCode sc = extrapolate( **itrack, vertexestimate.z(), tc ) ;
-      if( sc.isSuccess() ) { 
+      if( sc.isSuccess() ) {
 	states.push_back( tc ) ;
 	numresiduals += (*itrack)->size() ;
 	numexternalhits += (*itrack)->nExternalHits() ;
@@ -261,7 +264,7 @@ namespace Al
 	success = false ;
       }
     }
-    
+
 
     if(success) {
       // now vertex the states
@@ -272,18 +275,18 @@ namespace Al
       LHCb::TrackStateVertex::FitStatus fitstatus = vertex.fit() ;
       double vchi2orig = vertex.chi2() ; // cache it, because I know it is slow
       int ndof = vertex.nDoF() ;
-            
+
       if(fitstatus == LHCb::TrackStateVertex::FitSuccess && mconstraint ) {
 	//	static std::vector<double> masshypos = boost::assign::list_of(m_muonmass)(m_muonmass) ;
-	if( m_debugLevel ) 
+	if( m_debugLevel )
 	  debug() << "mass before constraint: "
-		  << vertex.mass(mconstraint->daughtermasses) 
+		  << vertex.mass(mconstraint->daughtermasses)
 		  << " +/- " << vertex.massErr(mconstraint->daughtermasses) << endreq ;
 	double qopbefore = std::sqrt(vertex.stateCovariance(0)(4,4)) ;
 	fitstatus = vertex.constrainMass( mconstraint->daughtermasses, mconstraint->mothermass, mconstraint->motherwidth) ;
 	// vertex fit updates chi2, but not ndof
 	ndof += 1 ;
-	if( m_debugLevel ) 
+	if( m_debugLevel )
 	  debug() << "mass afterconstraint: "
 		  << vertex.mass(mconstraint->daughtermasses)
 		  << " +/- " << vertex.massErr(mconstraint->daughtermasses) << std::endl
@@ -298,7 +301,7 @@ namespace Al
       counter("vchi2") += vchi2 ;
       counter("vchi2orig") += vchi2orig ;
       //counter("niter") += vertex.nIter() ;
-       
+
       if( m_debugLevel ) {
 	debug() << "Fitted vertex, chi2/dof=" << vchi2 << "/" << ndof << endreq ;
 	debug() << "Vertex position orig/new="
@@ -312,13 +315,13 @@ namespace Al
 	totalchisq += vchi2 ;
 	totalndof  += ndof ;
 	std::vector<const Al::TrackResiduals*> tracks ;
-	BOOST_FOREACH( const TrackContribution& atrack, states) 
+	BOOST_FOREACH( const TrackContribution& atrack, states)
 	  tracks.push_back( atrack.trackresiduals ) ;
 	rc = new Al::MultiTrackResiduals( totalchisq, totalndof, numexternalhits, tracks, vchi2, ndof ) ;
 	rc->m_residuals.reserve(numresiduals) ;
 	if( m_debugLevel )
 	  debug() << "created the vertex: " << numresiduals << endreq ;
-	
+
 	// calculate all new residuals and all correlations
 	bool computationerror(false) ;
 	for(size_t i = 0; i<states.size() && !computationerror; ++i) {
@@ -337,7 +340,7 @@ namespace Al
 	    assert( rc->m_residuals.size() == irow+ioffset ) ;
 	    rc->m_residuals.push_back( states[i].trackresiduals->residuals()[irow] ) ;
 	    Al::Residual1D& res = rc->m_residuals.back() ;
-	    
+
 	    // update with vertex info
 	    double deltar = (states[i].dResidualdState[irow] * deltaState)(0) ;
 	    double deltaHCH = ROOT::Math::Similarity(states[i].dResidualdState[irow], deltaCov)(0,0) ;
@@ -346,7 +349,7 @@ namespace Al
 	    if( res.HCH() < 0 ) {
 	      warning() << "problem computing update of track errors"
 			<< states[i].trackresiduals->residuals()[irow].HCH()
-			<< deltaHCH << std::endl 
+			<< deltaHCH << std::endl
 			<< deltaCov << endreq ;
 	      computationerror = true ;
 	    }
@@ -377,7 +380,7 @@ namespace Al
 			  << res.residualVertexCov()(0,k) << " "
 			  << std::sqrt( res.V() * vertex.covMatrix()(k,k) ) << std::endl ;
 		std::cout << "contributions: " ;
-		for( size_t l=0; l<5; ++l) 
+		for( size_t l=0; l<5; ++l)
 		  std::cout << states[i].residualStateCov[irow](0,l) * dVertexDStateIn(l,k) << " " ;
 		std::cout << std::endl ;
 
@@ -390,26 +393,26 @@ namespace Al
 			<< vertex.position().z() - vertexestimate.z() << std::endl ;
 	      ROOT::Math::SMatrix<double,5,3> statevertexcov = vertex.matrixA(i) * vertex.covMatrix() ;
 	      for( size_t k=0; k<5; ++k)
-		for (size_t l=0; l<3; ++l) 
+		for (size_t l=0; l<3; ++l)
 		  statevertexcov(k,l) /= std::sqrt( vertex.covMatrix()(l,l) * vertex.state(i).covariance()(k,k) ) ;
 	      std::cout << "statevertexcor: " << statevertexcov << std::endl ;
 	    }
 	    */
 	  }
-	  
+
 	  // loop over all existing entries of the per-track HCH and update
-	  for( Al::Residuals::CovarianceContainer::const_iterator 
+	  for( Al::Residuals::CovarianceContainer::const_iterator
 		 ielem = states[i].trackresiduals->m_HCHElements.begin() ;
 	       ielem != states[i].trackresiduals->m_HCHElements.end(); ++ielem) {
-	    double deltaHCH = 
+	    double deltaHCH =
 	      (states[i].dResidualdState[ielem->row] * deltaCov *
 	       ROOT::Math::Transpose(states[i].dResidualdState[ielem->col]))(0,0) ;
 	    rc->m_HCHElements.push_back
-	      ( Al::CovarianceElement( ielem->row + ioffset, 
+	      ( Al::CovarianceElement( ielem->row + ioffset,
 				       ielem->col + ioffset,
 				       ielem->val + deltaHCH ) ) ;
 	  }
-				       
+
 	  // now the correlations between the tracks. this is the very time-consuming part.
 	  if( m_maxHitsPerTrackForCorrelations>0 && !computationerror)
 	    for(size_t j =0; j<i && !computationerror; ++j) {
@@ -426,8 +429,8 @@ namespace Al
 		}
 	      }
 	    }
-	  
-	  
+
+
 	  // Let's check the result Keep track of the roots.
 	  if(!computationerror) {
 	    std::string message ;
@@ -435,25 +438,25 @@ namespace Al
 	    if(computationerror) warning() << message << endreq ;
 	  }
 	}
-	
+
 	if(computationerror) {
 	  delete rc ;
 	  rc = 0 ;
 	  warning() << "VertexResidualTool::compute failed" << endreq ;
-	} 
+	}
       } else {
-	warning() << "rejected vertex with chisqu/dof: " << vchi2 / vertex.nDoF() 
+	warning() << "rejected vertex with chisqu/dof: " << vchi2 / vertex.nDoF()
 		  << " isConstrained = " << bool(mconstraint!=0) << endreq ;
-      } 
+      }
     } else {
 	warning() << "not enough tracks for vertex anymore" << endreq ;
     }
     return rc ;
   }
-  
+
   StatusCode VertexResidualTool::extrapolate( const Al::TrackResiduals& track,
 					      double z,
-					      TrackContribution& tc ) const 
+					      TrackContribution& tc ) const
   {
     // Just to remind you, this is the covariance matrix for a state and its extrapolated state
     //
@@ -483,7 +486,7 @@ namespace Al
     // derivatives of the residuals to the state, which is
     //
     // dRdS = C2^{-1} * E' = C2^{-1} * F * E
-    
+
     // propagate the reference state and get the transport matrix
     Gaudi::TrackMatrix F ;
     tc.inputstate = track.state() ;
@@ -492,7 +495,7 @@ namespace Al
 
       // calculate the correlation
       // stateResidualCorrelation = convertToCLHEP(F) * track.m_stateResCov ;
-      
+
       // invert the covariance matrix. cache it for later use
       tc.inputCovInv = tc.inputstate.covariance() ;
       bool OK = tc.inputCovInv.InvertChol() ;
@@ -507,7 +510,7 @@ namespace Al
 	  tc.dResidualdState[inode]  = tc.residualStateCov[inode] * tc.inputCovInv ;
 	}
       }
-    } 
+    }
     return sc ;
   }
 }

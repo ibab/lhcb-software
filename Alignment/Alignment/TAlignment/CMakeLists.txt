@@ -28,19 +28,19 @@ gaudi_depends_on_subdirs(Alignment/AlignEvent
 find_package(CLHEP)
 find_package(GSL)
 find_package(AIDA)
+find_package(Boost)
 find_package(PythonLibs)
 
 gaudi_add_module(TAlignment
                  src/*.cpp
-                 INCLUDE_DIRS CLHEP GSL AIDA Alignment/AlignmentInterfaces Tr/TrackInterfaces
-                 LINK_LIBRARIES CLHEP GSL AlignEvent AlignKernel MuonDetLib STDetLib LinkerEvent PhysEvent RecEvent TrackEvent GaudiAlgLib GaudiKernel LHCbKernel LHCbMathLib LoKiCoreLib TrackFitEvent TrackKernel)
+                 INCLUDE_DIRS Boost CLHEP GSL AIDA Alignment/AlignmentInterfaces Tr/TrackInterfaces
+                 LINK_LIBRARIES Boost CLHEP GSL AlignEvent AlignKernel MuonDetLib STDetLib LinkerEvent PhysEvent RecEvent TrackEvent GaudiAlgLib GaudiKernel LHCbKernel LHCbMathLib LoKiCoreLib TrackFitEvent TrackKernel)
 
 gaudi_add_dictionary(TAlignment
                      dict/TAlignmentDict.h
                      dict/TAlignmentDict.xml
-                     INCLUDE_DIRS CLHEP GSL PythonLibs Alignment/AlignmentInterfaces Tr/TrackInterfaces
-                     LINK_LIBRARIES CLHEP GSL PythonLibs GaudiPythonLib AlignEvent AlignKernel MuonDetLib STDetLib LinkerEvent PhysEvent RecEvent TrackEvent GaudiAlgLib GaudiKernel LHCbKernel LHCbMathLib LoKiCoreLib TrackFitEvent TrackKernel
+                     INCLUDE_DIRS Boost CLHEP GSL PythonLibs Alignment/AlignmentInterfaces Tr/TrackInterfaces
+                     LINK_LIBRARIES Boost CLHEP GSL PythonLibs GaudiPythonLib AlignEvent AlignKernel MuonDetLib STDetLib LinkerEvent PhysEvent RecEvent TrackEvent GaudiAlgLib GaudiKernel LHCbKernel LHCbMathLib LoKiCoreLib TrackFitEvent TrackKernel
                      OPTIONS "-U__MINGW32__")
 
 gaudi_install_python_modules()
-

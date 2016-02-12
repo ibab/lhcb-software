@@ -5,7 +5,7 @@
 package           TAlignment
 version           v6r5
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 #branches          cmt doc dict src options TAlignment
 branches          cmt doc src python dict
@@ -14,29 +14,29 @@ include_path      none
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use     GaudiKernel             v*      
-use 	GSL               	v*	LCG_Interfaces
-use	CLHEP           	v*	LCG_Interfaces
-use   	GaudiAlg          	v*
-use     AlignSolvTools          v*      Alignment
-use 	AlignmentInterfaces	v*	Alignment
-use 	AlignTrTools		v*	Alignment
-use     AlignKernel             v*      Alignment
-use     AlignEvent              v*      Alignment
-use   	RecEvent          	v*      Event
-use 	TrackEvent		v*	Event
-use 	TrackFitEvent		v*	Tr
-use   	TrackInterfaces   	v*      Tr
-use   	TrackKernel	   	v*      Tr
-use 	STDet			v*	Det
-use     MuonDet                 v*      Det
-use     LHCbKernel              v*      Kernel
-use     LHCbMath                v*      Kernel
-use     LoKiCore        	v*      Phys
-use     LinkerEvent		v*	Event
-#use     OnlineKernel            v*      Online
-#use     OnlineAlign		v*      Online
-use     Boost            	v*	LCG_Interfaces -no_auto_imports
+use   GaudiKernel          v*
+use 	GSL                  v*	LCG_Interfaces
+use	  CLHEP           	   v*	LCG_Interfaces
+use   GaudiAlg          	 v*
+use   AlignSolvTools       v* Alignment
+use 	AlignmentInterfaces	 v*	Alignment
+use 	AlignTrTools		     v*	Alignment
+use   AlignKernel          v* Alignment
+use   AlignEvent           v* Alignment
+use   RecEvent          	 v* Event
+use 	TrackEvent		       v*	Event
+use 	TrackFitEvent		     v*	Tr
+use   TrackInterfaces   	 v* Tr
+use   TrackKernel	   	     v* Tr
+use 	STDet			           v*	Det
+use   MuonDet              v* Det
+use   LHCbKernel           v* Kernel
+use   LHCbMath             v* Kernel
+use   LoKiCore        	   v* Phys
+use   LinkerEvent		       v*	Event
+#use   OnlineKernel          v*      Online
+#use   OnlineAlign		       v*      Online
+use   Boost            	   v*	LCG_Interfaces -no_auto_imports
 #============================================================================
 # Component library building rule
 #============================================================================
@@ -71,4 +71,3 @@ macro_append Boost_linkopts " $(Boost_linkopts_system) $(Boost_linkopts_filesyst
 end_private
 
 macro TAlignmentDict_use_linkopts $(use_linkopts)
-

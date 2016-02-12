@@ -3,6 +3,10 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2016-02-12 - Maurizio Martinelli
+ - VertexResidualTool: added a couple of includes.
+ - Added boost to package requirements.
+
 ! 2016-01-07 - Wouter Hulsbergen
  - VertexResidualTool: bux fix in computation of ndof, new cut on mass constraint chi2, cleanup
  - AlignUpdateTool: added extra info from solv tool
@@ -78,7 +82,7 @@ Purpose	: collection of alignment algorithms
  - Change the 2 half constraint (cancel "total") for VeloAlignment scenario
 
 ! 2015-06-05 - Silvia Borghi
- - Add in Track selection for the velo overlap and add selection of the velo 
+ - Add in Track selection for the velo overlap and add selection of the velo
    refitted segnments of the long tracks
  - Change Vertex selection
  -  Few fixes in messages
@@ -107,11 +111,11 @@ Purpose	: collection of alignment algorithms
 ! 2015-05-26 - Silvia Borghi
  - Change the Configuration to change the format of xml file for Run2.
    Option "DataCondType" has been added to have back-compatible for Run1 data
-   (default is Run2). 
+   (default is Run2).
 
 
 ! 2015-04-30 - Maurizio Martinelli
- - Modified ParticleSelectionFromDST for being able to run 
+ - Modified ParticleSelectionFromDST for being able to run
 
 ! 2015-04-21 - Stefania Vecchi
  - Added MuonTrack selection to TrackSelection.py and
@@ -137,8 +141,8 @@ Purpose	: collection of alignment algorithms
 !========================= TAlignment v6r2 2014-11-10 =========================
 
 ! 2014-11-10 - Maurizio Martinelli
- - removed the classes used to interface with online environment. 
- 	 They will be found in AlignmentOnline/AlignOnline  
+ - removed the classes used to interface with online environment.
+ 	 They will be found in AlignmentOnline/AlignOnline
 
 ! 2014-10-06 - Maurizio Martinelli
  - modified AlignAlgorithm to rely on a tool for managing xml writers
@@ -194,7 +198,7 @@ Purpose	: collection of alignment algorithms
  - defined a standard scenario for early data alignment
 
 ! 2012-04-21 - Wouter Hulsbergen
- - if alignment elements are specified more than once, it takes the 
+ - if alignment elements are specified more than once, it takes the
    last set of specifief dofs, rather than the joint set
 
 ! 2012-04-05 - Frederic Dupertuis
@@ -230,21 +234,21 @@ Purpose	: collection of alignment algorithms
 !========================= TAlignment v5r4 2011-03-15 =========================
 ! 2011-03-12 - Wouter Hulsbergen
  - adapt to changes in trackfit
- - prepare  functionality to process Particles with mass constraints 
+ - prepare  functionality to process Particles with mass constraints
    rather than TwoProngVertices (not entirely finished yet)
  - removed isfinite
 
 ! 2010-10-25 Silvia Borghi
  - Update the Velo Detector and Module survey with the proper z position
 
-</PRE><H1><A NAME=v5r2>2010-10-08 TAlignment v5r2</A></H1><PRE> 
+</PRE><H1><A NAME=v5r2>2010-10-08 TAlignment v5r2</A></H1><PRE>
 
 ! 2010-10-15 M Needham
  - Use state closest to beamine in DToKPiTwoProng
 
 ! 2010-09-08 M Needham
   - Modify the vertex residual tool to deal with any one level resonance
-  - Add  DToKPiTwoProng.h/cpp [makes two prongs from D candidates ] 
+  - Add  DToKPiTwoProng.h/cpp [makes two prongs from D candidates ]
 
 ! 2010-08-13 - Wouter Hulsbergen
  - fix the way tracks from (psi) vertices are identified in input list
@@ -252,21 +256,21 @@ Purpose	: collection of alignment algorithms
 
 ! 2010-06-04 - Stefania Vecchi
  - added some code to run the Muon Alignment:
-   src/MakeMuonTracks.cpp(h) make a Muon stand alone track 
+   src/MakeMuonTracks.cpp(h) make a Muon stand alone track
    src/TrackMuonMatching.cpp(h) make a matching Long+Muon track
-   src/TrackFilterAlg updated with new functionalities 
- - python/TAlignment/Alignables.py 
+   src/TrackFilterAlg updated with new functionalities
+ - python/TAlignment/Alignables.py
  - python/TAlignment/Configuration.py to write HalfStation correction in the xml
  - python/TAlignment/SurveyConstraints.py updated with survey constraints for Muon Half stations
 
-</PRE><H1><A NAME=v5r1>2010-06-02 TAlignment v5r01/A></H1><PRE> 
+</PRE><H1><A NAME=v5r1>2010-06-02 TAlignment v5r01/A></H1><PRE>
 ! 2010-05-21 - Rob Lambert
  - adapt to movement of RecSysConf into RecConf package
 
 
 ! 2010-05-20 Johan Blouw
  - included use of (already defined, but previously unused) ntuple variables.
- 
+
 ! 2010-05-12 Johan Blouw
  - Tracks in TStation are now only fitted upon request (of a configurable).
  - removed a couple of info statements from execute call.
@@ -275,7 +279,7 @@ Purpose	: collection of alignment algorithms
  - fixed memory leak in TStation class
 
 
-</PRE><H1><A NAME=v5r0>2010-05-04 TAlignment v5r0</A></H1><PRE> 
+</PRE><H1><A NAME=v5r0>2010-05-04 TAlignment v5r0</A></H1><PRE>
 ! 2010-05-04 Johan Blouw
  - small changes to TStation algorithm
 
@@ -315,9 +319,9 @@ Purpose	: collection of alignment algorithms
  - added GAlignConf.py for configuring GAlign (previously, it was done in Escher/python/Configuration.py)
  - modified python/TAlignment/Configuration.py to reflect changes mentioned above.
  - updated TStation code so that it properly is enabled to use the energy deposited in the calorimeters.
-   (works currently only for long tracks...)                   
+   (works currently only for long tracks...)
 
-</PRE><H1><A NAME=v4r8>2010-03-03 TAlignment v4r8</A></H1><PRE> 
+</PRE><H1><A NAME=v4r8>2010-03-03 TAlignment v4r8</A></H1><PRE>
 ! 2010-02-25 - Wouter Hulsbergen
  - fix killer bug in AlignChisqConstraintTool: all xml errors were set to error on Tx
  - fix bug in SurveyConstraints.xml: global TT constraint was overwriting values read from xml
@@ -333,20 +337,20 @@ Purpose	: collection of alignment algorithms
  - fix problem with survey constraints for alignables that share all det elements with mother alignables
  - configurables: added configurable for T, add 'None' as a valid dof, set survey errors by jop option of AlignChi2ConstraintTool
 
-</PRE><H1><A NAME=v4r7>2010-02-08 TAlignment v4r7</A></H1><PRE> 
+</PRE><H1><A NAME=v4r7>2010-02-08 TAlignment v4r7</A></H1><PRE>
  - J. Blouw: Contrary to what is written below, v4r7 will now be used
    for Alignment release v4r6.
  - J. Blouw tagged the package v4r7.
 
 
 ! 2010-02-07  Stefania Vecchi
- - removed ResidualsM1 algo 
+ - removed ResidualsM1 algo
 
 ! 2010-02-06 Johan Blouw
  - updated the CalcResidual call according to ITAConfigTool.
 
 ! 2010-02-06 Stefania Vecchi
- - added ResidualsM1 algo to check residuals between the Long tracks and the 
+ - added ResidualsM1 algo to check residuals between the Long tracks and the
    Muon hits in M1
 
 </PRE><H1><A NAME=v4r5>2010-02-05 TAlignment v4r6</A></H1><PRE>
@@ -354,7 +358,7 @@ Purpose	: collection of alignment algorithms
 
 ! 2010-02-05 Johan Blouw
  - removed update conditions dbase call from GAlign. It wasn't needed.
- - small changes to Configuration.py, reflects changes up & 
+ - small changes to Configuration.py, reflects changes up &
    downstream to M'pede style alignment
 
 ! 2010-01-21 Wouter Hulsbergen
@@ -399,7 +403,7 @@ Purpose	: collection of alignment algorithms
 
 ! 2009-11-11 - Wouter Hulsbergen
  - TrackResidualTool can now perform internally a kalmansmoother iteration.
-   This means we no longer need a special trackfit configuration. This needs 
+   This means we no longer need a special trackfit configuration. This needs
    the next version of REC.
 
 ! 2009-11-04 - Wouter Hulsbergen
@@ -452,7 +456,7 @@ Purpose	: collection of alignment algorithms
  - changed version to v4r0.
  . Note: two sequences proven to work (Millepede OT-layers & Kalman OT-layers)
 
-! 2009-01-13 Wouter Hulsbergen: 
+! 2009-01-13 Wouter Hulsbergen:
  - Adapted to changes in SolvKernel
  - Added functionality to compute only subset of track-track hit correlations in VertexResidualTool
  - Added constrains for z-bowing
@@ -466,7 +470,7 @@ Purpose	: collection of alignment algorithms
 ! 2008-07-07 - Jan Amoraal
  - Throw StatusCode::FAILURE when no elments are given in GetElementsToBeAligned
  - Added some more ot alignables
- - Added property to change log filename to AlConfigurable  
+ - Added property to change log filename to AlConfigurable
  - Added property to change frame to AlConfigurable
  - Use index of elements as histogram directories ( easier to loop over )
 
@@ -514,7 +518,7 @@ Purpose	: collection of alignment algorithms
 
 ! 2008-03-24 - Adlene Hicheur
  - Moved AlFileIO.h and AlEquations.h to TAlignment/ for include (put the appropriate ifndef stuff, etc...
- - Added PersistSolv as a friend class in AlEquations.h 
+ - Added PersistSolv as a friend class in AlEquations.h
  - Change after discussion: move  AlFileIO.h and AlEquations.{cpp,h} to AlignSolvTools
 
 ! 2008-03-06 - Wouter Hulsbergen
@@ -552,7 +556,7 @@ Purpose	: collection of alignment algorithms
 
 ! 2008-01-27 - Jan AMORAAL
  - Can choose which global dofs to align for
- - Bug fix: in AlignmentElement.cpp 
+ - Bug fix: in AlignmentElement.cpp
 
 ! 2008-01-22 - Jan AMORAAL
  - clean-up
@@ -574,7 +578,7 @@ Purpose	: collection of alignment algorithms
  - Track projectors have changed (Needs: Rec v5r2)
 
 ! 2007-12-05 - Jan Amoraal
- - Added the ability to align ensembles 
+ - Added the ability to align ensembles
 
 ! 2007-11-29 - Louis Nicolas
  - Fixed a few option names changes in OTAlignment.opts and Escher_nikhef.opts
@@ -597,7 +601,7 @@ Purpose	: collection of alignment algorithms
   IGetElementsToBeAligned.h
   GetElementsToBeAligned.(h,cpp)
   FindAlignmentElement.cpp
- - Modified AlignAlgorithm to use new classes and tools 
+ - Modified AlignAlgorithm to use new classes and tools
 
 </PRE><H1><A NAME=v3r3>2007-11-13 TAlignment v3r3</A></H1><PRE>
 ! 2007-11-13 - Johan Blouw
@@ -655,7 +659,7 @@ Purpose	: collection of alignment algorithms
    python
  - added dictionaries for the above purpose
  - added modifications to the requirements file accordingly
- NOTE: this is not intended as a "best solution"; in a next release I'd 
+ NOTE: this is not intended as a "best solution"; in a next release I'd
  prefer to remove the linker library and the dictionaries.
 
 ! 2007-08-16 - Gerhard Raven
@@ -704,7 +708,7 @@ Purpose	: collection of alignment algorithms
 
 - 2007-03-19 - Jan Amoraal
  - Remove blah from requirements
-  
+
 - 2007-03-09 - Jan Amoraal
  - First version of the (T) Alignment Framework
  - AlignAlgorithm: Generic chi^2 minimisation algorithm
@@ -714,7 +718,7 @@ Purpose	: collection of alignment algorithms
 </PRE><H1><A NAME=v1r1>2007-02-05 TAlignment v1r1</A></H1><PRE>
 - Johan Blouw
 - small changes to requirements file to fullfill Escher requirements
-     
+
 </PRE><H1><A NAME=v1r0>2006-06-29 TAlignment v1r0</A></H1><PRE>
 - Johan Blouw
 - algorithm to be used for T-station alignment development
