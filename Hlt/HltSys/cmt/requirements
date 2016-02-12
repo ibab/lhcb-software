@@ -21,6 +21,7 @@ use HltRawData          v5r11    Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v3r2     Hlt   # Jose Angel Hernando-Morata
 use HltSettings         v7r6     Hlt   # Vava Gligorov, Mika Vesterinen, Roel Aaij
 use HltTracking         v13r14   Hlt   # Sascha Stahl, Vava Gligorov
+use HltJets             v1r0     Hlt   # Roel Aaij
 use TCKUtils            v1r18    Hlt   # Gerhard Raven
 use LoKiTrigger         v15r8    Phys  # Vanya Belyaev
 
