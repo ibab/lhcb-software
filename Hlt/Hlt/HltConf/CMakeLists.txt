@@ -9,7 +9,8 @@ gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Hlt/HltLine
                          Hlt/HltLuminosity
                          Hlt/HltSettings
-                         Hlt/HltTracking)
+                         Hlt/HltTracking
+                         Hlt/HltJets)
 
 set_property(DIRECTORY PROPERTY CONFIGURABLE_USER_MODULES HltConf.Hlt1 HltConf.Hlt2 HltConf.Configuration)
 gaudi_install_python_modules()

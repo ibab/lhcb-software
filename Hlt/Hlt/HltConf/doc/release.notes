@@ -4,6 +4,10 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2016-02-12 - Roel Aaij
+ - Add HltJetConf to used configurables hlt Hlt2 to ensure correct order of
+   configuration.
+
 !========================= HltConf v13r6 2016-02-01 =========================
 
 ! 2016-02-01 - Sean Benson

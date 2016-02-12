@@ -3,39 +3,27 @@
 # The helper package for configuration of Hlt(1)
 # =============================================================================
 package HltConf
-version           v13r6
+version v13r6
 
 # =============================================================================
 # ======= the actual dependencies =============================================
-use       GaudiPolicy v*
-use       Python      v* LCG_Interfaces
-use       HltLine     v*  Hlt
-use       Hlt1Lines   v*  Hlt
-use       Hlt2Lines   v*  Hlt
-use       HltTracking v* Hlt
-use       Hlt2SharedParticles v* Hlt
-use       HltSettings v* Hlt
+use       GaudiPolicy         v*
+use       Python              v*    LCG_Interfaces
+use       HltLine             v*    Hlt
+use       Hlt1Lines           v*    Hlt
+use       Hlt2Lines           v*    Hlt
+use       HltTracking         v*    Hlt
+use       Hlt2SharedParticles v*    Hlt
+use       HltSettings         v*    Hlt
+use       HltJets             v*    Hlt
+use       HltLuminosity       v*    Hlt
 
-# =============================================================================
-
-use       HltLuminosity v* Hlt #dependency via Hlt1Lines, actually
-
-# =============================================================================
 # ======= the structure =======================================================
 branches cmt doc python tests
-# =============================================================================
 
-
-
-# =============================================================================
 # ======= the patterns ========================================================
 macro HltConfConfUserModules "HltConf.Hlt1 HltConf.Hlt2 HltConf.Configuration"
 apply_pattern install_python_modules
-# =============================================================================
-
-# =============================================================================
-# The END
-# =============================================================================
 
 # ==== Auto added tests ====
 apply_pattern    QMTest
