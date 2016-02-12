@@ -6,6 +6,7 @@
 
 2016-02-12 - Ricardo Vazquez Gomez
  - Add lines for LFV to archive for incremental stripping
+ - Add lines for B2XLL to archive for incremental stripping
 
 2016-02-11 - Ricardo Vazquez Gomez
  - Update StrippingCC2DD.py for S21rXp1 
