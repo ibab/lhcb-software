@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-02-12 - Maurizio Martinelli
+ - Updated D2KsKsHLines and CharmHad Stages to use both KS types in the same combiner
+
 ! 2016-02-12 - Jon Harrison
  - Updated D2HLL lines in RareCharm to better agree with stripping and added 6 new wrong sign lines
 
@@ -16,8 +19,8 @@
    separate prescale. Regions are configurable.
 
 ! 2016-02-12 - Francesco Dettori
- - Added Hlt2Lines/Strange directory containing for the moment one line: 
-   StrangeKPiPiPi line. 
+ - Added Hlt2Lines/Strange directory containing for the moment one line:
+   StrangeKPiPiPi line.
 
 ! 2016-02-12 - Roel Aaij
  - Update CaloTest folder to work and not throw warnings.

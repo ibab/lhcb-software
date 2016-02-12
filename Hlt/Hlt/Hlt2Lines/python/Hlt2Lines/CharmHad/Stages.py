@@ -825,24 +825,29 @@ class HKsKsCombiner(Hlt2Combiner):
     Combiner for exclusive X->hKsKs lines.
 
     Configuration dictionaries must contain the following keys:
-        'KS0_ALL_PT_MIN'        : Minimum KS transverse momentum
-        'KS0_ALL_MIPCHI2DV_MIN' : Minimum KS IPChi2
-        'Trk_ALL_PT_MIN'        : Minimum bachelor transverse momentum
-        'Trk_ALL_MIPCHI2DV_MIN' : Minimum bachelor IPChi2
-        'AM_MIN'                : Minimum mass of the 3-body combination
-        'AM_MAX'                : Maximum mass of the 3-body combination
-        'AM_3'                  : Mass of the last particle
-        'PT12_MIN'              : Minimum PT of the two Ks combination
-        'ASUMPT_MIN'            : Minimum value of the sum of the PT of the daughters
-        'VCHI2PDOF_MAX'         : Upper limit on VFASPF(VCHI2PDOF) in MotherCut
-        'acosBPVDIRA_MAX'       : Upper limit on acosDIRA wrt bestPV in MotherCut
-        'BPVLTIME_MIN'          : Lower limit on Lifetime wrt bestPV in MotherCut
-        'DPT_MIN'               : Minimum PT of the vertex candidate
-        'DMOM_MIN'              : mother minimum momentum
-        'TisTosSpec'            : Configuration string of the Hlt1 TISTOS filter.
+        'KS0LL_ALL_PT_MIN'        : Minimum KS transverse momentum
+        'KS0LL_ALL_MIPCHI2DV_MIN' : Minimum KS IPChi2
+        'KS0DD_ALL_PT_MIN'        : Minimum KS transverse momentum
+        'KS0DD_ALL_MIPCHI2DV_MIN' : Minimum KS IPChi2
+        'Trk_ALL_PT_MIN'          : Minimum bachelor transverse momentum
+        'Trk_ALL_MIPCHI2DV_MIN'   : Minimum bachelor IPChi2
+        'AM_MIN'                  : Minimum mass of the 3-body combination
+        'AM_MAX'                  : Maximum mass of the 3-body combination
+        'AM_3'                    : Mass of the last particle
+        'PT12_MIN'                : Minimum PT of the two Ks combination
+        'ASUMPT_MIN'              : Minimum value of the sum of the PT of the daughters
+        'VCHI2PDOF_MAX'           : Upper limit on VFASPF(VCHI2PDOF) in MotherCut
+        'acosBPVDIRA_MAX'         : Upper limit on acosDIRA wrt bestPV in MotherCut
+        'BPVLTIME_MIN'            : Lower limit on Lifetime wrt bestPV in MotherCut
+        'DPT_MIN'                 : Minimum PT of the vertex candidate
+        'DMOM_MIN'                : mother minimum momentum
+        'TisTosSpec'              : Configuration string of the Hlt1 TISTOS filter.
     """
-    def __init__(self, name, decay, inputs, lldd = False, shared = False, nickname = None):
-        dc = { 'KS0' : "(PT > %(KS0_ALL_PT_MIN)s) & (MIPCHI2DV(PRIMARY) > %(KS0_ALL_MIPCHI2DV_MIN)s)" }
+    def __init__(self, name, decay, inputs, shared = False, nickname = None):
+        dc = { 'KS0' : "( (INTREE((ABSID=='pi+') & (ISLONG))) "+
+                        "&(PT > %(KS0LL_ALL_PT_MIN)s) & (MIPCHI2DV(PRIMARY) > %(KS0LL_ALL_MIPCHI2DV_MIN)s) )"+
+                    " | ( (INTREE((ABSID=='pi+') & (ISDOWN))) "+
+                        "&(PT > %(KS0DD_ALL_PT_MIN)s) & (MIPCHI2DV(PRIMARY) > %(KS0DD_ALL_MIPCHI2DV_MIN)s) )" }
         for child in ['pi+','K+','p+'] :
             dc[child] = "(PT > %(Trk_ALL_PT_MIN)s) & (MIPCHI2DV(PRIMARY) > %(Trk_ALL_MIPCHI2DV_MIN)s)"
         c12 = (" ( AM < (%(AM_MAX)s - %(AM_3)s) ) " +
@@ -854,8 +859,8 @@ class HKsKsCombiner(Hlt2Combiner):
                "&(P > %(DMOM_MIN)s )" +
                "&(BPVDIRA > lcldira )" +
                "&(BPVLTIME() > %(BPVLTIME_MIN)s )")
-        if lldd == True :
-          mc = "(INTREE((ABSID=='pi+') & (ISLONG)) & INTREE((ABSID=='pi+') & (ISDOWN))) & " + mc
+        #if lldd == True :
+        #  mc = "(INTREE((ABSID=='pi+') & (ISLONG)) & INTREE((ABSID=='pi+') & (ISDOWN))) & " + mc
 
         pream = [
                 "import math"
