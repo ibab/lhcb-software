@@ -91,7 +91,7 @@ StatusCode MatchVeloMuon::finalize()
 
 //=============================================================================
 StatusCode MatchVeloMuon::tracksFromTrack( const LHCb::Track& seed,
-                                           std::vector<LHCb::Track*>& tracks )
+                                           std::vector<LHCb::Track*>& tracks ) const
 {
     // Clean start
     i_clean();
@@ -148,7 +148,7 @@ StatusCode MatchVeloMuon::tracksFromTrack( const LHCb::Track& seed,
 
 //=============================================================================
 void MatchVeloMuon::i_findSeeds( const LHCb::Track& seed,
-                                 const unsigned int seedStation )
+                                 const unsigned int seedStation ) const
 {
     // Make a Candidate from the track
     Candidate veloSeed{ &seed }; 
@@ -214,7 +214,7 @@ void MatchVeloMuon::i_findSeeds( const LHCb::Track& seed,
 }
 
 //=============================================================================
-void MatchVeloMuon::i_addHits( Candidate& seed )
+void MatchVeloMuon::i_addHits( Candidate& seed ) const
 {
     // First hit is in magnet
     double zMagnet = m_magnetHit->z();
@@ -317,7 +317,7 @@ void MatchVeloMuon::i_fitCandidate( Candidate& candidate ) const
 }
 
 //=============================================================================
-void MatchVeloMuon::i_clean()
+void MatchVeloMuon::i_clean() const
 {
     // delete leftover seeds
     m_seeds.clear(); // leaves capacity invariant, hence we latch onto the max size

@@ -46,7 +46,7 @@ class HltVeloIsMuon : public extends1<GaudiHistoTool, ITracksFromTrack>
     StatusCode initialize() override;
     StatusCode finalize() override;
     StatusCode tracksFromTrack( const LHCb::Track& seed,
-                                std::vector<LHCb::Track*>& tracks ) override;
+                                std::vector<LHCb::Track*>& tracks ) const override;
 
   private:
     friend class ToolFactory<HltVeloIsMuon>;
@@ -96,20 +96,20 @@ class HltVeloIsMuon : public extends1<GaudiHistoTool, ITracksFromTrack>
 
 
     // Temporary storage
-    std::unique_ptr<CommonMuonHit> m_magnetHit;
-    std::vector<Candidate>  m_seeds;
+    mutable std::unique_ptr<CommonMuonHit> m_magnetHit;
+    mutable std::vector<Candidate>  m_seeds;
 
-    std::array<double,nRegions> m_regionFoIX;
-    std::array<double,nRegions> m_regionFoIY;
+    mutable std::array<double,nRegions> m_regionFoIX;
+    mutable std::array<double,nRegions> m_regionFoIY;
 
     // Helper methods
-    void findSeeds( const Candidate& seed, const unsigned int seedStation );
+    void findSeeds( const Candidate& seed, const unsigned int seedStation ) const;
 
-    void addHits( Candidate& seed );
+    void addHits( Candidate& seed ) const;
 
     void fitCandidate( Candidate& seed ) const;
 
-    void clean();
+    void clean() const;
 
     inline double dtx( const double p ) const
     {

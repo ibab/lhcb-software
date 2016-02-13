@@ -3,10 +3,12 @@
 ! Responsible : Vasilis Syropoulos, Roel Aaij, Francesco Dettori
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
+! 2016-02-13 - Gerhard Raven
+ - follow const-ification of Tr/TrackInterfaces
 
 ! 2016-02-10 - Jessica Prisciandaro
-- MatchVeloTTMuon is modified: same extrapolation and add_Hits of VeloMuonMatch. Use VeloTT infos to determine how the particle is bent. 
-
+- MatchVeloTTMuon is modified: same extrapolation and add_Hits of VeloMuonMatch. 
+  Use VeloTT infos to determine how the particle is bent. 
 
 !========================= Hlt1Muons v1r14p1 2015-07-23 =========================
 

@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef MATCHVELOTTMUON_H
 #define MATCHVELOTTMUON_H 1
 
@@ -43,7 +42,7 @@ public:
    StatusCode finalize() override;
 
    StatusCode tracksFromTrack( const LHCb::Track& seed,
-                               std::vector<LHCb::Track*>& tracks ) ;
+                               std::vector<LHCb::Track*>& tracks ) const ;
 
 private:
 
@@ -98,20 +97,20 @@ private:
    double m_FoIFactorY;
    
    // Temporary storage
-   LHCb::StateVector m_stateAtM3;
-   std::unique_ptr<CommonMuonHit> m_magnetHit;
-   std::vector<Candidate> m_seeds;
+   mutable LHCb::StateVector m_stateAtM3;
+   mutable std::unique_ptr<CommonMuonHit> m_magnetHit;
+   mutable std::vector<Candidate> m_seeds;
     
    // Helper methods
-   void i_findSeeds      ( const LHCb::Track& seed, const unsigned int seedStation );
-   void i_findVeloSeeds  ( const Candidate& seed,   const unsigned int seedStation );
-   void i_findVeloTTSeeds( const Candidate& seed,   const unsigned int seedStation );
+   void i_findSeeds      ( const LHCb::Track& seed, const unsigned int seedStation ) const;
+   void i_findVeloSeeds  ( const Candidate& seed,   const unsigned int seedStation ) const;
+   void i_findVeloTTSeeds( const Candidate& seed,   const unsigned int seedStation ) const;
 
-   void i_addHits( Candidate& seed );
+   void i_addHits( Candidate& seed ) const;
 
    void i_fitCandidate( Candidate& seed ) const;
 
-   void i_clean();
+   void i_clean() const;
  
    const std::vector<Candidate>& seeds() const {
       return m_seeds;

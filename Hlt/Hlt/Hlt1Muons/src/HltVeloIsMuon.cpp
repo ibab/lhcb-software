@@ -143,7 +143,7 @@ StatusCode Hlt::HltVeloIsMuon::finalize()
 
 //=============================================================================
 StatusCode Hlt::HltVeloIsMuon::tracksFromTrack( const LHCb::Track& seed,
-                                                vector<LHCb::Track*>& tracks )
+                                                vector<LHCb::Track*>& tracks ) const
 {
     // Clean start
     clean();
@@ -202,7 +202,7 @@ StatusCode Hlt::HltVeloIsMuon::tracksFromTrack( const LHCb::Track& seed,
 
 //=============================================================================
 void Hlt::HltVeloIsMuon::findSeeds( const Candidate& veloSeed,
-                                    const unsigned int seedStation )
+                                    const unsigned int seedStation ) const
 {
     // forward extrapolation, make seed point
     double zMagnet = m_zb + m_za * veloSeed.tx2();
@@ -273,7 +273,7 @@ void Hlt::HltVeloIsMuon::findSeeds( const Candidate& veloSeed,
 }
 
 //=============================================================================
-void Hlt::HltVeloIsMuon::addHits( Candidate& seed )
+void Hlt::HltVeloIsMuon::addHits( Candidate& seed ) const
 {
     // First hit is in magnet
     double zMagnet = m_magnetHit->z();
@@ -387,7 +387,7 @@ void Hlt::HltVeloIsMuon::fitCandidate( Candidate& candidate ) const
 }
 
 //=============================================================================
-void Hlt::HltVeloIsMuon::clean()
+void Hlt::HltVeloIsMuon::clean() const
 {
     // delete leftover seeds
     m_seeds.clear();

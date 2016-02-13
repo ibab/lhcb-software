@@ -20,7 +20,7 @@ class IsMuonTool : public GaudiTool, virtual public ITracksFromTrack {
   ~IsMuonTool() override = default;
   StatusCode initialize() override;
   StatusCode tracksFromTrack(const LHCb::Track&,
-                             std::vector<LHCb::Track*>&) override;
+                             std::vector<LHCb::Track*>&) const override;
 
  private:
   ICommonMuonTool* m_muonTool;

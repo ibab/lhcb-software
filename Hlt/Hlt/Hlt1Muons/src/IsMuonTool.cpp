@@ -42,7 +42,7 @@ StatusCode IsMuonTool::initialize() {
  * output track if isMuon is true.
  */
 StatusCode IsMuonTool::tracksFromTrack(const LHCb::Track& track,
-                                       std::vector<LHCb::Track*>& tracks) {
+                                       std::vector<LHCb::Track*>& tracks) const {
   if (!m_muonTool->preSelection(track)) {
     return StatusCode::SUCCESS;
   }

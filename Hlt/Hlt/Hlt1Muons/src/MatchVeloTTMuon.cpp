@@ -1,4 +1,3 @@
-// $Id: $
 // STL
 #include <vector>
 #include <algorithm>
@@ -155,7 +154,7 @@ StatusCode MatchVeloTTMuon::finalize()
 
 //=============================================================================
 StatusCode MatchVeloTTMuon::tracksFromTrack( const LHCb::Track& seed,
-                                             vector<LHCb::Track*>& tracks )
+                                             vector<LHCb::Track*>& tracks ) const
 {
    // Clean start
    i_clean();
@@ -216,7 +215,7 @@ StatusCode MatchVeloTTMuon::tracksFromTrack( const LHCb::Track& seed,
 
 //=============================================================================
 void MatchVeloTTMuon::i_findSeeds( const LHCb::Track& seed,
-                                   const unsigned int seedStation )
+                                   const unsigned int seedStation ) const
 {
   //Check if track has a state at TT.
   if( seed.hasTT() ) { 
@@ -233,7 +232,7 @@ void MatchVeloTTMuon::i_findSeeds( const LHCb::Track& seed,
 //=============================================================================
 
 void MatchVeloTTMuon::i_findVeloTTSeeds( const Candidate& veloSeed,
-                                         const unsigned int seedStation )
+                                         const unsigned int seedStation ) const
 {
   
   double zMagnet = m_zb + m_za * veloSeed.tx2();
@@ -316,7 +315,7 @@ void MatchVeloTTMuon::i_findVeloTTSeeds( const Candidate& veloSeed,
 
 //=============================================================================
 void MatchVeloTTMuon::i_findVeloSeeds( const Candidate& veloSeed,
-                                     const unsigned int seedStation )
+                                     const unsigned int seedStation ) const
 {
     // forward extrapolation, make seed point
     double zMagnet = m_zb + m_za * veloSeed.tx2();
@@ -386,7 +385,7 @@ void MatchVeloTTMuon::i_findVeloSeeds( const Candidate& veloSeed,
 
 //=============================================================================
 
-void MatchVeloTTMuon::i_addHits( Candidate& seed )
+void MatchVeloTTMuon::i_addHits( Candidate& seed ) const
 {    
 
   // First hit is in magnet
@@ -549,7 +548,7 @@ double MatchVeloTTMuon::FoIY( const int station, const int region,
 }
 
 //=============================================================================
-void MatchVeloTTMuon::i_clean()
+void MatchVeloTTMuon::i_clean() const
 {
    // delete leftover seeds
    m_seeds.clear(); // leaves capacity invariant, hence we latch onto the max size
