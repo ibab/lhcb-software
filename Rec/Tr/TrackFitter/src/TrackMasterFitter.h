@@ -1,4 +1,3 @@
-// $Id: TrackMasterFitter.h,v 1.34 2010-04-26 14:14:46 wouter Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -38,22 +37,18 @@ namespace LHCb {
  *  @author Matthew Needham 
  */
 
-class TrackMasterFitter : public GaudiTool,
-                          virtual public ITrackFitter {
+class TrackMasterFitter : public extends<GaudiTool, ITrackFitter> {
 public: 
   /// Standard constructor
   TrackMasterFitter( const std::string& type, 
                      const std::string& name,
                      const IInterface* parent );
 
-  /// Destructor
-  virtual ~TrackMasterFitter( );
-
-  StatusCode initialize();
-  StatusCode finalize();
+  StatusCode initialize() override;
+  StatusCode finalize() override;
 
   //! fit a track 
-  StatusCode fit( LHCb::Track& track, LHCb::ParticleID pid = LHCb::ParticleID(211)  ) ;
+  StatusCode fit( LHCb::Track& track, LHCb::ParticleID pid ) const override ;
 
 private:
 
@@ -72,18 +67,11 @@ private:
   //! projectReference state
   StatusCode projectReference( LHCb::Track& track ) const;
 
-  //! determine the z-position of the closest approach to the beam line
-  //! by linear extrapolation.
-  double closestToBeamLine( const LHCb::State& state ) const;
-
   //! Retrieve the number of nodes with a measurement
   unsigned int nNodesWithMeasurement( const LHCb::Track& track ) const;
 
   //! Create the nodes from the measurements
   StatusCode makeNodes( LHCb::Track& track, LHCb::ParticleID pid ) const;
-
-  //! Add info from fitter as extrainfo to track
-  void fillExtraInfo( LHCb::Track& track ) const ;
 
   //! Update material corrections stored in nodes
   StatusCode updateMaterialCorrections( LHCb::Track& track, LHCb::ParticleID pid ) const ;
@@ -96,10 +84,7 @@ private:
     return &(*m_extrapolator);
   }
 
-  //! check that this was a prefit iteration
-  bool isPrefit( const LHCb::TrackFitResult& fr ) const ;
 private:
-
  
   ToolHandle<ITrackExtrapolator> m_extrapolator;     ///< extrapolator
   ToolHandle<ITrackExtrapolator> m_veloExtrapolator; ///< extrapolator for Velo-only tracks

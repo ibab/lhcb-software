@@ -2,6 +2,9 @@
 ! Package     : Tr/TrackFitter
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
+! 2016-02-13 - Gerhard Raven
+ - follow const-ification of Tr/TrackInterfaces
+ - C++11 modernization
 
 !========================= TrackFitter v5r7p1 2015-10-13 =========================
 ! 2015-08-12 - Gerhard Raven
