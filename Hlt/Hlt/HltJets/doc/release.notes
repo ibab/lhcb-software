@@ -4,5 +4,10 @@
 ! Purpose     : Configuration of Jet building in the HLT
 !-----------------------------------------------------------------------------
 
+! 2016-02-13 - Roel Aaij
+ - Change dependencies to fix build
+ - add __init__.py
+
+
 ! 2016-02-11 - Roel Aaij
  - Initial commit
