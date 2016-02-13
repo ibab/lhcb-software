@@ -62,20 +62,124 @@ __all__     = (
     'getLogger' , 
     )
 # =============================================================================
-from AnalysisPython.Logger import getLogger 
+import logging
+
+
+
+def with_ipython()  :
+    try :
+        return __IPYTHON__
+    except NameError :
+        return False 
+
+_with_colors_ = False
+
+def make_colors () :
+
+    BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
+    #The background is set with 40 plus the number of the color, and the foreground with 30
+    #These are the sequences need to get colored ouput
+    RESET_SEQ = "\033[0m"
+    COLOR_SEQ = "\033[1;%dm"
+    BOLD_SEQ  = "\033[1m"
+    
+    def  makeName ( level , fg = None  , bg = None  ) :
+        if bg and fg : 
+            return '{bg}{fg}{name}{reset}' .format (
+                fg    = COLOR_SEQ % ( 30 + fg ) ,
+                bg    = COLOR_SEQ % ( 40 + bg ) ,
+                name  = logging.getLevelName ( level ) ,
+                reset = RESET_SEQ
+                )
+        elif bg : 
+            return '{bg}{name}{reset}' .format (
+                bg    = COLOR_SEQ % ( 40 + bg ) ,
+                name  = logging.getLevelName ( level ) ,
+                reset = RESET_SEQ
+                )
+        elif fg : 
+            return '{fg}{bold}{name}{reset}' .format (
+                fg    = COLOR_SEQ % ( 30 + fg ) ,
+                bold  = BOLD_SEQ ,
+                name  = logging.getLevelName ( level ) ,
+                reset = RESET_SEQ
+                )
+        return '{bold}{name}{reset}' .format (
+            bold  = BOLD_SEQ ,
+            name  = logging.getLevelName ( level ) ,
+            reset = RESET_SEQ
+            )
+    
+    import logging
+
+    logging.addLevelName( logging.CRITICAL  , '  FATAL'  )
+    logging.addLevelName( logging.WARNING   , 'WARNING'  )
+    logging.addLevelName( logging.DEBUG     , '  DEBUG'  )
+    logging.addLevelName( logging.INFO      , '   INFO'  )
+    logging.addLevelName( logging.ERROR     , '  ERROR'  )
+    
+    
+    logging.addLevelName( logging.CRITICAL ,  makeName( logging.CRITICAL , fg = RED    , bg  = BLUE     ) )
+    logging.addLevelName( logging.WARNING  ,  makeName( logging.WARNING  , fg = RED    , bg  = YELLOW   ) )
+    logging.addLevelName( logging.ERROR    ,  makeName( logging.ERROR    , fg = YELLOW , bg  = RED      ) )
+    logging.addLevelName( logging.INFO     ,  makeName( logging.INFO     , fg = BLUE   )) # , bg  = WHITE    ) )
+    logging.addLevelName( logging.DEBUG    ,  makeName( logging.DEBUG    , fg = GREEN  )) # , bg  = WHITE    ) )
+
+    global _with_colors_
+    _with_colors_ = True
+    
+    
+##  for ipython mode, add colors 
+if with_ipython() :
+    print 'WILL USE COLORS!!!'
+    make_colors()
+
+
+_columns = 0 
+
+def getLogger ( name ) :
+    from AnalysisPython.Logger import getLogger as gL
+    import logging
+    global _columns
+    if  0>= _columns :
+        from Ostap.progress_bar import columns
+        _columns = columns ()
+    if   _columns > 160 :
+        return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)-90s ## %(filename)s/%(lineno)d' )
+    elif _columns > 120 :
+        return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)-90s ## %(filename)s'              )
+    else :
+        return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)' )
+
 if '__main__' == __name__ : logger = getLogger ( 'Bender.Logger' )
 else                      : logger = getLogger ( __name__ )
 # =============================================================================
 if __name__ == '__main__' :
+    
+    import logging
+    logging.disable( logging.DEBUG - 5  ) 
     
     logger.info ( 80*'*'  ) 
     logger.info ( __doc__ ) 
     logger.info ( ' Author  : %s ' %  __author__  ) 
     logger.info ( ' Version : %s ' %  __version__ ) 
     logger.info ( ' Date    : %s ' %  __date__    ) 
-    logger.info ( ' Symbols : %s ' %  list ( __all__ ) ) 
-    logger.info ( 80*'*'  ) 
+    logger.info ( ' Symbols : %s ' %  list ( __all__ ) )
 
+    if _with_colors_ :
+        logger.debug    ( 80*'*'  )
+        logger.info     ( 80*'*'  )
+        logger.error    ( 80*'*'  )
+        logger.warning  ( 80*'*'  )
+        logger.critical ( 80*'*'  )
+        logger.fatal    ( 80*'*'  )
+        logger.debug    ( 80*'*'  )
+        logger.info     ( 80*'*'  )
+        logger.error    ( 80*'*'  )
+        logger.warning  ( 80*'*'  )
+        logger.critical ( 80*'*'  )
+        logger.fatal    ( 80*'*'  )
+        
 # =============================================================================
 # The END 
 # =============================================================================

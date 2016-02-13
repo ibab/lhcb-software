@@ -111,12 +111,6 @@ __all__     = ()  ## nothing to import
 import ROOT,sys  
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 # =============================================================================
-# logging 
-# =============================================================================
-from AnalysisPython.Logger import getLogger 
-if '__main__' == __name__ : logger = getLogger ( 'Bender/bender' )
-else                      : logger = getLogger ( __name__        )
-# =============================================================================
 def with_ipython() :
     try :
         __IPYTHON__
@@ -205,6 +199,20 @@ group.add_argument (
 
 ## eliminate artifacts and parse command-line arguments 
 arguments = parser.parse_args( [ a for a in sys.argv[1:] if '--' != a ] )  
+
+# =============================================================================
+# logging 
+# =============================================================================
+from Bender.Logger import getLogger
+if not arguments.batch :
+    from Bender.Logger import make_colors
+    make_colors ()
+    del make_colors 
+# =============================================================================    
+if '__main__' == __name__ : logger = getLogger ( 'bender' )
+else                      : logger = getLogger ( __name__        )
+# =============================================================================
+
 
 if arguments.Quiet :
        
