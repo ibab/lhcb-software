@@ -65,11 +65,11 @@ parser.add_argument (
     default = 1000                  
     )
 parser.add_argument (
-    '-t'            , 
-    '--teslocation' ,
-    nargs    = '?'  ,
-    required = True , 
-    type     = str  , 
+    '-t'             , 
+    '--teslocation'  ,
+    nargs    = '?'   ,
+    type     = str   ,
+    required = True  , 
     help     = 'TES location of particles (e.g. stripping line) to be tested'
     )
 group = parser.add_mutually_exclusive_group()
@@ -93,12 +93,8 @@ group.add_argument (
     help   = 'Start plain python shell [default : %(default)s]' ,
     default = False ) 
 
-
-config = parser.parse_args()
-config.teslocation = config.teslocation.strip() 
-if config.RootInTES :
-    config.RootInTES = config.RootInTES  .strip() 
-
+import sys 
+config = parser.parse_args( [ a for a in sys.argv[1:] if '--' != a ] ) 
 
 if 0 >= config.nEvents and -1 != config.nEvents : config.nEvents = 1000
 #
@@ -108,7 +104,8 @@ if config.Quiet :
     logger.info ( 'Script to collect/check trigger decisions for certain lines')
     import logging
     logging.disable ( logging.INFO  )
-    config.OutputLevel = 5 
+    config.OutputLevel = 5
+    
 else :
     
     import logging
@@ -122,12 +119,13 @@ else :
     logger.info ( ' Date    : %s ' % __date__     )
     logger.info ( 100*'*')
 
-
-
+## some sanity adjustments:
+config.teslocation  = config.teslocation.strip() 
+config.RootInTES    = config.RootInTES  .strip() 
 
 from BenderTools.CheckTrg import configChkTrg, chkTrg  
-configChkTrg( config )
-
+configChkTrg( config , colors = config.embed or config.interactive or config.plain )
+              
 #
 ## adjust configuration settings
 # 
@@ -137,31 +135,49 @@ else                 : from Bender.Main     import *
 #
 ## start gaudi
 #
+
 gaudi = appMgr()
 
 ## create algorithm 
 ALG    = chkTrg()
 ## .. and configure it 
-kwargs = { 'Inputs'          : [ config.teslocation.strip()  ] ,
-           'PropertiesPrint' : True                   }
-if config.RootInTES : kwargs.update( { 'RootInTES' : config.RootInTES } )
+kwargs = { 'Inputs'          : [ config.teslocation ] }
+if config.OutputLevel <=3 and not config.Quiet :
+    kwargs.update (  { 'PropertiesPrint' : True             } ) 
+if config.RootInTES :
+    kwargs.update (  { 'RootInTES'       : config.RootInTES } )
 alg = ALG ( 'CheckTrg', **kwargs )
+
 
 #
 ## run events
 #
 run ( config.nEvents )              
 
-#
-## print trigger decicions
-#
-alg.trgDecs()
 
+def checkAlg ( alg ) :
+    
+    problem = False 
+    if alg and not alg.used     :
+        alg.Error ('Algorithm was not invoked, check configuration!')
+        problem = True
+    if alg and not alg.nums     :
+        alg.Error ('Algorithm has not found particles at %s, check configuration!' % alg.Inputs ) 
+        problem = True
+    if alg and not alg.triggers :
+        alg.Error ('Algorithm has not found trigger information, check configuration!')
+        problem = True
+    if problem and not config.Quiet : 
+        alg.PropertiesPrint = True   
 #
 ## stop or continue as batch?
 #
 if  config.embed :
 
+    checkAlg ( alg ) 
+    ## print trigger decisions
+    alg.trgDecs()
+    
     logger.info ('Start embedded interactive shell') 
     import IPython
     IPython.embed ()
@@ -169,6 +185,10 @@ if  config.embed :
 
 elif config.plain :
         
+    checkAlg ( alg ) 
+    ## print trigger decisions 
+    alg.trgDecs()
+
     __vars = globals().copy()
     
     import readline
@@ -181,6 +201,10 @@ elif config.plain :
     exit() 
 
 elif config.interactive : 
+    
+    checkAlg ( alg ) 
+    ## print trigger decisions 
+    alg.trgDecs()
     
     __vars = globals().copy()
 

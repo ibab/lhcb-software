@@ -122,7 +122,7 @@ def dumpDst ( config ) :
     if not config.files : parser.error ( 'No input files are specified' )
 
     from BenderTools.DstExplorer import configure 
-    configure ( config ) 
+    configure ( config , colors = True ) 
 
     from BenderTools.Utils import totalSilence
     totalSilence( dod = config.DataOnDemand )

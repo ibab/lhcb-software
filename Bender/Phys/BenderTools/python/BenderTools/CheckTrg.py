@@ -79,7 +79,7 @@ logger = getLogger( __name__ )
 ## postpone the massive import from Bender 
 def chkTrg  ( ) :    
     """
-    Create the algorithnm for trigger checks 
+    Create the algorithm for trigger checks 
     """
     from   Bender.Main          import Algo, SUCCESS, PALL  
     import BenderTools.TisTos   ## add methods for TisTos 
@@ -102,7 +102,9 @@ def chkTrg  ( ) :
             
             sc = self.tisTos_initialize (      )
             if sc.isFailure() : return sc
-            
+
+            self.nums = 0
+            self.used = 0 
             return SUCCESS
     
         ## the only one esential method: 
@@ -110,7 +112,9 @@ def chkTrg  ( ) :
             """
             The only one essential method
             """
-            particles = self.select ( 'all' , PALL )
+            self.used += 1
+            
+            particles = self.select ( 'input' , PALL )
             
             for p in particles :
                 
@@ -118,27 +122,48 @@ def chkTrg  ( ) :
                 if not self.triggers.has_key ( pname ) : self.triggers[ pname ] = {}
                 self.decisions ( p , self.triggers[ pname ] ) 
 
+            self.nums += len(particles)
             self.setFilterPassed ( not particles.empty() )
 
             return SUCCESS 
 
+        ## finalization with some check for mistakes:
+        def  finalize ( self ) :
 
+            probs = False 
+            if not self.used       :
+                self.Error('Algorithm was not executed!     check configuration!' )
+                probs = True
+                
+            if not self.nums       :
+                self.Error('No input particles  were found! check configuration!' )
+                probs = True
+                
+            if not self.triggers   :
+                self.Error('No tigger information is found! check configurtaion!')
+                probs = True
+
+            if probs :
+                self.PropertiesPrint = True 
+            
+            return Algo.finalize ( self ) 
+            
     return CheckTrg
 
 
 # =============================================================================
 ## run the actual machinery machinery
-def configChkTrg ( config ) :
+def configChkTrg ( config , colors = False ) :
     """
     """
     
     # basic configuration 
     from BenderTools.DstExplorer import configure
-    configure ( config )
+    configure ( config , colors )
 
-    root = config.RootInTES
-    line = config.teslocation
-    
+    root  = config.RootInTES  .strip() 
+    line  = config.teslocation.strip()  
+
     if root :
         if   0 == line.find ( root + '/') :
             line = line.replace( root + '/' , '' )

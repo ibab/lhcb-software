@@ -321,9 +321,7 @@ def decisions ( self             ,
 def trgDecs ( self            ,
               triggers = None ,
               db_name  = ''   ) :
-    """
-    
-    Print trigger decisions, collected by ``decisions'' method
+    """Print trigger decisions, collected by ``decisions'' method
     It also dumps the statistics into shelve data base 
     ...
     self.trgDec ( self.triggers )
@@ -345,8 +343,6 @@ def trgDecs ( self            ,
     #
     tistos_print ( triggers , self.Warning ) ## std-out 
     tistos_print ( triggers , self.Warning , open ( txt_file , 'w' ) ) ## txt-file
-    #
-    print 90*'*'
     #
     import shelve
     db = shelve.open ( db_file )

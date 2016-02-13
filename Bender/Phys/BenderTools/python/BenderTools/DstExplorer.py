@@ -130,14 +130,13 @@ __usage__   = 'dst_explorer [options] file1 [ file2 [ file3 [ file4 ....'
 # =============================================================================
 # logging 
 # =============================================================================
-from AnalysisPython.Logger import getLogger 
+from Bender.Logger import getLogger 
 if '__main__' == __name__ : logger = getLogger ( 'BenderTools.DstExplorer' )
 else                      : logger = getLogger ( __name__ )
 # =============================================================================
 ## configure the application from parser data  
-def configure ( config ) :
-    """
-    Configure the application from parser data 
+def configure ( config , colors = False ) :
+    """Configure the application from parser data 
     """
     #
     if config.OutputLevel <= 3 and not config.Quiet :
@@ -161,7 +160,6 @@ def configure ( config ) :
         logger.info('set OutputLevel to be %s ' % config.OutputLevel )
         from BenderTools.Utils import silence
         silence ()
-
         
     import logging
     if   config.OutputLevel <= 1 : logging.disable ( logging.NOTSET  - 1 ) 
@@ -170,15 +168,19 @@ def configure ( config ) :
     elif config.OutputLevel <= 4 : logging.disable ( logging.WARNING - 1 ) 
     elif config.OutputLevel <= 5 : logging.disable ( logging.ERROR   - 1 )
     #
+    # some sanity actions:
+    #
+    config.RootInTES = config.RootInTES.strip()
+    config.files     = [ i.strip() for i in config.files if i.strip() ]
+    #
     ## start the actual action:
     #
     from Configurables       import DaVinci
-
     #
     ## get the file type for the file extension
     #
     from BenderTools.Parser import dataType
-    pyfiles = [ i for i in config.files if  len(i) == 3 + i.find('.py') ]
+    pyfiles = [ i for i in config.files if  len(i) == 3 + i.rfind('.py') ]
     files   = [ i for i in config.files if  i not in pyfiles ]
     
     from BenderTools.Parser import fileList
@@ -352,8 +354,25 @@ def configure ( config ) :
               config.XmlCatalogs   ,  ## XML-catalogues 
               config.Castor        ,  ## use Castor/EOS lookup 
               config.Grid          )  ## Use GRID to locate files 
-
-
+    
+    if colors :
+        
+        logger.debug( 'Add colorization to MessageSvc' )  
+        def _color_pre_init_action_ () :
+            from GaudiPython.Bindings import AppMgr
+            _g = AppMgr()
+            if not _g : return 
+            _s = _g.service('MessageSvc')
+            if not _s : return 
+            _s.useColors = True
+            _s.errorColorCode   = [ 'yellow' , 'red'  ] 
+            _s.warningColorCode = [ 'red'             ] 
+            _s.fatalColorCode   = [ 'blue'   , 'red'  ] 
+            #_s.alwaysColorCode  = [ 'black'           ] 
+            
+        from Bender.Utils import addPreInitAction
+        addPreInitAction ( _color_pre_init_action_ )
+                
     return pyfiles
 
 

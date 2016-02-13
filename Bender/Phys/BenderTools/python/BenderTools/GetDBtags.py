@@ -353,7 +353,7 @@ def extractTags ( args ) :
 
         logger.info ( "Try the file %s " % f )
         
-        tags = getDBTags ( f               ,
+        tags = getDBTags ( f                 ,
                            arguments.Castor  ,
                            arguments.Grid    , 
                            arguments.Verbose ) 

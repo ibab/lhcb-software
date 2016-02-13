@@ -64,7 +64,7 @@ __all__     = (
 # =============================================================================
 # logging 
 # =============================================================================
-from AnalysisPython.Logger import getLogger 
+from Bender.Logger import getLogger 
 if '__main__' == __name__ : logger = getLogger ( 'BenderTools.RunWGMC' )
 else                      : logger = getLogger ( __name__ )
 # ==============================================================================

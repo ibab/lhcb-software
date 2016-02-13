@@ -160,6 +160,7 @@ def makeParser ( **kwargs ) :
         '-r'                         ,
         '--root'                     ,
         type    = str                ,
+        default = ''                 ,
         dest    = 'RootInTES'        ,
         help    = """Root-In-TES fpr uDST [default : %(default)s].
         Often it can be deduced from input file name/extension""" 

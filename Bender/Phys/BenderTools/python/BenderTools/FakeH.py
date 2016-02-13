@@ -106,17 +106,13 @@ __all__= (
     ## 
     )
 # =============================================================================
-## logging
-# =============================================================================
-from Bender.Logger import getLogger 
-logger = getLogger( __name__ )
-# ==============================================================================
+import ROOT 
 from   LoKiCore.basic  import cpp, LHCb, LoKi 
 import PartProp.decorators 
 # =============================================================================
-# logging 
+## logging
 # =============================================================================
-from AnalysisPython.Logger import getLogger 
+from Bender.Logger import getLogger 
 if '__main__' == __name__ : logger = getLogger ( 'BenderTools.FakeH' )
 else                      : logger = getLogger ( __name__ )
 # ==============================================================================
