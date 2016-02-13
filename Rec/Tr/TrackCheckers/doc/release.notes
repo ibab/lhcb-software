@@ -3,6 +3,9 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
+! 2016-02-13 - Gerhard Raven
+ - follow const-ification of Tr/TrackInterfaces
+ - C++11 modernization
 
 !========================= TrackCheckers v4r22p1 2015-10-13 =========================
 ! 2015-08-12 - Gerhard Raven

@@ -1,5 +1,5 @@
 // $Id: TrackResChecker.cpp,v 1.13 2009-10-08 14:49:57 wouter Exp $
-// Include files 
+// Include files
 #include "TrackResChecker.h"
 
 //event
@@ -42,7 +42,7 @@ TrackResChecker::TrackResChecker(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackResChecker::~TrackResChecker() {} 
+TrackResChecker::~TrackResChecker() {}
 
 StatusCode TrackResChecker::initialize(){
 
@@ -54,12 +54,12 @@ StatusCode TrackResChecker::initialize(){
                                                       "Projector", this );
 
   m_histoTools[ 0 ] = createHistoTool("ALL") ;
-  if( splitByType() ) 
-    for( int itype = LHCb::Track::Velo ; itype <= LHCb::Track::Muon; ++itype ) 
+  if( splitByType() )
+    for( int itype = LHCb::Track::Velo ; itype <= LHCb::Track::Muon; ++itype )
       m_histoTools[ itype ] = createHistoTool(Gaudi::Utils::toString(LHCb::Track::Types(itype))) ;
-  
+
   return StatusCode::SUCCESS;
-} 
+}
 
 const IHistoTool* TrackResChecker::createHistoTool( const std::string& name) const
 {
@@ -85,20 +85,20 @@ StatusCode TrackResChecker::execute()
   }
 
   // if we are supposed to check ambiguities, init otlinker
-  if (m_checkAmbiguity == true){
+  if (m_checkAmbiguity){
     m_otLinker = OTLinks( evtSvc(), msgSvc(),LHCb::OTTimeLocation::Default );
   }
 
   // get the tracks
   const LHCb::Tracks* tracks = get<LHCb::Tracks>(tracksInContainer()) ;
-  
+
   // loop over them
-  for( LHCb::Tracks::const_iterator itrack = tracks->begin() ; 
+  for( LHCb::Tracks::const_iterator itrack = tracks->begin() ;
        itrack != tracks->end(); ++itrack) {
     // Get the associated true particle
     const LHCb::Track* track = *itrack ;
     const LHCb::MCParticle* mcparticle = mcTruth(track) ;
-    
+
     if(mcparticle
        // we actually just want to know if it passes the 'selector' inside the IMCReconstructible
        // && int(selector()->reconstructible(mcparticle)) > int(IMCReconstructible::NotReconstructible)
@@ -106,33 +106,33 @@ StatusCode TrackResChecker::execute()
       // split by type..
       const IHistoTool* histotool(0) ;
       if( splitByType() ) {
-	histotool = m_histoTools[track->type()] ;
+        histotool = m_histoTools[track->type()] ;
       } else {
-	histotool = m_histoTools[0] ;
+        histotool = m_histoTools[0] ;
       }
 
       // resolutions at predefined z.
       resolutionHistos(*histotool,*track,*mcparticle);
-  
+
       // prob chi^2
       histotool->plot1D(track->probChi2(),"probChi2","probChi2", 0., 1., 50);
-      
+
       // fit status
       histotool->plot1D(track->fitStatus(),"fitStatus","fit status", -0.5, 4.5, 5);
-      
+
       histotool->plot1D(mcparticle->p()/Gaudi::Units::GeV,"truemom","true p [GeV]",0,50,100) ;
       histotool->plot1D(mcparticle->pt()/Gaudi::Units::GeV,"truept","true pT [GeV]",0,10,100) ;
-      
+
       // Resolutions and pulls per Measurement type
       if ( m_plotsByMeasType && track->nMeasurements() > 0 )
 	plotsByMeasType(*histotool,*track,*mcparticle);
-  
-      
-      // resolution of drift ambiguity 
-      if (m_checkAmbiguity ) checkAmbiguity(*histotool,*track,*mcparticle); 
+
+
+      // resolution of drift ambiguity
+      if (m_checkAmbiguity ) checkAmbiguity(*histotool,*track,*mcparticle);
     }
   }
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -140,7 +140,7 @@ StatusCode TrackResChecker::execute()
 //
 //=============================================================================
 void TrackResChecker::resolutionHistos(const IHistoTool& htool,
-				       const LHCb::Track& track, 
+				       const LHCb::Track& track,
 				       const LHCb::MCParticle& mcPart ) const
 {
   // pulls at vertex
@@ -159,10 +159,10 @@ void TrackResChecker::resolutionHistos(const IHistoTool& htool,
     const double invp     = std::abs( track.firstState().qOverP() ) ;
     const double ptrue    = mcPart.p() ;
     const double eta      = mcPart.pseudoRapidity() ; //track.pseudoRapidity();
-    
+
     htool.plot2D( ptrue/Gaudi::Units::GeV , invp * ptrue - 1,
 		      "vertex/dpoverp_vs_p", "dp/p vs p", 0., 50., -0.1,0.1, 25, 50);
-    htool.plot2D( eta, invp * ptrue -1, 
+    htool.plot2D( eta, invp * ptrue -1,
 		  "vertex/dpoverp_vs_eta", "dp/p vs eta", 2., 5., -0.05,0.05, 20, 50);
 
     const double invperr2 = track.firstState().covariance()(4,4) ;
@@ -170,29 +170,26 @@ void TrackResChecker::resolutionHistos(const IHistoTool& htool,
       const double ppull = (invp - 1/ptrue)/std::sqrt( invperr2 ) ;
       htool.plot2D( ptrue/Gaudi::Units::GeV, ppull,
 		    "vertex/p_pull_vs_p","p pull vs p", 0., 50., -10.,10., 25, 50);
-      htool.plot2D( eta, ppull, 
+      htool.plot2D( eta, ppull,
 		    "vertex/p_pull_vs_eta","p pull vs eta", 2., 5., -10.,10., 20, 50);
     }
   }
-  
+
   // fraction of tracks with correct charge
   bool correctcharge = track.firstState().qOverP()*mcPart.particleID().threeCharge()>0 ;
   htool.plot1D( correctcharge,"correctcharge","correct charge",-0.5,1.5,2) ;
-  
+
   if ( fullDetail() == true && track.nMeasurements() > 0u) {
-    for( LHCb::Track::StateContainer::const_iterator istate = track.states().begin() ;
-	 istate != track.states().end(); ++istate) {
-      const LHCb::State& state = **istate ;
+    for( const LHCb::State* state : track.states() ) {
       // skip the closest to beam, since we already have it
-      if( state.location() != LHCb::State::ClosestToBeam ) {
-	LHCb::State trueState;
-        StatusCode sc = idealStateCreator()->createState( &mcPart, state.z(), trueState );
-	if( sc.isSuccess() ) {
-	  std::string location = state.location() != LHCb::State::LocationUnknown
-	    ? Gaudi::Utils::toString( state.location() ) 
-	    : format( "state_%d_mm", int( state.z() ) );
-	  pullplots(htool,trueState,state,location);
-	} 
+      if( state->location() == LHCb::State::ClosestToBeam ) continue;
+      LHCb::State trueState;
+      StatusCode sc = idealStateCreator()->createState( &mcPart, state->z(), trueState );
+      if( sc.isSuccess() ) {
+        std::string location = state->location() != LHCb::State::LocationUnknown
+          ? Gaudi::Utils::toString( state->location() )
+          : format( "state_%d_mm", int( state->z() ) );
+        pullplots(htool,trueState,*state,location);
       }
     }
   }
@@ -204,7 +201,7 @@ void TrackResChecker::resolutionHistos(const IHistoTool& htool,
 void TrackResChecker::pullplots(const IHistoTool& htool,
 				const LHCb::State& trueState, const LHCb::State& recState,
 				const std::string& location ) const {
-  
+
   // save some typing
   const Gaudi::TrackVector&    vec     = recState.stateVector();
   const Gaudi::TrackVector&    trueVec = trueState.stateVector();
@@ -218,18 +215,18 @@ void TrackResChecker::pullplots(const IHistoTool& htool,
   // fill the histograms
   htool.plot1D( dx/Gaudi::Units::cm, location+"/x_res", "x resolution", -0.06, 0.06, 101 );
   htool.plot1D( dy/Gaudi::Units::cm, location+"/y_res","y resolution", -0.06,0.06, 101 );
-  htool.plot1D( dtx, location+"/tx_res", "tx resolution", -0.01, 0.01, 100 );
-  htool.plot1D( dty, location+"/ty_res", "ty resolution", -0.01, 0.01, 100 );
+  htool.plot1D( dtx, location+"/tx_res", "tx resolution", -0.01, 0.01, 101 );
+  htool.plot1D( dty, location+"/ty_res", "ty resolution", -0.01, 0.01, 101 );
 
   htool.plot1D( dx / sqrt(cov(0,0)+trueCov(0,0)),
-		location+"/xpull", "x pull", -5., 5., 100 );
+		location+"/xpull", "x pull", -5., 5., 101 );
   htool.plot1D( dy / sqrt(cov(1,1)+trueCov(1,1)),
-		location+"/ypull", "y pull", -5., 5., 100 );
+		location+"/ypull", "y pull", -5., 5., 101 );
   htool.plot1D( dtx / sqrt(cov(2,2)+trueCov(2,2)),
-		location+"/txpull", "tx pull", -5., 5., 100 );
+		location+"/txpull", "tx pull", -5., 5., 101 );
   htool.plot1D( dty / sqrt(cov(3,3)+trueCov(3,3)),
-		location+"/typull", "ty pull", -5., 5., 100 );
-  
+		location+"/typull", "ty pull", -5., 5., 101 );
+
   if ( std::abs(cov(4,4)) > 1e-20 ) { // test that there was a momentum measurement
     const double qop      = vec(4) ;
     const double qoptrue  = trueVec(4);
@@ -237,11 +234,11 @@ void TrackResChecker::pullplots(const IHistoTool& htool,
     const double invptrue = std::abs(qoptrue) ;
     const double qoperr   = std::sqrt(cov(4,4)+trueCov(4,4)) ;
     // make two pulls, to be sensitive to both a curvature and a momentum bias
-    htool.plot1D( (qop - qoptrue) / qoperr, location+"/qoppull", "qop pull", -5., 5., 100 );
-    htool.plot1D( (invp - invptrue) / qoperr, location+"/ppull", "p pull", -5., 5., 100 );
-    htool.plot1D( invp / invptrue  - 1, location+"/dpoverp", "dp/p", -0.05, 0.05, 100 );
+    htool.plot1D( (qop - qoptrue) / qoperr, location+"/qoppull", "qop pull", -5., 5., 101 );
+    htool.plot1D( (invp - invptrue) / qoperr, location+"/ppull", "p pull", -5., 5., 101 );
+    htool.plot1D( invp / invptrue  - 1, location+"/dpoverp", "dp/p", -0.05, 0.05, 101 );
     if( invp > 0 )
-      htool.plot1D( std::sqrt( cov(4,4) ) / invp, 
+      htool.plot1D( std::sqrt( cov(4,4) ) / invp,
 		    location+"/expecteddpoverp", "expected dp/p", 0., 0.01, 100 );
   }
 }
@@ -251,53 +248,53 @@ void TrackResChecker::pullplots(const IHistoTool& htool,
 //
 //=============================================================================
 void TrackResChecker::checkAmbiguity(const IHistoTool& histotool,
-				     const LHCb::Track& track, 
+				     const LHCb::Track& track,
                                      const LHCb::MCParticle& mcPart) const
 {
   unsigned int wrongOnTrack   = 0;
   unsigned int correctOnTrack = 0;
-    
+
   // copy the container, in anti-cipation of changes in Track
   LHCb::Track::MeasurementContainer measurements = track.measurements() ;
-  for(LHCb::Track::MeasurementContainer::const_iterator itMeas = measurements.begin(); 
-      itMeas != measurements.end() ; ++itMeas )
+  for(auto itMeas = measurements.cbegin();
+      itMeas != measurements.cend() ; ++itMeas )
     if ( (*itMeas)->type() == LHCb::Measurement::OT ) {
       // only count ones that came from same particle as track.
       const LHCb::OTMeasurement* otMeas = dynamic_cast<const LHCb::OTMeasurement*>(*itMeas);
       LHCb::MCParticle* aParticle = m_otLinker.first(otMeas->channel());
-      
+
       bool found = false;
-      if (0 != aParticle) {
-        while (( 0 != aParticle )&&(found == false)) {
+      if (aParticle) {
+        while ( aParticle && !found ) {
           if (aParticle == &mcPart) found = true;
           aParticle = m_otLinker.next();
         }  // while
       }  // if
-      
-      if (found == true) {
-	// create true state...
-	LHCb::StateVector trueState;
-	idealStateCreator()->createStateVector( &mcPart, otMeas->z(), trueState ).ignore();
-	ITrackProjector* proj = m_projectorSelector -> projector( *otMeas );
-	if (proj != 0) {
-	  LHCb::OTMeasurement meascopy( *otMeas ) ;
-	  StatusCode sc = proj -> project(trueState , meascopy );
-	  if ( sc.isFailure() ){
-	    Warning( "Unable to project a state into a measurement", sc, 0 ).ignore();
-	  } else {
-	    if( meascopy.ambiguity() == otMeas->ambiguity() )
-	      ++correctOnTrack;
-	    else 
-	      ++wrongOnTrack;
-	  }
-	}
+
+      if (found) {
+        // create true state...
+        LHCb::StateVector trueState;
+        idealStateCreator()->createStateVector( &mcPart, otMeas->z(), trueState ).ignore();
+        ITrackProjector* proj = m_projectorSelector -> projector( *otMeas );
+        if (proj) {
+          LHCb::OTMeasurement meascopy( *otMeas ) ;
+          StatusCode sc = proj -> project(trueState , meascopy );
+          if ( sc.isFailure() ){
+            Warning( "Unable to project a state into a measurement", sc, 0 ).ignore();
+          } else {
+            if( meascopy.ambiguity() == otMeas->ambiguity() )
+              ++correctOnTrack;
+            else
+              ++wrongOnTrack;
+          }
+        }
       }
     }
-  
+
   const double sum = wrongOnTrack + correctOnTrack;
 
   if (sum > m_minToCountAmb){
-    histotool.plot1D(correctOnTrack/double(sum),"/frac_corr_amb" , 
+    histotool.plot1D(correctOnTrack/double(sum),"/frac_corr_amb" ,
 		     "frac correct ambiguity",-0.005, 1.005, 101);
   }
 
@@ -307,46 +304,42 @@ void TrackResChecker::checkAmbiguity(const IHistoTool& histotool,
 //=============================================================================
 //
 //=============================================================================
-void TrackResChecker::plotsByMeasType(const IHistoTool& htool, const LHCb::Track& track, 
-				      const LHCb::MCParticle& mcPart ) const
+void TrackResChecker::plotsByMeasType(const IHistoTool& htool, 
+                                      const LHCb::Track& track,
+                                      const LHCb::MCParticle& mcPart ) const
 {
-  
-  LHCb::Track::MeasurementContainer measures = track.measurements();
-  for ( LHCb::Track::MeasurementContainer::const_iterator it = measures.begin();
-        it != measures.end(); ++it ) {
+  for ( const auto& measure : track.measurements() ) {
 
     LHCb::State trueStateAtMeas;
-    StatusCode sc = idealStateCreator()->createState( &mcPart, (*it)->z(), trueStateAtMeas); 
+    StatusCode sc = idealStateCreator()->createState( &mcPart, measure->z(), trueStateAtMeas);
     if ( sc.isSuccess() ) {
 
-      const std::string dir = Gaudi::Utils::toString((*it)->type());
+      const std::string dir = Gaudi::Utils::toString(measure->type());
       LHCb::State stateAtMeas;
-      StatusCode sc = extrapolator()->propagate(track, (*it)->z(), stateAtMeas );
+      StatusCode sc = extrapolator()->propagate(track, measure->z(), stateAtMeas );
       if ( sc.isSuccess()) {
         // make pull plots as before
         pullplots(htool,trueStateAtMeas,stateAtMeas,dir);
-      } 
-      
+      }
+
       // Monitor unbiased measurement resolutions
-      ITrackProjector* proj = m_projectorSelector -> projector( *(*it) );
+      ITrackProjector* proj = m_projectorSelector -> projector( *measure );
       if (proj != 0){
-        StatusCode sc = proj -> project(trueStateAtMeas , *(*it) );
+        StatusCode sc = proj -> project(trueStateAtMeas , *measure );
         if ( sc.isFailure() ){
           Warning( "Unable to project a state into a measurement", sc, 0 ).ignore();
-        }
-        else {
+        } else {
           const double res       = proj -> residual();
           const double errorMeas = proj -> errMeasure();
-          const double chi2      = proj -> chi2();
-          htool.plot1D( res, dir+"/meas_res", 
+          const double chi2      = ( errorMeas>0 ? std::pow(res/errorMeas,2) : 0. );
+          htool.plot1D( res, dir+"/meas_res",
                         " Measurement resolution", -0.5, 0.5, 100 );
-          htool.plot1D( res/errorMeas,dir+"/meas_pull", 
+          htool.plot1D( res/errorMeas,dir+"/meas_pull",
                         " Measurement pull", -5., 5., 100 );
-          htool.plot1D( chi2, dir+"/meas_chi2", 
+          htool.plot1D( chi2, dir+"/meas_chi2",
                         " Measurement chi2", 0., 10., 200 );
         }
-      }
-      else { 
+      } else {
         Warning( "could not get projector for measurement", StatusCode::SUCCESS, 0 ).ignore();
       }
     }
@@ -356,46 +349,40 @@ void TrackResChecker::plotsByMeasType(const IHistoTool& htool, const LHCb::Track
 //=============================================================================
 //
 //=============================================================================
-StatusCode TrackResChecker::finalize () 
+StatusCode TrackResChecker::finalize ()
 {
-
   info() << "     ************************************    "<<endmsg;
-  
-  for( HistoToolMap::const_iterator ihtool = m_histoTools.begin() ;
-       ihtool != m_histoTools.end(); ++ihtool) {
-    const IHistoTool* htool = ihtool->second ;  
+  for( const auto& ihtool : m_histoTools) {
+    const IHistoTool* htool = ihtool.second ;
     const GaudiHistoTool* ghtool = dynamic_cast<const GaudiHistoTool*>(htool) ;
-    const AIDA::IHistogram1D* pull[5] = {0,0,0,0,0} ;
-    pull[0] = htool->histo( HistoID("vertex/xpull") ) ;
-    pull[1] = htool->histo( HistoID("vertex/ypull") ) ;
-    pull[2] = htool->histo( HistoID("vertex/txpull") ) ;
-    pull[3] = htool->histo( HistoID("vertex/typull") ) ;
-    pull[4] = htool->histo( HistoID("vertex/ppull") ) ;
-    for(size_t i=0; i<5; ++i)
-      if(pull[i]) 
-	info() << ghtool->histoDir() << "/" 
-	       << std::setiosflags(std::ios_base::left)
-	       << std::setw(10) << pull[i]->title() << " "
-	       <<  format( ":  mean =  %5.3f +/- %5.3f, RMS = %5.3f +/- %5.3f",
-			   pull[i]->mean(), Gaudi::Utils::HistoStats::meanErr(pull[i]),
-			   pull[i]->rms(), Gaudi::Utils::HistoStats::rmsErr(pull[i])) << endmsg;
-    
-    const AIDA::IHistogram1D* res[2]= {0,0} ;
-    res[0]  = htool->histo( HistoID("vertex/x_res") ) ;
-    res[1]  = htool->histo( HistoID("vertex/y_res") ) ;
-    for(size_t i=0; i<2; ++i) 
-      if(res[i])
-	info() << ghtool->histoDir() << "/"
-	       << res[i]->title() << format( ":  RMS =  %5.3f +/- %5.3f micron",
-					     res[i]->rms()*1000, Gaudi::Utils::HistoStats::rmsErr(res[i])*1000) << endmsg;
-    
-    const AIDA::IHistogram1D* dpop = htool->histo( HistoID("vertex/dpoverp") ) ;
+    for (const auto& name : { "vertex/xpull",
+                              "vertex/ypull",
+                              "vertex/txpull",
+                              "vertex/typull",
+                              "vertex/ppull" } ) {
+      const auto pull = htool->histo( HistoID(name) );
+      if(pull)
+        info() << ghtool->histoDir() << "/"
+               << std::setiosflags(std::ios_base::left)
+               << std::setw(10) << pull->title() << " "
+               <<  format( ":  mean =  %5.3f +/- %5.3f, RMS = %5.3f +/- %5.3f",
+                   pull->mean(), Gaudi::Utils::HistoStats::meanErr(pull),
+                   pull->rms(), Gaudi::Utils::HistoStats::rmsErr(pull)) << endmsg;
+    }
+    for (const auto&  name : { "vertex/x_res", "vertex/y_res" } ) {
+      const auto res = htool->histo( HistoID(name) ) ;
+      if(res)
+        info() << ghtool->histoDir() << "/" << res->title()
+               << format( ":  RMS =  %5.3f +/- %5.3f micron",
+                  res->rms()*1000, Gaudi::Utils::HistoStats::rmsErr(res)*1000)
+               << endmsg;
+    }
+    const auto dpop = htool->histo( HistoID("vertex/dpoverp") ) ;
     if(dpop)
       info() << ghtool->histoDir() << "/"
 	     << dpop->title() << format( ":  mean =  %6.4f +/- %6.4f, RMS =  %6.4f +/- %6.4f",
 					 dpop->mean(), Gaudi::Utils::HistoStats::meanErr(dpop),
-					 dpop->rms(), Gaudi::Utils::HistoStats::rmsErr(dpop)) << endmsg; 
+					 dpop->rms(), Gaudi::Utils::HistoStats::rmsErr(dpop)) << endmsg;
   }
-  
   return TrackCheckerBase::finalize();
 }
