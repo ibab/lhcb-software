@@ -76,6 +76,9 @@ _with_colors_ = False
 
 def make_colors () :
 
+    global _with_colors_
+    if _with_colors_ : return
+    
     BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
     #The background is set with 40 plus the number of the color, and the foreground with 30
     #These are the sequences need to get colored ouput
