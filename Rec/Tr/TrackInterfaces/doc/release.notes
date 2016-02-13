@@ -3,6 +3,14 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
+! 2016-02-13 - Gerhard Raven
+ - major change: const-ify interfaces, use extend_interfaces
+   (needs corresponding versions of Pr/PrAlgorithms, Tf/FastVelo, 
+   Tf/PatAlgorithms, Tf/PatVelo,Tf/PatVeloTT,Tr/TrackCheckers,
+   Tr/TrackFitter,Tr/TrackTools -- and Hlt/Hlt1Muons, 
+   Hlt/HltL0Conf, Hlt/HltTracking)
+
+
 ! 2016-01-01 - Gerhard Raven
  - major change: const-ify IPromoteClusters interface
    (needs corresponding version of Tf/PatVelo)

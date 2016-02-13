@@ -1,4 +1,3 @@
-// $Id: IAddTTClusterTool.h,v 1.6 2010-02-09 08:28:04 decianm Exp $
 #ifndef TRACKINTERFACES_IPRADDUTHITSTOOL_H
 #define TRACKINTERFACES_IPRADDUTHITSTOOL_H 1
 
@@ -9,7 +8,6 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-static const InterfaceID IID_IPrAddUTHitsTool ( "IPrAddUTHitsTool", 1, 0 );
 
 /** @class IPrAddUTHitsTool IPrAddUTHitsTool.h TrackInterfaces/IPrAddUTHitsTool.h
  *
@@ -25,16 +23,13 @@ namespace LHCb {
 
 class PrUTHit;
 
-
-class IPrAddUTHitsTool : virtual public IAlgTool {
-  
+class IPrAddUTHitsTool : public extend_interfaces<IAlgTool> {
 public: 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IPrAddUTHitsTool; }
+  DeclareInterfaceID( IPrAddUTHitsTool, 2, 0 );
 
   /// Add UT clusters to matched tracks
-  virtual StatusCode addUTHits( LHCb::Track& track ) = 0;
-  virtual StatusCode returnUTHits( LHCb::State& state, std::vector<PrUTHit*>& utHits, double& finalChi2, double p) = 0;
+  virtual StatusCode addUTHits( LHCb::Track& track ) const = 0;
+  virtual StatusCode returnUTHits( LHCb::State& state, std::vector<PrUTHit*>& utHits, double& finalChi2, double p) const = 0;
       
 
 };

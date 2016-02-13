@@ -36,7 +36,7 @@ class IMaterialLocator : virtual public IAlgTool
 public: 
   
   /// embedded class representing intersection
-  struct Intersection {
+  struct Intersection final {
     double z1 ;
     double z2 ;
     double tx ;

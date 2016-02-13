@@ -1,12 +1,8 @@
-// $Id: ITrackFitter.h,v 1.8 2008-03-31 07:12:00 mneedham Exp $
 #ifndef TRACKINTERFACES_ITRACKFITTER_H 
 #define TRACKINTERFACES_ITRACKFITTER_H 1
 
 // Include files
 // -------------
-// from STL
-#include <string>
-
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 // from LHCbKernel
@@ -16,8 +12,6 @@
 namespace LHCb {
  class Track;
 }
-
-static const InterfaceID IID_ITrackFitter ( "ITrackFitter", 1, 0 );
 
 /** @class ITrackFitter ITrackFitter.h TrackInterfaces/ITrackFitter.h
  *  
@@ -29,15 +23,13 @@ static const InterfaceID IID_ITrackFitter ( "ITrackFitter", 1, 0 );
  *  @author Rutger van der Eijk  07-04-1999
  *  @author Mattiew Needham 
  */
-class ITrackFitter : virtual public IAlgTool {
+class ITrackFitter : public extend_interfaces<IAlgTool> {
 public: 
-
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_ITrackFitter; }
+  DeclareInterfaceID( ITrackFitter, 3, 0 );
 
   //! fit a track 
   virtual StatusCode fit(LHCb::Track& track,
-                         LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
+                         LHCb::ParticleID pid = LHCb::ParticleID(211) ) const = 0;
 
 };
 #endif // TRACKINTERFACES_ITRACKFITTER_H

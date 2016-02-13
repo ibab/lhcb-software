@@ -21,7 +21,6 @@ namespace LHCb {
   class FitNode;
 }
 
-static const InterfaceID IID_ITrackProjector ( "ITrackProjector", 2, 0 );
 
 /** @class ITrackProjector ITrackProjector.h
  *  
@@ -34,7 +33,7 @@ static const InterfaceID IID_ITrackProjector ( "ITrackProjector", 2, 0 );
 class ITrackProjector : virtual public IAlgTool {
 public:
   // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_ITrackProjector; }
+  DeclareInterfaceID( ITrackProjector, 3, 0 );
 
   /// Project the reference vector
   virtual StatusCode project( const LHCb::StateVector& state,
@@ -47,19 +46,16 @@ public:
   /// Project the state vector in this fitnode and update projection matrix and reference residual
   virtual StatusCode projectReference( LHCb::FitNode& node ) const = 0;
   
-  /// Retrieve the projection matrix H of the (last) projection
-  virtual const Gaudi::TrackProjectionMatrix& projectionMatrix() const = 0;
-
-  /// Retrieve the chi squared of the (last) projection
-  virtual double chi2() const = 0;
-
   /// Retrieve the residual of the (last) projection
+  //__attribute__((deprecated("ITrackProjector::residual()")))
   virtual double residual() const = 0;
 
   /// Retrieve the error on the residual of the (last) projection
+  //__attribute__((deprecated("ITrackProjector::errResidual()")))
   virtual double errResidual() const = 0;
 
   /// Retrieve the error on the measure of the (last) projection
+  //__attribute__((deprecated("ITrackProjector::errMeasure()")))
   virtual double errMeasure() const = 0;
 
   /// Retrieve the derivative of the residual wrt. the alignment parameters
