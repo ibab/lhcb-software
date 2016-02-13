@@ -70,7 +70,10 @@ def _bender_at_exit_ () :
     """
     At-Exit action
     """
-
+    from Bender.Logger import getLogger 
+    if '__main__' == __name__ : logger = getLogger ( 'Bender.Fixes' )
+    else                      : logger = getLogger ( __name__ )
+    
     logger.debug ( '*'*120 ) 
     logger.debug ( 'custom "atexit" handler is being invoked' ) 
     logger.debug ( '*'*120 ) 
@@ -126,6 +129,8 @@ def _bender_at_exit_ () :
 import atexit
 atexit.register( _bender_at_exit_ )
 logger.debug ( 'add custom "atexit" handler' ) 
+
+
 
 # =============================================================================
 ## Other fixes:

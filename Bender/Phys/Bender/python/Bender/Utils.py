@@ -60,21 +60,33 @@ __date__    = "2010-00-12"
 __version__ = '$Revision$'
 __all__     = (
     ##
-    'run'               , ## run  N events
-    'irun'              , ## "generator" to run  N events 
-    'skip'              , ## skip N events 
-    'next'              , ## go to run event
-    'rewind'            , ## rewind 
-    'ls'                ,
-    'get'               ,
-    'appMgr'            ,
-    'dumpHistos'        , 
+    'run'                , ## run  N events
+    'irun'               , ## "generator" to run  N events 
+    'skip'               , ## skip N events 
+    'next'               , ## go to run event
+    'rewind'             , ## rewind 
+    'ls'                 ,
+    'get'                ,
+    'appMgr'             ,
+    'dumpHistos'         ,
+    #
+    'Action'             , ## trivial contetx action 
+    #
+    'setData'            ,
     ##
-    'post_Action'       , 
-    'pre_Action'        , 
-    'setPostAction'     , 
-    'setPreAction'      ,
-    'setData'           ,
+    'preRun_actions'     , 
+    'postRun_actions'    , 
+    'preInit_actions'    , 
+    'postInit_actions'   , 
+    'preStart_actions'   , 
+    'postStart_actions'  , 
+    ## 
+    'addPreRunAction'    ,
+    'addPostRunAction'   ,
+    'addPreInitAction'   ,
+    'addPostInitAction'  ,
+    'addPreStartAction'  ,
+    'addPostStartAction' ,
     ##
     )
 # =============================================================================
@@ -84,42 +96,139 @@ from Bender.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'Bender.Utils' )
 else                      : logger = getLogger ( __name__ )
 ## ============================================================================
-## post action 
-__Bender_Post_Action = None 
-## pre action 
-__Bender_Pre_Action  = None
+__Bender_PreRun_Actions    = [ lambda : logger.debug('"run"    pre-action' ) ]
+__Bender_PostRun_Actions   = [ lambda : logger.debug('"run"   post-action' ) ]
+__Bender_PreInit_Actions   = []
+__Bender_PostInit_Actions  = []
+__Bender_PreStart_Actions  = [] 
+__Bender_PostStart_Actions = [] 
+## ============================================================================
+## post-actions() : 
+def postRun_actions ( action = None ) :
+    """Get the ``post-Run-actions''
+    """
+    global __Bender_PostRun_Actions 
+    if action  and isinstance ( action , ( list , tuple ) ) : 
+        return __Bender_PostRun_Actions +   action
+    elif action : 
+        return __Bender_PostRun_Actions + [ action ]
+    ##
+    return list(__Bender_PostRun_Actions)
+## ============================================================================
+## pre-action 
+def preRun_actions ( action = None ) :
+    """Get the ``pre-Run-action''
+    """
+    global __Bender_PreRun_Actions 
+    if action  and isinstance ( action , ( list , tuple ) ) : 
+        return __Bender_PreRun_Actions +   action
+    elif action : 
+        return __Bender_PreRun_Actions + [ action ]
+    ##
+    return list(__Bender_PreRun_Actions)
 ## ============================================================================
 ## post-action 
-def post_Action () :
+def postInit_actions ( action = None  ) :
+    """Get the ``post-Init-action''
     """
-    Get the ``post-action''
+    global __Bender_PostIni_Actions 
+    if action  and isinstance ( action , ( list , tuple ) ) : 
+        return __Bender_PostInit_Actions +   action
+    elif action : 
+        return __Bender_PostInit_Actions + [ action ]
+    ##
+    return list(__Bender_PostInit_Actions)
+## ============================================================================
+## pre-action 
+def preInit_actions ( action = None ) :
+    """Get the ``pre-Init-action''
     """
-    return __Bender_Post_Action
+    global __Bender_PreIni_Actions 
+    if action  and isinstance ( action , ( list , tuple ) ) : 
+        return __Bender_PreInit_Actions +   action
+    elif action : 
+        return __Bender_PreInit_Actions + [ action ]
+    ##
+    return list(__Bender_PreInit_Actions)
 ## ============================================================================
 ## post-action 
-def pre_Action () :
+def postStart_actions ( action = None ) :
     """
-    Get the ``pre-action''
+    Get the ``post-Start-action''
     """
-    return __Bender_Pre_Action
+    global __Bender_PostStart_Actions 
+    if action  and isinstance ( action , ( list , tuple ) ) : 
+        return __Bender_PostStart_Actions +   action
+    elif action : 
+        return __Bender_PostStart_Actions + [ action ]
+    ##
+    return list(__Bender_PostStart_Actions)
 ## ============================================================================
-## set new Post-action 
-def setPostAction ( action ) :
+## pre-action 
+def preStart_actions ( action = None ) :
+    """Get the ``pre-Start-action''
     """
-    set new ``post-action'' for Bender
-    """
-    global __Bender_Post_Action
-    __Bender_Post_Action = action
-    
-## ============================================================================
-## set new Pre-action 
-def setPreAction ( action ) :
-    """
-    Set new ``pre-action'' for Bender
-    """
-    global __Bender_Pre_Action
-    __Bender_Pre_Action = action
+    global __Bender_PreStart_Actions 
+    if action  and isinstance ( action , ( list , tuple ) ) : 
+        return __Bender_PreStart_Actions +   action
+    elif action : 
+        return __Bender_PreStart_Actions + [ action ]
+    ##
+    return list(__Bender_PreStart_Actions)
 
+# ============================================================================
+## add new Post-action 
+def addPostRunAction ( action ) :
+    """ Add new ``post-run'' action for Bender
+    """
+    global __Bender_PostRun_Actions
+    __Bender_PostRun_Actions.append ( action )
+    return tuple(__Bender_PostRun_Actions)
+    
+# =============================================================================
+## add new Pre-action 
+def addPreRunAction ( action ) :
+    """ Add new ``pre-run'' action for Bender
+    """
+    global __Bender_PreRun_Actions
+    __Bender_PreRun_Actions.append ( action ) 
+    return tuple(__Bender_PreRun_Actions)
+
+# =============================================================================
+## add new Post-action 
+def addPostInitAction ( action ) :
+    """ Add new ``post-start'' action for Bender
+    """
+    global __Bender_PostInit_Actions
+    __Bender_PostInit_Actions.append ( action ) 
+    return tuple(__Bender_PostInit_Actions)
+
+# =============================================================================
+## add new Pre-action 
+def addPreInitAction ( action ) :
+    """ Add new ``pre-start'' action for Bender
+    """
+    global __Bender_PreInit_Actions
+    __Bender_PreInit_Actions.append ( action )
+    return tuple(__Bender_PreInit_Actions)
+    
+# =============================================================================
+## add new Post-action 
+def addPostStartAction ( action ) :
+    """ Add new ``post-start'' action for Bender
+    """
+    global __Bender_PostStart_Actions
+    __Bender_PostStart_Actions.append ( action ) 
+    return tuple(__Bender_PostStart_Actions)
+
+# =============================================================================
+## add new Pre-action 
+def addPreStartAction ( action ) :
+    """ Add new ``pre-start'' action for Bender
+    """
+    global __Bender_PreStart_Actions
+    __Bender_PreStart_Actions.append ( action ) 
+    return tuple(__Bender_PreStart_Actions)
 
 # =============================================================================
 ## @class Action
@@ -127,30 +236,35 @@ def setPreAction ( action ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2016-02-15
 class Action(object) :
-    """ Simple ``action''/context-manager for ``run''-fuction
+    """ Simple ``action''/context-manager for ``run''-function
     """
-    def __init__ ( self              ,
-                   preAction  = None ,
-                   postAction = None ) :
+    def __init__ ( self             ,
+                   preActions  = [] ,
+                   postActions = [] ) :
         
-        self.preAction  = preAction  if preAction  else pre_Action  ()
-        self.postAction = postAction if postAction else post_Action ()
+        self.preActions  =  preActions 
+        self.postActions = postActions 
 
     ## context manager: ENTER 
     def __enter__ ( self ) :
-
-        if self.preAction :
-            logger.debug ('Execute pre-action')
-            self.preAction()
+                
+        while self.preActions :
+            action = self.preActions.pop(0)
+            if action :
+                #logger.debug ('Execute pre-action')
+                action()
+                
         return self
     
     ## context manager: EXIT
     def __exit__ ( self , *_ ) :
         
-        if self.postAction :
-            logger.debug ('Execute post-action')
-            self.postAction()
-                       
+        while self.postActions :
+            action = self.postActions.pop(0)
+            if action :
+                #logger.debug ('Execute post-action')
+                action()
+                
 # =============================================================================
 ## run N events
 #  @code
@@ -162,7 +276,10 @@ def run ( nEvents     =   -1 ,
     """Run gauidi 
     >>> run(50)
     """
-    with Action ( preAction , postAction ) :
+    pre_actions  =  preRun_actions (  preAction )
+    post_actions = postRun_actions ( postAction )
+    
+    with Action ( pre_actions , post_actions ) :
         
         ## get the application manager
         _g = appMgr() 
@@ -333,11 +450,11 @@ setInputData = setData
 ## ============================================================================
 ## Get the application manager 
 def appMgr( *varg , **kwarg ) :
+    """Get the application manager
+    >>> gaudi = appMgr() 
     """
-    Get the application manager 
-    """
-    from GaudiPython.Bindings import AppMgr 
-    _g = AppMgr()
+    import GaudiPython.Bindings
+    _g = GaudiPython.Bindings.AppMgr()
     if not 'LoKiSvc' in _g.ExtSvc :
         logger.debug ('appMgr: add LoKiSvc into the list of servcies')
         _g.ExtSvc += [ 'LoKiSvc']

@@ -70,7 +70,7 @@ def with_ipython() :
     except NameError :
         return False
     
-## check if the file is actually empty
+## check if the file is actually "empty"
 def _empty_ ( fname ) :
     
     import os 
@@ -89,100 +89,98 @@ def _empty_ ( fname ) :
         
     except IOError :
         pass
-    
- 
-try:
+     
 
-    import datetime
-    start_time = datetime.datetime.now()
-    logger.info ( 'Bender session started %s' % start_time.strftime('%c')  )
-    
-    import os
-    ## define the name of the history file
-    __history__ = os.path.curdir + os.sep + '.bender_history'
-    
+import datetime
+start_time = datetime.datetime.now()
+logger.info ( 'Bender session started %s' % start_time.strftime('%c')  )
 
-    try :
+import os,sys
+## define the name of the history file
+__history__ = os.path.curdir + os.sep + '.bender_history'
+
+def _rename_ ( base , version = 0  ) :
+    
+    if version <= 0 :
+        version = 0 
+        fname   = '%s'    %    base 
+        fnamep1 = '%s.%d' %  ( base , 1 )
+    else :
+        fname   = '%s.%d' %  ( base , version     )
+        fnamep1 = '%s.%d' %  ( base , version + 1 )
         
-        def _rename_ ( base , version = 0  ) :
-            
-            if version <= 0 :
-                version = 0 
-                fname   = '%s'    %    base 
-                fnamep1 = '%s.%d' %  ( base , 1 )
-            else :
-                fname   = '%s.%d' %  ( base , version     )
-                fnamep1 = '%s.%d' %  ( base , version + 1 )
+    if os.path.exists ( fname ) and _empty_ ( fname ) :
+        os.remove ( fname )
+        return
+    
+    if os.path.exists ( fnamep1 ) :
+        if  _empty_   ( fnamep1 ) : os.remove ( fnamep1 )
+        else : _rename_ ( base , version + 1 )
+        
+    if os.path.exists ( fname ) :
+        if _empty_    ( fname ) : os.remove ( fname )
+        else : os.rename ( fname , fnamep1 )
+        
                 
-            if os.path.exists ( fname ) and _empty_ ( fname ) :
-                os.remove ( fname )
-                return
+## write history at the end 
+def _prnt_() :
+    end_time = datetime.datetime.now()   
+    logger.info ( 'Bender session   ended %s' % end_time.strftime('%c')  )
 
-            if os.path.exists ( fnamep1 ) :
-                if  _empty_   ( fnamep1 ) : os.remove ( fnamep1 )
-                else : _rename_ ( base , version + 1 )
-                
-            if os.path.exists ( fname ) :
-                if _empty_    ( fname ) : os.remove ( fname )
-                else : os.rename ( fname , fnamep1 )
-                
+    
+## line completer 
+import rlcompleter
+import readline
+readline.clear_history() 
+readline.parse_and_bind("tab: complete")
+
+## write history
+def write_history ( fname ) :
+    """Write history file 
+    """
+    ## first, delete old history file
+    try :        
         _rename_ ( __history__  )
-        
     except :
-        logger.warning ( "Can't erase old history files", exc_info = True ) 
-        pass
+        logger.warning ( "Can't erase old history file(s)", exc_info = True ) 
 
-
-    ## write history at the end 
-    def _prnt_() :
-        end_time = datetime.datetime.now()   
-        logger.info ( 'Bender session   ended %s' % end_time.strftime('%c')  )
-            
-    ## line completer 
-    import rlcompleter
-    import readline
-    readline.clear_history() 
-    readline.parse_and_bind("tab: complete")
-
-
-    def write_history ( fname ) :
+    end_time = datetime.datetime.now()   
+    command  = [ a for a in sys.argv ]
+    if command : command[0] = os.path.basename( command[0] )
+    command  = ' '.join(command)
+    curdit   = os.path.curdir
+    
+    if with_ipython() :
         
-        if with_ipython() :
-
-            try :
+        try :
+            
+            import IPython, getpass
+            ip  = IPython.get_ipython()
+            me  = getpass.getuser() 
+            with open ( fname , 'w' ) as f :
+                f.write( '# Bender session by %s started at %s\n' % ( me , start_time.strftime('%c' ) ) ) 
+                f.write( '# Command from CWD=%s \n# %s\n' % ( curdir , command  ) ) 
+                for record in ip.history_manager.get_range() :
+                    f.write( record[2] + '\n' )
+                f.write( '# Bender session by %s   ended at %s\n' % ( me ,   end_time.strftime('%c' ) ) ) 
                 
-                import IPython, getpass
-                ip  = IPython.get_ipython()
-                me  = getpass.getuser() 
-                with open ( fname , 'w' ) as f :
-                    f.write( '# Bender session by %s started at %s\n' % ( me , start_time.strftime('%c' ) ) ) 
-                    for record in ip.history_manager.get_range() :
-                        f.write( record[2] + '\n' )
-                    end_time = datetime.datetime.now()   
-                    f.write( '# Bender session by %s   ended at %s\n' % ( me ,   end_time.strftime('%c' ) ) ) 
-                
-                if os.path.exists( fname ) and os.path.isfile ( fname ) and not _empty_ ( fname ) : 
-                    logger.info ( 'Bender history file: %s' % __history__ )
+            if os.path.exists( fname ) and os.path.isfile ( fname ) and not _empty_ ( fname ) : 
+                logger.info ( 'Bender history file: %s' % __history__ )
                 return
             
-            except:
-                pass
+        except:
+            pass
             
-        ## use 'old-style' history 
-        readline.write_history_file ( fname ) 
-        if os.path.exists( fname ) and os.path.isfile ( fname ) and not _empty_ ( fname ) : 
-            logger.info ( 'Bender history file: %s' % __history__ )
+    ## use 'old-style' history 
+    readline.write_history_file ( fname ) 
+    if os.path.exists( fname ) and os.path.isfile ( fname ) and not _empty_ ( fname ) : 
+        logger.info ( 'Bender history file: %s' % __history__ )
         
 
-    import atexit
 
-    atexit.register ( _prnt_ )
-    atexit.register ( write_history , __history__ )    
-
-except:
-    ## 
-    logger.error ( 'Error in startup configuration, ignore... ' , exc_info = True ) 
-
+import atexit
+atexit.register ( _prnt_ )
+atexit.register ( write_history , __history__ )    
 
     
 # =============================================================================

@@ -232,7 +232,7 @@ from BenderTools.DstExplorer import configure
 #	
 ## Perform the basic configuration
 #
-pyfiles = configure ( arguments ) 
+pyfiles = configure ( arguments , colors = not arguments.batch ) 
 # 
 
 #

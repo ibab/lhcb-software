@@ -431,7 +431,7 @@ def extendfile2 ( filename       ,
         #
     iohstr = str(ioh) 
     if not _gaudi and not _local_dict_.has_key( iohstr ) : 
-        logger.info('make use of IOHelper.setupServices() ')
+        logger.debug ( 'extendfile2: make use of IOHelper.setupServices() ')
         ioh.setupServices ()
         _local_dict_[ iohstr ] = 1
         ##
@@ -449,7 +449,7 @@ extendfile  = extendfile2
 ## get list of input files from EventSelector.Input
 #  @code
 #  file_list = ... 
-#  inputs = evtSelInput  ( file_list )( 
+#  inputs = evtSelInput  ( file_list )
 #  @endcode 
 #  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
 #  @date 2016-01-28

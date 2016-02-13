@@ -637,7 +637,47 @@ def _sc_print_ ( sc ) :
 cpp.StatusCode .__repr__ = _sc_print_
 cpp.StatusCode .__str__  = _sc_print_
 
+
+if not hasattr ( GaudiPython.Bindings.AppMgr , '_old_initialize_' ) :
     
+    _old_appmgr_initialize_ = GaudiPython.Bindings.AppMgr.initialize
+    def _new_initialize_ ( self ) :
+        
+        import Bender.Utils as BU
+        with BU.Action ( BU. preInit_actions() , BU.postInit_actions() ) :
+            return self._old_initialize_ ()
+        
+    GaudiPython.Bindings.AppMgr.initialize       =        _new_initialize_ 
+    GaudiPython.Bindings.AppMgr._old_initialize_ = _old_appmgr_initialize_ 
+
+if not hasattr ( GaudiPython.Bindings.AppMgr , '_old_start_' ) :
+    
+    _old_appmgr_start_      = GaudiPython.Bindings.AppMgr.start    
+    def _new_start_ ( self ) :
+        
+        import Bender.Utils as BU
+        with BU.Action ( BU. preStart_actions() , BU.postStart_actions() ) :
+            return self._old_start_ ()
+        
+    GaudiPython.Bindings.AppMgr.start            =        _new_start_ 
+    GaudiPython.Bindings.AppMgr._old_start_      = _old_appmgr_start_ 
+
+    
+
+# =============================================================================
+## updated 'run' function for Gaudi.AppMgr 
+def _new_run_( self ,  n ) :
+    if self.FSMState() == Gaudi.StateMachine.CONFIGURED :
+        
+        sc = self.initialize()
+        if sc.isFailure() or self.ReturnCode != 0 :
+            return sc
+    if self.FSMState() == Gaudi.StateMachine.INITIALIZED :
+        sc = self.start()
+        if sc.isFailure() or self.ReturnCode != 0:
+            return sc
+    return self._evtpro.executeRun(n)
+
 
 # =============================================================================
 if __name__ == '__main__' :
