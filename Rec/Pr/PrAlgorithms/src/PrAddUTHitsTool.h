@@ -38,27 +38,27 @@
    *  
    */
 
-class PrAddUTHitsTool : public GaudiTool, virtual public IPrAddUTHitsTool {
+class PrAddUTHitsTool : public extends<GaudiTool, IPrAddUTHitsTool> {
 public:
     /// Standard constructor
   PrAddUTHitsTool( const std::string& type,
                     const std::string& name,
                     const IInterface* parent);
   
-  virtual ~PrAddUTHitsTool( ); ///< Destructor
+  ~PrAddUTHitsTool( ) override; ///< Destructor
   
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
   
   /// Add UT clusters to matched tracks
-  StatusCode addUTHits( LHCb::Track& track);
-  StatusCode returnUTHits( LHCb::State& state, PrUTHits& utHits, double& finalChi2, double p = 0 );
+  StatusCode addUTHits( LHCb::Track& track) const override;
+  StatusCode returnUTHits( LHCb::State& state, PrUTHits& utHits, double& finalChi2, double p = 0 ) const override;
    
 
 private:
 
-  void selectHits(PrUTHits& selected, const LHCb::State& state, const double p);
-  void calculateChi2(PrUTHits& goodUT,  double& chi2, const double& bestChi2, double& finalDist, const double& p );
-  void printInfo(const PrUTHits& goodUT, double dist, double chi2, const LHCb::State& state);
+  void selectHits(PrUTHits& selected, const LHCb::State& state, const double p) const;
+  void calculateChi2(PrUTHits& goodUT,  double& chi2, const double& bestChi2, double& finalDist, const double& p ) const;
+  void printInfo(const PrUTHits& goodUT, double dist, double chi2, const LHCb::State& state) const;
   
 
   Tf::UTStationHitManager<PrUTHit> * m_utHitManager;
@@ -77,7 +77,7 @@ private:
   double m_minAxProj;
   std::string m_extrapolatorName;
   
-  ILHCbMagnetSvc*     m_magFieldSvc; 
+  SmartIF<ILHCbMagnetSvc>     m_magFieldSvc; 
 
 };
 

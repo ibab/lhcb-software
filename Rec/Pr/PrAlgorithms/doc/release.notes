@@ -3,6 +3,9 @@
 ! Responsible : Yasmine Amhis
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
+! 2016-02-13 - Gerhard Raven
+ - follow const-ification of interface
+ - C++11 modernization
 
 !========================= PrAlgorithms v1r17 2016-01-28 =========================
 ! 2016-01-21 - Marco Cattaneo

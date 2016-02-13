@@ -5,7 +5,6 @@
 // from Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
 
-
 #include "PrAddUTHitsTool.h"
 
 
@@ -25,7 +24,7 @@ using ROOT::Math::CholeskyDecomp; // -- Maybe copy locally if not running at CER
 PrAddUTHitsTool::PrAddUTHitsTool( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : base_class ( type, name , parent )
 {
   declareInterface<IPrAddUTHitsTool>(this);
   declareProperty( "ZUTField"  , m_zUTField            =  1740. * Gaudi::Units::mm );
@@ -40,12 +39,11 @@ PrAddUTHitsTool::PrAddUTHitsTool( const std::string& type,
   declareProperty( "XTolSlope" , m_xTolSlope           =  30000.0                  );
   declareProperty( "MajAxProj" , m_majAxProj           =  20.0  * Gaudi::Units::mm   );
   declareProperty( "MinAxProj" , m_minAxProj           =  2.0   * Gaudi::Units::mm   );
-
-  }
+}
 //=============================================================================
 // Destructor
 //=============================================================================
-PrAddUTHitsTool::~PrAddUTHitsTool() {}
+PrAddUTHitsTool::~PrAddUTHitsTool() = default;
 
 //=========================================================================
 //
@@ -57,7 +55,7 @@ StatusCode PrAddUTHitsTool::initialize ( ) {
 
   m_utHitManager = tool<Tf::UTStationHitManager <PrUTHit> >("PrUTStationHitManager");
 
-  m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
+  m_magFieldSvc = service( "MagneticFieldSvc", true );
 
   return StatusCode::SUCCESS;
 }
@@ -65,7 +63,7 @@ StatusCode PrAddUTHitsTool::initialize ( ) {
 //=========================================================================
 //  Add the UT hits on the track, only the ids.
 //=========================================================================
-StatusCode PrAddUTHitsTool::addUTHits( LHCb::Track& track){
+StatusCode PrAddUTHitsTool::addUTHits( LHCb::Track& track) const {
 
   LHCb::State state = track.closestState( m_zUTProj );
   PrUTHits myUTHits;
@@ -88,16 +86,16 @@ StatusCode PrAddUTHitsTool::addUTHits( LHCb::Track& track){
   if( myUTHits.size() < 3 ) return StatusCode::SUCCESS;
 
 
-  for ( PrUTHits::iterator itT = myUTHits.begin(); myUTHits.end() != itT; ++itT ) {
+  for ( auto& hit : myUTHits ) {
 
     // ----------------------------------
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-      debug() << "--- Adding Hit in Layer: " << (*itT)->planeCode()
-              << " with projection: " << (*itT)->projection() << endmsg;
+      debug() << "--- Adding Hit in Layer: " << hit->planeCode()
+              << " with projection: " << hit->projection() << endmsg;
     // ----------------------------------
 
-    track.addToLhcbIDs( (*itT)->hit()->lhcbID() );
-    (*itT)->hit()->setUsed( true );
+    track.addToLhcbIDs( hit->hit()->lhcbID() );
+    hit->hit()->setUsed( true );
   }
 
   return StatusCode::SUCCESS;
@@ -109,7 +107,7 @@ StatusCode PrAddUTHitsTool::addUTHits( LHCb::Track& track){
 //=========================================================================
 //  Return the UT hits
 //=========================================================================
-StatusCode PrAddUTHitsTool::returnUTHits( LHCb::State& state, PrUTHits& utHits, double& finalChi2, double p){
+StatusCode PrAddUTHitsTool::returnUTHits( LHCb::State& state, PrUTHits& utHits, double& finalChi2, double p) const{
 
   // -- If no momentum is given, use the one from the state
   if(p < 1e-10){
@@ -141,13 +139,13 @@ StatusCode PrAddUTHitsTool::returnUTHits( LHCb::State& state, PrUTHits& utHits, 
 
   // -- Loop over all hits and make "groups" of hits to form a candidate
 
-  for ( PrUTHits::iterator itBeg = selected.begin(); itBeg+2 < selected.end(); ++itBeg ) {
+  for ( auto itBeg = selected.begin(); itBeg+2 < selected.end(); ++itBeg ) {
     double firstProj = (*itBeg)->projection();
     goodUT.clear();
     int nbPlane = 0;
-    boost::array<int, 4> firedPlanes;
-    std::fill(firedPlanes.begin(), firedPlanes.end(), 0);
-    PrUTHits::iterator itEnd = itBeg;
+    std::array<int, 4> firedPlanes;
+    firedPlanes.fill(0);
+    auto itEnd = itBeg;
 
     // -- If |firstProj| > m_majAxProj, the sqrt is ill defined
     double maxProj = firstProj;
@@ -211,7 +209,7 @@ StatusCode PrAddUTHitsTool::returnUTHits( LHCb::State& state, PrUTHits& utHits, 
 //=========================================================================
 // Select the hits in a certain window
 //=========================================================================
-void PrAddUTHitsTool::selectHits(PrUTHits& selected, const LHCb::State& state, const double p){
+void PrAddUTHitsTool::selectHits(PrUTHits& selected, const LHCb::State& state, const double p) const{
 
   // -- Define the tolerance parameters
   double yTol = m_yTolSlope / p ;
@@ -223,11 +221,10 @@ void PrAddUTHitsTool::selectHits(PrUTHits& selected, const LHCb::State& state, c
             << " y " << state.y() << " tx " << state.tx() << " ty " 
             << state.ty() << " p " << p << endmsg;
 
-  Tf::UTStationHitManager<PrUTHit>::HitRange hits = m_utHitManager->hits();
+  auto hits = m_utHitManager->hits();
 
   // -- Loop over all the UT hits, get all UT hits whose projection is compatible with the track
-  for ( PrUTHits::const_iterator itUT = hits.begin(); hits.end() != itUT; ++itUT ) {
-    PrUTHit* ut = *itUT;
+  for ( const auto& ut : hits ) {
 
     double z = ut->z();
     double yPred = state.y() + ( z - state.z() ) * state.ty();
@@ -252,7 +249,6 @@ void PrAddUTHitsTool::selectHits(PrUTHits& selected, const LHCb::State& state, c
     }
   }
 
-
   std::sort( selected.begin(), selected.end(), Tf::increasingByProjection<PrUTHit>() );
 
 }
@@ -260,7 +256,7 @@ void PrAddUTHitsTool::selectHits(PrUTHits& selected, const LHCb::State& state, c
 // Calculate Chi2
 //=========================================================================
 void PrAddUTHitsTool::calculateChi2(PrUTHits& goodUT, double& chi2, const double& bestChi2,
-                                  double& finalDist, const double& p ){
+                                  double& finalDist, const double& p ) const{
 
   // -- Fit a straight line to the points and calculate the chi2 of the hits with respect to the fitted track
 
@@ -296,8 +292,7 @@ void PrAddUTHitsTool::calculateChi2(PrUTHits& goodUT, double& chi2, const double
     rhs[1] = 0.;
     rhs[2] = 0.;
 
-    for ( PrUTHits::iterator itSel = goodUT.begin(); goodUT.end() != itSel; ++itSel ) {
-      PrUTHit* ut = *itSel;
+    for ( const auto& ut : goodUT ) {
       double w    = ut->hit()->weight();
       double dz   = ut->z() - m_zUTProj;
       double t    = ut->hit()->sinT();
@@ -334,19 +329,18 @@ void PrAddUTHitsTool::calculateChi2(PrUTHits& goodUT, double& chi2, const double
 
     unsigned int nIndep = nDoF;
 
-
-    for ( PrUTHits::iterator itSel = goodUT.begin(); goodUT.end() != itSel; ++itSel ) {
+    for ( auto itSel = goodUT.begin(); goodUT.end() != itSel; ++itSel ) {
       PrUTHit* ut = *itSel;
       double w    = ut->hit()->weight();
       double dz   = ut->z() - m_zUTProj;
-      dist = ut->projection() - offset - slope * dz - offsetY * ut->hit()->sinT();
-      if ( ( 1 < differentPlanes[ut->planeCode()] || nIndep == goodUT.size() ) && worstDiff < w * dist * dist ) {
-        worstDiff = w * dist * dist;
+      auto dist = ut->projection() - offset - slope * dz - offsetY * ut->hit()->sinT();
+      auto diff = w*dist*dist;
+      if ( ( 1 < differentPlanes[ut->planeCode()] || nIndep == goodUT.size() ) && worstDiff < diff ) {
+        worstDiff = diff;
         worst = itSel;
       }
-      chi2 += w * dist * dist;
+      chi2 += diff;
     }
-
 
     // -- Fix a coverity warning (division by zero)
     if( nDoF > 0 ){
@@ -363,33 +357,23 @@ void PrAddUTHitsTool::calculateChi2(PrUTHits& goodUT, double& chi2, const double
 
     // -- Remove last point (outlier) if bad fit...
     if ( worstDiff > 0. && bestChi2 < chi2 && goodUT.size() > 3  ) {
-
       goodUT.erase( worst );
       chi2 = 1.e11;  // -- Start new iteration
-
     }
-
-
     // -- Increase the sanity check counter
     counter++;
   }
-
-
   finalDist = dist;
-
-
 }
 
 //=========================================================================
 // Print out info
 //=========================================================================
-void PrAddUTHitsTool::printInfo(const PrUTHits& goodUT, double dist, double chi2, const LHCb::State& state){
+void PrAddUTHitsTool::printInfo(const PrUTHits& goodUT, double dist, double chi2, const LHCb::State& state) const{
 
   // -- Print some information at the end
-
   info() << "*** Store this candidate, nbUT = " << goodUT.size() << " chi2 " << chi2 << endmsg;
-  for ( PrUTHits::const_iterator itSel = goodUT.begin(); goodUT.end() != itSel; ++itSel ) {
-    PrUTHit* ut = *itSel;
+  for ( const auto& ut : goodUT ) {
     double z     = ut->z();
     double mPred = ut->x() + dist;
     info() << ut->planeCode()
@@ -397,5 +381,4 @@ void PrAddUTHitsTool::printInfo(const PrUTHits& goodUT, double dist, double chi2
                       z, state.x() + state.tx() * ( z-state.z() ), mPred, ut->hit()->xMid(), dist )
            << endmsg;
   }
-
 }
