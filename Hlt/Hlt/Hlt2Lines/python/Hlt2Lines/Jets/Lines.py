@@ -1,6 +1,9 @@
 from GaudiKernel.SystemOfUnits import MeV, GeV, picosecond, mm
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
+# Jet Lines written by Phil Ilten and Mike Williams (mwill@mit.edu),
+# with Roel Aaij's significant assistance.
+
 class JetsLines(Hlt2LinesConfigurableUser):
     __slots__ = {'_stages' : {},
                  'Prescale' : {},
@@ -13,7 +16,9 @@ class JetsLines(Hlt2LinesConfigurableUser):
                      'SV_TRK_IPCHI2' : 16,
                      'SV_FDCHI2' : 25,
                      'MU_PT'     : 1000*MeV,
-                     'MU_PROBNNMU'  : 0.5},
+                     'MU_PROBNNMU'  : 0.5,
+                     'JET_PT': 17*GeV},
+                 
                  'JetBuilder' : {
                      'JetPtMin' : 5 * GeV,
                      'JetInfo' : False,
@@ -27,42 +32,40 @@ class JetsLines(Hlt2LinesConfigurableUser):
             else: return self._stages
         else: self._stages = {}
 
+        # Import the topo lines for the 2-body SVs.
         from Hlt2Lines.Topo.Lines import TopoLines
         from Hlt2Lines.Utilities.Hlt2Stage import Hlt2ExternalStage
         from Hlt2Lines.Utilities.Hlt2JetBuilder import Hlt2JetBuilder
 
         topo_lines = TopoLines()
-        topo_sv = Hlt2ExternalStage(topo_lines, topo_lines.stages('Topo2BodyCombos')[0])
+        topo_sv = Hlt2ExternalStage(topo_lines,
+                                    topo_lines.stages('Topo2BodyCombos')[0])
 
 
-        from Stages import FilterSV, FilterMuon, SVSVCombiner, SVMuCombiner, MuMuCombiner
+        from Stages import (FilterSV, FilterMuon, SVSVCombiner, SVMuCombiner, 
+                            MuMuCombiner, DiJetCombiner)
 
+        # Create the stage filters.
         sv = [FilterSV([topo_sv])]
-        muon = [FilterMuon()]
-
+        mu = [FilterMuon()]
         svsv = [SVSVCombiner(sv)]
-        svmu = [SVMuCombiner(sv+muon)]
-        mumu = [MuMuCombiner(muon)]
+        svmu = [SVMuCombiner(sv + mu)]
+        mumu = [MuMuCombiner(mu)]
 
-        # TO-DO:
-        # once jet code is in, make jets and add SV and Mu tags to extrainfo;
-        # make appropriate svsv, etc, required inputs so PF is only run when needed;
-        # replace, eg svsv, below with the proper jets;
-        # add prescaled pt > 7 GeV lines.
+        # The input tags correspond to 9600 + index (9600 SV, 9601 mu).
+        jets = [Hlt2JetBuilder('DiJetsJetBuilder', sv + mu, shared = True,
+                               nickname = 'JetBuilder')]
 
-        self._stages['DiJetSV'] = sv
-        self._stages['DiJetMu'] = muon
-        self._stages['DiJetSVSV'] = svsv
-        self._stages['DiJetSVMu'] = svmu
-        self._stages['DiJetMuMu'] = mumu
-
-        # Build the jets and add them to all lines
-        # TO-DO: give it it's proper place
-        jets = Hlt2JetBuilder('DiJetsJetBuilder', sv + muon, shared = True, nickname = 'JetBuilder')
+        # Create the stages.
+        self._stages['JetsDiJetSVSV'] = [DiJetCombiner(svsv + jets, 9600, 9600)]
+        self._stages['JetsDiJetSVMu'] = [DiJetCombiner(svmu + jets, 9600, 9601)]
+        self._stages['JetsDiJetMuMu'] = [DiJetCombiner(mumu + jets, 9601, 9601)]
+        self._stages['JetsDiJetSV']   = [DiJetCombiner(sv + jets, 9600)]
+        self._stages['JetsDiJet']     = [DiJetCombiner(jets)]
 
         # Return the stages.
-        if nickname: return self._stages[nickname] + [jets]
-        else: return {k : v + [jets] for k, v in self._stages.iteritems()}
+        if nickname: return self._stages[nickname]
+        else: return {k : v for k, v in self._stages.iteritems()}
 
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line
@@ -70,4 +73,5 @@ class JetsLines(Hlt2LinesConfigurableUser):
         stages = self.stages()
         for (nickname, algos) in self.algorithms(stages):
             linename = nickname
-            Hlt2Line(linename, prescale = self.prescale, algos = algos, postscale = self.postscale)
+            Hlt2Line(linename, prescale = self.prescale, algos = algos,
+                     postscale = self.postscale)
