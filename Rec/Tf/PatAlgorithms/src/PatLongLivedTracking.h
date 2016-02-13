@@ -110,7 +110,8 @@ private:
     
   void getPreSelection( PatDownTrack& track ); ///< Get a preselection of hits around a first track estimate
 
-  void fitAndRemove( PatDownTrack& track, bool onlyFit ); ///< Perform a chi2 fit to the track and remove outliers
+  template<bool onlyFit>
+  void fitAndRemove( PatDownTrack& track ); ///< Perform a chi2 fit to the track and remove outliers
   
   void findMatchingHits( const PatDownTrack& track, const int plane ); ///< Find x hits matching the first track estimate
 
@@ -132,7 +133,7 @@ private:
   
   void initEvent();///< Init the event: Put hits in local containers which are sorted
 
-  void xFit( PatDownTrack& track ); ///< Fit tracklet with hits in x layers only.
+  void xFit( PatDownTrack& track, const PatTTHit* hit1, const PatTTHit* hit2 ); ///< Fit tracklet with hits in x layers only.
 
   /// Helper class to find lower bound of collection of hits
   class lowerBoundX {
@@ -148,7 +149,7 @@ private:
   }
   
   /// Does this track point inside the beampipe?  
-  bool insideBeampipe(const PatDownTrack& track){
+  inline bool insideBeampipe(const PatDownTrack& track){
     return (m_minTTx > fabs( track.xAtZ( m_zTTa ) )) && (m_minTTy > fabs( track.yAtZ( m_zTTa ) ));
   }
 
@@ -173,7 +174,6 @@ private:
   inline double xPosCorrection( const PatDownTrack& track ){
     return std::copysign( m_xCorrectionOffset + m_xCorrectionConst/std::abs( track.momentum() ), track.momentum() );
   }
-  
   
   // -- timing information
   int           m_downTime;
@@ -280,4 +280,179 @@ private:
   
 
 };
+
+//=========================================================================
+//  Fit and remove the worst hit, as long as over tolerance
+//=========================================================================
+template<bool onlyFit>
+void PatLongLivedTracking::fitAndRemove ( PatDownTrack& track ) {
+  
+  if ( m_doTiming ) m_timerTool->start( m_fitAndRemoveTime );
+
+  if ( 2 > track.hits().size() ){
+    if ( m_doTiming ) m_timerTool->stop( m_fitAndRemoveTime );
+    return;  // no fit if single point only !
+  }
+  
+  bool again = false;
+  do {
+
+    again = false;
+    
+    //== Fit, using the magnet point as constraint.
+    double mat[6], rhs[3];
+    mat[0] = 1./( track.errXMag() * track.errXMag() );
+    mat[1] = 0.;
+    mat[2] = 0.;
+    mat[3] = 0.;
+    mat[4] = 0.;
+    mat[5] = 0.;
+    rhs[0] = track.dxMagnet() /( track.errXMag() * track.errXMag() );//( m_magnetSave.x() - m_magnet.x() );
+    rhs[1] = 0.;
+    rhs[2] = 0.;
+    
+    int nbUV = 0;
+
+    std::array<int,4> differentPlanes = {0, 0, 0, 0 };
+    unsigned int nDoF = 0;
+    
+    double yTrack = track.yAtZ( 0. );
+    double tyTr   = track.slopeY();
+  
+    PatTTHits::const_iterator itEnd = track.hits().end();
+    for(PatTTHits::iterator iHit = track.hits().begin() ; iHit != itEnd; ++iHit) {
+
+      PatTTHit* hit = *iHit;
+      if( !onlyFit ) updateTTHitForTrackFast( hit, yTrack, tyTr);
+      const double dz   = 0.001*(hit->z() - track.zMagnet());
+      const double dist = track.distance( hit );
+      const double w    = hit->hit()->weight();
+      const double t    = hit->hit()->sinT();     
+      
+      mat[0] += w;
+      mat[1] += w * dz;
+      mat[2] += w * dz * dz;
+      mat[3] += w * t;
+      mat[4] += w * dz * t ;
+      mat[5] += w * t  * t ;
+      rhs[0] += w * dist;
+      rhs[1] += w * dist * dz;
+      rhs[2] += w * dist * t ;
+
+      // -- check how many different layers have fired
+      //if ( 0 == differentPlanes[hit->planeCode()]++ ) ++nDoF;
+      differentPlanes[hit->planeCode()]++;
+      nbUV += addIsStereo( hit );
+      
+      if ( UNLIKELY( m_printing )) {
+        info() << format( "   Plane %2d x %7.2f dist %6.3f ", 
+                          hit->planeCode(), hit->x(), dist );
+        if ( m_debugTool ) m_debugTool->debugTTCluster( info(), hit );
+        info() << endmsg;
+      }
+      
+    }
+    
+    nDoF = std::count_if(differentPlanes.begin(), differentPlanes.end(), [](const int a){ return a > 0; });
+    track.setFiredLayers( nDoF );
+    
+    // -- solve the equation and update the parameters of the track
+    CholeskyDecomp<double, 3> decomp(mat);
+    if (UNLIKELY(!decomp)) {
+      track.setChi2(1e42);
+      if ( m_doTiming ) m_timerTool->stop( m_fitAndRemoveTime );
+      return;
+    } else {
+      decomp.Solve(rhs);
+    }
+    
+    const double dx  = rhs[0];
+    const double dsl = 0.001*rhs[1];
+    const double dy  = rhs[2];
+    
+    if ( UNLIKELY( m_printing )) {
+      info() << format( "  dx %7.3f dsl %7.6f dy %7.3f, displY %7.2f", 
+                        dx, dsl, dy, track.displY() ) << endmsg;
+    }
+    
+    if ( 4 > nbUV ) track.updateX( dx, dsl );
+    track.setDisplY( track.displY() + dy );
+
+    //== Remove worst hit and retry, if too far.
+    double chi2 = track.initialChi2();
+    
+    double maxDist = -1.;
+    PatTTHits::iterator worst;
+    
+    yTrack = track.yAtZ( 0. );
+    tyTr   = track.slopeY();
+
+    itEnd = track.hits().end();
+    for (PatTTHits::iterator itH = track.hits().begin();
+         itH != itEnd; ++itH){
+      
+      PatTTHit* hit = *itH;
+      updateTTHitForTrackFast( hit, yTrack, tyTr);
+      
+      if( !onlyFit ){
+        const double yTrackAtZ = track.yAtZ( hit->z() );
+        if( !hit->hit()->isYCompatible(yTrackAtZ, m_yTol ) ){
+          // --
+          if ( UNLIKELY( m_printing )) {
+            info() << "   remove Y incompatible hit measure = " << hit->x() 
+                   << " : y " << yTrackAtZ << " min " << hit->hit()->yMin()
+                   << " max " << hit->hit()->yMax() << endmsg;
+          }
+          // --
+          track.hits().erase( itH );
+          if ( 2 < track.hits().size() ) again = true;
+          break;
+        }
+      }
+      
+      const double dist = track.distance( hit );
+      
+      // --
+      if ( UNLIKELY( m_printing )) {
+        info() << format( "   Plane %2d x %7.2f dist %6.3f ", 
+                          hit->planeCode(), hit->x(), dist );
+        if ( m_debugTool ) m_debugTool->debugTTCluster( info(), hit );
+        info() << endmsg;
+      }
+      // --
+      chi2 += dist * dist * hit->hit()->weight();
+      // -- only flag this hit as removable if it is not alone in a plane or there are 4 planes that fired
+      if ( !onlyFit && maxDist < std::abs(dist) &&  (1 < differentPlanes[hit->planeCode()] || nDoF == track.hits().size() ) ) {
+        maxDist = std::abs( dist );
+        worst = itH;
+      }
+    }
+    
+    if(again) continue;
+    
+
+    if ( 2 < track.hits().size() ) chi2 /= (track.hits().size() - 2 );
+    track.setChi2( chi2 );
+
+    if(onlyFit){
+      if ( m_doTiming ) m_timerTool->stop( m_fitAndRemoveTime );
+      return;
+    }
+    
+    if ( m_maxChi2 < chi2 && track.hits().size() > 3 && maxDist > 0) {
+      
+      track.hits().erase( worst );
+
+      again = true;
+      if( UNLIKELY( m_printing )) info() << "   remove worst and retry" << endmsg;
+    } 
+    
+    if ( UNLIKELY( m_printing )) {
+      info() << format( "  ---> chi2 %7.2f maxDist %7.3f", chi2, maxDist) << endmsg;
+    }    
+  } while (again);
+
+  if ( m_doTiming ) m_timerTool->stop( m_fitAndRemoveTime );
+
+}
 #endif // PATKSHORT_H

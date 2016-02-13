@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2016-02-13 - Michel De Cian
+ - Fix another small bug in PatLongLivedTracking, implement some speed-ups.
+
 ! 2016-02-10 - Michel De Cian
  - Fix two bugs in PatLongLivedTracking, and change chi2-cut in x-layers fit.
 

@@ -43,6 +43,44 @@ public:
   /// Move assignment operator
   PatDownTrack &operator=(PatDownTrack&& ) = default;
 
+  PatDownTrack( const PatDownTrack& track, 
+                PatTTHit* hit1,
+                PatTTHit* hit2,
+                const double chi2,
+                const double dx,
+                const double dsl):
+    m_momPar(track.m_momPar),
+    m_track(track.m_track),
+    m_state(track.m_state),
+    m_magnet( Gaudi::XYZPoint( m_magnet.x() + dx, m_magnet.y(), m_magnet.z() )),
+    m_magnetSave(track.m_magnetSave),
+    m_magnetScale(track.m_magnetScale),
+    m_zTT(track.m_zTT),
+    m_slopeX(track.m_slopeXCand + dsl),
+    m_slopeXSave(track.m_slopeXSave),
+    m_slopeXCand(track.m_slopeXCand),
+    m_slopeY(track.m_slopeY),
+    m_displX(track.m_displX + dx),
+    m_displY(track.m_displY),
+    m_errXMag(track.m_errXMag),
+    m_errYMag(track.m_errYMag),
+    m_chi2(chi2),
+    m_curvature(track.m_curvature),
+    m_ignore(track.m_ignore),
+    m_firedLayers(track.m_firedLayers),
+    m_hits({hit1, hit2})
+  {
+  };
+  
+  
+    
+
+
+
+
+
+
+
   virtual ~PatDownTrack( ) {} ///< Destructor
 
   
@@ -87,38 +125,38 @@ public:
   void setChi2( const double chi2 ){ m_chi2 = chi2; }
   
   // functions
-  double xAtZ( const double z ) const {
+  inline double xAtZ( const double z ) const {
     return m_magnet.x() + (z-m_magnet.z() ) * m_slopeX + m_curvature * ( z-m_zTT) * (z-m_zTT);
   }
 
-  double xAtZ( const double z, const double slopeX ) const {
+  inline double xAtZ( const double z, const double slopeX ) const {
     return m_magnet.x() + (z-m_magnet.z() ) * slopeX;
   }
  
-  double yAtZ( const double z ) const {
+  inline double yAtZ( const double z ) const {
     return m_magnet.y() + m_displY + (z-m_magnet.z() ) * slopeY();
   }
 
-  void updateX( const double dx, const double dsl )  {
+  inline void updateX( const double dx, const double dsl )  {
     m_displX += dx;
     m_magnet  = Gaudi::XYZPoint( m_magnet.x() + dx, m_magnet.y(), m_magnet.z() );
     m_slopeX += dsl;
   }
 
-  double dxMagnet() const { return m_magnetSave.x() - m_magnet.x(); }
+  inline double dxMagnet() const { return m_magnetSave.x() - m_magnet.x(); }
 
-  double initialChi2() const {
+  inline double initialChi2() const {
     return m_displX * m_displX / ( m_errXMag * m_errXMag ) + 
       m_displY * m_displY / ( m_errYMag * m_errYMag );
   }
  
-  double sagitta( const double z ) const { return m_curvature * ( z-m_zTT) * (z-m_zTT); }
+  inline double sagitta( const double z ) const { return m_curvature * ( z-m_zTT) * (z-m_zTT); }
 
-  double distance( const PatTTHit* hit ) const {
+  inline double distance( const PatTTHit* hit ) const {
     return hit->x() - xAtZ( hit->z() );
   }
  
-  double momentum() const { 
+  inline double momentum() const { 
     return ( (*m_momPar)[0] +    
              (*m_momPar)[1] * m_state->tx() * m_state->tx() +
              (*m_momPar)[2] * m_state->ty() * m_state->ty() ) / 
@@ -132,7 +170,7 @@ public:
     m_displY  = 0.;
     m_displX  = 0.;
   }
-
+  
   void startNewXCandidate(PatTTHit* firstHit) {
     m_hits.clear();
     m_hits.push_back(firstHit);
@@ -141,6 +179,15 @@ public:
     m_displY  = 0.;
     m_displX  = 0.;
   }
+  
+  void startNewXCandidate() {
+    m_hits.clear();
+    m_magnet = m_magnetSave;
+    m_slopeX = m_slopeXCand;
+    m_displY  = 0.;
+    m_displX  = 0.;
+  }
+
 
   void startNewXUCandidate(const double slopeX, const double displX, const double magnetX) {
     m_magnet  = Gaudi::XYZPoint( magnetX, m_magnet.y(), m_magnet.z() );

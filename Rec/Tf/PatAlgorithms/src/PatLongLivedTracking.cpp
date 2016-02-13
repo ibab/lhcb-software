@@ -106,8 +106,8 @@ PatLongLivedTracking::PatLongLivedTracking( const std::string& name,
   declareProperty( "MaxXTracks",                     m_maxXTracks           = 2                                           );
   declareProperty( "MaxChi2DistXTracks",             m_maxChi2DistXTracks   = 0.2                                         );
   declareProperty( "MaxXUTracks",                    m_maxXUTracks          = 2                                           );
-  declareProperty( "FitXProjChi2Offset",             m_fitXProjChi2Offset   = 4.0                                         );
-  declareProperty( "FitXProjChi2Const",              m_fitXProjChi2Const    = 40000.0                                     );
+  declareProperty( "FitXProjChi2Offset",             m_fitXProjChi2Offset   = 4.5                                         );
+  declareProperty( "FitXProjChi2Const",              m_fitXProjChi2Const    = 35000.0                                     );
     
   // -- Tolerance for adding overlap hits
   declareProperty( "OverlapTol",                     m_overlapTol           = 2.0*Gaudi::Units::mm                        );
@@ -436,10 +436,9 @@ StatusCode PatLongLivedTracking::execute() {
         for(unsigned int j = 0; j < maxJ; j++){
           
           PatDownTrack& xuTrack = m_goodXUTracks[j];
-          
           addVHits( xuTrack );
           if( UNLIKELY(m_withDebugTool) ){m_debugTool->recordStepInProcess("AddVHits",m_debugTool->isTrueTrack(tr,xuTrack.hits()));}//AD
-          fitAndRemove( xuTrack, false );
+          fitAndRemove<false>( xuTrack );
           if( UNLIKELY(m_withDebugTool) ){m_debugTool->recordStepInProcess("FitAndRemove",m_debugTool->isTrueTrack(tr,xuTrack.hits()));}//AD
           // -- Check if candidate is better than the old one
           if ( !acceptCandidate( xuTrack, maxPoints ) ) continue;
@@ -453,7 +452,7 @@ StatusCode PatLongLivedTracking::execute() {
         if( xTrack.hits().size() > 1 && maxPoints < 4 && m_goodXUTracks.empty() ){
           addVHits( xTrack );
           if( UNLIKELY(m_withDebugTool) ){m_debugTool->recordStepInProcess("AddVHits",m_debugTool->isTrueTrack(tr,xTrack.hits()));}//AD
-          fitAndRemove( xTrack, false );
+          fitAndRemove<false>( xTrack );
           if( UNLIKELY(m_withDebugTool) ){m_debugTool->recordStepInProcess("FitAndRemove",m_debugTool->isTrueTrack(tr,xTrack.hits()));}//AD
           // -- Check if candidate is better than the old one
           if ( !acceptCandidate( xTrack, maxPoints ) ) continue;
@@ -705,189 +704,15 @@ void PatLongLivedTracking::getPreSelection( PatDownTrack& track ) {
   
   if ( m_doTiming ) m_timerTool->stop( m_preselTime );
 }
-//=========================================================================
-//  Fit and remove the worst hit, as long as over tolerance
-//=========================================================================
-void PatLongLivedTracking::fitAndRemove ( PatDownTrack& track, bool onlyFit ) {
-  
-  if ( m_doTiming ) m_timerTool->start( m_fitAndRemoveTime );
 
-  if ( 2 > track.hits().size() ){
-    if ( m_doTiming ) m_timerTool->stop( m_fitAndRemoveTime );
-    return;  // no fit if single point !
-  }
-  
-  bool again = false;
-  do {
-    again = false;
-    //== Fit, using the magnet point as constraint.
-    double mat[6], rhs[3];
-    mat[0] = 1./( track.errXMag() * track.errXMag() );
-    mat[1] = 0.;
-    mat[2] = 0.;
-    mat[3] = 0.;
-    mat[4] = 0.;
-    mat[5] = 0.;
-    rhs[0] = mat[0] * track.dxMagnet();//( m_magnetSave.x() - m_magnet.x() );
-    rhs[1] = 0.;
-    rhs[2] = 0.;
-    int nbUV = 0;
-
-    std::array<int,4> differentPlanes = {0, 0, 0, 0 };
-    unsigned int nDoF = 0;
-    
-    double yTrack = track.yAtZ( 0. );
-    double tyTr   = track.slopeY();
-  
-    PatTTHits::const_iterator itEnd = track.hits().end();
-    for(PatTTHits::iterator iHit = track.hits().begin() ; iHit != itEnd; ++iHit) {
-
-      PatTTHit* hit = *iHit;
-      
-      if( !onlyFit ) updateTTHitForTrackFast( hit, yTrack, tyTr);
-      const double dz   = hit->z() - track.zMagnet();
-      const double dist = track.distance( hit );
-      const double w    = hit->hit()->weight();
-      const double t    = hit->hit()->sinT();          
-      mat[0] += w;
-      mat[1] += w * dz;
-      mat[2] += w * dz * dz;
-      mat[3] += w * t;
-      mat[4] += w * dz * t ;
-      mat[5] += w * t  * t ;
-      rhs[0] += w * dist;
-      rhs[1] += w * dist * dz;
-      rhs[2] += w * dist * t ;
-    
-      // -- check how many different layers have fired
-      //if ( 0 == differentPlanes[hit->planeCode()]++ ) ++nDoF;
-      differentPlanes[hit->planeCode()]++;
-      nbUV += addIsStereo( hit );
-      
-      
-      if ( UNLIKELY( m_printing )) {
-        info() << format( "   Plane %2d x %7.2f dist %6.3f ", 
-                          hit->planeCode(), hit->x(), dist );
-        if ( m_debugTool ) m_debugTool->debugTTCluster( info(), hit );
-        info() << endmsg;
-      }
-    }
-
-    nDoF = std::count_if(differentPlanes.begin(), differentPlanes.end(), [](const int a){ return a > 0; });
-    track.setFiredLayers( nDoF );
-    
-    // -- solve the equation and update the parameters of the track
-    CholeskyDecomp<double, 3> decomp(mat);
-    if (!decomp) {
-      track.setChi2(1e42);
-      if ( m_doTiming ) m_timerTool->stop( m_fitAndRemoveTime );
-      return;
-    } else {
-      decomp.Solve(rhs);
-    }
-    
-    const double dx  = rhs[0];
-    const double dsl = rhs[1];
-    const double dy  = rhs[2];
-    
-    if ( UNLIKELY( m_printing )) {
-      info() << format( "  dx %7.3f dsl %7.6f dy %7.3f, displY %7.2f", 
-                        dx, dsl, dy, track.displY() ) << endmsg;
-    }
-    
-    if ( 4 > nbUV ) track.updateX( dx, dsl );
-    track.setDisplY( track.displY() + dy );
-
-    //== Remove worst hit and retry, if too far.
-    double chi2 = track.initialChi2();
-    
-    double maxDist = -1.;
-    PatTTHits::iterator worst;
-    
-    yTrack = track.yAtZ( 0. );
-    tyTr   = track.slopeY();
-
-    itEnd = track.hits().end();
-    for (PatTTHits::iterator itH = track.hits().begin();
-         itH != itEnd; ++itH){
-      
-      PatTTHit* hit = *itH;
-      updateTTHitForTrackFast( hit, yTrack, tyTr);
-      const double dist = track.distance( hit );
-      
-      // --
-      if ( UNLIKELY( m_printing )) {
-        info() << format( "   Plane %2d x %7.2f dist %6.3f ", 
-                          hit->planeCode(), hit->x(), dist );
-        if ( m_debugTool ) m_debugTool->debugTTCluster( info(), hit );
-        info() << endmsg;
-      }
-      // --
-      chi2 += dist * dist * hit->hit()->weight();
-      // -- only flag this hit as removable if it is not alone in a plane or there are 4 planes that fired
-      if ( maxDist < fabs(dist) &&  (1 < differentPlanes[hit->planeCode()] || nDoF == track.hits().size() ) ) {
-        maxDist = fabs( dist );
-        worst = itH;
-      }
-    }
-    
-    if ( 2 < track.hits().size() ) chi2 /= (track.hits().size() - 2 );
-    track.setChi2( chi2 );
-
-    if(onlyFit){
-      if ( m_doTiming ) m_timerTool->stop( m_fitAndRemoveTime );
-      return;
-    }
-    
-    // -- remove if Y is incompatible
-    for (PatTTHits::iterator itH = track.hits().begin();
-         itH != track.hits().end(); ++itH){
-      PatTTHit* hit = *itH;
-      double yTrack = track.yAtZ( hit->z() );
-      if( hit->hit()->isYCompatible(yTrack, m_yTol ) ) continue;
-      
-      if ( UNLIKELY( m_printing )) {
-        info() << "   remove Y incompatible hit measure = " << hit->x() 
-               << " : y " << yTrack << " min " << hit->hit()->yMin()
-               << " max " << hit->hit()->yMax() << endmsg;
-      }
-      track.hits().erase( itH );
-      maxDist = 0.;  // avoid deleting worst, may be already gone...
-      if ( 2 < track.hits().size() ) again = true;
-      break;
-    }
-    
-    if ( again ) continue;
-   
-    
-    
-    if ( m_maxChi2 < chi2 && track.hits().size() > 3) {
-      track.hits().erase( worst );
-      again = true;
-      if ( UNLIKELY( m_printing )) info() << "   remove worst and retry" << endmsg;
-      
-    } 
-    
-    if ( UNLIKELY( m_printing )) {
-      info() << format( "  ---> chi2 %7.2f maxDist %7.3f", chi2, maxDist) << endmsg;
-    }    
-  } while (again);
-
-  if ( m_doTiming ) m_timerTool->stop( m_fitAndRemoveTime );
-
-}
 //=========================================================================
 //  Fit hits in x layers
 //=========================================================================
-void PatLongLivedTracking::xFit( PatDownTrack& track ) {
+void PatLongLivedTracking::xFit( PatDownTrack& track, const PatTTHit* hit1, const PatTTHit* hit2 ) {
+  //void PatLongLivedTracking::xFit( PatDownTrack& track ) {
   
   if ( m_doTiming ) m_timerTool->start( m_xFitTime );
 
-  if ( 2 > track.hits().size() ){
-    if ( m_doTiming ) m_timerTool->stop( m_xFitTime );
-    return;  // no fit if single point !
-  }
-  
   //== Fit, using the magnet point as constraint.
   double mat[6], rhs[3];
   mat[0] = 1./( track.errXMag() * track.errXMag() );
@@ -896,8 +721,8 @@ void PatLongLivedTracking::xFit( PatDownTrack& track ) {
   rhs[0] = mat[0] * track.dxMagnet();//( m_magnetSave.x() - m_magnet.x() );
   rhs[1] = 0.;
   
-  const PatTTHit* hit1 = track.hits()[0];
-  const PatTTHit* hit2 = track.hits()[1];
+  //const PatTTHit* hit1 = track.hits()[0];
+  //const PatTTHit* hit2 = track.hits()[1];
   const double w1 = hit1->hit()->weight();
   const double w2 = hit2->hit()->weight();
 
@@ -912,7 +737,7 @@ void PatLongLivedTracking::xFit( PatDownTrack& track ) {
     +  w2 *  track.distance( hit2 ) * (hit2->z() - track.zMagnet());
   
   CholeskyDecomp<double, 2> decomp(mat);
-  if (!decomp) {
+  if (UNLIKELY(!decomp)) {
     track.setChi2(1e42);
     if ( m_doTiming ) m_timerTool->stop( m_xFitTime );
     return;
@@ -1016,7 +841,7 @@ void PatLongLivedTracking::addUHits ( const PatDownTrack& track, const unsigned 
     greatTrack.startNewXUCandidate(slopeX, displX, magnetX);
   
     greatTrack.hits().push_back( hit );
-    fitAndRemove( greatTrack, true );
+    fitAndRemove<true>( greatTrack );
   
     // -- it's sorted
     if ( greatTrack.chi2() > minChi2 ) break;
@@ -1061,7 +886,7 @@ void PatLongLivedTracking::addVHits ( PatDownTrack& track ) {
     
     if( adist < tol ){
       track.hits().push_back( hit );
-      fitAndRemove( track, true );
+      fitAndRemove<true>( track );
       track.hits().pop_back();
       
       if( track.chi2() < minChi2){
@@ -1306,26 +1131,39 @@ void PatLongLivedTracking::fitXProjection( PatDownTrack& track, PatTTHit* firstH
   const double maxChi2 = m_fitXProjChi2Offset + m_fitXProjChi2Const/std::abs(track.momentum());
 
   // Catch if there is no second hit in other station
-  PatDownTrack newTrack( track );
+  //PatDownTrack newTrack( track );
   
   PatTTHits::const_iterator itEnd = m_matchingXHits.end();
   for( PatTTHits::const_iterator iHit = m_matchingXHits.begin(); iHit != itEnd; ++iHit) {
     PatTTHit* hit = *iHit;
     
-    newTrack.startNewXCandidate( firstHit );
-    newTrack.hits().push_back( hit );
-    xFit( newTrack );
+    //newTrack.startNewXCandidate( firstHit );
+    //newTrack.hits().push_back( hit );
+    //xFit( newTrack );
     
+    track.startNewXCandidate();
+    //newTrack.startNewXCandidate();
+    xFit( track, firstHit, hit );
+    //xFit( newTrack, firstHit, hit );
+
     // -- It is sorted according to the projection
     // -- the chi2 will therefore only increase
-    if( newTrack.chi2() > maxChi2) break;
-    
+    //if( newTrack.chi2() > maxChi2) break;
+    //newTrack.hits().push_back( firstHit );
+    //newTrack.hits().push_back( hit );
+
+    if( track.chi2() > maxChi2) break;
+    track.hits().push_back( firstHit );
+    track.hits().push_back( hit );
+
     // -- We can only move the last one
     // -- as the tracks before are 'recycled'
     if( m_goodXTracks.size() < m_maxXTracks-1){
-      m_goodXTracks.push_back( newTrack );
+      //m_goodXTracks.push_back( newTrack );
+      m_goodXTracks.push_back( track );
     }else{
-      m_goodXTracks.push_back( std::move(newTrack) );
+      //m_goodXTracks.push_back( std::move(newTrack) );
+      m_goodXTracks.push_back( std::move(track) );
       break;
     }
     
@@ -1392,7 +1230,7 @@ void PatLongLivedTracking::addOverlapRegions( PatDownTrack& track ){
   
   if ( hitAdded ) {
     track.sortFinalHits();
-    fitAndRemove( track, false );
+    fitAndRemove<false>( track );
   }
 
   if ( m_doTiming ) m_timerTool->stop( m_overlapTime );
