@@ -35,8 +35,7 @@
 #                 by $Author: ibelyaev $
 #
 # =============================================================================
-"""
-Simple script to extract MetaInfo from data files 
+"""Simple script to extract MetaInfo from data files 
 
 This file is a part of BENDER project:
 
@@ -61,19 +60,28 @@ Usage:
 __author__  = "Vanya BELYAEV"
 __date__    = "2012-10-24"
 __version__ = "$Revision:$"
+# =============================================================================
+import ROOT
+ROOT.PyConfig.IgnoreCommandLineOptions = True
+# =============================================================================
+# logging 
+# =============================================================================
+from Bender.Logger import getLogger, make_colors
+make_colors ()
+if '__main__' == __name__ : logger = getLogger ( 'get-metainfo' )
+else                      : logger = getLogger ( __name__      )
+# =============================================================================
 
 # =============================================================================
 if '__main__' == __name__ :
     
-    import ROOT
-    ROOT.PyConfig.IgnoreCommandLineOptions = True
-    
-    print 120*'*'
-    print                   __doc__ 
-    print ' Author(s)  : ', __author__ 
-    print ' Version    : ', __version__
-    print ' Date       : ', __date__ 
-    print 120*'*'
+    logger.info ( 100*'*')
+    logger.info ( __doc__ ) 
+    logger.info ( 100*'*')
+    logger.info ( ' Author  : %s ' % __author__   ) 
+    logger.info ( ' Version : %s ' % __version__  ) 
+    logger.info ( ' Date    : %s ' % __date__     )
+    logger.info ( 100*'*')
     
     from BenderTools.GetDBtags  import extractMetaInfo
 

@@ -71,6 +71,9 @@ __all__     = ()  ## nothing to import
 import ROOT, sys
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 # =============================================================================
+from Bender.Logger import make_colors
+make_colors()
+# =============================================================================
 from BenderTools.Parser      import makeParser
 # make parser 
 parser = makeParser  (

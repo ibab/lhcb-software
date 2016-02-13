@@ -36,12 +36,6 @@ __version__ = '$Revision: 193703 $'
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 # =============================================================================
-# logging 
-# =============================================================================
-from AnalysisPython.Logger import getLogger 
-if '__main__' == __name__ : logger = getLogger ( 'Bender/trg-check' )
-else                      : logger = getLogger ( __name__           )
-# =============================================================================
 def with_ipython() :
     try :
         __IPYTHON__
@@ -98,7 +92,16 @@ config = parser.parse_args( [ a for a in sys.argv[1:] if '--' != a ] )
 
 if 0 >= config.nEvents and -1 != config.nEvents : config.nEvents = 1000
 #
-## 
+
+# =============================================================================
+# logging 
+# =============================================================================
+from Bender.Logger import getLogger, make_colors
+make_colors()
+if '__main__' == __name__ : logger = getLogger ( 'Bender/trg-check' )
+else                      : logger = getLogger ( __name__           )
+# =============================================================================
+
 config.OutputLevel += 1 
 if config.Quiet :
     logger.info ( 'Script to collect/check trigger decisions for certain lines')
@@ -124,7 +127,7 @@ config.teslocation  = config.teslocation.strip()
 config.RootInTES    = config.RootInTES  .strip() 
 
 from BenderTools.CheckTrg import configChkTrg, chkTrg  
-configChkTrg( config , colors = config.embed or config.interactive or config.plain )
+configChkTrg( config , colors = True )
               
 #
 ## adjust configuration settings
