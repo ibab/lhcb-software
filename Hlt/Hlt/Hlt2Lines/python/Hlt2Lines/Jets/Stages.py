@@ -42,15 +42,17 @@ class SVSVCombiner(Hlt2Combiner) :
 
 class SVMuCombiner(Hlt2Combiner) :
   def __init__(self, inputs):
-
-      cc = "(abs(ACHILD(BPVPHI,(ABSID=='K*(892)0'))-ACHILD(PHI,(ABSID=='mu+'))) > (%(DPHI)s-1.0))"
-      Hlt2Combiner.__init__(self, 'JetsSVMu', ["D0 -> K*(892)0 mu+","D0 -> K*(892)0 mu-"], inputs,
-                            dependencies = [PV3D('Hlt2')],
-                            CombinationCut = cc,
-                            MotherCut = '(ALL)',
-                            Preambulo = [],
-                            shared = True,ParticleCombiners={ '' : 'ParticleAdder'})
-
+    cc = ("(abs(ACHILD(BPVPHI, 1) - ACHILD(PHI, 2)) > (%(DPHI)s - 1.0))"
+          " & (ACHILD(ABSID, 1) == 313) & (ACHILD(ABSID, 2) == 13)")
+    Hlt2Combiner.__init__(self, 'JetsSVMu', 
+                          ["D0 -> K*(892)0 mu+","D0 -> K*(892)0 mu-"], inputs,
+                          dependencies = [PV3D('Hlt2')],
+                          CombinationCut = cc,
+                          MotherCut = '(ALL)',
+                          Preambulo = [],
+                          shared = True,ParticleCombiners = 
+                          { '' : 'ParticleAdder'})
+    
 class MuMuCombiner(Hlt2Combiner) :
   def __init__(self, inputs):
 
@@ -66,8 +68,8 @@ class MuMuCombiner(Hlt2Combiner) :
 class DiJetCombiner(Hlt2Combiner) :
   def __init__(self, inputs, tag1 = None, tag2 = None):
       cc = "(APT > %(JET_PT)s) & (abs(ACHILD(PHI,1)-ACHILD(PHI,2)) > %(DPHI)s)"
-      if tag1: cc += "& (ACHILD(INFO(" + str(tag1) + "),1))";
-      if tag2: cc += "& (ACHILD(INFO(" + str(tag2) + "),2))";
+      if tag1: cc += " & (ACHILD(INFO(" + str(tag1) + ", -1), 1) > -1)";
+      if tag2: cc += " & (ACHILD(INFO(" + str(tag2) + ", -1), 2) > -1)";
       name = ""
       if tag1: name += "SV" if tag1 == 9600 else "Mu"
       if tag2: name += "SV" if tag2 == 9600 else "Mu"
