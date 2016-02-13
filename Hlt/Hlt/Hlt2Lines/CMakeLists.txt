@@ -4,8 +4,7 @@
 gaudi_subdir(Hlt2Lines v10r6)
 
 gaudi_depends_on_subdirs(Hlt/Hlt2SharedParticles
-                         Hlt/HltLine
-                         Hlt/HltTracking)
+                         Hlt/HltLine)
 
 gaudi_install_python_modules()
 

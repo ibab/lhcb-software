@@ -1,5 +1,5 @@
 # Created    : 2009/05/19
-# Maintainer : 
+# Maintainer :
 
 package           Hlt2Lines
 version           v10r6
@@ -11,10 +11,11 @@ include_path      none
 
 # ============================================================================
 # ======= the actual dependencies ============================================
-# 
+#
 use Hlt2SharedParticles  v*     Hlt
 use HltTracking          v*     Hlt
 use HltLine              v*     Hlt
+use HltJets              v*     Hlt
 
 # ============================================================================
 # ======= the patterns =======================================================
@@ -27,6 +28,5 @@ private
   macro LHCbAlgs_use "" QMTest "LHCbAlgs v* Kernel  -no_auto_imports"
   use $(SQL_use)
   use $(LHCbAlgs_use)
-  use PRConfig v* 
+  use PRConfig v*
 end_private
-

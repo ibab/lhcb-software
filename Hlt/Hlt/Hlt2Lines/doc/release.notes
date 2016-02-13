@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-02-13 - Roel Aaij
+ - Change dependencies to properly build with Hlt/HltJets
+
 ! 2016-02-12 - Patrick Spradlin
  - Universal change of settings variables in CharmHad for DIRA cuts.
    Instead of specifying the cosine of the DIRA in settings, the angle itself
