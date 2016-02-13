@@ -1,17 +1,27 @@
 from GaudiKernel.SystemOfUnits import MeV, picosecond, mm
 
 class Jets_25ns_Draft2016:
+   """
+    Threshold settings for Hlt2 jets lines for 2016 25 ns data-taking.
+
+    WARNING :: DO NOT EDIT WITHOUT PERMISSION OF THE AUTHORS
+
+    @author P. Ilten and M. Williams
+    @date 2016-02-13
+    """
 
     __all__ = ( 'ActiveHlt2Lines' )
 
     def ActiveHlt2Lines(self) :
         """Returns a list of active lines."""
 
-        lines = ['Hlt2DiJetSV',
-                 'Hlt2DiJetMu',
-                 'Hlt2DiJetSVSV',
-                 'Hlt2DiJetSVMu',
-                 'Hlt2DiJetMuMu']
+        lines = [
+            'Hlt2JetsDiJet',
+            'Hlt2JetsDiJetSV',
+            'Hlt2JetsDiJetSVSV',
+            'Hlt2JetsDiJetSVMu',
+            'Hlt2JetsDiJetMuMu'
+            ]
 
         return lines
     
