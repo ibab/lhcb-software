@@ -37,11 +37,8 @@ DECLARE_TOOL_FACTORY( PatSeedingTool )
 //=============================================================================
 PatSeedingTool::PatSeedingTool(const std::string& type,
     const std::string& name, const IInterface* parent)
-  : base_class(type, name , parent),
-  m_magFieldSvc(nullptr), m_tHitManager(nullptr), m_seedTool(nullptr),
-  m_timer(nullptr), m_momentumTool(nullptr), m_online(false)
+  : base_class(type, name , parent)
 {
-
   declareInterface<IPatSeedingTool>(this);
   declareInterface<ITracksFromTrack>(this);
 
@@ -192,7 +189,7 @@ PatSeedingTool::PatSeedingTool(const std::string& type,
 //=============================================================================
 StatusCode PatSeedingTool::initialize()
 {
-  StatusCode sc = GaudiTool::initialize(); // must be executed first
+  StatusCode sc = base_class::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiTool
 
   m_magFieldSvc = svc<ILHCbMagnetSvc>("MagneticFieldSvc", true);
@@ -320,7 +317,7 @@ StatusCode PatSeedingTool::finalize()
   if (m_measureTime) {
     info() << name() << " finalizing now..." << endmsg;
   }
-  return GaudiTool::finalize();
+  return base_class::finalize();
 }
 
 unsigned PatSeedingTool::prepareHits()
@@ -408,8 +405,7 @@ unsigned PatSeedingTool::prepareHits()
   return hits().size();
 }
 
-void PatSeedingTool::killClonesAndStore(
-                                        std::vector<PatSeedTrack*>& finalSelection,
+void PatSeedingTool::killClonesAndStore(std::vector<PatSeedTrack*>& finalSelection,
                                         std::vector<LHCb::Track*>& outputTracks,
                                         double maxUsedFraction) const
 {
@@ -460,9 +456,8 @@ void PatSeedingTool::killClonesAndStore(
   }
 }
 
-StatusCode PatSeedingTool::performTracking(
-                                           std::vector<LHCb::Track*>& outputTracks,
-                                           const LHCb::State* state )
+StatusCode PatSeedingTool::performTracking(std::vector<LHCb::Track*>& outputTracks,
+                                           const LHCb::State* state ) const
 {
   // Create a ProcStatus if it does not already exist
   LHCb::ProcStatus* procStat =
@@ -528,8 +523,7 @@ StatusCode PatSeedingTool::performTracking(
     if (0 == state) pool.reserve(1024);
 
     // collect all tracks inside a single region
-    collectPerRegion(pool, lowQualTracks, finalSelection,
-	outputTracks, state);
+    collectPerRegion(pool, lowQualTracks, finalSelection, outputTracks, state);
 
     //== Find remaining points in IT
     // skip in trigger context if state indicates a track with std::abs(y)>70cm at T1
@@ -549,7 +543,7 @@ StatusCode PatSeedingTool::performTracking(
       std::swap(m_initialArrow, initialArrow);
       std::swap(m_maxUsedFractPerRegion, maxUsedFractPerRegion);
       collectPerRegion(pool, lowQualTracks, finalSelection,
-	  outputTracks, state, true);
+	                   outputTracks, state, true);
       std::swap(m_initialArrow, initialArrow);
       std::swap(m_maxUsedFractPerRegion, maxUsedFractPerRegion);
     }
@@ -573,13 +567,12 @@ StatusCode PatSeedingTool::performTracking(
   return StatusCode::SUCCESS;
 }
 
-void PatSeedingTool::collectPerRegion(
-                                      std::vector<PatSeedTrack>& pool,
+void PatSeedingTool::collectPerRegion(std::vector<PatSeedTrack>& pool,
                                       std::vector<PatSeedTrack>& lowQualTracks,
                                       std::vector<PatSeedTrack*>& finalSelection,
                                       std::vector<LHCb::Track*>& outputTracks,
                                       const LHCb::State* state,
-                                      bool OTonly)
+                                      bool OTonly) const
 {
   std::vector<PatSeedTrack>::iterator itS;
   FwdHits stereo;
@@ -858,12 +851,11 @@ void PatSeedingTool::collectPerRegion(
   if (m_measureTime) m_timer->stop(m_timePerRegion);
 }
 
-void PatSeedingTool::collectITOT(
-                                 std::vector<PatSeedTrack>& pool,
+void PatSeedingTool::collectITOT(std::vector<PatSeedTrack>& pool,
                                  std::vector<PatSeedTrack*>& finalSelection,
                                  std::vector<LHCb::Track*>& outputTracks,
                                  const LHCb::State* state,
-                                 bool doOverlaps)
+                                 bool doOverlaps) const
 {
   if ( m_measureTime ) m_timer->start( m_timeItOt );
   // table in which to collect hits around a stub
@@ -1249,22 +1241,20 @@ void PatSeedingTool::collectITOT(
   if ( m_measureTime ) m_timer->stop( m_timeItOt );
 }
 
-void PatSeedingTool::collectLowQualTracks(
-                                          std::vector<PatSeedTrack>& lowQualTracks,
+void PatSeedingTool::collectLowQualTracks(std::vector<PatSeedTrack>& lowQualTracks,
                                           std::vector<PatSeedTrack*>& finalSelection,
                                           std::vector<LHCb::Track*>& outputTracks,
-                                          const LHCb::State* state)
+                                          const LHCb::State* state) const
 {
   if (lowQualTracks.empty()) return;
 
-  std::vector<PatSeedTrack>::iterator itS;
   FwdHits stereo;
 
   if ( m_measureTime ) m_timer->start( m_timeLowQual );
 
   finalSelection.clear();
   finalSelection.reserve(lowQualTracks.size());
-  for (itS = lowQualTracks.begin(); lowQualTracks.end() != itS; ++itS) {
+  for (auto itS = lowQualTracks.begin(); lowQualTracks.end() != itS; ++itS) {
     PatSeedTrack& track = *itS;
     // default to not valid
     track.setValid(false);
@@ -1601,7 +1591,7 @@ void PatSeedingTool::addIfBetter (PatSeedTrack& track,
 //=========================================================================
 void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
                                        std::vector<PatSeedTrack>& pool,
-                                       const LHCb::State* state)
+                                       const LHCb::State* state) const
 {
   HitRange::const_iterator itBeg, itH0, itH1, itH2;
 
@@ -1974,7 +1964,7 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
 //=========================================================================
 void PatSeedingTool::collectStereoHits ( PatSeedTrack& track,
                                          unsigned reg, FwdHits& stereo,
-                                         const LHCb::State* state )
+                                         const LHCb::State* state ) const
 {
   stereo.clear();
   int minRegion = reg;
@@ -2541,7 +2531,7 @@ void PatSeedingTool::processForwardTracks ( const std::string& location,
 
 //=============================================================================
 StatusCode PatSeedingTool::tracksFromTrack(const LHCb::Track& seed, 
-                                           std::vector<LHCb::Track*>& tracks ){ 
+                                           std::vector<LHCb::Track*>& tracks ) const{ 
   // now that we have the possibility to use the state inside this algorithm,
   // we use the state closest to the middle of the T stations available on
   // the track
@@ -2550,8 +2540,8 @@ StatusCode PatSeedingTool::tracksFromTrack(const LHCb::Track& seed,
 }
 
 //=============================================================================
-StatusCode PatSeedingTool::performTracking( LHCb::Tracks* outputTracks,
-                                            const LHCb::State* state)
+StatusCode PatSeedingTool::performTracking( LHCb::Tracks& outputTracks,
+                                            const LHCb::State* state) const
 { 
   std::vector<LHCb::Track*> outvec;
 
@@ -2559,9 +2549,9 @@ StatusCode PatSeedingTool::performTracking( LHCb::Tracks* outputTracks,
 
   if (sc.isSuccess() && !outvec.empty()) {
     // copy tracks from outvec to output container
-    outputTracks->reserve(outvec.size());
+    outputTracks.reserve(outvec.size());
     for( LHCb::Track* track: outvec )
-      outputTracks->insert(track);
+      outputTracks.insert(track);
   }
 
   return sc;

@@ -2,6 +2,7 @@
 #define FASTFORWARDTOOL_H 1
 
 // Include files
+#include <memory>
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
@@ -24,8 +25,6 @@
 
 #include "PatKernel/IPatDebugTool.h"
 
-static const InterfaceID IID_FastForwardTool ( "FastForwardTool", 1, 0 );
-
 
 /** @class FastForwardTool FastForwardTool.h
  *  Tool to extend one Velo (VeloTT) track through the magnet
@@ -34,79 +33,47 @@ static const InterfaceID IID_FastForwardTool ( "FastForwardTool", 1, 0 );
  *  @date   2010-11-02 Rewrite form PatFowardTool
  */
 
-class FastForwardTool : public GaudiTool, virtual public IPatForwardTool,
-                        virtual public ITracksFromTrack{
+class FastForwardTool : public extends<GaudiTool, IPatForwardTool, ITracksFromTrack> {
 public:
-
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_FastForwardTool; }
 
   /// Standard constructor
   FastForwardTool( const std::string& type,
                    const std::string& name,
                    const IInterface* parent);
 
-  virtual ~FastForwardTool( ); ///< Destructor
+  ~FastForwardTool( ) override; ///< Destructor
 
-  virtual void forwardTrack( const LHCb::Track* track, LHCb::Tracks* output );
+  void forwardTrack( const LHCb::Track& track, LHCb::Tracks& output ) const override;
 
-  virtual StatusCode tracksFromTrack( const LHCb::Track& seed,
-                                      std::vector<LHCb::Track*>& tracks );
+  StatusCode tracksFromTrack( const LHCb::Track& seed, std::vector<LHCb::Track*>& out) const override;
 
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
 
   // added for NNTools
   void setNNSwitch( bool nnSwitch)  { m_nnSwitch = nnSwitch;}
   bool nnSwitch()       const       { return m_nnSwitch;}
 
-  struct sortQuality{
-    bool operator()( PatFwdTrackCandidate first, PatFwdTrackCandidate second)
-    {
-      bool sortDecision = ( first.quality() < second.quality());
-      if(first.quality() == second.quality()){
-        sortDecision = ( first.chi2PerDoF() < second.chi2PerDoF());
-        if(first.chi2PerDoF() == second.chi2PerDoF()){
-          sortDecision = ( first.qOverP() < second.qOverP());
-        }
-      }
-      return sortDecision;
-    }
-  };
+private:
 
-  struct LowerByID  {
-    bool operator() (const PatForwardHit* lhs, const PatForwardHit* rhs) const { 
-      return lhs->planeCode() < rhs->planeCode();
-    }
-  };
+  void buildXCandidatesList( PatFwdTrackCandidate& track ) const;
 
-  struct LowerByAbsProjection  {
-    bool operator() (const std::pair<double,PatForwardHit*> lhs, const std::pair<double,PatForwardHit*> rhs) const { 
-      return lhs.first < rhs.first ; 
-    }
-  };
+  void fillXList( PatFwdTrackCandidate& track, double xMin, double xMax ) const;
 
-
-protected:
-
-  void buildXCandidatesList( PatFwdTrackCandidate& track );
-
-  void fillXList( PatFwdTrackCandidate& track, double xMin, double xMax );
-
-  bool fitXCandidate ( PatFwdTrackCandidate& track, double maxChi2, int minPlanes, bool isDebug );
+  bool fitXCandidate ( PatFwdTrackCandidate& track, double maxChi2, int minPlanes, bool isDebug ) const;
   
-  bool fillStereoList( PatFwdTrackCandidate& track, double tol );
+  bool fillStereoList( PatFwdTrackCandidate& track, double tol ) const;
 
-  bool isClone( PatFwdTrackCandidate& one, PatFwdTrackCandidate& two );
+  bool isClone( PatFwdTrackCandidate& one, PatFwdTrackCandidate& two ) const;
 
-  double getTTOffset ( PatFwdTrackCandidate& track, bool isDebug );
+  double getTTOffset ( PatFwdTrackCandidate& track, bool isDebug ) const;
   
-  void printTTHit( const PatTTHit* hit );
+  void printTTHit( const PatTTHit* hit ) const;
 
-  void printCoord( const PatForwardHit* hit );
+  void printCoord( const PatForwardHit* hit ) const;
 
-  void printTrack( PatFwdTrackCandidate& track );
+  void printTrack( const PatFwdTrackCandidate& track ) const;
 
-  bool matchKey( const PatForwardHit* hit ) {
+  bool matchKey( const PatForwardHit* hit ) const {
     if ( m_debugTool ) {
       LHCb::LHCbID id = hit->hit()->lhcbID();
       return m_debugTool->matchKey( id, m_wantedKey );
@@ -115,6 +82,11 @@ protected:
   }
 
 private:
+  static const unsigned int m_nSta = Tf::RegionID::OTIndex::kNStations;
+  static const unsigned int m_nLay = Tf::RegionID::OTIndex::kNLayers;
+  static const unsigned int m_nReg = Tf::RegionID::OTIndex::kNRegions + Tf::RegionID::ITIndex::kNRegions;
+  static const unsigned int m_nOTReg = Tf::RegionID::OTIndex::kNRegions;
+  static const unsigned int m_nITReg = Tf::RegionID::ITIndex::kNRegions;
 
   FastFwdTool*                               m_fwdTool;        ///< Tool to compute extrapolations of tracks
   Tf::TStationHitManager <PatForwardHit> *   m_tHitManager;    ///< Tool to provide hits
@@ -155,7 +127,7 @@ private:
   double m_ttToTScale;
   double m_ttToTWindow;
 
-  double m_errY;  ///< Estiimated error in Y from the Velo extrapolation
+  mutable double m_errY;  ///< Estiimated error in Y from the Velo extrapolation
 
   // setting the cov matrix of the state
   double m_stateErrorX2;
@@ -164,24 +136,19 @@ private:
   double m_stateErrorTY2;
   double m_stateErrorP;
 
-  std::vector<PatFwdHits>  m_xHitsPerStation;
-  std::vector<double> m_zStation;
+  mutable std::vector<PatFwdHits>  m_xHitsPerStation;
+  std::array<double,m_nSta> m_zStation;
 
-  std::vector<PatFwdTrackCandidate> m_candidates;
-  double m_ttOffset;
+  mutable std::vector<PatFwdTrackCandidate> m_candidates;
+  mutable double m_ttOffset;
 
   bool   m_withoutBField;
 
-  static const unsigned int m_nSta = Tf::RegionID::OTIndex::kNStations;
-  static const unsigned int m_nLay = Tf::RegionID::OTIndex::kNLayers;
-  static const unsigned int m_nReg = Tf::RegionID::OTIndex::kNRegions + Tf::RegionID::ITIndex::kNRegions;
-  static const unsigned int m_nOTReg = Tf::RegionID::OTIndex::kNRegions;
-  static const unsigned int m_nITReg = Tf::RegionID::ITIndex::kNRegions;
 
-  bool   m_nnSwitch;                   // switch on or off NN var. writing
+  bool   m_nnSwitch = false;                   // switch on or off NN var. writing
 
   std::string  m_debugToolName;
-  IPatDebugTool* m_debugTool;
+  IPatDebugTool* m_debugTool = nullptr;
   int m_wantedKey;
   int m_wantedVelo;
 };

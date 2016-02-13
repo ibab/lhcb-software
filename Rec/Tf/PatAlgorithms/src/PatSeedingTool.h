@@ -66,8 +66,7 @@ namespace LHCb {
  *          job options
  */
 
-class PatSeedingTool :
-  public extends2<GaudiTool, IPatSeedingTool, ITracksFromTrack>
+class PatSeedingTool : public extends<GaudiTool, IPatSeedingTool, ITracksFromTrack>
 {
   public:
     typedef Tf::TStationHitManager<PatForwardHit>::HitRange HitRange;
@@ -90,12 +89,12 @@ class PatSeedingTool :
 	const IInterface* parent);
 
     /// destructor
-    virtual ~PatSeedingTool() override = default;
+    ~PatSeedingTool() override = default;
 
     /// initialize the tool for subsequent use
-    virtual StatusCode initialize() override;
+    StatusCode initialize() override;
     /// finalize the tool
-    virtual StatusCode finalize() override;
+    StatusCode finalize() override;
 
     /** search for tracks in T stations using state from given tracks as seed,
      * thus restricting track search to tiny region of interest
@@ -103,24 +102,24 @@ class PatSeedingTool :
      * @param out container for output
      * @return StatusCode 
      */
-    virtual StatusCode tracksFromTrack(const LHCb::Track& seed,
-	std::vector<LHCb::Track*, std::allocator<LHCb::Track*> >& out) override;
+    StatusCode tracksFromTrack(const LHCb::Track& seed,
+	std::vector<LHCb::Track*, std::allocator<LHCb::Track*> >& out) const override;
 
     /** search for tracks in T stations
      * @param output container for tracks found
      * @param state optional parameter: state to restrict region of interest
      * @return StatusCode
      */
-    virtual StatusCode performTracking (LHCb::Tracks* output,
-	const LHCb::State* state = 0) override;
+    StatusCode performTracking (LHCb::Tracks& output,
+	                            const LHCb::State* state ) const override;
 
     /** search for tracks in T stations
      * @param outputTracks container for tracks found
      * @param state optional parameter: state to restrict region of interest
      * @return StatusCode
      */
-    virtual StatusCode performTracking (std::vector<LHCb::Track*>& outputTracks,
-	const LHCb::State* state = 0) override;
+    StatusCode performTracking (std::vector<LHCb::Track*>& outputTracks,
+                                const LHCb::State* state ) const override;
 
     /** prepare hits in IT/OT for use with the tool
      * @return number of hits in IT and OT
@@ -143,12 +142,12 @@ class PatSeedingTool :
 
     /// find candidates in xz projection in region reg, layer lay
     void findXCandidates ( unsigned lay, unsigned reg,
-	std::vector<PatSeedTrack>& pool,
-	const LHCb::State* state );
+	                       std::vector<PatSeedTrack>& pool,
+	                       const LHCb::State* state ) const;
 
     /// collect stereo hits compatible with track candidate in xz projection
     void collectStereoHits ( PatSeedTrack& track, unsigned typ,
-	FwdHits& stereo, const LHCb::State* state );
+	                         FwdHits& stereo, const LHCb::State* state ) const;
 
     /// search for cluster of stereo hits in projection plane
     bool findBestRange ( unsigned reg, int minNbPlanes, FwdHits& stereo ) const;
@@ -170,56 +169,52 @@ class PatSeedingTool :
     bool isIsolated(typename RANGE::const_iterator it, const RANGE& range) const;
 
     /// first stage: collect tracks per region
-    void collectPerRegion(
-	std::vector<PatSeedTrack>& pool,
-	std::vector<PatSeedTrack>& lowQualTracks,
-	std::vector<PatSeedTrack*>& finalSelection,
-	std::vector<LHCb::Track*>& outputTracks,
-	const LHCb::State* state,
-	bool OTonly = false);
+    void collectPerRegion( std::vector<PatSeedTrack>& pool,
+	                       std::vector<PatSeedTrack>& lowQualTracks,
+	                       std::vector<PatSeedTrack*>& finalSelection,
+	                       std::vector<LHCb::Track*>& outputTracks,
+	                       const LHCb::State* state,
+	                       bool OTonly = false) const ;
 
     /// second stage: make tracks in one IT station, collect more OT/IT hits
-    void collectITOT(
-	std::vector<PatSeedTrack>& pool,
-	std::vector<PatSeedTrack*>& finalSelection,
-	std::vector<LHCb::Track*>& outputTracks,
-	const LHCb::State* state,
-	bool doOverlaps = false);
+    void collectITOT( std::vector<PatSeedTrack>& pool,
+                      std::vector<PatSeedTrack*>& finalSelection,
+                      std::vector<LHCb::Track*>& outputTracks,
+                      const LHCb::State* state,
+                      bool doOverlaps = false) const;
 
     /// third stage: pick good ones among low quality tracks from first stage
-    void collectLowQualTracks(
-	std::vector<PatSeedTrack>& lowQualTracks,
-	std::vector<PatSeedTrack*>& finalSelection,
-	std::vector<LHCb::Track*>& outputTracks,
-	const LHCb::State* state);
+    void collectLowQualTracks( std::vector<PatSeedTrack>& lowQualTracks,
+	                           std::vector<PatSeedTrack*>& finalSelection,
+	                           std::vector<LHCb::Track*>& outputTracks,
+	                           const LHCb::State* state) const;
 
     /** sorts tracks by quality (many hits first, low chi^2 preferred) and
      *  kills tracks with too many common hits from input container
      *  surviving tracks are added to output container
      */
-    void killClonesAndStore(
-	std::vector<PatSeedTrack*>& finalSelection,
-	std::vector<LHCb::Track*>& outputTracks,
-	double maxUsedFraction) const;
+    void killClonesAndStore( std::vector<PatSeedTrack*>& finalSelection,
+	                         std::vector<LHCb::Track*>& outputTracks,
+	                         double maxUsedFraction) const;
 
   private:
-    ILHCbMagnetSvc* m_magFieldSvc;
+    ILHCbMagnetSvc* m_magFieldSvc = nullptr;
     /// Tool to provide hits
-    Tf::TStationHitManager<PatForwardHit>* m_tHitManager;
-    PatSeedTool* m_seedTool;
-    ISequencerTimerTool* m_timer;
-    ITrackMomentumEstimate *m_momentumTool;
+    Tf::TStationHitManager<PatForwardHit>* m_tHitManager = nullptr;
+    PatSeedTool* m_seedTool = nullptr;
+    ISequencerTimerTool* m_timer = nullptr;
+    ITrackMomentumEstimate *m_momentumTool = nullptr;
     std::string m_LHCbIDToolName;  
-    IUsedLHCbID*     m_usedLHCbIDTool; ///< Tool to check if hits are already being used  
+    IUsedLHCbID*     m_usedLHCbIDTool = nullptr; ///< Tool to check if hits are already being used  
       
     std::string      m_inputTracksName;
 
     double m_zMagnet;
     double m_xMagTol;
-    double m_tolCollectOT;
-    double m_tolCollectIT;
-    double m_tolCollectITOT;
-    double m_initialArrow;
+    mutable double m_tolCollectOT;
+    mutable double m_tolCollectIT;
+    mutable double m_tolCollectITOT;
+    mutable double m_initialArrow;
     double m_zReference;
     std::vector<double> m_zOutputs;
     double m_dRatio;
@@ -230,8 +225,8 @@ class PatSeedingTool :
     double m_commonXFraction;
     double m_maxRangeOT;
     double m_maxRangeIT;
-    double m_maxChi2HitOT;
-    double m_maxChi2HitIT;
+    mutable double m_maxChi2HitOT;
+    mutable double m_maxChi2HitIT;
     int m_minTotalPlanes;
     double m_maxTrackChi2;
     double m_maxFinalChi2;
@@ -247,8 +242,8 @@ class PatSeedingTool :
     double m_momentumScale;
     double m_minMomentum;
 
-    double m_tolCollect;
-    double m_maxChi2Hit;
+    mutable double m_tolCollect;
+    mutable double m_maxChi2Hit;
     double m_zForYMatch;
 
 
@@ -268,7 +263,7 @@ class PatSeedingTool :
 
     unsigned m_nDblOTHitsInXSearch;
 
-    bool m_printing;
+    mutable bool m_printing;
 
     // turns on some tuning for B field off
     bool m_fieldOff;
@@ -303,7 +298,7 @@ class PatSeedingTool :
     std::string m_momentumToolName;
 
     // cuts on fraction of used hits during final selection (per stage)
-    double m_maxUsedFractPerRegion;
+    mutable double m_maxUsedFractPerRegion;
     double m_maxUsedFractITOT;
     double m_maxUsedFractLowQual;
 
@@ -347,7 +342,7 @@ class PatSeedingTool :
     int m_minTotStHitsOT;
 
     /// are we running in an online (HLT) or offline context (set in initialize)
-    bool m_online;
+    bool m_online = false;
     /// are we to activate the HLT property hack?
     /** this activates a workaround for certain problematic properties which
      * get their values set wrong when being extracted from a TCK because the

@@ -85,8 +85,14 @@ class RangeGenerator {
   Iter next(Iter current) const { return std::next( std::move(current), m_minPlanes-1 ); }
 public:
   RangeGenerator( int minPlanes, Iter last ) :  m_last{ std::move(last) }, m_minPlanes{minPlanes} { }
-  template <typename Iterator> bool operator()(Iterator&& first, Iterator&& last) const { return std::distance(std::forward<Iterator>(first),std::forward<Iterator>(last)) > m_minPlanes-1; }
-  template <typename Iterator> bool operator()(Iterator&& first ) const { return std::distance(std::forward<Iterator>(first),m_last) > m_minPlanes-1; }
+
+  template <typename Iterator> 
+  bool operator()(Iterator&& first, Iterator&& last) const
+  { return std::distance(std::forward<Iterator>(first),std::forward<Iterator>(last)) > m_minPlanes-1; }
+
+  template <typename Iterator>
+  bool operator()(Iterator&& first ) const 
+  { return std::distance(std::forward<Iterator>(first),m_last) > m_minPlanes-1; }
 
   template <typename Iterator, typename Predicate>
   boost::iterator_range<Iterator> next_range(Iterator first, Predicate predicate)
@@ -228,8 +234,6 @@ PatForwardTool::PatForwardTool( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
   : base_class( type, name , parent )
-  , m_trackSelector(nullptr)
-
 {
   declareInterface<IPatForwardTool>(this);
   declareInterface<ITracksFromTrack>(this);
@@ -339,7 +343,7 @@ void PatForwardTool::handle ( const Incident& incident ) {
 //=========================================================================
 //  Prepare hits
 //=========================================================================
-void PatForwardTool::prepareHits()
+void PatForwardTool::prepareHits() const
 {
   m_tHitManager->prepareHits();
   //== if any hits to be flagged as used, do so now...
@@ -390,19 +394,19 @@ bool PatForwardTool::acceptTrack(const LHCb::Track& track) const
 //=========================================================================
 //  Main execution: Extend a track.
 //=========================================================================
-void PatForwardTool::forwardTrack( const LHCb::Track* tr, LHCb::Tracks* output ) {
+void 
+PatForwardTool::forwardTrack( const LHCb::Track& tr, LHCb::Tracks& output ) const
+{
+  std::vector<LHCb::Track*> out;
+  tracksFromTrack(tr,out).ignore();
 
-  std::vector<LHCb::Track*> outvec;
-  tracksFromTrack(*tr,outvec).ignore();
-
-  output->reserve(output->size()+outvec.size());
-  for ( const auto& i : outvec ) output->insert(i);
+  output.reserve(output.size()+out.size());
+  for ( const auto& i : out) output.insert(i);
 }
 
-StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
-                                            std::vector<LHCb::Track*>& output ){
+StatusCode
+PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector<LHCb::Track*>& output ) const {
   if ( !acceptTrack(seed) ) return StatusCode::SUCCESS;
-
   counter("#Seeds") += 1;
 
   PatFwdTrackCandidate track( &seed );
@@ -793,7 +797,7 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
                         Tf::increasingByProjection<PatForwardHit>() );
   }
   // select the subrange of m_xHitsAtReference which is within the interval...
-  return interval.inside( boost::make_iterator_range( std::begin(m_xHitsAtReference), std::end(m_xHitsAtReference) ),
+  return interval.inside( m_xHitsAtReference,
                           [](const PatForwardHit* h) { return h->projection(); } );
 }
 
@@ -872,7 +876,6 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
   }
 
   //== Select a coherent group
-
   auto bestRangeFinder = make_BestRangeFinder(boost::make_iterator_range(std::end(temp),std::end(temp)), 0, 1000. );
 
   unsigned int minYPlanes = 4;

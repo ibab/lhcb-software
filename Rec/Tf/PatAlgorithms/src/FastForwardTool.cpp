@@ -24,10 +24,35 @@
 //
 // 2005-10-04 : Olivier Callot
 //-----------------------------------------------------------------------------
+namespace {
 
+  struct LowerByID  {
+    bool operator() (const PatForwardHit* lhs, const PatForwardHit* rhs) const { 
+      return lhs->planeCode() < rhs->planeCode();
+    }
+  };
+
+  struct LowerByAbsProjection  {
+    bool operator() (const std::pair<double,PatForwardHit*> lhs, const std::pair<double,PatForwardHit*> rhs) const { 
+      return lhs.first < rhs.first ; 
+    }
+  };
+  struct sortQuality{
+    bool operator()( PatFwdTrackCandidate first, PatFwdTrackCandidate second)
+    {
+      bool sortDecision = ( first.quality() < second.quality());
+      if(first.quality() == second.quality()){
+        sortDecision = ( first.chi2PerDoF() < second.chi2PerDoF());
+        if(first.chi2PerDoF() == second.chi2PerDoF()){
+          sortDecision = ( first.qOverP() < second.qOverP());
+        }
+      }
+      return sortDecision;
+    }
+  };
+}
 
 DECLARE_TOOL_FACTORY( FastForwardTool )
-
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -35,8 +60,7 @@ DECLARE_TOOL_FACTORY( FastForwardTool )
 FastForwardTool::FastForwardTool( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
-    m_nnSwitch(false)
+  : base_class ( type, name , parent )
 {
   declareInterface<IPatForwardTool>(this);
   declareInterface<ITracksFromTrack>(this);
@@ -91,7 +115,7 @@ FastForwardTool::FastForwardTool( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-FastForwardTool::~FastForwardTool() {}
+FastForwardTool::~FastForwardTool() = default;
 
 //=========================================================================
 //  Initialization, get the tools
@@ -107,26 +131,21 @@ StatusCode FastForwardTool::initialize ( ) {
   m_fwdTool      = tool<FastFwdTool>( "FastFwdTool", this);
   m_ttHitManager = tool<Tf::TTStationHitManager <PatTTHit> >("PatTTStationHitManager");
 
-  if ( "" != m_addTtToolName ) {
-    m_addTTClusterTool = tool<IAddTTClusterTool>( m_addTtToolName, this );
-  } else {
-    m_addTTClusterTool = NULL;
-  }
+  m_addTTClusterTool = (!m_addTtToolName.empty() ? tool<IAddTTClusterTool>( m_addTtToolName, this ) : nullptr );
 
-  m_debugTool = 0;
-  if ( "" != m_debugToolName ) {
-    m_debugTool = tool<IPatDebugTool>( m_debugToolName );
-  }
+  m_debugTool = ( !m_debugToolName.empty() ? tool<IPatDebugTool>( m_debugToolName ) : nullptr );
 
-  for (unsigned int sta = 0; sta < m_nSta; sta ++){
+  unsigned int sta = 0;
+  for (auto& zStation : m_zStation ) {
     int nb = 0;
     double avZ = 0.;    
-    for (unsigned int lay = 0; lay< m_nLay; lay += 3){
-      const Tf::EnvelopeBase* regionB = m_tHitManager->region(sta,lay,0);
-      nb += 1;
+    for (unsigned int lay = 0; lay < m_nLay; lay += 3){
+      const auto* regionB = m_tHitManager->region(sta,lay,0);
+      ++nb;
       avZ += regionB->z();
     }
-    m_zStation.push_back( avZ/nb );
+    zStation = avZ/nb;
+    ++sta;
   }
 
   return StatusCode::SUCCESS;
@@ -135,31 +154,29 @@ StatusCode FastForwardTool::initialize ( ) {
 //=========================================================================
 //  Main execution: Extend a track.
 //=========================================================================
-void FastForwardTool::forwardTrack( const LHCb::Track* tr, LHCb::Tracks* output ) {
-
+void FastForwardTool::forwardTrack( const LHCb::Track& tr, LHCb::Tracks& output )  const
+{
   std::vector<LHCb::Track*> outvec;
-  tracksFromTrack(*tr,outvec).ignore();
-
-  for ( unsigned int i=0; i<outvec.size(); i++ ) {
-    output->insert(outvec[i]);
-  }
+  tracksFromTrack(tr,outvec).ignore();
+  for ( auto& i : outvec ) output.insert(i);
 }
 
 //=========================================================================
 //  Main method: From a Velo seed, produce all the forward tracks.
 //=========================================================================
-StatusCode FastForwardTool::tracksFromTrack( const LHCb::Track& seed,
-                                             std::vector<LHCb::Track*>& output ){
-
-  LHCb::Track* tr = (LHCb::Track*) &seed;
-
+StatusCode 
+FastForwardTool::tracksFromTrack( const LHCb::Track& seed,
+                                  std::vector<LHCb::Track*>& output ) const 
+{
   bool isDebug = msgLevel( MSG::DEBUG );
-  if ( tr->key() == m_wantedVelo ) isDebug = true;
+  if ( seed.key() == m_wantedVelo ) isDebug = true;
 
-  if ( tr->checkFlag( LHCb::Track::Invalid  ) ) return StatusCode::SUCCESS;
-  if ( tr->checkFlag( LHCb::Track::Backward ) ) return StatusCode::SUCCESS;
+  if ( seed.checkFlag( LHCb::Track::Invalid  ) ) return StatusCode::SUCCESS;
+  if ( seed.checkFlag( LHCb::Track::Backward ) ) return StatusCode::SUCCESS;
 
+  LHCb::Track* tr = const_cast<LHCb::Track*>( &seed );
   PatFwdTrackCandidate track( tr );
+
 
   const LHCb::State& state = seed.closestState( m_fwdTool->zReference() );
   double dzState =  m_fwdTool->zReference() - state.z();
@@ -185,13 +202,12 @@ StatusCode FastForwardTool::tracksFromTrack( const LHCb::Track& seed,
   int minPlanes = m_minPlanes;  //== Initial value, can be updated later...
 
   std::vector<PatFwdTrackCandidate> xCandidates;
-  std::vector<PatFwdTrackCandidate>::iterator itL;
 
   int minOTX = int( 1.5 * m_minXPlanes );
 
   //== Convert candidates to temporary tracks.
 
-  for( itL = m_candidates.begin(); m_candidates.end() != itL; ++itL ) {
+  for( auto itL = m_candidates.begin(); m_candidates.end() != itL; ++itL ) {
     PatFwdTrackCandidate temp = *itL;
     std::stable_sort( temp.coordBegin(), temp.coordEnd(), LowerByID() );
 
@@ -205,8 +221,7 @@ StatusCode FastForwardTool::tracksFromTrack( const LHCb::Track& seed,
     //=== Is this candidate a clone of an existing one. Else ignore or replace...
 
     bool abort = false;
-    for ( std::vector<PatFwdTrackCandidate>::iterator itCand = xCandidates.begin();
-          xCandidates.end() != itCand; ++itCand ) {
+    for ( auto itCand = xCandidates.begin(); xCandidates.end() != itCand; ++itCand ) {
       if ( isClone( temp, *itCand ) ) {
         bool keep = false;
         double diffChi2 =  temp.chi2PerDoF() - (*itCand).chi2PerDoF() ;
@@ -251,12 +266,13 @@ StatusCode FastForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
   if ( isDebug ) {
     info() << "************ List of X candidates , N = " << xCandidates.size() << endmsg;
-    for ( itL = xCandidates.begin(); xCandidates.end() != itL; ++itL ) {
-      info() << "Candidate " << itL - xCandidates.begin()
-             << " Chi2/nDof = " << (*itL).chi2PerDoF() << endmsg;
-      printTrack( *itL );
+    auto ioff = 0;
+    for (const auto&  xc : xCandidates) {
+      info() << "Candidate " << ioff++
+             << " Chi2/nDof = " << xc.chi2PerDoF() << endmsg;
+      printTrack( xc );
     }
-    if ( xCandidates.size() > 0 ) debug() << "---- Now get the stereo hits on these ---" << endmsg;
+    if ( !xCandidates.empty() ) debug() << "---- Now get the stereo hits on these ---" << endmsg;
   }
 
   //== Now try to get space track from these X track.
@@ -264,12 +280,11 @@ StatusCode FastForwardTool::tracksFromTrack( const LHCb::Track& seed,
   std::vector<PatFwdTrackCandidate> goodCandidates;
   int maxPlanes = 0;
 
-  for ( itL = xCandidates.begin(); xCandidates.end() != itL; ++itL ) {
+  for (auto itL = xCandidates.begin(); xCandidates.end() != itL; ++itL ) {
     if ( isDebug ) info() << "--- Candidate " << itL - xCandidates.begin()
                           << "  X cord size " << (*itL).coordEnd() - (*itL).coordBegin()
                           << endmsg;
 
-    PatFwdHits::iterator itH;
     PatFwdTrackCandidate& temp = *itL;
     temp.setSelectedCoords( );
 
@@ -419,7 +434,7 @@ StatusCode FastForwardTool::tracksFromTrack( const LHCb::Track& seed,
     if ( isDebug ) info() << "Require enough planes : " << minPlanes << endmsg;
     std::vector<PatFwdTrackCandidate> tempCandidates( goodCandidates );
     goodCandidates.clear();
-    for ( itL = tempCandidates.begin(); tempCandidates.end() != itL; ++itL ) {
+    for (auto itL = tempCandidates.begin(); tempCandidates.end() != itL; ++itL ) {
       PatFwdPlaneCounter tmp( (*itL).coordBegin(), (*itL).coordEnd() );
       if ( tmp.nbDifferent() >= minPlanes ) {
         goodCandidates.push_back( *itL );
@@ -433,7 +448,7 @@ StatusCode FastForwardTool::tracksFromTrack( const LHCb::Track& seed,
     bestQuality += 1.0;
     tempCandidates = goodCandidates;
     goodCandidates.clear();
-    for ( itL = tempCandidates.begin(); tempCandidates.end() != itL; ++itL ) {
+    for ( auto itL = tempCandidates.begin(); tempCandidates.end() != itL; ++itL ) {
       if ( (*itL).quality() < bestQuality ) {
         goodCandidates.push_back( *itL );
         if ( 2*(*itL).nbIT() + (*itL).nbOT() > maxOT ) maxOT =  2*(*itL).nbIT()+(*itL).nbOT();
@@ -447,28 +462,31 @@ StatusCode FastForwardTool::tracksFromTrack( const LHCb::Track& seed,
     maxOT -= 4;
     tempCandidates = goodCandidates;
     goodCandidates.clear();
-    for ( itL = tempCandidates.begin(); tempCandidates.end() != itL; ++itL ) {
-      if ( 2*(*itL).nbIT() + (*itL).nbOT() > maxOT || m_centerOTYSize > fabs( (*itL).y(0.) ) ) {
-        goodCandidates.push_back( *itL );
+    auto ioff = 0;
+    for ( auto& tc : tempCandidates) {
+      if ( 2*tc.nbIT() + tc.nbOT() > maxOT || m_centerOTYSize > fabs( tc.y(0.) ) ) {
+        goodCandidates.push_back( tc );
       } else {
-        if ( isDebug ) info() << "Ignore candidate " << itL-tempCandidates.begin()
-                              << " : not enough OT = " << (*itL).nbOT() << " mini " << maxOT << endmsg;
+        if ( isDebug ) info() << "Ignore candidate " << ioff
+                              << " : not enough OT = " << tc.nbOT() << " mini " << maxOT << endmsg;
       }
+      ++ioff;
     }
   }
 
   if ( isDebug ) info() << "Storing " << goodCandidates.size() << " good tracks " << endmsg;
   //=== Store tracks...
-  for ( itL = goodCandidates.begin(); goodCandidates.end() != itL; ++itL ) {
+  output.reserve(output.size()+goodCandidates.size());
+  for ( auto itL = goodCandidates.begin(); goodCandidates.end() != itL; ++itL ) {
     if ( isDebug ) {
       info() << "    track # " << itL - goodCandidates.begin() << endmsg;
       printTrack( *itL );
     }
 
-    LHCb::Track* fwTra = tr->clone();
+    output.push_back( tr->clone() );
+    LHCb::Track* fwTra = output.back();
     fwTra->clearAncestors();
     fwTra->addToAncestors( tr );  // Set the Velo track as only ancestor of the Forward track
-    output.push_back( fwTra );
     fwTra->setType( LHCb::Track::Long );
     fwTra->setHistory( LHCb::Track::PatForward );
 
@@ -476,11 +494,9 @@ StatusCode FastForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
     double qOverP = m_fwdTool->qOverP( *itL );
     // set q/p in all of the existing states
-    const std::vector< LHCb::State * > states = fwTra->states();
-    std::vector< LHCb::State * >::const_iterator iState;
-    for ( iState = states.begin() ; iState != states.end() ; ++iState ){
-      (*iState)->setQOverP(qOverP);
-      (*iState)->setErrQOverP2(qOverP*qOverP*0.012*0.012);
+    for (auto& state : fwTra->states() ) {
+      state->setQOverP(qOverP);
+      state->setErrQOverP2(qOverP*qOverP*0.012*0.012);
     }
 
     Gaudi::TrackSymMatrix cov;
@@ -514,7 +530,7 @@ StatusCode FastForwardTool::tracksFromTrack( const LHCb::Track& seed,
     fwTra->addInfo(LHCb::Track::Cand2ndQPat, (*itL).cand2ndquality());
 
     //== Add reference to the used clusters/, T stations
-    for ( PatFwdHits::iterator itH = (*itL).coordBegin(); (*itL).coordEnd() != itH; itH++ ) {
+    for ( auto itH = itL->coordBegin(); itH != itL->coordEnd(); ++itH ) {
       PatFwdHit* myHit = (*itH);
       fwTra->addToLhcbIDs( myHit->hit()->lhcbID() );
       myHit->hit()->setStatus(Tf::HitBase::UsedByPatForward);
@@ -523,7 +539,7 @@ StatusCode FastForwardTool::tracksFromTrack( const LHCb::Track& seed,
     fwTra -> setPatRecStatus( LHCb::Track::PatRecIDs );
 
 
-    if ( NULL != m_addTTClusterTool ) {
+    if ( m_addTTClusterTool ) {
       StatusCode sc = m_addTTClusterTool->addTTClusters( *fwTra );
       if (sc.isFailure()) {
         if ( isDebug ) info()<<" Failure in adding TT clusters to track"<<endmsg;
@@ -536,7 +552,7 @@ StatusCode FastForwardTool::tracksFromTrack( const LHCb::Track& seed,
 //=========================================================================
 //  Build the list of vector of X hit candidates.
 //=========================================================================
-void FastForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
+void FastForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) const {
 
   bool isDebug = msgLevel( MSG::DEBUG );
   if ( 0 != m_debugTool &&
@@ -579,7 +595,7 @@ void FastForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
 
   //== Try to handle the 3 independent lists per station.
 
-  PatFwdHits::iterator itH, itH0, itH1, itH2;
+  PatFwdHits::iterator itH, itH1, itH2;
   PatFwdHits::iterator itPrev1, itPrev2, last[2];
 
   if ( isDebug ) {
@@ -588,17 +604,16 @@ void FastForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
     for (unsigned int sta = 0; sta < m_nSta; sta ++){
       for (unsigned int lay = 0; lay< m_nLay; lay++){
         for (unsigned int region = 0; region <m_nReg; region ++) {
-          Tf::TStationHitManager<PatForwardHit>::HitRange range = m_tHitManager->hits( sta, lay, region );
-          for ( PatFwdHits::const_iterator itH = range.begin(); range.end() != itH; ++itH ) {
-            if ( matchKey( *itH ) ) printCoord( *itH );
+          for ( const auto& h : m_tHitManager->hits( sta, lay, region ) ) {
+            if ( matchKey( h ) ) printCoord( h );
           }
         }
       }
     }
     info() << "=== Selected X hits for wanted MCParticle " << m_wantedKey << " extrapolation " << xExtrap << " ===" << endmsg;
     for ( int kk = 0 ; 3 > kk ; ++kk ) {
-      for ( PatFwdHits::iterator itH = m_xHitsPerStation[kk].begin(); m_xHitsPerStation[kk].end() != itH; ++itH ) {
-        if ( matchKey( *itH ) ) printCoord( *itH );
+      for ( const auto &h : m_xHitsPerStation[kk] ) {
+        if ( matchKey( h ) ) printCoord( h );
       }
     }
   }
@@ -615,7 +630,7 @@ void FastForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
   itPrev2 = m_xHitsPerStation[2].begin();
   itPrev1 = m_xHitsPerStation[1].begin();
 
-  for ( itH0 = m_xHitsPerStation[0].begin(); m_xHitsPerStation[0].end() != itH0 ; itH0++ ) {
+  for (auto itH0 = m_xHitsPerStation[0].begin(); m_xHitsPerStation[0].end() != itH0 ; itH0++ ) {
     bool printDetails = false;
     if ( isDebug && matchKey( *itH0 ) ) printDetails = true;
     if ( printDetails ) {
@@ -871,7 +886,7 @@ void FastForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
 
   if ( isDebug ) {
     info() << endmsg << "$$$ Final list of X candidates has " << m_candidates.size() << " entries" << endmsg;
-    for (   std::vector<PatFwdTrackCandidate>::iterator itC = m_candidates.begin();
+    for (   auto itC = m_candidates.begin();
             m_candidates.end() != itC; ++itC ) {
       info() << "--- candidate " << itC - m_candidates.begin() << endmsg;
       printTrack( *itC );
@@ -882,9 +897,8 @@ void FastForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
 //=========================================================================
 //  Fill the vector of hit pointer, sorted by projection.
 //=========================================================================
-void FastForwardTool::fillXList ( PatFwdTrackCandidate& track, double xMin, double xMax ) {
+void FastForwardTool::fillXList ( PatFwdTrackCandidate& track, double xMin, double xMax ) const {
 
-  PatFwdHits::const_iterator itFwdH;
   m_xHitsPerStation.clear();
 
   for (unsigned int sta = 0; sta < m_nSta; sta ++){
@@ -946,12 +960,11 @@ void FastForwardTool::fillXList ( PatFwdTrackCandidate& track, double xMin, doub
 //  Fit the X projection of a candidate
 //=========================================================================
 bool FastForwardTool::fitXCandidate ( PatFwdTrackCandidate& track,
-                                      double maxChi2, int minPlanes, bool isDebug ) {
+                                      double maxChi2, int minPlanes, bool isDebug ) const {
 
   double highestChi2 = 1.e10;
-  PatFwdHits::iterator itH;
   PatFwdHit* centre = *(track.coordBegin() + track.coords().size()/2 );
-  for ( itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
+  for (auto itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
     (*itH)->setSelected( true );
     //(*itH)->setRlAmb( 0 );
     if ( (*itH)->driftDistance() < centre->driftDistance() ) centre = *itH;
@@ -971,7 +984,7 @@ bool FastForwardTool::fitXCandidate ( PatFwdTrackCandidate& track,
     }
     highestChi2 = 0;
     PatFwdHit* worst = *track.coordBegin();
-    for ( itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
+    for (auto itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
       PatFwdHit* hit = *itH;
       if ( !hit->isSelected() ) continue;
       double chi2 = m_fwdTool->chi2Hit( track, hit );
@@ -994,10 +1007,10 @@ bool FastForwardTool::fitXCandidate ( PatFwdTrackCandidate& track,
 //  Return if the two candidates share 70% of the smallest number of hits.
 //  Hits are supposed to be sorted by LHCBID
 //=========================================================================
-bool FastForwardTool::isClone ( PatFwdTrackCandidate& one, PatFwdTrackCandidate& two ) {
+bool FastForwardTool::isClone ( PatFwdTrackCandidate& one, PatFwdTrackCandidate& two ) const {
   int nbCommon = 0;
-  PatFwdHits::iterator itH1 = one.coordBegin();
-  PatFwdHits::iterator itH2 = two.coordBegin();
+  auto itH1 = one.coordBegin();
+  auto itH2 = two.coordBegin();
   while ( itH1 != one.coordEnd() && itH2 != two.coordEnd() ) {
     if ( (*itH1)->hit()->lhcbID() < (*itH2)->hit()->lhcbID() ) {
       ++itH1;
@@ -1012,24 +1025,21 @@ bool FastForwardTool::isClone ( PatFwdTrackCandidate& one, PatFwdTrackCandidate&
   int minSize = one.coordEnd() - one.coordBegin();
   int twoSize = two.coordEnd() - two.coordBegin();
   if ( twoSize < minSize ) minSize = twoSize;
-  if ( nbCommon > 0.7 * nbCommon ) return true;
-  return false;
+  return nbCommon > 0.7 * nbCommon ; //@FIXME .. this is always false...
 }
 
 //=========================================================================
 //  Return the best TT offset for this track.
 //=========================================================================
-double FastForwardTool::getTTOffset ( PatFwdTrackCandidate& track, bool isDebug ) {
+double FastForwardTool::getTTOffset ( PatFwdTrackCandidate& track, bool isDebug )  const {
 
   double offset = 10000.;
   LHCb::State state = track.track()->closestState( m_zTTProj );
   PatTTHits ttHits;
   double yTol   = 5. * sqrt( state.errY2() + m_zTTProj * m_zTTProj * state.errTy2() );
-  Tf::TTStationHitManager<PatTTHit>::HitRange hits = m_ttHitManager->hits();
 
   // -- Loop over all the TT hits, get all TT hits whose projection is compatible with the track
-  for ( PatTTHits::const_iterator itTT = hits.begin(); hits.end() != itTT; ++itTT ) {
-    PatTTHit* tt = *itTT;
+  for ( PatTTHit* tt :  m_ttHitManager->hits() ) {
     double z = tt->z();
     double yPred = state.y() + ( z - state.z() ) * state.ty();
 
@@ -1050,9 +1060,8 @@ double FastForwardTool::getTTOffset ( PatFwdTrackCandidate& track, bool isDebug 
   double tolMatch = 0.8;
   double rangeSize = 0.;
   if ( ttHits.size() < 4 ) return 10000.;
-  PatTTHits::iterator itF, itL;
-  for ( itF = ttHits.begin(); itF != ttHits.end() - 3 ;  ++itF ) {
-    itL = itF;
+  for ( auto itF = ttHits.begin(); itF != ttHits.end() - 3 ;  ++itF ) {
+    auto itL = itF;
     int nbPlanes = 0;
     std::array<int, 4> firedPlanes;
     firedPlanes.fill(0); 
@@ -1084,10 +1093,9 @@ double FastForwardTool::getTTOffset ( PatFwdTrackCandidate& track, bool isDebug 
 //=========================================================================
 //  Fill the vector of hit pointer, sorted by projection.
 //=========================================================================
-bool FastForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) {
+bool FastForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol )  const {
 
   PatFwdHits temp;
-  PatFwdHits::iterator itH;
 
   PatFwdRegionCounter regions( track.coordBegin(), track.coordEnd() );
 
@@ -1123,13 +1131,11 @@ bool FastForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol )
         double minProj = tol;
         if ( region < m_nOTReg ) minProj += 2.5;
 
-        Tf::TStationHitManager<PatForwardHit>::HitRange range = m_tHitManager->hitsWithMinX(xHitMin, sta, lay, region);
 
-        for ( PatFwdHits::const_iterator itH = range.begin(); range.end() != itH; ++itH ) {
-          PatFwdHit* hit = *itH;
+        for ( auto* hit :  m_tHitManager->hitsWithMinX(xHitMin, sta, lay, region) ) {
 
           if ( regions.nbInRegion( region ) == 0 &&
-               !hit->hit()->isYCompatible( (float)yRegion, (float)tolY ) ) continue;
+               !hit->hit()->isYCompatible( yRegion, tolY ) ) continue;
 
           updateHitForTrack( hit, y0, ty );
 
@@ -1171,9 +1177,7 @@ bool FastForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol )
 
   if ( isDebug ) {
     info() << "*** Stereo List size = " << temp.size() << endmsg;
-    for ( itH = temp.begin(); temp.end() != itH; ++itH ) {
-      printCoord( *itH );
-    }
+    for ( const auto& h : temp) printCoord( h );
   }
   if ( minYPlanes > (int)temp.size() ) return false;
 
@@ -1183,22 +1187,22 @@ bool FastForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol )
   nbInPlane.fill(0);
   double sum = 0.;
   double sw  = 0.;
-  for ( itH = temp.begin(); temp.end() > itH; ++itH ) {
-    sum += (*itH)->hit()->weight() * (*itH)->projection()/(*itH)->z();
-    sw  += (*itH)->hit()->weight();
-    nbInPlane[(*itH)->planeCode()] += 1;
+  for ( const auto& h : temp ) {
+    sum += h->hit()->weight() * h->projection()/h->z();
+    sw  += h->hit()->weight();
+    nbInPlane[h->planeCode()] += 1;
   }
   double meanProj = sum / sw;
   bool mustFilter = true;
   while ( mustFilter ) {
     if ( isDebug ) info() << "Central slope at " << meanProj << endmsg;
     mustFilter = false;
-    PatFwdHits::iterator worst = temp.begin();
+    auto worst = temp.begin();
     double maxDist = 0.;
     sum = 0.;
     sw  = 0.;
     //== Get the farest hit, remove, until all inside allowed window.
-    for ( itH = temp.begin(); temp.end() > itH; ++itH ) {
+    for ( auto itH = temp.begin(); temp.end() > itH; ++itH ) {
       double dist = (*itH)->projection() - meanProj * (*itH)->z();
       if ( (*itH)->hit()->type() == Tf::RegionID::OT ) {
         if ( dist < 0. ) {
@@ -1240,9 +1244,7 @@ bool FastForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol )
   track.updateParameters( 0., 0., 0., 0., dy, 0. );
   m_fwdTool->updateHitsForTrack( track, temp.begin(), temp.end() );
 
-  for ( itH = temp.begin(); temp.end() != itH; ++itH ) {
-    track.addCoord( *itH );
-  }
+  for ( const auto & h : temp ) track.addCoord( h );
 
   //== Sort by Z
   std::sort( track.coordBegin(), track.coordEnd(),
@@ -1253,7 +1255,7 @@ bool FastForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol )
 //=========================================================================
 //  Debug one TT hit, with MC truth if the tool is defined
 //=========================================================================
-void FastForwardTool::printTTHit( const PatTTHit* hit ) {
+void FastForwardTool::printTTHit( const PatTTHit* hit ) const {
   info() << format( " Z %10.2f Xp %10.2f X%10.2f  St%2d lay%2d reg%2d planeCode%2d typ%2d   ",
                     hit->z(),
                     hit->projection(),
@@ -1263,7 +1265,7 @@ void FastForwardTool::printTTHit( const PatTTHit* hit ) {
                     hit->hit()->region(),
                     hit->planeCode(),
                     hit->hit()->type() );
-  if ( 0 != m_debugTool ) {
+  if ( m_debugTool ) {
     LHCb::LHCbID myId =  hit->hit()->lhcbID();
     m_debugTool->printKey( info(), myId );
     if ( m_debugTool->matchKey( myId, m_wantedKey ) ) info() << " ***";
@@ -1273,7 +1275,7 @@ void FastForwardTool::printTTHit( const PatTTHit* hit ) {
 //=========================================================================
 //  Debug one hit, with MC truth if the tool is defined
 //=========================================================================
-void FastForwardTool::printCoord( const PatForwardHit* hit ) {
+void FastForwardTool::printCoord( const PatForwardHit* hit ) const {
   info() << format( " Z %10.2f Xp %10.2f X%10.2f  St%2d lay%2d reg%2d typ%2d Pr%2d Nxt%2d RL %2d Drift %7.3f   ",
                     hit->z(),
                     hit->projection(),
@@ -1286,7 +1288,7 @@ void FastForwardTool::printCoord( const PatForwardHit* hit ) {
                     hit->hasNext(),
                     hit->rlAmb(),
                     hit->driftDistance() );
-  if ( 0 != m_debugTool ) {
+  if ( m_debugTool ) {
     LHCb::LHCbID myId =  hit->hit()->lhcbID();
     m_debugTool->printKey( info(), myId );
     if ( m_debugTool->matchKey( myId, m_wantedKey ) ) info() << " ***";
@@ -1296,9 +1298,8 @@ void FastForwardTool::printCoord( const PatForwardHit* hit ) {
 //=========================================================================
 //  Debug one track, i.e. all hits of the track.
 //=========================================================================
-void FastForwardTool::printTrack ( PatFwdTrackCandidate& track  ) {
-  PatFwdHits::iterator itP;
-  for ( itP = track.coordBegin(); track.coordEnd() != itP; ++itP ) {
+void FastForwardTool::printTrack ( const PatFwdTrackCandidate& track  ) const {
+  for (auto itP = track.coordBegin(); track.coordEnd() != itP; ++itP ) {
     if ( !(*itP)->isSelected() ) continue;
     if ( track.fitted() ) info() << format( "Chi2%7.2f Dist%7.2f x%8.2f ",
                                             m_fwdTool->chi2Hit( track, *itP),

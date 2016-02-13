@@ -189,7 +189,7 @@ StatusCode PatForward::execute() {
 
   for ( const LHCb::Track *seed: inputTracks ) {
     auto prevSize = outputTracks->size();
-    m_forwardTool->forwardTrack(seed, outputTracks );
+    m_forwardTool->forwardTrack(*seed, *outputTracks );
     if ( dbg ) debug()  << " track " << seed->key()
                         << " position " << seed->position()
                         << " slopes " << seed->slopes()

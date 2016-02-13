@@ -69,9 +69,8 @@ StatusCode PatSeeding::execute()
 
   LHCb::Tracks* outputTracks = new LHCb::Tracks();
 
-
   m_seedingTool->prepareHits();
-  StatusCode sc = m_seedingTool->performTracking(outputTracks);
+  StatusCode sc = m_seedingTool->performTracking(*outputTracks);
 
   put(outputTracks, m_outputTracksName);
 
