@@ -67,7 +67,8 @@ class MuMuCombiner(Hlt2Combiner) :
 # Combine two jets with optional tags.
 class DiJetCombiner(Hlt2Combiner) :
   def __init__(self, inputs, tag1 = None, tag2 = None):
-      cc = "(APT > %(JET_PT)s) & (abs(ACHILD(PHI,1)-ACHILD(PHI,2)) > %(DPHI)s)"
+      cc = ("(AMINCHILD(PT) > %(JET_PT)s)"
+            " & (abs(ACHILD(PHI,1) - ACHILD(PHI,2)) > %(DPHI)s)")
       if tag1: cc += " & (ACHILD(INFO(" + str(tag1) + ", -1), 1) > -1)";
       if tag2: cc += " & (ACHILD(INFO(" + str(tag2) + ", -1), 2) > -1)";
       name = ""
