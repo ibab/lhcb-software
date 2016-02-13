@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2016-02-13 - Roel Aaij
+  - Change dependencies to properly build with Hlt/HltJets
+
+
 ! 2016-02-12 Sascha Stahl
   - HltSharedTracking: Use SimplifiedExtrapolator in the common TrackStateProvider.
   - Hlt2Tracking: Activate ANNPID tuning MC15TuneDev2
@@ -24,14 +28,14 @@
    in PatForward.
 
 ! 2016-02-01 - Sascha Stahl
- - Added possibility to calculate ProbNN variables. 
+ - Added possibility to calculate ProbNN variables.
    Activate for now with HltRecoConf().CalculateProbNN = True.
 
 ! 2016-01-14 - Sascha Stahl
  - Switch on filtering on ghost probability and track chi2 in Hlt1.
- 
+
 ! 2016-01-09 - Sascha Stahl
- - Added code to calculate ghost probability and cut on it. 
+ - Added code to calculate ghost probability and cut on it.
  - The new Hlt1TrackFilterGhostProb can cut on the chi2 and the ghost probability.
  - When HltRecoConf().ApplyGHOSTPROBCutInHLT1 is set to true, the streamer FitTrack
    includes the calculation of the Ghost Prob and the same cut as is applied in Hlt2.
@@ -42,7 +46,7 @@
  - Add HltPersistRecoConf so that it can get the output locations.
 
 ! 2015-10-26 - Sascha Stahl
- - HltSharedTracking: Fix configuration of Hlt1 Forward GECs. Affected number of 
+ - HltSharedTracking: Fix configuration of Hlt1 Forward GECs. Affected number of
    IT hits and number of Velo tracks.
  - HltRecoConf: Remove two out of three instances of the GEC cut for OT hits.
 

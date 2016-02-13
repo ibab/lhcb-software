@@ -17,6 +17,7 @@ use GaudiKernel         v*
 use GaudiAlg            v*
 use HltBase             v*  Hlt
 use HltEvent            v*  Event
+use HltJets             v*  Hlt
 use TrackEvent          v*  Event
 use TrackInterfaces     v*  Tr
 use Relations           v*  Kernel
