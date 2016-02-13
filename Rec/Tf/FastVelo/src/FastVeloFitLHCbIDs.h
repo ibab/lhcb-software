@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef FASTVELOFITLHCBIDS_H 
 #define FASTVELOFITLHCBIDS_H 1
 
@@ -16,26 +15,24 @@
  *  @author Olivier Callot
  *  @date   2010-11-18
  */
-class FastVeloFitLHCbIDs : public GaudiTool, virtual public ITrackFitter {
+class FastVeloFitLHCbIDs : public extends<GaudiTool, ITrackFitter> {
 public: 
   /// Standard constructor
   FastVeloFitLHCbIDs( const std::string& type, 
                       const std::string& name,
                       const IInterface* parent);
 
-  virtual ~FastVeloFitLHCbIDs( ); ///< Destructor
+  ~FastVeloFitLHCbIDs( ) override; ///< Destructor
 
-  virtual StatusCode initialize(); ///< initialize
+  StatusCode initialize() override; ///< initialize
 
   /// fit the track using the LHCbIDs on it with the FastVelo internal fit
-  virtual StatusCode fit ( LHCb::Track & track, 
-                           LHCb::ParticleID pid = LHCb::ParticleID(211) );
-
-protected:
+  StatusCode fit ( LHCb::Track & track, 
+                   LHCb::ParticleID pid ) const override;
 
 private:
-  DeVelo* m_velo;
-  FastVeloHitManager* m_hitManager;
+  DeVelo* m_velo = nullptr;
+  FastVeloHitManager* m_hitManager = nullptr;
   bool   m_stateAtBeam;
   bool   m_useKalmanFit ;
   double m_kalmanPtForScattering ;

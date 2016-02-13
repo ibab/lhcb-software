@@ -23,7 +23,7 @@ DECLARE_TOOL_FACTORY( FastVeloFitLHCbIDs )
 FastVeloFitLHCbIDs::FastVeloFitLHCbIDs( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : base_class ( type, name , parent )
 {
   declareInterface<ITrackFitter>(this);
   declareProperty( "StateAtBeam"  , m_stateAtBeam = true );
@@ -37,7 +37,7 @@ FastVeloFitLHCbIDs::FastVeloFitLHCbIDs( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-FastVeloFitLHCbIDs::~FastVeloFitLHCbIDs() {} 
+FastVeloFitLHCbIDs::~FastVeloFitLHCbIDs() = default;
 
 //=========================================================================
 //  Initialization
@@ -72,7 +72,7 @@ namespace {
 //=========================================================================
 //  Fit a single track. The second argument is ignored.
 //=========================================================================
-StatusCode FastVeloFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID) {
+StatusCode FastVeloFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID) const {
 
   int nRight(0), nLeft(0);
   std::vector< LHCb::LHCbID > otherIDs;
@@ -83,11 +83,10 @@ StatusCode FastVeloFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID) {
   double zMin =  1.e9;
   double zMax = -1.e9;
 
-  std::vector<LHCb::LHCbID>::const_iterator iID;
-  for( iID = track.lhcbIDs().begin() ; iID != track.lhcbIDs().end() ; ++iID){
+  for(auto  iID = track.lhcbIDs().begin() ; iID != track.lhcbIDs().end() ; ++iID){
     if( iID->isVelo() ){
       FastVeloHit* hit = m_hitManager->defaultStateHitByLHCbID( *iID );
-      if ( 0 == hit ) {
+      if ( !hit ) {
         error() << "*** Hit not found, id " << *iID << endmsg;
         return StatusCode::FAILURE;
       } else {

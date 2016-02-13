@@ -3,6 +3,8 @@
 ! Responsible : 
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
+! 2016-02-13 - Gerhard Raven
+ - follow const-ification of interfaces
 
 ! 2016-02-02 - Michel De Cian
  - Adapt FastVeloDecoding and FastSTDecoding to search the raw events in the correct locations.
