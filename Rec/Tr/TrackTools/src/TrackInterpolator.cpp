@@ -39,7 +39,7 @@ DECLARE_TOOL_FACTORY( TrackInterpolator )
 TrackInterpolator::TrackInterpolator( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
+  : base_class ( type, name , parent ),
     m_extrapolator("TrackMasterExtrapolator",this)
 {
   // interfaces
@@ -51,7 +51,7 @@ TrackInterpolator::TrackInterpolator( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackInterpolator::~TrackInterpolator() {}
+TrackInterpolator::~TrackInterpolator() = default;
 
 //=============================================================================
 // Initialization
@@ -80,7 +80,7 @@ StatusCode TrackInterpolator::finalize() {
 //=============================================================================
 StatusCode TrackInterpolator::interpolate( const Track& track,
                                            double z,
-                                           State& state )
+                                           State& state ) const
 {
   // Check that track was actally fitted. Otherwise quietly call
   // extrapolator.
@@ -100,7 +100,7 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
   // sure that it works for either now.
 
   // first find the pair of iterators such that z is between 'prevnode' and 'nextnode'
-  NodeContainer::const_iterator nextnode = nodes.begin() ;
+  auto nextnode = nodes.begin() ;
   if(  nodes.front()->z() < nodes.back()->z() ) {
     while( nextnode != nodes.end() && (*nextnode)->z() < z ) ++nextnode ;
   } else {
@@ -111,10 +111,10 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
   bool foundprecedingmeasurement(false) ; // is there measurement in nodes < nextnode?
   bool foundprocedingmeasurement(false) ; // is there a measurement in nodes >= nextnode?
   // any measurement nodes between begin and nextnode?
-  for( NodeContainer::const_iterator inode = nodes.begin() ;
+  for( auto inode = nodes.begin() ;
        inode != nextnode && !foundprecedingmeasurement; ++inode)
     foundprecedingmeasurement = (*inode)->type() == LHCb::Node::HitOnTrack ;
-  for( NodeContainer::const_iterator inode = nextnode ;
+  for( auto inode = nextnode ;
        inode != nodes.end() && !foundprocedingmeasurement; ++inode)
     foundprocedingmeasurement = (*inode)->type() == LHCb::Node::HitOnTrack ;
   
@@ -124,7 +124,7 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
 
   // This is not necessarily a valid iterator, but that should be
   // caught by the logic later on.
-  NodeContainer::const_iterator prevnode = nextnode ; --prevnode ;
+  auto prevnode = std::prev(nextnode);
   
   // interpolate only if we have measurements on both sides
   if( !foundprecedingmeasurement || !foundprocedingmeasurement) {
@@ -150,7 +150,6 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
 	    << z << ", " << nodePrev->z() << "," << nodeNext->z() << endmsg ;
     return StatusCode::FAILURE ;
   }
-  
   
   // bail out if we have actually reached our destination
   if( std::abs(nodeNext->z() - z) < TrackParameters::propagationTolerance ) {

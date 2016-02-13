@@ -1,4 +1,4 @@
-#ifndef TRACKTOOLS_TRACKINTERPOLATOR_H 
+#ifndef TRACKTOOLS_TRACKINTERPOLATOR_H
 #define TRACKTOOLS_TRACKINTERPOLATOR_H 1
 
 // Include files
@@ -8,7 +8,7 @@
 #include "GaudiKernel/ToolHandle.h"
 
 // from TrackInterfaces
-#include "TrackInterfaces/ITrackExtrapolator.h"            
+#include "TrackInterfaces/ITrackExtrapolator.h"
 #include "TrackInterfaces/ITrackInterpolator.h"
 
 // From TrackEvent
@@ -28,24 +28,22 @@
  *  @date   2006-10-06
  */
 
-class TrackInterpolator : public GaudiTool,
-                          virtual public ITrackInterpolator {
+class TrackInterpolator : public extends<GaudiTool, ITrackInterpolator> {
 public:
   /// Standard constructor
-  TrackInterpolator( const std::string& type, 
+  TrackInterpolator( const std::string& type,
                      const std::string& name,
                      const IInterface* parent );
 
-  virtual ~TrackInterpolator( );  ///< Destructor
+  ~TrackInterpolator( ) override;  ///< Destructor
 
-  StatusCode initialize();
-  StatusCode finalize();
+  StatusCode initialize() override;
+  StatusCode finalize() override;
 
   /// Interpolate between the two nearest nodes to get a state
-  virtual StatusCode interpolate( const LHCb::Track& track,
-                                  double z, 
-                                  LHCb::State& state );
-
+  StatusCode interpolate( const LHCb::Track& track,
+                          double z,
+                          LHCb::State& state ) const override;
 private:
 
   /// extrapolator

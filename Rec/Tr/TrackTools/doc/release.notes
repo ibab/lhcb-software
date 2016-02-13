@@ -3,6 +3,9 @@
 ! Responsible : 
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2016-02-13 - Gerhard Raven
+ - follow const-ification of Tr/TrackInterfaces
+ - C++11 modernization
 
 ! 2016-02-05 - Rosen Matev
  - Fix build (adapt to modernization of DeFTFibreMat)

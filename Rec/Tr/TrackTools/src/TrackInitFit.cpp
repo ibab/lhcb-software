@@ -3,6 +3,13 @@
 // from Gaudi
 #include "TrackInitFit.h" 
 
+// from TrackEvent
+#include "Event/TrackFunctor.h"
+#include "Event/StateParameters.h"
+#include "Event/Track.h"
+#include "Event/FitNode.h"
+#include "Event/State.h"
+
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackInitFit
@@ -20,9 +27,7 @@ DECLARE_TOOL_FACTORY( TrackInitFit )
 TrackInitFit::TrackInitFit( const std::string& type,
                             const std::string& name,
                             const IInterface* parent)
-  : GaudiTool ( type, name , parent )
-    , m_initTrack(0)
-    , m_fitTrack(0)
+  : base_class ( type, name , parent )
 {
  declareInterface<ITrackFitter>(this);
  declareProperty("Init", m_initToolName = "TrackStateInitTool");
@@ -31,7 +36,7 @@ TrackInitFit::TrackInitFit( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackInitFit::~TrackInitFit() {} 
+TrackInitFit::~TrackInitFit() = default;
 
 //=============================================================================
 // Initialization
@@ -52,7 +57,7 @@ StatusCode TrackInitFit::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode TrackInitFit::fit( LHCb::Track& track, LHCb::ParticleID pid ) {
+StatusCode TrackInitFit::fit( LHCb::Track& track, LHCb::ParticleID pid ) const {
     
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute " << endmsg;
   
@@ -62,18 +67,7 @@ StatusCode TrackInitFit::fit( LHCb::Track& track, LHCb::ParticleID pid ) {
     Warning("TrackStateInitTool failed",sc,0).ignore();
 
   // and fit
-  sc = m_fitTrack->fit(track, pid);
-  
-  return sc;
-  
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode TrackInitFit::finalize() {
-
-  return GaudiTool::finalize();  // must be called after all other actions
+  return m_fitTrack->fit(track, pid);
 }
 
 //=============================================================================
