@@ -1,4 +1,3 @@
-// $Id: PatVeloTTTool.h,v 1.8 2010-01-09 12:46:27 witekma Exp $
 #ifndef PATVELOTTTOOL_H
 #define PATVELOTTTOOL_H 1
 
@@ -18,7 +17,6 @@
 
 static const InterfaceID IID_PatVeloTTTool ( "PatVeloTTTool", 1, 0 );
 
-
   /** @class PatVeloTTTool PatVeloTTTool.h
    *
    *  PatVeloTT tool
@@ -29,45 +27,36 @@ static const InterfaceID IID_PatVeloTTTool ( "PatVeloTTTool", 1, 0 );
    *
    */
 
+
 class PatVeloTTTool : public GaudiTool, virtual public ITracksFromTrack {
 public:
 
     // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_PatVeloTTTool; }
+    static const InterfaceID& interfaceID() { return IID_PatVeloTTTool; }
 
     /// Standard constructor
     PatVeloTTTool( const std::string& type,
                    const std::string& name,
                    const IInterface* parent);
 
-    virtual ~PatVeloTTTool( ); ///< Destructor
+    ~PatVeloTTTool( ) override; ///< Destructor
 
-    StatusCode initialize ( );
+    StatusCode initialize ( ) override;
 
     
-  virtual StatusCode tracksFromTrack(const LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks );
+    StatusCode tracksFromTrack(const LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks ) const override;
    
-    void simpleFit( PatVTTTrack& vtt);
-
-    /// toggle passing of unmatched velo candidates to output
-    void passUnmatched(bool flag=true){m_passUnmatched=flag;}
-
-  protected:
-
-    void simpleFitTracks( std::vector<PatVTTTrack>&);
-    void selectBestTracks( std::vector<PatVTTTrack>& vttTracks);
-    void prepareOutputTracks( std::vector<PatVTTTrack>& vttTracks, std::vector<LHCb::Track*>& outtracks);
-    void localCleanUp(std::vector<PatVTTTrack>&);
-    void getCandidates(const LHCb::Track& veloTrack, std::vector<PatVTTTrack>& vtt);
-    void saveCandidate( PatTTHits& theClusters, PatVTTTrack& candidate);
+    void simpleFit(PatVTTTrack& vtt) const;
 
   private:
-    class compPseudoChi2  {
-    public:
-      bool operator() (PatVTTTrack* first, PatVTTTrack* second ) {
-        return fabs(first->chi2PerDoF()) < fabs(second->chi2PerDoF()) ;
-      }
-    };
+    void simpleFitTracks( std::vector<PatVTTTrack>&) const;
+    void selectBestTracks( std::vector<PatVTTTrack>& vttTracks) const;
+    std::vector<std::unique_ptr<LHCb::Track>> prepareOutputTracks( std::vector<PatVTTTrack>& vttTracks) const;
+    void localCleanUp(std::vector<PatVTTTrack>&) const;
+    void getCandidates(const LHCb::Track& veloTrack, std::vector<PatVTTTrack>& vtt) const;
+    void saveCandidate( PatTTHits& theClusters, PatVTTTrack& candidate) const;
+
+  private:
     double m_maxXSlope;
     double m_maxYSlope;
     double m_centralHoleSize;
@@ -85,9 +74,9 @@ public:
     double m_dxGroupFactor;
     double m_zMidTT;
 
-    Tf::TTStationHitManager<PatTTHit> *      m_ttHitManager;
+    Tf::TTStationHitManager<PatTTHit> *      m_ttHitManager = nullptr;
 
-    PatTTMagnetTool*    m_PatTTMagnetTool;  ///< Multipupose tool for Bdl and deflection
+    PatTTMagnetTool*    m_PatTTMagnetTool = nullptr;  ///< Multipupose tool for Bdl and deflection
     bool m_debug;
     bool m_verbose;
     bool m_passUnmatched;                   ///< flag to toggle passing unmatched velo candidates to output (default=true) 

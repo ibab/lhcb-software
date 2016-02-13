@@ -1,7 +1,5 @@
 #include "STDet/DeSTDetector.h"
 
-#include <boost/foreach.hpp>
-
 #include "PatVeloTTFit.h"
 #include "PatVeloTTTool.h"
 
@@ -21,9 +19,6 @@ PatVeloTTFit::PatVeloTTFit(const std::string& type,
                        const std::string& name,
                        const IInterface* parent)
   : GaudiTool(type, name, parent)
-  , m_patVTTTool(0)
-  , m_ttDet(0)
-  , m_PatTTMagnetTool(0)
 {
   declareInterface<IPatVeloTTFit>(this);
 }
@@ -31,7 +26,7 @@ PatVeloTTFit::PatVeloTTFit(const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-PatVeloTTFit::~PatVeloTTFit() {;}
+PatVeloTTFit::~PatVeloTTFit() = default;
 
 //=============================================================================
 // Initialization
@@ -49,23 +44,14 @@ StatusCode PatVeloTTFit::initialize()
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-// Finalize
-//=============================================================================
-StatusCode PatVeloTTFit::finalize()
-{
-  return GaudiTool::finalize();  // must be called after all other actions
-}
-
 /// fit a PatVTTTrack
 StatusCode PatVeloTTFit::fitVTT( LHCb::Track& track ) const
 {
-  LHCb::Track* veloTr = &track;
-  double slY = veloTr->stateAt(LHCb::State::EndVelo)->ty();
-  double slX = veloTr->stateAt(LHCb::State::EndVelo)->tx();
+  double slY = track.stateAt(LHCb::State::EndVelo)->ty();
+  double slX = track.stateAt(LHCb::State::EndVelo)->tx();
 
   // The candidate based on the Velo track
-  PatVTTTrack cand( veloTr );
+  PatVTTTrack cand( &track );
 
   std::vector<float> normFact;
   m_PatTTMagnetTool->dxNormFactorsTT( slY,  normFact);
@@ -77,53 +63,44 @@ StatusCode PatVeloTTFit::fitVTT( LHCb::Track& track ) const
     get<LHCb::STLiteCluster::FastContainer>(LHCb::STLiteClusterLocation::TTClusters);
 
   // loop over LHCbIDs, extract T-station measurements
-  std::vector< PatTTHit* > hits ;
-  std::vector< Tf::STHit* > sthits ;
-  
-  std::vector<LHCb::LHCbID> lhcbIDs = veloTr->lhcbIDs();
-  for( std::vector<LHCb::LHCbID>::const_iterator ihit = lhcbIDs.begin(); 
-       ihit != lhcbIDs.end(); ++ihit ) { 
-    if(  ihit->detectorType()==LHCb::LHCbID::TT ) {
-      LHCb::STChannelID stChan = ihit->stID() ;
-      const DeSTSector* stSector = m_ttDet->findSector( stChan );
-      if(stSector==0) {
-        return Error( "No sector found for TT hit!" );
-      }
+  std::vector< std::unique_ptr<PatTTHit> > hits ;
+  std::vector< std::unique_ptr<Tf::STHit> > sthits ;
 
-      LHCb::STLiteCluster::FastContainer::const_iterator iclus =  
-	m_stLiteContainer->find< LHCb::STLiteCluster::findPolicy >( stChan ) ;
+  for( const auto& id : track.lhcbIDs() ) {
+    if(  id.detectorType()!=LHCb::LHCbID::TT ) continue ;
+    LHCb::STChannelID stChan = id.stID() ;
+    const DeSTSector* stSector = m_ttDet->findSector( stChan );
+    if(!stSector) return Error( "No sector found for TT hit!" );
 
-      if( iclus != m_stLiteContainer->end() ) {
-	Tf::STHit* sthit = new Tf::STHit(*stSector, *iclus ) ;
-	PatTTHit* pattthit = new PatTTHit( *sthit );
-	sthits.push_back( sthit ) ;
-	hits.push_back( pattthit ) ; 
-	
-	double xOnTrack = cand.xAtZ( pattthit->z() );
-	//double yOnTrack = cand.yAtZ( pattthit->z() );
-	double yAt0 = cand.yAtZ( 0 );
-	
-	double dyDz = cand.slopeY();
-	
-	updateTTHitForTrack(pattthit,yAt0, dyDz);
-	double dx = pattthit->x() - xOnTrack;
-	
-	// Scale to the reference reg	
-	dx = dx * normFact[pattthit->planeCode()];
-	cand.storeHit( dx, pattthit );
-	
-      } else {
-        return Error( "Cannot find lite cluster!" );
-      }
+    auto iclus =  m_stLiteContainer->find< LHCb::STLiteCluster::findPolicy >( stChan ) ;
+    if( iclus == m_stLiteContainer->end() ) {
+      return Error( "Cannot find lite cluster!" );
     }
+    sthits.emplace_back( new Tf::STHit(*stSector, *iclus )) ;
+    Tf::STHit* sthit = sthits.back().get();
+    hits.emplace_back( new PatTTHit( *sthit ) );
+    PatTTHit* pattthit = hits.back().get();
+
+    double xOnTrack = cand.xAtZ( pattthit->z() );
+    //double yOnTrack = cand.yAtZ( pattthit->z() );
+    double yAt0 = cand.yAtZ( 0 );
+
+    double dyDz = cand.slopeY();
+
+    updateTTHitForTrack(pattthit,yAt0, dyDz);
+    double dx = pattthit->x() - xOnTrack;
+
+    // Scale to the reference reg	
+    dx *= normFact[pattthit->planeCode()];
+    cand.storeHit( dx, pattthit );
   }
 
   cand.storeClusters();
 
   m_patVTTTool->simpleFit(cand);
-  
+
   double qOverP = cand.qOverP();
-  
+
   double zMidTT    = m_PatTTMagnetTool->zMidTT();
   double zMidField = m_PatTTMagnetTool->zMidField();
 
@@ -138,15 +115,8 @@ StatusCode PatVeloTTFit::fitVTT( LHCb::Track& track ) const
 
   track.addToStates( temp );
 
-  LHCb::Track::StateContainer::const_iterator istate;
-  for( istate = track.states().begin(); istate != track.states().end(); ++istate)
-    (const_cast<LHCb::State*>(*istate))->setQOverP( qOverP ) ;
-
-
-  
-  BOOST_FOREACH( Tf::STHit* ihit, sthits ) delete ihit ;  
-  BOOST_FOREACH( PatTTHit* ihit, hits ) delete ihit ; 
+  for(auto& state : track.states())
+    (const_cast<LHCb::State*>(state))->setQOverP( qOverP ) ;
 
   return StatusCode::SUCCESS;
 }
-

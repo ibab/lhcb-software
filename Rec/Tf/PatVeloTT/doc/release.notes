@@ -3,6 +3,10 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2016-02-13 - Gerhard Raven
+ - follow const-ification of Tr/TrackInterfaces
+ - C++11 modernization
+
 ! 2016-01-30 - Gerhard Raven
  - add a few 'const' qualifiers to PatVTTTrack
 

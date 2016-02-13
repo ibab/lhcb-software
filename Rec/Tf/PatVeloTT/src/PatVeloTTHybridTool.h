@@ -1,4 +1,3 @@
-// $Id: PatVeloTTHybridTool.h,v 1.8 2010-01-09 12:46:27 witekma Exp $
 #ifndef PATVELOTTHYBRIDTOOL_H
 #define PATVELOTTHYBRIDTOOL_H 1
 
@@ -21,8 +20,6 @@
 
 #include "vdt/sqrt.h"
 
-static const InterfaceID IID_PatVeloTTHybridTool ( "PatVeloTTHybridTool", 1, 0 );
-
   /** @class PatVeloTTHybridTool PatVeloTTHybridTool.h
    *
    *  PatVeloTT tool
@@ -33,50 +30,32 @@ static const InterfaceID IID_PatVeloTTHybridTool ( "PatVeloTTHybridTool", 1, 0 )
    *
    */
 
-class PatVeloTTHybridTool : public GaudiTool,  virtual public ITracksFromTrack,  public IIncidentListener {
+class PatVeloTTHybridTool : public extends<GaudiTool, ITracksFromTrack, IIncidentListener> {
 public:
-  
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_PatVeloTTHybridTool; }
-
   /// Standard constructor
   PatVeloTTHybridTool( const std::string& type,
                 const std::string& name,
                 const IInterface* parent);
   
-  virtual ~PatVeloTTHybridTool( ); ///< Destructor
+  ~PatVeloTTHybridTool( ) override; ///< Destructor
+  StatusCode initialize ( ) override;
   
-  StatusCode initialize ( );
-  
-  virtual StatusCode tracksFromTrack(const LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks );
-  void handle ( const Incident& incident );
-  void simpleFit( PatVTTHybridTrack& vtt);
+  StatusCode  tracksFromTrack(const LHCb::Track & velotrack, std::vector<LHCb::Track*>& out) const override;
+  void handle ( const Incident& incident ) override;
 
-protected:
-  
-  void getCandidates(const LHCb::Track& veloTrack,std::vector<LHCb::Track*>& outtracks );
-  bool findHits();
-  void clustering();
-  void formClusters(bool forward);
-  void prepareOutputTracks(std::vector<LHCb::Track*>& outtracks);
-  void initEvent();
-  bool acceptTrack(const LHCb::Track& track);
+private:
+  void simpleFit( PatVTTHybridTrack& vtt) const;
+
+  std::unique_ptr<LHCb::Track> getCandidate(const LHCb::Track& veloTrack) const;
+  bool findHits() const;
+  void clustering() const;
+  void formClusters(bool forward) const;
+  std::unique_ptr<LHCb::Track> prepareOutputTrack() const;
+  void initEvent() const;
 
   
 private:
-  class compX  {
-  public:
-    bool operator() (PatTTHit* first, PatTTHit* second ) {
-      return first->hit()->xAtYEq0() < second->hit()->xAtYEq0() ;
-    }
-  };
 
-  class lowerBoundX  {
-    public:
-      bool operator() (const PatTTHit* first, const float value ) const {
-        return first->x() < value ;
-      }
-    };
   float m_minMomentum;
   float m_minPT;
   float m_maxPseudoChi2;
@@ -92,38 +71,37 @@ private:
   float m_zMidTT;
   float m_intraLayerDist;
   float m_overlapTol;
+  float m_distToMomentum;
+  float m_passHoleSize;
   
   Tf::TTStationHitManager<PatTTHit> *      m_utHitManager;
   
   PatTTMagnetTool*    m_PatTTMagnetTool;  ///< Multipupose tool for Bdl and deflection
   bool m_printVariables;
-  
-  std::vector<PatVTTHybridTrack> m_vuttracks;
-  std::array<PatTTHits,8> m_hitsLayers;
-  std::array<PatTTHits,4> m_allHits;
-  std::vector<PatTTHits> m_allClusters;
-  PatTTHits m_clusterCandidate;
-  std::array<PatTTHits::iterator,8> m_iterators;
-  std::vector<float> m_normFact;
-  std::vector<float> m_invNormFact;
-  bool m_newEvent;
-  std::vector<PatVTTHybridTrack> m_bestCand;
-  bool m_foundCand;
-  float m_xVelo;
-  float m_yVelo;
-  float m_zVelo;
-  float m_txVelo;
-  float m_tyVelo;
-  float m_zKink;
-  float m_bdl;
-  float m_yAtMidTT;
-  float m_distToMomentum;
-  float m_yAt0;
-  bool m_fourLayerSolution;
-  
-  float m_c11,m_c12,m_c13,m_c21,m_c22,m_c23;
   bool m_passTracks;
-  float m_passHoleSize;
+  
+  mutable std::vector<PatVTTHybridTrack> m_vuttracks;
+  mutable std::array<PatTTHits,8> m_hitsLayers;
+  mutable std::array<PatTTHits,4> m_allHits;
+  mutable std::vector<PatTTHits> m_allClusters;
+  mutable PatTTHits m_clusterCandidate;
+  mutable std::array<PatTTHits::const_iterator,8> m_iterators;
+  mutable std::vector<float> m_normFact;
+  mutable std::vector<float> m_invNormFact;
+  mutable bool m_newEvent;
+  mutable std::vector<PatVTTHybridTrack> m_bestCand;
+  mutable bool m_foundCand;
+  mutable float m_xVelo;
+  mutable float m_yVelo;
+  mutable float m_zVelo;
+  mutable float m_txVelo;
+  mutable float m_tyVelo;
+  mutable float m_zKink;
+  mutable float m_bdl;
+  mutable float m_yAtMidTT;
+  mutable float m_yAt0;
+  mutable bool m_fourLayerSolution;
+  mutable float m_c11,m_c12,m_c13,m_c21,m_c22,m_c23;
   
 };
 

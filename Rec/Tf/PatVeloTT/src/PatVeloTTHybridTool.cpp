@@ -12,6 +12,33 @@
 // 2007-05-08 : Mariusz Witek
 //-----------------------------------------------------------------------------
 
+namespace {
+
+struct  compX  {
+  bool operator() (PatTTHit* first, PatTTHit* second ) {
+    return first->hit()->xAtYEq0() < second->hit()->xAtYEq0() ;
+  }
+};
+struct  lowerBoundX  {
+  bool operator() (const PatTTHit* first, const float value ) const {
+    return first->x() < value ;
+  }
+};
+
+bool acceptTrack(const LHCb::Track& track)
+{
+  return !track.checkFlag( LHCb::Track::Invalid) 
+      && !track.checkFlag( LHCb::Track::Backward);
+}
+
+// convert a move-only type into a single element vector...
+template <typename T>
+auto to_vector(T&& t) -> std::vector<T> {
+    std::vector<T> v(1); v[0] = std::forward<T>(t); return v;
+}
+
+}
+
 
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( PatVeloTTHybridTool )
@@ -23,7 +50,7 @@ DECLARE_TOOL_FACTORY( PatVeloTTHybridTool )
 PatVeloTTHybridTool::PatVeloTTHybridTool( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
- : GaudiTool( type, name , parent )
+ : base_class( type, name , parent )
 {
   //declareInterface<PatVeloTTHybridTool>(this);
   declareInterface<ITracksFromTrack>(this);
@@ -116,7 +143,9 @@ StatusCode PatVeloTTHybridTool::initialize ( ) {
 //=========================================================================
 // Main reconstruction method
 //=========================================================================
-StatusCode PatVeloTTHybridTool::tracksFromTrack(const LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks )
+StatusCode
+PatVeloTTHybridTool::tracksFromTrack(const LHCb::Track & velotrack,
+                                     std::vector<LHCb::Track*>& out) const
 {
   //Check if it is a new event
   if(m_newEvent) initEvent();
@@ -145,11 +174,11 @@ StatusCode PatVeloTTHybridTool::tracksFromTrack(const LHCb::Track & velotrack, s
   if(sqrt(xAtMidTT*xAtMidTT+m_yAtMidTT*m_yAtMidTT) < m_centralHoleSize) return StatusCode::SUCCESS;
   
   if(m_passTracks && fabs(xAtMidTT)< m_passHoleSize && fabs(m_yAtMidTT) < m_passHoleSize){
-    LHCb::Track* outTr = new LHCb::Track();
+    std::unique_ptr<LHCb::Track> outTr{ new LHCb::Track() };
     outTr->reset();
     outTr->copy(velotrack);
     outTr->addToAncestors( velotrack );
-    outtracks.push_back(outTr);
+    out.push_back(outTr.release());
     return StatusCode::SUCCESS;
   }
   
@@ -162,16 +191,14 @@ StatusCode PatVeloTTHybridTool::tracksFromTrack(const LHCb::Track & velotrack, s
   m_foundCand = false;
   m_fourLayerSolution = false;
   
-  for(unsigned int i = 0; i < 4; ++i){
-    m_allHits[i].clear();
-  }
+  for(auto& ah : m_allHits) ah.clear();
   m_allClusters.clear();
   
   //Find deflection values
   m_PatTTMagnetTool->dxNormFactorsTT( m_tyVelo,  m_normFact);
   m_invNormFact.resize(m_normFact.size());
   std::transform(m_normFact.begin(),m_normFact.end(),m_invNormFact.begin(),
-                 [](const float normFact){return 1.0/normFact;});
+                 [](float normFact){return 1.0/normFact;});
   
   //Save some variables
   float zOrigin =  m_zVelo-m_yVelo/m_tyVelo;
@@ -182,64 +209,52 @@ StatusCode PatVeloTTHybridTool::tracksFromTrack(const LHCb::Track & velotrack, s
   //
   //Find VeloTT track candidates
   //
-  
-  getCandidates(velotrack,outtracks); 
-  
+  out.push_back(getCandidate(velotrack).release()); 
   return StatusCode::SUCCESS;
 }
 
 //=========================================================================
 // Get all the VeloTT track candidates
 //=========================================================================
-void PatVeloTTHybridTool::getCandidates(const LHCb::Track& veloTrack,std::vector<LHCb::Track*>& outtracks ){
-  
-  const LHCb::Track* veloTr = &veloTrack;
+std::unique_ptr<LHCb::Track>
+PatVeloTTHybridTool::getCandidate(const LHCb::Track& veloTrack) const {
   
   // Find hits within a search window
-  if(!findHits()) return;
+  if(!findHits()) return {};
   
   // Form clusters from the selected hits
   clustering();
   
   // Check there is at least one cluster
   int nClusters = m_allClusters.size();
-  if(nClusters<1) return;
+  if(nClusters<1) return {};
   
   // Create VeloTT track candidates
   for(PatTTHits theClusters : m_allClusters){
-
-    PatVTTHybridTrack candidate( veloTr );
-
-    for(PatTTHit* hit : theClusters){ 
-      candidate.storeHit( hit );
-    }
     // Add this solution
-    m_vuttracks.push_back( std::move(candidate) );
+    m_vuttracks.emplace_back( &veloTrack );
+
+    for(PatTTHit* hit : theClusters) m_vuttracks.back().storeHit( hit );
+
     
   } // loop over the VeloTT track candidates
-  for(PatVTTHybridTrack cand : m_vuttracks){
-    simpleFit(cand);
-  }
+  for(PatVTTHybridTrack& cand : m_vuttracks) simpleFit(cand);
 
   //Write out the best solution
-  if(!m_foundCand) return;
-  prepareOutputTracks(outtracks);
+  return m_foundCand ? prepareOutputTrack() : nullptr ;
 
 }
 
 //=========================================================================
 //Find hits in a search window
 //=========================================================================
-bool PatVeloTTHybridTool::findHits(){
+bool PatVeloTTHybridTool::findHits() const {
 
-  float invTheta = vdt::fast_isqrt(m_txVelo*m_txVelo+m_tyVelo*m_tyVelo);
   // protect against unphysical angles, should not happen
-  if(invTheta > 500.0 ) invTheta = 500.0;
-  
-  float minP = ((m_minPT*invTheta)>m_minMomentum) ? (m_minPT*invTheta):m_minMomentum;
-  
-  float xTol = fabs(1. / ( m_distToMomentum * minP ));
-  float yTol = m_yTol + m_yTolSlope * xTol;
+  auto invTheta = std::min(500.,vdt::fast_isqrt(m_txVelo*m_txVelo+m_tyVelo*m_tyVelo));
+  auto minP = ((m_minPT*invTheta)>m_minMomentum) ? (m_minPT*invTheta):m_minMomentum;
+  auto xTol = fabs(1. / ( m_distToMomentum * minP ));
+  auto yTol = m_yTol + m_yTolSlope * xTol;
 
   unsigned int nHits = 0;
   
@@ -273,19 +288,14 @@ bool PatVeloTTHybridTool::findHits(){
     float xLayer = m_xVelo + m_txVelo*(zLayer - m_zVelo);
     float yAtZ   = m_yVelo + m_tyVelo*(zLayer - m_zVelo);
 
-    if( yAtZ > 0){
-      yLayer =  yAtZ + yTol;
-    }
-    else{
-      yLayer =  yAtZ - yTol;
-    }
+    yLayer =  yAtZ + std::copysign(yTol, yAtZ);
     
     // max distance between strips in a layer => 15mm
     // Hits are sorted at y=0
     float lowerBoundX = 
       xLayer - xTol*m_invNormFact[m_hitsLayers[i].front()->planeCode()] - dxDy*yLayer - fabs(m_txVelo)*m_intraLayerDist;
     
-    auto itEnd =  m_hitsLayers[i].end();
+    auto itEnd =  m_hitsLayers[i].cend();
     auto itH = std::lower_bound( m_iterators[i], itEnd, lowerBoundX, Tf::compByX_LB< PatTTHit >() );
     
     for ( ; itH != itEnd; ++itH ){
@@ -322,7 +332,7 @@ bool PatVeloTTHybridTool::findHits(){
 //=========================================================================
 // Select the best list of sorted hits...
 //=========================================================================
-void PatVeloTTHybridTool::clustering(){
+void PatVeloTTHybridTool::clustering() const {
 
   //Run clustering in forward direction
   formClusters(true);
@@ -344,7 +354,7 @@ void PatVeloTTHybridTool::clustering(){
 //=========================================================================
 // Form clusters
 //=========================================================================
-void PatVeloTTHybridTool::formClusters(bool forward){
+void PatVeloTTHybridTool::formClusters(bool forward) const{
   
   if(!forward){
     std::reverse(m_allHits.begin(),m_allHits.end());
@@ -452,7 +462,7 @@ void PatVeloTTHybridTool::formClusters(bool forward){
 // Only q/p and chi2 of outTr are modified
 //
 //=========================================================================
-void PatVeloTTHybridTool::simpleFit(PatVTTHybridTrack& vuttr) {
+void PatVeloTTHybridTool::simpleFit(PatVTTHybridTrack& vuttr)  const {
   
   PatTTHits theHits = vuttr.clusters();
   int nHits = theHits.size();
@@ -495,16 +505,14 @@ void PatVeloTTHybridTool::simpleFit(PatVTTHybridTrack& vuttr) {
 
   float xTTFit, xSlopeTTFit;  // x pos and slope of track at TT after fit
   float den=m_c11*m_c22-m_c21*m_c12;
-  if(fabs(den)>1.0e-8) {
-    xTTFit      = (m_c13*m_c22-m_c23*m_c12)/(m_c11*m_c22-m_c21*m_c12);
-    xSlopeTTFit = (m_c13*m_c21-m_c23*m_c11)/(m_c12*m_c21-m_c22*m_c11);
-  }
-  else  {
+  if(fabs(den)<1.0e-8) {
     xTTFit = 0.;
     xSlopeTTFit = 0.;
     vuttr.setChi2PerDoF(1.0e19);
     return;
   }
+  xTTFit      = (m_c13*m_c22-m_c23*m_c12)/(m_c11*m_c22-m_c21*m_c12);
+  xSlopeTTFit = (m_c13*m_c21-m_c23*m_c11)/(m_c12*m_c21-m_c22*m_c11);
 
   // new VELO slope x
   float xb = xTTFit+xSlopeTTFit*(m_zKink-m_zMidTT);
@@ -561,7 +569,9 @@ void PatVeloTTHybridTool::simpleFit(PatVTTHybridTrack& vuttr) {
 //=========================================================================
 // Create the Velo-TT tracks
 //=========================================================================
-void PatVeloTTHybridTool::prepareOutputTracks(std::vector<LHCb::Track*>& outtracks){
+std::unique_ptr<LHCb::Track>
+PatVeloTTHybridTool::prepareOutputTrack() const 
+{
 
   PatVTTHybridTrack cand = *m_bestCand.begin();
   PatTTHits candClusters = cand.clusters();
@@ -592,24 +602,18 @@ void PatVeloTTHybridTool::prepareOutputTracks(std::vector<LHCb::Track*>& outtrac
   float qop = cand.qOverP();
   float xTT = cand.xTT();
     
-  LHCb::Track* outTr = new LHCb::Track();
+  std::unique_ptr<LHCb::Track> outTr{ new LHCb::Track() };
   
   // reset the track
   outTr->reset();
-  
   outTr->copy(*veloTr);
   
   // set q/p in all of the existing states
   const std::vector< LHCb::State * > states = outTr->states();
-  std::vector< LHCb::State * >::const_iterator iState;
-  for ( iState = states.begin() ; iState != states.end() ; ++iState ){
-    (*iState)->setQOverP(qop);
-  }
+  for (auto& state : states) state->setQOverP(qop);
 
   //Add TT hits to track
-  for( auto hit : finalHits){
-    outTr->addToLhcbIDs( hit->hit()->lhcbID() );
-  }
+  for( const auto& hit : finalHits) outTr->addToLhcbIDs( hit->hit()->lhcbID() );
   
   
   //== Add a new state...
@@ -623,15 +627,14 @@ void PatVeloTTHybridTool::prepareOutputTracks(std::vector<LHCb::Track*>& outtrac
                  qop );
   
   
-  outTr->addToStates( temp );
+  outTr->addToStates( std::move(temp) );
   
   outTr->setType( LHCb::Track::Upstream );
   outTr->setHistory( LHCb::Track::PatVeloTT );
   outTr->addToAncestors( veloTr );
   outTr->setPatRecStatus( LHCb::Track::PatRecIDs );
   outTr->setChi2PerDoF(cand.chi2PerDoF());
-  
-  outtracks.push_back(outTr);
+  return std::move(outTr);
 
 }
 
@@ -649,15 +652,10 @@ void PatVeloTTHybridTool::handle ( const Incident& incident ) {
 //=============================================================================
 // -- Init event: Get the new hits and sort them
 //=============================================================================
-void PatVeloTTHybridTool::initEvent () {
+void PatVeloTTHybridTool::initEvent () const {
   
-  for(unsigned int i = 0; i < 8; ++i){
-    m_hitsLayers[i].clear();
-  }
-  
-  Tf::TTStationHitManager<PatTTHit>::HitRange range = m_utHitManager->hits();
-  
-  for(PatTTHit* hit : range){
+  for(auto& hl : m_hitsLayers ) hl.clear();
+  for(PatTTHit* hit : m_utHitManager->hits()){
         
     if(hit->hit()->yMax() > 0){
       m_hitsLayers[hit->planeCode() + 4].push_back( hit );
@@ -667,20 +665,12 @@ void PatVeloTTHybridTool::initEvent () {
     }
   }
   
-  for(unsigned int i = 0; i < 8; ++i){
-    std::sort(m_hitsLayers[i].begin(), m_hitsLayers[i].end(), compX() );
-    m_iterators[i] = m_hitsLayers[i].begin();
-  }
+  for(auto& hl : m_hitsLayers ) std::sort(hl.begin(), hl.end(), compX() );
+  std::transform( m_hitsLayers.begin(), m_hitsLayers.end(), m_iterators.begin(),
+                  [](const PatTTHits& hits) { return hits.begin(); } );
   
   m_newEvent = false;
-  
 
 }
 
 //=============================================================================
-bool PatVeloTTHybridTool::acceptTrack(const LHCb::Track& track) 
-{
-  bool ok = !(track.checkFlag( LHCb::Track::Invalid) );
-  ok = ok && (!(track.checkFlag( LHCb::Track::Backward) ));
-  return ok;
-}

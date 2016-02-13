@@ -1,4 +1,3 @@
-// $Id: PatVeloTTFit.h,v 1.1 2009-03-11 15:30:53 smenzeme Exp $
 #ifndef INCLUDE_PATVELOTTFIT_H
 #define INCLUDE_PATVELOTTFIT_H 1
 
@@ -30,18 +29,16 @@ public:
   PatVeloTTFit(const std::string& type, const std::string& name,
 	       const IInterface* parent);
 
-  virtual ~PatVeloTTFit(); ///< Destructor
+  ~PatVeloTTFit() override; ///< Destructor
 
-  virtual StatusCode initialize(); ///< Tool initialization
-  virtual StatusCode   finalize(); ///< Tool finalize
+  StatusCode initialize() override; ///< Tool initialization
 
-  virtual StatusCode fitVTT( LHCb::Track& track) const;
+  StatusCode fitVTT( LHCb::Track& track) const override;
 
 private:
-  PatVeloTTTool* m_patVTTTool;
-  DeSTDetector* m_ttDet;
-
-  PatTTMagnetTool*    m_PatTTMagnetTool;  ///< Multipupose tool for Bdl and deflection
+  PatVeloTTTool* m_patVTTTool = nullptr;
+  DeSTDetector* m_ttDet = nullptr;
+  PatTTMagnetTool*    m_PatTTMagnetTool = nullptr;  ///< Multipupose tool for Bdl and deflection
 };
 #endif // INCLUDE_PATVELOTTFIT_H
 

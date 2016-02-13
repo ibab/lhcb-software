@@ -5,6 +5,14 @@
 // local
 #include "PatVeloTTTool.h"
 
+namespace {
+    struct compPseudoChi2  {
+      bool operator() (PatVTTTrack* first, PatVTTTrack* second ) {
+        return std::abs(first->chi2PerDoF()) < std::abs(second->chi2PerDoF()) ;
+      }
+    };
+}
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatVeloTTTool
 //
@@ -22,13 +30,10 @@ DECLARE_TOOL_FACTORY( PatVeloTTTool )
 PatVeloTTTool::PatVeloTTTool( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : GaudiTool( type, name , parent ),
-  m_ttHitManager(0)
-  , m_PatTTMagnetTool(0)
+  : GaudiTool( type, name , parent )
 {
   declareInterface<ITracksFromTrack>(this);
   declareInterface<PatVeloTTTool>(this);
-  
 
   declareProperty("MaxXSlope"          , m_maxXSlope        = 0.350);
   declareProperty("MaxYSlope"          , m_maxYSlope        = 0.300);
@@ -55,7 +60,7 @@ PatVeloTTTool::PatVeloTTTool( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-PatVeloTTTool::~PatVeloTTTool() {}
+PatVeloTTTool::~PatVeloTTTool() = default;
 
 //=============================================================================
 // Main method for VELOTT track rekonstruction
@@ -133,7 +138,6 @@ StatusCode PatVeloTTTool::initialize ( ) {
                         dist2mom, dxdz, dydz, nfact[0],nfact[1],nfact[2],nfact[3]) << endmsg;
   }
 
-
   m_ttHitManager   = tool<Tf::TTStationHitManager <PatTTHit> >("PatTTStationHitManager");
 
   return StatusCode::SUCCESS;
@@ -144,7 +148,7 @@ StatusCode PatVeloTTTool::initialize ( ) {
 // Main reconstruction method
 //=========================================================================
 StatusCode 
-PatVeloTTTool::tracksFromTrack(const LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks )
+PatVeloTTTool::tracksFromTrack(const LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks ) const
 {
 
   std::vector<PatVTTTrack> vttTracks;
@@ -153,20 +157,21 @@ PatVeloTTTool::tracksFromTrack(const LHCb::Track & velotrack, std::vector<LHCb::
   simpleFitTracks(vttTracks);
   localCleanUp(vttTracks);
   selectBestTracks(vttTracks);
-  prepareOutputTracks(vttTracks, outtracks);
+  auto out = prepareOutputTracks(vttTracks);
   // check if there any candidates within TT acceptance have been found if not --> pass on input track
-  if(m_passUnmatched && outtracks.size()<1){
+  if(m_passUnmatched && out.empty()){
     outtracks.push_back(new LHCb::Track(velotrack));
   }
+  std::transform( out.begin(), out.end(), std::back_inserter(outtracks),
+                  [](std::unique_ptr<LHCb::Track>& i) { return i.release(); } );
   return StatusCode::SUCCESS;
-
 }
 
 
 //=========================================================================
 // Get all the VeloTT track candidates
 //=========================================================================
-void PatVeloTTTool::getCandidates( const LHCb::Track& veloTrack, std::vector<PatVTTTrack>& vttTracks){
+void PatVeloTTTool::getCandidates( const LHCb::Track& veloTrack, std::vector<PatVTTTrack>& vttTracks) const {
 
   if(m_debug) debug() << "Entering getCandidates" << endmsg;
 
@@ -222,9 +227,7 @@ void PatVeloTTTool::getCandidates( const LHCb::Track& veloTrack, std::vector<Pat
   for (Tf::TTStationID sta=0; sta<m_ttHitManager->maxStations(); sta++){
     for (Tf::TTLayerID lay=0; lay<m_ttHitManager->maxLayers(); lay++){
       for (Tf::TTRegionID reg=0; reg<m_ttHitManager->maxRegions(); reg++){
-        if( 0 == m_ttHitManager->hits(sta,lay,reg).size()) continue;
-
-
+        if (m_ttHitManager->hits(sta,lay,reg).empty()) continue;
 
         const Tf::ITTHitCreator::STRegion* regionB = m_ttHitManager->region(sta,lay,reg);
 
@@ -248,43 +251,33 @@ void PatVeloTTTool::getCandidates( const LHCb::Track& veloTrack, std::vector<Pat
         //--------------------------------------------------------------------------
         // Loop on hits
         //--------------------------------------------------------------------------
-        Tf::TTStationHitManager<PatTTHit>::HitRange range = m_ttHitManager->hits(sta, lay, reg);
+        double yAt0 = cand.yAtZ( 0 );
+        double dyDz = cand.slopeY();
+        for ( const auto& hit :  m_ttHitManager->hits(sta, lay, reg)) {
 
-       for ( PatTTHits::const_iterator itH = range.begin();
-              range.end() != itH; ++itH ) {
+          if (hit->hit()->ignore()) continue;
 
+          double xOnTrack = cand.xAtZ( hit->z() );
+          double yOnTrack = cand.yAtZ( hit->z() );
 
-	 if ((*itH)->hit()->ignore())
-	   continue;
-
-          double xOnTrack = cand.xAtZ( (*itH)->z() );
-          double yOnTrack = cand.yAtZ( (*itH)->z() );
-          double yAt0 = cand.yAtZ( 0 );
-
-          double dyDz = cand.slopeY();
-
-
-          updateTTHitForTrack((*itH),yAt0, dyDz);
-          double dx = (*itH)->x() - xOnTrack;
-
-
+          updateTTHitForTrack(hit,yAt0, dyDz);
+          double dx = hit->x() - xOnTrack;
 
           // Scale to the reference reg
 
-          dx = dx * normFact[(*itH)->planeCode()];
+          dx = dx * normFact[hit->planeCode()];
           double fabsdx = fabs(dx);
 
-	  if(tol > fabsdx){
+          if(tol > fabsdx){
 
             // Now refine the tolerance in Y
-            if( yOnTrack + (m_yTol + m_yTolSlope * fabsdx) < (*itH)->hit()->yMin() ||
-                yOnTrack - (m_yTol + m_yTolSlope * fabsdx) > (*itH)->hit()->yMax() ) continue;
+            if( yOnTrack + (m_yTol + m_yTolSlope * fabsdx) < hit->hit()->yMin() ||
+                yOnTrack - (m_yTol + m_yTolSlope * fabsdx) > hit->hit()->yMax() ) continue;
 
-            cand.storeHit( dx, *itH );
+            cand.storeHit( dx, hit );
 
           }
         } // over hits
-
       } // over regs itL
     }
   }
@@ -345,7 +338,7 @@ void PatVeloTTTool::getCandidates( const LHCb::Track& veloTrack, std::vector<Pat
 //=========================================================================
 // Attach clusters to candidate, compute mean dx ...
 //=========================================================================
-void PatVeloTTTool::saveCandidate(PatTTHits& theClusters,PatVTTTrack& candidate){
+void PatVeloTTTool::saveCandidate(PatTTHits& theClusters,PatVTTTrack& candidate) const{
 
   // Attach best clusters to the candidate, recompute the scaled dx for each cluster and the mean dx
   int nClusters = 0;
@@ -359,19 +352,17 @@ void PatVeloTTTool::saveCandidate(PatTTHits& theClusters,PatVTTTrack& candidate)
   double dyDz = candidate.slopeY();
   m_PatTTMagnetTool->dxNormFactorsTT( dyDz,  normFact);
 
-  PatTTHits::const_iterator itClus;
-  for(itClus = theClusters.begin(); itClus != theClusters.end(); ++itClus){
+  for(PatTTHit *cluster : theClusters) {
 
-    PatTTHit* cluster = *itClus;
 
-    double xOnTrack = candidate.xAtZ( (*itClus)->z() );
+    double xOnTrack = candidate.xAtZ( cluster->z() );
     double yAt0 = candidate.yAtZ(0);
     dyDz = candidate.slopeY();
-    updateTTHitForTrack((*itClus),yAt0, dyDz);
-    double dx = (*itClus)->x() - xOnTrack;
+    updateTTHitForTrack(cluster,yAt0, dyDz);
+    double dx = cluster->x() - xOnTrack;
 
     // Scale to the reference reg using exact factors
-    dx = dx * normFact[(*itClus)->planeCode()];
+    dx = dx * normFact[cluster->planeCode()];
 
     if(m_debug) debug() << format("%7.2f(%1d) ", dx, cluster->planeCode()) << " " << cluster;
 
@@ -412,17 +403,10 @@ void PatVeloTTTool::saveCandidate(PatTTHits& theClusters,PatVTTTrack& candidate)
 //=========================================================================
 // Simple fit of vtt candidates
 //=========================================================================
-void PatVeloTTTool::simpleFitTracks(std::vector<PatVTTTrack>& vttTracks) {
-
-  std::vector<PatVTTTrack>::iterator ivttTrB;
-  for(ivttTrB = vttTracks.begin(); ivttTrB != vttTracks.end(); ++ivttTrB){
-
-    if(ivttTrB->badCandidate()) continue;
-
-    simpleFit(*ivttTrB);
-
+void PatVeloTTTool::simpleFitTracks(std::vector<PatVTTTrack>& vttTracks) const {
+  for(auto & t : vttTracks ) {
+    if(!t.badCandidate()) simpleFit(t);
   }
-
 }
 
 //=========================================================================
@@ -436,13 +420,11 @@ void PatVeloTTTool::simpleFitTracks(std::vector<PatVTTTrack>& vttTracks) {
 // Only q/p and chi2 of outTr are modified
 //
 //=========================================================================
-void PatVeloTTTool::simpleFit(PatVTTTrack& vtttr) {
+void PatVeloTTTool::simpleFit(PatVTTTrack& vtttr) const {
 
   PatTTHits theHits = vtttr.clusters();
   int nHits = theHits.size();
-  if(3>nHits) {
-    return;
-  }
+  if(3>nHits) return;
 
   const LHCb::Track* velotr = vtttr.track();
 
@@ -474,10 +456,7 @@ void PatVeloTTTool::simpleFit(PatVTTTrack& vtttr) {
 
   double z0 = zTT;
 
-  for ( PatTTHits::const_iterator itH = theHits.begin();
-        theHits.end() != itH; itH++ ) {
-
-    PatTTHit* pdigi = (*itH);
+  for ( PatTTHit * pdigi : theHits ) {
 
     double y0 = yVelo -  ySlopeVelo * zVelo;
     updateTTHitForTrack(pdigi, y0, ySlopeVelo);
@@ -511,16 +490,15 @@ void PatVeloTTTool::simpleFit(PatVTTTrack& vtttr) {
 
   double xTTFit, xSlopeTTFit;  // x pos and slope of track at TT after fit
   double den=c11*c22-c21*c12;
-  if(fabs(den)>1.0e-8) {
-    xTTFit      = (c13*c22-c23*c12)/(c11*c22-c21*c12);
-    xSlopeTTFit = (c13*c21-c23*c11)/(c12*c21-c22*c11);
-  }
-  else  {
+  if(fabs(den)<1.0e-8) {
     xTTFit = 0.;
     xSlopeTTFit = 0.;
     vtttr.setChi2PerDoF(1.0e19);
     return;
   }
+
+  xTTFit      = (c13*c22-c23*c12)/(c11*c22-c21*c12);
+  xSlopeTTFit = (c13*c21-c23*c11)/(c12*c21-c22*c11);
 
   // new VELO slope x
   double xb = xTTFit+xSlopeTTFit*(zmid-zTT);
@@ -534,10 +512,7 @@ void PatVeloTTTool::simpleFit(PatVTTTrack& vtttr) {
 
   if(m_debug) debug() << " Velo-TT track refit. Points:" << endmsg;
 
-  for ( PatTTHits::const_iterator itH = theHits.begin();
-        theHits.end() != itH; itH++ ) {
-
-    PatTTHit* pdigi = (*itH);
+  for ( const PatTTHit *pdigi : theHits ) {
 
     double zd    = pdigi->z();
     double xd    = xTTFit + xSlopeTTFit*(zd-zTT);
@@ -582,25 +557,19 @@ void PatVeloTTTool::simpleFit(PatVTTTrack& vtttr) {
   }
 
   // update track state (qOverP and chiSquared only)
-
   vtttr.setQOverP(qp);
-
   vtttr.setChi2PerDoF(chi2Global);
-
-  return;
-
 }
 
 
 //=========================================================================
 // Apply local clean-up for all track candidates based on the same Velo tracks
 //=========================================================================
-void PatVeloTTTool::localCleanUp(std::vector<PatVTTTrack>& vttTracks){
+void PatVeloTTTool::localCleanUp(std::vector<PatVTTTrack>& vttTracks) const {
 
   if(m_debug) debug() << "Entering localCleanUp" << endmsg;
 
-  std::vector<PatVTTTrack>::iterator ivttTrB;
-  for(ivttTrB = vttTracks.begin(); ivttTrB != vttTracks.end(); ++ivttTrB){
+  for(auto ivttTrB = vttTracks.begin(); ivttTrB != vttTracks.end(); ++ivttTrB){
 
     if(ivttTrB->badCandidate()) continue;
     if(ivttTrB->nTTLayersFired() == 0) continue; // Ignore candidates with no clusters
@@ -658,15 +627,10 @@ void PatVeloTTTool::localCleanUp(std::vector<PatVTTTrack>& vttTracks){
 
   // Check what we have left, only in debug mode
   if(m_debug){
-    int nVeloTTBeforeLocalCleanUp = 0;
-    int nVeloTTAfterLocalCleanUp = 0;
+    int nVeloTTAfterLocalCleanUp = std::count_if( vttTracks.begin(), vttTracks.end(),
+                    [](const PatVTTTrack& t) { return !t.badCandidate(); } );
 
-    for(ivttTrB = vttTracks.begin(); ivttTrB != vttTracks.end(); ++ivttTrB){
-      nVeloTTBeforeLocalCleanUp++;
-      if(ivttTrB->badCandidate()) continue;
-      nVeloTTAfterLocalCleanUp++;
-    }
-    debug() << "Number of VeloTT candidates before: " << nVeloTTBeforeLocalCleanUp
+    debug() << "Number of VeloTT candidates before: " << vttTracks.size()
             << " and after local clean-up: "<<  nVeloTTAfterLocalCleanUp << endmsg;
 
     debug() << "Leaving localCleanUp" << endmsg;
@@ -676,30 +640,27 @@ void PatVeloTTTool::localCleanUp(std::vector<PatVTTTrack>& vttTracks){
 //=========================================================================
 // Remove worse pseudo chi2 vtt candidates
 //=========================================================================
-void PatVeloTTTool::selectBestTracks( std::vector<PatVTTTrack>& vttTracks) {
+void PatVeloTTTool::selectBestTracks( std::vector<PatVTTTrack>& vttTracks) const {
 
   // keep only best m_maxSolutionsPerTrack i.e. smallest chi2
 
-  std::vector<PatVTTTrack>::iterator ivttTrB;
-
   // apply psudoChi2 cut
 
-  for(ivttTrB = vttTracks.begin(); ivttTrB != vttTracks.end(); ++ivttTrB){
+  for(auto ivttTrB = vttTracks.begin(); ivttTrB != vttTracks.end(); ++ivttTrB){
     if( ivttTrB->chi2PerDoF() > m_maxPseudoChi2 ) {
       ivttTrB->setBadCandidate(true);
     }
 
   }
 
-  for(ivttTrB = vttTracks.begin(); ivttTrB != vttTracks.end(); ++ivttTrB){
+  for(auto ivttTrB = vttTracks.begin(); ivttTrB != vttTracks.end(); ++ivttTrB){
 
     if(ivttTrB->badCandidate()) continue;
     if(ivttTrB->unique()) continue; // Ignore if only one candidate for a Velo track
 
     std::vector<PatVTTTrack*> pvtt;
     pvtt.push_back(&(*ivttTrB));
-    std::vector<PatVTTTrack>::iterator ivttTrE;
-    for(ivttTrE = ivttTrB+1; ivttTrE != vttTracks.end(); ++ivttTrE){
+    for(auto ivttTrE = std::next(ivttTrB); ivttTrE != vttTracks.end(); ++ivttTrE){
 
       if(ivttTrE->badCandidate()) continue;
       if(ivttTrE->unique()) continue; // Ignore if only one candidate for a Velo track
@@ -709,45 +670,36 @@ void PatVeloTTTool::selectBestTracks( std::vector<PatVTTTrack>& vttTracks) {
     }
 
 
-    if((int)pvtt.size() > m_maxSolutionsPerTrack) {
-      std::vector<PatVTTTrack*>::iterator iv;
+    if(static_cast<int>(pvtt.size()) > m_maxSolutionsPerTrack) {
 
-      std::sort(pvtt.begin(),pvtt.end(),compPseudoChi2());
+      std::nth_element(pvtt.begin(), std::next(pvtt.begin(),m_maxSolutionsPerTrack), pvtt.end(),compPseudoChi2());
 
       if(m_debug) {
-        debug() << pvtt.size() << " sorted vtt, chi2 = : ";
-        for (iv=pvtt.begin(); iv != pvtt.end() ; iv++) {
-          debug() << (*iv)->chi2PerDoF() << " " ;
-        }
+        debug() << pvtt.size() << " good vtt, chi2 = : ";
+        for (const auto& v:pvtt) debug() << v->chi2PerDoF() << " " ;
         debug() << endmsg;
       }
 
-      for (iv=pvtt.begin()+m_maxSolutionsPerTrack; iv != pvtt.end() ; iv++) {
+      for (auto iv=std::next(pvtt.begin(),m_maxSolutionsPerTrack); iv != pvtt.end() ; iv++) {
         (*iv)->setBadCandidate(true);
         if(m_debug) debug() << (*iv)->chi2PerDoF() << " bad chi2" << endmsg;
       }
-
-
     }
-
   }
 }
 
 //=========================================================================
 // Create the Velo-TT tracks
 //=========================================================================
-void PatVeloTTTool::prepareOutputTracks( std::vector<PatVTTTrack>& vttTracks,
-                                         std::vector<LHCb::Track*>& outtracks)
+std::vector<std::unique_ptr<LHCb::Track>>
+PatVeloTTTool::prepareOutputTracks( std::vector<PatVTTTrack>& vttTracks) const
 {
 
   if(m_debug) debug() << "Entering prepareOutputTracks" << endmsg;
 
   double zMidField = m_PatTTMagnetTool->zMidField();
-
-  std::vector<PatVTTTrack>::iterator ivttTrB;
-  for(ivttTrB = vttTracks.begin(); ivttTrB != vttTracks.end(); ++ivttTrB){
-
-    PatVTTTrack cand = *ivttTrB;
+  std::vector<std::unique_ptr<LHCb::Track>> outtracks; outtracks.reserve(vttTracks.size());
+  for(const PatVTTTrack& cand : vttTracks ) {
 
     bool ok = cand.badCandidate();
     if(m_debug) debug() << " good candidate? " << (!ok) << endmsg;
@@ -773,17 +725,13 @@ void PatVeloTTTool::prepareOutputTracks( std::vector<PatVTTTrack>& vttTracks,
     double qop = cand.qOverP();
     if(m_debug) debug() << " output track Q/P = " << qop << " p " << 1/qop << endmsg;
 
-    LHCb::Track* outTr = new LHCb::Track();
+    std::unique_ptr<LHCb::Track> outTr { new LHCb::Track() };
     // reset the track
     outTr->reset();
 
     outTr->copy(*veloTr);
     // set q/p in all of the existing states
-    const std::vector< LHCb::State * > states = outTr->states();
-    std::vector< LHCb::State * >::const_iterator iState;
-    for ( iState = states.begin() ; iState != states.end() ; ++iState ){
-      (*iState)->setQOverP(qop);
-    }
+    for ( auto& state : outTr->states() ) state->setQOverP(qop);
     //== Add a new state...
     LHCb::State temp;
     temp.setLocation( LHCb::State::AtTT );
@@ -800,16 +748,13 @@ void PatVeloTTTool::prepareOutputTracks( std::vector<PatVTTTrack>& vttTracks,
     if(m_debug) debug() << " added State " << temp.stateVector()
                         << " cov \n" << temp.covariance() << endmsg;
 
-    for( PatTTHits::const_iterator iClusB = candClusters.begin();
-         iClusB != candClusters.end(); ++iClusB){
-      (*iClusB)->hit()->setUsed( true );
-
-      outTr->addToLhcbIDs( (*iClusB)->hit()->lhcbID() );
+    for( auto& cl : candClusters) {
+      cl->hit()->setUsed( true );
+      outTr->addToLhcbIDs( cl->hit()->lhcbID() );
 
       if(m_debug){
-        debug() << " adding LHCb ID " << format( "%8x", (*iClusB)->hit()->lhcbID().lhcbID() ) << endmsg;
+        debug() << " adding LHCb ID " << format( "%8x", cl->hit()->lhcbID().lhcbID() ) << endmsg;
       }
-
     } // over PatTTCoords
 
     outTr->setType( LHCb::Track::Upstream );
@@ -818,14 +763,12 @@ void PatVeloTTTool::prepareOutputTracks( std::vector<PatVTTTrack>& vttTracks,
     outTr->setPatRecStatus( LHCb::Track::PatRecIDs );
     outTr->setChi2PerDoF(cand.chi2PerDoF());
 
-    outtracks.push_back(outTr);
+    outtracks.push_back(std::move(outTr));
 
   } // for ivttTr
 
   if(m_debug) debug() << "Leaving prepareOutputTracks" << endmsg;
+  return outtracks;
 }
-
-
-
 
 //=============================================================================
