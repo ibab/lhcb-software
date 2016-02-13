@@ -14,35 +14,14 @@
 //=============================================================================
 NewSpaceTrack::NewSpaceTrack( std::vector<Tf::PatVeloPhiHit*>::const_iterator it1,
                               std::vector<Tf::PatVeloPhiHit*>::const_iterator it2 ) {
-  m_s0  = 0.;
-  m_sx  = 0.;
-  m_sy  = 0.;
-  m_sz  = 0.;
-  m_sxz = 0.;
-  m_syz = 0.;
-  m_sz2 = 0.;
-  m_sPhi = 0.;
-  m_averagePhi = 0.;
 
-  m_x0 = 0.;
-  m_tx = 0.;
-  m_y0 = 0.;
-  m_ty = 0.;
 
-  m_nbUnused = 0;
-  m_qFactor  = -999.;
-  m_valid    = true;
-  
-  for ( std::vector<Tf::PatVeloPhiHit*>::const_iterator itH = it1; it2 >= itH ; ++itH ) {
+  for ( auto itH = it1; it2 >= itH ; ++itH ) { //@ FIXME: a closed range???
     addCluster( *itH );
   }
   std::sort( m_hits.begin(), m_hits.end(), Tf::PatVeloPhiHit::DecreasingByZ() );
   fitTrack();
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-NewSpaceTrack::~NewSpaceTrack() {}
 
 //=========================================================================
 //  Add a cluster to the track, fit the new parameters
@@ -74,12 +53,11 @@ void NewSpaceTrack::addCluster ( Tf::PatVeloPhiHit* hit) {
 //=========================================================================
 bool NewSpaceTrack::removeWorstMultiple( double maxChi2, unsigned int minExpected, bool debug ) {
   double highest = 1000.;
-  std::vector<Tf::PatVeloPhiHit*>::iterator itH;
   while ( m_hits.size() >= minExpected ) {
     highest = -1.;
     Tf::PatVeloPhiHit* worst = 0;
     unsigned int prevSensor = 999;
-    for ( itH = m_hits.begin(); m_hits.end() != itH ; ++itH ) {
+    for ( auto itH = m_hits.begin(); m_hits.end() != itH ; ++itH ) {
       unsigned int nextSensor = 999;
       unsigned int mySensor   = (*itH)->sensor()->sensorNumber();
       if ( itH != m_hits.end()-1 ) nextSensor = (*(itH+1))->sensor()->sensorNumber();
@@ -108,7 +86,7 @@ bool NewSpaceTrack::removeWorstMultiple( double maxChi2, unsigned int minExpecte
   while ( m_hits.size() >= minExpected ) {
     highest = -1.;
     Tf::PatVeloPhiHit* worst = 0;
-    for ( itH = m_hits.begin(); m_hits.end() != itH ; ++itH ) {
+    for (auto  itH = m_hits.begin(); m_hits.end() != itH ; ++itH ) {
       double chi2 = dist2( *itH );
       if ( debug ) std::cout << "  Cluster Sensor " << (*itH)->sensorNumber() 
                              << " strip " << (*itH)->hit()->strip() 

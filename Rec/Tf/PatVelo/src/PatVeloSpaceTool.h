@@ -1,4 +1,3 @@
-// $Id: PatVeloSpaceTool.h,v 1.6 2009-06-24 18:04:34 dhcroft Exp $
 #ifndef TF_PATVELOSPACETOOL_H 
 #define TF_PATVELOSPACETOOL_H 1
 
@@ -32,7 +31,7 @@ namespace Tf {
    *  @author David Hutchcroft
    *  @date   2006-07-24
    */
-  class PatVeloSpaceTool : public GaudiTool, virtual public ITracksFromTrack {
+  class PatVeloSpaceTool : public extends<GaudiTool, ITracksFromTrack> {
     public: 
 
       /// Standard constructor
@@ -40,18 +39,16 @@ namespace Tf {
           const std::string& name,
           const IInterface* parent);
 
-      virtual ~PatVeloSpaceTool( ); ///< Destructor
+      ~PatVeloSpaceTool( ) override; ///< Destructor
 
-      StatusCode initialize(); ///< Initialize use base class
+      StatusCode initialize() override; ///< Initialize use base class
 
       /// take a Velo only Track without phi clusters and add phi clusters
-      virtual StatusCode tracksFromTrack(const LHCb::Track& seed, 
-          std::vector<LHCb::Track*>& tracks );  
+      StatusCode tracksFromTrack(const LHCb::Track& seed, std::vector<LHCb::Track*>& out) const override;
 
     private:
       /// take a PatVeloSpaceTrack without phi clusters and add phi clusters
-      void find3DSpaceTrack(PatVeloSpaceTrack & track,
-          std::vector<PatVeloSpaceTrack*>& accepted );
+      std::vector<std::unique_ptr<PatVeloSpaceTrack>> find3DSpaceTrack(const PatVeloSpaceTrack & track) const;
 
 
       /// Take a new sector and add to (or create) consistent phi cluster lists
@@ -60,20 +57,19 @@ namespace Tf {
 				 unsigned int RZone,
 				 int nbTried,
 				 double r,
-				 const std::pair<double,double>& phiRange );
+				 const std::pair<double,double>& phiRange ) const;
 
       /// choose between phi cluster lists: best list added to track
-      bool getBestPhiList(PatVeloSpaceTrack & track,
-          double nbTried, 
-          std::vector<PatVeloSpaceTrack*>& accepted );
+      std::vector<std::unique_ptr<PatVeloSpaceTrack>> getBestPhiList(const PatVeloSpaceTrack & track,
+          double nbTried) const ;
 
       /// dump a cluster/track extrapolation comparison to verbose() if required
       void dumpClusterComparison(PatVeloPhiLists::iterator & iPhiList,
           double xPred, double yPred,
-          PatVeloPhiHit& pCoord);
+          PatVeloPhiHit& pCoord) const;
 
       /// Merge phi lists sharing clusters
-      void mergePhiLists( bool backward );
+      void mergePhiLists( bool backward ) const;
 
     private:
       bool m_markClustersUsed; ///< Mark clusters as used if found as a 3D track
@@ -114,16 +110,16 @@ namespace Tf {
     
       unsigned int m_fullErrorPoints; ///< Number of measurements to take with a full error
 
-      DeVelo * m_velo; ///< Ponter to DeVelo object to get sensor numbers
+      DeVelo * m_velo = nullptr; ///< Pointer to DeVelo object to get sensor numbers
 
-      PatVeloPhiLists m_phiPt; ///< Temporary storage for lists of phi clusters
+      mutable PatVeloPhiLists m_phiPt; ///< Temporary storage for lists of phi clusters
 
-      PatVeloPhiHitManager* m_phiHitManager;
-      PatVeloRHitManager*   m_rHitManager;
+      PatVeloPhiHitManager* m_phiHitManager = nullptr;
+      PatVeloRHitManager*   m_rHitManager = nullptr;
 
-      PatVeloTrackTool* m_trackTool;
+      PatVeloTrackTool* m_trackTool = nullptr;
 
-      CircularRangeUtils<double> m_angleUtils;
+      CircularRangeUtils<double> m_angleUtils = { -Gaudi::Units::pi,Gaudi::Units::pi };
   };
 }
 #endif // TF_PATVELOSPACETOOL_H

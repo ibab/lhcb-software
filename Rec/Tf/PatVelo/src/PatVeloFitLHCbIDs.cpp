@@ -29,7 +29,7 @@ namespace Tf{
 Tf::PatVeloFitLHCbIDs::PatVeloFitLHCbIDs( const std::string& type,
 					  const std::string& name,
 					  const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : base_class ( type, name , parent )
 {
   declareInterface<ITrackFitter>(this);
   declareProperty( "beamState",             m_beamState = false   );
@@ -44,8 +44,7 @@ Tf::PatVeloFitLHCbIDs::PatVeloFitLHCbIDs( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-Tf::PatVeloFitLHCbIDs::~PatVeloFitLHCbIDs() {
-}
+Tf::PatVeloFitLHCbIDs::~PatVeloFitLHCbIDs() = default;
 
 StatusCode Tf::PatVeloFitLHCbIDs::initialize(){
   StatusCode sc = GaudiTool::initialize();
@@ -60,17 +59,16 @@ StatusCode Tf::PatVeloFitLHCbIDs::initialize(){
   return StatusCode::SUCCESS;
 }
 
-StatusCode Tf::PatVeloFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID){
+StatusCode Tf::PatVeloFitLHCbIDs::fit(LHCb::Track& track, LHCb::ParticleID) const{
 
   // place to store the LHCbIDs ignored in the PatSpaceTrack fit
   std::vector<LHCb::LHCbID> nonVELOIDs;
    
-  PatVeloSpaceTrack * patVeloTrack = new PatVeloSpaceTrack(m_PatVeloTrackTool);
+  auto patVeloTrack = PatVeloSpaceTrack{m_PatVeloTrackTool};
   // take a majority vote of the side of the velo clusters to determine side 
   // to do fit in
   unsigned int nLeft(0),nRight(0);
-  std::vector<LHCb::LHCbID>::const_iterator iID;
-  for( iID = track.lhcbIDs().begin() ; iID != track.lhcbIDs().end() ; ++iID){
+  for(auto iID = track.lhcbIDs().begin() ; iID != track.lhcbIDs().end() ; ++iID){
     if( iID->isVelo() ){
       if ( m_velo->sensor(iID->veloID().sensor())->isRight() ) {
 	++nRight;
@@ -79,14 +77,11 @@ StatusCode Tf::PatVeloFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID){
       }
     }
   }    
-  if( nRight > nLeft ){
-    patVeloTrack->setSide( PatVeloHitSide::Right );
-  }else {
-    // use left in the case of a tie for no good reason
-    patVeloTrack->setSide( PatVeloHitSide::Left );    
-  }    
+  // use left in the case of a tie for no good reason
+  patVeloTrack.setSide(  (nRight > nLeft) ? PatVeloHitSide::Right 
+                                          : PatVeloHitSide::Left );
 
-  for( iID = track.lhcbIDs().begin() ; iID != track.lhcbIDs().end() ; ++iID){
+  for(auto iID = track.lhcbIDs().begin() ; iID != track.lhcbIDs().end() ; ++iID){
     if( ! iID->isVelo() ) {
       nonVELOIDs.push_back(*iID);
       continue;
@@ -101,10 +96,9 @@ StatusCode Tf::PatVeloFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID){
       if(!phiHit){
         Warning("Did not find phi cluster",StatusCode::SUCCESS,0).ignore();
         if(msgLevel(MSG::DEBUG)) debug() << "Did not find phi cluster for " << *iID << endmsg;
-        delete(patVeloTrack);
         return StatusCode::FAILURE;
       }
-      patVeloTrack->addPhi(phiHit);
+      patVeloTrack.addPhi(phiHit);
     }
     if( iID->isVeloR() ){
       int sensor = iID->veloID().sensor();
@@ -116,10 +110,9 @@ StatusCode Tf::PatVeloFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID){
       if(!rHit){
         Warning("Did not find R cluster",StatusCode::SUCCESS,0).ignore();
         if(msgLevel(MSG::DEBUG)) debug() << "Did not find R cluster for " << *iID << endmsg;
-        delete(patVeloTrack);
         return StatusCode::FAILURE;
       }
-      patVeloTrack->addRCoord(rHit);
+      patVeloTrack.addRCoord(rHit);
     }
   }
 
@@ -129,24 +122,21 @@ StatusCode Tf::PatVeloFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID){
   double veloQoverPerr2 = 0.;
 
   LHCb::Track::StateContainer savedStates;
-
-  const std::vector< LHCb::State * > states = track.states();
-  std::vector< LHCb::State * >::const_iterator iState;
-  for( iState = states.begin() ; iState != states.end() ; ++iState ){
-    LHCb::State::Location location = (*iState)->location();
+  for(const auto& state : track.states() ) {
+    LHCb::State::Location location = state->location();
     if( ( location == LHCb::State::ClosestToBeam || 
 	  location == LHCb::State::FirstMeasurement ||
 	  location == LHCb::State::EndVelo ) && veloQoverP == 0.){
-      veloQoverP = (*iState)->qOverP();
-      veloQoverPerr2 = (*iState)->errQOverP2();
+      veloQoverP = state->qOverP();
+      veloQoverPerr2 = state->errQOverP2();
     }else{
       // clone state to add back to track
-      savedStates.push_back((*iState)->clone());
+      savedStates.push_back(state->clone());
     }
   }
 
 
-  patVeloTrack->fitRZ();
+  patVeloTrack.fitRZ();
   // set R on phi hits
   m_PatVeloTrackTool->setPhiCoords(patVeloTrack);
   // fit the track trajectory
@@ -160,35 +150,28 @@ StatusCode Tf::PatVeloFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID){
     }
   }
 
-  patVeloTrack->fitSpaceTrack( msCorr, true, m_beamState , m_fullErrorPoints );
+  patVeloTrack.fitSpaceTrack( msCorr, true, m_beamState , m_fullErrorPoints );
 
   
   StatusCode sc =
-    m_PatVeloTrackTool->makeTrackFromPatVeloSpace(patVeloTrack,&track,
+    m_PatVeloTrackTool->makeTrackFromPatVeloSpace(patVeloTrack,track,
 						  m_forwardStepError,
 						  m_beamState);
-  delete(patVeloTrack);
 
   // add back the non-velo LHCbIDs
-  for( iID = nonVELOIDs.begin() ; iID != nonVELOIDs.end() ; ++iID){
-    track.addToLhcbIDs(*iID);
-  }
+  for( const auto& id : nonVELOIDs ) track.addToLhcbIDs(id);
 
   // now copy back q/p and error from remade track states
-  const std::vector< LHCb::State * > newStates = track.states();
-  for( iState = newStates.begin() ; iState != newStates.end() ; ++iState ){
-    LHCb::State::Location location = (*iState)->location();
+  for( const auto& state : track.states() ) {
+    LHCb::State::Location location = state->location();
     if( location == LHCb::State::ClosestToBeam || 
 	location == LHCb::State::FirstMeasurement ||
 	location == LHCb::State::EndVelo ) {
-      (*iState)->setQOverP(veloQoverP);
-      (*iState)->setErrQOverP2(veloQoverPerr2);
+      state->setQOverP(veloQoverP);
+      state->setErrQOverP2(veloQoverPerr2);
     }
   }
   // copy the other track states back into the new track
-  if(!savedStates.empty()){
-    track.addToStates(savedStates);
-  }
-  
+  if(!savedStates.empty()) track.addToStates(savedStates);
   return sc;
 }

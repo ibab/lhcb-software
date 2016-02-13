@@ -12,6 +12,14 @@
 // 2009-03-20 : Olivier Callot
 //-----------------------------------------------------------------------------
 
+namespace{
+  struct  increasingByReferencePhi {
+    bool operator() ( const Tf::PatVeloPhiHit* h1, const Tf::PatVeloPhiHit* h2 ) const {
+      return h1->referencePhi() < h2->referencePhi();
+    }
+  };
+}
+
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( NewVeloSpaceTool )
 
@@ -22,8 +30,7 @@ DECLARE_TOOL_FACTORY( NewVeloSpaceTool )
 NewVeloSpaceTool::NewVeloSpaceTool( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
-  : GaudiTool ( type, name , parent )
-  , m_angleUtils(-Gaudi::Units::pi,Gaudi::Units::pi)
+  : base_class ( type, name , parent )
 {
   declareInterface<ITracksFromTrack>(this);
   declareProperty( "RHitManagerName" ,   m_rHitManagerName    = "PatVeloRHitManager"   );
@@ -96,8 +103,10 @@ StatusCode NewVeloSpaceTool::initialize ( ) {
 //=========================================================================
 // Process one input track.
 //=========================================================================
-StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
-                                               std::vector<LHCb::Track*>& out  ) {
+StatusCode 
+NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
+                                    std::vector<LHCb::Track*>& out ) const {
+
   m_isVerbose = msgLevel(MSG::VERBOSE);
   m_isDebug   = msgLevel(MSG::DEBUG);
   if ( m_measureTime ) {
@@ -105,12 +114,11 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
     m_timer->start( m_convertTime );
   }
   
-  if ( 0 != m_debugTrackTool ) {
+  if ( m_debugTrackTool ) {
     //== Get the MC truth of the candidate..
-    std::vector<int> keys = m_debugTrackTool->keys( &in );
-    for ( unsigned int kk = 0 ; keys.size() > kk ; ++kk ) {
-      if ( msgLevel( MSG::DEBUG ) ) m_wantedKey = keys[kk];
-      if ( keys[kk] == m_wantedKey ) {
+    for ( int key : m_debugTrackTool->keys( &in ) ) {
+      if ( msgLevel( MSG::DEBUG ) ) m_wantedKey = key;
+      if ( key == m_wantedKey ) {
         m_isVerbose = true;
         m_isDebug   = true;
       }
@@ -118,40 +126,31 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
   }
 
   // turn an LHCb::Track into a PatVeloSpaceTrack for fitting purposes
-  Tf::PatVeloSpaceTrack* track = m_trackTool->makePatVeloSpaceTrack( in );
+  auto track = m_trackTool->makePatVeloSpaceTrack( in );
   int zone = track->zone();
-  int nbRight = 0;
-  int nbLeft  = 0;
-  for ( std::vector<LHCb::LHCbID>::const_iterator itId = in.lhcbIDs().begin();
-        in.lhcbIDs().end() != itId; ++itId ) {
-    bool isRight = m_velo->rSensor( (*itId).veloID() )->isRight();
-    if ( isRight ) {
-      ++nbRight;
-    } else {
-      ++nbLeft;
-    }
-  }
+  int nbRight = std::count_if( in.lhcbIDs().begin(), in.lhcbIDs().end(),
+                               [&](const LHCb::LHCbID& id) {  
+                    return m_velo->rSensor( id.veloID() )->isRight();
+  });
+  int nbLeft = in.lhcbIDs().size()-nbRight;
 
   int firstPhiSensor, lastPhiSensor, step;
-  getPhiSensorAndStep( track, firstPhiSensor, lastPhiSensor, step );
+  getPhiSensorAndStep( track.get(), firstPhiSensor, lastPhiSensor, step );
 
-  Tf::PatVeloPhiHitManager::StationIterator firstPhiSensorIter = m_phiHitManager->stationIterAllNoPrep( firstPhiSensor );
-  Tf::PatVeloPhiHitManager::StationIterator lastPhiSensorIter  = m_phiHitManager->stationIterAllNoPrep( lastPhiSensor );
-  Tf::PatVeloPhiHitManager::StationIterator phiSensorIter;
+  auto firstPhiSensorIter = m_phiHitManager->stationIterAllNoPrep( firstPhiSensor );
+  auto lastPhiSensorIter  = m_phiHitManager->stationIterAllNoPrep( lastPhiSensor );
 
-  for ( phiSensorIter = firstPhiSensorIter; lastPhiSensorIter != phiSensorIter;
+  for (auto  phiSensorIter = firstPhiSensorIter; lastPhiSensorIter != phiSensorIter;
         std::advance(phiSensorIter,step) ) {
     Tf::PatVeloPhiHitManager::Station* sensor = *phiSensorIter;
     if ( !sensor->sensor()->isReadOut() ) continue; // jump sensors not in readout
     if ( !sensor->hitsPrepared() ) m_phiHitManager->prepareHits(sensor);
   }
 
-  int nbOver = 0;
-  for ( std::vector<Tf::PatVeloRHit*>::iterator itC = track->rCoords()->begin();
-        track->rCoords()->end() != itC; ++itC ) {
-    if ( (*itC)->hit()->cluster().highThreshold() ) ++nbOver;
-  }
-  bool isDouble = nbOver > track->rCoords()->size() * m_fractionForDouble;
+  const auto& rCoords = track->rCoords();
+  int nbOver = std::count_if( rCoords.begin(), rCoords.end(), 
+                              [](const Tf::PatVeloRHit* c) { return c->hit()->cluster().highThreshold(); });
+  bool isDouble = ( nbOver > rCoords.size() * m_fractionForDouble );
   
   int minNbPhi = int( .5 * m_fractionFound * abs( lastPhiSensor - firstPhiSensor ) );  // two sensors per station.
 
@@ -170,22 +169,18 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
            << " minNbPhi " << minNbPhi
            << " wanted = " << m_wantedKey
            << endmsg;
-    for ( std::vector<Tf::PatVeloRHit*>::iterator itC = track->rCoords()->begin();
-          track->rCoords()->end() != itC; ++itC ) {
-      printCoord( *itC, "R  " );
-    }
+    for ( const auto& i : track->rCoords()) printCoord( i, "R  " );
     //== Now the PHI hits
-    for ( phiSensorIter = firstPhiSensorIter; lastPhiSensorIter != phiSensorIter;
+    for ( auto phiSensorIter = firstPhiSensorIter; lastPhiSensorIter != phiSensorIter;
           std::advance(phiSensorIter,step) ) {
       Tf::PatVeloPhiHitManager::Station* station = *phiSensorIter;
       if ( !station->sensor()->isReadOut() ) continue; // jump sensors not in readout
 
-      for ( unsigned int kk=0 ; 2> kk ; ++kk ) {
-        for ( std::vector<Tf::PatVeloPhiHit*>::const_iterator itH = station->hits( kk ).begin();
-              station->hits( kk ).end() != itH; ++itH ) {
-          if ( matchKey( *itH ) ) {
-            (*itH)->setReferencePhi( 0. );
-            printCoord( *itH, "Phi" );
+      for ( unsigned int kk=0 ; kk<2 ; ++kk ) {
+        for ( auto& hit : station->hits( kk ) ) {
+          if ( matchKey( hit ) ) {
+            hit->setReferencePhi( 0. );
+            printCoord( hit, "Phi" );
           }
         }
       }
@@ -201,9 +196,9 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
   unsigned int nbStationTried   = 0;
   unsigned int lastStationTried = 99999;
 
-  for ( phiSensorIter = firstPhiSensorIter; lastPhiSensorIter != phiSensorIter;
+  for (auto phiSensorIter = firstPhiSensorIter; lastPhiSensorIter != phiSensorIter;
         std::advance(phiSensorIter,step) ) {
-    Tf::PatVeloPhiHitManager::Station* sensor = *phiSensorIter;
+    auto* sensor = *phiSensorIter;
     if ( !sensor->sensor()->isReadOut() ) continue; // jump sensors not in readout
 
     int side = 0;
@@ -248,33 +243,32 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
     //== The track is using right and left R sensors -> its Phi is in a narrow range...
     if ( nbLeft > 2 && nbRight > 2 ) {
       if ( range.first < 0 ) {
-        range = std::pair<double,double> ( -Gaudi::Units::halfpi -0.1, -Gaudi::Units::halfpi +0.1 );
+        range = std::make_pair( -Gaudi::Units::halfpi -0.1, -Gaudi::Units::halfpi +0.1 );
       } else {
-        range = std::pair<double,double> (  Gaudi::Units::halfpi -0.1,  Gaudi::Units::halfpi +0.1 );
+        range = std::make_pair(  Gaudi::Units::halfpi -0.1,  Gaudi::Units::halfpi +0.1 );
       }
     }
     if ( m_isDebug ) info() << "Phi range " << range.first << " " << range.second << endmsg;
   
     double offset = sensor->sensor()->halfboxPhiOffset(phiZone,r);
-    std::vector<Tf::PatVeloPhiHit*>::const_iterator itP;
-    for ( itP = sensor->hits(phiZone).begin(); sensor->hits(phiZone).end() != itP; ++itP ) {
+    for ( auto& h : sensor->hits(phiZone) ) {
 
       // check if co-ord is compatible with the min and max for the sector.
-      double phi = m_angleUtils.add( (*itP)->coordHalfBox(), offset );
+      double phi = m_angleUtils.add( h->coordHalfBox(), offset );
       if ( !m_angleUtils.contains( range, phi) ) continue;
 
       // set a possible `point' (incorporating R info) corresponding to this co-ord
       //== Correct for the box offset
       phi = phi + sin(phi) * dxBox / r;
 
-      (*itP)->setRadiusAndPhi( r, phi );
-      (*itP)->setReferencePhi( phi ); 
+      h->setRadiusAndPhi( r, phi );
+      h->setReferencePhi( phi ); 
 
       //== Store the first 4 stations in a container, the rest in another.
       if ( 4 < nbStationTried ) {
-        extraHits.push_back( *itP );
+        extraHits.push_back( h );
       } else {
-        allHits.push_back( *itP );
+        allHits.push_back( h );
       }
     }
   }
@@ -282,10 +276,7 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
   std::sort( allHits.begin(), allHits.end(), increasingByReferencePhi() );
 
   if ( m_isDebug ) {
-    for ( std::vector<Tf::PatVeloPhiHit*>::iterator itH = allHits.begin();
-          allHits.end() != itH; ++itH ) {
-      printCoord( *itH, "Selected" );
-    }
+    for ( const auto& h : allHits ) printCoord( h, "Selected" );
   }
 
   if ( m_measureTime ) {
@@ -295,16 +286,14 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
 
   //== Fast return if no possible candidate...
   if ( 3 > allHits.size() ) {
-    delete track;
     if ( m_measureTime ) m_timer->stop( m_totalTime );
-    return StatusCode::SUCCESS;
+    return {};
   }
   
   std::vector<NewSpaceTrack> newTracks;
-  std::vector<Tf::PatVeloPhiHit*>::const_iterator itH1, itH2, itH, prevItH2;
-  itH1 = allHits.begin();
-  itH2 = itH1 + 2;
-  prevItH2 = itH1;
+  auto itH1 = allHits.begin();
+  auto itH2 = itH1 + 2;
+  auto prevItH2 = itH1;
 
   if ( m_isDebug ) info() << "== Search list with minimum size 3" << endmsg;
 
@@ -334,9 +323,9 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
                << " to " << (*itH2)->referencePhi()
                << " = " << (*itH2)->referencePhi() - (*itH1)->referencePhi()
                << " n " << itH2 - itH1 + 1 << endmsg;
-        for ( itH = candidate.begin(); candidate.end() != itH ; ++itH ) {
-          info() << format( "   chi2 %8.2f  dPhi %8.4f", candidate.dist2( *itH ), candidate.dPhi( *itH ) );
-          printCoord( *itH, "" );
+        for (const auto& h : candidate) {
+          info() << format( "   chi2 %8.2f  dPhi %8.4f", candidate.dist2( h ), candidate.dPhi( h ) );
+          printCoord( h, "" );
         }
       }
 
@@ -367,12 +356,12 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
       if ( ok ) {  //== Store it.
         if ( m_isDebug ) {
           info() << "**** Accepted , qFactor = " << candidate.qFactor() << " ****" << endmsg;
-          for ( itH = candidate.begin() ; candidate.end() != itH ; ++itH ) {
-            info() << format( "   chi2 %8.2f", candidate.dist2( *itH ) );
-            printCoord( *itH, "" );
+          for (const auto& h : candidate) {
+            info() << format( "   chi2 %8.2f", candidate.dist2( h ) );
+            printCoord( h, "" );
           }
         }
-        newTracks.push_back( candidate );
+        newTracks.push_back( std::move(candidate) );
       }
     }
     ++itH1;
@@ -386,12 +375,12 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
   }
 
   //== If no candidate: Take only the unused hits on both lists and try...
-  if ( 0 ==  newTracks.size() ) {
+  if ( newTracks.empty() ) {
     if ( m_isDebug ) info() << "Try with only unused hits " << endmsg;
     std::vector< Tf::PatVeloPhiHit*> unusedHits;
-    for ( itH = allHits.begin(); allHits.end() != itH; ++itH ) {
-      if ( !(*itH)->hit()->isUsed() ) unusedHits.push_back( *itH );
-    }
+    std::copy_if( allHits.begin(), allHits.end(),
+                  std::back_inserter(unusedHits),
+                  [](const Tf::PatVeloPhiHit* h) { return !h->hit()->isUsed(); } );
 
     bool retry = true;
     while ( retry && 3 <= unusedHits.size() ) {
@@ -421,9 +410,9 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
                    << " to " << (*itH2)->referencePhi()
                    << " = " << (*itH2)->referencePhi() - (*itH1)->referencePhi()
                    << " n " << itH2 - itH1 + 1 << endmsg;
-            for ( itH = candidate.begin(); candidate.end() != itH ; ++itH ) {
-              info() << format( "   chi2 %8.2f  dPhi %8.4f", candidate.dist2( *itH ), candidate.dPhi( *itH ) );
-              printCoord( *itH, "" );
+            for (const auto& h : candidate) {
+              info() << format( "   chi2 %8.2f  dPhi %8.4f", candidate.dist2( h ), candidate.dPhi( h ) );
+              printCoord( h, "" );
             }
           }
           
@@ -455,18 +444,18 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
           if ( ok ) {  
             if ( m_isDebug ) {
             info() << "**** Accepted , qFactor = " << candidate.qFactor() << " ****" << endmsg;
-              for ( itH = candidate.begin() ; candidate.end() != itH ; ++itH ) {
-                info() << format( "   chi2 %8.2f", candidate.dist2( *itH ) );
-                printCoord( *itH, "" );
+              for ( const auto& h : candidate) {
+                info() << format( "   chi2 %8.2f", candidate.dist2( h ) );
+                printCoord( h, "" );
               }
             }
             newTracks.push_back( candidate );
             bool  wasRemoved = false;
             Tf::PatVeloPhiHit* first = *itH1;   // restart in unused at the same hit
-            for ( itH = candidate.begin(); candidate.end() != itH; ++itH ) {
-              std::vector<Tf::PatVeloPhiHit*>::iterator itErase = std::find( unusedHits.begin(), unusedHits.end(), *itH );
+            for ( const auto& h : candidate ) {
+              auto itErase = std::find( unusedHits.begin(), unusedHits.end(), h );
               if ( itErase != unusedHits.end() ) {
-                if ( *itH == first ) {
+                if ( h == first ) {
                   wasRemoved = true;
                   if ( itErase != unusedHits.begin() ) {
                     first = *(itErase-1);
@@ -495,27 +484,26 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
     m_timer->start( m_storeTime );
   }
 
-  std::vector<NewSpaceTrack>::iterator itTr;
   double maxQual = 1.e10;
   double secondMinQual = 1.e10;
 
   unsigned int maxLen = 0;
   //== Get the properties of the best candidate. Invalidate tracks with 3 or 4 clusters, all already used.
-  for ( itTr = newTracks.begin(); newTracks.end() != itTr; ++itTr ) {
+  for (auto itTr = newTracks.begin(); newTracks.end() != itTr; ++itTr ) {
     if ( (*itTr).nbHits() < 5 && 0 ==  (*itTr).nbUnused()  ) (*itTr).setValid( false );
     if ( !(*itTr).isValid() ) continue;
     if ( (*itTr).nbHits() >= maxLen ) maxLen = (*itTr).nbHits();
   }
   unsigned int minExpected = maxLen;
   if ( 4 < maxLen ) minExpected = minExpected-1;
-  for ( itTr = newTracks.begin(); newTracks.end() != itTr; ++itTr ) {
-    if ( !(*itTr).isValid() ) continue;
-    if ( minExpected <= (*itTr).nbHits() ) {
-      if ( maxQual > (*itTr).qFactor() ) {
+  for ( const auto& itr : newTracks ) {
+    if ( !itr.isValid() ) continue;
+    if ( minExpected <= itr.nbHits() ) {
+      if ( maxQual > itr.qFactor() ) {
         secondMinQual = maxQual;
-        maxQual = (*itTr).qFactor();
-      } else if ( secondMinQual > (*itTr).qFactor() ) {
-        secondMinQual = (*itTr).qFactor();
+        maxQual = itr.qFactor();
+      } else if ( secondMinQual > itr.qFactor() ) {
+        secondMinQual = itr.qFactor();
       }
     }
   }
@@ -523,27 +511,24 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
   if ( isDouble ) maxQual = secondMinQual + m_deltaQuality;
 
   //== Store the good candidates
-  for ( itTr = newTracks.begin(); newTracks.end() != itTr; ++itTr ) {
-    if ( !(*itTr).isValid() ) continue;
+  out.reserve(out.size()+newTracks.size());
+  int ioff = 0;
+  for (const auto& itr : newTracks) {
+    if ( !itr.isValid() ) continue;
     if ( m_isDebug ) {
-      info() << "Test track " << itTr - newTracks.begin() << " nbHits " << (*itTr).nbHits() << " (min " << minExpected
-             << ") qFact " << (*itTr).qFactor() << " (max " << maxQual << ")" << endmsg;
+      info() << "Test track " << ioff++ << " nbHits " << itr.nbHits() << " (min " << minExpected
+             << ") qFact " << itr.qFactor() << " (max " << maxQual << ")" << endmsg;
     }
-    if ( minExpected > (*itTr).nbHits() ) continue;
-    if ( maxQual     < (*itTr).qFactor() ) continue;
+    if ( minExpected > itr.nbHits() ) continue;
+    if ( maxQual     < itr.qFactor() ) continue;
 
     Tf::PatVeloSpaceTrack tempTrack( *track );
-    for ( itH = (*itTr).begin() ; (*itTr).end() != itH ; ++itH ) {
-      tempTrack.addPhi( *itH );
-    }
+    for (const auto& h : itr ) tempTrack.addPhi( h );
 
     if ( m_isDebug ) {
-      info() << "Track with nPhi = " << tempTrack.phiCoords()->size()
+      info() << "Track with nPhi = " << tempTrack.phiCoords().size()
              << " nR " << tempTrack.nbCoords() << endmsg;
-      for ( itH = tempTrack.phiCoords()->begin();
-            tempTrack.phiCoords()->end() != itH; ++itH ) {
-        printCoord( *itH, "  " );
-      }
+      for (const auto&  h : tempTrack.phiCoords()) printCoord( h, "  " );
     }
 
     // fit the track trajectory
@@ -553,18 +538,15 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
     tempTrack.tagClustersAsUsed( Tf::HitBase::UsedByVeloSpace );
 
     // make the found PatVeloSpaceTrack back into an LHCb::Track
-    LHCb::Track *newTrack = new LHCb::Track();
-    newTrack->setHistory(LHCb::Track::PatVelo);
-    StatusCode sc = m_trackTool->makeTrackFromPatVeloSpace( &tempTrack, newTrack, m_forwardStepError);
+    std::unique_ptr<LHCb::Track> newTrack{ new LHCb::Track{} };
+    auto sc = m_trackTool->makeTrackFromPatVeloSpace( tempTrack, *newTrack, m_forwardStepError);
     if (!sc) {
       Warning("Failed to convert to LHCb::Track", StatusCode::SUCCESS).ignore();
-      delete newTrack;
       continue;
     }
-    out.push_back(newTrack);
+    newTrack->setHistory(LHCb::Track::PatVelo);
+    out.push_back(newTrack.release());
   }
-
-  delete track;
 
   if ( m_isDebug ) info() << "Returned " << out.size() << " candidates" << endmsg;
 
@@ -580,12 +562,11 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
 //  Get the first and last Phi sensor number, and the step to move inbetween
 //=========================================================================
 void NewVeloSpaceTool::getPhiSensorAndStep ( Tf::PatVeloSpaceTrack* track,
-                                             int& firstPhiSensor, int& lastPhiSensor, int& step ) {
+                                             int& firstPhiSensor, int& lastPhiSensor, int& step ) const {
   Tf::PatVeloRHitManager::StationIterator lastRSensorIter;
   Tf::PatVeloRHitManager::StationIterator firstRSensorIter;
-  Tf::PatVeloRHitManager::StationIterator startSensor = m_rHitManager->stationsAllBeginNoPrep();
-  Tf::PatVeloRHitManager::StationIterator stopSensor  = m_rHitManager->stationsAllEndNoPrep();
-  --stopSensor;
+  auto startSensor = m_rHitManager->stationsAllBeginNoPrep();
+  auto stopSensor  = std::prev(m_rHitManager->stationsAllEndNoPrep());
   if ( track->backward() ) {
     // backward track
     lastRSensorIter  = m_rHitManager->stationIterAllNoPrep(track->maxRSensor());
@@ -614,18 +595,16 @@ void NewVeloSpaceTool::getPhiSensorAndStep ( Tf::PatVeloSpaceTrack* track,
 //=========================================================================
 //  Merge tracks sharing hits, tag clones.
 //=========================================================================
-void NewVeloSpaceTool::mergeClones ( std::vector<NewSpaceTrack>& tracks ) {
+void NewVeloSpaceTool::mergeClones ( std::vector<NewSpaceTrack>& tracks ) const {
   if ( tracks.size() <= 1 ) return;
-  std::vector<NewSpaceTrack>::iterator it1, it2;
-  for ( it1 = tracks.begin(); tracks.end() != it1 ; ++it1 ) {
+  for ( auto it1 = tracks.begin(); tracks.end() != it1 ; ++it1 ) {
     int n1 = (*it1).nbHits();
-    for ( it2 = it1+1; tracks.end() != it2 ; ++it2 ) {
+    for ( auto it2 = it1+1; tracks.end() != it2 ; ++it2 ) {
       if ( !(*it2).isValid() ) continue;
       int n2 = (*it2).nbHits();
       int minN = n1 > n2 ? n2 : n1;
       int nCommon = 0;
-      std::vector<Tf::PatVeloPhiHit*>::const_iterator itH;
-      for ( itH = (*it1).begin(); (*it1).end() != itH ; ++itH ) {
+      for (auto itH = (*it1).begin(); (*it1).end() != itH ; ++itH ) {
         if ( std::find( (*it2).begin(), (*it2).end(), *itH ) != (*it2).end() ) ++nCommon;
       }
       if ( nCommon > m_fractionForMerge * minN ) {
@@ -647,7 +626,7 @@ void NewVeloSpaceTool::mergeClones ( std::vector<NewSpaceTrack>& tracks ) {
 //  Add clusters form the list to the track, and update the candidate
 //=========================================================================
 bool NewVeloSpaceTool::addClustersToTrack ( std::vector<Tf::PatVeloPhiHit*>& hitList,
-                                            NewSpaceTrack& candidate ) {
+                                            NewSpaceTrack& candidate ) const {
   bool added = false;
   std::vector<Tf::PatVeloPhiHit*>::const_iterator itH;
   for ( itH = hitList.begin() ; hitList.end() != itH ; ++itH ) {

@@ -62,7 +62,7 @@ namespace Tf {
 
   // if the track has R hits on both sides but phi hits out of the overlap
   // region delete the R hits
-  bool PatVeloTrackTool::cleanNonOverlapTracks(PatVeloSpaceTrack *tr,
+  bool PatVeloTrackTool::cleanNonOverlapTracks(PatVeloSpaceTrack &tr,
 			double stepErr,
 			unsigned int fullErrorPoints ) const {
     bool isVerbose = msgLevel( MSG::VERBOSE );
@@ -70,20 +70,20 @@ namespace Tf {
     if(isVerbose) verbose() << "Cleaning R overlap hits from track" <<endmsg;
 
     bool refit = false;
-    std::vector<PatVeloRHit*>* rCoords = tr->rCoords();
+    auto& rCoords = tr.rCoords();
 
-    std::vector<PatVeloRHit*>::iterator iR =rCoords->begin();
-    double xPoint = tr->point().X();
-    double yPoint = tr->point().Y();
-    double zPoint = tr->point().Z();
-    double slopeX = tr->slopeX();
-    double slopeY = tr->slopeY();
-    while( iR != rCoords->end() ){
+    double xPoint = tr.point().X();
+    double yPoint = tr.point().Y();
+    double zPoint = tr.point().Z();
+    double slopeX = tr.slopeX();
+    double slopeY = tr.slopeY();
+    auto iR =rCoords.begin();
+    while( iR != rCoords.end() ){
 
       double xTrack = xPoint + slopeX*( (*iR)->z() - zPoint );
       double yTrack = yPoint + slopeY*( (*iR)->z() - zPoint );
       double phiTrack = atan2(yTrack,xTrack);
-      if( tr->side() != (*iR)->side() ){
+      if( tr.side() != (*iR)->side() ){
         xTrack += xOffsetOtherHB((*iR)->sensorNumber(),phiTrack);
         yTrack += yOffsetOtherHB((*iR)->sensorNumber(),phiTrack);
         phiTrack = atan2(yTrack,xTrack);
@@ -93,78 +93,66 @@ namespace Tf {
         (*iR)->sensor()->veloHalfBoxToLocal(halfBoxPoint);
       if ( !(*iR)->sensor()->isInActiveArea(localPoint) ) {
         if(isVerbose) {
-          verbose() << "deleting cluster " << iR - rCoords->begin() << endmsg;
+          verbose() << "deleting cluster " << iR - rCoords.begin() << endmsg;
         }
-        iR = rCoords->erase(iR); //delete R coord, get pointer to next cluster
+        iR = rCoords.erase(iR); //delete R coord, get pointer to next cluster
         refit = true;
       }else{
         ++iR; // that cluster was OK, check next
       }
     }
-    if(refit){
-      if(rCoords->size() < 2) {
-        if(isVerbose){
-          verbose()
-            << "Removed too many R clusters from track: set to invalid"
-            << endmsg;
-        }
-        tr->setValid(false);
-        return false;
+    if(!refit) return false;
+
+    if(rCoords.size() < 2) {
+      if(isVerbose){
+        verbose()
+          << "Removed too many R clusters from track: set to invalid"
+          << endmsg;
       }
-      // reset phi coords
-      this->setPhiCoords(tr);
-      tr->fitSpaceTrack( stepErr, true, true, fullErrorPoints );
-      return true;
-    }else{
+      tr.setValid(false);
       return false;
     }
+    // reset phi coords
+    setPhiCoords(tr);
+    tr.fitSpaceTrack( stepErr, true, true, fullErrorPoints );
+    return true;
   }
 
-  void PatVeloTrackTool::setPhiCoords(PatVeloSpaceTrack* track) const {
+  void PatVeloTrackTool::setPhiCoords(PatVeloSpaceTrack& track) const {
     // need to reset r and phi of phi clusters which may have been overwritten
-    std::vector<PatVeloPhiHit*>* phiCoords = track->phiCoords();
-    std::vector<PatVeloPhiHit*>::iterator iP;
-    for( iP = phiCoords->begin() ; iP != phiCoords->end() ; ++iP ){
-      double r = track->rInterpolated( (*iP)->z() );
-      double phi  = (*iP)->sensor()
-        ->halfboxPhi((*iP)->hit()->strip(),
-                     (*iP)->hit()->interStripFraction(),r);
-      if( track->side() != (*iP)->side() ){
+    for( auto& pc : track.phiCoords() ) {
+      double r = track.rInterpolated( pc->z() );
+      double phi  = pc->sensor()
+        ->halfboxPhi(pc->hit()->strip(),
+                     pc->hit()->interStripFraction(),r);
+      if( track.side() != pc->side() ){
       // if track is fitted in other HB frame
-        phi += phiOffsetOtherHB((*iP)->sensorNumber(),phi,r);
+        phi += phiOffsetOtherHB(pc->sensorNumber(),phi,r);
       }
-      (*iP)->setRadiusAndPhi(r,phi);
+      pc->setRadiusAndPhi(r,phi);
     }
-    return;
   }
 
-  bool PatVeloTrackTool::isSpilloverTrack(PatVeloSpaceTrack* track) const {
+  bool PatVeloTrackTool::isSpilloverTrack(const PatVeloSpaceTrack& track) const {
 
-    double nbClus = 0.0;
-    double nbOver = 0.0;
+    auto nbClus = track.rCoords().size() + track.phiCoords().size();
 
-    // loop over the rs
-    for ( std::vector<PatVeloRHit*>::iterator itC = track->rCoords()->begin();
-        track->rCoords()->end() != itC; ++itC ) {
-      if ( m_chargeThreshold < (*itC)->hit()->signal() ) nbOver += 1.0;
-      nbClus += 1.0;
-    }
-
-    // and the phis in the glorious leaders scheme
-    for ( std::vector<PatVeloPhiHit*>::iterator itC = track->phiCoords()->begin();
-        track->phiCoords()->end() != itC; ++itC ) {
-      if ( m_chargeThreshold < (*itC)->hit()->signal() ) nbOver += 1.0;
-      nbClus += 1.0;
-    }
-
-    return (nbClus * m_highChargeFract  > nbOver ? true : false);
-
+    // loop over the rs and the phis in the glorious leaders scheme
+    auto nbOver = std::count_if( track.rCoords().begin(), track.rCoords().end(),
+                                 [&](const PatVeloRHit* h) { 
+                                    return m_chargeThreshold < h->hit()->signal();
+                               } )      
+                + std::count_if( track.phiCoords().begin(), track.phiCoords().end(),
+                                 [&](const PatVeloPhiHit* h) {
+                                    return m_chargeThreshold < h->hit()->signal();
+                               } );
+    return nbClus * m_highChargeFract  > nbOver;
   }
 
   //=============================================================================
-  PatVeloSpaceTrack *
-    PatVeloTrackTool::makePatVeloSpaceTrack(const LHCb::Track & pTrack) const {
-      PatVeloSpaceTrack * newTrack = new PatVeloSpaceTrack(this);
+  std::unique_ptr<PatVeloSpaceTrack>
+  PatVeloTrackTool::makePatVeloSpaceTrack(const LHCb::Track & pTrack) const {
+      std::unique_ptr<PatVeloSpaceTrack> newTrack{ new PatVeloSpaceTrack(this) };
 
       newTrack->setBackward( pTrack.checkFlag( LHCb::Track::Backward ) );
       newTrack->setZone( pTrack.specific() );
@@ -175,45 +163,39 @@ namespace Tf {
       newTrack->setSide( (pTrack.specific()<4) ? PatVeloHitSide::Left : 
                                                  PatVeloHitSide::Right ); 
       // copy co-ords from rz track input tracks
-      std::vector<LHCb::LHCbID>::const_iterator itR;
-      for ( itR = pTrack.lhcbIDs().begin(); pTrack.lhcbIDs().end() != itR; ++itR ){
-        LHCb::VeloChannelID id = (*itR).veloID();
-        unsigned int sensorNumber = id.sensor();
+      for ( const auto& id : pTrack.lhcbIDs()) {
+        LHCb::VeloChannelID vid = id.veloID();
+        unsigned int sensorNumber = vid.sensor();
         PatVeloRHitManager::Station* station = m_rHitManager->stationNoPrep( sensorNumber );
         if ( !station->hitsPrepared() ) m_rHitManager->prepareHits(station);
-        int zone         = station->sensor()->globalZoneOfStrip(id.strip());
-        PatVeloRHit* coord = station->hitByLHCbID( zone, (*itR));
-
-        if ( 0 == coord ) {
-          err() << "PatVeloRhit not found. id " << id
+        int zone         = station->sensor()->globalZoneOfStrip(vid.strip());
+        PatVeloRHit* coord = station->hitByLHCbID( zone, id);
+        if ( !coord ) {
+          err() << "PatVeloRhit not found. id " << vid
             << " sensor " << sensorNumber << " zone " << zone
             << endmsg;
-          delete newTrack;
-          return 0;
-        } else {
-          newTrack->addRCoord( coord );
-        }
+          return nullptr;
+        } 
+        newTrack->addRCoord( coord );
       }
       newTrack->fitRZ();
       return newTrack;
     }
 
-  void  PatVeloTrackTool::addStateToTrack(PatVeloSpaceTrack * patTrack,
-					  LHCb::Track *newTrack,
+  void  PatVeloTrackTool::addStateToTrack(const PatVeloSpaceTrack& patTrack,
+					  LHCb::Track &newTrack,
 					  LHCb::State::Location location,
 					  const Gaudi::TrackSymMatrix& covariance) const{
     LHCb::State state;
     state.setLocation(location);
     if( !m_tracksInHalfBoxFrame ) { // default to tracks in global frame
       // set box offset here
-      const DeVeloSensor *lastSens = (*(patTrack->rCoords()->begin()))->sensor();
-      Gaudi::XYZPoint localPoint1(patTrack->point().x(),patTrack->point().y(),
-                                  patTrack->point().z());
-      Gaudi::XYZPoint global1 = lastSens->veloHalfBoxToGlobal(localPoint1);
+      const DeVeloSensor *lastSens = (*patTrack.rCoords().begin())->sensor();
+      Gaudi::XYZPoint global1 = lastSens->veloHalfBoxToGlobal(patTrack.point());
       // to do slopes make a point 1 unit in dx and dy offset from default
-      Gaudi::XYZPoint localPoint2(patTrack->point().x()+patTrack->slopeX(),
-                                 patTrack->point().y()+patTrack->slopeY(),
-                                 patTrack->point().z()+1);
+      Gaudi::XYZPoint localPoint2(patTrack.point().x()+patTrack.slopeX(),
+                                  patTrack.point().y()+patTrack.slopeY(),
+                                  patTrack.point().z()+1);
       Gaudi::XYZPoint global2 = lastSens->veloHalfBoxToGlobal(localPoint2);
 
       double globalTx = (global2.x()-global1.x())/(global2.z()-global1.z());
@@ -224,87 +206,80 @@ namespace Tf {
       if ( msgLevel( MSG::VERBOSE ) ){
 	verbose() << "Offset track from "
                   <<format("xyz (%6.3f,%6.3f,%8.3f) (tx,ty)*10^3 (%6.1f,%6.1f)",
-                           patTrack->point().x(),patTrack->point().y(),
-                           patTrack->point().z(),
-                           1.e3*patTrack->slopeX(),1.e3*patTrack->slopeY())
+                           patTrack.point().x(),patTrack.point().y(),
+                           patTrack.point().z(),
+                           1.e3*patTrack.slopeX(),1.e3*patTrack.slopeY())
                   << " to "
                   <<format("xyz (%6.3f,%6.3f,%8.3f) (tx,ty)*10^3 (%6.1f,%6.1f)",
                            state.x(),state.y(),state.z(),1e3*state.tx(),1e3*state.ty())
                   << endmsg;
       }
     }else{
-      state.setState(patTrack->point().x(),patTrack->point().y(),patTrack->point().z(),
-		     patTrack->slopeX(),patTrack->slopeY(),0.); // q/p unknown from the VELO
+      state.setState(patTrack.point().x(),patTrack.point().y(),patTrack.point().z(),
+		     patTrack.slopeX(),patTrack.slopeY(),0.); // q/p unknown from the VELO
       if (msgLevel( MSG::VERBOSE )) verbose() << "Ignore box offset" << endmsg;
     }
     state.setCovariance( covariance );
-    newTrack->addToStates( state );
-    return;
+    newTrack.addToStates( state );
   }
 
   StatusCode
-  PatVeloTrackTool::makeTrackFromPatVeloSpace(PatVeloSpaceTrack * patTrack,
-					      LHCb::Track *newTrack,
+  PatVeloTrackTool::makeTrackFromPatVeloSpace(PatVeloSpaceTrack& patTrack,
+					      LHCb::Track &newTrack,
 					      double forwardStepError,
-					      double beamState) const{
+					      double beamState) const
+  {
+    if ( !patTrack.valid() ) return StatusCode::FAILURE;
+    LHCb::Track::History history = newTrack.history();
+    newTrack.reset(); // in case reusing track
+    newTrack.setHistory(history);
 
-    if ( !patTrack->valid() ) return StatusCode::FAILURE;
-    LHCb::Track::History history = newTrack->history();
-    newTrack->reset(); // in case reusing track
-    newTrack->setHistory(history);
-
-    const LHCb::Track* ances = patTrack->ancestor();
+    const LHCb::Track* ances = patTrack.ancestor();
 
     if( ances ) {
-      newTrack->addToAncestors( ances );
+      newTrack.addToAncestors( ances );
     }
-    std::vector<PatVeloRHit*>::iterator itR;
-    for ( itR = patTrack->rCoords()->begin();
-          patTrack->rCoords()->end() != itR; ++itR ) {
-      newTrack->addToLhcbIDs( (*itR)->hit()->lhcbID() );
+    for (const auto& rc : patTrack.rCoords() ) {
+      newTrack.addToLhcbIDs( rc->hit()->lhcbID() );
     }
 
-    newTrack->setFlag( LHCb::Track::Backward, patTrack->backward() );
-    newTrack->setType( LHCb::Track::Velo );
-    newTrack->setPatRecStatus( LHCb::Track::PatRecIDs );
+    newTrack.setFlag( LHCb::Track::Backward, patTrack.backward() );
+    newTrack.setType( LHCb::Track::Velo );
+    newTrack.setPatRecStatus( LHCb::Track::PatRecIDs );
     // the number of "expected" r+phi clusters
-    if( patTrack->nVeloExpected() > -0.5 ){ // default if unset is -1
-      newTrack->addInfo(LHCb::Track::nPRVelo3DExpect,patTrack->nVeloExpected());
+    if( patTrack.nVeloExpected() > -0.5 ){ // default if unset is -1
+      newTrack.addInfo(LHCb::Track::nPRVelo3DExpect,patTrack.nVeloExpected());
     }
 
     if(beamState){
-      addStateToTrack(patTrack,newTrack,LHCb::State::ClosestToBeam,patTrack->covariance());
+      addStateToTrack(patTrack,newTrack,LHCb::State::ClosestToBeam,patTrack.covariance());
     }else{
-      addStateToTrack(patTrack,newTrack,LHCb::State::FirstMeasurement,patTrack->covariance());
+      addStateToTrack(patTrack,newTrack,LHCb::State::FirstMeasurement,patTrack.covariance());
     }
 
-    newTrack->setChi2PerDoF( patTrack->chi2Dof( ) );
-    newTrack->setNDoF( patTrack->rCoords()->size() +
-        patTrack->phiCoords()->size() - 4 );
+    newTrack.setChi2PerDoF( patTrack.chi2Dof( ) );
+    newTrack.setNDoF( patTrack.rCoords().size() 
+                    + patTrack.phiCoords().size() - 4 );
 
     // fit away from z=0 to improve extrapolation to TT and beyond
     // reset phi coords
-    this->setPhiCoords(patTrack);
-    patTrack->fitSpaceTrack( forwardStepError, false );
+    setPhiCoords(patTrack);
+    patTrack.fitSpaceTrack( forwardStepError, false );
 
-    addStateToTrack(patTrack,newTrack,LHCb::State::EndVelo,patTrack->covariance());
+    addStateToTrack(patTrack,newTrack,LHCb::State::EndVelo,patTrack.covariance());
 
-    std::vector<PatVeloPhiHit*>::iterator itC;
-    for ( itC = patTrack->phiCoords()->begin();
-        patTrack->phiCoords()->end() != itC; ++itC ) {
-      newTrack->addToLhcbIDs( (*itC)->hit()->lhcbID() );
+    for (const auto& pc : patTrack.phiCoords()) {
+      newTrack.addToLhcbIDs( pc->hit()->lhcbID() );
     }
     // add "no fit" coords from other side of detector
-    for ( itR = patTrack->rCoordsNoFit()->begin();
-	  patTrack->rCoordsNoFit()->end() != itR; ++itR ) {
-      newTrack->addToLhcbIDs( (*itR)->hit()->lhcbID() );
+    for ( const auto& rc : patTrack.rCoordsNoFit()) {
+      newTrack.addToLhcbIDs( rc->hit()->lhcbID() );
     }
-    for ( itC = patTrack->phiCoordsNoFit()->begin();
-        patTrack->phiCoordsNoFit()->end() != itC; ++itC ) {
-      newTrack->addToLhcbIDs( (*itC)->hit()->lhcbID() );
+    for ( const auto& pc : patTrack.phiCoordsNoFit()) {
+      newTrack.addToLhcbIDs( pc->hit()->lhcbID() );
     }
 
-    newTrack -> setPatRecStatus( LHCb::Track::PatRecIDs );
+    newTrack.setPatRecStatus( LHCb::Track::PatRecIDs );
     return StatusCode::SUCCESS;
   }
 

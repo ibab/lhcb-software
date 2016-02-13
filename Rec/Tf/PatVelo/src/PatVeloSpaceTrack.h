@@ -60,7 +60,7 @@ namespace Tf {
     void setBackward( bool flag )      { m_backward = flag; }
 
     /// find interpolated R at z
-    double rInterpolated( double z );
+    double rInterpolated( double z ) const;
 
     /// if this coord is on the track set the effective phi and r of the coord
     void setPhiInterpolated( PatVeloRHit* myCoord );
@@ -88,33 +88,34 @@ namespace Tf {
 
   public:
     // inline getters
-    inline double meanZ()           const { return m_meanZ; }
-    inline double rPred( double z ) const { return m_pos0 + z * m_slope; }
-    inline double rErr2( double z ) const { 
+    double meanZ()           const { return m_meanZ; }
+    double rPred( double z ) const { return m_pos0 + z * m_slope; }
+    double rErr2( double z ) const { 
       return m_posErr + (z-m_meanZ)*(z-m_meanZ) * m_slopeErr;  
     }
-    inline std::vector<PatVeloRHit*>* rCoords()    { return &m_rCoord; };
-    inline unsigned int nbCoords()          const  { return m_rCoord.size(); }
-    inline unsigned int nFitCoords() const  { 
-      return m_rCoord.size()+m_phiCoord.size(); }
-    inline std::vector<PatVeloPhiHit*>* phiCoords(){ return &m_phiCoord; };
-    inline std::vector<PatVeloRHit*>* rCoordsNoFit()    { return &m_rCoordNoFit; };
-    inline std::vector<PatVeloPhiHit*>* phiCoordsNoFit(){ return &m_phiCoordNoFit; };
-    inline bool valid()          const { return m_valid; }
-    inline double firstZ()       const { return m_rCoord[0]->z(); }
-    inline double rSlope()       const { return m_slope; }
-    inline int zone()            const { return m_zone; }
-    inline bool backward()       const { return m_backward; }
-    inline const Gaudi::XYZPoint&  point( ) const { return m_point; }
-    inline double slopeX()       const { return m_slopeX; }
-    inline double slopeY()       const { return m_slopeY; }
-    inline double chi2Dof( )     const { return m_chiSqDof; }
-    inline const LHCb::Track* ancestor() const { return m_ancestor; }
-    inline unsigned int minRSensor() const { return m_minRSensor; }
-    inline unsigned int maxRSensor() const { return m_maxRSensor; }
-    inline double nVeloExpected()    const { return m_nVeloExpected; }
+    std::vector<PatVeloRHit*>& rCoords()    { return m_rCoord; };
+    const std::vector<PatVeloRHit*>& rCoords()  const  { return m_rCoord; };
+    unsigned int nbCoords()          const  { return m_rCoord.size(); }
+    unsigned int nFitCoords() const  { return m_rCoord.size()+m_phiCoord.size(); }
+    std::vector<PatVeloPhiHit*>& phiCoords(){ return m_phiCoord; };
+    const std::vector<PatVeloPhiHit*>& phiCoords() const { return m_phiCoord; };
+    std::vector<PatVeloRHit*>& rCoordsNoFit()    { return m_rCoordNoFit; };
+    std::vector<PatVeloPhiHit*>& phiCoordsNoFit(){ return m_phiCoordNoFit; };
+    bool valid()          const { return m_valid; }
+    double firstZ()       const { return m_rCoord[0]->z(); }
+    double rSlope()       const { return m_slope; }
+    int zone()            const { return m_zone; }
+    bool backward()       const { return m_backward; }
+    const Gaudi::XYZPoint&  point( ) const { return m_point; }
+    double slopeX()       const { return m_slopeX; }
+    double slopeY()       const { return m_slopeY; }
+    double chi2Dof( )     const { return m_chiSqDof; }
+    const LHCb::Track* ancestor() const { return m_ancestor; }
+    unsigned int minRSensor() const { return m_minRSensor; }
+    unsigned int maxRSensor() const { return m_maxRSensor; }
+    double nVeloExpected()    const { return m_nVeloExpected; }
 
-    inline const Gaudi::TrackSymMatrix& covariance()  const { return m_cov; }
+    const Gaudi::TrackSymMatrix& covariance()  const { return m_cov; }
 
     void setChiSqDof( double chi )     { m_chiSqDof = chi; }
 

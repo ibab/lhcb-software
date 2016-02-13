@@ -24,41 +24,34 @@
  *  @author Olivier Callot
  *  @date   2009-03-20
  */
-class NewVeloSpaceTool : public GaudiTool, virtual public ITracksFromTrack {
+class NewVeloSpaceTool : public extends<GaudiTool, ITracksFromTrack> {
 public:
   /// Standard constructor
   NewVeloSpaceTool( const std::string& type,
                     const std::string& name,
                     const IInterface* parent);
 
-  virtual ~NewVeloSpaceTool( ); ///< Destructor
+  ~NewVeloSpaceTool( ) override; ///< Destructor
 
-  StatusCode initialize(); ///< Initialize use base class
+  StatusCode initialize() override; ///< Initialize use base class
 
   /// take a Velo only Track without phi clusters and add phi clusters
-  virtual StatusCode tracksFromTrack(const LHCb::Track& seed,
-                                     std::vector<LHCb::Track*>& tracks );
+  StatusCode tracksFromTrack(const LHCb::Track& seed,std::vector<LHCb::Track*>& out) const override;
 
-protected:
-  void printRCoords( Tf::PatVeloRHitManager::Station* station, int zone, std::string title ) {
-    std::vector<Tf::PatVeloRHit*>::const_iterator itC;
+private:
+  void printRCoords( Tf::PatVeloRHitManager::Station* station, int zone, std::string title ) const {
     info() << " ... coordinates in " << title << " sensor " << station->sensor()->sensorNumber()
            << " zone " << zone << " ..." << endmsg;
-    for ( itC = station->hits(zone).begin(); station->hits(zone).end() != itC; ++itC ) {
-      printCoord( *itC, " ");
-    }
+    for ( const auto& i : station->hits(zone)) printCoord( i, " ");
   }
 
-  void printPhiCoords( Tf::PatVeloPhiHitManager::Station* station, int zone, std::string title ) {
-    std::vector<Tf::PatVeloPhiHit*>::const_iterator itC;
+  void printPhiCoords( Tf::PatVeloPhiHitManager::Station* station, int zone, std::string title ) const {
     info() << " ... coordinates in " << title << " sensor " << station->sensor()->sensorNumber()
            << " zone " << zone << " ..." << endmsg;
-    for ( itC = station->hits(zone).begin(); station->hits(zone).end() != itC; ++itC ) {
-      printCoord( *itC, " ");
-    }
+    for (const auto& i : station->hits(zone)) printCoord( i, " ");
   }
 
-  template<class TYPE> void printCoord( const TYPE* hit, std::string title ) {
+  template<class TYPE> void printCoord( const TYPE* hit, std::string title ) const {
     info() << "  " << title
            << format( " sensor %3d z%7.1f strip%5d coord%10.5f phi%10.5f size%2d inter%5.2f high%2d used%2d ",
                       hit->sensorNumber(), hit->z(), hit->hit()->strip(),
@@ -69,36 +62,30 @@ protected:
                       hit->hit()->cluster().highThreshold(),
                       hit->hit()->isUsed() );
     LHCb::LHCbID myId =  hit->hit()->lhcbID();
-    if ( 0 != m_debugTool ) m_debugTool->printKey( info(), myId );
+    if ( m_debugTool ) m_debugTool->printKey( info(), myId );
     if ( matchKey( hit ) ) info() << " ***";
     info() << endmsg;
   }
 
-  template<class TYPE> bool matchKey( TYPE* coord ) {
-    if ( 0 == m_debugTool ) return false;
+  template<class TYPE> bool matchKey( TYPE* coord ) const {
+    if ( !m_debugTool ) return false;
     LHCb::LHCbID id = coord->hit()->lhcbID();
     return m_debugTool->matchKey( id, m_wantedKey );
   }
   
-  class increasingByReferencePhi {
-    public:
-    bool operator() ( const Tf::PatVeloPhiHit* h1, const Tf::PatVeloPhiHit* h2 ) const {
-      return h1->referencePhi() < h2->referencePhi();
-    }
-  };
 
   void getPhiSensorAndStep ( Tf::PatVeloSpaceTrack* track,
-                             int& firstPhiSensor, int& lastPhiSensor, int& step );
+                             int& firstPhiSensor, int& lastPhiSensor, int& step ) const;
   
-  void mergeClones( std::vector<NewSpaceTrack>& tracks );
+  void mergeClones( std::vector<NewSpaceTrack>& tracks ) const;
 
   bool addClustersToTrack ( std::vector<Tf::PatVeloPhiHit*>& hitList,
-                            NewSpaceTrack& candidate );
+                            NewSpaceTrack& candidate ) const;
   
 private:
   std::string m_debugToolName;
   std::string m_debugTrackToolName;
-  int         m_wantedKey;
+  mutable int m_wantedKey;
   bool        m_printTracks;
   std::string m_rHitManagerName;      /// Name of the R hit manager instance
   std::string m_phiHitManagerName;    /// Name of the Phi hit manager instance
@@ -122,11 +109,11 @@ private:
   Tf::PatVeloPhiHitManager*      m_phiHitManager;
   Tf::PatVeloRHitManager*        m_rHitManager;
   Tf::PatVeloTrackTool*          m_trackTool;
-  Tf::CircularRangeUtils<double> m_angleUtils;
+  Tf::CircularRangeUtils<double> m_angleUtils = { -Gaudi::Units::pi,Gaudi::Units::pi };
   IPatDebugTool*                 m_debugTool;
   IPatDebugTrackTool*            m_debugTrackTool;
-  bool                           m_isDebug;
-  bool                           m_isVerbose;
+  mutable bool                   m_isDebug;
+  mutable bool                   m_isVerbose;
 
   bool                           m_measureTime;
   ISequencerTimerTool*           m_timer;

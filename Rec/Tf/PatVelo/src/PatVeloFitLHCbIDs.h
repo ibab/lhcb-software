@@ -1,4 +1,3 @@
-// $Id: PatVeloFitLHCbIDs.h,v 1.4 2009-07-29 16:25:59 dhcroft Exp $
 #ifndef TF_PATVELOFITLHCBIDS_H 
 #define TF_PATVELOFITLHCBIDS_H 1
 
@@ -28,8 +27,7 @@ namespace Tf {
    *  @author David Hutchcroft
    *  @date   2008-02-07
    */
-  class PatVeloFitLHCbIDs : public GaudiTool, 
-			    virtual public ITrackFitter {
+  class PatVeloFitLHCbIDs : public extends<GaudiTool, ITrackFitter> {
   public: 
 
     // Return the interface ID
@@ -40,13 +38,13 @@ namespace Tf {
 		      const std::string& name,
 		      const IInterface* parent);
 
-    virtual ~PatVeloFitLHCbIDs( ); ///< Destructor
+    ~PatVeloFitLHCbIDs( ) override; ///< Destructor
 
-    StatusCode initialize(); ///< initialize
+    StatusCode initialize() override; ///< initialize
 
     /// fit the track using the LHCbIDs on it with the PatVelo internal fit
-    virtual StatusCode fit ( LHCb::Track & track, 
-                             LHCb::ParticleID pid = LHCb::ParticleID(211) );
+    StatusCode fit ( LHCb::Track& track, 
+                     LHCb::ParticleID pid = LHCb::ParticleID(211) ) const override;
 
   private:
 
@@ -83,7 +81,7 @@ namespace Tf {
     unsigned int m_fullErrorPoints; 
 
     /// velo detector element
-    DeVelo *m_velo;
+    DeVelo *m_velo = nullptr;
   };
 }
 #endif // TF_PATVELOFITLHCBIDS_H

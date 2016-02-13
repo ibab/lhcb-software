@@ -44,7 +44,7 @@ namespace Tf {
   private:
 
   /// Captive class describing a point in the VELO made of crossed coordinates
-    class PatVeloLocalPoint {
+    class PatVeloLocalPoint final {
     public:
       /// constructor: shifts point into global frame
       PatVeloLocalPoint(PatVeloRHit *rHit, PatVeloPhiHit *phiHit,double phi,
@@ -108,7 +108,7 @@ namespace Tf {
     typedef std::map<unsigned int, std::vector<PatVeloLocalPoint> > PointsContainer;
 
     /// Captive class describing a list of points in the VELO
-    class PointsList {
+    class PointsList final {
     public:
       /// creator: always start from triplet of points
       PointsList( PatVeloLocalPoint *one,
@@ -118,17 +118,16 @@ namespace Tf {
 		  bool isLeftSide):
 	m_chi2(chi2), m_valid(true), m_isLeft(isLeftSide){
 	m_points.reserve(10);
-	m_points.push_back(one);
-	m_points.push_back(two);
-	m_points.push_back(three);
+	m_points = { one, two, three };
       };
       // inline getters
-      inline std::vector<PatVeloLocalPoint*> & points() { return m_points; }
-      inline double chi2() const { return m_chi2; }
-      inline bool vaild() const { return m_valid; }
-      inline bool isLeft() const { return m_isLeft; }
+      std::vector<PatVeloLocalPoint*> & points() { return m_points; }
+      const std::vector<PatVeloLocalPoint*>& points() const { return m_points; }
+      double chi2() const { return m_chi2; }
+      bool valid() const { return m_valid; }
+      bool isLeft() const { return m_isLeft; }
       // setter
-      inline void setValid(bool valid) { m_valid = valid; }
+      void setValid(bool valid) { m_valid = valid; }
 
       /// less in chi2 function for sorting
       struct lessChi2 {
@@ -156,33 +155,31 @@ namespace Tf {
 
     /// take the container of 3D points and find tracks in it
     /// "overlap" sets how opposite side sensors are used
-    void findTracks(PointsContainer &points,
-		    std::vector<PatVeloSpaceTrack*> &tracks,
-		    bool overlap);
+    std::vector<std::unique_ptr<PatVeloSpaceTrack>> 
+    findTracks(PointsContainer &points, bool overlap) const;
 
     /// turn the three lists of points (representing 3 sensors) 
     /// into valid triplets
-    void makeAllGoodTriplets(std::vector<PatVeloLocalPoint> &one,
+    std::vector<PointsList> makeAllGoodTriplets(std::vector<PatVeloLocalPoint> &one,
 			     std::vector<PatVeloLocalPoint> &two,      
 			     std::vector<PatVeloLocalPoint> &three,
-			     std::vector<PointsList> &triplets,
-			     bool overlap);
+			     bool overlap) const;
 
     /// choose between triplets based on chi2 and only keep best of overlaps
-    void sortAndKeepGoodTriplets(std::vector<PointsList> &triplets);
+    void sortAndKeepGoodTriplets(std::vector<PointsList> &triplets) const;
 
     /// extend a triplet into a longer track
     bool extendTrack(PointsList &trackPoints,
 		     PointsContainer &points,
-		     PatVeloSpaceTrack *newTrack);
+		     PatVeloSpaceTrack &newTrack) const;
 
     /// extend a track using single clusters
     void extendTrackSingleClusters(PatVeloSpaceTrackLocal::FrameParam &xFit,
 				   PatVeloSpaceTrackLocal::FrameParam &yFit,
-				   PatVeloSpaceTrack *newTrack);
+				   PatVeloSpaceTrack &newTrack) const ;
 
     /// write out tracks to store that pass cuts
-    void storeTracks(std::vector<PatVeloSpaceTrack*> & tracks);
+    void storeTracks(std::vector<std::unique_ptr<PatVeloSpaceTrack>> & tracks) const;
 
     PatVeloRHitManager* m_rHitManager;     ///< R hit storage
     PatVeloPhiHitManager* m_phiHitManager; ///< Phi hit storage

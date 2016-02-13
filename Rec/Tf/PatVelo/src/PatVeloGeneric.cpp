@@ -19,14 +19,8 @@ namespace Tf {
   //=============================================================================
 
   PatVeloGeneric::PatVeloGeneric( const std::string& name,
-      ISvcLocator* pSvcLocator)
+                                  ISvcLocator* pSvcLocator)
     : GaudiAlgorithm ( name , pSvcLocator )
-    , m_angleUtils(-Gaudi::Units::pi,Gaudi::Units::pi)
-    , m_rHitManager(NULL)
-    , m_phiHitManager(NULL)
-    , m_PatVeloTrackTool(NULL)
-    , m_velo(NULL)
-    , m_outputTracks(NULL)
     {
       declareProperty( "SigmaTol",    m_sigma = 4.0 );
       declareProperty( "RAliTol",     m_rOff = 0.0 );
@@ -57,7 +51,6 @@ namespace Tf {
       declareProperty( "ConsiderOverlaps", m_considerOverlaps=false );
       declareProperty( "MaxGapForOverlapSearch", m_maxGapForOverlapSearch=10.0*Gaudi::Units::micrometer );
 
-      m_binary = 1/sqrt(12.);  // digital resolution a priori
 
       numberOfRSectors = 4;
       numberOfPSectors = 2;
@@ -106,9 +99,9 @@ namespace Tf {
       << "Right half x-offset       = " << m_velo->halfBoxOffset(1).x() << " mm"<< endmsg
       << "======================================"           << endmsg;
 
-    std::vector<DeVeloPhiType*>::const_iterator phiIt = m_velo->phiSensorsBegin();  
-    m_inner2 = m_binary*(*phiIt)->phiPitch( (unsigned int)1 ); 
-    m_outer2 = m_binary*(*phiIt)->phiPitch( (unsigned int)1000 );
+    auto phiIt = m_velo->phiSensorsBegin();  
+    m_inner2 = s_binary*(*phiIt)->phiPitch( (unsigned int)1 ); 
+    m_outer2 = s_binary*(*phiIt)->phiPitch( (unsigned int)1000 );
     m_inner2 *= m_inner2;
     m_outer2 *= m_outer2;  
     m_rOff *= m_rOff;
@@ -436,38 +429,31 @@ namespace Tf {
               LHCb::State temp;
               PatVeloSpaceTrack tr(m_PatVeloTrackTool);
 
-              std::vector<PatVeloRHit*>::iterator itR;
-              for ( itR = fitter->rCoords().begin(); fitter->rCoords().end() != itR;
-                  ++itR ) {
-                if ( 0 == (*itR) ) continue;
-                PatVeloRHit* coord = (*itR);
+              for ( auto* coord : fitter->rCoords()) {
+                if ( !coord ) continue;
                 double rr = coord->coordHalfBox();
                 double  z = coord->z();        
                 coord->setRadiusAndPhi(rr,fitter->pExtrap(z));
                 tr.addRCoord(coord);        
               }
 
-              std::vector<PatVeloPhiHit*>::iterator itP;
-              for ( itP = fitter->phiCoords().begin(); fitter->phiCoords().end() != itP;
-                  ++itP ) {
-                if ( 0 == (*itP) ) continue;        
-                PatVeloPhiHit* coord = (*itP);        
+              for ( auto* coord : fitter->phiCoords() ) {
+                if ( !coord ) continue;        
                 double  z = coord->z();        
                 double rr = fitter->rExtrap(z);
                 double phi = coord->coordHalfBox() + coord->sensor()->halfboxPhiOffset(coord->zone(),rr);
-
                 coord->setRadiusAndPhi(rr,phi);
                 tr.addPhi(coord);        
               }
 
               tr.fitSpaceTrack(0.002);
 	      
-	      m_PatVeloTrackTool->addStateToTrack(&tr,track,
+	      m_PatVeloTrackTool->addStateToTrack(tr,*track,
 						  LHCb::State::EndVelo,
 						  tr.covariance());
 
               track->setChi2PerDoF( tr.chi2Dof( ) );
-              track->setNDoF( tr.rCoords()->size() + tr.phiCoords()->size() );
+              track->setNDoF( tr.rCoords().size() + tr.phiCoords().size() );
 
               debug() << "Saving track with Chi2 " <<  track->chi2() 
                 << " and dof " << track->nDoF() << endmsg;  

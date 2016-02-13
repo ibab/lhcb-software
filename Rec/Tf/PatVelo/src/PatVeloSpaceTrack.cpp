@@ -89,8 +89,8 @@ namespace Tf {
   }
 
   /// find interpolated R at z
-  double PatVeloSpaceTrack::rInterpolated( double z ) {
-    std::pair<const PatVeloRHit*,const PatVeloRHit*> coordP = surroundZ(m_rCoord,z);
+  double PatVeloSpaceTrack::rInterpolated( double z ) const {
+    auto coordP = surroundZ(m_rCoord,z);
     double zRatio = (z - coordP.first->z() ) / ( coordP.second->z()- coordP.first->z() );
     return ( zRatio * coordP.second->coordHalfBox() + (1.-zRatio) * coordP.first->coordHalfBox() );
   }

@@ -41,29 +41,29 @@ namespace Tf {
 		      const std::string& name,
 		      const IInterface* parent);
 
-    virtual ~PatVeloTrackTool( ); ///< Destructor
+    ~PatVeloTrackTool( ) override; ///< Destructor
 
-    StatusCode initialize(); ///< initialize
+    StatusCode initialize() override; ///< initialize
 
     /// remove overlap hits from non-overlap tracks, 
     /// also clean R hits in corner cutouts
     /// stepErr is MS error per velo station assumed in fit errors
-    bool cleanNonOverlapTracks(PatVeloSpaceTrack *tr,
+    bool cleanNonOverlapTracks(PatVeloSpaceTrack& tr,
 			       double stepErr,
 			       unsigned int fullErrorPoints = 0) const;
 
     /// Set (or reset) the phi coordinates to match the RZ track fit
-    void setPhiCoords(PatVeloSpaceTrack* track) const;
+    void setPhiCoords(PatVeloSpaceTrack& track) const;
 
     /// test if a track contains too many spillover like clusters
-    bool isSpilloverTrack(PatVeloSpaceTrack* track) const;
+    bool isSpilloverTrack(const PatVeloSpaceTrack& track) const;
 
     /// Turn an LHCb::track into a PatVeloSpaceTrack
-    PatVeloSpaceTrack * makePatVeloSpaceTrack(const LHCb::Track & pTrack) const;
+    std::unique_ptr<PatVeloSpaceTrack> makePatVeloSpaceTrack(const LHCb::Track & pTrack) const;
 
     /// Convert a pat track into a normal track
-    StatusCode makeTrackFromPatVeloSpace(PatVeloSpaceTrack * patTrack,
-					 LHCb::Track *newTrack,
+    StatusCode makeTrackFromPatVeloSpace(PatVeloSpaceTrack&  patTrack,
+					 LHCb::Track &newTrack,
 					 double forwardStepError,
 					 double beamState = true ) const;
     
@@ -111,7 +111,7 @@ namespace Tf {
 		   
 
     /// add a state to the track and correct for half box position (if required)
-    void addStateToTrack(PatVeloSpaceTrack * patTrack, LHCb::Track *newTrack,
+    void addStateToTrack(const PatVeloSpaceTrack& patTrack, LHCb::Track& newTrack,
 			 LHCb::State::Location location, 
 			 const Gaudi::TrackSymMatrix& covariance) const;
 

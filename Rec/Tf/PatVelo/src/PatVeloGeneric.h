@@ -40,13 +40,14 @@ namespace Tf {
       virtual StatusCode finalize  (); ///< Algorithm finalization
 
     private:
+      static constexpr const auto s_binary = 1.0/sqrt(12.);  // digital resolution a priori
 
-      CircularRangeUtils<double> m_angleUtils;
-      PatVeloRHitManager*   m_rHitManager;
-      PatVeloPhiHitManager* m_phiHitManager;
-      PatVeloTrackTool * m_PatVeloTrackTool; ///< tool to handle PatVeloSpaceTracks
-      DeVelo* m_velo;
-      LHCb::Tracks* m_outputTracks;  ///< Container for output Space tracks
+      CircularRangeUtils<double> m_angleUtils = {-Gaudi::Units::pi,Gaudi::Units::pi };
+      PatVeloRHitManager*   m_rHitManager = nullptr;
+      PatVeloPhiHitManager* m_phiHitManager = nullptr;
+      PatVeloTrackTool * m_PatVeloTrackTool = nullptr; ///< tool to handle PatVeloSpaceTracks
+      DeVelo* m_velo = nullptr;
+      LHCb::Tracks* m_outputTracks = nullptr;  ///< Container for output Space tracks
 
       std::string m_outputTracksLocation;
       std::string m_rHitManagerName;
@@ -63,7 +64,6 @@ namespace Tf {
       bool m_considerOverlaps; ///< Look for clusters in the other hals during propagation
 
       double m_maxGapForOverlapSearch; ///< Maximum gap between halfs for which overlap search is enabled 
-      double m_binary;
       double m_sigma;    ///< Corridor width in standard deviations
       double m_rOff;     ///< Alignment tolerance in R
       double m_pOff;     ///< Alignment tolerance in phi
@@ -94,22 +94,19 @@ namespace Tf {
 
       /// Returns R-cluster candidate
       PatVeloRHit* rCandidate(PatVeloRHitManager::Station* rStation, unsigned int zone, double rEst)  {    
-        PatVeloRHit* best = 0;
-        if (rEst < 8.2 || rEst > 42.) return best; // to be changed or removed!    
+        if (rEst < 8.2 || rEst > 42.) return nullptr; // to be changed or removed!    
         const DeVeloRType* rSensor = rStation->sensor();
-        double rCor = m_binary*rSensor->rPitch( rEst );    
+        double rCor = s_binary*rSensor->rPitch( rEst );    
         rCor *= rCor;                  
         rCor += m_rOff;
         rCor = sqrt(rCor);
         rCor *= m_sigma;
         debug() << "R estimate = " << rEst << ", R tolerance = " << rCor << endmsg;
-        best = rStation->closestHitHalfBox( zone,rEst,rCor );
-        return best;
+        return rStation->closestHitHalfBox( zone,rEst,rCor );
       }
 
       /// Returns phi-cluster candidate
       PatVeloPhiHit* pCandidate(PatVeloRHitManager::Station* rStation, PatGenericFitter* fitter)  {
-        PatVeloPhiHit* best = 0;
         bool consist = false;
         double pEst = 0;
         double rEst = 0;
@@ -125,18 +122,16 @@ namespace Tf {
         }
         if (!consist) {
           debug() << "Extrapolated r not consistent with any phi zone." << endmsg;
-          return best; 
+          return nullptr; 
         }       
         double pCor = m_inner2;
-        if ( 1 == iSectorP ) {
-          pCor = m_outer2;
-        }    
+        if ( 1 == iSectorP ) pCor = m_outer2;
         pCor += m_pOff;
         pCor = sqrt(pCor);
         pCor *= m_sigma;
         pEst = fitter->pExtrap(zP);
         debug() << "PHI estimate = " << pEst << ", PHI tolerance = " << pCor << endmsg;
-        best = phiStation->closestHitAtRHalfBox( iSectorP,rEst,pEst,pCor );
+        auto best = phiStation->closestHitAtRHalfBox( iSectorP,rEst,pEst,pCor );
         if (!best)
           debug() << "No phi hit in search window." << endmsg;
         return best;
@@ -160,4 +155,3 @@ namespace Tf {
 }
 
 #endif // TF_PAT_PATVELOGENERIC_H
-

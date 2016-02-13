@@ -26,9 +26,7 @@ namespace Tf {
   PatVeloSpaceTool::PatVeloSpaceTool( const std::string& type,
       const std::string& name,
       const IInterface* parent )
-    : GaudiTool ( type, name , parent )
-    , m_phiPt()
-    , m_angleUtils(-Gaudi::Units::pi,Gaudi::Units::pi)
+    : base_class ( type, name , parent )
     {
       declareInterface<ITracksFromTrack>(this);
       // normally want to only use clusters once
@@ -55,7 +53,7 @@ namespace Tf {
   //=============================================================================
   // Destructor
   //=============================================================================
-  PatVeloSpaceTool::~PatVeloSpaceTool() {}
+  PatVeloSpaceTool::~PatVeloSpaceTool() = default;
 
   StatusCode PatVeloSpaceTool::initialize(){
     StatusCode sc = GaudiTool::initialize();
@@ -77,37 +75,33 @@ namespace Tf {
     return StatusCode::SUCCESS;
   }
 
-  StatusCode PatVeloSpaceTool::tracksFromTrack( const LHCb::Track& seed,
-      std::vector<LHCb::Track*>& tracks ){
+  StatusCode
+  PatVeloSpaceTool::tracksFromTrack( const LHCb::Track& seed,std::vector<LHCb::Track*>& tracks ) const {
+
     bool isVerbose = msgLevel(MSG::VERBOSE);
     bool isDebug   = msgLevel(MSG::DEBUG);
 
     if( seed.checkFlag(LHCb::Track::Invalid) ) {
-      return Warning("Invalid RZ Velo track as input", StatusCode::FAILURE );
+      Warning("Invalid RZ Velo track as input", StatusCode::FAILURE ).ignore();
+      return { };
     }
 
     // turn an LHCb::Track into a PatVeloSpaceTrack for fitting purposes
-    PatVeloSpaceTrack* space =
-      m_trackTool->makePatVeloSpaceTrack(seed);
-
-    std::vector<PatVeloSpaceTrack*> spaceTracks;
-    find3DSpaceTrack(*space, spaceTracks);
-    delete space; // done with tempoary space track
-
+    auto space = m_trackTool->makePatVeloSpaceTrack(seed);
+    auto spaceTracks = find3DSpaceTrack(*space);
+    tracks.reserve(tracks.size()+spaceTracks.size());
     // fit returned space tracks
-    std::vector<PatVeloSpaceTrack*>::iterator iTr;
+    for (const auto& strack : spaceTracks ) {
 
-    for ( iTr = spaceTracks.begin(); spaceTracks.end() != iTr; ++iTr ) {
-
-      if(!(*iTr)->valid()) continue; // if fails skip to next track
+      if(!strack->valid()) continue; // if fails skip to next track
 
       // set R on phi hits
-      m_trackTool->setPhiCoords(*iTr);
+      m_trackTool->setPhiCoords(*strack);
       // fit the track trajectory
-      (*iTr)->fitSpaceTrack( m_stepError, true, true, m_fullErrorPoints );
+      strack->fitSpaceTrack( m_stepError, true, true, m_fullErrorPoints );
 
       // check if spillover
-      if (m_trackTool->isSpilloverTrack(*iTr) == true) {
+      if (m_trackTool->isSpilloverTrack(*strack)) {
         if(isVerbose) verbose() << "Spillover track removed" << endmsg;
         continue;
       }
@@ -116,9 +110,9 @@ namespace Tf {
         // if the track has R hits on both sides but phi hits out of the
         // overlap region delete the R hits
         bool cleaned =
-	  m_trackTool->cleanNonOverlapTracks(*iTr, m_stepError,
+	  m_trackTool->cleanNonOverlapTracks(*strack, m_stepError,
 					     m_fullErrorPoints);
-        if(!(*iTr)->valid()) {
+        if(!strack->valid()) {
           if (isVerbose) verbose()
             << "Non-overlap track has overlap R clusters removed"
               << endmsg;
@@ -128,49 +122,39 @@ namespace Tf {
           << "Cleaned R clusters from non-overlap track" << endmsg;
       }
       //  clean the worst fitted examples
-      if ( (*iTr)->chi2Dof( ) > m_chiSqDofMax ) {
+      if ( strack->chi2Dof( ) > m_chiSqDofMax ) {
         if (isVerbose) verbose() << "Skip track with chi^2/ndf "
-          << (*iTr)->chi2Dof( )
+          << strack->chi2Dof( )
             << endmsg;
         continue;
       }
 
       if (isDebug) debug() << "Found track with chi^2/ndf "
-        << (*iTr)->chi2Dof( ) << endmsg;
+        << strack->chi2Dof( ) << endmsg;
 
       // make the found PatVeloSpaceTrack back into an LHCb::Track
-      LHCb::Track *newTrack = new LHCb::Track();
-      newTrack->setHistory(LHCb::Track::PatVelo);
-      StatusCode sc =
-        m_trackTool->makeTrackFromPatVeloSpace((*iTr),newTrack,
-            m_forwardStepError);
+      std::unique_ptr<LHCb::Track> newTrack{ new LHCb::Track() };
+      auto sc = m_trackTool->makeTrackFromPatVeloSpace(*strack, *newTrack, m_forwardStepError);
       if (!sc) {
         Warning("Failed to convert to LHCb::Track",StatusCode::SUCCESS,0).ignore();
-        delete newTrack;
         continue;
       }
-      tracks.push_back(newTrack);
+      newTrack->setHistory(LHCb::Track::PatVelo);
+      tracks.push_back(newTrack.release());
     }
-
-    // delete all PatVeloSpaceTracks
-    for ( iTr = spaceTracks.begin(); spaceTracks.end() != iTr; ++iTr ) {
-      delete (*iTr);
-    }
-
     return StatusCode::SUCCESS;
   }
 
-  void PatVeloSpaceTool::find3DSpaceTrack(PatVeloSpaceTrack & track,
-      std::vector<PatVeloSpaceTrack*>& accepted){
+  std::vector<std::unique_ptr<PatVeloSpaceTrack>> PatVeloSpaceTool::find3DSpaceTrack(const PatVeloSpaceTrack & track) const
+  {
 
     bool isVerbose = msgLevel(MSG::VERBOSE);
     bool isDebug   = msgLevel(MSG::DEBUG);
 
     int zone = track.zone();
 
-    PatVeloRHitManager::StationIterator startStation = m_rHitManager->stationsAllBeginNoPrep();
-    PatVeloRHitManager::StationIterator stopStation  = m_rHitManager->stationsAllEndNoPrep();
-    --stopStation;
+    auto startStation = m_rHitManager->stationsAllBeginNoPrep();
+    auto stopStation  = std::prev(m_rHitManager->stationsAllEndNoPrep());
     PatVeloRHitManager::StationIterator lastRStationIter;
     PatVeloRHitManager::StationIterator firstRStationIter;
     int step;
@@ -211,13 +195,13 @@ namespace Tf {
     unsigned int lastStationTried =0;
 
     // loop over Phi sensors in station range of R hits on track
-    PatVeloPhiHitManager::StationIterator firstPhiStationIter
+    auto firstPhiStationIter
       = m_phiHitManager->stationIterAllNoPrep((*firstRStationIter)->sensor()->associatedPhiSensor()->sensorNumber());
-    PatVeloPhiHitManager::StationIterator lastPhiStationIter
+    auto lastPhiStationIter
       = m_phiHitManager->stationIterAllNoPrep((*lastRStationIter)->sensor()->associatedPhiSensor()->sensorNumber());
 
-    PatVeloPhiHitManager::StationIterator phiStationIter = firstPhiStationIter;
-    for ( ; lastPhiStationIter != phiStationIter; std::advance(phiStationIter,step) ) {
+    
+    for ( auto phiStationIter = firstPhiStationIter; lastPhiStationIter != phiStationIter; std::advance(phiStationIter,step) ) {
       // try inner sector of phi sensor
       PatVeloPhiHitManager::Station* station = *phiStationIter;
       if ( !station->sensor()->isReadOut() ) continue; // jump sensors not in readout
@@ -294,8 +278,7 @@ namespace Tf {
       //== One stores only the best per list, and create a new list
       //== at beginning of the track (first two pairs) only.
 
-      PatVeloPhiLists::iterator iPhiList;
-      for ( iPhiList = m_phiPt.begin(); m_phiPt.end() != iPhiList; ++iPhiList ) {
+      for (auto iPhiList = m_phiPt.begin(); m_phiPt.end() != iPhiList; ++iPhiList ) {
         // once candidate phi hits have been found
         iPhiList->setExtrapolation( z, r, m_phiMatchTol, m_phiFirstTol);
 
@@ -304,7 +287,7 @@ namespace Tf {
       // note phi list can grow in this operation
       findBestPhiClusInSect(station, phiZone, zone, nStationsTried, r, range);
 
-      for ( iPhiList = m_phiPt.begin(); m_phiPt.end() != iPhiList; ++iPhiList ) {
+      for (auto iPhiList = m_phiPt.begin(); m_phiPt.end() != iPhiList; ++iPhiList ) {
         // save the candidate phi clusters if it survived
         iPhiList->saveCandidate( );
         if(isVerbose)verbose()<<format(" sensor %3d list #%2d phi%7.4f size %2d",
@@ -314,12 +297,12 @@ namespace Tf {
       }
     } // end of loop over phi sensors for this RZ track
 
-    if( getBestPhiList(track,nStationsTried, accepted) ){
+    auto accepted = getBestPhiList(track,nStationsTried);
+    if(!accepted.empty()) {
       if ( isDebug ) debug() << "Good track, nAccepted ="
         << accepted.size() << endmsg;
     }
-
-    return;
+    return accepted;
   }
 
   void PatVeloSpaceTool::
@@ -328,7 +311,7 @@ namespace Tf {
 			unsigned int RZone,
 			int nStationsTried,
 			double r,
-			const std::pair<double,double>& phiRange) {
+			const std::pair<double,double>& phiRange) const {
     // set the same side offset in phi for this radius
     double offset = station->sensor()->halfboxPhiOffset(zone,r);
     // if other side from RZ track add a correction to phi
@@ -339,8 +322,7 @@ namespace Tf {
       r += m_trackTool->rOffsetOtherHB(station->sensor()->sensorNumber(),
 					  m_trackTool->phiGlobalRZone(RZone));
     }
-    std::vector<PatVeloPhiHit*>::const_iterator itP;
-    for ( itP = station->hits(zone).begin();
+    for (auto itP = station->hits(zone).begin();
 	  station->hits(zone).end() != itP; ++itP ) {
 
       // check if co-ord is compatible with the min and max for the sector.
@@ -368,8 +350,7 @@ namespace Tf {
 
       // loop over each phi list to see if cluster is the new closest
       bool found = false;
-      PatVeloPhiLists::iterator iPhiList;
-      for ( iPhiList = m_phiPt.begin(); m_phiPt.end() != iPhiList; ++iPhiList ) {
+      for ( auto iPhiList = m_phiPt.begin(); m_phiPt.end() != iPhiList; ++iPhiList ) {
         bool better = iPhiList->isCloser( xPred, yPred, *itP );
         if ( better ) {
           found = true;
@@ -393,31 +374,28 @@ namespace Tf {
     }
   }
 
-  bool PatVeloSpaceTool::getBestPhiList(PatVeloSpaceTrack & track,
-      double nStationsTried,
-      std::vector<PatVeloSpaceTrack*>& accepted ){
+  std::vector<std::unique_ptr<PatVeloSpaceTrack>> 
+  PatVeloSpaceTool::getBestPhiList(const PatVeloSpaceTrack & track, double nStationsTried ) const
+  {
 
     // if no phi clusters found this is not a good track
-    if(m_phiPt.empty()) return false;
+    if(m_phiPt.empty()) return {};
 
     int minExpected = int( m_fractionFound * nStationsTried ) -1;
     if ( 3 > minExpected ) minExpected = 3;
 
     // if too few phi hits from number of R clusters reject track
-    bool good = false;
-
     if ( msgLevel(MSG::DEBUG) ) debug() << "nStationsTried " << nStationsTried
       << " request " << minExpected
         << " phi clusters " << endmsg;
 
     // All acceptable combinations of phi clusters: start with 1st
-    PatVeloPhiLists::iterator iPhiList;
     double minChi2 = 1.e10;
 
     mergePhiLists( track.backward() );
 
     //== Get the properties of the best list
-    for ( iPhiList = m_phiPt.begin(); m_phiPt.end() != iPhiList; ++iPhiList ) {
+    for (auto iPhiList = m_phiPt.begin(); m_phiPt.end() != iPhiList; ++iPhiList ) {
       if ( iPhiList->size() < 5 && 0 ==  iPhiList->nbUnused()  ) continue;
       if ( minExpected == iPhiList->size() ) {
         if ( minChi2 > iPhiList->qFactor() ) minChi2 = iPhiList->qFactor();
@@ -430,7 +408,8 @@ namespace Tf {
     if ( 4 < minExpected ) minExpected = minExpected - 1;
     if ( 3 < minExpected ) minChi2 += 0.5;
 
-    for ( iPhiList = m_phiPt.begin(); m_phiPt.end() != iPhiList; ++iPhiList ) {
+    std::vector<std::unique_ptr<PatVeloSpaceTrack>> accepted;
+    for (auto iPhiList = m_phiPt.begin(); m_phiPt.end() != iPhiList; ++iPhiList ) {
       int nbFound  = iPhiList->size();
       if ( 3 > nbFound ) continue;
       if ( msgLevel(MSG::DEBUG) ) {
@@ -441,37 +420,26 @@ namespace Tf {
       if ( iPhiList->size() < 5 && 0 ==  iPhiList->nbUnused()  ) continue;
       if ( minExpected > nbFound       ) continue;
       if ( minChi2 < iPhiList->qFactor() ) continue;
-      good = true;
-      std::vector<PatVeloPhiHit*>::iterator itP;
-      PatVeloSpaceTrack* phiCan = new PatVeloSpaceTrack( track );
-      for ( itP = iPhiList->coords().begin();
-          iPhiList->coords().end() != itP; ++itP ) {
-        phiCan->addPhi( *itP );
-      }
-      if ( m_markClustersUsed )
-	phiCan->tagClustersAsUsed( HitBase::UsedByVeloSpace );
-
+      accepted.emplace_back( new PatVeloSpaceTrack(track) );
+      auto* phiCan = accepted.back().get();
+      for (const auto& c : iPhiList->coords() ) { phiCan->addPhi(c); }
+      if ( m_markClustersUsed ) phiCan->tagClustersAsUsed( HitBase::UsedByVeloSpace );
       phiCan->setChiSqDof( iPhiList->chiSq() );
-      accepted.push_back( phiCan );
     }
 
-    if ( msgLevel( MSG::DEBUG ) &&
-        accepted.size() > 1 ) {
+    if ( msgLevel( MSG::DEBUG ) && accepted.size() > 1 ) {
       debug() << "Multiple solutions for same R" << endmsg;
-      for ( std::vector<PatVeloSpaceTrack*>::iterator itT = accepted.begin();
-	    accepted.end() != itT; ++itT ) {
-        int indx =  itT - accepted.begin();
-        debug() << "... track " << indx << " Chisq/dof " << (*itT)->chi2Dof()
-		<< endmsg;
+      int indx = 0;
+      for ( const auto& t : accepted ) {
+        debug() << "... track " << indx++ << " Chisq/dof " << t->chi2Dof() << endmsg;
       }
     }
-
-    return good;
+    return accepted;
   }
 
   void PatVeloSpaceTool::dumpClusterComparison(PatVeloPhiLists::iterator & iPhiList,
       double xPred, double yPred,
-      PatVeloPhiHit & pCoord){
+      PatVeloPhiHit & pCoord) const{
     double dist = iPhiList->distSquared( xPred, yPred );
     verbose() << " strip " << pCoord.lhcbID().veloID().strip()
       << format(" PhiList%8.4f Xpred %7.3f/%7.3f"\
@@ -484,14 +452,13 @@ namespace Tf {
   //=========================================================================
   //  Merge lists if they share hits
   //=========================================================================
-  void PatVeloSpaceTool::mergePhiLists ( bool backward ) {
+  void PatVeloSpaceTool::mergePhiLists ( bool backward ) const {
 
-    PatVeloPhiLists::iterator it1, it2;
     // make all pairs of Phi lists
-    for ( it1 = m_phiPt.begin(); m_phiPt.end() != it1; ++it1 ) {
-      int n1 = (*it1).size();
+    for (auto it1 = m_phiPt.begin(); m_phiPt.end() != it1; ++it1 ) {
+      int n1        = (*it1).size();
       if ( 3 > n1 ) continue; // too short, so ignore
-      for ( it2 = it1+1 ; m_phiPt.end() != it2; ++it2 ) {
+      for (auto it2 = std::next(it1) ; m_phiPt.end() != it2; ++it2 ) {
         int n2 = (*it2).size();
         if ( 3 > n2 ) continue; // too short, so ignore
         // pick the short/long combination (arbitary if same length)
@@ -503,15 +470,12 @@ namespace Tf {
           iShort = it2;
           iLong = it1;
         }
-        int nCommon = 0;
-        std::vector<PatVeloPhiHit*>::const_iterator itHLong, itHShort;
         // count clusters in common
-        for ( itHLong = (*iLong).coords().begin();
-            (*iLong).coords().end() != itHLong; ++itHLong  ) {
-          if ( std::find((*iShort).coords().begin(),
-                (*iShort).coords().end(),*itHLong)
-              != (*iShort).coords().end() ) ++nCommon;
-        }
+        int nCommon = std::count_if(iLong->coords().begin(), iLong->coords().end(),
+                                    [&](const Tf::PatVeloPhiHit* h) { 
+                      const auto& c = iShort->coords();
+                      return std::find(c.begin(),c.end(), h )!= c.end(); 
+        });
         bool added = false;
 
         // check found enough hits in common to start merge
@@ -523,10 +487,10 @@ namespace Tf {
               << std::min(n1,n2)
               << " " << nCommon << " shared hits." << endmsg;
           }
-          for ( itHShort = (*iShort).coords().begin();
+          for (auto itHShort = (*iShort).coords().begin();
               (*iShort).coords().end() != itHShort; ++itHShort  ) {
             bool foundSensor = false;
-            for ( itHLong = (*iLong).coords().begin();
+            for (auto itHLong = (*iLong).coords().begin();
                 (*iLong).coords().end() != itHLong; ++itHLong  ) {
               if ( (*itHLong)->sensor()->sensorNumber() ==
                   (*itHShort)->sensor()->sensorNumber() ) {
