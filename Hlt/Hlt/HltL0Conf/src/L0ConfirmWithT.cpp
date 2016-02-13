@@ -27,10 +27,7 @@ DECLARE_TOOL_FACTORY( L0ConfirmWithT )
 L0ConfirmWithT::L0ConfirmWithT( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
-  m_l0ConfExtrapolator(0)
-  , m_TrackConfirmTool(0)
-  , m_DataStore(0)
+  : base_class ( type, name , parent )
 {
   declareInterface<ITracksFromTrack>(this);
   declareInterface<ITrackView>(this);
@@ -39,10 +36,6 @@ L0ConfirmWithT::L0ConfirmWithT( const std::string& type,
   declareProperty("debugMode",m_debugMode = false );
   declareProperty("particleType", m_particleTypeTMP = 0 );
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-L0ConfirmWithT::~L0ConfirmWithT() {} 
 
 //=============================================================================
 StatusCode L0ConfirmWithT::initialize() 
@@ -75,9 +68,8 @@ StatusCode L0ConfirmWithT::initialize()
   return sc;
 }
 
-StatusCode L0ConfirmWithT::tracksFromTrack(
-		const LHCb::Track& seed,
-		std::vector<LHCb::Track*>& tracks )
+StatusCode L0ConfirmWithT::tracksFromTrack( const LHCb::Track& seed,
+		                                    std::vector<LHCb::Track*>& tracks ) const
 {
   if ( msgLevel(MSG::DEBUG) )
 	  debug() << "enter tracksFromTrack method" << endmsg;
@@ -146,7 +138,7 @@ std::vector<LHCb::LHCbID> L0ConfirmWithT::lhcbIDsInView(const LHCb::Track& seed)
 }
 
 
-StatusCode L0ConfirmWithT::prepareStates( const LHCb::Track& seed, LHCb::State* seedStates, int& nStates )
+StatusCode L0ConfirmWithT::prepareStates( const LHCb::Track& seed, LHCb::State* seedStates, int& nStates ) const
 {
   switch (m_particleType) {
   case Muon:

@@ -3,6 +3,8 @@
 ! Responsible : Johannes Albrecht
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
+! 2016-02-13- Gerhard Raven
+ - follow const-ification of Tr/TrackInterfaces
 
 !========================= HltL0Conf v4r3 2015-12-17 =========================
 

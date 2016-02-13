@@ -26,9 +26,8 @@ class ITrackConfirmTool;
  *  @author Johannes Albrecht
  *  @date   2007-07-04
  */
-class L0ConfirmWithT : public GaudiTool, 
-                       virtual public ITracksFromTrack,
-                       virtual public ITrackView 
+class L0ConfirmWithT : public extends<GaudiTool, ITracksFromTrack,
+                                                 ITrackView >
 {
 public: 
   /// Standard constructor
@@ -36,34 +35,29 @@ public:
                   const std::string& name,
                   const IInterface* parent);
 
-  virtual ~L0ConfirmWithT( ); ///< Destructor
-
   /// Initialize method
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
 
-  virtual StatusCode tracksFromTrack( const LHCb::Track& seed,
-                                      std::vector<LHCb::Track*>& tracks );
+  StatusCode tracksFromTrack( const LHCb::Track& seed,
+                              std::vector<LHCb::Track*>& tracks ) const override;
 
-  virtual std::vector<Tf::IStationSelector*>  view(const LHCb::Track& seed);
-  virtual std::vector<LHCb::LHCbID> lhcbIDsInView(const LHCb::Track& seed);
-
-  
-protected:
+  std::vector<Tf::IStationSelector*>  view(const LHCb::Track& seed) override;
+  std::vector<LHCb::LHCbID> lhcbIDsInView(const LHCb::Track& seed) override;
 
 private:
 
-  StatusCode prepareStates( const LHCb::Track& seed, LHCb::State* seedStates, int& nStates );
+  StatusCode prepareStates( const LHCb::Track& seed, LHCb::State* seedStates, int& nStates ) const;
   
 
   bool m_debugMode;
   
-  IL0ConfExtrapolator* m_l0ConfExtrapolator;
+  IL0ConfExtrapolator* m_l0ConfExtrapolator = nullptr;
   
-  ITrackConfirmTool* m_TrackConfirmTool;
+  ITrackConfirmTool* m_TrackConfirmTool = nullptr;
   std::string m_trackingTool;
 
   //debug information
-  L0ConfDataStore* m_DataStore;
+  L0ConfDataStore* m_DataStore = nullptr;
   // select particle type:
   //	0 = muon
   //	1 = hadron
