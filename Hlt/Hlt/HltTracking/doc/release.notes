@@ -3,14 +3,15 @@
 ! Responsible : Sascha Stahl, Vladimir Gligorov
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2016-02-13 - Gerhard Raven
+ - follow const-ification of Tr/TrackInterfaces
 
 ! 2016-02-13 - Roel Aaij
-  - Change dependencies to properly build with Hlt/HltJets
-
+ - Change dependencies to properly build with Hlt/HltJets
 
 ! 2016-02-12 Sascha Stahl
-  - HltSharedTracking: Use SimplifiedExtrapolator in the common TrackStateProvider.
-  - Hlt2Tracking: Activate ANNPID tuning MC15TuneDev2
+ - HltSharedTracking: Use SimplifiedExtrapolator in the common TrackStateProvider.
+ - Hlt2Tracking: Activate ANNPID tuning MC15TuneDev2
 
 ! 2016-02-12 - Roel Aaij
  - Add HltJetConf to used configurables of Hlt2Tracking to ensure proper order

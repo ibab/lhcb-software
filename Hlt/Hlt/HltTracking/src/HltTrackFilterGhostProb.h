@@ -32,15 +32,13 @@ public:
   ~HltTrackFilterGhostProb( ) override = default; ///< Destructor
 
   StatusCode tracksFromTrack( const LHCb::Track& seed,
-			      std::vector<LHCb::Track*>& tracks ) override;
+			      std::vector<LHCb::Track*>& tracks ) const override;
 
-  void handle ( const Incident& incident );
-
-protected:
+  void handle ( const Incident& incident ) override;
 
 private:
 
-  bool m_initializeEvent;
+  mutable bool m_initializeEvent;
   std::string m_ghostToolName;
   IGhostProbability* m_ghostTool;
   double m_maxGhostProbCut;

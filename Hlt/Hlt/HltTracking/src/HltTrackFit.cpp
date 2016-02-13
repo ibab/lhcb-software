@@ -25,18 +25,11 @@ DECLARE_TOOL_FACTORY( HltTrackFit )
 HltTrackFit::HltTrackFit( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
-  : GaudiTool ( type, name , parent )
-  , m_fit{nullptr}
+  : base_class ( type, name , parent )
 {
   declareInterface<ITracksFromTrack>(this);
   declareProperty("FitterName", m_fitName = "TrackMasterFitter/Fit");
 }
-
-//=============================================================================
-HltTrackFit::~HltTrackFit()
-{
-
-} 
 
 //=============================================================================
 StatusCode HltTrackFit::initialize() 
@@ -48,7 +41,7 @@ StatusCode HltTrackFit::initialize()
 
 //=============================================================================
 StatusCode HltTrackFit::tracksFromTrack( const LHCb::Track& seed,
-		                                 std::vector<LHCb::Track*>& tracks )
+		                                 std::vector<LHCb::Track*>& tracks ) const
 {
   std::unique_ptr<LHCb::Track> tr( seed.clone() );
   StatusCode sc = m_fit->fit( *tr );

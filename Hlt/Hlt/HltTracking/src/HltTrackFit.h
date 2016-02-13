@@ -21,27 +21,23 @@
  *  @author Johannes Albrecht
  *  @date   2008-10-31
  */
-class HltTrackFit : public GaudiTool, virtual public ITracksFromTrack {
+class HltTrackFit : public extends<GaudiTool, ITracksFromTrack> {
 public: 
   /// Standard constructor
   HltTrackFit( const std::string& type, 
                const std::string& name,
                const IInterface* parent);
 
-  virtual ~HltTrackFit( ); ///< Destructor
-
   /// Initialize method
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
 
-  virtual StatusCode tracksFromTrack( const LHCb::Track& seed,
-                                      std::vector<LHCb::Track*>& tracks );
+  StatusCode tracksFromTrack( const LHCb::Track& seed,
+                              std::vector<LHCb::Track*>& tracks ) const override;
   
-protected:
-
 private:
 
   std::string m_fitName;
-  ITrackFitter* m_fit;
+  ITrackFitter* m_fit = nullptr;
 
 };
 #endif // HLTTRACKFIT_H

@@ -57,7 +57,7 @@ StatusCode HltTrackFilterGhostProb::initialize()
 
 //=============================================================================
 StatusCode HltTrackFilterGhostProb::tracksFromTrack( const LHCb::Track& track,
-		                                 std::vector<LHCb::Track*>& tracks )
+		                                 std::vector<LHCb::Track*>& tracks ) const
 {
   if ( m_initializeEvent ){
     if ( m_ghostTool->beginEvent().isFailure() ){
