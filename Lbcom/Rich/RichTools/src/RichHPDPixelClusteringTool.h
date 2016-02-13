@@ -127,7 +127,7 @@ namespace Rich
       mutable HPDPixelClustersBuilder m_clusterBuilder;
 
       /// Flag to turn on the option to split clusters
-      bool m_splitClusters;
+      bool m_splitClusters = false;
 
     };
 

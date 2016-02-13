@@ -15,15 +15,14 @@
 // RICH DAQ
 using namespace Rich::DAQ;
 
-DECLARE_TOOL_FACTORY( HPDPixelClusteringTool )
+//-----------------------------------------------------------------------------
 
 // Standard constructor
 HPDPixelClusteringTool::
 HPDPixelClusteringTool( const std::string& type,
                         const std::string& name,
                         const IInterface* parent )
-: ToolBase ( type, name, parent ),
-  m_splitClusters ( false )
+  : ToolBase ( type, name, parent )
 {
   // Define interface
   declareInterface<IPixelClusteringTool>(this);
@@ -59,7 +58,7 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
   sortIDs(smartIDs);
 
   // Make a new pixel clusters object to return
-  HPDPixelClusters * pixelData = new HPDPixelClusters();
+  auto * pixelData = new HPDPixelClusters();
 
   // Initialise the builder
   m_clusterBuilder.initialise( pixelData, smartIDs );
@@ -73,11 +72,11 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
     _ri_verbo << " -> " << S << endmsg;
 
     // get row and column data
-    const int col     = m_clusterBuilder.colNumber(S);
-    const int row     = m_clusterBuilder.rowNumber(S);
-    const int lastrow = row - 1;
-    const int lastcol = col - 1;
-    const int nextcol = col + 1;
+    const auto col     = m_clusterBuilder.colNumber(S);
+    const auto row     = m_clusterBuilder.rowNumber(S);
+    const auto lastrow = row - 1;
+    const auto lastcol = col - 1;
+    const auto nextcol = col + 1;
 
     // Null cluster pointer
     HPDPixelClusters::Cluster * clus(nullptr);
@@ -127,18 +126,18 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
     static HPDPixelClusters::Cluster::PtnVector clustersToSplit;
     for ( auto & C : pixelData->clusters() )
     {
-      if ( C->size() < m_minClusSize || 
+      if ( C->size() < m_minClusSize ||
            C->size() > m_maxClusSize ) { clustersToSplit.push_back(C.get()); }
     }
-    if ( !clustersToSplit.empty() ) 
+    if ( !clustersToSplit.empty() )
     {
       // split the selected clusters
-      m_clusterBuilder.splitClusters(clustersToSplit); 
+      m_clusterBuilder.splitClusters(clustersToSplit);
       // clear for next time
       clustersToSplit.clear();
     }
   }
-  
+
   // print the final cluster
   _ri_verbo << m_clusterBuilder << endmsg;
   //_ri_verbo << *pixelData       << endmsg;
@@ -147,3 +146,9 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
   // user takes ownership at this point
   return std::unique_ptr<const Rich::HPDPixelClusters>(pixelData);
 }
+
+//-----------------------------------------------------------------------------
+
+DECLARE_TOOL_FACTORY( HPDPixelClusteringTool )
+
+//-----------------------------------------------------------------------------
