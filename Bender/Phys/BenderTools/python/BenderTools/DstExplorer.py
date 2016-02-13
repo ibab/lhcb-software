@@ -138,6 +138,9 @@ else                      : logger = getLogger ( __name__ )
 def configure ( config , colors = False ) :
     """Configure the application from parser data 
     """
+    if colors :
+        from Bender.Logger import make_colors
+        make_colors() 
     #
     if config.OutputLevel <= 3 and not config.Quiet :
         _vars   = vars ( config )
