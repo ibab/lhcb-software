@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-02-14 - Roel Aaij
+ - Add RareCharm_25ns_Draft2016.py that works with the head of Hlt2Lines.
+
 ! 2016-02-12 - Patrick Spradlin
  - Added new lines and configuration dictionaries to
    CharmHad/CharmHad_25ns_Draft2016.py
@@ -54,7 +57,7 @@ A                0   python/HltSettings/LFV/LFV_25ns_Draft2016.py
  - Add the BDT variable map to the cut dictionary for B2GammaGamma lines.
 
 ! 2016-02-01 - Mike Sokoloff
-  in python/HltSettings/CharmHad/CharmHad_25ns_Draft2016.py 
+  in python/HltSettings/CharmHad/CharmHad_25ns_Draft2016.py
   modified BPVDIRA_MIN threshold for D2HHHKs lines and
   Q_M_MIN?MAX and Q_AM_MIN/MAX thresholds for CharmSPectroscopy
   lines
@@ -117,7 +120,7 @@ A                0   python/HltSettings/LFV/LFV_25ns_Draft2016.py
  - Fix TurboOnly for nightlies.
 
 ! 2015-10-23 - Dan Johnson
- - Changes to LowMult threshold settings to reflect changes in Hlt1LowMult lines 
+ - Changes to LowMult threshold settings to reflect changes in Hlt1LowMult lines
    (and resulting changes in Hlt2LowMult lines).
  - Added Hlt1LowMult settings to Physics_25ns_October2015 recipe
 
