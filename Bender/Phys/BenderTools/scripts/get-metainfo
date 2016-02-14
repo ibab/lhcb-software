@@ -67,7 +67,7 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 # logging 
 # =============================================================================
 from Bender.Logger import getLogger, make_colors
-make_colors ()
+#make_colors ()
 if '__main__' == __name__ : logger = getLogger ( 'get-metainfo' )
 else                      : logger = getLogger ( __name__      )
 # =============================================================================
