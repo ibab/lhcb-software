@@ -2385,15 +2385,15 @@ H2LambdaPrPi_DDDD  = HHLambdaCombiner('LamPrPiDDDD', decay="[D0 ->  Lambda0 p+ p
 
 
 ##  Let's do the same for Lambda,pi+,p
-H2LambdaPiPr_LLLL  = HHLambdaCombiner('LamPiPrLLLL', decay="[D0 ->  Lambda0 p- pi+]cc",
+H2LambdaPiPr_LLLL  = HHLambdaCombiner('LamPiPrLLLL', decay="[D0 ->  Lambda0 p~- pi+]cc",
                      inputs=[SharedTighterDetachedLcChild_p, SharedDetachedLcChild_p,
                              CharmHadSharedSecondaryLambdaLL], nickname='LambdaPrPiLLLL')
-H2LambdaPiPr_DDLL  = HHLambdaCombiner('LamPiPrDDLL', decay="[D0 ->  Lambda0 p- pi+]cc",
+H2LambdaPiPr_DDLL  = HHLambdaCombiner('LamPiPrDDLL', decay="[D0 ->  Lambda0 p~- pi+]cc",
                      inputs=[SharedTighterDetachedLcChild_p, SharedDetachedLcChild_p,
                              CharmHadSharedSecondaryLambdaDD], nickname='LambdaPrPiDDLL')
 
 from Inputs import Hlt2DownProtons
 
-H2LambdaPiPr_DDDD  = HHLambdaCombiner('LamPiPrDDDD', decay="[D0 ->  Lambda0 p- pi+]cc",
+H2LambdaPiPr_DDDD  = HHLambdaCombiner('LamPiPrDDDD', decay="[D0 ->  Lambda0 p~- pi+]cc",
                      inputs=[Hlt2DownProtons, Hlt2DownPions,
                              CharmHadSharedSecondaryLambdaDD], nickname='LambdaPrPiDDDD')
