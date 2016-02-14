@@ -144,21 +144,26 @@ StatusCode HltJetBuilder::execute() {
     prts = getIfExists<Particle::Range>(m_inTags[inLoc]);
     for (Particle::Range::iterator prt = prts.begin(); prt != prts.end(); 
 	 ++prt) {
-      double phi((*prt)->momentum().Phi()), eta((*prt)->momentum().Eta());
+      cout << setw(10) << (*prt)->particleID().pid() << "\n";
+      double tagPhi((*prt)->momentum().Phi()), tagEta((*prt)->momentum().Eta());
       if ((*prt)->endVertex()) {
 	const VertexBase *vrt = bestVertex(*prt);
 	if (vrt) {Gaudi::XYZVector vec = (*prt)->endVertex()->position() - 
-	    vrt->position(); phi = vec.Phi(); eta = vec.Eta();}
+	    vrt->position(); tagPhi = vec.Phi(); tagEta = vec.Eta();}
       }
       for (vector<Particle*>::iterator jet = m_jets.begin(); 
 	   jet != m_jets.end(); ++jet) {
-	phi -= (*jet)->momentum().Phi();
-	eta -= (*jet)->momentum().Eta();
+	double phi = tagPhi - (*jet)->momentum().Phi();
+	double eta = tagEta - (*jet)->momentum().Eta();
 	while (phi > M_PI) phi -= 2*M_PI;
 	while (phi <= -M_PI) phi += 2*M_PI;
 	bool tag = (*jet)->hasInfo(Particle::FirstJetIndex + 100 + inLoc);
-	if (!tag && sqrt(phi*phi + eta*eta) < m_jetR)
+	if (!tag && sqrt(phi*phi + eta*eta) < m_jetR) {
 	  (*jet)->addInfo(Particle::FirstJetIndex + 100 + inLoc, (*prt)->key());
+	  cout << setw(40) << (*prt)->key() << "\n";
+	}
+	cout << setw(10) << "" << setw(10) << (*jet)->pt() << setw(10) 
+	     << sqrt(phi*phi + eta*eta) << "\n";
       }
     }
   }
