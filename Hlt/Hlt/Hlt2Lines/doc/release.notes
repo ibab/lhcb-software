@@ -10,6 +10,7 @@
 
 ! 2016-02-14 - Roel Aaij
  - Align dependencies in CMakeLists.txt and cmt/requirements.
+ - Remove "Filter" from all RareCharm line names.
 
 ! 2016-02-13 - Roel Aaij
  - Change dependencies to properly build with Hlt/HltJets

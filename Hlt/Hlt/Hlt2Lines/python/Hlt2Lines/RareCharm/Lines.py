@@ -63,16 +63,16 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                             ,'TrkChi2_HLL'               : 3.0
                             ,'TrkPt_HLL'                 : 300.0 * MeV
                             ,'TrkP_HLL'                  : 2000.0 * MeV
-                            ,'TrkPVIPChi2_HLL'           : 5.0     
+                            ,'TrkPVIPChi2_HLL'           : 5.0
                             ,'DMassWin_HLL'              : 200.0 * MeV
                             ,'DMAXDOCA_HLL'              : 0.15 * mm
                             ,'DMassLow_HLL'              : 1763.0 * MeV
                             ,'DimuonMass_HLL'            : 250.0 * MeV
                             ,'DVCHI2DOF_HLL'             : 5
                             ,'DIPCHI2_HLL'               : 25
-                            ,'BPVVD_HLL'         	 : 20.0
+                            ,'BPVVD_HLL'             : 20.0
                             ,'DDIRA_HLL'                 : 0.9999
-          		    #four body lines
+                    #four body lines
                             ,'TrkPt_HHmumu'                 : 300.0 * MeV
                             , 'TrkP_HHmumu'                  : 3000.0 * MeV
                             , 'TrkPVIPChi2_HHmumu'           : 2.0      # unitless
@@ -127,7 +127,7 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                             , 'Pair_BPVVD_MIN_mueX'            :    0.0 * mm
                             , 'Pair_SumAPT_MIN_mueX'           : 0.0 * MeV
                             , 'Pair_BPVCORRM_MAX_mueX'         : 3500.0 * MeV
-                   	      },
+                          },
                }
 
     def stages(self, nickname=""):
@@ -198,46 +198,45 @@ class RareCharmLines(Hlt2LinesConfigurableUser):
                             D02KKMueFilter,
                             D02KPiMueFilter,
                             D02KPiMuMuSSFilter)
-        self._stages = { 'D02MuMu'   : [ D02mumuComb ],
-                   'D02PiPi'  :  [ D02pipiComb ],
-                   'D02KPi'  :  [ D02kpiComb ],
-                   'D02KMu'  :  [ D02kmuComb ],
-                   'D02EMu'  :  [ D02emuComb ],
-                   'D2PiMuMuOS' : [ D2PiMuMuOSComb ],
-                   'D2PiMuMuSS' : [ D2PiMuMuSSComb ],
-                   'D2PiMuMuWS' : [ D2PiMuMuWSComb ],
-                   'D2KMuMuOS' : [ D2KMuMuOSComb ],
-                   'D2KMuMuSS' : [ D2KMuMuSSComb ],
-                   'D2KMuMuWS' : [ D2KMuMuWSComb ],
-                   'D2PiEEOS' : [ D2PiEEOSComb ],
-                   'D2PiEESS' : [ D2PiEESSComb ],
-                   'D2PiEEWS' : [ D2PiEEWSComb ],
-                   'D2KEEOS' : [ D2KEEOSComb ],
-                   'D2KEESS' : [ D2KEESSComb ],
-                   'D2KEEWS' : [ D2KEEWSComb ],
-                   'D2PiMuEOS' : [ D2PiMuEOSComb ],
-                   'D2PiMuESS' : [ D2PiMuESSComb ],
-                   'D2PiMuEWS' : [ D2PiMuEWSComb ],
-                   'D2PiEMuOS' : [ D2PiEMuOSComb ],
-                   'D2KMuEOS' : [ D2KMuEOSComb ],
-                   'D2KMuESS' : [ D2KMuESSComb ],
-                   'D2KMuEWS' : [ D2KMuEWSComb ],
-                   'D2KEMuOS' : [ D2KEMuOSComb ],
-                   'Lc2PMuMuFilter' : [ Lc2PMuMuFilter ],
-                   'Lc2PMuMuSSFilter' : [ Lc2PMuMuSSFilter ],
-                   'Lc2PeeFilter' : [ Lc2PeeFilter ],
-                   'Lc2PMueFilter' : [ Lc2PMueFilter ],
-                   'D02PiPiMuMuFilter' : [ D02PiPiMuMuFilter ],
-                   'D02KKMuMuFilter' : [ D02KKMuMuFilter ],
-                   'D02KPiMuMuFilter' : [ D02KPiMuMuFilter ],
-                   'D02PiPieeFilter' : [ D02PiPieeFilter ],
-                   'D02KKeeFilter' : [ D02KKeeFilter ],
-                   'D02KPieeFilter' : [ D02KPieeFilter ],
-                   'D02PiPiMueFilter' : [ D02PiPiMueFilter ],
-                   'D02KKMueFilter' : [ D02KKMueFilter ],
-                   'D02KPiMueFilter' : [ D02KPiMueFilter ],
-                   'D02KPiMuMuSSFilter' : [ D02KPiMuMuSSFilter ],
-                  }
+        self._stages = { 'D02MuMu'      : [ D02mumuComb ],
+                         'D02PiPi'      : [ D02pipiComb ],
+                         'D02KPi'       : [ D02kpiComb ],
+                         'D02KMu'       : [ D02kmuComb ],
+                         'D02EMu'       : [ D02emuComb ],
+                         'D2PiMuMuOS'   : [ D2PiMuMuOSComb ],
+                         'D2PiMuMuSS'   : [ D2PiMuMuSSComb ],
+                         'D2PiMuMuWS'   : [ D2PiMuMuWSComb ],
+                         'D2KMuMuOS'    : [ D2KMuMuOSComb ],
+                         'D2KMuMuSS'    : [ D2KMuMuSSComb ],
+                         'D2KMuMuWS'    : [ D2KMuMuWSComb ],
+                         'D2PiEEOS'     : [ D2PiEEOSComb ],
+                         'D2PiEESS'     : [ D2PiEESSComb ],
+                         'D2PiEEWS'     : [ D2PiEEWSComb ],
+                         'D2KEEOS'      : [ D2KEEOSComb ],
+                         'D2KEESS'      : [ D2KEESSComb ],
+                         'D2KEEWS'      : [ D2KEEWSComb ],
+                         'D2PiMuEOS'    : [ D2PiMuEOSComb ],
+                         'D2PiMuESS'    : [ D2PiMuESSComb ],
+                         'D2PiMuEWS'    : [ D2PiMuEWSComb ],
+                         'D2PiEMuOS'    : [ D2PiEMuOSComb ],
+                         'D2KMuEOS'     : [ D2KMuEOSComb ],
+                         'D2KMuESS'     : [ D2KMuESSComb ],
+                         'D2KMuEWS'     : [ D2KMuEWSComb ],
+                         'D2KEMuOS'     : [ D2KEMuOSComb ],
+                         'Lc2PMuMu'     : [ Lc2PMuMuFilter ],
+                         'Lc2PMuMuSS'   : [ Lc2PMuMuSSFilter ],
+                         'Lc2Pee'       : [ Lc2PeeFilter ],
+                         'Lc2PMue'      : [ Lc2PMueFilter ],
+                         'D02PiPiMuMu'  : [ D02PiPiMuMuFilter ],
+                         'D02KKMuMu'    : [ D02KKMuMuFilter ],
+                         'D02KPiMuMu'   : [ D02KPiMuMuFilter ],
+                         'D02PiPiee'    : [ D02PiPieeFilter ],
+                         'D02KKee'      : [ D02KKeeFilter ],
+                         'D02KPiee'     : [ D02KPieeFilter ],
+                         'D02PiPiMue'   : [ D02PiPiMueFilter ],
+                         'D02KKMue'     : [ D02KKMueFilter ],
+                         'D02KPiMue'    : [ D02KPiMueFilter ],
+                         'D02KPiMuMuSS' : [ D02KPiMuMuSSFilter ]}
 
         if nickname:
             return self._stages[nickname]
