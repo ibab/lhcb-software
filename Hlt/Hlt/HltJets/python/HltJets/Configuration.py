@@ -58,9 +58,6 @@ class HltJetConf(LHCbConfigurableUser):
         from Hlt2SharedParticles.Lambda import LambdaLLTrackFitted as LambdaLL
         from Hlt2SharedParticles.Lambda import LambdaDDTrackFitted as LambdaDD
 
-        veloTracks = longTracking.hlt2VeloTracking()
-        veloSeq = GaudiSequencer("Hlt2JetVeloRecoSequence", Members = veloTracks.members())
-
         self.__caloProcessor = longTracking.caloProcessor()
         ecalSeq = self.__caloProcessor.clusters()
 
@@ -74,7 +71,6 @@ class HltJetConf(LHCbConfigurableUser):
             ['Particle',       'particle', self.__sharedParticleInput(LambdaDD, "LambdaDD")],
             ['ProtoParticle',  'best',     (longSeq, longChargedProtos.outputSelection())],
             ['ProtoParticle',  'best',     (downSeq, downChargedProtos.outputSelection())],
-            ['Track',          'pi+',      (None, veloTracks.outputSelection())],
             ['CaloCluster',    'gamma',    (None, self.__findCaloLocation(Photons.members(), CellularAutomatonAlg, "OutputData"))],
             ['CaloCluster',    'gamma',    self.__hcalClusters()],
             ['IClusTrTable2D', 'ecal',     (None, self.__findCaloLocation(Photons.members(), PhotonMatchAlg, "Output"))],
