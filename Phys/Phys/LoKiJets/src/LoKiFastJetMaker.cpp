@@ -39,6 +39,7 @@ StatusCode LoKi::FastJetMaker::initialize ()
   //
   svc<LoKi::ILoKiSvc>( "LoKiSvc" , true ) ;
   //
+  if (!m_showBanner) fastjet::ClusterSequence::set_fastjet_banner_stream(0);
   return sc ;
 }
 // ============================================================================

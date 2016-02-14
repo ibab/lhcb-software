@@ -124,6 +124,7 @@ namespace LoKi
       , m_sort         ( 2   )
       //
       , m_strat        ( fastjet::Best  )
+      , m_showBanner   ( false  )
       //
       , m_combinerName ( "MomentumCombiner"  )
       , m_combiner     ( 0   )
@@ -155,6 +156,8 @@ namespace LoKi
         ( "Strategy"         ,
           m_strat            ,
           "JetFinding strategy, see fastjet::Strategy " ) ;
+      declareProperty ( "ShowBanner", m_showBanner = false,
+			"Print the FastJet banner if true." ) ;
       // define momentum combiner
       declareProperty ( "ParticleCombiner", m_combinerName ) ;
     }
@@ -263,6 +266,8 @@ namespace LoKi
     int    m_sort      ; ///< jet sorting criteria
     // jet finding strategy
     int    m_strat    ; ///< jet finding strategy
+    // print the FastJet banner
+    bool   m_showBanner ; ///< print the FastJet banner 
     // combiner
     std::string                m_combinerName ;
     mutable IParticleCombiner* m_combiner ; ///< combiner to be used
