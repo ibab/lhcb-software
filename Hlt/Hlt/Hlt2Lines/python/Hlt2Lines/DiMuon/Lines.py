@@ -82,12 +82,25 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                                          'Pt'         :  2000 * MeV,
                                          'MuPt'       :     0 * MeV,
                                          'VertexChi2' :    25},
-
                  'Psi2SLowPTTurbo' :    {'MassWindow' :   120 * MeV,
                                          'PtMax'      :  2500 * MeV,
                                          'MuPt'       :     0 * MeV,
                                          'VertexChi2' :    25},
-
+                 'JPsiPIDTurbo' :          {'MassWindow' :   120 * MeV,
+                                            'Pt'         :     0 * MeV,
+                                            'MuPt'       :     0 * MeV,
+                                            'VertexChi2' :    25,
+                                            'PIDCut'     : "MINTREE('mu-' == ABSID, PIDmu) > 1" },
+                 'Psi2SPIDTurbo' :         {'MassWindow' :   120 * MeV,
+                                            'Pt'         :     0 * MeV,
+                                            'MuPt'       :     0 * MeV,                                            
+                                            'VertexChi2' :    25, 
+                                            'PIDCut'     : "MINTREE('mu-' == ABSID, PIDmu) > 1" },
+                 'Psi2SLowPTPIDTurbo' :    {'MassWindow' :   120 * MeV,
+                                            'PtMax'      :  2500 * MeV,
+                                            'MuPt'       :     0 * MeV,
+                                            'VertexChi2' :    25,
+                                            'PIDCut'     : "MINTREE('mu-' == ABSID, PIDmu) > 1" },
                  'BTurbo' :             {'MinMass'    :   4700 * MeV,
                                          'VertexChi2' :    25},
 
@@ -101,6 +114,7 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                 return self._stages
 
         from Stages import (DiMuonFilter, JpsiFilter, Psi2SFilter, Psi2SLowPtFilter, 
+                            JpsiPIDFilter, Psi2SPIDFilter, Psi2SLowPtPIDFilter, 
                             BFilter, ZFilter, DetachedDiMuonFilter,
                             DetachedDiMuonHeavyFilter, DetachedJpsiFilter,
                             DetachedPsi2SFilter, SoftDiMuonFilter)
@@ -121,6 +135,9 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
                         'JPsiTurbo'         : [JpsiFilter('JPsiTurbo')],
                         'Psi2STurbo'        : [Psi2SFilter('Psi2STurbo')],
                         'Psi2SLowPTTurbo'   : [Psi2SLowPtFilter('Psi2SLowPTTurbo')],
+                        'JPsiPIDTurbo'         : [JpsiPIDFilter('JPsiPIDTurbo')],
+                        'Psi2SPIDTurbo'        : [Psi2SPIDFilter('Psi2SPIDTurbo')],
+                        'Psi2SLowPTPIDTurbo'   : [Psi2SLowPtPIDFilter('Psi2SLowPTPIDTurbo')],
                         'BTurbo'            : [BFilter('BTurbo')],
                         }
         if nickname:

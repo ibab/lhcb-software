@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+
+! 2016-02-14 - Simone Stracka
+ - Added DiMuon Turbo lines with PID in DiMuon/Stages.py and DiMuon/Lines.py
+
 ! 2016-02-14 - Roel Aaij
  - Align dependencies in CMakeLists.txt and cmt/requirements.
  - Remove "Filter" from all RareCharm line names.
