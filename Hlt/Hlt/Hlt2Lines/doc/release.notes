@@ -8,6 +8,12 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-02-14 = Mike Sokoloff
+  in CharmHad, made small changes to Stages.py
+  and SecondaryH2LamPrPiLines.py. In Stages.py, remove
+  a bug (use of p- rather than p~- in a decay descriptor).
+  In SecondaryH2LamPrPiLines.py, uncomment last two lines.
+
 ! 2016-02-14 - Federico Redi
  - Modified cuts for Majorana lines.
 
