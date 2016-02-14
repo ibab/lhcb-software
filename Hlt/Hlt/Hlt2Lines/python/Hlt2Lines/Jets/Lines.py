@@ -57,11 +57,11 @@ class JetsLines(Hlt2LinesConfigurableUser):
                                nickname = 'JetBuilder')]
 
         # Create the stages.
-        self._stages['JetsDiJetSVSV'] = [DiJetCombiner(svsv + jets, 9600, 9600)]
-        self._stages['JetsDiJetSVMu'] = [DiJetCombiner(svmu + jets, 9600, 9601)]
-        self._stages['JetsDiJetMuMu'] = [DiJetCombiner(mumu + jets, 9601, 9601)]
-        self._stages['JetsDiJetSV']   = [DiJetCombiner(sv + jets, 9600)]
-        self._stages['JetsDiJet']     = [DiJetCombiner(jets)]
+        self._stages['JetsDiJetSVSV'] = [DiJetCombiner(svsv + jets, 'SVSV')]
+        self._stages['JetsDiJetSVMu'] = [DiJetCombiner(svmu + jets, 'SVMu')]
+        self._stages['JetsDiJetMuMu'] = [DiJetCombiner(mumu + jets, 'MuMu')]
+        self._stages['JetsDiJetSV']   = [DiJetCombiner(sv + jets, 'SV')]
+        self._stages['JetsDiJet']     = [DiJetCombiner(jets, '')]
 
         # Return the stages.
         if nickname: return self._stages[nickname]

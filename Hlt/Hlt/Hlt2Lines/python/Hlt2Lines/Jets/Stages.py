@@ -66,15 +66,24 @@ class MuMuCombiner(Hlt2Combiner) :
 
 # Combine two jets with optional tags.
 class DiJetCombiner(Hlt2Combiner) :
-  def __init__(self, inputs, tag1 = None, tag2 = None):
+  def __init__(self, inputs, tag = None):
       cc = ("(AMINCHILD(PT) > %(JET_PT)s)"
             " & (abs(ACHILD(PHI,1) - ACHILD(PHI,2)) > %(DPHI)s)")
-      if tag1: cc += " & (ACHILD(INFO(" + str(tag1) + ", -1), 1) > -1)";
-      if tag2: cc += " & (ACHILD(INFO(" + str(tag2) + ", -1), 2) > -1)";
-      name = ""
-      if tag1: name += "SV" if tag1 == 9600 else "Mu"
-      if tag2: name += "SV" if tag2 == 9600 else "Mu"
-      Hlt2Combiner.__init__(self, 'DiJet' + name, 
+      if tag == 'SV':
+        cc += (" & ((ACHILD(INFO(9600, -1), 1) != -1)"
+               " | (ACHILD(INFO(9600, -1), 2) != -1))")
+      elif tag == 'SVSV':
+        cc += (" & (ACHILD(INFO(9600, -1), 1) != -1)"
+               " & (ACHILD(INFO(9600, -1), 2) != -1)")
+      elif tag == 'MuMu':
+        cc += (" & (ACHILD(INFO(9601, -1), 1) != -1)"
+               " & (ACHILD(INFO(9601, -1), 2) != -1)")
+      elif tag == "SVMu":
+        cc += (" & (((ACHILD(INFO(9600, -1), 1) != -1)"
+               " & (ACHILD(INFO(9601, -1), 2) != -1))"
+               " | ((ACHILD(INFO(9601, -1), 1) != -1)"
+               " & (ACHILD(INFO(9600, -1), 2) != -1)))")
+      Hlt2Combiner.__init__(self, 'DiJet' + tag, 
                             ["CLUSjet -> CELLjet CELLjet"], inputs,
                             dependencies = [PV3D('Hlt2')],
                             CombinationCut = cc,
