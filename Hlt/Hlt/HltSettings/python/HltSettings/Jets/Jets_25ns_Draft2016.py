@@ -35,7 +35,6 @@ class Jets_25ns_Draft2016:
             JetsLines : {
                'Common' : {
                   'GHOSTPROB' : 0.2,
-                  'JET_PT'
                   'DPHI'      : 1.5,
                   'SV_VCHI2'  : 10,
                   'SV_TRK_PT' : 500*MeV,
@@ -43,7 +42,7 @@ class Jets_25ns_Draft2016:
                   'SV_FDCHI2' : 25,
                   'MU_PT'     : 1000*MeV,
                   'MU_PROBNNMU'  : 0.5,
-                  'JET_PT': 17*GeV},
+                  'JET_PT' : 17*GeV},
                
                'JetBuilder' : {
                   'JetPtMin' : 5 * GeV,
