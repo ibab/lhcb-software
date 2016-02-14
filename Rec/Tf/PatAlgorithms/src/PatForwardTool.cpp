@@ -437,14 +437,22 @@ PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector<LHCb::Trac
     if(processingSecondLoop){
       auto ty = track.slY();
       auto y0 = track.yStraight( 0. );
-      for(auto it = m_xHitsAtReference.begin(); it != m_xHitsAtReference.end(); ++it){
+      for(auto it = rng.begin(); it != rng.end(); ++it){
         auto hit = *it;
         if(hit->isOT()){
           approxUpdateOTHitForTrack( hit, y0, ty);
           hit->setIgnored( false );
           hit->setRlAmb( 0 );
           hit->setSelected( this->driftInRange(*hit) );
-          if(not_selected(hit)) it = std::prev(m_xHitsAtReference.erase(it));
+          if(not_selected(hit)) { 
+            // move the 'bad' hit to the end of rng, and shorten the range..
+            // do NOT erase from m_xHitsAtReference , as then rng is invalidated!
+            auto w_f = std::next( m_xHitsAtReference.begin(), std::distance(m_xHitsAtReference.cbegin(),it ) );
+            auto w_l = std::next( m_xHitsAtReference.begin(), std::distance(m_xHitsAtReference.cbegin(),rng.end() ) );
+            std::rotate( w_f, std::next(w_f), w_l);
+            --it;
+            rng.drop_back();
+          }
         } else{
           updateNonOTHitForTrack( hit, y0, ty);
           hit->setIgnored( false );
@@ -728,7 +736,7 @@ PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector<LHCb::Trac
 //=========================================================================
 
 boost::iterator_range<typename PatFwdHits::const_iterator>
-PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
+PatForwardTool::fillXList( PatFwdTrackCandidate& track ) const
 {
   m_xHitsAtReference.clear();
   auto interval = make_XInterval(track);
@@ -797,7 +805,7 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
                         Tf::increasingByProjection<PatForwardHit>() );
   }
   // select the subrange of m_xHitsAtReference which is within the interval...
-  return interval.inside( m_xHitsAtReference,
+  return interval.inside( boost::make_iterator_range( std::begin(m_xHitsAtReference), std::end(m_xHitsAtReference) ),
                           [](const PatForwardHit* h) { return h->projection(); } );
 }
 
