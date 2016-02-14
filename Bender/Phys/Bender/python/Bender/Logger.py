@@ -76,6 +76,8 @@ _with_colors_ = False
 
 def make_colors () :
 
+    ##return
+
     global _with_colors_
     if _with_colors_ : return
     
@@ -134,9 +136,7 @@ def make_colors () :
     
 ##  for ipython mode, add colors 
 if with_ipython() :
-    print 'WILL USE COLORS!!!'
     make_colors()
-
 
 _columns = 0 
 
@@ -153,7 +153,9 @@ def getLogger ( name ) :
     ## elif _columns > 120 :
     ##     return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)-80s ## %(filename)s'            )
     ## else :
-    
+
+    global _with_colors_
+    if not _with_colors_ : return gL ( name ) 
     return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)s' )
 
 if '__main__' == __name__ : logger = getLogger ( 'Bender.Logger' )
