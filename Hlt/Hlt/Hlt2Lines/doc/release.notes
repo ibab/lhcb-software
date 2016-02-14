@@ -8,6 +8,8 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-02-14 - Federico Redi
+ - Modified cuts for Majorana lines.
 
 ! 2016-02-14 - Simone Stracka
  - Added DiMuon Turbo lines with PID in DiMuon/Stages.py and DiMuon/Lines.py

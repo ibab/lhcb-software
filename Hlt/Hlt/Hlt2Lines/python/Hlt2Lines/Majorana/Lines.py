@@ -30,14 +30,14 @@ class MajoranaLines(Hlt2LinesConfigurableUser):
                                 "Lambda0DaugMIPChi2"    : 10.   ,#adimensional
                                 #Lambda cuts
                                 "MajoranaCutFDChi2"     : 100.,  #adimensional
-                                "MajoranaCutM"          : 300. * MeV,
+                                "MajoranaCutM"          : 1500. * MeV,
                                 "Lambda0VertexChi2"     : 10.   ,#adimensional
                                 "Lambda0PT"             : 700.  ,#adimensional
                                 },
                  'BLambdaMu':  {#B Mother Cuts
                                 "BVCHI2DOF"             : 4.    ,#adminensional
                                 "BDIRA"                 : 0.99  ,#adminensional
-                                "LambdaMuMassLowTight"  : 300.  * MeV,
+                                "LambdaMuMassLowTight"  : 1500.  * MeV,
                                 "XMuMassUpperHigh"      : 6500. * MeV,
                                 'LambdaZ'               : 0. * mm
                                 }
