@@ -360,23 +360,23 @@ def configure ( config , colors = False ) :
               config.Castor        ,  ## use Castor/EOS lookup 
               config.Grid          )  ## Use GRID to locate files 
     
-    if colors :
+    ## if colors :
         
-        logger.debug( 'Add colorization to MessageSvc' )  
-        def _color_pre_init_action_ () :
-            from GaudiPython.Bindings import AppMgr
-            _g = AppMgr()
-            if not _g : return 
-            _s = _g.service('MessageSvc')
-            if not _s : return 
-            _s.useColors = True
-            _s.errorColorCode   = [ 'yellow' , 'red'  ] 
-            _s.warningColorCode = [ 'red'             ] 
-            _s.fatalColorCode   = [ 'blue'   , 'red'  ] 
-            #_s.alwaysColorCode  = [ 'black'           ] 
+    ##     logger.debug( 'Add colorization to MessageSvc' )  
+    ##     def _color_pre_init_action_ () :
+    ##         from GaudiPython.Bindings import AppMgr
+    ##         _g = AppMgr()
+    ##         if not _g : return 
+    ##         _s = _g.service('MessageSvc')
+    ##         if not _s : return 
+    ##         _s.useColors = True
+    ##         _s.errorColorCode   = [ 'yellow' , 'red'  ] 
+    ##         _s.warningColorCode = [ 'red'             ] 
+    ##         _s.fatalColorCode   = [ 'blue'   , 'red'  ] 
+    ##         #_s.alwaysColorCode  = [ 'black'           ] 
             
-        from Bender.Utils import addPreInitAction
-        addPreInitAction ( _color_pre_init_action_ )
+    ##     from Bender.Utils import addPreInitAction
+    ##     addPreInitAction ( _color_pre_init_action_ )
                 
     return pyfiles
 
