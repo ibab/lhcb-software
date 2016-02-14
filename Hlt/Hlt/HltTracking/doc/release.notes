@@ -3,6 +3,10 @@
 ! Responsible : Sascha Stahl, Vladimir Gligorov
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2016-02-14 - Roel Aaij
+ - Further update of used_configurables to work with Hlt/HltJets.
+
 ! 2016-02-13 - Gerhard Raven
  - follow const-ification of Tr/TrackInterfaces
 

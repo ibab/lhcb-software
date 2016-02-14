@@ -46,7 +46,6 @@ from Configurables import ChargedProtoANNPIDConf
 
 import Hlt2Lines
 _hlt2linesconfs = importLineConfigurables( Hlt2Lines )
-globals().update( ( cfg.__name__, cfg ) for cfg in _hlt2linesconfs )
 
 #################################################################################################
 #
@@ -64,8 +63,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                                HltAfterburnerConf,
                                HltPersistRecoConf,
                                (ChargedProtoANNPIDConf,None),
-                               HltJetConf,
-                             ] + _hlt2linesconfs
+                               HltJetConf ]
                              # This above hlt2linesconf defines all the Hlt2 Lines since they
                              # configured after the tracking. This means that each
                              # Hlt2Lines configurable MUST be a singleton AND this
