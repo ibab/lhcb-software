@@ -422,10 +422,10 @@ Particle *HltParticleFlow::create(const ProtoParticle *pro, const int &id,
 
   // ProtoParticle with a Track.
   if (pro->track()) {
-    prt = new Particle(ParticleID(id * pro->charge()));
     const Track *trk = pro->track();
     State sta = trk->firstState();
-    double p(-1); int type(trk->type());
+    double p(-1), q(pro->charge() ? pro->charge() : -1); int type(trk->type());
+    prt = new Particle(ParticleID(id * q));
     if (type == Track::Velo) p = m_trkVlP;
     else {
       double e(abs(sta.qOverP() / sqrt(sta.errQOverP2())));
@@ -436,7 +436,7 @@ Particle *HltParticleFlow::create(const ProtoParticle *pro, const int &id,
       else if (m_trkDnErrMax>= 0 && type == Track::Downstream && 
 	       e > m_trkDnErrMax) p = m_trkDnP;
     }
-    if (p > 0) sta.setQOverP(pro->charge() / p);
+    if (p > 0) sta.setQOverP(q / p);
     if (m_prtSta->state2Particle(sta, *prt).isFailure()) {delete prt; return 0;}
 
   // ProtoParticle with CaloClusters.
