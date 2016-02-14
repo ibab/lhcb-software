@@ -49,8 +49,8 @@ class SecondaryH2LamPrPiLines(Hlt2LinesConfigurableUser):
                   'SecondaryH2LamPpPimDDLLTurbo'  :  [Filtered_LamPrPi_DDLL],
                   'SecondaryH2LamPpPimDDDDTurbo'  :  [Filtered_LamPrPi_DDDD],
                   'SecondaryH2LamPipPmLLLLTurbo'  :  [Filtered_LamPiPr_LLLL],
-## mds                  'SecondaryH2LamPipPmDDLLTurbo'  :  [Filtered_LamPiPr_DDLL],
-## mds                  'SecondaryH2LamPipPmDDDDTurbo'  :  [Filtered_LamPiPr_DDDD],
+                  'SecondaryH2LamPipPmDDLLTurbo'  :  [Filtered_LamPiPr_DDLL],
+                  'SecondaryH2LamPipPmDDDDTurbo'  :  [Filtered_LamPiPr_DDDD],
                  }
         
 
