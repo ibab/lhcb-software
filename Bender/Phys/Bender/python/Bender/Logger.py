@@ -143,16 +143,18 @@ _columns = 0
 def getLogger ( name ) :
     from AnalysisPython.Logger import getLogger as gL
     import logging
-    global _columns
-    if  0>= _columns :
-        from Ostap.progress_bar import columns
-        _columns = columns ()
-    if   _columns > 160 :
-        return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)-120s ## %(filename)s/%(lineno)d' )
-    elif _columns > 120 :
-        return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)-80s ## %(filename)s'            )
-    else :
-        return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)s' )
+    
+    ## global _columns
+    ## if  0>= _columns :
+    ##     from Ostap.progress_bar import columns
+    ##     _columns = columns ()
+    ## if   _columns > 160 :
+    ##     return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)-120s ## %(filename)s/%(lineno)d' )
+    ## elif _columns > 120 :
+    ##     return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)-80s ## %(filename)s'            )
+    ## else :
+    
+    return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)s' )
 
 if '__main__' == __name__ : logger = getLogger ( 'Bender.Logger' )
 else                      : logger = getLogger ( __name__ )
