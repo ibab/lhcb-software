@@ -148,11 +148,11 @@ def getLogger ( name ) :
         from Ostap.progress_bar import columns
         _columns = columns ()
     if   _columns > 160 :
-        return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)-90s ## %(filename)s/%(lineno)d' )
+        return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)-120s ## %(filename)s/%(lineno)d' )
     elif _columns > 120 :
-        return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)-90s ## %(filename)s'              )
+        return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)-80s ## %(filename)s'            )
     else :
-        return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)' )
+        return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)s' )
 
 if '__main__' == __name__ : logger = getLogger ( 'Bender.Logger' )
 else                      : logger = getLogger ( __name__ )
@@ -169,6 +169,7 @@ if __name__ == '__main__' :
     logger.info ( ' Date    : %s ' %  __date__    ) 
     logger.info ( ' Symbols : %s ' %  list ( __all__ ) )
 
+    global _with_colors_ 
     if _with_colors_ :
         logger.debug    ( 80*'*'  )
         logger.info     ( 80*'*'  )
