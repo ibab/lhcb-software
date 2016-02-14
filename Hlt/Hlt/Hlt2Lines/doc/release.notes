@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+
+! 2016-02-14 - Simone Stracka
+ - Added Bottomonium lines in new folder. Requires Hlt2SharedParticles rev. 201528
+
 ! 2016-02-14 = Mike Sokoloff
   in CharmHad, made small changes to Stages.py
   and SecondaryH2LamPrPiLines.py. In Stages.py, remove
