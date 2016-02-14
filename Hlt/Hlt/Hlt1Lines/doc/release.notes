@@ -5,6 +5,11 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+
+! 2016-02-14 - Simone Stracka
+ - Add Hlt1BottomoniumLines.py including: 
+   Hlt1Bottomonium2PhiPhi, Hlt1Bottomonium2KstarKstar 
+
 ! 2016-02-11 - Francesco Dettori
  - Adding two Hlt1Muon dedicated lines: 
    Hlt1DiMuonNoIP - for not displaced dimuon searches
