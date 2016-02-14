@@ -63,8 +63,23 @@ __all__     = (
     )
 # =============================================================================
 import logging
+logging.addLevelName( logging.CRITICAL  , 'FATAL  '  )
+logging.addLevelName( logging.WARNING   , 'WARNING'  )
+logging.addLevelName( logging.DEBUG     , 'DEBUG  '  )
+logging.addLevelName( logging.INFO      , 'INFO   '  )
+logging.addLevelName( logging.ERROR     , 'ERROR  '  )
 
 
+__with_colors_ = False
+
+def with_colors() :
+    global __with_colors_
+    return __with_colors_ 
+
+def setColors( what ) :
+    global __with_colors_
+    __with_colors_ = what
+    return with_colors()
 
 def with_ipython()  :
     try :
@@ -72,14 +87,12 @@ def with_ipython()  :
     except NameError :
         return False 
 
-_with_colors_ = False
 
 def make_colors () :
 
     ##return
 
-    global _with_colors_
-    if _with_colors_ : return
+    if with_colors() : return 
     
     BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
     #The background is set with 40 plus the number of the color, and the foreground with 30
@@ -117,21 +130,15 @@ def make_colors () :
     
     import logging
 
-    logging.addLevelName( logging.CRITICAL  , '  FATAL'  )
-    logging.addLevelName( logging.WARNING   , 'WARNING'  )
-    logging.addLevelName( logging.DEBUG     , '  DEBUG'  )
-    logging.addLevelName( logging.INFO      , '   INFO'  )
-    logging.addLevelName( logging.ERROR     , '  ERROR'  )
-    
-    
     logging.addLevelName( logging.CRITICAL ,  makeName( logging.CRITICAL , fg = RED    , bg  = BLUE     ) )
     logging.addLevelName( logging.WARNING  ,  makeName( logging.WARNING  , fg = RED    , bg  = YELLOW   ) )
     logging.addLevelName( logging.ERROR    ,  makeName( logging.ERROR    , fg = YELLOW , bg  = RED      ) )
-    logging.addLevelName( logging.INFO     ,  makeName( logging.INFO     , fg = BLUE   )) # , bg  = WHITE    ) )
-    logging.addLevelName( logging.DEBUG    ,  makeName( logging.DEBUG    , fg = GREEN  )) # , bg  = WHITE    ) )
+    #logging.addLevelName( logging.INFO     ,  makeName( logging.INFO     , fg = BLUE   )) # , bg  = WHITE    ) )
+    #logging.addLevelName( logging.DEBUG    ,  makeName( logging.DEBUG    , fg = GREEN  )) # , bg  = WHITE    ) )
+    logging.addLevelName( logging.INFO     ,  makeName( logging.INFO     , bg = BLUE   , fg  = WHITE ) )
+    logging.addLevelName( logging.DEBUG    ,  makeName( logging.DEBUG    , bg = GREEN  , fg  = WHITE ) )
 
-    global _with_colors_
-    _with_colors_ = True
+    setColors( True ) 
     
     
 ##  for ipython mode, add colors 
@@ -153,9 +160,8 @@ def getLogger ( name ) :
     ## elif _columns > 120 :
     ##     return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)-80s ## %(filename)s'            )
     ## else :
-
-    global _with_colors_
-    if not _with_colors_ : return gL ( name ) 
+    
+    if not with_colors() : return gL ( name ) 
     return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)s' )
 
 if '__main__' == __name__ : logger = getLogger ( 'Bender.Logger' )
@@ -172,9 +178,11 @@ if __name__ == '__main__' :
     logger.info ( ' Version : %s ' %  __version__ ) 
     logger.info ( ' Date    : %s ' %  __date__    ) 
     logger.info ( ' Symbols : %s ' %  list ( __all__ ) )
+    logger.info ( 80*'*'  ) 
 
-    global _with_colors_ 
-    if _with_colors_ :
+    make_colors()
+    
+    if with_colors() :
         logger.debug    ( 80*'*'  )
         logger.info     ( 80*'*'  )
         logger.error    ( 80*'*'  )
