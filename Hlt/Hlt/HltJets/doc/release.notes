@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of Jet building in the HLT
 !-----------------------------------------------------------------------------
 
+! 2016-02-14 - Roel Aaij
+ - Change configurable to work around problems with order of it's application.
+
 ! 2016-02-13 - Roel Aaij
  - Change dependencies to fix build
  - add __init__.py

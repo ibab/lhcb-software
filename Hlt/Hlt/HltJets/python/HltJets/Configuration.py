@@ -21,7 +21,6 @@ from HltConf.ThresholdUtils import importLineConfigurables
 
 import Hlt2Lines
 _hlt2linesconfs = importLineConfigurables( Hlt2Lines )
-globals().update( ( cfg.__name__, cfg ) for cfg in _hlt2linesconfs )
 
 class HltJetConf(LHCbConfigurableUser):
     ## Possible used Configurables
@@ -31,9 +30,11 @@ class HltJetConf(LHCbConfigurableUser):
                  '__caloProcessor' : 0}
 
     def particleFlow(self):
+        if not hasattr(self, '__particleFlow') or not self.__particleFlow:
+            self.__configure()
         return self.__particleFlow
 
-    def __apply_configuration__(self):
+    def __configure(self):
         recoSeq = GaudiSequencer("Hlt2JetRecoSequence", ModeOR = True, ShortCircuit = False)
 
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
@@ -156,3 +157,6 @@ class HltJetConf(LHCbConfigurableUser):
                         val = val.replace('Ecal', 'Hcal')
                     alg.setProp(prop, val)
                 return val
+
+    def __apply_configuration__(self):
+        self.__configure()
