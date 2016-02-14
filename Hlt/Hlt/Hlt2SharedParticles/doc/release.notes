@@ -4,6 +4,9 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2016-02-14 - Simone Stracka
+ - Add TightKstar2KPi to Kstar.py
+
 ! 2016-02-12 - Miguel Ramos Pernas
  - Add TrackFittedDetachedDiElectron.py
 
