@@ -209,7 +209,8 @@ PatVeloTTHybridTool::tracksFromTrack(const LHCb::Track & velotrack,
   //
   //Find VeloTT track candidates
   //
-  out.push_back(getCandidate(velotrack).release()); 
+  auto c = getCandidate(velotrack);
+  if (c) out.push_back(c.release());
   return StatusCode::SUCCESS;
 }
 
