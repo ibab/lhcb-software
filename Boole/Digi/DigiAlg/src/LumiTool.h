@@ -37,10 +37,10 @@ public:
   ~LumiTool() override = default;
 
   /// standard methods
-  StatusCode initialize();
+  StatusCode initialize() override;
 
   /// Return number of interactions for given luminosity 
-  StatusCode numInteractions( int& number );
+  StatusCode numInteractions( int& number ) override;
 
 private:
   double m_bunchCrossRate; ///< bunch crossing rate (MHz)

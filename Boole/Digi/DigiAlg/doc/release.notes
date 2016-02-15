@@ -3,6 +3,10 @@
 ! Responsible : Marco CATTANEO
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
+
+! 2016-02-15 - Marco Cattaneo
+ - LumiTool.h: Add missing override's 
+
 ! 2016-02-03 - Gerhard Raven
  - modernize LumiTool, MergeEventAlg
 
