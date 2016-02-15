@@ -399,9 +399,9 @@ namespace
 {
   // ==========================================================================
   /// almost zero  ? 
-  const LHCb::Math::Zero<double>      s_zero  ;
+  const LHCb::Math::Zero<double>      s_zero { } ;
   /// almost equal ? 
-  const LHCb::Math::Equal_To<double>  s_equal ;
+  const LHCb::Math::Equal_To<double>  s_equal { } ;
   // ==========================================================================
 }
 // ============================================================================
