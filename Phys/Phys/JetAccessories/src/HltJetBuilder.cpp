@@ -144,7 +144,6 @@ StatusCode HltJetBuilder::execute() {
     prts = getIfExists<Particle::Range>(m_inTags[inLoc]);
     for (Particle::Range::iterator prt = prts.begin(); prt != prts.end(); 
 	 ++prt) {
-      cout << setw(10) << (*prt)->particleID().pid() << "\n";
       double tagPhi((*prt)->momentum().Phi()), tagEta((*prt)->momentum().Eta());
       if ((*prt)->endVertex()) {
 	const VertexBase *vrt = bestVertex(*prt);
@@ -158,12 +157,8 @@ StatusCode HltJetBuilder::execute() {
 	while (phi > M_PI) phi -= 2*M_PI;
 	while (phi <= -M_PI) phi += 2*M_PI;
 	bool tag = (*jet)->hasInfo(Particle::FirstJetIndex + 100 + inLoc);
-	if (!tag && sqrt(phi*phi + eta*eta) < m_jetR) {
+	if (!tag && sqrt(phi*phi + eta*eta) < m_jetR) 
 	  (*jet)->addInfo(Particle::FirstJetIndex + 100 + inLoc, (*prt)->key());
-	  cout << setw(40) << (*prt)->key() << "\n";
-	}
-	cout << setw(10) << "" << setw(10) << (*jet)->pt() << setw(10) 
-	     << sqrt(phi*phi + eta*eta) << "\n";
       }
     }
   }
