@@ -35,16 +35,17 @@ var VeloPlotter = (function(window, undefined) {
   // Make a d3.chart.AxesChart inside the container
   // Accepts:
   //   container: jQuery to draw the chart in
+  //   opts: Configuration object to pass to the AxesChart instantiation
   // Returns:
   //   d3.chart.AxesChart instance
-  var makeChart = function(container) {
+  var makeChart = function(container, opts) {
     // Use the width and height provided, if given
     var width = container.width(),
         height = container.height();
     return d3.select(container.get(0)).append('svg')
       .attr('width', width)
       .attr('height', height)
-      .chart('AxesChart');
+      .chart('AxesChart', opts);
   };
 
   // Display plot inside container
@@ -62,7 +63,7 @@ var VeloPlotter = (function(window, undefined) {
   // Returns:
   //   d3.chart instance
   var displayPlot = function(plotType, plotData, opts, container, failure) {
-    var chart = makeChart(container)
+    var chart = makeChart(container, opts)
       .xAxisLabel(plotData['axis_titles'][0])
       .yAxisLabel(plotData['axis_titles'][1]);
     addPlotToChart(plotType, plotData, opts, chart);
@@ -93,7 +94,7 @@ var VeloPlotter = (function(window, undefined) {
   //   d3.chart instance
   var displayPlots = function(plotTypes, plotData, opts, container, failure) {
     // Label the axes with the axis titles of the first plot
-    var chart = makeChart(container)
+    var chart = makeChart(container, opts)
       .xAxisLabel(plotData[0]['axis_titles'][0])
       .yAxisLabel(plotData[0]['axis_titles'][1]);
     var numPlotables = 0;
@@ -168,9 +169,16 @@ var VeloPlotter = (function(window, undefined) {
       plotable = plotableTH2(plotData, opts);
     } else if (plotType === 'TProfile') {
       plotable = plotableTProfile(plotData, opts);
+    } else if (plotType === 'dict') {
+      plotable = plotablePoints(plotData, opts);
+    } else {
+      JobMonitor.log('Plot type ' + plotType + ' not known, not drawing');
+      return;
     }
-    // Append a title property, useful for other things to fetch later
-    plotable.title = plotData.title;
+    if (plotable !== undefined) {
+      // Append a title property, useful for other things to fetch later
+      plotable.title = plotData.title;
+    }
     return plotable;
   };
 
@@ -276,6 +284,25 @@ var VeloPlotter = (function(window, undefined) {
       }
     }
     return d3.plotable.Histogram2D(sanitise(data.name), formattedData, opts);
+  };
+
+  // Return d3.plotable.LineChart for the point data
+  // Accepts:
+  //   data: Plot data as returned by the veloview API
+  //   opts: Options passed to the plotable
+  // Returns:
+  //   d3.plotable.LineChart object
+  var plotablePoints = function(data, opts) {
+    var formattedData = [],
+        datum;
+    for (var i = 1; i < data.values.length; i++) {
+      datum = data.values[i];
+      formattedData.push({
+        x: datum[0],
+        y: datum[1]
+      });
+    }
+    return d3.plotable.LineChart(sanitise(data.name), formattedData, opts);
   };
 
   return {

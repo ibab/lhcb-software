@@ -1,11 +1,35 @@
 {% extends "velo_view/layout.html" %}
-{% block pageheader %}Detailed trends{% endblock %}
+{% block pageheader %}Trends{% endblock %}
 {% block body %}
-  <ul class="nav nav-tabs nav-justified">
-    {{ list_link_tag('velo_view/trends/nzs', 'NZS') }}
-    {{ list_link_tag('velo_view/trends/clusters', 'Clusters') }}
-    {{ list_link_tag('velo_view/trends/tracks', 'Tracks') }}
-    {{ list_link_tag('velo_view/trends/vertices', 'Vertices') }}
-  </ul>
-  {% include "partials/_run_range_form.html" %}
+  <div class="run-range-form">
+    <div class="row">
+      <form class="form-inline trending" role="form">
+        <div class="col-sm-2">
+          <select id="trendable" name="trendable">
+            <option disabled selected>Choose a trendable:</option>
+            {% for name, title in g.trendables %}
+            <option value="{{ name }}">{{ title }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-sm-10">
+          <div class="row">
+            <div class="col-sm-8">
+              <div class="input-daterange input-group">
+                <label class="sr-only" for="start-run">First run</label>
+                <input type="text" class="input-sm form-control" name="start-run" placeholder="First run">
+                <span class="input-group-addon">to</span>
+                <label class="sr-only" for="end-run">Last run</label>
+                <input type="text" class="input-sm form-control" name="end-run" placeholder="Last run">
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <button type="submit" class="btn btn-block btn-sm btn-info">Inspect</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="trend-plot"></div>
 {% endblock %}

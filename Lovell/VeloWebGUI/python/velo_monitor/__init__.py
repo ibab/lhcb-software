@@ -9,8 +9,10 @@ __all__ = ['create_app', 'wsgi']
 def create_app():
     """Create a Flask application deriving from jobmonitor."""
     from velo_monitor.run_view import run_view
+    from velo_monitor.velo_view import velo_view
     from velo_monitor.job_resolvers import (
-        run_view_resolver
+        run_view_resolver,
+        trends_resolver
     )
     app = jobmonitor.create_app()
     app.config.from_object('velo_monitor.config')
@@ -25,8 +27,10 @@ def create_app():
     app.register_blueprint(example)
 
     app.register_blueprint(run_view, url_prefix='/run_view')
+    app.register_blueprint(velo_view, url_prefix='/velo_view')
 
     app.add_job_resolver(run_view_resolver)
+    app.add_job_resolver(trends_resolver)
 
     return app
 

@@ -100,6 +100,19 @@ sidebar .sensor-detail {
   text-align: center;
 }
 
+.input-daterange input:first-of-type {
+  border-right: none;
+}
+
+.input-daterange input:last-of-type {
+  border-left: none;
+}
+
+.trend-plot {
+  width: 100%;
+  height: 400px;
+}
+
 .plotables {
   margin-bottom: 20px;
   padding: 0;
@@ -154,4 +167,20 @@ sidebar .sensor-detail {
 /* Hint that the statistics boxes are draggable */
 .TextBox {
   cursor: move;
+}
+
+.dq-summary {
+  list-style-type: none;
+}
+
+.dq-summary > li {
+  border-bottom: 1px solid #eee;
+  font-size: 1.5em;
+}
+
+.dq-summary ul {
+  margin: 0 0 0 1em;
+  padding: 0;
+  font-size: 0.666em;
+  list-style-type: none;
 }

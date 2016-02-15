@@ -18,6 +18,7 @@ var VeloMonitor = (function(window, undefined) {
     + '<a class="plotable-toggle pull-right">Hide</a>'
     + '</li>';
   TEMPLATES.sortablePlaceholder = '<li>&nbsp</li>';
+  TEMPLATES.dqTree = '<div class="dq-tree"><pre><code>{0}</pre></code></div>';
 
   // We need to check if a job result is an array or not, so polyfill the
   // isArray method on the Array object in case it isn't available
@@ -84,21 +85,19 @@ var VeloMonitor = (function(window, undefined) {
     }
   };
 
-  // Load the plot(s) returned by the job
-  // 'runview.plots.get_run_plot_with_reference' in to container.
+  // Load the plot(s) returned by the job task in to container.
   // Accepts:
   //   args: Object of keyword arguments to pass to the job
   //   opts: Drawing options passed to appropriate d3.plotable
   //   container: jQuery element to load the resulting plot(s) in to, if any
   // Returns:
   //   Polling job task
-  var loadRunViewPlotInContainer = function(args, opts, container) {
+  var loadTaskPlotInContainer = function(task, args, cacheKey, opts, container) {
     var spinner = appendSpinner(container);
     var failure = function(msg) { displayFailure(msg, container); };
 
     // Use cached job result if available, else create a job
     // Promises used to unify resolution/failure logic
-    var cacheKey = args.name + '_' + args.run;
     var cacheResult = JobCache.getItem(cacheKey);
     var task;
     if (cacheResult !== null) {
@@ -107,7 +106,7 @@ var VeloMonitor = (function(window, undefined) {
       // Can always resolve as only successful jobs are cached
       task.resolve(cacheResult);
     } else {
-      task = JobMonitor.createTask('runview.plots.get_run_plot_with_reference', args);
+      task = JobMonitor.createTask(task, args);
       JobCounter.increment();
     }
 
@@ -233,6 +232,71 @@ var VeloMonitor = (function(window, undefined) {
       this.setupPlots();
       this.fixNavigationOverflow();
     },
+    dq: {
+      init: function() {
+        this.setupDQTree();
+      },
+      setupDQTree: function() {
+        var run = $('#run-number').data('run'),
+            container = $('.run-view-pane'),
+            cacheKey = 'dq-tree-' + run,
+            cacheResult = JobCache.getItem(cacheKey),
+            spinner = appendSpinner(container),
+            task;
+        if (cacheResult !== null) {
+          this.displayDQTree(cacheResult);
+        } else {
+          task = JobMonitor.createTask('runview.dq_trends.get_dq_values', {run: run});
+          task.done(function(result) {
+            JobCache.setItem(cacheKey, result);
+            this.displayDQTree(result);
+          });
+          task.always(function() {
+            spinner.stop();
+          });
+        }
+      },
+      displayDQTree: function(result) {
+          var tree = result['result']['data'],
+              // Format object as JSON with 4-space indentation for nested structures
+              jsonTree = JSON.stringify(tree, null, 4);
+
+          // Format the data
+          var key, components, category, topic, categories, newTree = {};
+          for (key in tree) {
+            // TODO assumes two components, should probably do this recursively
+            components = key.split('.');
+            category = components[0];
+            topic = components[1];
+            if (newTree[category] === undefined) {
+              newTree[category] = [];
+            }
+            newTree[category].push(tree[key]);
+          }
+
+          var s = '', i, items, item, keyAsTitle,
+              // Map DQ levels to Bootstrap label classes
+              labelClasses = ['success', 'warning', 'danger'];
+          // TODO assumes two components, should probably do this recursively
+          for (key in newTree) {
+            keyAsTitle = key[0].toUpperCase() + key.slice(1);
+            s += '<ul class="dq-summary">';
+            s += '<li>' + keyAsTitle + '<ul>';
+            items = newTree[key];
+            for (i = 0; i < items.length; i++) {
+              item = items[i];
+              s += '<li>{0} '.format(item.name);
+              s += '<span class="label label-{1}">{0:.0f}</span></p>'.format(item.score, labelClasses[item.lvl]);
+              s += '</li>';
+            }
+            s += '</ul></li>'
+            s += '</ul>'
+          }
+
+          // $('.run-view-pane').html(TEMPLATES.dqTree.format(jsonTree));
+          $('.run-view-pane').html(s);
+      }
+    },
     // Load the plots in to the page
     // Accepts:
     //   args: Optional object of arguments to send to the job
@@ -258,7 +322,11 @@ var VeloMonitor = (function(window, undefined) {
           requiresSensorSelector = true;
           args.name = name.format(sensor)
         }
-        loadRunViewPlotInContainer(args, plotOpts, $el);
+        var cacheKey = args.name + '_' + args.run;
+        loadTaskPlotInContainer(
+            'runview.plots.get_run_plot_with_reference',
+            args, cacheKey, plotOpts, $el
+        );
       });
       // We don't do this inside the each loop else bindings will be duplicated
       if (requiresSensorSelector === true) {
@@ -455,9 +523,60 @@ var VeloMonitor = (function(window, undefined) {
     }
   };
 
+  var veloView = {
+    trends: {
+      init: function() {
+        $('form.trending').submit(function(e) {
+          var $this = $(this),
+              selector = $this.find('select'),
+              startInput = $this.find('input[name=start-run]'),
+              endInput = $this.find('input[name=end-run]'),
+              trendable = selector.val(),
+              startRun = parseInt(startInput.val(), 10),
+              endRun = parseInt(endInput.val(), 10),
+              runs = [];
+
+          if (trendable === null) {
+            return false;
+          }
+          // TODO find more sensible/rationalised default values
+          if (Number.isNaN(startRun)) {
+            startRun = 163000;
+          }
+          if (Number.isNaN(endRun)) {
+            endRun = 170000;
+          }
+          runs = [startRun, endRun];
+
+          var args = {
+                name: trendable,
+                runRange: runs
+              },
+              plotOpts = {
+                showPoints: true,
+                interpolation: 'linear',
+                // We don't want the run numbers to be formatted with exponents
+                xFormatExponent: false
+              };
+
+          var $el = $('.trend-plot'),
+              cacheKey = args.name + '_' + startRun + '_' + endRun;
+          $el.empty();
+          loadTaskPlotInContainer(
+            'runview.plots.get_trending_plot',
+            args, cacheKey, plotOpts, $el
+          );
+
+          e.preventDefault();
+        });
+      }
+    }
+  }
+
   // Page-specific modules
   var pages = {
-    runView: runView
+    runView: runView,
+    veloView: veloView
   };
 
   // Initialise the app

@@ -4,6 +4,10 @@
 ! Purpose     : Web GUI for analysis of VELO data
 !------------------------------------------------------------------------------
 
+! 2016-02-15 - Alex Pearce
+  - Add support for per-run DQ analysis
+  - Add support for trends
+
 ! 2015-11-02 - Alex Pearce
   - Add preliminary support for subpages and references plots.
   - Still to be done: support layout option and plottables (see run view
