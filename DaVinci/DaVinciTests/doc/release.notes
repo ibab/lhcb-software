@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2016-02-15 - Bassem Khanji, Julian Wishahi
+ - Update tagging test ref. file. test/qmtest/tagging.qms/test_tag_mc12.qmt.
+
 !======================= DaVinciTests v3r2 2016-02-08 ========================
 
 ! 2016-02-08 - Eduardo Rodrigues
