@@ -30,7 +30,7 @@ class ChargedProtoANNPIDConf(LHCbConfigurableUser):
                                          "2009"    : "MC12TuneV2",
                                          "2008"    : "MC12TuneV2",
                                          "MC09"    : "MC12TuneV2",
-                                         "DEFAULT" : "MC15TuneV1" }
+                                         "DEFAULT" : "MC12TuneV2" }
                   ,"DataType"   : "" # Type of data, propagated from application
                   ,"TrackTypes" : ["Long","Downstream","Upstream"]
                   ,"PIDTypes"   : ["Electron","Muon","Pion","Kaon","Proton","Ghost"]
