@@ -6,7 +6,8 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 
 class JetsLines(Hlt2LinesConfigurableUser):
     __slots__ = {'_stages' : {},
-                 'Prescale' : {},
+                 'Prescale' : {'Hlt2JetsDiJet'                : 1.e-3,
+                               'Hlt2JetsDiJetSV'                : 1.e-2},
                  'Postscale' : {},
                  'Common' : {
                      'GHOSTPROB' : 0.2,

@@ -9,6 +9,9 @@
 !----------------------------------------------------------------------------
 
 
+! 2016-02-14 - Mika Vesterinen
+ - Add prescales to the jet lines
+
 ! 2016-02-14 - Simone Stracka
  - Added Bottomonium lines in new folder. Requires Hlt2SharedParticles rev. 201528
 
