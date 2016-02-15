@@ -168,9 +168,11 @@ namespace Rich
     public: // definitions
 
       /// Collection of cluster pointers
-      using PtnVector      = LHCb::Boost::PoolAllocList< Cluster*                 >;
+      //using PtnVector      = LHCb::Boost::PoolAllocList< Cluster* >;
+      using PtnVector      = LHCb::STL::List< Cluster* >;
       /// Collection of cluster smart pointers (i.e. for ownership with memory management)
-      using SmartPtnVector = LHCb::Boost::PoolAllocList< std::unique_ptr<Cluster> >;
+      //using SmartPtnVector = LHCb::Boost::PoolAllocList< std::unique_ptr<Cluster> >;
+      using SmartPtnVector = LHCb::STL::List< std::unique_ptr<Cluster> >;
 
     public: // Constructors etc.
 
@@ -261,6 +263,7 @@ namespace Rich
     {
       auto * clus = new HPDPixelClusters::Cluster(id);
       m_allclus.emplace_back( clus );
+      // m_allclus.push_back( std::unique_ptr<Cluster>(clus) );
       return clus;
     }
 

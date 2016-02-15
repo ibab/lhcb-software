@@ -4,6 +4,11 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2016-02-15 - Chris Jones
+ - Disable use of Pool allocated vectors for std::unique_ptr<Cluster>, as it 
+   appears using the POOL allocators require a copy constructor for the 
+   contained objects, which is explicitly deleted for std::unique_ptr.
+
 ! 2016-02-12 - Chris Jones
  - Move the method that creates new clusters into the HPDPixelClusters class,
    such that it is more closely bind to the memory management and the 
