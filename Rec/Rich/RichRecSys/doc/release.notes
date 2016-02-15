@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2016-02-15 - Chris Jones
+ - Enable by default Deuteron.
+
 ! 2016-02-02 - Chris Jones
  - Update RichPID version number from 1 to 2, to reflect the fact the data
    objects have changed in structure (an additional float in the DLL vector

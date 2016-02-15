@@ -72,9 +72,9 @@ class RichRecSysBaseConf(RichConfigurableUser):
         
         # default values
         self.setRichDefault("Particles","Offline", ["electron","muon","pion","kaon",
-                                                    "proton","belowThreshold"] )
+                                                    "proton","deuteron","belowThreshold"] )
         self.setRichDefault("Particles","HLT",     ["electron","muon","pion","kaon",
-                                                    "proton","belowThreshold"] )
+                                                    "proton","deuteron","belowThreshold"] )
         self.setRichDefault("Radiators","Offline", ["Rich1Gas","Rich2Gas"] )
         self.setRichDefault("Radiators","HLT",     ["Rich1Gas","Rich2Gas"] )
 
