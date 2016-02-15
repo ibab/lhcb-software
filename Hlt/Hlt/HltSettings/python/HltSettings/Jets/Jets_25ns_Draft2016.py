@@ -33,6 +33,8 @@ class Jets_25ns_Draft2016:
       from Hlt2Lines.Jets.Lines import JetsLines
       d.update({
             JetsLines : {
+               'Prescale' : {'Hlt2JetsDiJet'                : 1.e-3,
+                             'Hlt2JetsDiJetSV'                : 1.e-2},
                'Common' : {
                   'GHOSTPROB' : 0.2,
                   'DPHI'      : 1.5,

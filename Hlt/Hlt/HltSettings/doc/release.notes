@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-02-15 - Mika Vesterinen
+ - Update the main Draft2016 settings file to pick up any new Draft2016 settings files that are already commited.
+
 ! 2016-02-14 - Roel Aaij
  - Add RareCharm_25ns_Draft2016.py that works with the head of Hlt2Lines.
 

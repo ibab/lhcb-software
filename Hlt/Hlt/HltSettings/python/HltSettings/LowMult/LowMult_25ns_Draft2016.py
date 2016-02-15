@@ -1,6 +1,6 @@
 from GaudiKernel.SystemOfUnits import GeV, MeV, mm
 
-class LowMult_25ns_October2015 :
+class LowMult_25ns_Draft2016 :
     """
     Threshold settings for Hlt2 Low Multiplicity (LowMult) lines
 
