@@ -9,7 +9,7 @@ WARNING :: DO NOT EDIT WITHOUT PERMISSION OF THE AUTHORS
 
 from GaudiKernel.SystemOfUnits import GeV, mm, MeV 
 
-class DiElectrons_25ns_Draft2016(object) :
+class DiElectron_25ns_Draft2016(object) :
     
     __all__ = ( 'ActiveHlt2Lines' )
     
