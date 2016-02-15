@@ -13,6 +13,7 @@
 
 namespace Tf {
   DECLARE_ALGORITHM_FACTORY( PatVeloGeneric )
+  const double PatVeloGeneric::s_binary = 1.0/sqrt(12.);  // digital resolution a priori
 
   //=============================================================================
   // Standard constructor, initializes variables

@@ -40,7 +40,7 @@ namespace Tf {
       virtual StatusCode finalize  (); ///< Algorithm finalization
 
     private:
-      static constexpr const auto s_binary = 1.0/sqrt(12.);  // digital resolution a priori
+      static const double  s_binary; // digital resolution a priori
 
       CircularRangeUtils<double> m_angleUtils = {-Gaudi::Units::pi,Gaudi::Units::pi };
       PatVeloRHitManager*   m_rHitManager = nullptr;
