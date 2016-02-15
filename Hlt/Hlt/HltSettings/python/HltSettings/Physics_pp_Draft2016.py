@@ -56,14 +56,14 @@ class Physics_pp_Draft2016( object ):
         return          'Physics_pp_Draft2016'
 
     def SubDirs(self):
-        return {'August2015' : ['CcDiHadron', 'DPS', 'EW',
+        return {'August2015' : ['CcDiHadron', 'DPS', 
                                 'Bc2JpsiX', 'DiMuon', 'DisplVertices',
                                 'TrackEff', "Commissioning", 'RareStrange',
                                 'TriMuon','Phi'],
                 'September2015' : ['XcMuXForTau'],
                 'October2015' : ['SingleMuon'],
                 'Draft2016': ['B2HH','B2Kpi0','BHad','CharmHad','DiElectron','Exotica',
-                              'Jets','LFV','LowMult','PID','Radiative','RareCharm',
+                              'Jets','LFV','LowMult','PID','Radiative','RareCharm','EW',
                               'Topo','TrackEffDiMuon']}
 
     def Thresholds(self) :
@@ -222,7 +222,7 @@ class Physics_pp_Draft2016( object ):
                                                                               'MultiMuonNoL0'    : None
                                                                              }
                                                , 'Prescale'                 : { 'Hlt1NoPVPassThrough': 1.0,
-                                                                                'Hlt1SingleMuonNoIP' : 1.0,
+                                                                                'Hlt1SingleMuonNoIP' : 0.01,
                                                                                 'Hlt1DiMuonNoL0'  : 0.01,
                                                                                 'Hlt1MultiMuonNoL0'  : 0.01
                                                                                 }

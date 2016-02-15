@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!2016-02-15 - Mika Vesterinen
+ - Prescale the Hlt1SingleMuonNoIP line, and pick up the EW module
+
 !2016-02-15 - Karlis Dreimanis
  - Create EW_25ns_Draft2016 settings file. Tau pre-scales are the only changes from August.
 
