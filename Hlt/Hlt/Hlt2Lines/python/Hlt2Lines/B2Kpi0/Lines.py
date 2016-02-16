@@ -68,7 +68,7 @@ class B2Kpi0Lines(Hlt2LinesConfigurableUser):
                   }
         from HltLine.HltLine import Hlt2Line
         for (linename, algos) in self.algorithms(stages):
-            Hlt2Line(linename,
+            Hlt2Line('B2Kpi0_'+linename,
                      algos=algos,
                      prescale=self.prescale,
                      postscale=self.postscale,
