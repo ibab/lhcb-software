@@ -5,6 +5,14 @@
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
 
+! 2016-02-16 - Vanya Belyaev
+ - simplify processing of MC-uDST
+    via auto-collection of all relevant Particle -> MCParticle relation tables 
+ - make use of GetTESLocations class 
+ - add new property 'CollectP2MCPLinks'  (default is False)
+   to activate autocollections of Particle -> MCParticle 
+   links for MC-micro-DST one needs to set it to 'True'
+
 !========================= LoKiAlgoMC v9r7 2014-12-03 =========================
 
 ! 2015-11-01 - Gerhard Raven

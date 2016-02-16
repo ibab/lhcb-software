@@ -6,6 +6,10 @@
 // ============================================================================
 #include "GaudiAlg/GaudiTool.h"
 // ============================================================================
+// DaVinciKernel
+// ============================================================================
+#include "Kernel/GetTESLocations.h"
+// ============================================================================
 // LoKiMC 
 // ============================================================================
 #include "LoKi/Objects.h"
@@ -33,6 +37,20 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-31 
  */
+// ============================================================================
+namespace
+{
+  // ==========================================================================
+  /// standars suffix for constainer of particles 
+  const std::string s_PARTICLES      = "/Particles"      ;
+  /// standars suffix P->MC relations 
+  const std::string s_P2MCPRELATIONS = "/P2MCPRelations" ;
+  // ==========================================================================
+  /// has non-trivial RootInTES ? 
+  inline bool hasRootInTES ( const std::string& rit ) 
+  { return 7 < rit.length() ; }
+  // ==========================================================================  
+}
 // ============================================================================
 /*  standard constructor 
  *  @param name algorithm instance name 
@@ -78,6 +96,7 @@ LoKi::AlgoMC::AlgoMC
 //
   , m_disableMCMatch   ( false ) 
 //
+  , m_collectP2MCLinks ( false ) 
   , m_mcdecay  ( 0 ) 
   , m_gendecay ( 0 ) 
 {
@@ -86,17 +105,48 @@ LoKi::AlgoMC::AlgoMC
   m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Upstream ) ;
   m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Neutrals ) ;
   
-  declareProperty   ( "P2MCs"  , m_P2MC   ) ;
-  declareProperty   ( "WP2MCs" , m_P2MCW  ) ;  
-  declareProperty   ( "PP2MCs" , m_PP2MC  ) ;
-  declareProperty   ( "T2MCs"  , m_T2MC   ) ;
-  declareProperty   ( "WT2MCs" , m_T2MCW  ) ;
+  declareProperty   
+    ( "P2MCs"  , 
+      m_P2MC   , 
+      "List of Particle -> MCParticle relation tables      (LoKi::Types::TableP2MC)" ) ;
+  declareProperty  
+    ( "WP2MCs" , 
+      m_P2MCW  , 
+      "List of Particle -> MCParticle relation tables      (LoKi::Types::TableP2MCW)" ) ;
+  declareProperty   
+    ( "PP2MCs" , 
+      m_PP2MC  , 
+      "List of ProtoParticle -> MCParticle relation tables (LoKi::Types::TablePP2MC)" ) ;
+  declareProperty   
+    ( "T2MCs"  ,
+      m_T2MC   , 
+      "List of Track -> MCParticle relation tables         (LoKi::Types::TableT2MC)"  ) ;
+  declareProperty   
+    ( "WT2MCs" , 
+      m_T2MCW  , 
+      "List of Track -> MCParticle relation tables         (LoKi::Types::TableT2MCW)"  ) ;
   //
-  declareProperty   ( "MC2CollisionTool" , m_mc2collisionName ) ;  
-  declareProperty   ( "HepMC2MCTool"     , m_hepmc2mcName     ) ;  
-  declareProperty   ( "PV2MCTool"        , m_pv2mcName        ) ;  
+  declareProperty   
+    ( "MC2CollisionTool" , 
+      m_mc2collisionName , 
+      "Type/Name of tool for MC <--> Collision association (IMC2Collision interface)") ;  
+  declareProperty   
+    ( "HepMC2MCTool"     , 
+      m_hepmc2mcName  , 
+      "Type/Name of tool for MC <--> HepMC association     (IHepMC2MC interface)") ;  
+  declareProperty  
+    ( "PV2MCTool" , 
+      m_pv2mcName ,
+      "Type/Name of tool for MC association of PVs         (IPV2MC interface)"   ) ;  
   //
-  declareProperty   ( "DisableMCMatch"   , m_disableMCMatch   ) ;
+  declareProperty   
+    ( "DisableMCMatch"    , 
+      m_disableMCMatch    , 
+      "Disable MC-truth matching" ) ;
+  declareProperty 
+    ( "CollectP2MCPLinks" , 
+      m_collectP2MCLinks  , 
+      "(Auto)collect Particle -> MCParticle links (useful for micro-DST") ;
 } 
 // ============================================================================
 // virtual and protected destructor 
@@ -226,7 +276,7 @@ LoKi::AlgoMC::mcTruth  ( const std::string& name ) const
     object->addRef() ;
     // add the matcher into container 
     m_mcmatchers[name] = object  ;
-  } ;
+  } 
   //
   object->clear() ;
   /// feed the matcher with the information
@@ -242,6 +292,33 @@ LoKi::AlgoMC::mcTruth  ( const std::string& name ) const
     _feedIt<LoKi::Types::TableT2MC>   ( object , m_T2MC   ) . ignore () ;
     // Track         -> MC with double  weight 
     _feedIt<LoKi::Types::TableT2MCW>  ( object , m_T2MCW  ) . ignore () ;
+    //
+    //
+    // for uDST MC a bit more work is needed:
+    if ( m_collectP2MCLinks && hasRootInTES ( rootInTES() ) ) 
+    {
+      const std::string::size_type rit_len = rootInTES().length() ;
+      // get all particles
+      const LHCb::Particle::Range parts = this->particles();
+      // collect all TES locations from them 
+      const DaVinci::Utils::GetTESLocations locator ( parts.begin() , parts.end  () ) ;
+      const std::vector<std::string>& inputs =  locator.locations() ;
+      // transform it into proper locations of relation tables 
+      std::vector<std::string>  tables ; tables.reserve( inputs.size() ) ;
+      for ( std::vector<std::string>::const_iterator i = inputs.begin() ;
+            inputs.end() != i ; ++i )
+      {
+        const std::string::size_type p1 = i-> find ( rootInTES () ) ;
+        const std::string::size_type p2 = i->rfind ( s_PARTICLES  ) ;
+        if ( 0 == p1 && std::string::npos != p2 && rit_len < p2 ) 
+        { tables.push_back ( std::string ( *i , rit_len , p2 - rit_len  ) + s_P2MCPRELATIONS ) ; }
+        else 
+        { Warning("Can't construct P2MCP location from '" + (*i)+ "', skip it") ; }     
+      }
+      // finally use these tables to load MC-truth information 
+      // Particle      -> MC
+      _feedIt<LoKi::Types::TableP2MC>   ( object , tables ,  false ) . ignore () ;
+    }
   }
   //
   return LoKi::MCMatch( object ) ;
@@ -292,11 +369,18 @@ StatusCode LoKi::AlgoMC::initialize ()
   //
   if      ( m_disableMCMatch   )
   { Warning ( "MCMatch is explicitely DISABLED" ) ; }
-  else if ( m_P2MC  .empty() && 
-            m_P2MCW .empty() && 
-            m_PP2MC .empty() && 
-            m_T2MC  .empty() && 
-            m_T2MCW .empty()   )
+  else if (  m_P2MC  .empty() && 
+             m_P2MCW .empty() && 
+             m_PP2MC .empty() && 
+             m_T2MC  .empty() && 
+             m_T2MCW .empty() && !hasRootInTES( rootInTES() ) ) 
+  { Warning ( "MCMatch is implicitely DISABLED: no input data specified" ) ; }
+  else if (  m_P2MC  .empty() && 
+             m_P2MCW .empty() && 
+             m_PP2MC .empty() && 
+             m_T2MC  .empty() && 
+             m_T2MCW .empty() &&  
+             hasRootInTES( rootInTES() ) && !m_collectP2MCLinks ) 
   { Warning ( "MCMatch is implicitely DISABLED: no input data specified" ) ; }
   //
   return StatusCode::SUCCESS ;

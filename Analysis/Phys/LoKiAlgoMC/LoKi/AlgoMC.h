@@ -1031,10 +1031,11 @@ namespace LoKi
   private:
     // ========================================================================    
     /// helper fuction to feed LoKi::MCMatchObj object with the data 
-    template <class TABLE> 
-    StatusCode _feedIt 
-    ( LoKi::MCMatchObj* object    , 
-      const Addresses&  addresses ) const ;
+    template <class TABLE>
+      StatusCode _feedIt 
+      ( LoKi::MCMatchObj* object          , 
+        const Addresses&  addresses       , 
+        const bool        report   = true ) const ;
     // ========================================================================    
   private:
     // ========================================================================    
@@ -1068,16 +1069,18 @@ namespace LoKi
     Addresses    m_T2MC   ;
     Addresses    m_T2MCW  ;
     // ========================================================================    
-    std::string                  m_mc2collisionName ;
-    mutable const IMC2Collision* m_mc2collision     ;
+    std::string                  m_mc2collisionName  ;
+    mutable const IMC2Collision* m_mc2collision      ;
     // ========================================================================    
-    std::string                  m_hepmc2mcName     ;
-    mutable const IHepMC2MC*     m_hepmc2mc         ;
+    std::string                  m_hepmc2mcName      ;
+    mutable const IHepMC2MC*     m_hepmc2mc          ;
     // ========================================================================    
-    std::string                  m_pv2mcName        ;
-    mutable const IPV2MC*        m_pv2mc            ;
+    std::string                  m_pv2mcName         ;
+    mutable const IPV2MC*        m_pv2mc             ;
     // ========================================================================    
-    bool                         m_disableMCMatch   ;
+    bool                         m_disableMCMatch    ;
+    // auto-collect P->MC plinks for uDST ? 
+    bool                         m_collectP2MCLinks  ;
     // ========================================================================
     /// the factory to create the (MC)decay trees 
     LoKi::Interface<Decays::IMCDecay>  m_mcdecay  ;          // the decay trees 
@@ -1094,7 +1097,8 @@ template <class TABLE>
 inline StatusCode 
 LoKi::AlgoMC::_feedIt 
 ( LoKi::MCMatchObj*              object    ,
-  const LoKi::AlgoMC::Addresses& addresses ) const
+  const LoKi::AlgoMC::Addresses& addresses , 
+  const bool                     report    ) const
 {
   //
   if ( 0 == object ) { return StatusCode::FAILURE ; }
@@ -1106,11 +1110,14 @@ LoKi::AlgoMC::_feedIt
     // check the data 
     if ( !exist<TABLE>( address ) )
     { 
-      Error ( " There is no valid data at '" + address + "'" ) ; 
+      if ( !report ) { counter ( "NO-links:" + address ) += 1 ; }
+      else  { Warning ( " There is no valid data at '" + address + "'" ) ; }
       continue ; 
     }
     // get the table from the Transient Store 
     const TABLE* table = get<TABLE> ( address ) ;
+    // make some statistics of MC-links 
+    counter("MC-links:" + address ) += table->relations().size();
     // feed it! 
     object -> addMatchInfo ( table ) ;
   } 
