@@ -22,6 +22,10 @@
 ! ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 ! -----------------------------------------------------------------------------
 
+! 2016-02-16 - Vanya Belyaev
+ - add new example for processing of MC-micro-DST 
+ - add corresponding   QMtest 
+
 !  ====================== Ex/BenderExample v28r0 2015-02-12 ==================
 
 ! 2015-11-08 - Vanya Belyaev
