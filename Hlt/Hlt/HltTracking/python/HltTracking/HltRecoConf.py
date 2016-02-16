@@ -31,6 +31,8 @@ class HltRecoConf(LHCbConfigurableUser):
                , "Forward_HPT_MinP"            : 3000. * MeV
                , "Forward_LPT_Muon_MinPt"      :  300. * MeV
                , "Forward_LPT_Muon_MinP"       : 3000. * MeV
+               , "Forward_ULPT_Muon_MinPt"     :  80. * MeV
+               , "Forward_ULPT_Muon_MinP"      : 3000. * MeV
                , "Forward_LPT_MinPt"           :   80. * MeV  # was 200
                , "Forward_LPT_MinP"            : 1000. * MeV # was 3000
                , "Forward_MaxOTHits"           : 15000
@@ -146,35 +148,10 @@ HltRichDefaultRadiators			= ["Rich1Gas","Rich2Gas"]
 HltRichDefaultTrackCuts     = { tt : { "Chi2Cut" : [0.,MaxChi2], "PCut" : [2,100], "PtCut" : [0.8,100]} for tt in ['Forward','Match']}
 
 
-OfflineRichDefaultHypos	       = ["electron","muon","pion","kaon","proton","belowThreshold"]
+OfflineRichDefaultHypos	       = ["electron","muon","pion","kaon","proton","deuteron","belowThreshold"]
 OfflineRichDefaultRadiators    = ["Rich1Gas","Rich2Gas"]
 OfflineRichDefaultTrackCuts    = { tt : {'Chi2Cut' : [0,MaxChi2], 'PCut' : [0,1e9], 'PtCut' : [0,1e9] } for tt in ['Forward','Match'] }
 OfflineRichDefaultDownTrackCuts    = { tt : {'Chi2Cut' : [0,MaxChi2], 'PCut' : [0,1e9], 'PtCut' : [0,1e9] } for tt in ['KsTrack'] }
 
 
 
-## CommonForwardTrackingOptions_EarlyData = { "MaxChi2" : 40.,
-##                                  "MaxChi2Track" : 40,
-##                                  "MinHits" : 12,
-##                                  "MinOTHits" : 14,
-##                                  "MinXPlanes" : 4,
-##                                  "MinPlanes" : 8,
-##                                  "MaxSpreadX" : 1.5,
-##                                  "MaxSpreadY" : 3.0  }
-## CommonSeedingTrackingOptions_EarlyData = { "OTNHitsLowThresh" : 12,
-##                                            "MinTotalPlanes" : 7,
-##                                            "MaxMisses" : 2,
-##                                            "MaxTrackChi2LowMult" : 10,
-##                                            "MaxFinalTrackChi2" : 20,
-##                                            "MaxFinalChi2" : 30,
-##                                            "MaxTrackChi2" : 40,
-##                                            "MaxChi2HitIT" : 10,
-##                                            "MaxChi2HitOT" : 30}
-## CommonDownstreamTrackingOptions_EarlyData = { "xPredTol2" : 20.0,
-##                                               "TolMatch" : 1.5,
-##                                               "TolUV" : 2.0,
-##                                               "maxWindowSize" : 10.0,
-##                                               "MaxChisq" : 20.0,
-##                                               "MaxDistance" : 0.3,
-##                                               "deltaP" : 2.0,
-##                                               "errorZMagnet" : 30.0 }

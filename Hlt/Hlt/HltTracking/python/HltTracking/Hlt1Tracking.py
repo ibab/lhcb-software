@@ -157,6 +157,11 @@ ConfiguredForward( ToolSvc(), to_name( "ComplementForward" ),
                    minPt=HltRecoConf().getProp("Forward_LPT_Muon_MinPt"),
                    useMomEst = True,
                    MarkHitsTrackLocations = [ HltHPTTracking.outputSelection() ])
+ConfiguredForward( ToolSvc(), to_name( "LooseComplementForward" ), 
+                   minP=HltRecoConf().getProp("Forward_ULPT_Muon_MinP"),  
+                   minPt=HltRecoConf().getProp("Forward_ULPT_Muon_MinPt"),
+                   useMomEst = True,
+                   MarkHitsTrackLocations = [ HltHPTTracking.outputSelection() ])
 ConfiguredForward( ToolSvc(), to_name( "LooseForward" ), 
                    minP=HltRecoConf().getProp("Forward_LPT_MinP"),  
                    minPt=HltRecoConf().getProp("Forward_LPT_MinPt"))
@@ -167,6 +172,9 @@ LooseForward      = ("LooseForward       = ( execute(decodeIT) * "
 ComplementForward = ("ComplementForward  = ( execute(decodeIT) * "
                      "TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.ComplementForward,"
                      "'%s' ) )" % cache_loc(HltHPTTracking.outputSelection()))
+LooseComplementForward = ("LooseComplementForward  = ( execute(decodeIT) * "
+                          "TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.LooseComplementForward,"
+                          "'%s' ) )" % cache_loc(HltHPTTracking.outputSelection()))
 
 # =============================================================================
 ## Hlt trackfit upgrade configuration

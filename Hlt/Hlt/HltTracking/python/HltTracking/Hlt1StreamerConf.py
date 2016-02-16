@@ -69,6 +69,17 @@ ComplementForward = LoKi.Hlt1.UpgradeConf(
     False                         ,                    ## "TransferExtraInfo"
     True                          )                    ##         "OrderByPt"
 # =============================================================================
+LooseComplementForward = LoKi.Hlt1.UpgradeConf(
+    Hlt1Tools["LooseComplementForward"],               ##              "Tool" 
+    Hlt1TrackLoc["LooseComplementForward"],            ##         "TESOutput"
+    Hlt1CacheLoc["LooseComplementForward"],            ##             "Cache"
+    LHCb.Track.Long               ,                    ##         "TrackType"
+    True                          ,                    ##             "Owner"
+    False                         ,                    ##       "TransferIDs"
+    False                         ,                    ##  "TransferAncestor"
+    False                         ,                    ## "TransferExtraInfo"
+    True                          )                    ##         "OrderByPt"
+# =============================================================================
 LooseForward = LoKi.Hlt1.UpgradeConf(
     Hlt1Tools["LooseForward"],                         ##               "Tool" 
     Hlt1TrackLoc["LooseForward"] ,                     ##          "TESOutput"
@@ -148,6 +159,7 @@ IsMuon = LoKi.Hlt1.UpgradeConf(
 
 _trUpgrader = {}
 _trUpgrader['ComplementForward'] = ComplementForward
+_trUpgrader['LooseComplementForward'] = LooseComplementForward
 _trUpgrader['FitTrack'         ] = FitTrack
 _trUpgrader['FilterGhostProb'     ] = FilterGhostProb
 _trUpgrader['MatchVeloMuon'    ] = MatchVeloMuon
