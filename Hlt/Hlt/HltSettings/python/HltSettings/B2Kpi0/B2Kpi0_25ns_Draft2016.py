@@ -12,8 +12,8 @@ class B2Kpi0_25ns_Draft2016 :
         Returns a list of active lines
         """
         lines = [
-            'Hlt2B2Kpi0',
-            'Hlt2B2K0pi0'
+            'Hlt2B2Kpi0_B2Kpi0',
+            'Hlt2B2Kpi0_B2K0pi0'
                 ]
 
         return lines
