@@ -102,5 +102,5 @@ class B2HHLines(Hlt2LinesConfigurableUser):
 
         from HltLine.HltLine import Hlt2Line
         for nickname, algos in self.algorithms(stages):
-            Hlt2Line(nickname, prescale = self.prescale,
+            Hlt2Line('B2HH_'+nickname, prescale = self.prescale,
                      algos = algos, postscale = self.postscale)
