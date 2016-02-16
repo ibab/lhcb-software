@@ -35,7 +35,7 @@ namespace Tf {
 
     template <typename Container, typename Proj>
     typename std::remove_pointer<typename Container::value_type>::type::range_type
-    range(Container c, double min, double max, Proj proj) {
+    range(const Container& c, double min, double max, Proj proj) {
         auto cmp = [&](typename Container::const_reference d, double m) { return (d->*proj)() < m; };
         auto first = std::begin(c);
         auto last  = std::end(c);
@@ -45,7 +45,7 @@ namespace Tf {
     }
 
     template <typename Container, typename Projection>
-    typename Container::value_type closestHit(Container c, double pos, double tol, Projection proj) {
+    typename Container::value_type closestHit(const Container& c, double pos, double tol, Projection proj) {
         typename Container::value_type closest = nullptr;
         //auto first  = c.begin(); // @TODO: use lower_bound to skip ahead to pos-tol, as the code implicilty assumes weak ordered by projection
         //auto last = c.end();
