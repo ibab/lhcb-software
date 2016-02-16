@@ -7,6 +7,10 @@ Purpose: LHCb reconstruction program
   . Follow introduction of Deuteron particle hypothesis
   . Fix two bugs in PatLongLivedTracking, use new chi2-cut in x-layer fit
 
+- Changes to tests
+  . Remove temporary RegexpReplacer that was introduced in v49r2 to deal with the
+    name change of the HltError sequence
+
 </PRE><H1><A NAME=v49r2>2016-02-05 Brunel v49r2</A></H1><PRE>
 This version uses projects LHCb v40r0, Lbcom v18r0, Rec v19r0, Gaudi v27r0
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
