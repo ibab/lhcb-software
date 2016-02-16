@@ -11,12 +11,12 @@ class B2HH_25ns_Draft2016 :
         Returns a list of active lines
         """
         lines = [
-                'Hlt2B2HH',
-                'Hlt2B2PiPi',
-                'Hlt2B2KPi',
-                'Hlt2B2KK',
-                'Hlt2Lb2PK',
-                'Hlt2Lb2PPi'
+                'Hlt2B2HH_B2HH',
+                'Hlt2B2HH_B2PiPi',
+                'Hlt2B2HH_B2KPi',
+                'Hlt2B2HH_B2KK',
+                'Hlt2B2HH_Lb2PK',
+                'Hlt2B2HH_Lb2PPi'
                 ]
 
         return lines
