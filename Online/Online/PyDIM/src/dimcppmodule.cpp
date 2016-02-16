@@ -859,8 +859,6 @@ static PyTypeObject DimRpcInfo_Type = {
 #endif
 
 PyMODINIT_FUNC initdimcpp(void)  {
-  PyObject *m;
-
   /* This is needed if the program is threaded.
    * Creates the global interpretor lock
    */
@@ -877,24 +875,24 @@ PyMODINIT_FUNC initdimcpp(void)  {
     printf("Could not initialize type DimRpcInfo\n");
     return;
   }
+
   /* Initializing Python module */
-  m = Py_InitModule3("dimcpp", dimcpp_methods, "DIM C++ methods");
+  PyObject *module = Py_InitModule3("dimcpp", dimcpp_methods, "DIM C++ methods");
   PyEval_InitThreads();
-  if (m == NULL) {
+  if (module == NULL) {
     print("Could not initialise dimcpp module\n");
     return;
   }
   /* Making sure that the new class objects will not by cleaned out by the
    * garbage collector
    */
-  m = (PyObject *)&DimRpc_Type;
-  Py_INCREF(m);
-  m = (PyObject *)&DimRpcInfo_Type;
-  Py_INCREF(m);
+  PyObject *rpc_type = (PyObject *)&DimRpc_Type;
+  Py_INCREF(rpc_type);
+  PyObject *info_type = (PyObject *)&DimRpcInfo_Type;
+  Py_INCREF(info_type);
   /* Adding the objects to the created module */
-  PyModule_AddObject(m, "DimRpc", (PyObject *)&DimRpc_Type);
-  PyModule_AddObject(m, "DimRpcInfo", (PyObject *)&DimRpcInfo_Type);
+  PyModule_AddObject(module, "DimRpc", rpc_type);
+  PyModule_AddObject(module, "DimRpcInfo", info_type);
   /* Magic call to DIM API. Makes sure all the data type sizes are respected.*/
   dic_disable_padding();
 }
-
