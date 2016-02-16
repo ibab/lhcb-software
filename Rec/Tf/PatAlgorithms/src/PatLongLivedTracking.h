@@ -340,7 +340,6 @@ void PatLongLivedTracking::fitAndRemove ( PatDownTrack& track ) {
       rhs[2] += w * dist * t ;
 
       // -- check how many different layers have fired
-      //if ( 0 == differentPlanes[hit->planeCode()]++ ) ++nDoF;
       differentPlanes[hit->planeCode()]++;
       nbUV += addIsStereo( hit );
       

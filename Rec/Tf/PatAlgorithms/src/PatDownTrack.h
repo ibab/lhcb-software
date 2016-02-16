@@ -43,44 +43,6 @@ public:
   /// Move assignment operator
   PatDownTrack &operator=(PatDownTrack&& ) = default;
 
-  PatDownTrack( const PatDownTrack& track, 
-                PatTTHit* hit1,
-                PatTTHit* hit2,
-                const double chi2,
-                const double dx,
-                const double dsl):
-    m_momPar(track.m_momPar),
-    m_track(track.m_track),
-    m_state(track.m_state),
-    m_magnet( Gaudi::XYZPoint( m_magnet.x() + dx, m_magnet.y(), m_magnet.z() )),
-    m_magnetSave(track.m_magnetSave),
-    m_magnetScale(track.m_magnetScale),
-    m_zTT(track.m_zTT),
-    m_slopeX(track.m_slopeXCand + dsl),
-    m_slopeXSave(track.m_slopeXSave),
-    m_slopeXCand(track.m_slopeXCand),
-    m_slopeY(track.m_slopeY),
-    m_displX(track.m_displX + dx),
-    m_displY(track.m_displY),
-    m_errXMag(track.m_errXMag),
-    m_errYMag(track.m_errYMag),
-    m_chi2(chi2),
-    m_curvature(track.m_curvature),
-    m_ignore(track.m_ignore),
-    m_firedLayers(track.m_firedLayers),
-    m_hits({hit1, hit2})
-  {
-  };
-  
-  
-    
-
-
-
-
-
-
-
   virtual ~PatDownTrack( ) {} ///< Destructor
 
   

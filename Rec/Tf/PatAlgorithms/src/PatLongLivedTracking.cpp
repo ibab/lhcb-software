@@ -709,7 +709,6 @@ void PatLongLivedTracking::getPreSelection( PatDownTrack& track ) {
 //  Fit hits in x layers
 //=========================================================================
 void PatLongLivedTracking::xFit( PatDownTrack& track, const PatTTHit* hit1, const PatTTHit* hit2 ) {
-  //void PatLongLivedTracking::xFit( PatDownTrack& track ) {
   
   if ( m_doTiming ) m_timerTool->start( m_xFitTime );
 
@@ -721,8 +720,6 @@ void PatLongLivedTracking::xFit( PatDownTrack& track, const PatTTHit* hit1, cons
   rhs[0] = mat[0] * track.dxMagnet();//( m_magnetSave.x() - m_magnet.x() );
   rhs[1] = 0.;
   
-  //const PatTTHit* hit1 = track.hits()[0];
-  //const PatTTHit* hit2 = track.hits()[1];
   const double w1 = hit1->hit()->weight();
   const double w2 = hit2->hit()->weight();
 
@@ -1131,27 +1128,15 @@ void PatLongLivedTracking::fitXProjection( PatDownTrack& track, PatTTHit* firstH
   const double maxChi2 = m_fitXProjChi2Offset + m_fitXProjChi2Const/std::abs(track.momentum());
 
   // Catch if there is no second hit in other station
-  //PatDownTrack newTrack( track );
-  
   PatTTHits::const_iterator itEnd = m_matchingXHits.end();
   for( PatTTHits::const_iterator iHit = m_matchingXHits.begin(); iHit != itEnd; ++iHit) {
     PatTTHit* hit = *iHit;
     
-    //newTrack.startNewXCandidate( firstHit );
-    //newTrack.hits().push_back( hit );
-    //xFit( newTrack );
-    
     track.startNewXCandidate();
-    //newTrack.startNewXCandidate();
     xFit( track, firstHit, hit );
-    //xFit( newTrack, firstHit, hit );
-
+    
     // -- It is sorted according to the projection
     // -- the chi2 will therefore only increase
-    //if( newTrack.chi2() > maxChi2) break;
-    //newTrack.hits().push_back( firstHit );
-    //newTrack.hits().push_back( hit );
-
     if( track.chi2() > maxChi2) break;
     track.hits().push_back( firstHit );
     track.hits().push_back( hit );
@@ -1159,10 +1144,8 @@ void PatLongLivedTracking::fitXProjection( PatDownTrack& track, PatTTHit* firstH
     // -- We can only move the last one
     // -- as the tracks before are 'recycled'
     if( m_goodXTracks.size() < m_maxXTracks-1){
-      //m_goodXTracks.push_back( newTrack );
       m_goodXTracks.push_back( track );
     }else{
-      //m_goodXTracks.push_back( std::move(newTrack) );
       m_goodXTracks.push_back( std::move(track) );
       break;
     }
