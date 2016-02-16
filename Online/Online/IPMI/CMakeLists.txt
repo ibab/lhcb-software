@@ -51,5 +51,5 @@ macro(Applexe name)
   gaudi_add_executable(${name} ${ARGN} LINK_LIBRARIES IPMILib -pthread)
 endmacro()
 
-Applexe(Test1 src/Applications/Test1.cpp)
+#Applexe(Test1 src/Applications/Test1.cpp)
 Applexe(ipmiSrv src/Applications/ipmiSrv.cpp)
