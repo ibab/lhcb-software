@@ -60,16 +60,16 @@ namespace Rich
     private:   // Private data members
 
       /// Rich Cherenkov angle calculator tool
-      const ICherenkovAngle * m_ckAngle;
+      const ICherenkovAngle * m_ckAngle = nullptr;
 
       /// Cherenkov angle resolution tool
-      const ICherenkovResolution * m_ckAngleRes;
+      const ICherenkovResolution * m_ckAngleRes = nullptr;
 
       /// Pointer to RichExpectedTrackSignal tool
-      const IExpectedTrackSignal * m_tkSignal;
+      const IExpectedTrackSignal * m_tkSignal = nullptr;
 
       /// Track selector
-      const ITrackSelector * m_trSelector;
+      const ITrackSelector * m_trSelector = nullptr;
 
       /// Location to store the summary tracks
       std::string m_summaryLoc;

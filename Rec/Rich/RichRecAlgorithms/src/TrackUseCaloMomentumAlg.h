@@ -38,7 +38,7 @@ public:
 private:
 
   /// Track -> CALO matching tool
-  ITrackCaloMatch * m_trackenergy;
+  ITrackCaloMatch * m_trackenergy = nullptr;
 
   /// Input tracks location
   std::string m_inTracksLoc;

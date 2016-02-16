@@ -56,10 +56,10 @@ namespace Rich
     private:
 
       /// Pointer to RICH PID tool
-      const IRichPID * m_pidTool;
+      const IRichPID * m_pidTool = nullptr;
 
       /// Track Selector
-      const Rich::Rec::ITrackSelector * m_trSelector;
+      const Rich::Rec::ITrackSelector * m_trSelector = nullptr;
 
       /// Nickname of RichPID tool to use
       std::string m_pidToolName;

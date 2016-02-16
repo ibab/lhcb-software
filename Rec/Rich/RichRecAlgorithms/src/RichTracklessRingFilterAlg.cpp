@@ -23,15 +23,16 @@ DECLARE_ALGORITHM_FACTORY( TracklessRingFilterAlg )
 // Standard constructor, initializes variables
 TracklessRingFilterAlg::TracklessRingFilterAlg( const std::string& name,
                                                 ISvcLocator* pSvcLocator )
-  : Rich::Rec::AlgBase ( name, pSvcLocator )
+: Rich::Rec::AlgBase ( name, pSvcLocator ),
+  m_minNumHits       ( 3, 5   ),
+  m_minAvProb        ( 3, 0.7 )
 {
-  using namespace boost::assign;
   declareProperty( "InputRings",  
                    m_inputRings  = LHCb::RichRecRingLocation::MarkovRings+"All"  );
   declareProperty( "OutputRings", 
                    m_outputRings = LHCb::RichRecRingLocation::MarkovRings+"Best" );
-  declareProperty( "MinNumPixels",        m_minNumHits = std::vector<unsigned int>(3, 5  ) );
-  declareProperty( "MinAveragePixelProb", m_minAvProb  = std::vector<double>      (3, 0.7) );
+  declareProperty( "MinNumPixels",        m_minNumHits );
+  declareProperty( "MinAveragePixelProb", m_minAvProb  );
 }
 
 // Destructor
@@ -56,12 +57,11 @@ StatusCode TracklessRingFilterAlg::execute()
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // Load the input rings
-  const LHCb::RichRecRings * inrings = get<LHCb::RichRecRings>(m_inputRings);
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "Found " << inrings->size() << " input rings at " << m_inputRings << endmsg;
+  const auto * inrings = get<LHCb::RichRecRings>(m_inputRings);
+  _ri_debug << "Found " << inrings->size() << " input rings at " << m_inputRings << endmsg;
 
   // Create a container for the output rings
-  LHCb::RichRecRings * outrings = new LHCb::RichRecRings();
+  auto * outrings = new LHCb::RichRecRings();
   put ( outrings, m_outputRings );
 
   // Count Rings per radiator
@@ -72,36 +72,33 @@ StatusCode TracklessRingFilterAlg::execute()
   rCount[Rich::Rich2Gas] = 0;
 
   // Loop over the input rings and select the 'best' ones
-  for ( LHCb::RichRecRings::const_iterator iRing = inrings->begin();
-        iRing != inrings->end(); ++iRing )
+  for ( const auto ring : *inrings )
   {
     // average ring hit prob
-    const double avProb = (*iRing)->averagePixelProb();
+    const auto avProb = ring->averagePixelProb();
     // Number of pixels on the ring
-    const unsigned int nPixels = (*iRing)->richRecPixels().size();
+    const auto nPixels = ring->richRecPixels().size();
 
     // radiator
-    const Rich::RadiatorType rad = (*iRing)->radiator();
+    const auto rad = ring->radiator();
     
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Ring " << (*iRing)->key() 
-                << " av prob = " << avProb
-                << " nPixels = " << nPixels << endmsg;
+    _ri_verbo << " -> Ring " << ring->key() 
+              << " av prob = " << avProb
+              << " nPixels = " << nPixels << endmsg;
  
     if ( avProb < m_minAvProb[rad]   ||
          nPixels < m_minNumHits[rad] ) continue;
 
     // If get here, ring is selected so clone and save
     ++rCount[rad];
-    outrings->insert( new LHCb::RichRecRing(**iRing), (*iRing)->key() );
+    outrings->insert( new LHCb::RichRecRing(*ring), ring->key() );
   }
+  
+  _ri_debug << "Selected " << outrings->size() << " rings at " << m_outputRings << endmsg;
 
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "Selected " << outrings->size() << " rings at " << m_outputRings << endmsg;
-
-  for ( RadCount::const_iterator rad = rCount.begin(); rad != rCount.end(); ++rad )
+  for ( const auto & rad : rCount )
   {
-    counter("Selected good "+Rich::text(rad->first)+" rings") += rad->second;
+    counter("Selected good "+Rich::text(rad.first)+" rings") += rad.second;
   }
 
   return StatusCode::SUCCESS;

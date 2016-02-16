@@ -23,8 +23,7 @@ DECLARE_ALGORITHM_FACTORY( PixelBackgroundAlg )
 // Standard constructor, initializes variables
 PixelBackgroundAlg::PixelBackgroundAlg( const std::string& name,
                                         ISvcLocator* pSvcLocator )
-  : Rich::Rec::AlgBase ( name, pSvcLocator ),
-    m_bkgTool          ( NULL              ) { }
+  : Rich::Rec::AlgBase ( name, pSvcLocator ) { }
 
 // Destructor
 PixelBackgroundAlg::~PixelBackgroundAlg() {}
@@ -53,11 +52,9 @@ StatusCode PixelBackgroundAlg::execute()
   // Check segments and pixels
   if ( !richSegments() ) return Error( "Failed to access RichRecSegments" );
   if ( !richPixels()   ) return Error( "Failed to access RichRecPixels"   );
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "Found " << richSegments()->size() << " RichRecSegments" << endmsg
+  
+  _ri_debug << "Found " << richSegments()->size() << " RichRecSegments" << endmsg
             << "Found " << richPixels()->size() << " RichRecPixels" << endmsg;
-  }
 
   // compute backgrounds
   m_bkgTool->computeBackgrounds();

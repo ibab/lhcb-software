@@ -61,7 +61,7 @@ StatusCode Initialise::execute()
     {
       Warning( "No ProcStatus at " + LHCb::ProcStatusLocation::Default + " : Creating one",
                StatusCode::SUCCESS,0 ).ignore();
-      LHCb::ProcStatus * procS = new LHCb::ProcStatus();
+      auto * procS = new LHCb::ProcStatus();
       put( procS, LHCb::ProcStatusLocation::Default );
     }
   }

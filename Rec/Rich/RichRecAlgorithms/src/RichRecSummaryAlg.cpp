@@ -24,10 +24,6 @@ DECLARE_ALGORITHM_FACTORY( SummaryAlg )
 SummaryAlg::SummaryAlg( const std::string& name,
                         ISvcLocator* pSvcLocator )
   : Rich::Rec::AlgBase ( name, pSvcLocator ),
-    m_ckAngle          ( NULL ),
-    m_ckAngleRes       ( NULL ),
-    m_tkSignal         ( NULL ),
-    m_trSelector       ( NULL ),
     m_summaryLoc       ( LHCb::RichSummaryTrackLocation::Default ),
     m_nSigma           ( Rich::NRadiatorTypes, 1 )
 {
@@ -74,19 +70,18 @@ StatusCode SummaryAlg::execute()
     return Error( "Problem creating RichRecPhotons" );
 
   // Create a new container for RICH reconstruction summary Tracks
-  LHCb::RichSummaryTracks * sumTracks = new LHCb::RichSummaryTracks();
+  auto * sumTracks = new LHCb::RichSummaryTracks();
   put( sumTracks, m_summaryLoc );
 
   // All OK, load the RichRecTracks
-  for ( LHCb::RichRecTracks::iterator track = richTracks()->begin();
-        track != richTracks()->end(); ++track )
+  for ( const auto track : *richTracks() )
   {
 
     // apply track selection
-    if ( !m_trSelector->trackSelected(*track) ) continue;
+    if ( !m_trSelector->trackSelected(track) ) continue;
 
     // get the reco track
-    const LHCb::Track * trtrack = dynamic_cast<const LHCb::Track *>((*track)->parentTrack());
+    const auto * trtrack = dynamic_cast<const LHCb::Track *>(track->parentTrack());
     if ( !trtrack )
     {
       Warning( "Input track type is not Track -> RichRecTrack skipped" ).ignore();
@@ -96,7 +91,7 @@ StatusCode SummaryAlg::execute()
     // Make a new summary track
     LHCb::RichSummaryTrack * sumTrack = new LHCb::RichSummaryTrack();
     // give to Gaudi
-    sumTracks->insert( sumTrack, (*track)->key() );
+    sumTracks->insert( sumTrack, track->key() );
 
     // store track reference
     sumTrack->setTrack( trtrack );
@@ -105,53 +100,46 @@ StatusCode SummaryAlg::execute()
     LHCb::RichSummaryRadSegment::Vector sumSegs;
 
     // loop over radiator segments
-    const LHCb::RichRecTrack::Segments & segments = (*track)->richRecSegments();
-    for ( LHCb::RichRecTrack::Segments::const_iterator iSeg = segments.begin();
-          iSeg != segments.end(); ++iSeg )
+    for ( const auto seg : track->richRecSegments() )
     {
       // Add a summary segment for this reconstructed segment
       sumSegs.push_back( LHCb::RichSummaryRadSegment() );
       // get reference to this segment
-      LHCb::RichSummaryRadSegment & sumSeg = sumSegs.back();
+      auto & sumSeg = sumSegs.back();
 
       // which radiator
-      const Rich::RadiatorType rad = (*iSeg)->trackSegment().radiator();
+      const auto rad = seg->trackSegment().radiator();
 
       // set the radiator type
       sumSeg.setRadiator( rad );
 
       // Loop over all particle codes.
-      for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
+      for ( const auto hypo : Rich::particles() )
       {
-        const Rich::ParticleIDType hypo = static_cast<Rich::ParticleIDType>(iHypo);
-
         // Set expected CK theta angles
-        sumSeg.setExpectedCkTheta( hypo, (float)m_ckAngle->avgCherenkovTheta(*iSeg,hypo) );
+        sumSeg.setExpectedCkTheta( hypo, (float)m_ckAngle->avgCherenkovTheta(seg,hypo) );
         // set expected CK resolutions (errors)
-        sumSeg.setExpectedCkThetaError( hypo, (float)m_ckAngleRes->ckThetaResolution(*iSeg,hypo) );
+        sumSeg.setExpectedCkThetaError( hypo, (float)m_ckAngleRes->ckThetaResolution(seg,hypo) );
         // Expected number of observable signal photons
-        sumSeg.setExpectedNumPhotons( hypo, (float)m_tkSignal->nObservableSignalPhotons(*iSeg,hypo) );
-
+        sumSeg.setExpectedNumPhotons( hypo, (float)m_tkSignal->nObservableSignalPhotons(seg,hypo) );
       }
 
       // vector of summary photons
       LHCb::RichSummaryPhoton::Vector sumPhots;
 
       // Loop over photons for this segment and add info on those passing the selection
-      const LHCb::RichRecSegment::Photons & photons = photonCreator()->reconstructPhotons( *iSeg );
-      for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = photons.begin();
-            iPhot != photons.end(); ++iPhot )
+      const auto & photons = photonCreator()->reconstructPhotons( seg );
+      for ( const auto * phot : photons )
       {
         // get Cherenkov angles
-        const double ckTheta ( (*iPhot)->geomPhoton().CherenkovTheta() );
-        const double ckPhi   ( (*iPhot)->geomPhoton().CherenkovPhi()   );
+        const auto ckTheta ( phot->geomPhoton().CherenkovTheta() );
+        const auto ckPhi   ( phot->geomPhoton().CherenkovPhi()   );
 
         // does this photon come within n-sigma of any of the expected CK angles for this segment ?
         bool OK ( false );
-        for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
+        for ( const auto hypo : Rich::particles() )
         {
-          const Rich::ParticleIDType hypo = static_cast<Rich::ParticleIDType>(iHypo);
-          const double ckDiff = fabs( sumSeg.expectedCkTheta(hypo) - ckTheta );
+          const auto ckDiff = fabs( sumSeg.expectedCkTheta(hypo) - ckTheta );
           if ( ckDiff < m_nSigma[rad] * sumSeg.expectedCkThetaError(hypo) )
           {
             OK = true; break;
@@ -166,12 +154,12 @@ StatusCode SummaryAlg::execute()
         {
           // Add a new summary photon
           sumPhots.push_back( LHCb::RichSummaryPhoton() );
-          LHCb::RichSummaryPhoton & sumPhot = sumPhots.back();
+          auto & sumPhot = sumPhots.back();
           // set angles
           sumPhot.setCherenkovTheta((float)ckTheta);
           sumPhot.setCherenkovPhi((float)ckPhi);
           // channel ID (only store primary ID)
-          sumPhot.setSmartID( (*iPhot)->richRecPixel()->hpdPixelCluster().primaryID() );
+          sumPhot.setSmartID( phot->richRecPixel()->hpdPixelCluster().primaryID() );
         }
 
       } // loop over reco photons

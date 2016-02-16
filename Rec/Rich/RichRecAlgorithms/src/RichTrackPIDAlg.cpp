@@ -23,9 +23,7 @@ DECLARE_ALGORITHM_FACTORY( TrackPIDAlg )
 // Standard constructor, initializes variables
 TrackPIDAlg::TrackPIDAlg( const std::string& name,
                           ISvcLocator* pSvcLocator )
-  : Rich::Rec::AlgBase ( name, pSvcLocator ),
-    m_pidTool          ( NULL ),
-    m_trSelector       ( NULL )
+  : Rich::Rec::AlgBase( name, pSvcLocator )
 {
   // Context specific track locations
   declareProperty( "PIDToolName", m_pidToolName = "RichPIDTool" );
@@ -63,15 +61,14 @@ StatusCode TrackPIDAlg::execute()
   LHCb::RichPID::ConstVector richpids;
 
   // load and select tracks
-  const LHCb::Tracks * tracks = get<LHCb::Tracks>( m_trTracksLocation );
-  for ( LHCb::Tracks::const_iterator iTrack = tracks->begin();
-        iTrack != tracks->end(); ++iTrack )
+  const auto * tracks = get<LHCb::Tracks>( m_trTracksLocation );
+  for ( const auto tk : *tracks )
   {
     // select tracks
-    if ( !m_trSelector->trackSelected(*iTrack) ) continue;
+    if ( !m_trSelector->trackSelected(tk) ) continue;
 
     // add to list of tracks to PID
-    tracksToPID.push_back(*iTrack);
+    tracksToPID.push_back(tk);
 
     // if correct number, PID them
     if ( tracksToPID.size() == m_nAtOnce ) 

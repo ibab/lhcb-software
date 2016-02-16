@@ -49,7 +49,7 @@ namespace Rich
     private:
 
       /// background tool
-      const IPixelBackgroundEsti * m_bkgTool;
+      const IPixelBackgroundEsti * m_bkgTool = nullptr;
 
     };
 

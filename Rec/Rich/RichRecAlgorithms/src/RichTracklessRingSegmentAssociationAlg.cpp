@@ -61,49 +61,45 @@ StatusCode TracklessRingSegmentAssociationAlg::execute()
   MatchMap mmap;
 
   // Loop over the rings to find associations
-  for ( LHCb::RichRecRings::const_iterator iR = rings->begin();
-        iR != rings->end(); ++iR )
+  for ( const auto ring : *rings )
   {
     // Detector info
-    const Rich::RadiatorType rad = (*iR)->radiator();
-    const Rich::DetectorType det = (*iR)->rich();
+    const auto rad = ring->radiator();
+    const auto det = ring->rich();
 
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << "Ring " << (*iR)->key() << " " << det << " " << rad << endmsg;
+    _ri_verbo << "Ring " << ring->key() << " " << det << " " << rad << endmsg;
 
     // Ring centre point
-    const Gaudi::XYZPoint & ringPtnLocal = (*iR)->centrePointLocal();
+    const auto & ringPtnLocal = ring->centrePointLocal();
 
     // reset all segment associations to NULL
-    (*iR)->setRichRecSegment(NULL);
+    ring->setRichRecSegment(nullptr);
 
     // Loop over segments for this ring + radiator
-    for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
-          iSeg != richSegments()->end(); ++iSeg )
+    for ( const auto seg : *richSegments() )
     {
       // Only uses segments in correct RICH and for the same radiator
-      if ( det != (*iSeg)->trackSegment().rich() ||
-           rad != (*iSeg)->trackSegment().radiator()
+      if ( det != seg->trackSegment().rich() ||
+           rad != seg->trackSegment().radiator()
            ) continue;
 
       // Track hit point (if it were a photon) on detector plane, in local coords
       // (i.e. centre of Ch ring)
-      const Gaudi::XYZPoint & tkPtnLocal = (*iSeg)->pdPanelHitPointLocal();
+      const auto & tkPtnLocal = seg->pdPanelHitPointLocal();
 
       // compute track / ring centre seperation
-      const double sep = std::sqrt( std::pow ( ringPtnLocal.x()-tkPtnLocal.x(), 2 ) +
-                                    std::pow ( ringPtnLocal.y()-tkPtnLocal.y(), 2 ) );
+      const auto sep = std::sqrt( std::pow ( ringPtnLocal.x()-tkPtnLocal.x(), 2 ) +
+                                  std::pow ( ringPtnLocal.y()-tkPtnLocal.y(), 2 ) );
       if ( sep < m_maxDist[rad] )
       {
-        if ( msgLevel(MSG::VERBOSE) )
-          verbose() << " -> Segment " << (*iSeg)->key() << " within matching distance" << endmsg;
+        _ri_verbo << " -> Segment " << seg->key() << " within matching distance" << endmsg;
 
         // Get current best for this segment
-        if ( mmap.find(*iSeg) == mmap.end() ) mmap[*iSeg] = SegRingPair(*iR,9e20);
-        SegRingPair & best = mmap[*iSeg];
+        if ( mmap.find(seg) == mmap.end() ) mmap[seg] = SegRingPair(ring,9e20);
+        auto & best = mmap[seg];
 
         // if a better match for this segment save it
-        if ( sep < best.second ) best = SegRingPair(*iR,sep);
+        if ( sep < best.second ) best = SegRingPair(ring,sep);
 
       }
 
@@ -113,18 +109,17 @@ StatusCode TracklessRingSegmentAssociationAlg::execute()
 
   // Make final association, checking if a ring has been matched to more than one segment
   Rich::Map<LHCb::RichRecRing*, double> tmap;
-  for ( MatchMap::const_iterator iM = mmap.begin(); iM != mmap.end(); ++iM )
+  for ( const auto& M : mmap )
   {
-    const double         dist = (*iM).second.second; 
-    LHCb::RichRecSegment* seg = (*iM).first;
-    LHCb::RichRecRing*   ring = (*iM).second.first;
+    const auto dist = M.second.second; 
+    auto * seg      = M.first;
+    auto * ring     = M.second.first;
     if ( tmap.find(ring) == tmap.end() )
     {
       // This ring is not yet associated, so do so
       ring->setRichRecSegment(seg);
       tmap[ring] = dist;
-      if ( msgLevel(MSG::DEBUG) )
-        debug() << "Setting  segment " << seg->key() 
+      _ri_debug << "Setting  segment " << seg->key() 
                 << " match to ring " << ring->key() << endmsg;
     }
     else
@@ -135,8 +130,7 @@ StatusCode TracklessRingSegmentAssociationAlg::execute()
         // yes, so update association
         ring->setRichRecSegment(seg);
         tmap[ring] = dist;
-        if ( msgLevel(MSG::DEBUG) )
-          debug() << "Updating segment " << seg->key() 
+        _ri_debug << "Updating segment " << seg->key() 
                   << " match to ring " << ring->key() << endmsg;
       }
     }

@@ -79,13 +79,12 @@ StatusCode EventSelectionAlg::execute()
       Rich::Map<LHCb::RichSmartID,unsigned int> hpdCount;
       std::set<LHCb::RichSmartID> selectedHPDs;
       // loop over pixels
-      for ( LHCb::RichRecPixels::const_iterator iP = richPixels()->begin();
-            iP != richPixels()->end(); ++iP )
+      for ( const auto pix : *richPixels() )
       {
         // count hits in each HPD
-        unsigned int & count = ++hpdCount[(*iP)->hpd()];
+        auto & count = ++hpdCount[pix->hpd()];
         if ( count > m_minHPDHits && 
-             count < m_maxHPDHits  ) selectedHPDs.insert((*iP)->hpd());
+             count < m_maxHPDHits  ) selectedHPDs.insert(pix->hpd());
       }
       OK = ( selectedHPDs.size() >= m_minHPDsWithHits && 
              selectedHPDs.size() <= m_maxHPDsWithHits );
@@ -95,15 +94,15 @@ StatusCode EventSelectionAlg::execute()
   // rings
   if ( OK && ( m_minRings > 0 || m_maxRings < s_large_number ) )
   {
-    if ( !exist<LHCb::RichRecRings>(m_ringLoc) )
+    // get the rings
+    const auto * rings = getIfExists<LHCb::RichRecRings>(m_ringLoc);
+    if ( UNLIKELY(!rings) )
     {
       Warning( "No Rings at '"+m_ringLoc+"'");
       OK = false;
     }
     else
     {
-      // get the rings
-      const LHCb::RichRecRings * rings = get<LHCb::RichRecRings>(m_ringLoc);
       // enough rings ?
       OK = ( rings->size() >= m_minRings && rings->size() <= m_maxRings );
     }

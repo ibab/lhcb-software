@@ -17,8 +17,7 @@ DECLARE_ALGORITHM_FACTORY( TrackUseCaloMomentumAlg )
 //=============================================================================
 TrackUseCaloMomentumAlg::TrackUseCaloMomentumAlg( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ),
-    m_trackenergy  ( NULL )
+  : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "InputTracks",
                    m_inTracksLoc  = LHCb::TrackLocation::Default );
@@ -52,40 +51,37 @@ StatusCode TrackUseCaloMomentumAlg::execute()
 {
 
   // Load input tracks
-  const LHCb::Tracks * in_tracks = get<LHCb::Tracks>( m_inTracksLoc );
+  const auto * in_tracks = get<LHCb::Tracks>( m_inTracksLoc );
   debug() << "Found " << in_tracks->size() << " Tracks at '"
           << m_inTracksLoc << "'" << endmsg;
 
   // Create output tracks
-  LHCb::Tracks * out_tracks = new LHCb::Tracks();
+  auto * out_tracks = new LHCb::Tracks();
   put( out_tracks, m_outTracksLoc );
 
   // Loop over tracks and clone those with CALO info
-  for ( LHCb::Tracks::const_iterator iT = in_tracks->begin();
-        iT != in_tracks->end(); ++iT )
+  for ( const auto tk : *in_tracks )
   {
     // Get CALO info ?
-    const double caloEn = m_trackenergy->energy( **iT );
+    const auto caloEn = m_trackenergy->energy( *tk );
     if ( caloEn > 0 )
     {
       // Found CALO
-      verbose() << " -> Track " << (*iT)->key()
+      verbose() << " -> Track " << tk->key()
                 << " has CALO energy " << caloEn << endmsg;
 
       // Clone track and save in output container
-      LHCb::Track * newTk = (*iT)->clone();
-      out_tracks->insert( newTk, (*iT)->key() ); 
+      auto * newTk = tk->clone();
+      out_tracks->insert( newTk, tk->key() ); 
 
       // Update momentum values in all attached states
-      const LHCb::Track::StateContainer & states = newTk->states();
-      for ( LHCb::Track::StateContainer::const_iterator iS = states.begin();
-            iS != states.end(); ++iS )
+      for ( const auto state : newTk->states() )
       {
-        verbose() << "  -> Updating State at z = " << (*iS)->z()
-                  << " : Ptot " << (*iS)->p() << " -> ";
+        verbose() << "  -> Updating State at z = " << state->z()
+                  << " : Ptot " << state->p() << " -> ";
         // CRJ : ??? Need to correct energy to momentum using pion mass ???
-        (*iS)->setQOverP( (*iS)->qOverP() * (*iS)->p() / caloEn );
-        verbose() << (*iS)->p() << endmsg;
+        state->setQOverP( state->qOverP() * state->p() / caloEn );
+        verbose() << state->p() << endmsg;
       }
 
     } // Track has CALO energy
