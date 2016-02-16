@@ -19,6 +19,7 @@
 #include "Kernel/DaVinciAlgorithm.h"
 #include "Kernel/DaVinciHistoAlgorithm.h"
 #include "Kernel/DaVinciTupleAlgorithm.h"
+#include "Kernel/GetTESLocations.h"
 // ============================================================================
 // The END
 // ============================================================================

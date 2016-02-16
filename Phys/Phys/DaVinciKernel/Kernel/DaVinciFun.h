@@ -1,7 +1,8 @@
 // $Id: DaVinciFun.h,v 1.9 2009-11-05 10:19:04 jpalac Exp $
+// ============================================================================
 #ifndef KERNEL_DAVINCIFUN_H
 #define KERNEL_DAVINCIFUN_H 1
-
+// ============================================================================
 #include "Math/Boost.h"
 #include "Kernel/Particle2Vertex.h"
 #include "Event/Particle.h"
@@ -9,7 +10,7 @@
 #include "Event/RecVertex.h"
 #include "DaVinciUtils/Functions.h"
 #include "Kernel/ParticlePredicates.h"
-
+// ============================================================================
 /** @namespace DaVinci Kernel/DaVinciFun.h
  *
  * Collection of free functions used widely in DVAlgorithm
@@ -19,7 +20,7 @@
  */
 namespace DaVinci
 {
-
+  // ==========================================================================
   /**
    * delete contents of container of newed pointers unless they are
    * also in the TES.
@@ -32,7 +33,7 @@ namespace DaVinci
    * @author Juan Palacios juan.palacios@nikhef.nl
    * @date 10/02/2009
    *
-   **/
+   */
   template <class T>
   unsigned int safeContainerClear(T& container)
   {
@@ -50,13 +51,14 @@ namespace DaVinci
     container.clear();
     return iCount;
   }
-
+  // ==========================================================================
   /// Return the best VertexBase given a Particle->VertexBase relations range.
+  GAUDI_API
   const LHCb::VertexBase* bestVertexBase(const Particle2Vertex::Table::Range& range);
-
+  // ==========================================================================
   /// Return the best RecVertex given a Particle->VertexBase relations range.
+  GAUDI_API
   const LHCb::RecVertex* bestRecVertex(const Particle2Vertex::Table::Range& range);
-
   // ==========================================================================
   namespace Utils
   {
@@ -72,12 +74,12 @@ namespace DaVinci
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2008-07-11
      */
+    GAUDI_API 
     StatusCode setInput
     ( IInterface*                        component ,
       const LHCb::Particle::ConstVector& input     ) ;
-
     // ========================================================================
-
+    
     // ========================================================================
     /// Add Particles and Vertices in the decay of a particle to vectors.
     /// Entries are only added uniquely.
@@ -86,17 +88,21 @@ namespace DaVinci
     /// @param particles (UPDATE) Add particles in the decay.
     /// @param vertices  (UPDATE) Add Vertices in the decay.
     /// @param truncate           Predicate that decides where to stop recursion. If true, do not follow decay branch.
+    GAUDI_API
     void findDecayTree( const LHCb::Particle*        head,
                         LHCb::Particle::ConstVector& particles,
                         LHCb::Vertex::ConstVector&   vertices,
                         DaVinci::Utils::IParticlePredicate* truncate = 0 );
 
     // ========================================================================
-
+    GAUDI_API 
     bool decayTreeInTES( const LHCb::Particle* head );
-
+    // ========================================================================
   } // namespace Utils
-
+  // ==========================================================================
 } // namespace DaVinci
-
+// ============================================================================
 #endif // KERNEL_DAVINCIFUN_H
+// ============================================================================
+//                                                                      The END 
+// ============================================================================

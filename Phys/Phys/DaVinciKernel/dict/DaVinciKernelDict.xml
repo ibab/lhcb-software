@@ -10,6 +10,7 @@
 
 <class name = "DVCommonBase<GaudiTupleAlg>" />
 <class name = "DaVinciTupleAlgorithm" />
+<class name = "DaVinci::Utils::GetTESLocations" />
 
 <function name    = "DaVinci::Utils::setInput"/>
 <function name    = "DaVinci::filter"         />
