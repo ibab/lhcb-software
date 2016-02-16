@@ -3,6 +3,11 @@
 ! Responsible : Vasilis Syropoulos, Roel Aaij, Francesco Dettori
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
+
+! 2016-02-16 - Sascha Stahl
+ - MatchVeloTTMuon: Fix search window, add upper momentum cut ("MaxPt" = 750 MeV). 
+   Added point in magnet as constraint in the fit. Cleaned code. 
+
 ! 2016-02-13 - Gerhard Raven
  - follow const-ification of Tr/TrackInterfaces
 

@@ -1,3 +1,4 @@
+// $Id: $
 #ifndef MATCHVELOTTMUON_H
 #define MATCHVELOTTMUON_H 1
 
@@ -7,7 +8,6 @@
 // from Gaudi
 #include <GaudiAlg/GaudiHistoTool.h>
 #include <TrackInterfaces/ITracksFromTrack.h>
-#include <TrackInterfaces/ITrackExtrapolator.h>
 
 // Hlt1Muons
 #include <Hlt1Muons/Candidate.h>
@@ -54,6 +54,7 @@ private:
    double m_yWindow;
 
    double m_minMomentum;
+   double m_maxPt;
    double m_kickScale;
    double m_kickOffset;
 
@@ -69,9 +70,7 @@ private:
    bool m_setQOverP;
 
    // Tools
-   std::string m_extrapolatorName;
    CommonMuonHitManager* m_hitManager;
-   ITrackExtrapolator* m_extrapolator;
 
    // Services
    ILHCbMagnetSvc* m_fieldSvc;
@@ -97,7 +96,6 @@ private:
    double m_FoIFactorY;
    
    // Temporary storage
-   mutable LHCb::StateVector m_stateAtM3;
    mutable std::unique_ptr<CommonMuonHit> m_magnetHit;
    mutable std::vector<Candidate> m_seeds;
     
@@ -128,6 +126,14 @@ private:
    void fitCandidate( Candidate& seed ) const override;
 
    void clean() override;
+
+   inline double dtx( const double p ) const {
+      return m_kickScale / ( p - m_kickOffset );
+   }
+
+   inline double momentum( const double dtx ) const{
+      return m_kickScale / fabs( dtx ) + m_kickOffset;
+   }
 
 };
 #endif // MATCHVELOTTMUON_H
