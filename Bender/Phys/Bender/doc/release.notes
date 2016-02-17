@@ -25,6 +25,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2016-02-17 - Vanya Belyaev
+ - fix get-grid-url and grid_url.py scripts 
+
+! 2016-02-17 - Vanya Belyaev
 
  - add iMagneticFieldSvc and iLHCbMagnetSvc - python wrappers 
     for magentic field services

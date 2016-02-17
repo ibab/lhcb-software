@@ -27,9 +27,8 @@
 #  Last modification $Date$
 #                 by $Author$ 
 # =============================================================================
-"""
-  Helper module to get Grid access URL 
-  Actually it is a bit modified version of dirac-dms-lfn-accessURL script 
+""" Helper module to get Grid access URL for LFN
+Actually it is a wrapper for dirac-dms-lfn-accessURL script 
 
 This file is a part of BENDER project:
 ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
@@ -51,213 +50,169 @@ __date__    = "2012-10-27"
 __version__ = "$Revision$"
 __all__     = ( 'accessURLs' , ) 
 # =============================================================================
-## get the dictionary { 'LFN' : 'access-URL' }
-#  Actually it is a bit modified version of dirac-dms-lfn-accessURL script 
-#  @author VanyaBELYAEV Ivan.Belyaev@itep.ru
-#  @date   2012-10-23
-def _accessURLs ( silent  = True ) :  
-    """
-    Get the dictionary { 'LFN' : 'access-URL' }
-    Actually it is a bit modified version of dirac-dms-lfn-accessURL script 
-    """
-
-    import DIRAC
-    from   LHCbDIRAC.DataManagementSystem.Client.DMScript import DMScript, printDMResult
-    from   DIRAC.Core.Base import Script
-
-
-    dmScript = DMScript()
-    dmScript.registerFileSwitches()
-    dmScript.registerSiteSwitches()
-    Script.setUsageMessage( '\n'.join( [ __doc__.split( '\n' )[1],
-                                         'Usage:',
-                                         '  %s [option|cfgfile] ... LFN[,LFN2[,LFN3...]] [SE[,SE2]]' % Script.scriptName,
-                                         'Arguments:',
-                                         '  LFN:      Logical File Name or file containing LFNs',
-                                         '  SE:       Valid DIRAC SE' ] ) )
-
-
-    Script.parseCommandLine( ignoreErrors = True )
-    
-    seList = dmScript.getOption('SEs',[])
-
-    args = Script.getPositionalArgs()
-    if not seList:
-        sites = dmScript.getOption( 'Sites', [] )
-        from DIRAC import gConfig
-        for site in sites:
-            res = gConfig.getOptionsDict( '/Resources/Sites/LCG/%s' % site )
-            if not res['OK'] and not silent :
-                print 'Site %s not known' % site
-                Script.showHelp()
-            seList.extend( res['Value']['SE'].replace( ' ', '' ).split( ',' ) )
-
-    if not seList:
-        if not args :
-            if not silent :
-                print "Give SE name as last argument or with --SE option"
-                Script.showHelp()
-            DIRAC.exit(0)
-        seList = args.pop(-1).split(',')
-    
-    if type(seList) == type(''):
-        seList = [seList]
-        
-    # This should be improved, with disk SEs first...
-    seList.sort()
-
-
-    lfns  = dmScript.getOption('LFNs',[])
-    lfns += args
-
-    lfnList = lfns 
-
-    from DIRAC.DataManagementSystem.Client.DataManager          import DataManager
-    
-    dm       = DataManager()
-    result   = dm.getReplicas ( lfnList )
-    replicas = result.get('Value',{}).get('Successful',{}) 
-
-    from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient   import BookkeepingClient
-    bk           = BookkeepingClient()
-    results      = {'OK':True, 'Value':{'Successful':{}, 'Failed':{}}}
-    notFoundLfns = set( lfnList )
-
-    bkRes = bk.getFileTypeVersion( lfnList )
-
-    mdfFiles = set( [lfn for lfn, fileType in bkRes.get( 'Value', {} ).items() if fileType == 'MDF'] )
-    
-    from DIRAC.Resources.Storage.StorageElement                 import StorageElement
-    
-    protocol = None 
-    for se in seList:
-        lfns = [lfn for lfn in lfnList if se in replicas.get( lfn, [] )]
-        if lfns:
-            res = StorageElement( se ).getURL( lfns, protocol = protocol )
-            success = res.get( 'Value', {} ).get( 'Successful' )
-            failed = res.get( 'Value', {} ).get( 'Failed' )
-            if res['OK']:
-                if success:
-                    for lfn in set( success ) & mdfFiles:
-                        success[lfn] = 'mdf:' + success[lfn]
-                    notFoundLfns -= set( success )
-                    results['Value']['Successful'].setdefault( se, {} ).update( success )
-                if failed:
-                    results['Value']['Failed'].setdefault( se, {} ).update( failed )
-            else:
-                results['Value']['Failed'].setdefault( se, {} ).update( dict.fromkeys( lfns, res['Message'] ) )
-                
-    for se, failed in results['Value']['Failed'].items():
-        for lfn in list( failed ):
-            if lfn not in notFoundLfns:
-                failed.pop( lfn )
-            else:
-                notFoundLfns.remove( lfn )
-    if notFoundLfns:
-        results['Value']['Failed'] = dict.fromkeys( sorted( notFoundLfns ), 'File not found in required seList' )
-
-    ##print results
-    results = results.get('Value',{}).get('Successful',{})
-    res = {}
-    for se in results :
-        access = results[se]
-        for lfn in access :
-            if res.has_key( lfn ) : res[lfn].append( access[lfn] )
-            else                  : res[lfn] = [ access[lfn] ] 
-                            
-    return res
-
-## def getAccessURL( lfnList, seList, protocol = None ):
-##   dm = DataManager()
-##   res = dm.getReplicas( lfnList )
-##   replicas = res.get( 'Value', {} ).get( 'Successful', {} )
-##   if not seList:
-##     seList = sorted( set( [se for lfn in lfnList for se in replicas.get( lfn, {} )] ) )
-##     if len( seList ) > 1:
-##       gLogger.always( "Using the following list of SEs: %s" % str( seList ) )
-##   bk = BookkeepingClient()
-##   notFoundLfns = set( lfnList )
-##   results = {'OK':True, 'Value':{'Successful':{}, 'Failed':{}}}
-##   savedLevel = gLogger.getLevel()
-##   gLogger.setLevel( 'FATAL' )
-##   # Check if files are MDF
-##   bkRes = bk.getFileTypeVersion( lfnList )
-##   mdfFiles = set( [lfn for lfn, fileType in bkRes.get( 'Value', {} ).items() if fileType == 'MDF'] )
-##   for se in seList:
-##     lfns = [lfn for lfn in lfnList if se in replicas.get( lfn, [] )]
-##     if lfns:
-##       res = StorageElement( se ).getURL( lfns, protocol = protocol )
-##       success = res.get( 'Value', {} ).get( 'Successful' )
-##       failed = res.get( 'Value', {} ).get( 'Failed' )
-##       if res['OK']:
-##         if success:
-##           for lfn in set( success ) & mdfFiles:
-##             success[lfn] = 'mdf:' + success[lfn]
-##           notFoundLfns -= set( success )
-##           results['Value']['Successful'].setdefault( se, {} ).update( success )
-##         if failed:
-##           results['Value']['Failed'].setdefault( se, {} ).update( failed )
-##       else:
-##         results['Value']['Failed'].setdefault( se, {} ).update( dict.fromkeys( lfns, res['Message'] ) )
-##   gLogger.setLevel( savedLevel )
-
-##   for se, failed in results['Value']['Failed'].items():
-##     for lfn in list( failed ):
-##       if lfn not in notFoundLfns:
-##         failed.pop( lfn )
-##       else:
-##         notFoundLfns.remove( lfn )
-##   if notFoundLfns:
-##     results['Value']['Failed'] = dict.fromkeys( sorted( notFoundLfns ), 'File not found in required seList' )
-
-##   printDMResult( results, empty = "File not at SE", script = "dirac-dms-lfn-accessURL" )
-
-
+import ROOT,sys  
+ROOT.PyConfig.IgnoreCommandLineOptions = True
+# =============================================================================
+from Bender.Logger import getLogger
+if '__main__' == __name__ : logger = getLogger ( 'Bender/grid_url' )
+else                      : logger = getLogger ( __name__          )
 # =============================================================================
 ## get the dictionary { 'LFN' : 'access-URL' }
-#  Actually it is a bit modified version of dirac-get-accessURL script 
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  Actually it is a wrapper for dirac-dms-lfn-accessURL script 
+#  @author VanyaBELYAEV Ivan.Belyaev@itep.ru
 #  @date   2012-10-23
-def accessURLs ( silent = True ) :
+def _accessURLs_ ( lfn , sites  = [] , elements = [] ) :  
+    """ Get the dictionary { 'LFN' : 'access-URL' }
+    Actually it is a wrapper for dirac-dms-lfn-accessURL script 
     """
-    Get (optionally silently) the map of access URSL for LFNs
     
-    >>> ursl = accessURLs() 
-    """
-    import sys 
-    stdout = sys.stdout
-    stderr = sys.stderr
+    arguments = [ 'dirac-dms-lfn-accessURL' ]
+    arguments.append ( lfn )
+    if sites    : arguments += [ '-g' ] + sites
+    if elements : arguments += [ '-S' ] + elements 
 
-    result = {}
+    import os 
+    from subprocess import Popen, PIPE
+    logger.debug ( 'use Popen(%s)' % arguments )  
+    pipe = Popen ( arguments     ,
+                   stdout = PIPE ,
+                   stderr = PIPE )
     
-    try :
+    with_errors = False 
+    for e in pipe.stderr :
+        logger.error( 'STDERR: %s' % arguments[0] )  
+        with_errors = True
         
-        if silent :
-            
-            sys.stderr = None ## open ( '/dev/null' )
-            sys.stdout = None ## open ( '/dev/null' )
-
-        result = _accessURLs ( silent ) ## RETURN 
+    if with_errors : return {}
     
-    except:
+    Successful = False
 
-        if not silent:
-            import traceback 
-            print  traceback.format_exc() 
-            
-        result = {}           ## RETURN 
+    result     = {}
+    current    = None 
+    for l in pipe.stdout :
+        line = l[:-1]
+        logger.debug('STDOUT: %s' % line) 
+        if not Successful or 0 == line.find('Successful') :
+            Successful = True
+            continue
+        ## parse only lines after the first successful 
+        if not Successful : continue
+        left,sep,right = line.partition(':') ## primitive "parsing"
+        if not sep :
+            logger.warning('Invalid line: "%s"' % line )
+            continue
+        left   = left .strip()
+        right  = right.strip()
+        if   left        and not right             : current = left 
+        elif left == lfn and     right and current : result [ current ] = right 
+        else :  logger.warning('Invalid tokens: %s' % tokens )
         
-    finally:
-        
-        sys.stderr = stderr
-        sys.stdout = stdout
+
+    
+    if result :
+        logger.info ( 80*'*')
+        logger.info ( "LFN : %s" %  lfn )
+        keys = result.keys()
+        keys.sort() 
+        logger.info                 ( "%20s : %s" % ( "Site" , "URL" ) ) 
+        for k in keys : logger.info ( "%20s : %s" % ( k , result[k]  ) )
+        logger.info ( 80*'*')
+    else :
+        logger.warning  ( "No valid replicas for LFN %s is found " %  lfn )
         
     return result
 
+
+# =============================================================================
+## get the dictionary { 'LFN' : 'access-URL' }
+#  Actually it is wrapper over dirac-dms-lfn-accessURL script
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-10-23
+def accessURLs ( args = [] ) :
+    """Get (optionally silently) the map of access URSL for LFNs
+    [Actually it is wrapper over dirac-dms-lfn-accessURL script]
+    >>> urls = accessURLs() 
+    """
+    # =========================================================================
+    ## make parser: 
+    # =========================================================================
+    import argparse 
+    parser = argparse.ArgumentParser(
+        prog        = 'get-grid-ulg/grid_url' ,
+        description = """
+        Helper module to get Grid access-URL for given LFN.
+        [Actually it is wrapper over dirac-dms-lfn-accessURL script]
+        """
+        )
+    
+    parser.add_argument (
+        "lfn"    ,
+        metavar  = "LFN"   ,
+        type     = str     , 
+        help     = "LFN to be investigated" )
+    
+    parser.add_argument (
+        "-g"       ,
+        "--Sites"  ,
+        metavar  = "SITES"   ,
+        dest     = 'Sites'   ,
+        nargs    = '*'       , 
+        default  = []        , 
+        help     = "GRID sites to consider [defaut : %(default)s ]"
+        )
+    
+    parser.add_argument (
+        "-S"     ,
+        "--SEs"  ,
+        metavar  = "SEs"   ,
+        dest     = 'SEs'   ,
+        default  = []      , 
+        nargs    = '*'     , 
+        help     = "Storage Elements to consider [defaut : %(default)s ]"
+        )
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument (
+        '-v'                           ,
+        '--verbose'                    ,
+        action  = "store_true"         ,
+        dest    = 'Verbose'            ,
+        help    = "``Verbose'' processing [defaut : %(default)s ]"  , 
+        default = False 
+        )
+    group.add_argument (
+        '-q'                          ,
+        '--quiet'                     ,
+        action  = "store_false"       ,
+        dest    = 'Verbose'           ,
+        help    = "``Quiet'' processing [defaut : %(default)s ]"  
+        )
+    
+    ## use parser:
+    import sys    
+    if not args : args = [ a for a in sys.argv[1:] if '--' != a ]
+    
+    config  = parser.parse_args ( args ) 
+    silent  = not config.Verbose
+    result  = {}
+    
+    try :
+        
+        from Ostap.Utils import mute
+        with mute ( silent , silent ) :
+            result = _accessURLs_ ( config.lfn   ,
+                                    config.Sites ,
+                                    config.SEs   )                                               
+    except:
+        if not silent :
+            logger.error('Exception caught:' , exc_info = True )  
+            result = {}
+            
+    return result 
+
 # =============================================================================
 if __name__ == '__main__' :
-
-    print accessURLs( True ) 
+    
+    print accessURLs () 
         
 # =============================================================================
 # The END 
