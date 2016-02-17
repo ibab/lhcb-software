@@ -80,10 +80,9 @@ namespace
         ( "AlgFunctors::getAlgorithm: IAlgManager* points to NULL" ) ; 
       return LoKi::Interface<IAlgorithm>()  ; 
     }
-
     
     {
-      // if algorith, is already exist - just get it! 
+      // if the algorithm is already exist and running  - just get it! 
       IAlgorithm* iialg = 0 ;
       iialg = iam->algorithm ( name , false ) ;
       if ( nullptr != iialg
@@ -182,31 +181,39 @@ namespace
       addedRootInTES = false;
     }
     ///////// end of code copied from GaudiSequencer...
-
+    
     IAlgorithm* _a =  myIAlg;
-    if ( !_a->isInitialized() ) 
+    if ( Gaudi::StateMachine::INITIALIZED    > _a -> FSMState() )
     {
-      StatusCode sc = _a->sysInitialize() ;
-      if ( sc.isFailure() ) 
+      const Gaudi::StateMachine::State loki_state = 
+        LoKi::Services::instance().lokiSvc()->FSMState() ;
+      if ( Gaudi::StateMachine::INITIALIZED <= loki_state ) 
       {
-        LoKi::Report::Error 
-          ( "AlgFunctors::getAlgorithm: Failure to initialize '" + name + "'" , sc ) ;
-        return LoKi::Interface<IAlgorithm>()  ; 
+        StatusCode sc = _a->sysInitialize() ;
+        if ( sc.isFailure() ) 
+        {
+          LoKi::Report::Error 
+            ( "AlgFunctors::getAlgorithm: Failure to initialize '" + name + "'" , sc ) ;
+          return LoKi::Interface<IAlgorithm>()  ; 
+        } 
       } 
     }
     //
-    
-    if ( Gaudi::StateMachine::RUNNING != _a -> FSMState() &&
-         Gaudi::StateMachine::RUNNING == LoKi::Services::instance().lokiSvc()->FSMState() )
-    { 
-      // start it! 
-      StatusCode sc = _a->sysStart() ;
-      if ( sc.isFailure() ) 
-      {
-        LoKi::Report::Error 
-          ( "AlgFunctors::getAlgorithm: Failure to start '" + name + "'" , sc ) ;
-        return LoKi::Interface<IAlgorithm>()  ; 
-      } 
+    if ( Gaudi::StateMachine::RUNNING != _a -> FSMState() ) 
+    {
+      const Gaudi::StateMachine::State loki_state = 
+        LoKi::Services::instance().lokiSvc()->FSMState() ;
+      if ( Gaudi::StateMachine::RUNNING == loki_state ) 
+      { 
+        // start it! 
+        StatusCode sc = _a->sysStart() ;
+        if ( sc.isFailure() ) 
+        {
+          LoKi::Report::Error 
+            ( "AlgFunctors::getAlgorithm: Failure to start '" + name + "'" , sc ) ;
+          return LoKi::Interface<IAlgorithm>()  ; 
+        } 
+      }
     }
     //
     return LoKi::Interface<IAlgorithm>( _a )  ; 

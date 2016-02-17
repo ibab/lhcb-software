@@ -540,80 +540,99 @@ def _iter_SRV_ ( self ) :
         index += 1
 
 # =============================================================================
+## define __repr__ function for SmartRef
+#  essentially it delegates the prints to the object itself
+#  @code
+#  obj = ...
+#  print repr(obj)
+#  @endcode
+def _repr_SR_ ( self ) :
+    """Define __repr__ function for SmartRef
+    essentially it delegates the prints to the object itself
+    >>> obj = ...
+    >>> print repr(obj)
+    """
+    _t = self.target()
+    if _t : return _t.__repr__()
+    return 'SmartRef(%s)(nullptr)'%s.__class__.__name__[9:-1].replace('::','.')
+
+# =============================================================================
+## define __str__ function for SmartRef
+#  essentially it delegates the prints to the object itself
+#  @code
+#  obj = ...
+#  print str(obj)
+#  @endcode
+def _str_SR_ ( self ) :
+    """Define __repr__ function for SmartRef
+    essentially it delegates the prints to the object itself
+    >>> obj = ...
+    >>> print str(obj)
+    """
+    _t = self.target()
+    if _t : return _t.__str__()
+    return 'SmartRef(%s)(nullptr)'%s.__class__.__name__[9:-1].replace('::','.')
+
+# =============================================================================
 ## Simple function, which prints the name of the particle
 def   pname ( p ) :
-    """
-    Simple function, which prints the name of the particle
-
+    """ Simple function, which prints the name of the particle
     >>> p = ...
-    >>> pname ( p ) 
-    
+    >>> pname ( p )     
     """    
     return p.__pname__ ()
 
 # =============================================================================
 ## simple function, which prints the name of the particle 
 def __pname__ ( self ) :
-    """
-    Simple function, which prints the name of the particle
+    """Simple function, which prints the name of the particle
     
     >>> p = ...
-    >>> p.name()  
-    
+    >>> p.name()      
     """
     return LoKi.Particles.nameFromPID( self.particleID() ) 
 
 # =============================================================================
 ## Construct 'select/filter' vector-function from the scalar predicate:
 def select ( s ) :
-    """
-    Construct 'select/filter' vector-function from the scalar predicate:
+    """Construct 'select/filter' vector-function from the scalar predicate:
 
     >>> cut = ...
     >>> selector = select ( cut )
         
-    The concept belongs to Gerhard 'The Great' Raven
-            
+    The concept belongs to Gerhard 'The Great' Raven            
     """
     return s.__select__() 
 
 # =============================================================================
 ## Construct 'process' vector-function from the scalar functor 
 def process ( s ) :
-    """
-    Construct 'process' vector-function from the scalar functor 
-
+    """Construct 'process' vector-function from the scalar functor
+    
     >>> functor = ...
     >>> processor = process ( functor )
-        
-    The concept belongs to Gerhard 'The Great' Raven
-            
+    
+    The concept belongs to Gerhard 'The Great' Raven            
     """
     return s.__process__() 
 
 def tee ( s ) :
-    """
-    Construct 'tee' vector-function form the vector functor
-
+    """Construct 'tee' vector-function form the vector functor
     >>> functor  = ...
-    >>> functorT = tee ( functor )
-        
-    The concept belongs to Gerhard 'The Great' Raven
-            
+    >>> functorT = tee ( functor )        
+    The concept belongs to Gerhard 'The Great' Raven            
     """
     return s.__tee__ () 
     
 # =============================================================================
 ## Construct 'yield/map' vector-function from the scalar functor 
 def yields ( s ) :
-    """
-    Construct 'yield/map' vector-function from the scalar functor 
-
+    """Construct 'yield/map' vector-function from the scalar functor
+    
     >>> functor = ...
     >>> mapper = yields ( functor )
     
-    The concept belongs to Gerhard 'The Great' Raven
-            
+    The concept belongs to Gerhard 'The Great' Raven            
     """
     return s.__yields__() 
 
@@ -621,12 +640,11 @@ def yields ( s ) :
 # =============================================================================
 ## construct "smart Extra Info" functor
 def info ( key , fun , update = False ) :
-    """
-    Construct ''Smart-extra-info''/``cache'' functor,
+    """Construct ''Smart-extra-info''/``cache'' functor,
     which returns the valeu of extraInfo(index)/cache(key), if the information
     present, otherwise it evaluates the functor and (optionally)
     updates the extraInfo/cache field
-
+    
     >>> functor = ...
     >>> smart = info ( 15 , functor )
     
@@ -641,43 +659,37 @@ def info ( key , fun , update = False ) :
 # =============================================================================
 ## construct logging-functor
 def logging ( fun , *args ) :
-    """
-    Construct logging functor,
+    """Construct logging functor,
     that writes into cache the resutl sof own evaluation 
     
     >>> functor = ...
     >>> logged  = logging ( functor )
     
-    The concept belongs to Gerhard ``The Great'' Raven 
-    
+    The concept belongs to Gerhard ``The Great'' Raven     
     """
     return fun.__logging__ ( *args ) 
 
 
 # =============================================================================
 def has ( cut ) :
-    """
-    Create the vector function that checks certain scalar predicate
+    """Create the vector function that checks certain scalar predicate
 
     >>> cut = ...
     >>> checker = has ( cut )
     >>> ok = checker ( data )
     
-    The concept belongs to Gerhard 'The Great' Raven
-    
+    The concept belongs to Gerhard 'The Great' Raven    
     """
     return cut.__has__ ()
 
 # =============================================================================
 def count ( cut ) :
-    """
-    Create the vector function that counts certain scalar predicate
+    """Create the vector function that counts certain scalar predicate
 
     >>> cut = ...
     >>> counter = count ( cut )
     
-    The concept belongs to Gerhard 'The Great' Raven
-    
+    The concept belongs to Gerhard 'The Great' Raven    
     """
     return cut.__count__ ()
 
@@ -698,12 +710,10 @@ def count ( cut ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date 2011-03-28
 def fetch ( s , *args ) :
-    """
-    Construct 'fetch/reduce' vector-function from the scalar functor 
+    """Construct 'fetch/reduce' vector-function from the scalar functor 
 
     >>> functor = ...
-    >>> f = fetch ( functor , 1 , -1 )
-         
+    >>> f = fetch ( functor , 1 , -1 )         
     """
     return s.__fetch__( *args ) 
 
@@ -723,14 +733,12 @@ def fetch ( s , *args ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2010-06-06
 def union ( fun1 , fun2 ) :
-    """
-    Create ``union'' for two streamers
+    """ Create ``union'' for two streamers
 
     >>> fun1 = ...  # the first streamer
     >>> fun2 = ...  # the first streamer
     
-    >>> result = union ( fun1 , fun2 ) 
-    
+    >>> result = union ( fun1 , fun2 )     
     """
     if hasattr ( fun1 , '__union__' ) : return fun1.__union__ ( fun2 )
     return fun2.__union__ ( fun1 )
@@ -750,14 +758,12 @@ def union ( fun1 , fun2 ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2010-06-06
 def intersection ( fun1 , fun2 ) :
-    """
-    Create ``intersection'' for two streamers
+    """Create ``intersection'' for two streamers
 
     >>> fun1 = ...  # the first streamer
     >>> fun2 = ...  # the first streamer
     
-    >>> result = intersection ( fun1 , fun2 ) 
-    
+    >>> result = intersection ( fun1 , fun2 )     
     """
     if hasattr ( fun1 , '__intersection__' ) :
         return fun1.__intersection__ ( fun2 )
@@ -779,14 +785,12 @@ def intersection ( fun1 , fun2 ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2010-06-06
 def difference ( fun1 , fun2 ) :
-    """
-    Create ``difference'' for two streamers
+    """Create ``difference'' for two streamers
 
     >>> fun1 = ...  # the first streamer
     >>> fun2 = ...  # the first streamer
     
-    >>> result = difference ( fun1 , fun2 ) 
-    
+    >>> result = difference ( fun1 , fun2 )     
     """
     return fun1.__difference__ ( fun2 )
 
@@ -805,14 +809,12 @@ def difference ( fun1 , fun2 ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2010-06-06
 def sym_difference ( fun1 , fun2 ) :
-    """
-    Create ``symmetric difference'' for two streamers
+    """Create ``symmetric difference'' for two streamers
 
     >>> fun1 = ...  # the first streamer
     >>> fun2 = ...  # the first streamer
     
-    >>> result = sym_difference ( fun1 , fun2 ) 
-    
+    >>> result = sym_difference ( fun1 , fun2 )     
     """
     if hasattr ( fun1 , '__sym_difference__' ) :
         return fun1.__sym_difference__ ( fun2 )
@@ -834,14 +836,12 @@ def sym_difference ( fun1 , fun2 ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2010-06-06
 def includes ( fun1 , fun2 ) :
-    """
-    Create ``includes'' for two streamers
+    """Create ``includes'' for two streamers
 
     >>> fun1 = ...  # the first streamer
     >>> fun2 = ...  # the first streamer
     
-    >>> result = includes ( fun1 , fun2 ) 
-    
+    >>> result = includes ( fun1 , fun2 )     
     """
     return fun1.__includes__ ( fun2 )
 
@@ -862,8 +862,9 @@ def includes ( fun1 , fun2 ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2010-06-06 
 def timer ( obj , *args ) :
-    """
-    Define the timers
+    """ Define the timers
+    >>> fun   = ...
+    >>> fun_t = timer ( fun ) 
     """
     ##
     if hasattr ( obj , '__timer__' )         : return obj.__timer__ ( *args )
@@ -889,12 +890,10 @@ def timer ( obj , *args ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2012-01-28 
 def dump1 ( obj , *args ) :
-    """
-    Define the dump-1 functor
+    """Define the dump-1 functor
 
     >>> fun   = ...
-    >>> fun_t = dump1 ( fun )
-    
+    >>> fun_t = dump1 ( fun )    
     """
     return obj.__dump1__ ( *args ) 
 
@@ -911,11 +910,9 @@ def dump1 ( obj , *args ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date 2011-03-04
 def mean ( obj , *args ) :
-    """
-    Create ``mean-over-stream'' vector-functor
-
-    >> mean ( PT ) >> 
+    """Create ``mean-over-stream'' vector-functor
     
+    >> mean ( PT ) >>     
     """
     return obj.__mean__ ( *args )
 # =============================================================================
@@ -931,11 +928,9 @@ def mean ( obj , *args ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date 2011-03-04
 def meanErr ( obj , *args ) :
-    """
-    Create ``mean-error-over-stream'' vector-functor
+    """Create ``mean-error-over-stream'' vector-functor
 
-    >> meanErr ( PT ) >> 
-    
+    >> meanErr ( PT ) >>     
     """
     return obj.__meanErr__ ( *args )
 # =============================================================================
@@ -951,11 +946,9 @@ def meanErr ( obj , *args ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date 2011-03-04
 def rms ( obj , *args ) :
-    """
-    Create ``mean-error-over-stream'' vector-functor
+    """Create ``mean-error-over-stream'' vector-functor
 
-    >> rms ( PT ) >> 
-    
+    >> rms ( PT ) >>     
     """
     return obj.__rms__ ( *args )
 # =============================================================================
@@ -971,11 +964,9 @@ def rms ( obj , *args ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date 2011-03-04
 def eff ( obj , *args ) :
-    """
-    Create ``mean-error-over-stream'' vector-functor
+    """Create ``mean-error-over-stream'' vector-functor
 
-    >> eff ( PT  > 1 * GeV  ) >> 
-    
+    >> eff ( PT  > 1 * GeV  ) >>     
     """
     return obj.__eff__ ( *args )
 # =============================================================================
@@ -991,11 +982,9 @@ def eff ( obj , *args ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date 2011-03-04
 def effErr ( obj , *args ) :
-    """
-    Create ``mean-error-over-stream'' vector-functor
+    """Create ``mean-error-over-stream'' vector-functor
 
-    >> effErr ( PT  > 1 * GeV  ) >> 
-    
+    >> effErr ( PT  > 1 * GeV  ) >>     
     """
     return obj.__effErr__ ( *args )
 
@@ -1014,14 +1003,12 @@ def effErr ( obj , *args ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date 2010-11-18
 def cause ( fun1 , fun2 ) :
-    """
-    Create ``conditional source/cause'' 
+    """Create ``conditional source/cause'' 
 
     >>> cond   = ...  # the condition 
     >>> source = ...  # the source
     
-    >>> result = cause ( cond , source ) 
-    
+    >>> result = cause ( cond , source )     
     """    
     return fun1._cause_ ( fun2 ) if hasattr ( fun1 , '_cause_' ) else fun2._cause_ ( fun1 )
 
@@ -1040,25 +1027,20 @@ def cause ( fun1 , fun2 ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date 2011-10-30
 def sort( fun , *args ) :
-    """
-    sort the stream  (and get the first N-elements)
+    """Sort the stream  (and get the first N-elements)
     
     >>> stream >> sort ( PT )
     
-    >>> stream >> sort ( PT , 5 ) ## get no more than 5 elements 
-    
+    >>> stream >> sort ( PT , 5 ) ## get no more than 5 elements     
     """    
     return fun.__sort__ ( *args  ) 
 
 # =============================================================================
 def mark ( tree ) :
-    """
-    Create the 'marked' tree:
-
+    """Create the 'marked' tree:
 
     >>> tree = ...
-    >>> marked = mark ( tree )
-    
+    >>> marked = mark ( tree )    
     """
     return tree.__mark__()
 
@@ -1131,13 +1113,11 @@ def _check_arg_ ( check ,
 # =============================================================================
 ## construct std::vector<std::string> from the arguments 
 def strings ( arg1 , *arg ) :
-    """
-    Construct the std::vector<std::string> from the arguments
+    """Construct the std::vector<std::string> from the arguments
     
     >>> v1 = strings ( 'sadfsdf' )
     >>> v2 = strings ( 'sadfsdf' , 'sadf' , 'afadf' )
-    >>> v3 = strings ( [ 'sadfsdf' , 'sadf' , 'afadf' ] )
-    
+    >>> v3 = strings ( [ 'sadfsdf' , 'sadf' , 'afadf' ] )    
     """
     VT  = std.vector('std::string')
     vct = VT()
@@ -1149,13 +1129,11 @@ def strings ( arg1 , *arg ) :
 # =============================================================================
 ## construct std::vector<double> from the arguments 
 def doubles ( arg1 , *arg ) :
-    """
-    Construct the std::vector<double> from the arguments
+    """Construct the std::vector<double> from the arguments
     
     >>> v1 = doubles ( 1.01 )
     >>> v2 = doubles ( 1.01 , 1.02 , 1.03  )
-    >>> v3 = doubles ( [ 1.01 , 1.02 , 1.03 ] )
-    
+    >>> v3 = doubles ( [ 1.01 , 1.02 , 1.03 ] )    
     """
     VT  = std.vector('double')
     vct = VT()
@@ -1167,13 +1145,11 @@ def doubles ( arg1 , *arg ) :
 # =============================================================================
 ## construct std::vector<int> from the arguments 
 def ints ( arg1 , *arg ) :
-    """
-    Construct the std::vector<int> from the arguments
+    """Construct the std::vector<int> from the arguments
     
     >>> v1 = ints ( 1 )
     >>> v2 = ints ( 1 , 1 , 10  )
-    >>> v3 = ints ( [ 1 , 2 , 3 ] )
-    
+    >>> v3 = ints ( [ 1 , 2 , 3 ] )    
     """
     VT  = std.vector('int')
     vct = VT()

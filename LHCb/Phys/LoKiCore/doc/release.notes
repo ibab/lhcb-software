@@ -13,6 +13,12 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2016-02-17 - Vanya Belyaev
+ - remove PyCintex 
+ - add print-functions for smart-refs 
+ - improve a bit AlgFunctors.cpp (at least fix he issue with 
+   the misinterpretation of  Algorithm::isInitialized 
+
 ! 2016-02-10 - Roel Aaij
  - Do not insert "dir()" function in case of debug; this causes cache misses
    when using the generated C++ of functors.
@@ -25,7 +31,7 @@
    for interactive processing.
    I DO HOPE THAT IS DOES NOT BREAK THE NORMAL FLOW
 
-   [Is there a good Samaritian to replace this code fro GaudiSequencer with
+   [Is there a good Samaritian to replace this code from GaudiSequencer with
     something that has more sense?]
 
 !========================= LoKiCore v11r29 2016-01-27 =========================

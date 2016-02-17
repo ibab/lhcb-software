@@ -40,29 +40,21 @@ __date__    = "2010-09-27"
 __version__ = "SVN $Revision$ "
 # =============================================================================
 __all__     = (
-    'cpp'   ,
-    'std'   ,
-    'LoKi'  ,
-    'LHCb'  ,
-    'Gaudi'
+    'cpp'   ,  ## global C++ namespace 
+    'std'   ,  ## C++ 'std'   namespace 
+    'LoKi'  ,  ## C++ 'LoKi'  namespace 
+    'LHCb'  ,  ## C++ 'LHCb'  namespace 
+    'Gaudi'    ## C++ 'Gaudi' namespace
     )
 # =============================================================================
-
-try:
-    import cppyy
-except ImportError:
-    # FIXME: backward compatibility
-    print "# WARNING: using PyCintex as cppyy implementation"
-    import PyCintex as cppyy
-    import sys
-    sys.modules['cppyy'] = cppyy
+import cppyy
 
 # namespaces shortcuts
 cpp   = cppyy.gbl
-std   = cppyy.gbl.std
-LoKi  = cppyy.gbl.LoKi
-LHCb  = cppyy.gbl.LHCb
-Gaudi = cppyy.gbl.Gaudi
+std   = cpp.std
+LoKi  = cpp.LoKi
+LHCb  = cpp.LHCb
+Gaudi = cpp.Gaudi
 
 # =============================================================================
 if '__main__' == __name__ :
