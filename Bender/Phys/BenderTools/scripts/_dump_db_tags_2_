@@ -27,21 +27,47 @@ __version__ = "Revision"
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 # =============================================================================
+from Bender.Logger import getLogger
+if '__main__' == __name__ : logger = getLogger ( 'Bender/_dum_db_tags_2_' )
+else                      : logger = getLogger ( __name__                 )
+# =============================================================================
 ## helper function to get DB-tags
 #  @author Thomas RUF
 #  @author Vanya Belyaev Ivan.Belyaev@itep.ru
 #  @date  2013-02-18
-def _get_db_tags_ ( files ) :
+def _get_db_tags_ ( files , importOpts = [] , catalogs = [] ) :
     """
     Helper function to get DB-tags 
     """
     tags = {}
-
+    
+    ## import options if specified 
+    if importOpts :
+        from Gaudi.Configuration import importOptions
+        for i in importOpts : importOptions ( i )  
+        
+    ## load files files 
     from GaudiConf.IOHelper import IOHelper
-    evtsel = IOHelper().inputFiles ( files )
-       
+    evtsel = IOHelper().inputFiles ( files , clear = False )
+    
+    ## add catalogs, if specified 
+    if catalogs : 
+        from Configurables import FileCatalog
+        fcatalog           = FileCatalog() 
+        fcatalog.Catalogs += catalogs
+
+    ## check inputs :
+    from Configurables import EventSelector
+    evtSel = EventSelector()
+    if not evtSel.Input :
+        logger.erorr('No entries in EventSelector.Input')
+        return {}
+
+    if    files : evtSel.Input = evtSel.Input[-1:] ## + evtSel.Input[1:]
+    else        : evtSel.Input = evtSel.Input[:1 ] ## + evtSel.Input[1:]
+    
     from Configurables import LHCbApp
-    app = LHCbApp()
+    app = LHCbApp( OutputLevel = 3)
 
     #
     ## some action to get ODIN
@@ -69,8 +95,7 @@ def _get_db_tags_ ( files ) :
     mgr = ApplicationMgr()
     ##mgr.TopAlg = [ createODIN() ] + mgr.TopAlg
     mgr.TopAlg = [ CreateODIN ] + mgr.TopAlg
-    
-    
+        
     
     from GaudiPython.Bindings import AppMgr
     
@@ -85,7 +110,6 @@ def _get_db_tags_ ( files ) :
     
     gaudi.run(1)
     evtsvc = gaudi.evtSvc()
-
     
     for header in ( '/Event/Rec/Header' ,
                     '/Event/MC/Header'  ,
@@ -118,35 +142,81 @@ def _get_db_tags_ ( files ) :
 #  @author Thomas RUF
 #  @author Vanya Belyaev Ivan.Belyaev@itep.ru
 #  @date  2013-02-18
-def get_db_tags ( silent = True , files = [] ) :
+def get_db_tags ( files = [] ) :
     """
     Helper function to get DB-tags 
     """
-    if not files :
-        import sys 
-        if len(sys.argv) > 1 : 
-            files = sys.argv[1:] 
-
-    ## no valid 
-    if not files : return {}
+    import argparse 
+    parser = argparse.ArgumentParser()
     
+    parser.add_argument (
+        '-v'                          ,
+        '--verbose'                   ,
+        action  = "store_true"        ,
+        dest    = 'Verbose'           ,
+        help    = "``Vebose'' processing [defaut : %(default)s ]"  ,
+        default = False   
+        )
+    
+    parser.add_argument (
+        '-x'                    ,
+        '--xml'                 ,
+        dest    = 'XmlCatalogs' ,
+        help    = "``XmlCatalogs'' to be transferred to setData-function [default: %(default)s]" ,
+        nargs   = '*'           , 
+        default = []                
+        )
+    
+    parser.add_argument (
+        "files" ,
+        metavar = "FILE"          ,
+        nargs   = '*'             ,
+        default = []              , 
+        help    = "Input files to be processed [default: %(default)s]" )
+    
+    parser.add_argument (
+        '-i'                       ,
+        '--import'                 ,
+        dest    = 'ImportOptions'  ,
+        metavar = 'IMPORT'         ,
+        nargs   = '*'              ,
+        default = []               , 
+        help    = """List of files to be used for 'importOptions',
+        e.g. input data [default:%(default)s].
+        The files are imported at the end of configuration step"""
+        )
+    
+    import sys 
+    config = parser.parse_args( [ a for a in sys.argv[1:] if '--' != a ] ) 
+    
+    if files : config.files += files
+    
+    ## no input data 
+    if not config.files and not config.ImportOptions :  return {}
+        
     tags = {}
-
+    
+    silent = not config.Verbose
+    
     try:
         
         from Ostap.Utils import mute 
         with mute ( silent , silent ) :
-            tags = _get_db_tags_ ( files )
-        
-    except: tags = {}
-                    
+            tags = _get_db_tags_ ( config.files         ,
+                                   config.ImportOptions ,
+                                   config.XmlCatalogs   )        
+    except:
+        if not silent :
+            logger.error('Exception caught:' , exc_info = True )  
+        tags = {}
+            
     return tags
 
 
 # =============================================================================
 if __name__ == '__main__' :
 
-    print 'DBTags: %s ' % get_db_tags ( silent = True ) 
+    print 'DBTags: %s ' % get_db_tags ( ) 
         
 # =============================================================================
 # The END 

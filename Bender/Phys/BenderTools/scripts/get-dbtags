@@ -85,7 +85,7 @@ if '__main__' == __name__ :
     
     from BenderTools.GetDBtags  import extractTags 
     import sys
-    extractTags ( sys.argv[1:] )
+    extractTags ( [ a for a in sys.argv[1:] if '--' != a ] )
     
 # =============================================================================
 # The END 

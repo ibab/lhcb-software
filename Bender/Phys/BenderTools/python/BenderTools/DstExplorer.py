@@ -256,35 +256,39 @@ def configure ( config , colors = False ) :
     from BenderTools.Parser import hasInFile 
     if   hasInFile ( files , 'CHARM.MDST'    ) and not config.RootInTES :
         config.RootInTES = '/Event/Charm'
-        logger.info ('RootInTES is set according to CHARM.MDST'    )
+        logger.info ('RootInTES is set according to CHARM.MDST'      )
         daVinci.InputType = 'MDST'        
     elif hasInFile ( files , 'LEPTONIC.MDST' ) and not config.RootInTES :
         config.RootInTES = '/Event/Leptonic'
-        logger.info ('RootInTES is set according to LEPTONIC.MDST' )
+        logger.info ('RootInTES is set according to LEPTONIC.MDST'   )
         daVinci.InputType = 'MDST'
     elif hasInFile ( files , 'BHADRON.MDST'  ) and not config.RootInTES :
         config.RootInTES = '/Event/Bhadron'
-        logger.info ('RootInTES is set according to BHADRON.MDST'  )
+        logger.info ('RootInTES is set according to BHADRON.MDST'    )
         daVinci.InputType = 'MDST'
     elif hasInFile ( files , 'PID.MDST'      ) and not config.RootInTES :
         config.RootInTES = '/Event/PID'
-        logger.info ('RootInTES is set according to PID.MDST'      )
+        logger.info ('RootInTES is set according to PID.MDST'        )
         daVinci.InputType = 'MDST'
     elif hasInFile ( files , 'PSIX.MDST'     ) and not config.RootInTES :
         config.RootInTES = '/Event/PSIX'
-        logger.info ('RootInTES is set according to PSIX.MDST'     )
+        logger.info ('RootInTES is set according to PSIX.MDST'       )
         daVinci.InputType = 'MDST'
     elif hasInFile ( files , 'PSIX0.MDST'    ) and not config.RootInTES :
         config.RootInTES = '/Event/PSIX0'
-        logger.info ('RootInTES is set according to PSIX0.MDST'    )
+        logger.info ('RootInTES is set according to PSIX0.MDST'      )
         daVinci.InputType = 'MDST'
     elif hasInFile ( files , 'BOTTOM.MDST'   ) and not config.RootInTES :
         config.RootInTES = '/Event/BOTTOM'
-        logger.info ('RootInTES is set according to BOTTOM.MDST'   )
+        logger.info ('RootInTES is set according to BOTTOM.MDST'     )
         daVinci.InputType = 'MDST'
-    elif hasInFile ( files , 'TURBO.MDST'    ) and not config.RootInTES :
+    elif hasInFile ( files , 'TURBO.MDST'     ) and not config.RootInTES :
         config.RootInTES = '/Event/Turbo'
-        logger.info ('RootInTES is set according to TURBO.MDST'    )
+        logger.info ('RootInTES is set according to TURBO.MDST'      )
+        daVinci.InputType = 'MDST'
+    elif hasInFile ( files , 'ALLSTREAMS.MDST' ) and not config.RootInTES :
+        config.RootInTES = '/Event/AllStreams'
+        logger.info ('RootInTES is set according to ALLSTREAMS.MDST' )
         daVinci.InputType = 'MDST'
     
     if config.RootInTES and  0  != config.RootInTES.find ( '/Event' ) :

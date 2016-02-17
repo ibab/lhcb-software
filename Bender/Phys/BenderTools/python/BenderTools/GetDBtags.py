@@ -187,27 +187,27 @@ def useDBTagsFromData (
 #  @author Thomas RUF 
 #  @author Vanya BELYAEV 
 #  @date   2012-10-24  
-def getDBTags ( file_name      ,
-                castor = True  ,
-                grid   = ''    , 
-                debug  = False ) :
+def _getDBTags_ ( file_name          ,
+                  importOpts = []    , 
+                  catalogs   = []    , 
+                  debug      = False ) :
     
     import os
-    
-    file_name = os.path.expandvars ( file_name ) 
-    file_name = os.path.expanduser ( file_name ) 
-    file_name = os.path.expandvars ( file_name ) 
-
-    if not os.path.exists ( file_name ) :
-        
-        from Bender.DataUtils import extendfile1
-        file_name = extendfile1     ( file_name , castor , grid )
 
     logger.info ( "Use the file %s " % file_name )
 
     from subprocess import Popen, PIPE
     serr =  open ( '/dev/null' )
-    pipe = Popen ( [ '_dump_db_tags_2_' , file_name ] ,
+    
+    arguments = [ '_dump_db_tags_2_' , file_name ]
+    #
+    if importOpts : arguments += [ '-i' ] + importOpts
+    if catalogs   : arguments += [ '-x' ] + catalogs
+    if debug      : arguments += [ '-v' ] 
+    #
+    logger.debug ( "Use Popen(%s)" % arguments )
+    
+    pipe = Popen ( arguments            ,
                    env    = os.environ  ,
                    stdout = PIPE        ,
                    stderr = serr        )
@@ -215,12 +215,12 @@ def getDBTags ( file_name      ,
     stdout = pipe.stdout 
     ts = {}
 
-    ## Format = 'DBTags: { disctionary} '
+    ## Format = 'DBTags: { dictionary} '
     key  = 'DBTags:'
     tags = {} 
     for line in stdout :
 
-        if debug : logger.info ( line ) 
+        if debug : logger.info ( line[:-1] ) 
 
         ## good line? 
         p = line.find ( key )
@@ -237,6 +237,37 @@ def getDBTags ( file_name      ,
             
     return tags 
 
+# =============================================================================
+## get DB-tags from the data
+#  @author Thomas RUF 
+#  @author Vanya BELYAEV 
+#  @date   2012-10-24  
+def getDBTags ( file_name          ,
+                castor     = True  ,
+                grid       = ''    ,
+                importOpts = []    , 
+                catalogs   = []    , 
+                debug      = False ) :
+    
+    import os
+
+    file_name_ext = os.path.expandvars ( file_name     ) 
+    file_name_ext = os.path.expanduser ( file_name_ext ) 
+    file_name_ext = os.path.expandvars ( file_name_ext ) 
+
+    if not os.path.exists ( file_name_ext ) :
+        
+        from Bender.DataUtils import extendfile1
+        file_name_ext = extendfile1  ( file_name_ext , castor , grid )
+
+    
+    tags = _getDBTags_ ( file_name_ext , importOpts , catalogs , debug )
+
+    ## try non-decorated name 
+    if not tags and file_name_ext != file_name :
+        return _getDBTags_ ( file_name , importOpts , catalogs , debug )
+
+    return tags
 
 # =============================================================================
 ## get Meta-info from the data
@@ -327,8 +358,8 @@ def extractTags ( args ) :
         '-v'                           ,
         '--verbose'                    ,
         action  = "store_true"         ,
-        dest    = 'Quiet'              ,
-        help    = "Verbose processing" ,
+        dest    = 'Verbose'            ,
+        help    = "``Verbose'' processing [defaut : %(default)s ]"  , 
         default = False 
         )
     group.add_argument (
@@ -338,34 +369,85 @@ def extractTags ( args ) :
         dest    = 'Verbose'           ,
         help    = "``Quiet'' processing [defaut : %(default)s ]"  
         )
+    
     parser.add_argument (
         "files" ,
         metavar = "FILE"          ,
-        nargs   = '+'             ,
-        help    = "Input data file(s) to be processed" 
+        nargs   = '*'             ,
+        help    = "Input data file(s) to be processed [defaut : %(default)s ]" 
         )
-    ##
+    
+    parser.add_argument (
+        '-i'                       ,
+        '--import'                 ,
+        dest    = 'ImportOptions'  ,
+        metavar = 'IMPORT'         ,
+        nargs   = '*'              ,
+        default = []               , 
+        help    = """List of files to be used for 'importOptions',
+        e.g. input data [default:%(default)s].
+        The files are imported at the end of configuration step"""
+        )
+    
+    parser.add_argument (
+        '-x'                    ,
+        '--xml'                 ,
+        dest    = 'XmlCatalogs' ,
+        help    = "``XmlCatalogs'' to be transferred to setData-function [default: %(default)s]" ,
+        nargs   = '*'           , 
+        default = []                
+        )
     
     arguments = parser.parse_args ( args )
     
-    tags = {}
-    for f in arguments.files : 
-
-        logger.info ( "Try the file %s " % f )
+    import logging
+    if arguments.Verbose : logging.disable ( logging.DEBUG - 1 )
+    else                 : logging.disable ( logging.INFO  - 1 ) 
         
-        tags = getDBTags ( f                 ,
-                           arguments.Castor  ,
-                           arguments.Grid    , 
-                           arguments.Verbose ) 
-        if tags : break
+    if arguments.ImportOptions :
+        from Gaudi.Configuration import importOptions
+        for i in arguments.ImportOptions : importOptions ( i )  
+        from Configurables import EventSelector
+        evtSel = EventSelector()
+        inputs = evtSel.Input
+        if inputs : logger.info('Add %d files from EventSelector.Input' % len(inputs) )  
+        arguments.files += evtSel.Input
 
+    if not arguments.files :
+        raise ArgumentError, "No input files are specifed"
+    
+    tags = {}
+
+    ifile = 0
+    nfile = len(arguments.files) 
+    for f in arguments.files : 
+        ifile += 1 
+        logger.debug ( "Try the file %s   [%d/%d]" %  ( f , ifile , nfile ) ) 
+        
+        tags = getDBTags ( f                       ,
+                           arguments.Castor        ,
+                           arguments.Grid          ,
+                           arguments.ImportOptions ,
+                           arguments.XmlCatalogs   ,                           
+                           arguments.Verbose       )
+        
+        if tags : break
+        #
+        if   0 == ifile % 100 : 
+            logger.error   (" No success in %d/%d trials" % ( ifile , nfile ) )
+        elif 0 == ifile %  10 :
+            logger.warning (" No success in %d/%d trials" % ( ifile , nfile ) )  
+
+            
     logger.info ( 12*'-'+'+'+57*'-' )
     logger.info ( ' Tags: '         )
     logger.info ( 12*'-'+'+'+57*'-' )
     for k in tags :
         logger.info ( '%11s : %-s ' % ( k , tags[k] ) ) 
     logger.info ( 12*'-'+'+'+57*'-' )
-
+    logger.info ( ' Input files scanned: %d from %s' %  ( ifile , nfile ) )
+    logger.info ( ' Last (successful) file "%s"' % f )
+    logger.info ( 12*'-'+'+'+57*'-' )
 
 # =============================================================================
 ## extract MetaInfo from the files
