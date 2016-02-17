@@ -14,6 +14,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2016-02-17 - Vanya Belyaev
+ - minor fix 
+
+! 2016-02-17 - Vanya Belyaev
  - remove PyCintex 
  - add print-functions for smart-refs 
  - improve a bit AlgFunctors.cpp (at least fix he issue with 

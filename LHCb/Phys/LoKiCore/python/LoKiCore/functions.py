@@ -554,7 +554,7 @@ def _repr_SR_ ( self ) :
     """
     _t = self.target()
     if _t : return _t.__repr__()
-    return 'SmartRef(%s)(nullptr)'%s.__class__.__name__[9:-1].replace('::','.')
+    return 'SmartRef(%s)(nullptr)'%self.__class__.__name__[9:-1].replace('::','.')
 
 # =============================================================================
 ## define __str__ function for SmartRef
@@ -571,7 +571,20 @@ def _str_SR_ ( self ) :
     """
     _t = self.target()
     if _t : return _t.__str__()
-    return 'SmartRef(%s)(nullptr)'%s.__class__.__name__[9:-1].replace('::','.')
+    return 'SmartRef(%s)(nullptr)'%self.__class__.__name__[9:-1].replace('::','.')
+
+# =============================================================================
+## define __getattr__ function for smart references,
+#  actually delegate it to the object
+def _getattr_SR_ ( self , attribute ) :
+    """Define __getattr__ function for smart references,
+    actually delegate it to the object
+    """
+    print 'I am getattr(%s) ' % attribute 
+    _t = self.target()
+    print 'I am getattr(%s) ' % attribute , bool(_t) 
+    if _t : return getattr ( _t , attribute ) 
+    raise AttributeError, 'SmartRef(%s)(nullptr).%s'% (self.__class__.__name__[9:-1].replace('::','.'), attribute)
 
 # =============================================================================
 ## Simple function, which prints the name of the particle
