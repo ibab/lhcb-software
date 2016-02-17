@@ -49,8 +49,8 @@ GaudiHistoAlg ( name , pSvcLocator ),
   declareProperty( "MaxParabolaSeedHits", m_maxParabolaSeedHits  = 5                            );
   declareProperty( "TolTyOffset",         m_tolTyOffset          = 0.002                        ); 
   declareProperty( "TolTySlope",          m_tolTySlope           = 0.015                        );
-  declareProperty( "MaxIpAtZero",         m_maxIpAtZero          = 5000.                        );
-  declareProperty( "MaxIpAtZeroIN",       m_maxIpAtZeroIN        = 3000.                        );
+  declareProperty( "MaxIpAtZero",         m_maxIpAtZero          = 6000.                        );
+  declareProperty( "MaxIpAtZeroIN",       m_maxIpAtZeroIN        = 5000.                        );
   declareProperty( "BestDist",            m_bestDist             = 10.0                         );//added
   declareProperty( "UseFix",              m_useFix               = true                         );//added 
   declareProperty( "TolTriangle",         m_tolTriangle          = 10.* Gaudi::Units::mm        );//added 
@@ -64,10 +64,10 @@ GaudiHistoAlg ( name , pSvcLocator ),
   declareProperty( "WantedKey",           m_wantedKey             = -100                        );
   declareProperty( "TimingMeasurement",   m_doTiming              = false                       );
   declareProperty( "PrintSettings",       m_printSettings         = false                       );
-  //Parameter Track Model                                                                                                                              
+  //Parameter Track Model 
   declareProperty( "UseCubicCorrection",  m_useCubic              = true                        );
   declareProperty( "dRatio",              m_dRatio                = -0.000262                   ); 
-  declareProperty( "SlopeCorr",           m_SlopeCorr             = true                       ); 
+  declareProperty( "SlopeCorr",           m_SlopeCorr             = true                        ); 
   declareProperty( "UseCorrPosition",     m_useCorrPos            = true                        ); 
   declareProperty( "maxChi2HitsHigh",     m_maxChi2HitFullFitHigh = 5.5                         );
   declareProperty( "maxChi2HitsMed",      m_maxChi2HitFullFitMed  = 2.5                         );
@@ -77,9 +77,9 @@ GaudiHistoAlg ( name , pSvcLocator ),
   declareProperty( "maxChi2HitsXHigh",    m_maxChi2HitsXHigh      = 5.5                         );
   declareProperty( "maxChi2HitsXMed",     m_maxChi2HitsXMed       = 3.0                         );
   declareProperty( "maxChi2HitsXLow",     m_maxChi2HitsXLow       = 2.0                         );
-  declareProperty( "maxChi2HitsYHigh",    m_maxChi2HitsYHigh      = 1000.                        );
+  declareProperty( "maxChi2HitsYHigh",    m_maxChi2HitsYHigh      = 1000.                       );
   declareProperty( "maxChi2HitsYMed",     m_maxChi2HitsYMed       = 100.                        );
-  declareProperty( "maxChi2HitsYLow",     m_maxChi2HitsYLow       = 50.                        );
+  declareProperty( "maxChi2HitsYLow",     m_maxChi2HitsYLow       = 50.                         );
   declareProperty( "RadiusHole",          m_radiusHole            = 87.                         );
   declareProperty( "RemoveHole",          m_removeHole            = true                        );
 
@@ -773,7 +773,7 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
 
     //Loop over first Zone hits to define last Zone hit search window
     for ( PrHits::iterator itF = fHits.begin(); fHits.end() != itF; ++itF ) {
-      //if ( 0 != iCase && (*itF)->isUsed() ) continue;
+
       float minXl = (*itF)->x() * zRatio - m_maxIpAtZero * ( zRatio - 1 );
       float maxXl = (*itF)->x() * zRatio + m_maxIpAtZero * ( zRatio - 1 );
       
@@ -845,8 +845,8 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
             if ( (*itH)->x() > xMax ) break;
 	    
 	    if ( 0 != iCase){
-              if ( (*itF)->isUsed() and  (*itH)->isUsed() ) continue;
-              if ( (*itL)->isUsed() and  (*itH)->isUsed() ) continue;
+	      if ( (*itF)->isUsed() and  (*itH)->isUsed() ) continue;
+	      if ( (*itL)->isUsed() and  (*itH)->isUsed() ) continue;
             }
 
             parabolaSeedHits.push_back( *itH );
@@ -897,11 +897,12 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
 	    
 	    
             float dz = (*itZ)->z() - m_zReference;
-            float xAtZ = a*dz*dz + b*dz + c; //parabola extracted value of x at the z of the inter-layer
-	    if(m_useCubic){
+            float xAtZ ;
+	    if(m_useCubic)
               xAtZ= a * dz * dz * (1. + m_dRatio* dz) + b * dz + c; 
-	    }
-
+	    else 
+	      xAtZ = a*dz*dz + b*dz + c; //parabola extracted value of x at the z of the inter-layer
+	    
             float xP   = x0 + (*itZ)->z() * tx;  //Linear Prediction
             float xMax = xAtZ + fabs(tx)*2.0 + 0.5; //max ...put outside the params?
             float xMin = xAtZ - fabs(tx)*2.0 - 0.5; //min ...put outside the params?
@@ -919,7 +920,8 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
               //this is probably useless
               if ( (*itH)->x() < xMin ) continue;
               if ( (*itH)->x() > xMax ) break;
-              if( fabs((*itH)->x() - xAtZ ) < bestDist)
+	      
+	      if( fabs((*itH)->x() - xAtZ ) < bestDist)
               {
                 bestDist = fabs((*itH)->x() - xAtZ );
                 best = *itH;
@@ -1137,23 +1139,17 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
 	  xMax = xPred - m_tolXStereo* dxDy;
 	  xMin = xPred + m_tolXStereoIN * dxDy;
 	}
-	if ( xMin > xMax ) {
-	  float tmp = xMax;
-	  xMax = xMin;
-	  xMin = tmp;
-	}
       }else{
 	//regions for triangle
 	xMin = xPred + m_tolXStereoTriangle * dxDy;
 	xMax = xPred - m_tolXStereoTriangle * dxDy;
-	
-	if ( xMin > xMax ) {
-	  float tmp = xMax;
-	  xMax = xMin;
-	  xMin = tmp;
-	}
       }
-
+      
+      if ( xMin > xMax ) {
+	float tmp = xMax;
+	xMax = xMin;
+	xMin = tmp;
+      }
 
 #ifdef DEBUG_HISTO
       plot2D(xMax-xMin,xPred,"xMax-xMin Vs xPred","xMax-xMin Vs xPred",-3000.,3000.,-3000.,3000.,1000,1000);
@@ -1194,7 +1190,7 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
     unsigned int firstSpace = m_trackCandidates.size();
     
     PrHits::iterator itBeg = myStereo.begin();
-    PrHits::iterator itEnd = itBeg + m_minSPlanes  ; //Why 5?
+    PrHits::iterator itEnd = itBeg + m_minSPlanes; 
 
     
     while ( itEnd < myStereo.end() ) {
@@ -1207,7 +1203,7 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
         }
       }
       plCount.set( itBeg, itEnd );       
-
+      
       if ( m_minSPlanes <= plCount.nbDifferent()) plCounters.push_back(plCount);
       
       ++itBeg;
@@ -1221,7 +1217,7 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
       PrSeedTrack temp( *itT );
       
       for ( PrHits::const_iterator itH = plane.first(); plane.last() != itH; ++itH ) {
-	if((*itT).hits().size() ==6 or  !(*itH)->isUsed() )temp.addHit( *itH );
+	if((*itT).hits().size() ==6 or  !(*itH)->isUsed()) temp.addHit( *itH );
       }
 	  
       temp.setnXnY( (*itT).hits().size(), temp.hits().size()-(*itT).hits().size());
@@ -1245,7 +1241,7 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
       if( ok && (temp.hits().size() > m_minTPlanes ||  (temp.hits().size()<10 &&  innerMod(temp) < 3 ))){
 	  
 	setChi2( temp );
-	float maxChi2 = m_maxChi2PerDoF + 6*temp.xSlope(9000)*temp.xSlope(9000);
+	float maxChi2 = m_maxChi2PerDoF + temp.nx()*temp.xSlope(9000)*temp.xSlope(9000);
 
 	if(temp.chi2PerDoF() < maxChi2 ){
 	  
@@ -1257,11 +1253,10 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
 	    for ( PrHits::iterator itH = temp.hits().begin(); temp.hits().end() != itH; ++ itH) {
 	      (*itH)->setUsed( true );
 	    }
-	    break;
 	  }
 	}
       }
-      if (found >1) break;
+      if (found >5) break;
     }
 	    
     
@@ -1269,10 +1264,50 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
     if ( m_trackCandidates.size() > firstSpace+1 ) {
       //sort by size and chi2, first one is the good one
       std::sort( m_trackCandidates.begin()+firstSpace , m_trackCandidates.end(), PrSeedTrack::LowerBySize() );
-      for ( unsigned int kk = firstSpace+1; m_trackCandidates.size() > kk ; ++kk ) {
-	m_trackCandidates[kk].setValid(false) ;
+     
+      for ( unsigned int k1 = firstSpace; m_trackCandidates.size() > k1 ; ++k1 ) {
+	if(!m_trackCandidates[k1].valid()) continue;
+	for ( unsigned int k2 = k1+1; m_trackCandidates.size() > k2 ; ++k2 ) {
+	  //if( m_trackCandidates[k2].hits().size() < 10  ) m_trackCandidates[k2].setValid(false);
+
+	  if(!m_trackCandidates[k2].valid()) continue;
+	  
+	  PrHits::iterator itH1   = m_trackCandidates[k1].hits().begin();
+	  PrHits::iterator itH2   = m_trackCandidates[k2].hits().begin();
+	  PrHits::iterator itEnd1 = m_trackCandidates[k1].hits().end();
+	  PrHits::iterator itEnd2 = m_trackCandidates[k2].hits().end();
+
+	  unsigned int maxCommon =  m_trackCandidates[k2].hits().size()-4;
+          
+	  unsigned int nCommon = 0;
+	  while( itH1 != itEnd1 && itH2 != itEnd2 ){
+	    
+	    if((*itH1)->id() == (*itH2)->id()){
+	      ++nCommon;
+	 
+	      ++itH1;
+	      ++itH2;
+	    }
+	    else if( (*itH1)->id() < (*itH2)->id() ){
+	      ++itH1;
+	    }
+	    else{
+	      ++itH2;
+	    }
+	    if( nCommon >=maxCommon )  break;
+	  }
+	  if(nCommon >= maxCommon){
+	    m_trackCandidates[k2].setValid(false);
+	  }
+	}
       }
+
+    /*
+    for ( unsigned int kk = firstSpace+1; m_trackCandidates.size() > kk ; ++kk ) {
+      //m_trackCandidates[kk].setValid(false) ;
     }
+    */
+  }
 
   }//x projections
 }
