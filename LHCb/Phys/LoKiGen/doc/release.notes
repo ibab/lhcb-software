@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2016-02-17 - Vanya Belyaev
+ - remove the explicit loading of HepMC reflex library 
+
 !========================= LoKiGen v10r23 2016-01-27 =========================
 ! 2016-01-25 - Vanya Belyaev
  - add Graphviz into CMT&CMAKE 
