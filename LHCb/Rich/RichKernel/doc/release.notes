@@ -4,6 +4,11 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2016-02-17 - Chris Jones
+ - Invalidate merged and removed clusters pointers after merger.
+ - Throw exception if pixel cluster builder is initialised with a null pointer
+   to the cluster object it should form.
+
 ! 2016-02-15 - Chris Jones
  - Disable use of Pool allocated vectors for std::unique_ptr<Cluster>, as it 
    appears using the POOL allocators require a copy constructor for the 

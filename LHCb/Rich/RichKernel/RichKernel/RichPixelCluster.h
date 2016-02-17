@@ -263,7 +263,6 @@ namespace Rich
     {
       auto * clus = new HPDPixelClusters::Cluster(id);
       m_allclus.emplace_back( clus );
-      // m_allclus.push_back( std::unique_ptr<Cluster>(clus) );
       return clus;
     }
 
@@ -364,9 +363,14 @@ namespace Rich
       return m_hpdClus->createNewCluster( ++m_lastID );
     }
 
-    /// Create a new cluster with given ID
-    HPDPixelClusters::Cluster * mergeClusters( HPDPixelClusters::Cluster * clus1, 
-                                               HPDPixelClusters::Cluster * clus2 );
+    /** Create a new cluster with given ID
+     *  @param clus1 First cluster to merge
+     *  @param clus2 Second cluster to merge
+     *  @attention clus1 and clus2 should both be considered invalid after the merger.
+     *  @return A pointer to the merged cluster object.
+     */ 
+    HPDPixelClusters::Cluster * mergeClusters( HPDPixelClusters::Cluster *& clus1, 
+                                               HPDPixelClusters::Cluster *& clus2 );
 
     /** Are we in LHCb or ALICE mode ?
      *  @return Boolean indicating data mode
@@ -422,12 +426,14 @@ namespace Rich
     bool m_aliceMode{false};
 
     /** Raw input data (row,col) (false means no hit, true means hit)
-     *  @attention Hardcoding number of rows here to ALICE mode
+     *  @attention Hardcoding number of rows here to ALICE mode.
+     *             In LHCb mode only the first Rich::DAQ::MaxDataSize are then used.
      */
     bool m_data[Rich::DAQ::MaxDataSizeALICE][Rich::DAQ::NumPixelColumns];
 
-    /** Assigned cluster for each pixel
-     *  @attention Hardcoding number of rows here to ALICE mode
+    /** Assigned cluster for each pixel (row,col)
+     *  @attention Hardcoding number of rows here to ALICE mode. 
+     *             In LHCb mode only the first Rich::DAQ::MaxDataSize are then used.
      */
     HPDPixelClusters::Cluster * m_clusters[Rich::DAQ::MaxDataSizeALICE][Rich::DAQ::NumPixelColumns];
 

@@ -16,7 +16,7 @@
 // boost
 #include "boost/format.hpp"
 
-#include <cstring> // for memset with gcc 4.3
+//#include <cstring> // for memset with gcc 4.3
 
 using namespace Rich;
 
@@ -34,8 +34,12 @@ initialise( HPDPixelClusters * clus,
   // reset the first cluster ID to 0
   m_lastID  = 0;
 
+  // Must pass a valid cluster object to fill
+  if ( UNLIKELY( !clus ) )
+  { throw Rich::Exception( "Must pass a pointer to a HPDPixelClusters" ); }
+
   // use the smartIDs to set the active pixels
-  if ( clus && !smartIDs.empty() )
+  if ( !smartIDs.empty() )
   {
 
     // What mode are we in ?
@@ -53,16 +57,16 @@ initialise( HPDPixelClusters * clus,
              (sizeof(m_data)/Rich::DAQ::NumAlicePixelsPerLHCbPixel) );
 
     // set the hit pixels as "on"
-    for ( const auto& S : smartIDs )
+    for ( const auto S : smartIDs )
     {
       // double check all pixels are in same mode
-      if ( aliceMode() != S.pixelSubRowDataIsValid() )
+      if ( UNLIKELY( aliceMode() != S.pixelSubRowDataIsValid() ) )
       {
         throw Rich::Exception( "Invalid mix of LHCb and ALICE mode RichSmartIDs" );
       }
       setOn( rowNumber(S), colNumber(S) );
     }
-
+    
   }
   else  // empty hit list... just reset.
   {
@@ -72,16 +76,18 @@ initialise( HPDPixelClusters * clus,
 }
 
 HPDPixelClusters::Cluster *
-HPDPixelClustersBuilder::mergeClusters( HPDPixelClusters::Cluster * clus1, 
-                                        HPDPixelClusters::Cluster * clus2 )
+HPDPixelClustersBuilder::mergeClusters( HPDPixelClusters::Cluster *& clus1, 
+                                        HPDPixelClusters::Cluster *& clus2 )
 {
-  // add pixels to clus1
-  for ( const auto& i : clus2->pixels().smartIDs() )
+  // add pixels in clus2 to clus1
+  for ( const auto id : clus2->pixels().smartIDs() )
   {
-    setCluster( i, rowNumber(i), colNumber(i), clus1 );
+    setCluster( id, rowNumber(id), colNumber(id), clus1 );
   }
   // delete clus2 and remove from vector
   removeCluster( clus2 );
+  // invalidate the now deleted cluster
+  clus2 = nullptr;
   // return clus1 as merged cluster
   return clus1;
 }
