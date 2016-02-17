@@ -11,7 +11,7 @@ HeavyIonDiMuon =  {
     'CONFIG'          : {
         "odin": ["NoBeam","Beam1","Beam2","BeamCrossing"],
         'CheckPV'    :  False,
-
+        
         "VCHI2VDOF_max"       : 25,
         "Track_CHI2"       : 3,
         "DOCA_max"            : 0.5,
@@ -19,7 +19,7 @@ HeavyIonDiMuon =  {
         "AM"              : 2900,   # MeV
 
         'Prescale'            :  1.0,
-        'Postscale'           : 1.0,
+        'Postscale'           : 1.0, 
 
         'Hlt1Filter'          : "HLT_PASS_RE('Hlt1DiMuonHighMassDecision')",
         'Hlt2Filter'          : None,
@@ -29,8 +29,8 @@ HeavyIonDiMuon =  {
 HeavyIonNoPIDDstar =  {
     'WGs'        : ['ALL'],
     'BUILDERTYPE': 'HeavyIonDst2D0KPiForPIDConf',
-    'CONFIG'     :{
-
+     'CONFIG'     :{
+    
       'DaugPt'           : 250 * MeV      ## GeV
     , 'DaugP'            : 2.0 * GeV      ## GeV
     , 'DaugIPChi2'       : 16             ## unitless
@@ -66,25 +66,25 @@ HeavyIonNoPIDDstar =  {
     
 HeavyIonMiniBias =  {
     'WGs'             : ['ALL'],
-    'STREAMS'         : ['ALL'],
+    'STREAMS'         : ['MiniBias'],
     'BUILDERTYPE'     : 'HeavyIonMiniBiasConf',
     'CONFIG'          : {
         "odin": ["NoBeam","Beam1","Beam2","BeamCrossing"],
         'CheckPV'    :  False,
-
+        
 
         'MicroBiasPrescale'            :  1.0,
-        'MicroBiasPostscale'           :  1.0,
+        'MicroBiasPostscale'           :  1.0, 
         "MicroBiasHlt1Filter"         : "(HLT_PASS('Hlt1MBMicroBiasVeloDecision'))", #(HLT_PASS('Hlt1MB.*Decision')) #Hlt1MBMicroBiasVelo
         "MicroBiasHlt2Filter"         : "(HLT_PASS('Hlt2PassThroughDecision'))",
 
-        'MicroBiasLowMultPrescale'            :  1.0,
-        'MicroBiasLowMultPostscale'           :  1.0,
+        'MicroBiasLowMultPrescale'            :  0.1,
+        'MicroBiasLowMultPostscale'           :  1.0, 
         "MicroBiasLowMultHlt1Filter"         : "(HLT_PASS('Hlt1MBMicroBiasLowMultVeloDecision'))", #(HLT_PASS('Hlt1MB.*Decision')) #Hlt1MBMicroBiasVelo
         "MicroBiasLowMultHlt2Filter"         : "(HLT_PASS('Hlt2PassThroughDecision'))",
 
-        'NoBiasPrescale'            :  1.0,
-        'NoBiasPostscale'           :  1.0,
+        'NoBiasPrescale'            :  0.2,
+        'NoBiasPostscale'           :  1.0, 
         "NoBiasHlt1Filter"         : "(HLT_PASS('Hlt1MBNoBiasLeadingCrossingDecision'))", #(HLT_PASS('Hlt1MB.*Decision')) #Hlt1MBMicroBiasVelo
         "NoBiasHlt2Filter"         : "(HLT_PASS('Hlt2PassThroughDecision'))",
 
@@ -121,7 +121,7 @@ HeavyIonOpenCharm = {
         'D0_Prescale':  1.0,
         'D0_Postscale': 1.0, 
 
-        'D0_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOGSingleTrackDecision')",   #Hlt1SMOGD0KPiDecision ?
+        'D0_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOG.*Decision')",   #Hlt1SMOGD0KPiDecision ?
         'D0_Hlt2Filter': "HLT_PASS_RE('Hlt2SMOGD02KPiDecision')",
 
 
@@ -134,13 +134,13 @@ HeavyIonOpenCharm = {
         'Dst_Prescale'     : 1.0, 
         'Dst_Postscale'    : 1.0,
 
-        'Dst_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOGSingleTrackDecision')",   #Hlt1SMOGD0KPiDecision ?
+        'Dst_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOG.*Decision')",   #Hlt1SMOGD0KPiDecision ?
         'Dst_Hlt2Filter': "HLT_PASS_RE('Hlt2SMOGD02KPiDecision')",
 
 
-        ######################################
-        # D0 -> K pi No PV line, to estimate PV efficiency for open charm analysis 
-        ######################################
+	######################################
+	# D0 -> K pi No PV line, to estimate PV efficiency for open charm analysis 
+	######################################
         'NoPVD0_Daug_All_PT_MIN'         : 800.0*MeV,         # Minimum transverse momentum all D0 daughters must satisfy
         'NoPVD0_Daug_P_MIN'              : 5.0*GeV,           # Minimum D0 daughter momentum
         'NoPVD0_Daug_P_MAX'              : 200.*GeV,          # Maximum D0 daughter momentum,       'do it offline"
@@ -152,19 +152,19 @@ HeavyIonOpenCharm = {
         'NoPVD0_Comb_ADOCAMAX_MAX'       : 0.5,               # DOCA
 
         'NoPVD0_ADAMASS_WIN'             : 100.0*MeV,         # D0 mass window around the nominal D0 mass before the vertex fit, '90 MeV at HLT2 of pAr'
-            'NoPVD0_PT'                      : 1000.0*MeV,
-            'NoPVD0_VTX_Xmin'                      : -5.0*mm,
-            'NoPVD0_VTX_Xmax'                      : +5.0*mm,
-            'NoPVD0_VTX_Ymin'                      : -5.0*mm,
-            'NoPVD0_VTX_Ymax'                      : +5.0*mm,
-            'NoPVD0_VTX_Zmin'                      : -1000.*mm,
-            'NoPVD0_VTX_Zmax'                      : +1000.*mm,
-            'NoPVD0_odin'                      : ["NoBeam","Beam1","Beam2"],
+	    'NoPVD0_PT'                      : 1000.0*MeV,
+	    'NoPVD0_VTX_Xmin'                      : -5.0*mm,
+	    'NoPVD0_VTX_Xmax'                      : +5.0*mm,
+	    'NoPVD0_VTX_Ymin'                      : -5.0*mm,
+	    'NoPVD0_VTX_Ymax'                      : +5.0*mm,
+	    'NoPVD0_VTX_Zmin'                      : -1000.*mm,
+	    'NoPVD0_VTX_Zmax'                      : +1000.*mm,
+	    'NoPVD0_odin'                      : ["NoBeam","Beam1","Beam2","BeamCrossing"],
 
-        'NoPVD0_Prescale':  1.0,
+        'NoPVD0_Prescale':  0.2,
         'NoPVD0_Postscale': 1.0, 
 
-        'NoPVD0_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOGSingleTrackDecision')",
+        'NoPVD0_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOG.*Decision')",
         'NoPVD0_Hlt2Filter': "HLT_PASS_RE('Hlt2SMOGD02KPiDecision')",
 
         ########################################
@@ -195,7 +195,7 @@ HeavyIonOpenCharm = {
         'Dp_Prescale': 1.0,
         'Dp_Postscale': 1.0, 
 
-        'Dp_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOGSingleTrackDecision')",   #Hlt1SMOGDpmKKPiDecision ?
+        'Dp_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOG.*Decision')",   #Hlt1SMOGDpmKKPiDecision ?
         'Dp_Hlt2Filter': "HLT_PASS_RE('Hlt2SMOGDpm2KPiPiDecision')",
        
 
@@ -206,7 +206,7 @@ HeavyIonOpenCharm = {
         'Ds_Postscale': 1.0, 
 
         # HLT filters, only process events firing triggers matching the RegEx
-        'Ds_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOGSingleTrackDecision')",   #Hlt1SMOGDpmKPiDecision ?
+        'Ds_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOG.*Decision')",   #Hlt1SMOGDpmKPiDecision ?
         'Ds_Hlt2Filter': "HLT_PASS_RE('Hlt2SMOGDs2KKPiDecision')",
 
 
@@ -217,7 +217,7 @@ HeavyIonOpenCharm = {
         'Lc_Postscale': 1.0, 
 
         # HLT filters, only process events firing triggers matching the RegEx
-        'Lc_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOGSingleTrackDecision')",   #Hlt1SMOGDpmKPiDecision ?
+        'Lc_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOG.*Decision')",   #Hlt1SMOGDpmKPiDecision ?
         'Lc_Hlt2Filter': "HLT_PASS_RE('Hlt2SMOGLc2KPPiDecision')",
     }
 }
@@ -459,44 +459,44 @@ HeavyIonTrackEffDownMuon = {
     'WGs'         : ['ALL'],
     'BUILDERTYPE' : 'HeavyIonTrackEffDownMuonConf',
     'CONFIG'      : { 
-                                'MuMom':                2000.   # MeV
-                        ,       'MuTMom':               200.    # MeV
-                        ,       'ZMuMom':               0.      # MeV
-                        ,       'ZMuTMom':              20000.  # MeV
-                        ,       'UpsilonMuMom':         0.      # MeV
-                        ,       'UpsilonMuTMom':        500.    # MeV
-                        ,       'ZMuMinEta':            2.      # adimensional
-                        ,       'ZMuMaxEta':            4.5     # adimensional
-                        ,       'TrChi2':               10.     # MeV
-                        ,       'MassPreComb':          2000.   # MeV
-                        ,       'MassPostComb':         200.    # MeV
-                        ,       'ZMassPreComb':         100000. # MeV
-                        ,       'ZMassPostComb':        1500.   # MeV
-                        ,       'UpsilonMassPreComb':   100000. # MeV
-                        ,       'UpsilonMassPostComb':  00.     # MeV
-                        ,       'Doca':                 5.      # mm
-                        ,       'VertChi2':             25.     # adimensional
-                        ,       'SeedingMinP':          1500.   # MeV
-                        ,       'DataType':             '2011'  # for ConfiguredMuonIDs configuration
-                        ,       'NominalLinePrescale':  1. # proposal: 0.2 to stay below 0.15% retention rate 
-                        ,       'NominalLinePostscale': 1.
-                        ,       'ValidationLinePrescale':0.0015 #0.5 in stripping15: 0.1 gives 1.42% retention rate , ValidationLine further prescaled
-                        ,       'ValidationLinePostscale': 1.
-                        ,       'ZLinePrescale':  1. # proposal: 0.2 to stay below 0.15% retention rate 
-                        ,       'ZLinePostscale':  1.  
-                        ,       'UpsilonLinePrescale':  1. # proposal: 0.2 to stay below 0.15% retention rate 
-                        ,       'UpsilonLinePostscale':  1. 
+				'MuMom':		2000.	# MeV
+			,	'MuTMom':		200.	# MeV
+			,	'ZMuMom':		0.	# MeV
+			,	'ZMuTMom':		20000.	# MeV
+			,	'UpsilonMuMom':		0.	# MeV
+			,	'UpsilonMuTMom':	500.	# MeV
+			,	'ZMuMinEta':		2.	# adimensional
+			,	'ZMuMaxEta':		4.5	# adimensional
+			,	'TrChi2':		10.	# MeV
+			,	'MassPreComb':		2000.	# MeV
+			,	'MassPostComb':		200.	# MeV
+			,	'ZMassPreComb':		100000.	# MeV
+			,	'ZMassPostComb':	1500.	# MeV
+			,	'UpsilonMassPreComb':	100000.	# MeV
+			,	'UpsilonMassPostComb':	00.	# MeV
+			,	'Doca':			5.	# mm
+			,	'VertChi2':		25.	# adimensional
+			,	'SeedingMinP':		1500.	# MeV
+                	,       'DataType':             '2011'  # for ConfiguredMuonIDs configuration
+			,	'NominalLinePrescale':  1. # proposal: 0.2 to stay below 0.15% retention rate 
+			,	'NominalLinePostscale': 1.
+			,	'ValidationLinePrescale':0.0015 #0.5 in stripping15: 0.1 gives 1.42% retention rate , ValidationLine further prescaled
+			,	'ValidationLinePostscale': 1.
+			,	'ZLinePrescale':  1. # proposal: 0.2 to stay below 0.15% retention rate 
+			,	'ZLinePostscale':  1.  
+			,	'UpsilonLinePrescale':  1. # proposal: 0.2 to stay below 0.15% retention rate 
+			,	'UpsilonLinePostscale':  1. 
             ,   'JpsiHlt1Filter' : 'Hlt1.*Decision'
             ,   'JpsiHlt2Filter' : 'Hlt2.*Decision'
             #'JpsiHlt1Triggers'            :  { "Hlt1GlobalDecision%TOS" : 0, "Hlt1GlobalDecision%TIS" : 0},
-                        ,       'HLT1TisTosSpecs': { "Hlt1GlobalDecision%TOS" : 0, "Hlt1GlobalDecision%TIS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
-                        ,       'ZHLT1TisTosSpecs'      : { "Hlt1GlobalDecision%TOS" : 0, "Hlt1GlobalDecision%TIS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
-                        ,       'UpsilonHLT1TisTosSpecs': { "Hlt1GlobalDecision%TOS" : 0, "Hlt1GlobalDecision%TIS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
-                        ,       'HLT1PassOnAll': True
-                        ,       'HLT2TisTosSpecs': { "Hlt2TrackEffDiMuonDownstream.*Decision%TOS" : 0, "Hlt2.*Decision%TOS" : 0} #reg. expression allowed
-                        ,       'ZHLT2TisTosSpecs': { "Hlt2TrackEffDiMuonDownstream.*Decision%TOS" : 0, "Hlt2.*Decision%TOS" : 0} #reg. expression allowed
-                        ,       'UpsilonHLT2TisTosSpecs': { "Hlt2TrackEffDiMuonDownstream.*Decision%TOS": 0, "Hlt2.*Decision%TOS" : 0} #reg. expression allowed
-                        ,       'HLT2PassOnAll': False
+			,	'HLT1TisTosSpecs': { "Hlt1GlobalDecision%TOS" : 0, "Hlt1GlobalDecision%TIS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
+			,	'ZHLT1TisTosSpecs'      : { "Hlt1GlobalDecision%TOS" : 0, "Hlt1GlobalDecision%TIS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
+			,	'UpsilonHLT1TisTosSpecs': { "Hlt1GlobalDecision%TOS" : 0, "Hlt1GlobalDecision%TIS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
+			,	'HLT1PassOnAll': True
+			,	'HLT2TisTosSpecs': { "Hlt2TrackEffDiMuonDownstream.*Decision%TOS" : 0, "Hlt2.*Decision%TOS" : 0} #reg. expression allowed
+			,	'ZHLT2TisTosSpecs': { "Hlt2TrackEffDiMuonDownstream.*Decision%TOS" : 0, "Hlt2.*Decision%TOS" : 0} #reg. expression allowed
+			,	'UpsilonHLT2TisTosSpecs': { "Hlt2TrackEffDiMuonDownstream.*Decision%TOS": 0, "Hlt2.*Decision%TOS" : 0} #reg. expression allowed
+			,	'HLT2PassOnAll': False
                     },
     'STREAMS'     :  ["ALL"]
     }
@@ -506,48 +506,48 @@ HeavyIonTrackEffMuonTT = {
     'WGs'         : ['ALL'],
     'BUILDERTYPE' : 'HeavyIonTrackEffMuonTTConf',
     'CONFIG'      : { 
-                        'JpsiMassWin'                 : 500,
-                        'UpsilonMassWin'              : 1500,
-                        'ZMassWin'                    : 40000,
-                        'BMassWin'                    : 500,
-                        'JpsiMuonTTPT'                : 0,
-                        'UpsilonMuonTTPT'             : 500,
-                        'ZMuonTTPT'                   : 500,
-                        'JpsiLongPT'                  : 1300,
-                        'UpsilonLongPT'               : 1000,
-                        'ZLongPT'                     : 10000,
-                        'JpsiPT'                      : 1000,
-                        'UpsilonPT'                   : 0,
-                        'ZPT'                         : 0,
-                        'JpsiLongMuonMinIP'           : 0.0, # removed, yanxi
-                        'UpsilonLongMuonMinIP'        : 0,
-                        'ZLongMuonMinIP'              : 0,
-                        'JpsiMINIP'                   : 10000,   # make it dummy, yanxi
-                        'UpsilonMINIP'                : 10000, #this is a dummy
-                        'ZMINIP'                      : 10000, #this is a dummy
-                        'BJpsiKMINIP'                 : 10000, #this is a dummy
-                        'JpsiLongMuonTrackCHI2'       : 5,
-                        'UpsilonLongMuonTrackCHI2'    : 5,
-                        'ZLongMuonTrackCHI2'          : 5,
-                        'VertexChi2'                  : 5,
-                        'LongMuonPID'                 : 2,
+			'JpsiMassWin'                 : 500,
+			'UpsilonMassWin'              : 1500,
+			'ZMassWin'                    : 40000,
+			'BMassWin'                    : 500,
+			'JpsiMuonTTPT'                : 0,
+			'UpsilonMuonTTPT'             : 500,
+			'ZMuonTTPT'                   : 500,
+			'JpsiLongPT'                  : 1300,
+			'UpsilonLongPT'               : 1000,
+			'ZLongPT'                     : 10000,
+			'JpsiPT'                      : 1000,
+			'UpsilonPT'                   : 0,
+			'ZPT'                         : 0,
+			'JpsiLongMuonMinIP'           : 0.0, # removed, yanxi
+			'UpsilonLongMuonMinIP'        : 0,
+			'ZLongMuonMinIP'              : 0,
+			'JpsiMINIP'                   : 10000,   # make it dummy, yanxi
+			'UpsilonMINIP'                : 10000, #this is a dummy
+			'ZMINIP'                      : 10000, #this is a dummy
+			'BJpsiKMINIP'                 : 10000, #this is a dummy
+			'JpsiLongMuonTrackCHI2'       : 5,
+			'UpsilonLongMuonTrackCHI2'    : 5,
+			'ZLongMuonTrackCHI2'          : 5,
+			'VertexChi2'                  : 5,
+			'LongMuonPID'                 : 2,
             'JpsiHlt1Filter'              : 'Hlt1.*Decision',
             'JpsiHlt2Filter'              : 'Hlt2.*Decision',
             'JpsiHlt1Triggers'            :  { "Hlt1GlobalDecision%TOS" : 0, "Hlt1GlobalDecision%TIS" : 0},
             'Hlt1PassOnAll'               : True,
-                        'UpsilonHlt1Triggers'         :  { "Hlt1GlobalDecision%TOS" : 0, "Hlt1GlobalDecision%TIS" : 0},
-                        'ZHlt1Triggers'               :  { "Hlt1GlobalDecision%TOS" : 0, "Hlt1GlobalDecision%TIS" : 0},
+			'UpsilonHlt1Triggers'         :  { "Hlt1GlobalDecision%TOS" : 0, "Hlt1GlobalDecision%TIS" : 0},
+			'ZHlt1Triggers'               :  { "Hlt1GlobalDecision%TOS" : 0, "Hlt1GlobalDecision%TIS" : 0},
             'JpsiHlt2Triggers'            :  { "Hlt2TrackEffDiMuonMuonTT.*Decision%TOS" : 0, "Hlt2.*Decision%TOS" : 0},  # for test
-                        #'JpsiHlt2Triggers'            :  { "Hlt2TrackEffDiMuonMuonTT.*Decision%TOS" : 0},
-                        'UpsilonHlt2Triggers'         :  { "Hlt2TrackEffDiMuonMuonTT.*Decision%TOS" : 0, "Hlt2.*Decision%TOS" : 0},
-                        'ZHlt2Triggers'               :  { "Hlt2TrackEffDiMuonMuonTT.*Decision%TOS" : 0, "Hlt2.*Decision%TOS" : 0},
-                        'BJpsiKHlt2TriggersTUS'       :  { "Hlt2TrackEffDiMuonMuonTT.*Decision%TUS" : 0, "Hlt2.*Decision%TUS" : 0},
-                        'BJpsiKHlt2TriggersTOS'       :  { "Hlt2TrackEffDiMuonMuonTT.*Decision%TOS" : 0, "Hlt2.*Decision%TOS" : 0, "Hlt2.*Decision%TIS" : 0},
-                        'JpsiPrescale'                : 1,
-                        'UpsilonPrescale'             : 1,
-                        'ZPrescale'                   : 1,
-                        'BJpsiKPrescale'              : 1,
-                        'Postscale'                   : 1
+			#'JpsiHlt2Triggers'            :  { "Hlt2TrackEffDiMuonMuonTT.*Decision%TOS" : 0},
+			'UpsilonHlt2Triggers'         :  { "Hlt2TrackEffDiMuonMuonTT.*Decision%TOS" : 0, "Hlt2.*Decision%TOS" : 0},
+			'ZHlt2Triggers'               :  { "Hlt2TrackEffDiMuonMuonTT.*Decision%TOS" : 0, "Hlt2.*Decision%TOS" : 0},
+			'BJpsiKHlt2TriggersTUS'       :  { "Hlt2TrackEffDiMuonMuonTT.*Decision%TUS" : 0, "Hlt2.*Decision%TUS" : 0},
+			'BJpsiKHlt2TriggersTOS'       :  { "Hlt2TrackEffDiMuonMuonTT.*Decision%TOS" : 0, "Hlt2.*Decision%TOS" : 0, "Hlt2.*Decision%TIS" : 0},
+			'JpsiPrescale'                : 1,
+			'UpsilonPrescale'             : 1,
+			'ZPrescale'                   : 1,
+			'BJpsiKPrescale'              : 1,
+			'Postscale'                   : 1
                     },
     'STREAMS'     :   ["ALL"]
     }
@@ -556,47 +556,47 @@ HeavyIonTrackEffVeloMuon = {
     'WGs'         : ['ALL'],
     'BUILDERTYPE' : 'HeavyIonTrackEffVeloMuonConf',
     'CONFIG'      : {
-                        "TrChi2VeMu":           5.      # adimensional
-                ,       "TrChi2LongMu":         3.      # adimensional
-                ,       "JpsiPt":               0.5     # GeV
-                ,       "ZPt":                  0.5     # GeV
-                ,       "UpsilonPt":            0.5     # GeV
-                ,       "TrPt":                 100.    # MeV
-                ,       "TrP":                  5.      # GeV
-                ,       "ZTrPt":                20000.  # MeV
-                ,       "ZTrP":                 0.      # MeV
-                ,       "UpsilonTrPt":          500.    # MeV
-                ,       "UpsilonTrP":           0.      # MeV
-                ,       "LongP":                7.      # GeV
-                ,       "ZTrMinEta":            2.0     # adimensional
-                ,       "ZTrMaxEta":            4.5     # adimensional
-                ,       "MuDLL":                1.      # adimensional
-                ,       "VertChi2":             2.      # adimensional
-                ,       "ZVertChi2":            10000.  # adimensional, dummy
-                ,       "UpsilonVertChi2":      10000.  # adimensional, dummy
-                ,       "MassPreComb":          1000.   # MeV
-                ,       "ZMassPreComb":         100000. # MeV
-                ,       "UpsilonMassPreComb":   100000. # MeV
-                ,       "MassPostComb":         400.    # MeV
-                ,       "ZMassPostComb":        40000.  # MeV
-                ,       "UpsilonMassPostComb":  1500.   # MeV
-                ,       "Prescale":             1.      # adimensional
-                ,       "ZPrescale":            1.      # adimensional
-                ,       "UpsilonPrescale":      1.      # adimensional
-                ,       "Postscale":            1.      # adimensional
-                ,       "ZPostscale":           1.      # adimensional
-                ,       "UpsilonPostscale":     1.      # adimensional
-                ,       "JpsiHlt1Filter" : 'Hlt1.*Decision'
-        ,               'JpsiHlt2Filter' : 'Hlt2.*Decision'
-                ,       'HLT1TisTosSpecs'       : { "Hlt1GlobalDecision%TOS" : 0, "Hlt1GlobalDecision%TIS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
-                ,       'ZHLT1TisTosSpecs'      : { "Hlt1GlobalDecision%TOS" : 0, "Hlt1GlobalDecision%TIS" : 0 } #no reg. expression allowed(see selHlt1Jpsi )
-                ,       'UpsilonHLT1TisTosSpecs': { "Hlt1GlobalDecision%TOS" : 0, "Hlt1GlobalDecision%TIS" : 0 } #no reg. expression allowed(see selHlt1Jpsi )
-                ,       'HLT1PassOnAll'         : True
-            #           'UpsilonHlt2Triggers'         :  { "Hlt2TrackEffDiMuonMuonTT.*Decision%TOS" : 0, "Hlt2.*Decision%TOS" : 0, "Hlt2.*Decision%TIS" : 0},
-                ,       'HLT2TisTosSpecs'       : { "Hlt2TrackEffDiMuonVeloMuon.*Decision%TOS" : 0, "Hlt2.*Decision%TOS" : 0} #reg. expression allowed
-                ,       'ZHLT2TisTosSpecs'      : { "Hlt2TrackEffDiMuonVeloMuon.*Decision%TOS" : 0, "Hlt2.*Decision%TOS" : 0} #reg. expression allowed
-                ,       'UpsilonHLT2TisTosSpecs': { "Hlt2TrackEffDiMuonVeloMuon.*Decision%TOS" : 0, "Hlt2.*Decision%TOS" : 0} #reg. expression allowed
-                ,       'HLT2PassOnAll'         : False
+			"TrChi2VeMu":		5.	# adimensional
+		,	"TrChi2LongMu":		3.	# adimensional
+		,	"JpsiPt":		0.5	# GeV
+		,	"ZPt":			0.5	# GeV
+		,	"UpsilonPt":		0.5	# GeV
+		,	"TrPt":			100.	# MeV
+		,	"TrP":			5.	# GeV
+		,	"ZTrPt":		20000.	# MeV
+		,	"ZTrP":			0.	# MeV
+		,	"UpsilonTrPt":		500.	# MeV
+		,	"UpsilonTrP":		0.	# MeV
+		,	"LongP":		7.	# GeV
+		,	"ZTrMinEta":		2.0	# adimensional
+		,	"ZTrMaxEta":		4.5	# adimensional
+		,	"MuDLL":		1.	# adimensional
+		,	"VertChi2":		2.	# adimensional
+		,	"ZVertChi2":		10000.	# adimensional, dummy
+		,	"UpsilonVertChi2":	10000.	# adimensional, dummy
+		,	"MassPreComb":		1000.	# MeV
+		,	"ZMassPreComb":		100000. # MeV
+		,	"UpsilonMassPreComb":	100000. # MeV
+		,	"MassPostComb":		400.	# MeV
+		,	"ZMassPostComb":	40000.	# MeV
+		,	"UpsilonMassPostComb":	1500.	# MeV
+		,	"Prescale":		1.	# adimensional
+		,	"ZPrescale":		1.	# adimensional
+		,	"UpsilonPrescale":	1.	# adimensional
+		,	"Postscale":		1.	# adimensional
+		,	"ZPostscale":		1.	# adimensional
+		,	"UpsilonPostscale":	1.	# adimensional
+        ,   'JpsiHlt1Filter' : 'Hlt1.*Decision'
+        ,   'JpsiHlt2Filter' : 'Hlt2.*Decision'
+		,	'HLT1TisTosSpecs'	: { "Hlt1GlobalDecision%TOS" : 0, "Hlt1GlobalDecision%TIS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
+		,	'ZHLT1TisTosSpecs'	: { "Hlt1GlobalDecision%TOS" : 0, "Hlt1GlobalDecision%TIS" : 0 } #no reg. expression allowed(see selHlt1Jpsi )
+		,	'UpsilonHLT1TisTosSpecs': { "Hlt1GlobalDecision%TOS" : 0, "Hlt1GlobalDecision%TIS" : 0 } #no reg. expression allowed(see selHlt1Jpsi )
+		,	'HLT1PassOnAll'		: True
+	    #		'UpsilonHlt2Triggers'         :  { "Hlt2TrackEffDiMuonMuonTT.*Decision%TOS" : 0, "Hlt2.*Decision%TOS" : 0, "Hlt2.*Decision%TIS" : 0},
+		,	'HLT2TisTosSpecs'	: { "Hlt2TrackEffDiMuonVeloMuon.*Decision%TOS" : 0, "Hlt2.*Decision%TOS" : 0} #reg. expression allowed
+		,	'ZHLT2TisTosSpecs'	: { "Hlt2TrackEffDiMuonVeloMuon.*Decision%TOS" : 0, "Hlt2.*Decision%TOS" : 0} #reg. expression allowed
+		,	'UpsilonHLT2TisTosSpecs': { "Hlt2TrackEffDiMuonVeloMuon.*Decision%TOS" : 0, "Hlt2.*Decision%TOS" : 0} #reg. expression allowed
+		,	'HLT2PassOnAll'		: False
          },
     'STREAMS'     :  ["ALL"]
     }
