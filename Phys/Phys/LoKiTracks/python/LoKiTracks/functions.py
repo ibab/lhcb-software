@@ -49,10 +49,6 @@ LHCb     = cpp.LHCb
 
 _T = 'const LHCb::Track*'
 
-## FIXME: needed since there is no autoloading of Tracking dictionaries:
-import cppyy
-cppyy.loadDict('TrackEventDict')
-
 # =============================================================================
 ## "Ordinary" functions for Tracks: "Tr"
 # =============================================================================

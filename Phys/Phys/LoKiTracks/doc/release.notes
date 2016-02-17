@@ -5,6 +5,9 @@
 ! Purpose     : track-related functors for LoKi-framework
 ! -----------------------------------------------------------------------------
 
+! 2016-02-17 - Vanya Belyaev
+ - remove explicit loading of TrackEvent library 
+
 ! 2016-02-10 - Roel Aaij
  - Do not insert "dir()" function in case of debug; this causes cache misses
    when using the generated C++ of functors.
