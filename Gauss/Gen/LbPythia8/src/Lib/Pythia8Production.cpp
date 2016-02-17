@@ -283,7 +283,6 @@ StatusCode Pythia8Production::toHepMC(HepMC::GenEvent* theEvent,
                && status != LHCb::HepMCEvent::DocumentationParticle)
       warning() << "Unknown status rule " << status << " for particle" 
                 << pid << endmsg;
-    if (abs(pid) == 10221) (*p)->set_pdg_id(pid > 0 ? 30221 : -30221);
   }
   
   // Convert to LHCb units.
