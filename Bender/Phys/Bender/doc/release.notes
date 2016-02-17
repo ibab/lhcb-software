@@ -24,13 +24,28 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2016-02-17 - Vanya Belyaev
+
+ - add iMagneticFieldSvc and iLHCbMagnetSvc - python wrappers 
+    for magentic field services
+ - add accessors for these services for AppMgr 
+     (thanks to Carlos Vazquez Serra for idea)
+
+    >>> gaudi  = appMgr()
+    >>> magnet = gaudi.magSvc() 
+    >>> help(magnet)
+    >>> xyz    = Gaudi.Point3D( 0 , 0 , 5.2 * meter )
+    >>> print magnet.field ( xyz ) 
+    >>> print magnet.isDown() 
+    >>> print magnet.isUp  () 
+
 ! ==================== Phys/Bender v28r0 2016-02-12 ===========================
 
 ! 2016-02-12 - Vanya Belyaev
  - add a useful function irun     (run over event using 'generator')
    It can be rather useful for scripts:
 
-   Run over events till certain number of good events is found
+   Run over events till the certain number of good events is found
 
    def accept_function () :  ... 
 

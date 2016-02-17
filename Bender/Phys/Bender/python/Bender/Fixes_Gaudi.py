@@ -188,10 +188,9 @@ if not hasattr ( _AppMgr , '_new_topAlg_' ) :
 
     ## get the list of top-level algorithms 
     def __top_Algs_ ( self ) :
-        """
-        
-        Get the list of top-level algorithms as ``algorithms''
-        
+        """Get the list of top-level algorithms as ``algorithms''
+        >>> gaudi = appMgr()
+        >>> print gaudi.topAlgs() 
         """
         _algs = self.TopAlg
 
@@ -229,10 +228,9 @@ if not hasattr ( _AppMgr , '_new_allAlg_' ) :
 
     ## get the list of all algorithms 
     def __all_Algs_ ( self ) :
-        """
-        
-        Get the list of all algorithms as ``algorithms''
-        
+        """Get the list of *ALL* algorithms as ``algorithms''        
+        >>> gaudi = appMgr()
+        >>> print gaudi.allAlgs() 
         """
         _algs = self.algorithms()
 
@@ -250,8 +248,10 @@ if not hasattr ( _AppMgr , '_disable_Tops_' ) :
 
     ## get the list of all algorithms 
     def __disable_Top_ ( self ) :
-        """
-        Disable all top-level algorithms
+        """ Disable all top-level algorithms,
+        and return the list of disabled algorithsm
+        >>> gaudi    = appMgr()
+        >>> disabled = gaudi.disableTopAlgs()        
         """
         _tops     = self.topAlgs()
         _disabled = []
@@ -271,8 +271,10 @@ if not hasattr ( _AppMgr , '_disable_All_' ) :
         
     ## get the list of all algorithms 
     def __disable_All_ ( self ) :
-        """        
-        Disable all algorithms
+        """ Disable ALL algorithms
+        and return the list of disabled algorithsm
+        >>> gaudi    = appMgr()
+        >>> disabled = gaudi.disableAllAlgs()        
         """
         _tops      = self.allAlgs()
         _disabled = []
@@ -358,12 +360,10 @@ if not hasattr ( _AppMgr , 'cntxSvc' ) :
 
         ## get the current algorithm
         def current ( self ) :
-            """
-            Get the current algorithm
+            """Get the current algorithm
             
             >>> icntx = ...
-            >>> alg = icntx.current()
-            
+            >>> alg = icntx.current()            
             """
             if not self._ictxs :
                 raise RuntimeError , " Invalid pointer to IIncidentSvc "
@@ -375,12 +375,10 @@ if not hasattr ( _AppMgr , 'cntxSvc' ) :
         
         ## get he stack of algorithms 
         def stack   ( self ) :
-            """
-            Get the stack of algorithms
+            """Get the stack of algorithms
 
             >>> icntx = ...
-            >>> algs  = icntx.stack()
-            
+            >>> algs  = icntx.stack()            
             """
             if not self._ictxs :
                 raise RuntimeError , " Invalid pointer to IIncidentSvc "
@@ -395,12 +393,10 @@ if not hasattr ( _AppMgr , 'cntxSvc' ) :
     # =========================================================================
     ## get incident service form Gaudi 
     def _cntxSvc_ ( self , name = "AlgContextSvc" ) :
-        """
-        Get context service from Gaudi:
+        """Get context service from Gaudi:
         
         >>> gaudi = ...
-        >>> iSvc  = gaudi.cntxSvc()
-        
+        >>> iSvc  = gaudi.cntxSvc()        
         """
         if self.state() == cpp.Gaudi.StateMachine.CONFIGURED :  self.initialize()
         svc  = iHelper.service( self._svcloc, name )
@@ -433,12 +429,10 @@ if not hasattr ( _AppMgr , 'evtColSvc' ) :
 # =============================================================================
 ## get the links from data object  
 def _links_ ( self ) :
-    """
-    Get the links from DataObject :
+    """Get the links from DataObject :
 
     >>> obj = ...
-    >>> links = obj.links()
-    
+    >>> links = obj.links()    
     """
     lnks = set() 
     lm = self.linkMgr()
@@ -451,12 +445,160 @@ def _links_ ( self ) :
 cpp.DataObject.links = _links_
 # =============================================================================
 
-## decorate Incident Service 
+## decorate Particle Property Service 
 if not hasattr ( _AppMgr , 'ppSvc' ) :
     import PartProp.Service 
     logger.debug ( 'decorate AppMgr.ppSvc() ') 
 
+
+if not hasattr ( _AppMgr , 'magSvc' ) :
     
+    iService  = GaudiPython.Bindings.iService
+    iProperty = GaudiPython.Bindings.iProperty
+    iHelper   = GaudiPython.Bindings.Helper
+    iCast     = GaudiPython.Bindings.InterfaceCast
+    # =========================================================================
+    ## @class iMagneticFieldSvc
+    #  python wrapper for IMagneticFieldSvc
+    #  @see IMagneticFieldSvc
+    #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+    #  @date   2016-02-17
+    class iMagneticFieldSvc(iService) :
+        """
+        Python wrapper for IMagneticFieldSvc
+        """
+        def __init__( self , name , isvc ) :
+            iService.__init__(self, name, isvc )
+            self.__dict__['_imagsvc'] = iCast ( cpp.IMagneticFieldSvc ) ( isvc )
+            print 'here3:', self._imagsvc 
+
+        def interface        ( self ) : return self._imagsvc        
+        def interface_metods ( self ) :
+            """ List of major interface methods
+            """
+            my_methods  = [ i for i in dir (     iService   ) ]
+            my_methods += [ i for i in dir (     iProperty  ) ]
+            my_methods += [ i for i in dir ( cpp.IService   ) ]
+            my_methods += [ i for i in dir ( cpp.IProperty  ) ]
+            my_methods += [ i for i in dir ( cpp.IStateful  ) ]
+            my_methods += [ i for i in dir ( cpp.IInterface ) ]
+            my_methods = set( my_methods ) 
+            if_methods = set()
+            for m in dir( cpp.IMagneticFieldSvc ) :
+                if m in my_methods : continue 
+                if_methods.add ( m )
+            return tuple ( if_methods )
+        
+        ## allow to get 'interface' methods
+        def  __getattr__  ( self , attribute ) :
+
+            if cpp.Gaudi.Utils.hasProperty ( self._isvc , attribute ) :
+                return GaudiPython.Bindings.iProperty.__getattr__ ( self , attribute )
+
+            ## use the interface method
+            _if = self.interface() 
+            if _if : return getattr ( _if ,  attribute )
+            
+            raise AttributeError ('Attribute/property %s does not exist for %s' % ( attribute , self._name ) ) 
+
+    # ===================================================================================
+    ## @class iLHCbMagnetSvc
+    #  python wrapper for IMagneticFieldSvc
+    #  @see ILHCbMagnetSvc
+    #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+    #  @date   2016-02-17
+    class iLHCbMagnetSvc(iMagneticFieldSvc) :
+        """
+        Python wrapper for ILHCbMagnetSvc
+        """
+        def __init__( self , name , isvc ) :
+            iService.__init__(self, name, isvc )
+            self.__dict__['_ilhcbmagnet'] = iCast ( cpp.ILHCbMagnetSvc ) ( isvc )
+
+        def interface        ( self ) : return self._ilhcbmagnet
+        def interface_metods ( self ) :
+            """ List of major interface methods
+            """
+            my_methods  = [ i for i in dir (     iService   ) ]
+            my_methods += [ i for i in dir (     iProperty  ) ]
+            my_methods += [ i for i in dir ( cpp.IService   ) ]
+            my_methods += [ i for i in dir ( cpp.IProperty  ) ]
+            my_methods += [ i for i in dir ( cpp.IStateful  ) ]
+            my_methods += [ i for i in dir ( cpp.IInterface ) ]
+            my_methods = set( my_methods ) 
+            if_methods = set()
+            for m in dir( cpp.ILHCbMagnetSvc ) :
+                if m in my_methods : continue 
+                if_methods.add ( m )
+            return tuple ( if_methods )
+        
+        ## get the value of magnetic field at given point
+        #  @param xyz Point at which magnetic field vector will be given
+        #  @return fvec Maagnectic field vector.
+        #  @code
+        #  xyz = Gaudi.Point3D( 0 , 0 , 5.2 * meter )
+        #  print svc.field() 
+        #  @endcode 
+        def field  ( self , xyz ) :
+            """ Get the value of magnetic field at given point
+            >>> xyz = Gaudi.Point3D( 0 , 0 , 5.2 * meter )
+            >>> print svc.field() 
+            """
+            return self._ilhcbmagnet.fieldVector ( xyz )
+
+        ## direction of magneric field 
+        def isDown ( self ) :
+            """ Direction of magnetic field
+            >>> print svc.isDown() 
+            """
+            return self._ilhcbmagnet.isDown()
+        ## direction of magneric field 
+        def isUp   ( self ) :
+            """ Direction of magnetic field
+            >>> print svc.isUp () 
+            """
+            return not self.isDown()
+        
+    # =========================================================================
+    ## get incident service form Gaudi 
+    def _app_magFieldSvc_ ( self , name = "MagneticFieldSvc" ) :
+        """Get magnetic field service from Gaudi:
+        
+        >>> gaudi = ...
+        >>> iSvc  = gaudi.magFieldSvc()        
+        """
+        if self.state() < cpp.Gaudi.StateMachine.INITIALIZED :  self.initialize()
+        if self.state() < cpp.Gaudi.StateMachine.RUNNING     :  self.start     ()
+        print ' I am here 1 '
+        svc    = iHelper.service( self._svcloc, name )
+        if not svc and not name in self.ExtSvc : self.ExtSvc += [ name ]
+        svc    = iHelper.service( self._svcloc, name )            
+        print ' I am here 2 ', svc 
+        return iMagneticFieldSvc ( name , svc )
+
+    # =========================================================================
+    ## get incident service form Gaudi 
+    def _app_magSvc_ ( self , name = "MagneticFieldSvc" ) :
+        """Get (LHCb) magnetic field service from Gaudi:
+        
+        >>> gaudi = ...
+        >>> iSvc  = gaudi.magSvc()        
+        """
+        #
+        if self.state() < cpp.Gaudi.StateMachine.INITIALIZED :  self.initialize()
+        if self.state() < cpp.Gaudi.StateMachine.RUNNING     :  self.start     ()
+        #
+        svc    = iHelper.service( self._svcloc, name )
+        if not svc and not name in self.ExtSvc : self.ExtSvc += [ name ]
+        svc    = iHelper.service( self._svcloc, name )
+        return iLHCbMagnetSvc ( name , svc )
+    
+    _AppMgr. magFieldSvc = _app_magFieldSvc_
+    logger.debug ( 'decorate AppMgr.magFieldSvc() ' ) 
+    _AppMgr. magSvc      = _app_magSvc_
+    logger.debug ( 'decorate AppMgr.magSvc()      ' ) 
+
+
 # =============================================================================
 logger.debug ( 'Suppress excessive prints from GaudiPython.TupleUtils') 
 # =============================================================================
@@ -521,8 +663,9 @@ if not hasattr ( GaudiPython.Bindings.iAlgTool , '_old_init_' ) :
         my_methods = list ( dir ( GaudiPython.Bindings.iAlgTool ) )
         my_methods               += [ i for i in dir ( cpp.IAlgTool   ) ] 
         my_methods               += [ i for i in dir ( cpp.IInterface ) ]
+        my_methods               += [ i for i in dir ( cpp.IStateful  ) ]
         if self._ip : my_methods += [ i for i in dir ( self._ip       ) ]
-        my_methdos = set( my_methods )
+        my_methods = set( my_methods )
         if_methods = set()  
         for i in dir( self._itool ) :
             if i in my_methods    : continue
@@ -553,7 +696,7 @@ if not hasattr ( GaudiPython.Bindings.iAlgTool , '_old_init_' ) :
         if tool._itool :
             return getattr  ( tool._itool , attribute ) 
         
-        raise AttributeError ('Attribubte/property %s does not exist for %s' % ( attribute , tool ) ) 
+        raise AttributeError ('Attribute/property %s does not exist for %s' % ( attribute , tool ) ) 
 
     GaudiPython.Bindings.iAlgTool._old_init_        = _old_iAlgTool_init_
     GaudiPython.Bindings.iAlgTool._new_init_        = _new_iAlgTool_init_
@@ -567,7 +710,6 @@ if not hasattr ( GaudiPython.Bindings.iAlgTool , '_old_init_' ) :
 
 ##  print ut for tthe tools  
 def _itool_str_ ( self ) :
-
 
     if not self._itool :
         tname = self._name 
