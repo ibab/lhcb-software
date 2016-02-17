@@ -16,7 +16,7 @@ __all__ = (
 default_config =  {
     'NAME'            : 'HeavyIonMiniBias',
     'WGs'             : ['ALL'],
-    'STREAMS'         : ['ALL'],
+    'STREAMS'         : ['MiniBias'],
     'BUILDERTYPE'     : 'HeavyIonMiniBiasConf',
     'CONFIG'          : {
         "odin": ["NoBeam","Beam1","Beam2","BeamCrossing"],
@@ -28,12 +28,12 @@ default_config =  {
         "MicroBiasHlt1Filter"         : "(HLT_PASS('Hlt1MBMicroBiasVeloDecision'))", #(HLT_PASS('Hlt1MB.*Decision')) #Hlt1MBMicroBiasVelo
         "MicroBiasHlt2Filter"         : "(HLT_PASS('Hlt2PassThroughDecision'))",
 
-        'MicroBiasLowMultPrescale'            :  1.0,
+        'MicroBiasLowMultPrescale'            :  0.1,
         'MicroBiasLowMultPostscale'           :  1.0, 
         "MicroBiasLowMultHlt1Filter"         : "(HLT_PASS('Hlt1MBMicroBiasLowMultVeloDecision'))", #(HLT_PASS('Hlt1MB.*Decision')) #Hlt1MBMicroBiasVelo
         "MicroBiasLowMultHlt2Filter"         : "(HLT_PASS('Hlt2PassThroughDecision'))",
 
-        'NoBiasPrescale'            :  1.0,
+        'NoBiasPrescale'            :  0.2,
         'NoBiasPostscale'           :  1.0, 
         "NoBiasHlt1Filter"         : "(HLT_PASS('Hlt1MBNoBiasLeadingCrossingDecision'))", #(HLT_PASS('Hlt1MB.*Decision')) #Hlt1MBMicroBiasVelo
         "NoBiasHlt2Filter"         : "(HLT_PASS('Hlt2PassThroughDecision'))",
@@ -55,7 +55,7 @@ class HeavyIonMiniBiasConf(LineBuilder):
         LineBuilder.__init__(self, name, config)
         self.name = name 
         self.config = config
-        print "inside MiniBias",config
+        
         odin = "|".join( ["(ODIN_BXTYP == LHCb.ODIN.%s)"%(odin_type,) for odin_type in config['odin'] if odin_type in ["NoBeam","Beam1","Beam2","BeamCrossing"]])
 
         self.MicroBiasLine = StrippingLine( 

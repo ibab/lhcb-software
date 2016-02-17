@@ -62,7 +62,7 @@ default_config = {
         'D0_Prescale':  1.0,
         'D0_Postscale': 1.0, 
 
-        'D0_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOGSingleTrackDecision')",   #Hlt1SMOGD0KPiDecision ?
+        'D0_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOG.*Decision')",   #Hlt1SMOGD0KPiDecision ?
         'D0_Hlt2Filter': "HLT_PASS_RE('Hlt2SMOGD02KPiDecision')",
 
 
@@ -75,7 +75,7 @@ default_config = {
         'Dst_Prescale'     : 1.0, 
         'Dst_Postscale'    : 1.0,
 
-        'Dst_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOGSingleTrackDecision')",   #Hlt1SMOGD0KPiDecision ?
+        'Dst_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOG.*Decision')",   #Hlt1SMOGD0KPiDecision ?
         'Dst_Hlt2Filter': "HLT_PASS_RE('Hlt2SMOGD02KPiDecision')",
 
 
@@ -100,12 +100,12 @@ default_config = {
 	    'NoPVD0_VTX_Ymax'                      : +5.0*mm,
 	    'NoPVD0_VTX_Zmin'                      : -1000.*mm,
 	    'NoPVD0_VTX_Zmax'                      : +1000.*mm,
-	    'NoPVD0_odin'                      : ["NoBeam","Beam1","Beam2"],
+	    'NoPVD0_odin'                      : ["NoBeam","Beam1","Beam2","BeamCrossing"],
 
-        'NoPVD0_Prescale':  1.0,
+        'NoPVD0_Prescale':  0.2,
         'NoPVD0_Postscale': 1.0, 
 
-        'NoPVD0_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOGSingleTrackDecision')",
+        'NoPVD0_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOG.*Decision')",
         'NoPVD0_Hlt2Filter': "HLT_PASS_RE('Hlt2SMOGD02KPiDecision')",
 
         ########################################
@@ -136,7 +136,7 @@ default_config = {
         'Dp_Prescale': 1.0,
         'Dp_Postscale': 1.0, 
 
-        'Dp_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOGSingleTrackDecision')",   #Hlt1SMOGDpmKKPiDecision ?
+        'Dp_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOG.*Decision')",   #Hlt1SMOGDpmKKPiDecision ?
         'Dp_Hlt2Filter': "HLT_PASS_RE('Hlt2SMOGDpm2KPiPiDecision')",
        
 
@@ -147,7 +147,7 @@ default_config = {
         'Ds_Postscale': 1.0, 
 
         # HLT filters, only process events firing triggers matching the RegEx
-        'Ds_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOGSingleTrackDecision')",   #Hlt1SMOGDpmKPiDecision ?
+        'Ds_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOG.*Decision')",   #Hlt1SMOGDpmKPiDecision ?
         'Ds_Hlt2Filter': "HLT_PASS_RE('Hlt2SMOGDs2KKPiDecision')",
 
 
@@ -158,7 +158,7 @@ default_config = {
         'Lc_Postscale': 1.0, 
 
         # HLT filters, only process events firing triggers matching the RegEx
-        'Lc_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOGSingleTrackDecision')",   #Hlt1SMOGDpmKPiDecision ?
+        'Lc_Hlt1Filter': "HLT_PASS_RE('Hlt1SMOG.*Decision')",   #Hlt1SMOGDpmKPiDecision ?
         'Lc_Hlt2Filter': "HLT_PASS_RE('Hlt2SMOGLc2KPPiDecision')",
     }
 }
@@ -266,9 +266,11 @@ class HeavyIonOpenCharmConf(LineBuilder):
             HLT1      =self.config['NoPVD0_Hlt1Filter'],
             HLT2      =self.config['NoPVD0_Hlt2Filter'],
             #ODIN      = odin
-            ODIN      = ("|".join( ["(ODIN_BXTYP == LHCb.ODIN.%s)"%(odin_type,) for odin_type in self.config['NoPVD0_odin'] if odin_type in ["NoBeam","Beam1","Beam2","BeamCrossing"]]))
+            ODIN      = ("|".join( ["(ODIN_BXTYP == LHCb.ODIN.%s)"%(odin_type,) for odin_type in self.config['NoPVD0_odin'] if odin_type in ["NoBeam","Beam1","Beam2"]]))
+            #ODIN      = ("|".join( ["(ODIN_BXTYP == LHCb.ODIN.%s)"%(odin_type,) for odin_type in self.config['NoPVD0_odin'] if odin_type in ["NoBeam","Beam1","Beam2","BeamCrossing"]]))
         )
 
+        #""", not work because trigger works only on Beam1
         self.line_NoPVD02HH = self.make_line(
             name=('{0}Line'.format(NoPVD02HH_name)).replace("BE","BB"),
             prescale  =self.config['NoPVD0_Prescale']*0.1,
@@ -280,6 +282,7 @@ class HeavyIonOpenCharmConf(LineBuilder):
             #ODIN      = odin
             ODIN      = ("|".join( ["(ODIN_BXTYP == LHCb.ODIN.%s)"%(odin_type,) for odin_type in ["BeamCrossing"]]))
         )
+        #"""
 
 
         self.line_Dst2D0Pi= self.make_line(
@@ -488,7 +491,7 @@ class HeavyIonOpenCharmConf(LineBuilder):
               "D+":"Dp",
               "D-":"Dp",
               "D_s+":"Ds",
-              "Ds-":"Ds",
+              "D_s-":"Ds",
               "Lambda_c+":"Lc",
               "Lambda_c~-":"Lc",
               }
