@@ -25,9 +25,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2016-02-16
 #
-#                    $Revision: 197322 $
-#  Last modification $Date: 2015-11-08 15:46:16 +0100 (Sun, 08 Nov 2015) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """Access for K0 from V0 
 
@@ -52,14 +52,14 @@ By usage of this code one clearly states the disagreement
 with the smear campaign of Dr.O.Callot et al.: 
     ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-                  $Revision: 197322 $
-Last modification $Date: 2015-11-08 15:46:16 +0100 (Sun, 08 Nov 2015) $
-               by $Author: ibelyaev $
+                  $Revision$
+Last modification $Date$
+               by $Author$
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2016-02-16" 
-__version__ = " $Revision:$"
+__version__ = " $Revision$"
 # ============================================================================= 
 ## import everything from bender 
 from   Bender.Main import *

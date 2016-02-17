@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id:$ 
+# $Id$ 
 # =============================================================================
 ## @file BenderExample/MCuDST
 # The simple Bender-based example to illustrate
@@ -24,9 +24,9 @@
 #  @date 2016-02-16
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #
-#            Version $Revision:$
-#  Last modification $Date: 2015-03-20 11:51:25 +0100 (Fri, 20 Mar 2015) $
-#                 by $Author: ibelyaev $
+#            Version $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 The simple Bender-based example to illustrate usage of MC-uDST 
@@ -44,14 +44,14 @@ By usage of this code one clearly states the disagreement
 with the smear campaign of Dr.O.Callot et al.: 
 ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-          Version $Revision:$  
-Last modification $Date: 2015-03-20 11:51:25 +0100 (Fri, 20 Mar 2015) $
-               by $Author: ibelyaev $
+          Version $Revision$  
+Last modification $Date$
+               by $Author$
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2016-02-16 "
-__version__ = "$Revision: 185719 $ "
+__version__ = "$Revision$ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
