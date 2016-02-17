@@ -128,7 +128,7 @@ def clusterReco ( context , enableRecoOnDemand , clusterPt = 0.  , fastReco = Fa
 
     ## setup onDemand for SplitClusters
     if enableRecoOnDemand : 
-        splitSeq   = mergedPi0Reco( context , enableRecoOnDemand , True, False, False,mergedPi0Pt)
+        splitSeq   = mergedPi0Reco( context , enableRecoOnDemand , True, False, False,mergedPi0Pt,False,'',noSpdPrs,masksE,masksP)
         onDemand ( 'Rec/Calo/EcalSplitClusters' , splitSeq , context ) 
 
 
@@ -442,7 +442,7 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
     if enableRecoOnDemand :
             onDemand ( 'Rec/Calo/SplitPhotons'      , seq , context ) 
             onDemand ( 'Rec/Calo/MergedPi0s'        , seq , context )
-            ## onDemand ( 'Rec/Calo/EcalSplitClusters' , seq , context )  ## ??
+            #onDemand ( 'Rec/Calo/EcalSplitClusters' , seq , context )  ## ??
 
     ## printout
     _log.debug ( 'Configure MergedPi0 Reco Seq : %s  for : %s' %( seq.name() , context ))

@@ -143,6 +143,9 @@ StatusCode CaloMergedPi0::execute(){
 
   //======== create cluster output :
   //- split clusters (check it does not exist first)
+
+
+  /* == WARNING  exist<> / get<> can trigger the onDemand splitCluster production to clear the container !
   LHCb::CaloClusters* splitclusters = nullptr;
   if (exist<LHCb::CaloClusters>(m_splitClusters)) {
     Warning("Existing SplitCluster container at "+ m_splitClusters + " found -> will replace",StatusCode::SUCCESS,1).ignore();
@@ -152,6 +155,23 @@ StatusCode CaloMergedPi0::execute(){
     splitclusters = new LHCb::CaloClusters();
     put(splitclusters, m_splitClusters );
   }
+  */
+
+  LHCb::CaloClusters* splitclusters = new LHCb::CaloClusters();
+  int level = outputLevel();     // store outputLevel
+  try{ 
+    setOutputLevel(MSG::ALWAYS);   // suppress FATAL message
+    put(splitclusters, m_splitClusters ); 
+  } catch(GaudiException &exc ) {
+    setOutputLevel(level);         // reset outputLevel
+    Warning("Existing SplitCluster container at "+ m_splitClusters + " found -> will replace",StatusCode::SUCCESS,1).ignore();
+    delete splitclusters;
+    splitclusters=get<LHCb::CaloClusters>( m_splitClusters );
+    splitclusters->clear();
+  }
+  setOutputLevel(level);         // reset outputLevel
+  
+
 
   //- pi0s & SPlitPhotons
   LHCb::CaloHypos* pi0s = new LHCb::CaloHypos();
