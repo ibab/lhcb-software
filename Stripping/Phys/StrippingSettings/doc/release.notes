@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2015-02-17 Andrea Contu
+ - Modified settings for S25
+
 ! 2015-02-12 Andrea Contu
  - added configuration and dbase for S25
 
