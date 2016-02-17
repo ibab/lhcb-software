@@ -1707,7 +1707,8 @@ int lan::ipmi_get_session_challenge_cmd(ipmi_intf * intf)
   rsp = intf->sendrecv(&req);
   if (rsp == NULL)
   {
-    lprintf(LOG_ERR, "Get Session Challenge command failed");
+    lprintf(LOG_ERR, "Get Session Challenge command failed: No reply from host %s",
+        intf->session->hostname);
     return -1;
   }
   if (verbose > 2)
@@ -1731,7 +1732,7 @@ int lan::ipmi_get_session_challenge_cmd(ipmi_intf * intf)
       }
       default:
       {
-        this->sessionsup_fail = SessSup_BadUserName;
+//        this->sessionsup_fail = SessSup_BadUserName;
         lprintf(LOG_ERR, "Get Session Challenge command failed: %s for host %s",
             intf->helper->val2str(rsp->ccode, completion_code_vals),intf->session->hostname);
       }
