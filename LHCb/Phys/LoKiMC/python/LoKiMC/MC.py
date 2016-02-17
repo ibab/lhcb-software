@@ -405,10 +405,16 @@ _LCF.printDecay    . __doc__ += "\n" + LoKi.PrintMC.printDecay        . __doc__
 for _t in ( LHCb.MCParticle ,
             LHCb.MCVertex   ) :
     
-    _tt = cpp.SmartRefVector ( _t )
     # redefine the iterator 
-    _tt.__iter__ = _LCF._iter_SRV_
+    _tv = cpp.SmartRefVector ( _t )
+    _tv.__iter__     = _LCF._iter_SRV_
 
+    # add more functions: 
+    _tr = cpp.SmartRef       ( _t )
+    _tr.__repr__     = _LCF._repr_SR_
+    _tr.__str__      = _LCF._str_SR_
+    _tr.__getattr__  = _LCF._getattr_SR_
+    
     
 LHCb.MCParticle.ConstVector = cpp.std.vector ('const LHCb::MCParticle*')
 LHCb.MCVertex.ConstVector   = cpp.std.vector ('const LHCb::MCVertex*'  )
