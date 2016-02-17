@@ -87,28 +87,34 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
     clus = ( m_allowDiags ? m_clusterBuilder.getCluster(lastrow,lastcol) : nullptr );
 
     // last row and same column
-    auto * newclus1 = m_clusterBuilder.getCluster(lastrow,col);
-    if ( newclus1 )
     {
-      clus = ( clus && clus != newclus1 ?
-               m_clusterBuilder.mergeClusters(clus,newclus1) : newclus1 );
+      auto * newclus1 = m_clusterBuilder.getCluster(lastrow,col);
+      if ( newclus1 )
+      {
+        clus = ( clus && clus != newclus1 ?
+                 m_clusterBuilder.mergeClusters(clus,newclus1) : newclus1 );
+      }
     }
 
     // last row and next column
-    auto * newclus2 =
-      ( m_allowDiags ? m_clusterBuilder.getCluster(lastrow,nextcol) : nullptr );
-    if ( newclus2 )
     {
-      clus = ( clus && clus != newclus2 ?
-               m_clusterBuilder.mergeClusters(clus,newclus2) : newclus2 );
+      auto * newclus2 =
+        ( m_allowDiags ? m_clusterBuilder.getCluster(lastrow,nextcol) : nullptr );
+      if ( newclus2 )
+      {
+        clus = ( clus && clus != newclus2 ?
+                 m_clusterBuilder.mergeClusters(clus,newclus2) : newclus2 );
+      }
     }
 
     // this row and last column
-    auto * newclus3 = m_clusterBuilder.getCluster(row,lastcol);
-    if ( newclus3 )
     {
-      clus = ( clus && clus != newclus3 ?
-               m_clusterBuilder.mergeClusters(clus,newclus3) : newclus3 );
+      auto * newclus3 = m_clusterBuilder.getCluster(row,lastcol);
+      if ( newclus3 )
+      {
+        clus = ( clus && clus != newclus3 ?
+                 m_clusterBuilder.mergeClusters(clus,newclus3) : newclus3 );
+      }
     }
 
     // Did we find a neighbouring pixel cluster ?

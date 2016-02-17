@@ -14,9 +14,7 @@
 
 // STL
 #include <vector>
-
-// GSL
-#include "gsl/gsl_math.h"
+#include <cmath>
 
 // Rich Kernel
 #include "RichKernel/RichTrackSegment.h"

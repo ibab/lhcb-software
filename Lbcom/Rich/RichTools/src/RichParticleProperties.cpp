@@ -60,14 +60,16 @@ StatusCode Rich::ParticleProperties::initialize()
   m_particleMass[Rich::Kaon]     = ppSvc->find("K+" )->mass()/Gaudi::Units::MeV;
   m_particleMass[Rich::Proton]   = ppSvc->find("p+" )->mass()/Gaudi::Units::MeV;
   m_particleMass[Rich::Deuteron] = ppSvc->find("deuteron" )->mass()/Gaudi::Units::MeV;
+  m_particleMass[Rich::BelowThreshold] = boost::numeric::bounds<double>::highest();
 
   // cache squares of masses
-  m_particleMassSq[Rich::Electron] = gsl_pow_2( m_particleMass[Rich::Electron] );
-  m_particleMassSq[Rich::Muon]     = gsl_pow_2( m_particleMass[Rich::Muon]     );
-  m_particleMassSq[Rich::Pion]     = gsl_pow_2( m_particleMass[Rich::Pion]     );
-  m_particleMassSq[Rich::Kaon]     = gsl_pow_2( m_particleMass[Rich::Kaon]     );
-  m_particleMassSq[Rich::Proton]   = gsl_pow_2( m_particleMass[Rich::Proton]   );
-  m_particleMassSq[Rich::Deuteron] = gsl_pow_2( m_particleMass[Rich::Deuteron] );
+  m_particleMassSq[Rich::Electron] = std::pow( m_particleMass[Rich::Electron] , 2 );
+  m_particleMassSq[Rich::Muon]     = std::pow( m_particleMass[Rich::Muon]     , 2 );
+  m_particleMassSq[Rich::Pion]     = std::pow( m_particleMass[Rich::Pion]     , 2 );
+  m_particleMassSq[Rich::Kaon]     = std::pow( m_particleMass[Rich::Kaon]     , 2 );
+  m_particleMassSq[Rich::Proton]   = std::pow( m_particleMass[Rich::Proton]   , 2 );
+  m_particleMassSq[Rich::Deuteron] = std::pow( m_particleMass[Rich::Deuteron] , 2 );
+  m_particleMassSq[Rich::BelowThreshold] = boost::numeric::bounds<double>::highest();
 
   // release service
   sc = release(ppSvc);
@@ -83,8 +85,8 @@ StatusCode Rich::ParticleProperties::initialize()
       else if ( "pion"           == S ) { m_pidTypes.push_back(Rich::Pion); }
       else if ( "kaon"           == S ) { m_pidTypes.push_back(Rich::Kaon); }
       else if ( "proton"         == S ) { m_pidTypes.push_back(Rich::Proton); }
-      else if ( "belowThreshold" == S ) { m_pidTypes.push_back(Rich::BelowThreshold); }
       else if ( "deuteron"       == S ) { m_pidTypes.push_back(Rich::Deuteron); }
+      else if ( "belowThreshold" == S ) { m_pidTypes.push_back(Rich::BelowThreshold); }
       else
       {
         return Error( "Unknown particle type from options " + S );
@@ -99,7 +101,7 @@ StatusCode Rich::ParticleProperties::initialize()
                                   Rich::Pion ) != m_pidTypes.end();
   info() << "Particle types considered = " << m_pidTypes << endmsg;
   if ( m_pidTypes.empty() ) return Error( "No particle types specified" );
-  if ( !hasPion )           return Error( "Pion hypothesis must be included in list" );
+  if ( !hasPion )           return Error( "Pion hypothesis must be enabled" );
 
   // Informational Printout
   if ( msgLevel(MSG::DEBUG) )
@@ -121,8 +123,8 @@ StatusCode Rich::ParticleProperties::initialize()
 double Rich::ParticleProperties::beta( const double ptot,
                                        const Rich::ParticleIDType id ) const
 {
-  const double Esquare  = ptot*ptot + m_particleMassSq[id];
-  return ( Esquare > 0 ? ptot/std::sqrt(Esquare) : 0 );
+  const double Esquare = ptot*ptot + m_particleMassSq[id];
+  return ( Rich::BelowThreshold != id && Esquare > 0 ? ptot/std::sqrt(Esquare) : 0 );
 }
 
 double Rich::ParticleProperties::mass( const Rich::ParticleIDType id ) const
@@ -139,19 +141,29 @@ double
 Rich::ParticleProperties::thresholdMomentum( const Rich::ParticleIDType id,
                                              const Rich::RadiatorType rad ) const
 {
-  const double index = m_refIndex->refractiveIndex(rad);
-  return ( index > 1.0 ? mass(id)/std::sqrt((index*index)-1.0) : 
-           boost::numeric::bounds<double>::highest() );
+  double thresP = boost::numeric::bounds<double>::highest();
+  if ( Rich::BelowThreshold != id )
+  {
+    const auto index = m_refIndex->refractiveIndex(rad);
+    thresP = ( index > 1.0 ? mass(id) / std::sqrt((index*index)-1.0) : 
+               boost::numeric::bounds<double>::highest() );
+  }
+  return thresP;
 }
 
 double
 Rich::ParticleProperties::thresholdMomentum( const Rich::ParticleIDType id,
                                              const LHCb::RichTrackSegment& trSeg ) const
 {
-  const double index = m_refIndex->refractiveIndex( trSeg.radIntersections(),
+  double thresP = boost::numeric::bounds<double>::highest();
+  if ( Rich::BelowThreshold != id )
+  {
+    const auto index = m_refIndex->refractiveIndex( trSeg.radIntersections(),
                                                     trSeg.avPhotonEnergy() );
-  return ( index > 1.0 ? mass(id)/std::sqrt((index*index)-1.0) : 
-           boost::numeric::bounds<double>::highest() );
+    thresP = ( index > 1.0 ? mass(id) / std::sqrt((index*index)-1.0) : 
+               boost::numeric::bounds<double>::highest() );
+  }
+  return thresP;
 }
 
 const Rich::Particles & Rich::ParticleProperties::particleTypes() const

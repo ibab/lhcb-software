@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2016-02-17 - Chris Jones
+ - Return 'correct' (i.e. large) values from thresholdMomentum with the 
+   Rich::ParticleProperties tool for BelowThreshold types.
+
 ! 2016-02-11 - Chris Jones
  - Adapt pixel clustering tool to changes in memory management in the pixel
    classes.
