@@ -352,10 +352,13 @@ LHCb.Particle. __printDecay__ =   printDecay
 LHCb.Particle.      __decay__ =   printDecay
 
 
+import LoKiCore.functions  as _LCF 
+    
 ## non-zero test for smart reference 
 for t in ( LHCb.Particle    ,
            LHCb.Vertex      ,
            LHCb.VertexBase  ,
+           LHCb.RecVertex   ,
            LHCb.Track       ,
            LHCb.CaloDigit   ,
            LHCb.CaloCluster , 
@@ -363,8 +366,10 @@ for t in ( LHCb.Particle    ,
     
     _SR = cpp.SmartRef ( t )
     _SR .__nonzero__ = lambda s : bool ( s.target() )
-
-import LoKiCore.functions  as _LCF 
+    _SR .__repr__    = _LCF._repr_SR_ 
+    _SR .__str__     = _LCF._str_SR_ 
+    _SR .__getattr__ = _LCF._getattr_SR_ 
+    
 LHCb.Particle.__pname__ =  _LCF.__pname__
 LHCb.Particle.  pname   =  _LCF.__pname__
 LHCb.Particle.   name   =  _LCF.__pname__

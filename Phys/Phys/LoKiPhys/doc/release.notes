@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2016-02-17 - Vanya Belyaev
+ - add print functions to smart refs 
+
 ! 2016-02-12 - Vanya Belyaev
  - add more methods fr particles:
      mass, pT, eT, mT, rapidity, pseudorapidity, phi and theta, etc...  

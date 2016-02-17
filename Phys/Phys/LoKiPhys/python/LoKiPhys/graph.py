@@ -116,8 +116,9 @@ class DecayGraph ( object ) :
         if nid in self._nodes : return nid 
 
         # create new node
-        node = pydot.Node ( name      = nid       ,
-                            label     = p.name()  , **node_attributes) 
+        label = pydot.quote_if_necessary ( p.name() )
+        node  = pydot.Node ( name  = nid   ,
+                             label = label , **node_attributes) 
         
         self._nodes.add      ( nid  )
         self._graph.add_node ( node )
