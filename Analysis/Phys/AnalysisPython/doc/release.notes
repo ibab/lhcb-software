@@ -5,6 +5,9 @@
 !               GaudiPython analyses.
 !-----------------------------------------------------------------------------
 
+! 2016-02-18 - Vanya Belyaev
+ - remove PyCintex stuff 
+
 !====================== AnalysisPython v2r40 2016-02-09 ======================
 
 ! 2016-01-24 - Vanya Belyaev

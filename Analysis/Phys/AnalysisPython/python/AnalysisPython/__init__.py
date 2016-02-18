@@ -17,21 +17,7 @@
 Module with some common stuff for AnalysisPython package 
 """
 # =============================================================================
-import ROOT
-#
-try:
-    import cppyy
-except ImportError:
-    # FIXME: backward compatibility
-    print "# AnalysisPython WARNING: using PyCintex as cppyy implementation"
-    import PyCintex as cppyy
-    import sys
-    sys.modules['cppyy'] = cppyy
-#
-cpp = cppyy.makeNamespace('')
-if not hasattr ( ROOT    , 'ostream' ) :
-    print "# AnalysisPython WARNING: force loading of <ostream>"
-    ROOT.gROOT.ProcessLine("#include <ostream>")
+import ROOT,cppyy
 
 # =============================================================================
 # The END 
