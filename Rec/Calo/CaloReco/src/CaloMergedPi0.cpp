@@ -160,16 +160,20 @@ StatusCode CaloMergedPi0::execute(){
   LHCb::CaloClusters* splitclusters = new LHCb::CaloClusters();
   int level = outputLevel();     // store outputLevel
   try{ 
-    setOutputLevel(MSG::ALWAYS);   // suppress FATAL message
+    //setOutputLevel(MSG::ALWAYS);   // suppress FATAL message - setOuputLevel no longer exist in Gaudi
+    setProperty("OutputLevel", MSG::ALWAYS ).ignore();
     put(splitclusters, m_splitClusters ); 
   } catch(GaudiException &exc ) {
-    setOutputLevel(level);         // reset outputLevel
+    //setOutputLevel(level);         // reset outputLevel
+    setProperty("OutputLevel", level ).ignore();
     Warning("Existing SplitCluster container at "+ m_splitClusters + " found -> will replace",StatusCode::SUCCESS,1).ignore();
     delete splitclusters;
     splitclusters=get<LHCb::CaloClusters>( m_splitClusters );
     splitclusters->clear();
   }
-  setOutputLevel(level);         // reset outputLevel
+  //setOutputLevel(level);         // reset outputLevel
+  setProperty("OutputLevel", level ).ignore();
+  
   
 
 

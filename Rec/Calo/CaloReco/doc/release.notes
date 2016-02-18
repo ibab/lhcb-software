@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 
+! 2016-02-18 - Olivier Deschamps
+ - CaloMergedPi0 : replace setOuputLevel with setProperty("OutputLevel", ...) to please Gaudi_HEAD
+
 ! 2016-02-17 - Olivier Deschamps
  - Configuration.py : - fix :  propagate cluster mask to  SplitClusters
                       - revert change done in 2015-12-05 :  the exception handling to check TES was done on purpose - to avoid triggering the splitcluster onDemand with another instance 
