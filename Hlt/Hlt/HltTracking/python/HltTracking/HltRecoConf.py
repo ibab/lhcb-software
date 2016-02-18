@@ -51,6 +51,9 @@ class HltRecoConf(LHCbConfigurableUser):
                , "CalculateProbNN"             : True
                , "AddGhostProb"                : True
                , "InitFits"                    : True
+               , "BeamGasMode"                 : False
+               , "VeloTrackingZMin"            : -2000.   #minimum velo tracking range
+               , "VeloTrackingZMax"            : +2000.   #maximum velo tracking range
                , "MoreOfflineLikeFit"          : True   # This runs a fit in HLT1 and HLT2 which uses the default offline fit
                                                         # with a simplified material description
                , "FitIterationsInHltFit"       : 1      # Increases the number of fit iterations in the current Hlt fit.

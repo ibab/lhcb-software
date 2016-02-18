@@ -79,8 +79,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 , "RestartForward"                  : False  # Intended default False. Development options
                 , "CreateBestTracks"                : True  # Intended default True. Development options
                 , "UseTrackBestTrackCreator"        : True  # Intended default True. Development options
-                                                             # This one disables separate fitting of Hlt2 Forward, Match
-                                                             # and Downstream tracks. Leave DoCleanups true for Hlt1 track filtering
+                                                            # This one disables separate fitting of Hlt2 Forward, Match
+                                                            # and Downstream tracks. Leave DoCleanups true for Hlt1 track filtering
                 , "NewDownstreamAlg"                : True  # TODO: Remove this option after some grace period
                 , "FitTTracks"                      : True
                 , "RichHypos"                       : HltRichDefaultHypos

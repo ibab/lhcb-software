@@ -57,10 +57,11 @@ ToolSvc().TrackStateProvider.Interpolator.Extrapolator.addTool(SimplifiedMateria
 # the full Velo reconstruction
 def recoVelo(OutputTracksName=HltSharedTrackLoc["Velo"]):
     recoVelo = FastVeloTracking( 'FastVeloHlt', OutputTracksName = OutputTracksName) 
-    # TODO: Move this to HltRecoConf
-    recoVelo.HLT1Only = False 
-    recoVelo.HLT2Complement = False 
     recoVelo.StatPrint = True
+    extendVelo = HltRecoConf().getProp("BeamGasMode")
+    if extendVelo:
+        recoVelo.ZVertexMin = HltRecoConf().getProp("VeloTrackingZMin")
+        recoVelo.ZVertexMax = HltRecoConf().getProp("VeloTrackingZMax")
     recoVelo.VetoObjects = [ OutputTracksName ]
     return recoVelo
  
