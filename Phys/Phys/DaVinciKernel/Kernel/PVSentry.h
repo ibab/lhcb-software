@@ -5,6 +5,10 @@
 // ============================================================================
 // Include files
 // ============================================================================
+// STD& STL 
+// ============================================================================
+#include <set>
+// ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/Kernel.h"
@@ -36,13 +40,14 @@ namespace DaVinci
   public:
     // ========================================================================
     /** constructor
-     *  @param parent   the davinci algorithmthat holds relation tables  
+     *  @param parent   the davinci algorithm that holds relation tables  
      *  @param particle the particle
      */
-    PVSentry ( const IDVAlgorithm*   parent,
-               const LHCb::Particle* particle ) ;
-    /// destructor
-    ~PVSentry() ; 
+    PVSentry ( const IDVAlgorithm*   parent           ,
+               const LHCb::Particle* particle         , 
+               const bool            tree     = false ) ;
+      /// destructor
+      ~PVSentry() ; 
     // ========================================================================
   private:
     // ========================================================================
@@ -52,9 +57,9 @@ namespace DaVinci
   private:
     // ========================================================================
     /// the parent
-    const IDVAlgorithm*   m_parent   ;             
+    const IDVAlgorithm*             m_parent    ;             
     /// the temporary particle
-    const LHCb::Particle* m_particle ;  
+    std::vector<const LHCb::Particle*> m_particles ;  
     // ========================================================================
   };
   // ==========================================================================

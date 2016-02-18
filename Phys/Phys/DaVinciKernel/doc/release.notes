@@ -4,6 +4,11 @@
 ! Responsible : DV Maintainer
 !============================================================================
 
+! 2016-02-18 - Vanya Belyaev
+
+ - PVSentry: 
+   extend a bit to allow protect the whole decay tree 
+
 ! 2016-02-16 - Vanya Belyaev
  - add helper class GetTESLocation
    that allows in easy way to collect all relevant TES location for 
