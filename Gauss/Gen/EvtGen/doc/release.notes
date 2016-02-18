@@ -4,6 +4,9 @@
 ! Purpose     :
 !-----------------------------------------------------------------------------
 
+! 2016-02-18 - Tom Blake
+	- Fixed bug in EvtRareLbToLll mdoel (definition of Sinit in HadronicAmpRS)
+
 ! 2016-02-12 - John Back
   - Added extensions to the EvtHQET2(FF) model for semitauonic decays from
     Brian Hamilton. See https://its.cern.ch/jira/browse/LHCBGAUSS-636.

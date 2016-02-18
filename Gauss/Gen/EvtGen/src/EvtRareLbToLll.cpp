@@ -438,7 +438,7 @@ void EvtRareLbToLll::HadronicAmpRS( EvtParticle* parent,
                                    const int j )
 {
   const EvtRaritaSchwinger Sfinal = lambda->spRSParent(i);
-  const EvtDiracSpinor     Sinit  = lambda->sp(j);
+  const EvtDiracSpinor     Sinit  = parent->sp(j);
   
   EvtVector4R P;
   P.set(parent->mass(), 0.0,0.0,0.0);
