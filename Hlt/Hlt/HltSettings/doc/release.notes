@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!2016-02-18 - Mika Vesterinen
+ - Pick up DisplVertices_25ns_Draft2016 in Physics_pp_Draft2016
+
 !2016-02-18 - Karlis Dreimanis
  - Create DisplVertices_25ns_Draft2016. No changes from August.
 

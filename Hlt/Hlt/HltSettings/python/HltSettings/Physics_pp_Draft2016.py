@@ -49,7 +49,7 @@ class Physics_pp_Draft2016( object ):
             raise RuntimeError( 'Must update HltType when modifying ActiveHlt.Lines()' )
 
     def L0TCK(self) :
-        return '0x0050'
+        return '0xFF61'
 
     def HltType(self) :
         self.verifyType( Physics_pp_Draft2016 )
@@ -57,14 +57,14 @@ class Physics_pp_Draft2016( object ):
 
     def SubDirs(self):
         return {'August2015' : ['CcDiHadron', 'DPS', 
-                                'Bc2JpsiX', 'DiMuon', 'DisplVertices',
+                                'Bc2JpsiX', 'DiMuon',
                                 'TrackEff', "Commissioning", 'RareStrange',
                                 'TriMuon','Phi'],
                 'September2015' : ['XcMuXForTau'],
                 'October2015' : ['SingleMuon'],
                 'Draft2016': ['B2HH','B2Kpi0','BHad','CharmHad','DiElectron','Exotica',
                               'Jets','LFV','LowMult','PID','Radiative','RareCharm','EW',
-                              'Topo','TrackEffDiMuon']}
+                              'Topo','TrackEffDiMuon','DisplVertices']}
 
     def Thresholds(self) :
         """
