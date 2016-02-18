@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!2016-02-18 - Karlis Dreimanis
+ - Create DisplVertices_25ns_Draft2016. No changes from August.
+
 !2016-02-15 - Mika Vesterinen
  - Prescale the Hlt1SingleMuonNoIP line, and pick up the EW module
 
