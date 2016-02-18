@@ -42,7 +42,7 @@ if ( NOT "$ENV{CMTCONFIG}" STREQUAL "x86_64-slc6-gcc48-do0" )
  set ( conf_deps ${deps} DaVinciConfUserDB )
 
  # Build the caches, most recent first
- foreach(strip 25 24 22)
+ foreach(strip 25 24 22 21r1p1 21r0p1)
  
   # Stripping cache name
   set ( sname S${strip}FunctorCache )
