@@ -6,7 +6,7 @@ package           PatVeloTT
 version           v4r8
 
 #=====================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #=====================================================================
 branches          cmt doc src options python
 include_path      none
@@ -14,10 +14,11 @@ include_path      none
 #=====================================================================
 # Used packages.
 #=====================================================================
+use     Boost           v*      LCG_Interfaces
 use     LHCbKernel      v*      Kernel
-use	TfKernel	v*	Tf
+use     TfKernel        v*      Tf
 use     PatKernel       v*      Tf
-use     TrackInterfaces	v*	Tr
+use     TrackInterfaces v*      Tr
 use     STDet           v*      Det
 use     DigiEvent       v*      Event
 use     TrackEvent      v*      Event
@@ -25,7 +26,7 @@ use     TrackEvent      v*      Event
 #=====================================================================
 # Component library building rule
 #=====================================================================
-library          PatVeloTT    ../src/*.cpp 
+library          PatVeloTT    ../src/*.cpp
 #=====================================================================
 # define component library link options
 #=====================================================================
