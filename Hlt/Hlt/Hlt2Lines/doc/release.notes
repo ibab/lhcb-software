@@ -8,6 +8,8 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-02-18 - Mika Vesterinen
+ - Move the Commissioning module to Technical
 
 ! 2016-02-14 - Mika Vesterinen
  - Add prescales to the jet lines
