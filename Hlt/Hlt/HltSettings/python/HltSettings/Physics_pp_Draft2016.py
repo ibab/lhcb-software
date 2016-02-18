@@ -147,8 +147,8 @@ class Physics_pp_Draft2016( object ):
                                                                 'GEC'         : 'Loose'},
                                                'L0Channels'  : {'TrackMVA'    : 'L0_DECISION_PHYSICS',
                                                                 'TwoTrackMVA' : 'L0_DECISION_PHYSICS'},
-                                               'Priorities'  : {'TrackMVA'    : 20,
-                                                                'TwoTrackMVA' : 21}
+                                               'Priorities'  : {'TrackMVA'    : 1,
+                                                                'TwoTrackMVA' : 2}
                                                }
                      , Hlt1ElectronLinesConf : { 'SingleElectronNoIP_P'          : 20000
                                                , 'SingleElectronNoIP_PT'         : 10000
