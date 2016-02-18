@@ -8,9 +8,7 @@ gaudi_depends_on_subdirs(Det/STDet
                          Event/TrackEvent
                          Tf/PatKernel
                          Tf/TfKernel
-                         Tr/TrackInterfaces
-                         Event/LinkerEvent
-                         Event/MCEvent)
+                         Tr/TrackInterfaces)
 
 find_package(VDT)
 find_package(Boost COMPONENTS system)
@@ -18,7 +16,7 @@ find_package(Boost COMPONENTS system)
 gaudi_add_module(PatVeloTT
                  src/*.cpp
                  INCLUDE_DIRS Event/DigiEvent Tf/PatKernel Tf/TfKernel Tr/TrackInterfaces VDT Boost
-                 LINK_LIBRARIES STDetLib TrackEvent VDT LinkerEvent MCEvent)
+                 LINK_LIBRARIES STDetLib TrackEvent VDT)
 
 gaudi_install_python_modules()
 
