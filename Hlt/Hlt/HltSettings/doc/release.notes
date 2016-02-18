@@ -4,6 +4,13 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-02-18 - Simone Stracka
+ - Add the following settings files: 
+   Bottomonium_25ns_Draft2016.py (in new folder), 
+	 CcDiHadron_25ns_Draft2016.py  (no changes from August), 	
+	 DPS_25ns_Draft2016.py         (no changes from August), 	
+   Bc2JpsiX_25ns_Draft2016.py    (no changes from August)
+
 ! 2016-02-18 - Mika Vesterinen
  - Pick up recent Draft2016 settings, and move Commissioning to Technical
 
