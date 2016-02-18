@@ -48,8 +48,8 @@ RelInfoConeIsolation::RelInfoConeIsolation( const std::string &type,
 
   declareProperty( "FillMaxPt", m_fillMaxPt = true,
                    "Flag to fill the neutral cone (default = true)" );
-  declareProperty( "MaxPtParticlesLocation", m_maxPtParticleLocation = "Phys/StdAllLooseMuons/Particles",
-                   "Set the type of max-pT particles that are considered in the charged cone (default = Phys/StdAllLooseMuons/Particles)" );
+  declareProperty( "MaxPtParticlesLocation", m_maxPtParticleLocation = "Phys/StdAllNoPIDsMuons/Particles",
+                   "Set the type of max-pT particles that are considered in the charged cone (default = Phys/StdAllNoPIDsMuons/Particles)" );
 
 }
 //=============================================================================
