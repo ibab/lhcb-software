@@ -86,11 +86,11 @@ class ChargedHyperonLines():
         from Stages import Xi2LambdaPi_LLL, Xi2LambdaPi_DDL, Xi2LambdaPi_DDD
         from Stages import Omega2LambdaK_LLL, Omega2LambdaK_DDL, Omega2LambdaK_DDD
         stages = {# 
-                  'Xim2LamPim_LLL'       : [MassFilter('Ximinus2LambdaPi_LLL', inputs=[Xi2LambdaPi_LLL])],
-                  'Xim2LamPim_DDL'       : [MassFilter('Ximinus2LambdaPi_DDL',inputs=[Xi2LambdaPi_DDL])],
-                  'Xim2LamPim_DDD'       : [MassFilter('Ximinus2LambdaPi_DDD',inputs=[Xi2LambdaPi_DDD])],
-                  'Omm2LamKm_LLL'        : [MassFilter('Omegaminus2LambdaK_LLL',inputs=[Omega2LambdaK_LLL])],
-                  'Omm2LamKm_DDL'        : [MassFilter('Omegaminus2LambdaK_DDL',inputs=[Omega2LambdaK_DDL])],
-                  'Omm2LamKm_DDD'        : [MassFilter('Omegaminus2LambdaK_DDD',inputs=[Omega2LambdaK_DDD])],
+                  'Xim2LamPim_LLLTurbo'       : [MassFilter('Ximinus2LambdaPi_LLL', inputs=[Xi2LambdaPi_LLL])],
+                  'Xim2LamPim_DDLTurbo'       : [MassFilter('Ximinus2LambdaPi_DDL',inputs=[Xi2LambdaPi_DDL])],
+                  'Xim2LamPim_DDDTurbo'       : [MassFilter('Ximinus2LambdaPi_DDD',inputs=[Xi2LambdaPi_DDD])],
+                  'Omm2LamKm_LLLTurbo'        : [MassFilter('Omegaminus2LambdaK_LLL',inputs=[Omega2LambdaK_LLL])],
+                  'Omm2LamKm_DDLTurbo'        : [MassFilter('Omegaminus2LambdaK_DDL',inputs=[Omega2LambdaK_DDL])],
+                  'Omm2LamKm_DDDTurbo'        : [MassFilter('Omegaminus2LambdaK_DDD',inputs=[Omega2LambdaK_DDD])],
                  }
         return stages

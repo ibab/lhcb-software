@@ -419,7 +419,7 @@ class CharmHadD2HHHLines() :
                   'LcpToPpKmPip_LTUNBTurbo'  : [LcpToPpKmPip_LTUNB],
 
                   # Now the KPi asymmetry line
-                  'DpToKmPipPip_ForKPiAsym'  : [Dpm2KPiPi_ForKPiAsym]
+                  'DpToKmPipPip_ForKPiAsymTurbo'  : [Dpm2KPiPi_ForKPiAsym]
             }
 
         # Create Full stream version of this line for use in

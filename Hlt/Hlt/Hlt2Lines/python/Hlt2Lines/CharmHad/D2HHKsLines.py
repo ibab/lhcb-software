@@ -208,30 +208,30 @@ class CharmHadD2HHKshLines(Hlt2LinesConfigurableUser):
 ## mds          'D02KS0KmKp_KS0LLTurbo'         : [MassFilter('D02KshKK_LL',inputs=[D02KsKK_LL])],
 ## mds          'D02KS0KmKp_KS0DDTurbo'         : [MassFilter('D02KshKK_DD',inputs=[D02KsKK_DD])],
         stages = {
-                  'Dstp2D0Pip_D02KS0PimPip_KS0LL' : [Dstp2D0Pip_D02KS0PimPip_KS0LL],
-                  'Dstp2D0Pip_D02KS0PimPip_KS0DD' : [Dstp2D0Pip_D02KS0PimPip_KS0DD],
+                  'Dstp2D0Pip_D02KS0PimPip_KS0LLTurbo' : [Dstp2D0Pip_D02KS0PimPip_KS0LL],
+                  'Dstp2D0Pip_D02KS0PimPip_KS0DDTurbo' : [Dstp2D0Pip_D02KS0PimPip_KS0DD],
 
-                  'Dstp2D0Pip_D02KS0KmPip_KS0LL'  : [Dstp2D0Pip_D02KS0KmPip_KS0LL],
-                  'Dstp2D0Pip_D02KS0KmPip_KS0DD'  : [Dstp2D0Pip_D02KS0KmPip_KS0DD],
+                  'Dstp2D0Pip_D02KS0KmPip_KS0LLTurbo'  : [Dstp2D0Pip_D02KS0KmPip_KS0LL],
+                  'Dstp2D0Pip_D02KS0KmPip_KS0DDTurbo'  : [Dstp2D0Pip_D02KS0KmPip_KS0DD],
 
-                  'Dstp2D0Pip_D02KS0KpPim_KS0LL'  : [Dstp2D0Pip_D02KS0KpPim_KS0LL],
-                  'Dstp2D0Pip_D02KS0KpPim_KS0DD'  : [Dstp2D0Pip_D02KS0KpPim_KS0DD],
+                  'Dstp2D0Pip_D02KS0KpPim_KS0LLTurbo'  : [Dstp2D0Pip_D02KS0KpPim_KS0LL],
+                  'Dstp2D0Pip_D02KS0KpPim_KS0DDTurbo'  : [Dstp2D0Pip_D02KS0KpPim_KS0DD],
 
-                  'Dstp2D0Pip_D02KS0KmKp_KS0LL'   : [Dstp2D0Pip_D02KS0KmKp_KS0LL],
-                  'Dstp2D0Pip_D02KS0KmKp_KS0DD'   : [Dstp2D0Pip_D02KS0KmKp_KS0DD],
+                  'Dstp2D0Pip_D02KS0KmKp_KS0LLTurbo'   : [Dstp2D0Pip_D02KS0KmKp_KS0LL],
+                  'Dstp2D0Pip_D02KS0KmKp_KS0DDTurbo'   : [Dstp2D0Pip_D02KS0KmKp_KS0DD],
 
 ## and the corresponding LTUNB line
-                  'Dstp2D0Pip_D02KS0PimPip_KS0LL_LTUNB' : [Dstp2D0Pip_D02KS0PimPip_KS0LL_LTUNB],
-                  'Dstp2D0Pip_D02KS0PimPip_KS0DD_LTUNB' : [Dstp2D0Pip_D02KS0PimPip_KS0DD_LTUNB],
+                  'Dstp2D0Pip_D02KS0PimPip_KS0LL_LTUNBTurbo' : [Dstp2D0Pip_D02KS0PimPip_KS0LL_LTUNB],
+                  'Dstp2D0Pip_D02KS0PimPip_KS0DD_LTUNBTurbo' : [Dstp2D0Pip_D02KS0PimPip_KS0DD_LTUNB],
 
-                  'Dstp2D0Pip_D02KS0KmPip_KS0LL_LTUNB'  : [Dstp2D0Pip_D02KS0KmPip_KS0LL_LTUNB],
-                  'Dstp2D0Pip_D02KS0KmPip_KS0DD_LTUNB'  : [Dstp2D0Pip_D02KS0KmPip_KS0DD_LTUNB],
+                  'Dstp2D0Pip_D02KS0KmPip_KS0LL_LTUNBTurbo'  : [Dstp2D0Pip_D02KS0KmPip_KS0LL_LTUNB],
+                  'Dstp2D0Pip_D02KS0KmPip_KS0DD_LTUNBTurbo'  : [Dstp2D0Pip_D02KS0KmPip_KS0DD_LTUNB],
 
-                  'Dstp2D0Pip_D02KS0KpPim_KS0LL_LTUNB'  : [Dstp2D0Pip_D02KS0KpPim_KS0LL_LTUNB],
-                  'Dstp2D0Pip_D02KS0KpPim_KS0DD_LTUNB'  : [Dstp2D0Pip_D02KS0KpPim_KS0DD_LTUNB],
+                  'Dstp2D0Pip_D02KS0KpPim_KS0LL_LTUNBTurbo'  : [Dstp2D0Pip_D02KS0KpPim_KS0LL_LTUNB],
+                  'Dstp2D0Pip_D02KS0KpPim_KS0DD_LTUNBTurbo'  : [Dstp2D0Pip_D02KS0KpPim_KS0DD_LTUNB],
 
-                  'Dstp2D0Pip_D02KS0KmKp_KS0LL_LTUNB'   : [Dstp2D0Pip_D02KS0KmKp_KS0LL_LTUNB],
-                  'Dstp2D0Pip_D02KS0KmKp_KS0DD_LTUNB'   : [Dstp2D0Pip_D02KS0KmKp_KS0DD_LTUNB]
+                  'Dstp2D0Pip_D02KS0KmKp_KS0LL_LTUNBTurbo'   : [Dstp2D0Pip_D02KS0KmKp_KS0LL_LTUNB],
+                  'Dstp2D0Pip_D02KS0KmKp_KS0DD_LTUNBTurbo'   : [Dstp2D0Pip_D02KS0KmKp_KS0DD_LTUNB]
 
                  }
         
