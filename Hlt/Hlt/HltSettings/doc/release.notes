@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-02-18 - Mika Vesterinen
+ - Pick up recent Draft2016 settings, and move Commissioning to Technical
+
 ! 2016-02-18 - Carla Marin
  - Add Majorana_25ns_Draft2016.py 
 
