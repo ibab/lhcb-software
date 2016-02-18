@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Startup.py 173921 2014-06-16 14:25:50Z ibelyaev $ 
+# $Id$ 
 # =============================================================================
 ## The trivial startup sctript for Ostap session
 #
@@ -22,9 +22,9 @@
 #  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
 #  @date   2006-10-08
 #
-#                    $Revision: 173921 $
-#  Last modification $Date: 2014-06-16 16:25:50 +0200 (Mon, 16 Jun 2014) $
-#                 by $Author: ibelyaev $ 
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$ 
 # =============================================================================
 """This is a trivial startup script for Ostap session
  
@@ -45,12 +45,12 @@ with the smear campaign of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2006-10-08"
-__version__ = "$Revision: 173921 $"
+__version__ = "$Revision$"
 __all__     = () 
 # =============================================================================
 ## logging
 # =============================================================================
-from AnalysisPython.Logger import getLogger 
+from Ostap.Logger import getLogger 
 if '__main__' == __name__ : logger = getLogger ( 'Ostap.Startup' )
 else                      : logger = getLogger ( __name__ )
 # =============================================================================

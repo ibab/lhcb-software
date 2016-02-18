@@ -66,7 +66,7 @@ import ROOT, sys
 # =============================================================================
 # logging 
 # =============================================================================
-from AnalysisPython.Logger import getLogger
+from Ostap.Logger import getLogger
 __logger = getLogger ( 'OstapBender' )
 # =============================================================================
 ## 1) load LHCb-style file

@@ -38,7 +38,7 @@ import ROOT, math
 from   Ostap.PyRoUts             import cpp, iszero  
 from   Ostap.FitBasic            import makeVar, PDF2 
 # =============================================================================
-from   AnalysisPython.Logger     import getLogger
+from   Ostap.Logger     import getLogger
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.Fit2DModels' )
 else                       : logger = getLogger ( __name__            )
 # =============================================================================

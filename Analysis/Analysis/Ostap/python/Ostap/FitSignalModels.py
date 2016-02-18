@@ -103,7 +103,7 @@ from   Ostap.PyRoUts             import cpp
 from   GaudiKernel.SystemOfUnits import GeV 
 from   Ostap.FitBasic            import makeVar, MASS 
 # =============================================================================
-from   AnalysisPython.Logger     import getLogger
+from   Ostap.Logger     import getLogger
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.FitSignalModels' )
 else                       : logger = getLogger ( __name__                )
 # =============================================================================

@@ -38,7 +38,7 @@ __date__    = "2012-05-13"
 __version__ = "$Revision$" 
 __all__     = ()   ## nothing to import 
 # =============================================================================
-from AnalysisPython.Logger import getLogger 
+from Ostap.Logger import getLogger 
 if '__main__' ==  __name__ : logger = getLogger( 'Ostap.shelve_ext' )
 else                       : logger = getLogger( __name__ )
 # =============================================================================

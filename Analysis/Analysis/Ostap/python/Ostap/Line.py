@@ -59,7 +59,7 @@ ostap = line
 # =============================================================================
 if '__main__' == __name__ :
     
-    from AnalysisPython.Logger import getLogger 
+    from Ostap.Logger import getLogger 
     if '__main__' ==  __name__ : logger = getLogger( 'Ostap.Line' )
     else                       : logger = getLogger( __name__ )
     

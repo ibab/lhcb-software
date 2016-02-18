@@ -27,7 +27,7 @@ from   Ostap.PyRoUts     import hID,VE
 # =============================================================================
 # logging 
 # =============================================================================
-from AnalysisPython.Logger import getLogger 
+from Ostap.Logger import getLogger 
 if '__main__' ==  __name__ : logger = getLogger( 'Ostap.HCmpDeco' )
 else                       : logger = getLogger( __name__ )
 # =============================================================================

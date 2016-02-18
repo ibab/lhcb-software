@@ -116,7 +116,7 @@ __all__ = (
     'tmpdb'       ,   ## helper function to create the temporary database 
     )
 # =============================================================================
-from AnalysisPython.Logger import getLogger
+from Ostap.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'SQLiteShelve' )
 else                      : logger = getLogger ( __name__ )
 # =============================================================================

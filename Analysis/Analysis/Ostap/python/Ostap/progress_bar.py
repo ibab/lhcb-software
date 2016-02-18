@@ -463,7 +463,7 @@ def main():
 if __name__ == '__main__':
 
     import Ostap.Line
-    from   AnalysisPython.Logger import getLogger
+    from   Ostap.Logger import getLogger
     logger = getLogger('Ostap.progress_bar')
     
     logger.info ( __file__  + '\n' + Ostap.Line.line  ) 

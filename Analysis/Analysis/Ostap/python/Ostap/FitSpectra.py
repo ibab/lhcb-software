@@ -40,7 +40,7 @@ __all__     = (
 import ROOT, math
 from   Ostap.PyRoUts             import VE,cpp, funID 
 # =============================================================================
-from   AnalysisPython.Logger     import getLogger
+from   Ostap.Logger     import getLogger
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.FitSpectra' )
 else                       : logger = getLogger ( __name__           )
 # =============================================================================

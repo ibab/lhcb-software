@@ -63,7 +63,7 @@ __all__     = (
 # =============================================================================
 import ROOT,cppyy, os
 import Ostap.PyRoUts 
-from   AnalysisPython.Logger import getLogger
+from   Ostap.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'Ostap.PidCalib' )
 else                      : logger = getLogger ( __name__         )
 # =============================================================================

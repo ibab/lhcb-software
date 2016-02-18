@@ -101,7 +101,7 @@ __all__ = (
     'tmpdb'         , ## helper function to create TEMPORARY  RootShelve database 
     )
 # =============================================================================
-from AnalysisPython.Logger import getLogger
+from Ostap.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'RootShelve' )
 else                      : logger = getLogger ( __name__     )
 # =============================================================================

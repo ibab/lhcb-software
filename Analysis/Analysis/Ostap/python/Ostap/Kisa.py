@@ -36,7 +36,7 @@ import GaudiMP.Parallel as Parallel
 # =============================================================================
 # logging 
 # =============================================================================
-from AnalysisPython.Logger import getLogger 
+from Ostap.Logger import getLogger 
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.Kisa' )
 else                       : logger = getLogger ( __name__     )
 # =============================================================================
@@ -184,7 +184,7 @@ class  FillTask(Parallel.Task) :
         tree = ROOT.TChain( tree )
         tree.Add ( fname )
 
-        from AnalysisPython.Logger import logWarning
+        from Ostap.Logger import logWarning
         with logWarning() : 
             
             import Ostap.PyRoUts

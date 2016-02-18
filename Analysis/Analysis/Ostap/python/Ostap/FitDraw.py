@@ -36,7 +36,7 @@ __all__     = (
     )
 # =============================================================================
 import ROOT
-from   AnalysisPython.Logger     import getLogger
+from   Ostap.Logger     import getLogger
 # =============================================================================
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.FitDraw' )
 else                       : logger = getLogger ( __name__         )

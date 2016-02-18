@@ -102,7 +102,7 @@ natural_entry  = Gaudi.Math.natural_entry
 # =============================================================================
 # logging 
 # =============================================================================
-from AnalysisPython.Logger import getLogger 
+from Ostap.Logger import getLogger 
 logger = getLogger( __name__ )
 # =============================================================================
 logger.info ( 'Zillions of decorations for ROOT   objects')

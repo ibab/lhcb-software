@@ -68,7 +68,7 @@ import Ostap.PyRoUts
 # =============================================================================
 # logging 
 # =============================================================================
-from   AnalysisPython.Logger import getLogger 
+from   Ostap.Logger import getLogger 
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.uStat' )
 else                       : logger = getLogger ( __name__      )
 # =============================================================================

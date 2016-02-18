@@ -29,7 +29,7 @@ import Ostap.ZipShelve as     DBASE ## needed to store the weights&histos
 # =============================================================================
 # logging 
 # =============================================================================
-from AnalysisPython.Logger import getLogger 
+from Ostap.Logger import getLogger 
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.Reweighting' )
 else                       : logger = getLogger ( __name__            )
 # =============================================================================

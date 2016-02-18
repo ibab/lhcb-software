@@ -33,7 +33,7 @@ __all__     = ()
 import ROOT, cppyy
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 # =============================================================================
-from   AnalysisPython.Logger import getLogger
+from   Ostap.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'pid_calib' )
 else                      : logger = getLogger ( __name__    )
 # =============================================================================

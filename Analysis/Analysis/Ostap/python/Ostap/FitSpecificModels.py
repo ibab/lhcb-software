@@ -42,7 +42,7 @@ import ROOT, math
 from   Ostap.PyRoUts             import VE,cpp
 from   GaudiKernel.SystemOfUnits import GeV 
 # =============================================================================
-from   AnalysisPython.Logger     import getLogger
+from   Ostap.Logger     import getLogger
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.FitSpecificModels' )
 else                       : logger = getLogger ( __name__     )
 # =============================================================================

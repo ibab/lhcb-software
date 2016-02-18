@@ -47,21 +47,7 @@ __author__  = "Vanya BELYAEV  Ivan.Belyaev@itep.ru"
 __date__    = "2014-03-10"
 __version__ = "$Revision$"
 # =============================================================================
-import ROOT, os 
-#
-try:
-    import cppyy
-except ImportError:
-    # FIXME: backward compatibility
-    print "# Ostap WARNING: using PyCintex as cppyy implementation"
-    import PyCintex as cppyy
-    import sys
-    sys.modules['cppyy'] = cppyy
-#
-cpp = cppyy.makeNamespace('')
-##if not hasattr ( ROOT    , 'ostream' ) :
-##    print "# Ostap WARNING: force loading of <ostream>"
-##    ROOT.gROOT.ProcessLine("#include <ostream>")
+import ROOT,cppyy,os 
 
 # =============================================================================
 workdir = os.environ.get('OSTAP_DIR') or '$HOME/.ostap'

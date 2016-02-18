@@ -120,7 +120,7 @@ Analysis  = cpp.Analysis
 # =============================================================================
 # logging 
 # =============================================================================
-from   AnalysisPython.Logger import getLogger 
+from   Ostap.Logger import getLogger 
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.Selectors' )
 else                       : logger = getLogger ( __name__          )
 # =============================================================================
@@ -464,7 +464,7 @@ class SelectorWithVars(SelectorWithCuts) :
         #
         ## create the logger 
         #
-        from   AnalysisPython.Logger           import getLogger
+        from   Ostap.Logger           import getLogger
         self._logger = getLogger ( fullname ) 
         #
 

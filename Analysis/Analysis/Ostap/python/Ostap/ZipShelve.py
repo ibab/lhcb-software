@@ -139,7 +139,7 @@ __all__ = (
 # if not logger.handlers : logging.basicConfig()
 # logger.setLevel(logging.INFO)
 # =============================================================================
-from AnalysisPython.Logger import getLogger
+from Ostap.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'ZipShelve' )
 else                      : logger = getLogger ( __name__    )
 # =============================================================================

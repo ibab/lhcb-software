@@ -71,13 +71,12 @@ import ROOT, glob
 # =============================================================================
 # logging 
 # =============================================================================
-from   AnalysisPython.Logger import getLogger 
+from   Ostap.Logger import getLogger 
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.Data' )
 else                       : logger = getLogger ( __name__     )
 # =============================================================================
 if not hasattr ( ROOT.TTree , '__len__' ) :  
     ROOT.TTree. __len__ = lambda s : s.GetEntries()
-        
 # =============================================================================
 ## @class Files
 #  Simple utility to pickup the list of files 
@@ -85,9 +84,7 @@ if not hasattr ( ROOT.TTree , '__len__' ) :
 #  @author Alexander BARANOV a.baranov@cern.ch
 #  @date   2014-06-08  
 class Files(object):
-    """
-    Simple utility to pickup the list of files 
-    
+    """Simple utility to pickup the list of files     
     >>> data  = Files( '*.root' )
     >>> files = data.files 
     """    
@@ -156,9 +153,7 @@ class Files(object):
 #  @author Alexander BARANOV a.baranov@cern.ch
 #  @date   2014-06-08  
 class Data(Files):
-    """
-    Simple utility to access to certain chain in the set of ROOT-files
-    
+    """Simple utility to access to certain chain in the set of ROOT-files
     >>> data  = Data('Bc/MyTree', '*.root' )
     >>> chain = data.chain
     >>> flist = data.files 
@@ -179,8 +174,7 @@ class Data(Files):
         
     ## the specific action for each file 
     def treatFile ( self, the_file ) :
-        """
-        Add the file to TChain
+        """Add the file to TChain
         """
         Files.treatFile ( self , the_file )
         
@@ -208,9 +202,7 @@ class Data(Files):
 #  @author Alexander BARANOV a.baranov@cern.ch
 #  @date   2014-06-08  
 class Data2(Data):
-    """
-    Simple utility to access to certain chain in the set of ROOT-files
-    
+    """Simple utility to access to certain chain in the set of ROOT-files    
     >>> data  = Data('Bc/MyTree', '*.root' )
     >>> chain = data.chain
     >>> flist = data.files 
@@ -265,9 +257,7 @@ class Data2(Data):
 #  @author Alexander BARANOV a.baranov@cern.ch
 #  @date   2014-06-08  
 class DataAndLumi(Data2):
-    """
-    Simple utility to access to certain chain in the set of ROOT-files
-    
+    """Simple utility to access to certain chain in the set of ROOT-files    
     >>> data  = DataAndLumi('Bc/MyTree', '*.root' )
     >>> chain = data.chain
     >>> flist = data.files 

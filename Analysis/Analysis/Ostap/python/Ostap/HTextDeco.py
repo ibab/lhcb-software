@@ -29,7 +29,7 @@ VE  = cpp.Gaudi.Math.ValueWithError
 # =============================================================================
 # logging 
 # =============================================================================
-from AnalysisPython.Logger import getLogger 
+from Ostap.Logger import getLogger 
 if '__main__' ==  __name__ : logger = getLogger( 'Ostap.HTextDeco' )
 else                       : logger = getLogger( __name__ )
 # =============================================================================

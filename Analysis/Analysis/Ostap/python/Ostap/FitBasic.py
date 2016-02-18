@@ -39,7 +39,7 @@ __all__     = (
     )
 # =============================================================================
 import ROOT, math
-from   AnalysisPython.Logger     import getLogger
+from   Ostap.Logger     import getLogger
 from   Ostap.PyRoUts             import VE, hID, allInts, cpp, rootID
 from   Ostap.PyRoUts             import h1_axis , h2_axes 
 from   Ostap.Utils               import roo_silent 
