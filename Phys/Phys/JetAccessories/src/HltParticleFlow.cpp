@@ -377,7 +377,6 @@ void HltParticleFlow::add(const ProtoParticle *pro, const Input &in) {
       max = val; best = idx;
     } m = m_proBestMs[best]; pid = m_proBestPids[best];
   }
-  pid *= pro->charge() >= 0 ? 1 : -1;
   Particle *prt(create(pro, pid, m));
   if (!prt) return;
   use(pro, m_sprRecover ? prt : 0);
@@ -388,8 +387,7 @@ void HltParticleFlow::add(const ProtoParticle *pro, const Input &in) {
 void HltParticleFlow::add(const Track *trk, const Input &in) {
   if (in.ban) {use(trk, 0); return;}
   if (used(trk)) return;
-  double m(in.m); int pid(in.pid*(trk->charge() >= 0 ? 1 : -1));
-  Particle *prt(create(trk, pid, m));
+  Particle *prt(create(trk, in.pid, in.m));
   if (!prt) return;
   use(trk, m_sprRecover ? prt : 0);
   if (m_prtVrt) relate(prt);
