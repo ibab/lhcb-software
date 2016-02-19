@@ -24,6 +24,22 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2016-02-19 - Vanya Belyaev
+ - more fixes to data-access utilitis 
+ - improve logging and colorization 
+ - add function run_progress for running "with progress bar"
+    >>> run_progress(100)
+
+
+! 2016-02-19 - Vanya Belyaev
+ - bender : 
+   1) allow '-g/--grid'  option to get a list of GRID sites to look for data  (default is [ CERN ] ) e.g.
+
+      bender /lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000245_1.allstreams.dst -g RAL PIC
+
+      the order of elements in the list defines the relative priority 
+   2) add option '--no-color' that suprpeses the colorized prints (both logging and Gaudi)
+
 ! 2016-02-17 - Vanya Belyaev
  - fix get-grid-url and grid_url.py scripts 
 

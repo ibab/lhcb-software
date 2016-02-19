@@ -92,7 +92,7 @@ for i in [
     m = i[1]
     
     if not hasattr ( t , 'size' ) :
-        logger.debug ( 'decorate packed type: %s ' % t  ) 
+        logger.verbose ( 'decorate packed type: %s ' % t  ) 
         t.get_data    = getattr ( t , m ) 
         t.__len__     = lambda s : s.get_data().size()
         t.size        = lambda s : len  ( s )

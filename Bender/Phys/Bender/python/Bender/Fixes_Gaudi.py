@@ -133,11 +133,11 @@ if not hasattr ( _EvtSel , '_openNew_') :
 
     _EvtSel._openNew_ = _openNew_
     _EvtSel.open      = _openNew_
-    logger.debug ( 'decorate iEventSelector to deal with RAW/MDF & CASTOR -files' ) 
+    logger.verbose ( 'decorate iEventSelector to deal with RAW/MDF & CASTOR -files' ) 
 
 ## Decorate iDataSvc with proper dir/ls methods '
 import AnalysisPython.Dir 
-logger.debug ( 'decorate iDataSvc with proper "dir/ls" methods ')
+logger.verbose( 'decorate iDataSvc with proper "dir/ls" methods ')
 
 ## decorate the algorithms with the proper dumpHistos methods
 import GaudiPython.Bindings 
@@ -145,7 +145,7 @@ _iAlgorithm = GaudiPython.Bindings.iAlgorithm          ##    Algorithm interface
 _iAlgTool   = GaudiPython.Bindings.iAlgTool            ##         Tool interface
 for _t in ( _iAlgorithm , _iAlgTool ) :
     if not hasattr ( _t , 'dumpHistos' ) :
-        logger.debug ( 'decorate iAlgoritm/iAlgTool with "dumpHistos" method') 
+        logger.verbose ( 'decorate iAlgoritm/iAlgTool with "dumpHistos" method') 
         ## dump all histogram from the given component 
         def _dumpHistos ( cmp , *args ) :
             """ASCII-Dump for 1D-histograms and 1D-profiles
@@ -160,11 +160,11 @@ for _t in ( _iAlgorithm , _iAlgTool ) :
         _t.dumpHistos = _dumpHistos 
 
 if not hasattr ( _iAlgorithm , 'isEnabled' ) :
-    logger.debug ( 'decorate iAlgoritm with "isEnabled" method')
+    logger.verbose ( 'decorate iAlgoritm with "isEnabled" method')
     _iAlgorithm.isEnabled = lambda self : self.__call_interface_method__("_ialg","isEnabled")
 
 if not hasattr ( _iAlgorithm , 'setEnabled' ) :
-    logger.debug ( 'decorate iAlgoritm with "setEnabled" method' )
+    logger.verbose ( 'decorate iAlgoritm with "setEnabled" method' )
     ## enable/disbale 
     def __set_Enabled_ ( self , value ) :
         self.Enable = True if value else False
@@ -221,7 +221,7 @@ if not hasattr ( _AppMgr , '_new_topAlg_' ) :
 
     _AppMgr._new_topAlg_ = __top_Algs_
     _AppMgr.topAlgs      = __top_Algs_
-    logger.debug ( 'decorate AppMgr.topAlgs() ' )
+    logger.verbose ( 'decorate AppMgr.topAlgs() ' )
 
 ##
 if not hasattr ( _AppMgr , '_new_allAlg_' ) :
@@ -241,7 +241,7 @@ if not hasattr ( _AppMgr , '_new_allAlg_' ) :
 
     _AppMgr._new_allAlg_ = __all_Algs_
     _AppMgr.allAlgs      = __all_Algs_
-    logger.debug ( 'decorate AppMgr.allAlgs() ' ) 
+    logger.verbose ( 'decorate AppMgr.allAlgs() ' ) 
 
 ##
 if not hasattr ( _AppMgr , '_disable_Tops_' ) :
@@ -264,7 +264,7 @@ if not hasattr ( _AppMgr , '_disable_Tops_' ) :
 
     _AppMgr._disable_Tops_   = __disable_Top_ 
     _AppMgr.disableTopAlgs   = __disable_Top_ 
-    logger.debug ( 'decorate AppMgr.disableTopAlgs() ' ) 
+    logger.verbose ( 'decorate AppMgr.disableTopAlgs() ' ) 
 
 ## 
 if not hasattr ( _AppMgr , '_disable_All_' ) :
@@ -287,7 +287,7 @@ if not hasattr ( _AppMgr , '_disable_All_' ) :
 
     _AppMgr._disable_All_   = __disable_All_ 
     _AppMgr.disableAllAlgs  = __disable_All_ 
-    logger.debug ( 'decorate AppMgr.disableAllAlgs() ' ) 
+    logger.verbose ( 'decorate AppMgr.disableAllAlgs() ' ) 
 
 
 ## decorate Incident Service 
@@ -335,7 +335,7 @@ if not hasattr ( _AppMgr , 'incSvc' ) :
         return iIncSvc(name, svc)
     
     _AppMgr. incSvc = _incSvc_
-    logger.debug ( 'decorate AppMgr.incSvc() ' ) 
+    logger.verbose ( 'decorate AppMgr.incSvc() ' ) 
 
 ## decorate Context Service 
 if not hasattr ( _AppMgr , 'cntxSvc' ) : 
@@ -404,7 +404,7 @@ if not hasattr ( _AppMgr , 'cntxSvc' ) :
     
     _AppMgr.   cntxSvc = _cntxSvc_
     _AppMgr. contexSvc = _cntxSvc_
-    logger.debug ( 'decorate AppMgr.cntxSvc() ' ) 
+    logger.verbose ( 'decorate AppMgr.cntxSvc() ' ) 
 
 
 ## decorate Event Collection service
@@ -424,7 +424,7 @@ if not hasattr ( _AppMgr , 'evtColSvc' ) :
 
     _AppMgr. evtcolSvc = _evtcolsvc_
     _AppMgr. evtColSvc = _evtcolsvc_
-    logger.debug ( 'decorate AppMgr.evtColSvc() ' ) 
+    logger.verbose ( 'decorate AppMgr.evtColSvc() ' ) 
 
 # =============================================================================
 ## get the links from data object  
@@ -448,7 +448,7 @@ cpp.DataObject.links = _links_
 ## decorate Particle Property Service 
 if not hasattr ( _AppMgr , 'ppSvc' ) :
     import PartProp.Service 
-    logger.debug ( 'decorate AppMgr.ppSvc() ') 
+    logger.verbose ( 'decorate AppMgr.ppSvc() ') 
 
 
 if not hasattr ( _AppMgr , 'magSvc' ) :
@@ -594,13 +594,13 @@ if not hasattr ( _AppMgr , 'magSvc' ) :
         return iLHCbMagnetSvc ( name , svc )
     
     _AppMgr. magFieldSvc = _app_magFieldSvc_
-    logger.debug ( 'decorate AppMgr.magFieldSvc() ' ) 
+    logger.verbose ( 'decorate AppMgr.magFieldSvc() ' ) 
     _AppMgr. magSvc      = _app_magSvc_
-    logger.debug ( 'decorate AppMgr.magSvc()      ' ) 
+    logger.verbose ( 'decorate AppMgr.magSvc()      ' ) 
 
 
 # =============================================================================
-logger.debug ( 'Suppress excessive prints from GaudiPython.TupleUtils') 
+logger.verbose ( 'Suppress excessive prints from GaudiPython.TupleUtils') 
 # =============================================================================
 import GaudiPython.TupleUtils as _TU 
 
@@ -704,7 +704,7 @@ if not hasattr ( GaudiPython.Bindings.iAlgTool , '_old_init_' ) :
     GaudiPython.Bindings.iAlgTool.interface_methods = _interface_methods_  
     GaudiPython.Bindings.iAlgTool.__getattr__       = _itool_getattrib_   
     
-    logger.debug ( 'more decoration for iAlgTool: add interface methods') 
+    logger.verbose ( 'more decoration for iAlgTool: add interface methods') 
 
 
 
@@ -760,7 +760,7 @@ if not hasattr ( GaudiPython.Bindings.iToolSvc , 'tool' ) :
     
     GaudiPython.Bindings.iToolSvc.tool = _its_tool_
     
-    logger.debug ( 'Decoration for iToolSvc.tool') 
+    logger.verbose ( 'Decoration for iToolSvc.tool') 
     
     
 
@@ -773,7 +773,7 @@ def _sc_print_ ( sc ) :
     """
     if   sc.isSuccess     () : return 'SUCCESS'
     elif sc.isRecoverable () : return 'RECOVERABLE'
-    elif 1 != sc.getCode  () : return 'FAILURE[%d]' % sc.getCode()
+    elif 0 != sc.getCode  () : return 'FAILURE[%d]' % sc.getCode()
     return 'FAILURE'
 
 cpp.StatusCode .__repr__ = _sc_print_

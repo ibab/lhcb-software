@@ -59,17 +59,51 @@ __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2012-03-16"
 __version__ = '$Revision$'
 __all__     = (
-    'getLogger' , 
+    'getLogger' ,
+    'setLogging' 
     )
 # =============================================================================
+## some manipulations with logging module 
 import logging
-logging.addLevelName( logging.CRITICAL  , 'FATAL  '  )
-logging.addLevelName( logging.WARNING   , 'WARNING'  )
-logging.addLevelName( logging.DEBUG     , 'DEBUG  '  )
-logging.addLevelName( logging.INFO      , 'INFO   '  )
-logging.addLevelName( logging.ERROR     , 'ERROR  '  )
+logging.addLevelName ( logging.CRITICAL  , 'FATAL  '  )
+logging.addLevelName ( logging.WARNING   , 'WARNING'  )
+logging.addLevelName ( logging.DEBUG     , 'DEBUG  '  )
+logging.addLevelName ( logging.INFO      , 'INFO   '  )
+logging.addLevelName ( logging.ERROR     , 'ERROR  '  )
+if not hasattr ( logging , 'VERBOSE' ) :
+    logging.VERBOSE = 5
+logging.addLevelName ( logging.VERBOSE   , 'VERBOSE'  )
+    
+def _verbose1_(self, msg, *args, **kwargs):
+        """
+        Log 'msg % args' with severity 'VERBOSE'.
+        """
+        if self.isEnabledFor(logging.VERBOSE):
+            self._log(logging.VERBOSE, msg, args, **kwargs)
 
+def _verbose2_(msg, *args, **kwargs):
+    """
+    Log a message with severity 'DEBUG' on the root logger.
+    """
+    if len(logging.root.handlers) == 0:
+        logging.basicConfig()
+    logging.root.verbose (msg, *args, **kwargs)
 
+logging.Logger.verbose = _verbose1_
+logging.verbose        = _verbose2_
+
+## convert MSG::Level into logging level 
+def setLogging ( output_level ) :
+    """Convert MSG::Level into logging level 
+    """
+    if   6 <= output_level : logging.disable ( logging.FATAL   - 1 )
+    elif 5 <= output_level : logging.disable ( logging.ERROR   - 1 )
+    elif 4 <= output_level : logging.disable ( logging.WARNING - 1 )
+    elif 3 <= output_level : logging.disable ( logging.INFO    - 1 )
+    elif 2 <= output_level : logging.disable ( logging.DEBUG   - 1 )
+    elif 1 <= output_level : logging.disable ( logging.VERBOSE - 1 )
+
+# =============================================================================
 __with_colors_ = False
 
 def with_colors() :
@@ -88,6 +122,7 @@ def with_ipython()  :
         return False 
 
 
+## male colors 
 def make_colors () :
 
     ##return
@@ -160,9 +195,10 @@ def getLogger ( name ) :
     ## elif _columns > 120 :
     ##     return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)-80s ## %(filename)s'            )
     ## else :
-    
-    if not with_colors() : return gL ( name ) 
-    return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)s' )
+
+    level = logging.VERBOSE - 1 
+    if not with_colors() : return gL ( name , level = level ) 
+    return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)s' , level = level ) 
 
 if '__main__' == __name__ : logger = getLogger ( 'Bender.Logger' )
 else                      : logger = getLogger ( __name__ )

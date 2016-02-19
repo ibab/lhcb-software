@@ -230,21 +230,20 @@ def inEOS ( fname            ,
 #  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
 #  @date 2012-10-10
 def hasGridProxy ( ) : 
+    """Check GRID proxy
+    >>> hasGridProxy () 
     """
-    Check GRID proxy 
-    """
-    #
-    ## 1-check lhcb-proxy-info
-    #
     import os
     from subprocess import Popen, PIPE
-    p   = Popen (  ['lhcb-proxy-info' , '--checkvalid' ] ,
-                   env       = os.environ ,
-                   stdout    = PIPE       ,
-                   stderr    = None       )
+    arguments = ['lhcb-proxy-info' , '--checkvalid' ] 
+    logger.verbose ( 'use Popen(%s)' % arguments )
+    p   = Popen ( arguments              ,
+                  env       = os.environ ,
+                  stdout    = PIPE       ,
+                  stderr    = None       )
     (cout,cerr) = p.communicate()
     #
-    return 0 == p.returncode 
+    return 0 == p.returncode and cout 
 
 # =============================================================================
 ## check the presence of file in Grid and get the access URL
@@ -253,7 +252,7 @@ def hasGridProxy ( ) :
 #  @date 2012-10-10
 def inGrid ( filename , grid = [] ) :
     """Check the presence of file in Grid and get the access URL
-    outptu depends on the 'grid' argument
+    Result depends on supplied 'grid' argument
 
     Get the access URL for certain GRID site:
     >>> inGrid('/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000245_1.allstreams.dst','RAL')
@@ -291,7 +290,7 @@ def inGrid ( filename , grid = [] ) :
     from subprocess import Popen, PIPE
     arguments =  [ 'get-grid-url', filename ]
     if grid   : arguments += ["--Sites" ] + grid
-    logger.debug('use Popen(%s)' % arguments )
+    logger.verbose('use Popen(%s)' % arguments )
     p   = Popen ( arguments               ,
                   env       = os.environ  ,
                   stdout    = PIPE        ,
@@ -477,7 +476,7 @@ def extendfile2 ( filename       ,
         #
     iohstr = str(ioh) 
     if not _gaudi and not _local_dict_.has_key( iohstr ) : 
-        logger.debug ( 'extendfile2: make use of IOHelper.setupServices() ')
+        logger.verbose ( 'extendfile2: make use of IOHelper.setupServices() ')
         ioh.setupServices ()
         _local_dict_[ iohstr ] = 1
         ##

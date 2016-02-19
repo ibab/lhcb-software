@@ -61,6 +61,7 @@ __version__ = '$Revision$'
 __all__     = (
     ##
     'run'                , ## run  N events
+    'run_progress'       , ## run  N events with progress bar 
     'irun'               , ## "generator" to run  N events 
     'skip'               , ## skip N events 
     'next'               , ## go to run event
@@ -96,8 +97,8 @@ from Bender.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'Bender.Utils' )
 else                      : logger = getLogger ( __name__ )
 ## ============================================================================
-__Bender_PreRun_Actions    = [ lambda : logger.debug('"run"    pre-action' ) ]
-__Bender_PostRun_Actions   = [ lambda : logger.debug('"run"   post-action' ) ]
+__Bender_PreRun_Actions    = [ lambda : logger.verbose('"run"    pre-action' ) ]
+__Bender_PostRun_Actions   = [ lambda : logger.verbose('"run"   post-action' ) ]
 __Bender_PreInit_Actions   = []
 __Bender_PostInit_Actions  = []
 __Bender_PreStart_Actions  = [] 
@@ -289,6 +290,26 @@ def run ( nEvents     =   -1 ,
             st.setCode ( 2 )
             
     return st 
+
+# =============================================================================
+## run N events with progress bar 
+#  @code
+#  run_progress (10)
+#  @endcode 
+def run_progress ( nEvents ) : 
+    """Run gaudi showing the progress bar  
+    >>> run_progress ( 50 )
+    """
+    if nEvents <= 0 : return run ( nEvents )
+    ##
+    from GaudiPython.Bindings import gbl as cpp 
+    sc   = cpp.StatusCode(cpp.StatusCode.SUCCESS)
+    from Ostap.progress_bar import progress_bar
+    for i in  progress_bar ( xrange ( nEvents ) ) :
+        sc = run ( i )
+        if sc.isFailure() : return sc 
+        
+    return sc
 
 # ==============================================================================
 ## Run over events till certain number of good events is found
