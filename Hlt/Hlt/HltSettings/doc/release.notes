@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-02-19 - Francesco Dettori
+ - Adding 2016 settings for muons (Single and DiMuon)
+
 ! 2016-02-19 - Mika Vesterinen
  - Pick up the changes from BandQ and create 2016 settings for TrackEff module
 
