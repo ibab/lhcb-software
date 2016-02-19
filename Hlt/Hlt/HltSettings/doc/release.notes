@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-02-19 - Francesco Dettori
+ - Correcting settings for Hlt1DiMuonNoL0
+
 ! 2016-02-19 - Sascha Stahl
  - Fix TurboOnly settings.
 

@@ -189,11 +189,11 @@ class Physics_pp_Draft2016( object ):
                                                , 'DiMuonNoL0_VxDOCA'     :  0.2
                                                , 'DiMuonNoL0_VxChi2'     :   25.
                                                , 'DiMuonNoL0_P'          : 3000.
-                                               , 'DiMuonNoL0_PT'         :    0.
-                                               , 'DiMuonNoL0_TrChi2'     :    3.
+                                               , 'DiMuonNoL0_PT'         :   80.
+                                               , 'DiMuonNoL0_TrChi2'     :    4.
                                                , 'DiMuonNoL0_M'          :    0.
-                                               , 'DiMuonNoL0_IPChi2'     :    4.
-                                               , 'DiMuonNoL0_GEC'        : 'Loose'
+                                               , 'DiMuonNoL0_IPChi2'     :    9.
+                                               , 'DiMuonNoL0_GEC'        : 'Tight'
                                                , 'MultiMuonNoL0_P'          : 6000
                                                , 'MultiMuonNoL0_PT'         :  500
                                                , 'MultiMuonNoL0_TrChi2'     :    3.
@@ -220,7 +220,7 @@ class Physics_pp_Draft2016( object ):
                                                                              }
                                                , 'Prescale'                 : { 'Hlt1NoPVPassThrough': 1.0,
                                                                                 'Hlt1SingleMuonNoIP' : 0.01,
-                                                                                'Hlt1DiMuonNoL0'  : 0.01,
+                                                                                'Hlt1DiMuonNoL0'  :  1.0,
                                                                                 'Hlt1MultiMuonNoL0'  : 0.01
                                                                                 }
                                                }
