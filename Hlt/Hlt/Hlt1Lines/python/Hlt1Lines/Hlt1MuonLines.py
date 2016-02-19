@@ -44,6 +44,13 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  , 'DiMuonHighMass_TrChi2'    :    4.
                  , 'DiMuonHighMass_M'         : 2900.
                  , 'DiMuonHighMass_GEC'       : 'Loose'
+                 , 'DiMuonHighMassBE_VxDOCA'  :  0.2
+                 , 'DiMuonHighMassBE_VxChi2'  :   25.
+                 , 'DiMuonHighMassBE_P'       : 6000.
+                 , 'DiMuonHighMassBE_PT'      :  200.
+                 , 'DiMuonHighMassBE_TrChi2'  :    4.
+                 , 'DiMuonHighMassBE_M'       : 2900.
+                 , 'DiMuonHighMassBE_GEC'     : 'Loose'
                  , 'DiMuonNoIP_VxDOCA'    :  0.1
                  , 'DiMuonNoIP_VxChi2'    :    9.
                  , 'DiMuonNoIP_P'         : 6000.
@@ -95,6 +102,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                                                   'DiMuonLowMass'    : ( 'Muon', 'DiMuon' ),
                                                   'DiMuonNoL0'       : ('Muon','DiMuon','Hadron','Photon', 'Electron'),
                                                   'DiMuonHighMass'   : ( 'Muon', 'DiMuon' ),
+                                                  'DiMuonHighMassBE'   : ( 'Muon', 'DiMuon' ),
                                                   'DiMuonNoIP'   : ( 'Muon', 'DiMuon' ),
                                                   'MultiMuonNoL0'    : ( 'Muon', 'DiMuon' ),
                                                   'MultiDiMuonNoIP'    : ( 'Muon', 'DiMuon' ),
@@ -586,6 +594,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                      ( 'SingleMuonNoIP',   self.singleMuon_streamer ),
                      ( 'DiMuonLowMass',    self.diMuonDetached_streamer ),
                      ( 'DiMuonHighMass',   self.diMuon_streamer ),
+                     ( 'DiMuonHighMassBE', self.diMuon_streamer ),
                      ( 'DiMuonNoIP',   self.diMuon_streamer ),
                      ( 'DiMuonNoL0',       self.diMuonNoL0_streamer ),
                      ( 'MultiMuonNoL0',    self.multiMuon_streamer ) ,

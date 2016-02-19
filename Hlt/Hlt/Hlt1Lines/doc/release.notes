@@ -5,6 +5,8 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2016-02-19 - Francesco Dettori
+ - Adding back the Hlt1DiMuonHighMassBE, special dedicated line for BE collisions
 
 ! 2016-02-14 - Simone Stracka
  - Add Hlt1BottomoniumLines.py including: 
