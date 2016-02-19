@@ -5,6 +5,9 @@
 ! Created     : 2015-02-04
 ! -----------------------------------------------------------------------------
 
+! 2016-02-19 - Ricardo Vazquez Gomez
+ - Fix in Cache for S21r0,1p1
+
 ! 2016-02-18 - Ricardo Vazquez Gomez
  - Added StrippingCache for S21r0p1 and S21r1p1
 
