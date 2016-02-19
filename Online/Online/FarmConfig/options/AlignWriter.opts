@@ -36,11 +36,12 @@ AlignDataWriter_Tracker.PrintFreq                 = 1.0;
 AlignDataWriter_Tracker.Requirements         = {
 "EvType=2;TriggerMask=0x0,0x00200000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
-AlignDataWriter_Tracker.MEPFilePrefix          = "/localdisk/Alignment/Tracker/Run_";
-AlignDataWriter_Tracker.EvtFilePrefix          = "/localdisk/Alignment/Tracker/Run_";
+AlignDataWriter_Tracker.MEPFilePrefix          = "/Alignment/Tracker/Run_";
+AlignDataWriter_Tracker.EvtFilePrefix          = "/Alignment/Tracker/Run_";
 AlignDataWriter_Tracker.MaxEvents              = 1000;
 AlignDataWriter_Tracker.DIMSteering = 1;
 AlignDataWriter_Tracker.PartitionName             = @OnlineEnv.PartitionName;
+AlignDataWriter_Tracker.DeviceList = {"/localdisk","/localdisk1","/localdisk2"};
 
 AlignDataWriter_Rich.SizeLimit            = @Param.FileSizeLimit;
 AlignDataWriter_Rich.PrintFreq            = 1.0;
@@ -52,9 +53,10 @@ AlignDataWriter_Rich.DIMSteering = 1;
 AlignDataWriter_Rich.Requirements         = {
 "EvType=2;TriggerMask=0x0,0x00400000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
-AlignDataWriter_Rich.MEPFilePrefix        = "/localdisk/Alignment/Rich/Run_";
-AlignDataWriter_Rich.EvtFilePrefix        = "/localdisk/Alignment/Rich/Run_";
+AlignDataWriter_Rich.MEPFilePrefix        = "/Alignment/Rich/Run_";
+AlignDataWriter_Rich.EvtFilePrefix        = "/Alignment/Rich/Run_";
 AlignDataWriter_Rich.MaxEvents            = 1000;
+AlignDataWriter_Rich.DeviceList = {"/localdisk","/localdisk1","/localdisk2"};
 
 AlignDataWriter_Velo.SizeLimit            = @Param.FileSizeLimit;
 AlignDataWriter_Velo.PrintFreq            = 1.0;
@@ -67,9 +69,10 @@ AlignDataWriter_Velo.Requirements         = {
 "EvType=2;TriggerMask=0x0,0x00000008,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 ,"EvType=2;TriggerMask=0x0,0x00004000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
-AlignDataWriter_Velo.MEPFilePrefix        = "/localdisk/Alignment/Velo/Run_";
-AlignDataWriter_Velo.EvtFilePrefix        = "/localdisk/Alignment/Velo/Run_";
+AlignDataWriter_Velo.MEPFilePrefix        = "/Alignment/Velo/Run_";
+AlignDataWriter_Velo.EvtFilePrefix        = "/Alignment/Velo/Run_";
 AlignDataWriter_Velo.MaxEvents            = 1000;
+AlignDataWriter_Velo.DeviceList = {"/localdisk","/localdisk1","/localdisk2"};
 
 AlignDataWriter_Muon.SizeLimit            = @Param.FileSizeLimit;
 AlignDataWriter_Muon.PrintFreq            = 1.0;
@@ -81,11 +84,12 @@ AlignDataWriter_Muon.PartitionName             = @OnlineEnv.PartitionName;
 AlignDataWriter_Muon.Requirements         = {
 "EvType=2;TriggerMask=0x0,0x01000000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
-AlignDataWriter_Muon.MEPFilePrefix        = "/localdisk/Alignment/Muon/Run_";
-AlignDataWriter_Muon.EvtFilePrefix        = "/localdisk/Alignment/Muon/Run_";
+AlignDataWriter_Muon.MEPFilePrefix        = "/Alignment/Muon/Run_";
+AlignDataWriter_Muon.EvtFilePrefix        = "/Alignment/Muon/Run_";
 AlignDataWriter_Muon.MaxEvents            = 1000;
 AlignDataWriter_Muon.DIMSteering = 1;
 AlignDataWriter_Muon.PartitionName             = @OnlineEnv.PartitionName;
+AlignDataWriter_Muon.DeviceList = {"/localdisk","/localdisk1","/localdisk2"};
 
 AlignDataWriter_Calo.SizeLimit            = @Param.FileSizeLimit;
 AlignDataWriter_Calo.PrintFreq            = 1.0;
@@ -97,11 +101,12 @@ AlignDataWriter_Calo.PartitionName             = @OnlineEnv.PartitionName;
 AlignDataWriter_Calo.Requirements         = {
 "EvType=2;TriggerMask=0x0,0x18000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
-AlignDataWriter_Calo.MEPFilePrefix        = "/localdisk/Alignment/Calo/Run_";
-AlignDataWriter_Calo.EvtFilePrefix        = "/localdisk/Alignment/Calo/Run_";
+AlignDataWriter_Calo.MEPFilePrefix        = "/Alignment/Calo/Run_";
+AlignDataWriter_Calo.EvtFilePrefix        = "/Alignment/Calo/Run_";
 AlignDataWriter_Calo.MaxEvents            = 1000;
 AlignDataWriter_Calo.DIMSteering = 1;
 AlignDataWriter_Calo.PartitionName             = @OnlineEnv.PartitionName;
+AlignDataWriter_Calo.DeviceList = {"/localdisk","/localdisk1","/localdisk2"};
 
 AlignDataWriter_BWDivision.SizeLimit            = @Param.FileSizeLimit;
 AlignDataWriter_BWDivision.PrintFreq            = 1.0;
@@ -113,11 +118,12 @@ AlignDataWriter_BWDivision.PartitionName             = @OnlineEnv.PartitionName;
 AlignDataWriter_BWDivision.Requirements         = {
 "EvType=2;TriggerMask=0x0,0x800000,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
-AlignDataWriter_BWDivision.MEPFilePrefix        = "/localdisk/Alignment/BWDivision/Run_";
-AlignDataWriter_BWDivision.EvtFilePrefix        = "/localdisk/Alignment/BWDivision/Run_";
+AlignDataWriter_BWDivision.MEPFilePrefix        = "/Alignment/BWDivision/Run_";
+AlignDataWriter_BWDivision.EvtFilePrefix        = "/Alignment/BWDivision/Run_";
 AlignDataWriter_BWDivision.MaxEvents            = 1000;
 AlignDataWriter_BWDivision.DIMSteering = 1;
 AlignDataWriter_BWDivision.PartitionName             = @OnlineEnv.PartitionName;
+AlignDataWriter_BWDivision.DeviceList = {"/localdisk","/localdisk1","/localdisk2"};
 //
 //
 //
@@ -132,8 +138,9 @@ AlignDataWriter_HLTTiming.PartitionName             = @OnlineEnv.PartitionName;
 AlignDataWriter_HLTTiming.Requirements         = {
 "EvType=2;TriggerMask=0x0,0x80,0x0,0x0;VetoMask=0x10000,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
-AlignDataWriter_HLTTiming.MEPFilePrefix        = "/localdisk/Alignment/HLTTiming/Run_";
-AlignDataWriter_HLTTiming.EvtFilePrefix        = "/localdisk/Alignment/HLTTiming/Run_";
+AlignDataWriter_HLTTiming.MEPFilePrefix        = "/Alignment/HLTTiming/Run_";
+AlignDataWriter_HLTTiming.EvtFilePrefix        = "/Alignment/HLTTiming/Run_";
 AlignDataWriter_HLTTiming.MaxEvents            = 100;
 AlignDataWriter_HLTTiming.DIMSteering = 0;
 AlignDataWriter_HLTTiming.PartitionName             = @OnlineEnv.PartitionName;
+AlignDataWriter_HLTTiming.DeviceList = {"/localdisk","/localdisk1","/localdisk2"};

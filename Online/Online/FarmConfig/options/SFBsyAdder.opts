@@ -1,0 +1,23 @@
+//ApplicationMgr.ExtSvc               += {"MonitorSvc"};
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+
+Runable.Wait                         = 3;  // 1 of running as daemon (Class1 task)
+
+MessageSvc.fifoPath                  = "$LOGFIFO";
+//MessageSvc.OutputLevel               = 3;
+//MonitorSvc.OutputLevel               = 3;
+HistogramPersistencySvc.Warnings     = false;
+//MonitorSvc.CounterUpdateInterval     = 5;
+ApplicationMgr.ExtSvc               += {"AdderSvc/BusyAdder"};
+
+BusyAdder.MyName                = "<part>_<node>_BusyMon";
+BusyAdder.PartitionName         = "GEN";
+BusyAdder.TaskPattern           = "<part>_<node>[0-9][0-9]_BusyMon";
+BusyAdder.ServicePattern        = "MON_<part>_<node>[0-9][0-9]_BusyMon/Counter/";
+BusyAdder.AdderClass            = "Counter";
+BusyAdder.ReceiveTimeout          = 6;
+BusyAdder.InDns     = "<node>";
+BusyAdder.OutDns     = "hlt01";

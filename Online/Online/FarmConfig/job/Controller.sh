@@ -34,18 +34,21 @@ fi;
 ctrl_args="-count=${NBOFSLAVES} -bindcpu=0";
 PRINT_LEVEL=4;
 #
+if test "${PARTITION_NAME}" = "LHCb"; then
+    #PRINT_LEVEL=3;
+    ctrl_args="${ctrl_args} -service=${UTGID}/NTasks"
+fi;
 if test "${PARTITION_NAME}" = "LHCb2"; then
     # This will make the controller wait until on PAUSE all slaves are paused.
-    #PRINT_LEVEL=2;
-    #PRINT_LEVEL=4;
+    #PRINT_LEVEL=3;
+    PRINT_LEVEL=4;
     #ctrl_args="-fsm=DAQPause";
+    ctrl_args="${ctrl_args} -service=${UTGID}/NTasks"
     echo "[INFO] ${UTGID} Partition:${PARTITION_NAME} FSM protocol: ${ctrl_args} Print-Level:${PRINT_LEVEL}";
 #    if test "${HH}" = "HLTC0411"; then
 #	ctrl_args="-count=22 -bindcpu=0";
 #    fi;
 fi;
-#cd /group/online/dataflow/cmtuser/OnlineDev_v5r25;
-#
 #if test "${HH}" = "HLTA0328"; then
 #  if test "${PARTITION_NAME}" = "LHCb"; then
 #    cd /home/frankm/cmtuser/OnlineDev_v5r24;
@@ -64,4 +67,5 @@ exec -a ${UTGID} fsm_ctrl.exe \
     -runinfo=${RUNINFO} \
     -mode=${MOORESTARTUP_MODE} \
     -taskconfig=${ARCH_FILE} \
+    -maxcount=40 \
     ${ctrl_args}

@@ -9,5 +9,5 @@
 #
 # =========================================================================
 #
-export CMTCONFIG=x86_64-slc6-gcc48-opt;
+export CMTCONFIG=x86_64-slc6-gcc49-opt;
 . /group/hlt/MOORE/${MOOREONLINE_VERSION}/InstallArea/runMooreOnline_EFF.sh ${DIM_DNS_NODE} ${PARTITION_NAME} ${NBOFSLAVES}

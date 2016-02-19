@@ -2,6 +2,7 @@
 CheckpointSvc.Partition           = @OnlineEnv.PartitionName;
 CheckpointSvc.FirstChild          = 0;
 CheckpointSvc.ChildSleep          = 100;
+CheckpointSvc.MaxChildren         = 40;
 CheckpointSvc.TaskType            = "$TASK_TYPE";
 CheckpointSvc.UtgidPattern        = "%P_%NN_%T_%02d";
 CheckpointSvc.UtgidPattern        = "%UTGID%02d";

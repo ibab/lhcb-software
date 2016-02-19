@@ -9,7 +9,7 @@
 #
 # =========================================================================
 #
-export CMTCONFIG=x86_64-slc6-gcc48-opt;
+export CMTCONFIG=x86_64-slc6-gcc49-opt;
 export DAQ_INHIBIT_FINALIZE=ON;
 export HN=`hostname -s | tr a-z A-Z`;
 if test -f "/group/online/dataflow/options/LHCb2/Nodes/${HN}_TriggerInfo.py";
