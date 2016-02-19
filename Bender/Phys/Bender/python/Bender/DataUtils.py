@@ -247,16 +247,36 @@ def hasGridProxy ( ) :
     return 0 == p.returncode 
 
 # =============================================================================
-## check the presence of file in Grid and get the access URL  
+## check the presence of file in Grid and get the access URL
+#  @attention  valid GRID proxy is required 
 #  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
 #  @date 2012-10-10
 def inGrid ( filename , grid = [] ) :
-    """
-    Check the presence of file in Grid and get the access URL    
+    """Check the presence of file in Grid and get the access URL
+    outptu depends on the 'grid' argument
+
+    Get the access URL for certain GRID site:
+    >>> inGrid('/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000245_1.allstreams.dst','RAL')
+    ... 'root://clhcbdlf.ads.rl.ac.uk//castor/ads.rl.ac.uk/prod/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000245_1.allstreams.dst?svcClass=lhcbDst'
+
+    Get the DICTIONARY of all access URLs for all GRID sites
+    >>> inGrid('/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000245_1.allstreams.dst')
+    ... {'CERN_MC-DST-EOS': 'root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000245_1.allstreams.dst',
+    ...  'IN2P3_MC-DST': 'root://ccdcacli067.in2p3.fr:1094/pnfs/in2p3.fr/data/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000245_1.allstreams.dst',
+    ...  'RAL_MC-DST': 'root://clhcbdlf.ads.rl.ac.uk//castor/ads.rl.ac.uk/prod/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000245_1.allstreams.dst?svcClass=lhcbDst'}
+    
+    Get the access URL from GID site according to the priority list 
+    >>> inGrid('/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000245_1.allstreams.dst', ['RAL','IN2P3'] )
+    ... 'root://clhcbdlf.ads.rl.ac.uk//castor/ads.rl.ac.uk/prod/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000245_1.allstreams.dst?svcClass=lhcbDst'
+
+    ditto (note the order of GRID sites in the list)
+    >>> inGrid('/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000245_1.allstreams.dst', [ 'IN2P3', 'RAL'] )
+    ... 'root://ccdcacli067.in2p3.fr:1094/pnfs/in2p3.fr/data/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000245_1.allstreams.dst'
     """
 
     if    grid is None                           : return None
-    elif  isinstance ( grid , str ) and not grid : return None 
+    elif  grid is False                          : return None 
+    elif  isinstance ( grid , str ) and not grid : grid = [] 
     elif  isinstance ( grid , str )              : grid = [ grid ]
     #
     ## 1-check lhcb-proxy-info
@@ -290,12 +310,14 @@ def inGrid ( filename , grid = [] ) :
     #
     ## special case: return whole  disctioanry 
     if not grid : return res
-
-    ## return the first macthed  entry 
-    for k in res :
-        ku = k.upper() 
-        for s in grid :
-            su = s.upper() 
+    
+    ## return the first matched entry accoring to priotity list of GRID sites 
+    keys = res.keys()
+    keys.sort() 
+    for s in grid :
+        su = s.upper() 
+        for k in keys :
+            ku = k.upper() 
             if 0 <= ku.find(su) : return res[k]
 
     ## return the first entry     
