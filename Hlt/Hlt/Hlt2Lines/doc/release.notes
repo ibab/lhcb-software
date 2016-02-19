@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-02-18 - Mark Williams
+ - Moved some CharmHad lines from full->turbo
+
 ! 2016-02-18 - Mika Vesterinen
  - Move the Commissioning module to Technical
 
