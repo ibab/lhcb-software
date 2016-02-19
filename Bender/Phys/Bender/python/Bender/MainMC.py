@@ -60,7 +60,7 @@ if '__main__' == __name__ : logger = getLogger ( 'Bender.MainMC' )
 else                      : logger = getLogger ( __name__ )
 # =============================================================================
 from Bender.Main import *
-## MC :
+##
 logger.info ( "Load simulation stuff")
 from LoKiGen.decorators           import *
 from LoKiGenMC.decorators         import *
@@ -69,13 +69,13 @@ from LoKiPhysMC.decorators        import *
 from LoKiAlgoMC.decorators        import *
 
 ## prepare machinery for powerfull n-tuple filling 
-from BenderTools.Fill   import decorateFill 
-decorateFill   ( AlgoMC )
+from BenderTools.Fill   import decorateFill   as  _decorateFill 
+_decorateFill   ( AlgoMC )
 ## prepare machinery for TisTos'sing
-from BenderTools.TisTos import decorateTisTos 
-decorateTisTos ( AlgoMC )
+from BenderTools.TisTos import decorateTisTos as _decorateTisTos 
+_decorateTisTos ( AlgoMC )
 #
-del decorateFill, decorateTisTos 
+
 # =============================================================================
 if __name__ == '__main__' :
 

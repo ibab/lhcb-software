@@ -50,10 +50,85 @@ __date__    = "2012-10-27"
 __version__ = "$Revision$"
 __all__     = ( 'accessURLs' , ) 
 # =============================================================================
-import ROOT,sys  
+import ROOT,sys, os, logging  
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 # =============================================================================
-from Bender.Logger import getLogger
+def getLogger (
+    name                                                 ,
+    fmt    = '# %(name)-25s %(levelname)-7s %(message)s' ,
+    level  = logging.DEBUG - 2                           ,
+    stream = None                                        ) :  
+    """Get the proper logger
+    >>> logger1 = getLogger ( 'LOGGER1' )
+    >>> logger2 = getLogger ( 'LOGGER2' , level = logging.INFO )
+    """
+    #
+    logger = logging.getLogger ( name )
+    logger.propagate =  False 
+    ##logger.propagate =  True
+    #
+    while logger.handlers :
+        logger.removeHandler ( logger.handlers[0] )
+        #
+    if not stream :
+        import sys
+        stream = sys.stdout
+        
+    lh  = logging.StreamHandler ( stream ) 
+    fmt = logging.Formatter     ( fmt    )
+    lh  . setFormatter          ( fmt    )
+    logger.addHandler           ( lh     ) 
+    #
+    logger.setLevel             ( level  )
+    #
+    return logger
+# ============================================================================= 
+class Mute(object):
+    ## class variables: dev-null device & instance counter 
+    _devnull = 0
+    _cnt     = 0    
+    def __init__( self , out = True , err = False ):
+        
+        self._out = out
+        self._err = err
+
+        # increment instance counter 
+        self.__class__._cnt += 1
+
+        # create dev-null if not done yet 
+        if not self.__class__._devnull :
+            self.__class__._devnull = os.open ( os.devnull , os.O_WRONLY )            
+
+    def __del__  ( self ) :
+        # decrement instance counter 
+        self.__class__._cnt -= 1        
+        # close dev-null if not done yet 
+        if self.__class__._cnt <= 0 and self.__class__._devnull : 
+            os.close ( self.__class__._devnull  )
+            self.__class__._devnull = 0
+            
+    ## context-manager 
+    def __enter__(self):
+        ## Save the actual stdout (1) and stderr (2) file descriptors.
+        self.save_fds =  os.dup(1), os.dup(2)  # leak was here !!!
+        ## mute it!
+        if self._out : os.dup2 ( self.__class__._devnull , 1 )  ## C/C++
+        if self._err : os.dup2 ( self.__class__._devnull , 2 )  ## C/C++
+
+        return self
+    
+    ## context-manager 
+    def __exit__(self, *_):
+        # Re-assign the real stdout/stderr back to (1) and (2)  (C/C++)
+        if self._err : os.dup2 ( self.save_fds[1] , 2 )
+        if self._out : os.dup2 ( self.save_fds[0] , 1 )        
+        # fix the  file descriptor leak
+        # (there were no such line in example, and it causes
+        #      the sad:  "IOError: [Errno 24] Too many open files"        
+        os.close ( self.save_fds[1] ) 
+        os.close ( self.save_fds[0] )
+
+# ============================================================================= 
 if '__main__' == __name__ : logger = getLogger ( 'Bender/grid_url' )
 else                      : logger = getLogger ( __name__          )
 # =============================================================================
@@ -91,24 +166,28 @@ def _accessURLs_ ( lfn , sites  = [] , elements = [] ) :
     current    = None 
     for l in pipe.stdout :
         line = l[:-1]
+        if not line : continue
+        line = line.strip()
+        if not line : continue        
         logger.debug('STDOUT: %s' % line) 
         if not Successful or 0 == line.find('Successful') :
             Successful = True
+            continue
+        if 0 == line.find ('Failed') :
+            Successful = False 
             continue
         ## parse only lines after the first successful 
         if not Successful : continue
         left,sep,right = line.partition(':') ## primitive "parsing"
         if not sep :
-            logger.warning('Invalid line: "%s"' % line )
+            logger.warning('Invalid line[1]: "%s"' % line )
             continue
         left   = left .strip()
         right  = right.strip()
         if   left        and not right             : current = left 
         elif left == lfn and     right and current : result [ current ] = right 
-        else :  logger.warning('Invalid tokens: %s' % tokens )
-        
+        else :  logger.warning('Invalid line[2]: %s' % line )
 
-    
     if result :
         logger.info ( 80*'*')
         logger.info ( "LFN : %s" %  lfn )
@@ -194,19 +273,19 @@ def accessURLs ( args = [] ) :
     config  = parser.parse_args ( args ) 
     silent  = not config.Verbose
     result  = {}
-    
+
+
     try :
         
-        from Ostap.Utils import mute
-        with mute ( silent , silent ) :
-            result = _accessURLs_ ( config.lfn   ,
-                                    config.Sites ,
-                                    config.SEs   )                                               
+        with Mute(silent,silent) : 
+            return _accessURLs_ ( config.lfn   ,
+                                  config.Sites ,
+                                  config.SEs   )
     except:
+        
         if not silent :
-            logger.error('Exception caught:' , exc_info = True )  
-            result = {}
-            
+            logger.fatal ('Exception caught:' , exc_info = True )  
+    
     return result 
 
 # =============================================================================

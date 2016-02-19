@@ -133,6 +133,7 @@ _eos_   = 'root://eoslhcb.cern.ch//eos'
 _eos_0  = 'root://eoslhcb.cern.ch/'
 _eos_p  = '/eos/lhcb/grid/prod'
 _eos_u  = '/eos/lhcb/grid/user'
+_eos_f  = '/eos/lhcb/grid/prod/lhcb/freezer' ## Freezer 
 _eosls  = 'eos_ls %s '
 # =============================================================================
 ## check the presence of the file in (CERN) EOS
@@ -157,6 +158,8 @@ _eosls  = 'eos_ls %s '
 #  @param fname   filename
 #  @param prefix  prefix to be used
 #
+# how to use this pattern? 
+## ['root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision15/RDST/00048237/0000/00048237_00008700_1.rdst'
 def inEOS ( fname            ,
             prefix  = _eos_0 ,
             eosls   = _eosls ) :
@@ -199,6 +202,10 @@ def inEOS ( fname            ,
     ## require empty stder
     #
     for l in stderr :
+        ## make a try to freezer 
+        if 0 == fname0.find('/lhcb/' ) :
+            if fname0.endswith('.rdst') or fname0.endswith('.RDST') :
+                return  inEOS ( _eos_f + fname0 , prefix , eosls )
         if 0 == fname0.find('/lhcb/user') :
             # try user EOS area : 
             return inEOS ( '/eos' + fname0 , prefix , eosls )
@@ -207,17 +214,12 @@ def inEOS ( fname            ,
     ## Require non-empty std-out:
     #
     for l in stdout :
-        #
         ## play a bit with extension
-        #
-        for ext in ( '.raw' , '.RAW' , '.mdf' , '.MDF' ) :               
-            p = fname.find ( ext )
-            if 0<= p and len( ext ) + p == len ( fname ) :
+        for ext in ( '.raw' , '.RAW' , '.mdf' , '.MDF' ) :
+            if fname.endswith ( ext ) : 
                 return 'mdf:' + prefix + fname               ## RETURN
             
-        #
         ## add prefix
-        #
         return prefix + fname                                ## RETURN 
 
     ## 
@@ -248,25 +250,34 @@ def hasGridProxy ( ) :
 ## check the presence of file in Grid and get the access URL  
 #  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
 #  @date 2012-10-10
-def inGrid ( filename , grid ) :
+def inGrid ( filename , grid = [] ) :
     """
     Check the presence of file in Grid and get the access URL    
     """
+
+    if    grid is None                           : return None
+    elif  isinstance ( grid , str ) and not grid : return None 
+    elif  isinstance ( grid , str )              : grid = [ grid ]
     #
     ## 1-check lhcb-proxy-info
     #
     if not hasGridProxy () : return None ## LHCb-PROXY-INFO is invalid! 
     #
+    
+    #
     ## 2 - get the files from storage element 
     #
     import os 
     from subprocess import Popen, PIPE
-    p   = Popen ( [ 'get-grid-url', filename, "--Sites" , grid ] ,
+    arguments =  [ 'get-grid-url', filename ]
+    if grid   : arguments += ["--Sites" ] + grid
+    logger.debug('use Popen(%s)' % arguments )
+    p   = Popen ( arguments               ,
                   env       = os.environ  ,
                   stdout    = PIPE        ,
                   stderr    = None        )
     (stdout,stderr) = p.communicate()
-    if 0 != p.returncode  : return None
+    if 0 != p.returncode  or stderr : return None
     #
     try :
         res = eval ( stdout )
@@ -275,11 +286,24 @@ def inGrid ( filename , grid ) :
 
     #
     if not isinstance  ( res, dict ) : return None
-    if not res.has_key ( filename  ) : return None
-    urls = res [ filename ]
-    if not urls                      : return None 
+    if not res   : return None 
     #
-    return urls [ 0 ] 
+    ## special case: return whole  disctioanry 
+    if not grid : return res
+
+    ## return the first macthed  entry 
+    for k in res :
+        ku = k.upper() 
+        for s in grid :
+            su = s.upper() 
+            if 0 <= ku.find(su) : return res[k]
+
+    ## return the first entry     
+    for k in res :
+        return res [k]
+    #
+    ## nothing to return 
+    return None 
 
 # =============================================================================
 ##  check the existence of the file with given name

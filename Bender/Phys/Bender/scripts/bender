@@ -196,7 +196,12 @@ group.add_argument (
     default = False        , 
     help    = "Batch processing: execute input files and exit [default: %(default)s]" )
     ##
-
+parser.add_argument ( 
+    '--no-color'     ,
+    dest    = 'Color'      , 
+    action  = 'store_false' , 
+    help    = "Do not use colorization", 
+    default = True          )
 ## eliminate artifacts and parse command-line arguments 
 arguments = parser.parse_args( [ a for a in sys.argv[1:] if '--' != a ] )  
 
@@ -204,15 +209,15 @@ arguments = parser.parse_args( [ a for a in sys.argv[1:] if '--' != a ] )
 # logging 
 # =============================================================================
 from Bender.Logger import getLogger
-if not arguments.batch :
+if arguments.Color and not arguments.batch : 
     from Bender.Logger import make_colors
     make_colors ()
     del make_colors 
 # =============================================================================    
 if '__main__' == __name__ : logger = getLogger ( 'bender' )
-else                      : logger = getLogger ( __name__        )
+else                      : logger = getLogger ( __name__ )
+del getLogger 
 # =============================================================================
-
 
 if arguments.Quiet :
        
@@ -236,12 +241,14 @@ else :
 from BenderTools.DstExplorer import configure
 # =============================================================================
 
-
 #	
 ## Perform the basic configuration
 #
-pyfiles = configure ( arguments , colors = not arguments.batch ) 
-# 
+pyfiles = configure (
+    arguments ,
+    colors = arguments.Color and not arguments.batch
+    )
+del configure
 
 #
 ## adjust configuration settings
@@ -262,19 +269,17 @@ if arguments.TupleFile :
 if arguments.HistoFile :
     from GaudiPython.HistoUtils import book, bookProf, fill, dumpHisto  
 
+##output file is specified, immport corresponding functions
+if arguments.OutputFile :
+    from BenderTools.GoodEvents import writeEvent
+
 try :
     from Ostap.Utils import mute_py 
     with mute_py() :
         import pydot
     del mute_py
-    import LoKiPhys.gr
 except :
     pass
-
-##outptu file is specified, immport corresponding functions
-if arguments.OutputFile :
-    from BenderTools.GoodEvents import writeEvent
-
 
 ##  drawing graphs 
 import  LoKiPhys.graph
