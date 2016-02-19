@@ -137,8 +137,8 @@ def _re_nbanks_ ( rawevt , bank_type = None ) :
     for _bt in range ( 0 , 100 ) :
         _bn = LHCb.RawBank.typeName ( _bt )
         if 'Undefined_name' == _bn : continue
-        _banks = revt.banks ( _bt )
-        _nb   += _banks
+        _banks = rawevt.banks ( _bt )
+        _nb   += len( _banks )
     return _nb
 
 # =============================================================================
