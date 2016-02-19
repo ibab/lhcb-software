@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-02-19 - Mika Vesterinen
+ - Pick up the changes from BandQ and create 2016 settings for TrackEff module
+
 ! 2016-02-18 - Simone Stracka
  - Add the following settings files: 
    Bottomonium_25ns_Draft2016.py (in new folder), 

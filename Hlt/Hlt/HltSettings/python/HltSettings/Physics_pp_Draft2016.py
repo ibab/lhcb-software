@@ -56,14 +56,13 @@ class Physics_pp_Draft2016( object ):
         return          'Physics_pp_Draft2016'
 
     def SubDirs(self):
-        return {'August2015' : ['CcDiHadron', 'DPS', 
-                                'Bc2JpsiX', 'DiMuon',
-                                'TrackEff','RareStrange',
+        return {'August2015' : ['DiMuon',
+                                'RareStrange',
                                 'TriMuon','Phi'],
                 'October2015' : ['SingleMuon'],
-                'Draft2016': ['B2HH','B2Kpi0','BHad','CharmHad','DiElectron','Exotica',
+                'Draft2016': ['CcDiHadron', 'DPS', 'Bc2JpsiX','B2HH','B2Kpi0','BHad','CharmHad','DiElectron','Exotica',
                               'Jets','LFV','LowMult','PID','Radiative','RareCharm','EW',
-                              'Topo','TrackEffDiMuon','DisplVertices','XcMuXForTau','Technical']}
+                              'Topo','TrackEffDiMuon','DisplVertices','XcMuXForTau','Technical','TrackEff']}
 
     def Thresholds(self) :
         """
@@ -393,7 +392,12 @@ class Physics_pp_Draft2016( object ):
                  , 'Hlt1LowMultVeloCut_Leptons'
                  , 'Hlt1LowMultMaxVeloCut'
                  , 'Hlt1LowMultPassThrough'
-                 , 'Hlt1NoBiasNonBeamBeam']
+                 , 'Hlt1NoBiasNonBeamBeam'
+                   , 'Hlt1Bottomonium2PhiPhi'
+                   , 'Hlt1Bottomonium2KstarKstar']
+                   
+                   
+                   
 
         from Hlt1TechnicalLines import Hlt1TechnicalLines
         lines.extend( Hlt1TechnicalLines().ActiveHlt1Lines() )
