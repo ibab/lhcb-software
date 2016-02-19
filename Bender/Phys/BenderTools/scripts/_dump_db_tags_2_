@@ -28,8 +28,8 @@ import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 # =============================================================================
 from Bender.Logger import getLogger
-if '__main__' == __name__ : logger = getLogger ( 'Bender/_dum_db_tags_2_' )
-else                      : logger = getLogger ( __name__                 )
+if '__main__' == __name__ : logger = getLogger ( 'Bender/_dump_db_tags_2_' )
+else                      : logger = getLogger ( __name__                  )
 # =============================================================================
 ## helper function to get DB-tags
 #  @author Thomas RUF

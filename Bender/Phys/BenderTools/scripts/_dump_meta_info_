@@ -25,28 +25,45 @@ __version__ = "$Revision:$"
 # =============================================================================
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
-try:
-    import cppyy
-except ImportError:
-    # FIXME: backward compatibility
-    import PyCintex as cppyy
-    import sys
-    sys.modules['cppyy'] = cppyy
-    #
-cpp = cppyy.makeNamespace('')
-
+# =============================================================================
+from Bender.Logger import getLogger
+if '__main__' == __name__ : logger = getLogger ( 'Bender/_dump_meta_info_' )
+else                      : logger = getLogger ( __name__                  )
 # =============================================================================
 ## helper function to get meta-info 
 #  @author Vanya Belyaev Ivan.Belyaev@itep.ru
 #  @date  2013-06-11
-def _get_meta_info_ ( files ) :
+def _get_meta_info_ ( files , importOpts = [] , catalogs = [] ) : 
     """
     Helper function to get meta-info 
     """
     info = {}
-
+    
+    ## import options if specified 
+    if importOpts :
+        from Gaudi.Configuration import importOptions
+        for i in importOpts : importOptions ( i )  
+        
+    ## load files files 
     from GaudiConf.IOHelper import IOHelper
-    evtsel = IOHelper().inputFiles ( files )
+    evtsel = IOHelper().inputFiles ( files , clear = False )
+    
+    ## add catalogs, if specified 
+    if catalogs : 
+        from Configurables import FileCatalog
+        fcatalog           = FileCatalog() 
+        fcatalog.Catalogs += catalogs
+
+    ## check inputs :
+    from Configurables import EventSelector
+    evtSel = EventSelector()
+    if not evtSel.Input :
+        logger.erorr('No entries in EventSelector.Input')
+        return {}
+
+    if    files : evtSel.Input = evtSel.Input[-1:] ## + evtSel.Input[1:]
+    else        : evtSel.Input = evtSel.Input[:1 ] ## + evtSel.Input[1:]
+
 
     from Configurables import LHCbApp
     app = LHCbApp()
@@ -83,17 +100,15 @@ def _get_meta_info_ ( files ) :
     IODataManager  ( 'IODataManager' , OutputLevel = 6 ,
                      AgeLimit = 1    , UseGFAL = False )
     
+
     from GaudiPython.Bindings import AppMgr
     import Bender.Fixes_Gaudi
     
     gaudi = AppMgr( outputlevel = 6 )
 
-    print cpp.LHCb.ODIN, cpp.LHCb.STSummary  
     
     gaudi.run(1)
     evtsvc = gaudi.evtSvc()
-
-    for i in range (0,5) : print 100*'*'
 
     for header in ( '/Event/Gen/Header'     ,
                     '/Event/MC/Header'      ,
@@ -155,18 +170,22 @@ def _get_meta_info_ ( files ) :
     ## go to RunDB and get information for run&fill
     try :
 
+        info_run  = {} 
+        info_fill = {} 
         if info.has_key ( 'Run' ) :
             run_number = info['Run']
             
             from Ostap.RunDB import run_info, fill_info
             rinfo  = run_info ( run_number )
-            rkeys  = rinfo.keys()
-            for k in rkeys : info ['RUN:%s' % k ] = rinfo[k]
+            info_run.update( rinfo ) 
             fillid = rinfo.get( 'fillid' , None )
             if fillid :
                 finfo = fill_info ( fillid )
-                fkeys = finfo.keys()
-                for k in fkeys : info ['FILL:%s' % k ] = finfo[k]
+                info_fill.update ( finfo )
+                
+        if info_run  : info ['|RUN' ] = info_run
+        if info_fill : info ['|FILL'] = info_fill
+            
     except :
         pass
 
@@ -181,37 +200,81 @@ def _get_meta_info_ ( files ) :
 ## helper function to get meta-info
 #  @author Vanya Belyaev Ivan.Belyaev@itep.ru
 #  @date  2013-02-18
-def get_meta_info ( silent = True , files = [] ) :
+def get_meta_info ( files = [] ) :
     """
     Helper function to get meta-info
     """
-    import sys 
-    if not files :
-        if len(sys.argv) > 1 : 
-            files = sys.argv[1:] 
-
-    ## no valid 
-    if not files : return {}
+    import argparse 
+    parser = argparse.ArgumentParser()
     
-    info = {}
-
-    ##return  _get_meta_info_ ( files )
-
+    parser.add_argument (
+        '-v'                          ,
+        '--verbose'                   ,
+        action  = "store_true"        ,
+        dest    = 'Verbose'           ,
+        help    = "``Vebose'' processing [defaut : %(default)s ]"  ,
+        default = False   
+        )
+    
+    parser.add_argument (
+        '-x'                    ,
+        '--xml'                 ,
+        dest    = 'XmlCatalogs' ,
+        help    = "``XmlCatalogs'' to be transferred to setData-function [default: %(default)s]" ,
+        nargs   = '*'           , 
+        default = []                
+        )
+    
+    parser.add_argument (
+        "files" ,
+        metavar = "FILE"          ,
+        nargs   = '*'             ,
+        default = []              , 
+        help    = "Input files to be processed [default: %(default)s]" )
+    
+    parser.add_argument (
+        '-i'                       ,
+        '--import'                 ,
+        dest    = 'ImportOptions'  ,
+        metavar = 'IMPORT'         ,
+        nargs   = '*'              ,
+        default = []               , 
+        help    = """List of files to be used for 'importOptions',
+        e.g. input data [default:%(default)s].
+        The files are imported at the end of configuration step"""
+        )
+    
+    import sys 
+    config = parser.parse_args( [ a for a in sys.argv[1:] if '--' != a ] ) 
+    
+    if files : config.files += files
+    
+    ## no input data 
+    if not config.files and not config.ImportOptions :  return {}
+    
+    info   = {}
+    
+    silent = not config.Verbose
+    
     try:
     
         from Ostap.Utils import mute
         with mute ( silent , silent ) :
-            info = _get_meta_info_ ( files )
+            info = _get_meta_info_ ( config.files         ,
+                                     config.ImportOptions ,
+                                     config.XmlCatalogs   )  
             
-    except : info = {}
+    except :
+        if not silent :
+            logger.error('Exception caught:' , exc_info = True )  
+        info = {}
     
     return info
-
 
 # =============================================================================
 if __name__ == '__main__' :
 
-    print 'MetaInfo: %s ' % get_meta_info ( silent = True ) 
+    print 'MetaInfo: %s ' % get_meta_info () 
         
 # =============================================================================
 # The END 

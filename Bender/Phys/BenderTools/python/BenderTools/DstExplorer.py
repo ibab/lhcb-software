@@ -138,11 +138,7 @@ else                      : logger = getLogger ( __name__ )
 def configure ( config , colors = False ) :
     """Configure the application from parser data 
     """
-    
-    #if colors :
-    #    from Bender.Logger import make_colors
-    #    make_colors()
-    
+
     #
     if config.OutputLevel <= 3 and not config.Quiet :
         _vars   = vars ( config )
@@ -324,12 +320,14 @@ def configure ( config , colors = False ) :
         #
         ## try to get the tags from Rec/Header
         from BenderTools.GetDBtags import useDBTagsFromData
-        tags = useDBTagsFromData (
-            files [ 0 ]       ,
-            True              , ## castor 
-            config.Grid       ,
-            daVinci           ) 
-
+        tags   = useDBTagsFromData (
+            files                             , 
+            castor     = config.Castor        ,  
+            grid       = config.Grid          ,
+            daVinci    = daVinci              ,
+            importOpts = config.ImportOptions ,
+            catalogs   = config.XmlCatalogs   )
+            
     if config.IgnoreDQFlags :
         logger.info('DataQuality flags will be ignored')
         daVinci.IgnoreDQFlags = config.IgnoreDQFlags
@@ -357,6 +355,37 @@ def configure ( config , colors = False ) :
         from Gaudi.Configuration import importOptions
         importOptions ( i )  
 
+    if colors :
+        
+        logger.debug( 'Add colorization to MessageSvc' )
+        
+        from Configurables import MessageSvc
+        msgsvc = MessageSvc (
+            useColors        = True ,
+            errorColorCode   = [ 'yellow' , 'red'  ] ,
+            warningColorCode = [ 'red'             ] ,
+            fatalColorCode   = [ 'blue'   , 'red'  ] ,
+            )
+            
+        def _color_pre_init_action_ () :
+            
+            logger.debug( 'Add colorization to MessageSvc' )
+            from GaudiPython.Bindings import AppMgr
+            _g = AppMgr()
+            if not _g : return 
+            _s = _g.service('MessageSvc')
+            if not _s : return 
+            _s.useColors = True
+            _s.errorColorCode   = [ 'yellow' , 'red'  ] 
+            _s.warningColorCode = [ 'red'             ] 
+            _s.fatalColorCode   = [ 'blue'   , 'red'  ] 
+            ##_s.alwaysColorCode  = [ 'blue'            ] 
+            ##_s.infoColorCode    = [ 'green'           ] 
+            del _g, _s
+            
+        from Bender.Utils import addPreInitAction
+        addPreInitAction ( _color_pre_init_action_ )
+
     ## set input data
     from Bender.Utils import setData 
     setData ( files                ,
@@ -364,26 +393,9 @@ def configure ( config , colors = False ) :
               config.Castor        ,  ## use Castor/EOS lookup 
               config.Grid          )  ## Use GRID to locate files 
     
-    ## if colors :
-        
-    ##     logger.debug( 'Add colorization to MessageSvc' )  
-    ##     def _color_pre_init_action_ () :
-    ##         from GaudiPython.Bindings import AppMgr
-    ##         _g = AppMgr()
-    ##         if not _g : return 
-    ##         _s = _g.service('MessageSvc')
-    ##         if not _s : return 
-    ##         _s.useColors = True
-    ##         _s.errorColorCode   = [ 'yellow' , 'red'  ] 
-    ##         _s.warningColorCode = [ 'red'             ] 
-    ##         _s.fatalColorCode   = [ 'blue'   , 'red'  ] 
-    ##         #_s.alwaysColorCode  = [ 'black'           ] 
-            
-    ##     from Bender.Utils import addPreInitAction
-    ##     addPreInitAction ( _color_pre_init_action_ )
-                
-    return pyfiles
+    
 
+    return pyfiles
 
 
 # =============================================================================

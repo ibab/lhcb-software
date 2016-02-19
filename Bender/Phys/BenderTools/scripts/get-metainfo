@@ -66,8 +66,7 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 # =============================================================================
 # logging 
 # =============================================================================
-from Bender.Logger import getLogger, make_colors
-#make_colors ()
+from Bender.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'get-metainfo' )
 else                      : logger = getLogger ( __name__      )
 # =============================================================================
@@ -86,7 +85,7 @@ if '__main__' == __name__ :
     from BenderTools.GetDBtags  import extractMetaInfo
 
     import sys
-    extractMetaInfo ( sys.argv[1:] )
+    extractMetaInfo ( [ a for a in sys.argv[1:] if '--' != a ] ) 
     
 # =============================================================================
 # The END 

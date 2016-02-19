@@ -192,10 +192,11 @@ def makeParser ( **kwargs ) :
     group_da.add_argument (
         '-g'                       ,
         '--grid'                   ,
-        type    = str              , 
+#        type    = str             ,
+        nargs   = '*'              ,
         dest    = 'Grid'           ,
-        help    = "Grid-site to access LFN-files (has precedence over 'castor/eos', but grid proxy is needed) [default : %(default)s]" ,
-        default = 'CERN'
+        help    = "Grid-site(s) to access LFN-files (has precedence over 'castor/eos', but grid proxy is needed) [default : %(default)s]" ,
+        default = ['CERN']
         )
     ##
     group_da.add_argument (

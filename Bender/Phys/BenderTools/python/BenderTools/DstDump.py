@@ -118,9 +118,6 @@ def dumpDst ( config ) :
         logger.info ( ' Date    : %s ' % __date__     )
         logger.info ( 100*'*')
         
-    ## The input files mus
-    if not config.files : parser.error ( 'No input files are specified' )
-
     from BenderTools.DstExplorer import configure 
     configure ( config , colors = True ) 
 

@@ -96,10 +96,10 @@ def _lfn_pfn_strip_ ( file_name ) :
     return file_name
 
 
+# =============================================================================
 ## guess about the main DDB-tag from the list 
 def dddb_tag ( tags ) :
-    """
-    Guess about the main DDB-tag from the list
+    """Guess about the main DDB-tag from the list
     """
     if isinstance ( tags , str ) : return tags
     #
@@ -107,33 +107,54 @@ def dddb_tag ( tags ) :
         if 0 == t.find('dddb-') or 0 == t.find('DDDB-') : return t
     #
     return tags[0] 
+
     
 # =============================================================================
 def useDBTagsFromData (
-    file_name      ,   ## the file name 
-    castor  = True ,   ## use castor/EOS ? 
-    grid    = ''   ,   ## use grid?
-    daVinci = None ) : 
+    files             ,   ## the file name 
+    castor     = True ,   ## use castor/EOS ? 
+    grid       = ''   ,   ## use grid?
+    daVinci    = None ,   ## davinci instance 
+    importOpts = []   ,   ## import options (if any) 
+    catalogs   = []   ) : ## XMl  catalogs to use 
+    """ Extract the tags from data file  and configure DaVinci
+    >>> dv        = DaVinci ( ... )
+    >>> datatiles = ...
+    >>> from BenderTools.GetDBtags import useDBtagsFromDATA
+    >>> useDBtagsFromDATA ( datafiles , castor , grid )    
     """
-    Extract the tags from data file  and configure DaVinci
-
-    dv        = DaVinci ( ... )
-    datatiles = ...
-
-    from BenderTools.GetDBtags import useDBtagsFromDATA
-
-    useDBtagsFromDATA ( datafiles , castor , grid )
     
-    """
-    if isinstance ( file_name , (list,tuple) ) and file_name : file_name = file_name[0]
-    if not file_name :
-        logger.error( ' useDBTagsFromDATA: Invalid file name(s) ')
-        return
+    if isinstance ( files , str ) :  files = [ filenames ]  
 
-    tags = getDBTags  ( file_name , castor , grid )
+    if importOpts :
+        from Bender.DataUtils import evtSelInput
+        ifiles = evtSelInput ( importOpts )
+        files  = files + ifiles
+
+    if not files :
+        logger.error('No input files are specified') 
+        return {}
+    
+    tags  = {}
+    ifile = 0
+    nfile = len(files)
+    for f  in files :
+        ifile += 1 
+        logger.debug ( "Try the file %s   [%d/%d]" %  ( f , ifile , nfile ) ) 
+        tags = getDBTags  ( f                       ,
+                            castor     = castor     ,
+                            grid       = grid       ,
+                            importOpts = importOpts ,
+                            catalogs   = catalogs   ,
+                            debug      = False      )
+        if tags : break  
+        if   0 == ifile % 100 : 
+            logger.error   (" No success in %d/%d trials" % ( ifile , nfile ) )
+        elif 0 == ifile %  10 :
+            logger.warning (" No success in %d/%d trials" % ( ifile , nfile ) )  
 
     if not tags : 
-        logger.warning ( 'No tags are extracted from the file %s' % file_name )
+        logger.warning ( 'No tags are extracted from %d files ' % nfile )
         return tags  
     #
     logger.info    ( 'Extracted tags from DATA are : %s' % tags         )
@@ -197,8 +218,6 @@ def _getDBTags_ ( file_name          ,
     logger.info ( "Use the file %s " % file_name )
 
     from subprocess import Popen, PIPE
-    serr =  open ( '/dev/null' )
-    
     arguments = [ '_dump_db_tags_2_' , file_name ]
     #
     if importOpts : arguments += [ '-i' ] + importOpts
@@ -206,21 +225,20 @@ def _getDBTags_ ( file_name          ,
     if debug      : arguments += [ '-v' ] 
     #
     logger.debug ( "Use Popen(%s)" % arguments )
-    
     pipe = Popen ( arguments            ,
                    env    = os.environ  ,
                    stdout = PIPE        ,
-                   stderr = serr        )
-    
-    stdout = pipe.stdout 
-    ts = {}
+                   stderr = PIPE        )
+
+    for line in pipe.stderr :
+        logger.error ( 'STDERR:%s' % line[-1]  ) 
 
     ## Format = 'DBTags: { dictionary} '
     key  = 'DBTags:'
     tags = {} 
-    for line in stdout :
+    for line in pipe.stdout :
 
-        if debug : logger.info ( line[:-1] ) 
+        if debug : logger.info ('STDOUT:%s' % line[:-1] ) 
 
         ## good line? 
         p = line.find ( key )
@@ -251,18 +269,19 @@ def getDBTags ( file_name          ,
     
     import os
 
-    file_name_ext = os.path.expandvars ( file_name     ) 
-    file_name_ext = os.path.expanduser ( file_name_ext ) 
-    file_name_ext = os.path.expandvars ( file_name_ext ) 
+    file_name = os.path.expandvars ( file_name ) 
+    file_name = os.path.expanduser ( file_name ) 
+    file_name = os.path.expandvars ( file_name ) 
 
-    if not os.path.exists ( file_name_ext ) :
+    tags = {}
+    file_name_ext = file_name 
+    if not os.path.exists ( file_name ) :
         
         from Bender.DataUtils import extendfile1
-        file_name_ext = extendfile1  ( file_name_ext , castor , grid )
+        file_name_ext = extendfile1  ( file_name , castor , grid )
 
-    
     tags = _getDBTags_ ( file_name_ext , importOpts , catalogs , debug )
-
+    
     ## try non-decorated name 
     if not tags and file_name_ext != file_name :
         return _getDBTags_ ( file_name , importOpts , catalogs , debug )
@@ -273,10 +292,60 @@ def getDBTags ( file_name          ,
 ## get Meta-info from the data
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-06-11  
-def getMetaInfo ( file_name      ,
-                  castor = True  ,
-                  grid   = ''    , 
-                  debug  = False ) :
+def _getMetaInfo_ ( file_name          ,
+                    importOpts = []    , 
+                    catalogs   = []    , 
+                    debug      = False ) :
+
+    import os 
+    logger.info ( "Use the file %s " % file_name )
+
+    from subprocess import Popen, PIPE
+    
+    arguments = [ '_dump_meta_info_' , file_name ]
+    #
+    if importOpts : arguments += [ '-i' ] + importOpts
+    if catalogs   : arguments += [ '-x' ] + catalogs
+    if debug      : arguments += [ '-v' ] 
+    #
+    logger.debug ( "Use Popen(%s)" % arguments )
+    pipe = Popen (  arguments           ,
+                    env    = os.environ ,
+                    stdout = PIPE       ,
+                    stderr = PIPE       )
+    
+    ## Format = 'MetaInfo: { dictionary} '
+    key  = 'MetaInfo:'
+    info = {} 
+    for line in pipe.stdout :
+        
+        if debug : logger.info ('STDOUT:%s' % line[:-1] ) 
+        
+        ## good line? 
+        p = line.find ( key )
+        if not 0 <= p : continue
+        
+        try : 
+            dct    = line[ p + len(key) : ]
+            value  = eval ( dct )
+            if not isinstance ( value , dict ) : continue
+            info   = value
+            if not info : continue 
+        except :
+            continue 
+            
+    return info
+
+# =============================================================================
+## get Meta-info from the data
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-06-11  
+def getMetaInfo ( file_name          ,
+                  castor     = True  ,
+                  grid       = ''    ,
+                  importOpts = []    , 
+                  catalogs   = []    , 
+                  debug      = False ) :
     
     import os
     
@@ -284,46 +353,21 @@ def getMetaInfo ( file_name      ,
     file_name = os.path.expanduser ( file_name ) 
     file_name = os.path.expandvars ( file_name ) 
 
+    metainfo = {}
+    file_name_ext = file_name 
     if not os.path.exists ( file_name ) :
         
         from Bender.DataUtils import extendfile1
-        file_name = extendfile1     ( file_name , castor , grid )
-
-    logger.info ( "Use the file %s " % file_name )
-
-    from subprocess import Popen, PIPE
-    
-    with open ( '/dev/null' ) as serr :
+        file_name_ext = extendfile1  ( file_name , castor , grid )
         
-        pipe = Popen ( [ '_dump_meta_info_'  , file_name ] ,
-                       env    = os.environ ,
-                       stdout = PIPE       ,
-                       stderr = serr       )
+    metainfo = _getMetaInfo_ ( file_name_ext , importOpts , catalogs , debug )
         
-        stdout = pipe.stdout
-        
-        ## Format = 'MetaInfo: { dictionary} '
-        key  = 'MetaInfo:'
-        info = {} 
-        for line in stdout :
+    ## try non-decorated name 
+    if not metainfo and file_name_ext != file_name :
+        return _getMetaInfo_ ( file_name , importOpts , catalogs , debug )
 
-            if debug : logger.info ( line ) 
+    return metainfo
 
-            ## good line? 
-            p = line.find ( key )
-            if not 0 <= p : continue
-
-            try : 
-                dct    = line[ p + len(key) : ]
-                value  = eval ( dct )
-                if not isinstance ( value , dict ) : continue
-                info   = value
-                if not info : continue 
-            except :
-                continue 
-            
-    return info
-    
 # =============================================================================
 ## extract DB-tags form the files
 #  @author Vanya BELYAEV 
@@ -405,13 +449,10 @@ def extractTags ( args ) :
     else                 : logging.disable ( logging.INFO  - 1 ) 
         
     if arguments.ImportOptions :
-        from Gaudi.Configuration import importOptions
-        for i in arguments.ImportOptions : importOptions ( i )  
-        from Configurables import EventSelector
-        evtSel = EventSelector()
-        inputs = evtSel.Input
+        from Bender.DataUtils import evtSelInput
+        inputs = evtSelInput ( arguments.ImportOptions )
         if inputs : logger.info('Add %d files from EventSelector.Input' % len(inputs) )  
-        arguments.files += evtSel.Input
+        arguments.files += inputs
 
     if not arguments.files :
         raise ArgumentError, "No input files are specifed"
@@ -454,84 +495,148 @@ def extractTags ( args ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-06-11   
 def extractMetaInfo ( args ) :
+    """ Extract MetaInfo-tags from the files 
     """
-    Extract MetaInfo-tags from the files 
-    """
+
+    import argparse 
+    parser = argparse.ArgumentParser( ) ##**kwargs )
     
-    from optparse import OptionParser as OptParser
-    
-    parser = OptParser( usage   = __doc__                 ,
-                        version = ' %prog ' + __version__ )
-    
-    ##
-    parser.add_option (
+    parser.add_argument (
         '-g'                       ,
         '--grid'                   ,
-        type    = 'str'            , 
+        type    = str              , 
         dest    = 'Grid'           ,
-        help    = "Grid-site to access LFN-files (has precedence over -c, but grid proxy is needed)" ,
-        default = ''
-        )
-    ##
-    parser.add_option (
-        '-c'                          ,
-        '--castor'                    ,
-        action  = "store_true"        ,
-        dest    = 'Castor'            ,
-        help    = "Enable direct access to Castor Grid Storage to access LFN-files" ,
-        default = True   
+        help    = "Grid-site to access LFN-files (has precedence over 'castor/eos', but grid proxy is needed) [default : %(default)s]" ,
+        default = 'CERN'
         )
     
-    parser.add_option (
+    parser.add_argument (
+        '--no-castor'              ,
+        action  = 'store_false'    , 
+        dest    = 'Castor'         ,
+        help    = "Disable direct access to Castor/EOS storage for LFNs",
+        default = True             ## use castor on default 
+        )
+    
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument (
         '-v'                           ,
         '--verbose'                    ,
-        action  = "store_false"        ,
+        action  = "store_true"         ,
         dest    = 'Verbose'            ,
-        help    = "Verbose processing" ,
-        default = False   
+        help    = "``Verbose'' processing [defaut : %(default)s ]"  , 
+        default = False 
+        )
+    group.add_argument (
+        '-q'                          ,
+        '--quiet'                     ,
+        action  = "store_false"       ,
+        dest    = 'Verbose'           ,
+        help    = "``Quiet'' processing [defaut : %(default)s ]"  
         )
     
-    ##
-    options , arguments = parser.parse_args ( args )
+    parser.add_argument (
+        "files" ,
+        metavar = "FILE"          ,
+        nargs   = '*'             ,
+        help    = "Input data file(s) to be processed [defaut : %(default)s ]" 
+        )
     
-    if not arguments : parser.error ( 'No input files are specified' )
+    parser.add_argument (
+        '-i'                       ,
+        '--import'                 ,
+        dest    = 'ImportOptions'  ,
+        metavar = 'IMPORT'         ,
+        nargs   = '*'              ,
+        default = []               , 
+        help    = """List of files to be used for 'importOptions',
+        e.g. input data [default:%(default)s].
+        The files are imported at the end of configuration step"""
+        )
+    
+    parser.add_argument (
+        '-x'                    ,
+        '--xml'                 ,
+        dest    = 'XmlCatalogs' ,
+        help    = "``XmlCatalogs'' to be transferred to setData-function [default: %(default)s]" ,
+        nargs   = '*'           , 
+        default = []                
+        )
+    
+    arguments = parser.parse_args ( args )
 
-    info = {}
-    for f in arguments  :
+    import logging
+    if arguments.Verbose : logging.disable ( logging.DEBUG - 1 )
+    else                 : logging.disable ( logging.INFO  - 1 ) 
+    
+    if arguments.ImportOptions :
+        from Bender.DataUtils import evtSelInput
+        inputs           = evtSelInput ( arguments.ImportOptions )
+        if inputs : logger.info('Add %d files from EventSelector.Input' % len(inputs) )  
+        arguments.files += inputs
         
-        logger.info ( "Try the file %s " % f )
+    if not arguments.files :
+        raise ArgumentError, "No input files are specifed"
         
-        info = getMetaInfo ( f               ,
-                             options.Castor  ,
-                             options.Grid    , 
-                             options.Verbose ) 
+    info  = {}
+    ifile = 0
+    nfile = len(arguments.files) 
+    for f in arguments.files  :
+        
+        ifile +=1 
+        logger.debug ( "Try the file %s   [%d/%d]" %  ( f , ifile , nfile ) ) 
+        
+        info = getMetaInfo ( f                       ,
+                             arguments.Castor        ,
+                             arguments.Grid          ,
+                             arguments.ImportOptions ,
+                             arguments.XmlCatalogs   ,                             
+                             arguments.Verbose       ) 
         if info : break
+        
+        if   0 == ifile % 100 : 
+            logger.error   (" No success in %d/%d trials" % ( ifile , nfile ) )
+        elif 0 == ifile %  10 :
+            logger.warning (" No success in %d/%d trials" % ( ifile , nfile ) )  
+            
 
-    
     keys = info.keys()
     keys.sort()
     
     from GaudiPython.Bindings import gbl as cpp
     Time = cpp.Gaudi.Time
-
     
-    logger.info ( 12*'-'+'+'+57*'-' )
+    logger.info ( 33*'-'+'+'+36*'-' )
     logger.info ( ' MetaInfo: '     ) 
-    logger.info ( 12*'-'+'+'+57*'-' )
+    logger.info ( 33*'-'+'+'+36*'-' )
     for k in keys :
-        ##if  k.lower().find('time') + 4 == len(k) and isinstance ( info[k] , (long,int) ) : 
-        if  'Time' == k :
+        ##if  k.lower().find('time') + 4 == len(k) and isinstance ( info[k] , (long,int) ) :
+        value = info[k]
+        if isinstance ( value , dict ) :
+            logger.info ( 33*'-'+'+'+36*'-' )
+            logger.info ( ' Metainfo: %s' % k[1:] )
+            logger.info ( 33*'-'+'+'+36*'-' )
+            vkeys = value.keys()
+            vkeys.sort()
+            fmt = '%-5s %25s'
+            for vk in vkeys :
+                pk = fmt % ( k[1:] , vk ) 
+                logger.info ( '%32s : %-s '      % ( pk , value[vk] ) ) 
+        elif  'Time' == k :
             ## @attention: note 1000 here! 
             time   = Time ( 1000 * info [k] )
-            logger.info ( '%25s : %-s (%s) ' % ( k , info[k] , time.format(False) ) ) 
+            logger.info ( '%32s : %-s (%s) ' % ( k , value , time.format(False) ) ) 
         elif 'TCK'  == k or 'Tck' == k :
-            logger.info ( '%25s : 0x%08x '   % ( k ,        info[k]   ) )
+            logger.info ( '%32s : 0x%08x '   % ( k ,        value ) )
         elif isinstance ( info[k] , set ) : 
-            logger.info ( '%25s : %-s '      % ( k , list ( info[k] ) ) ) 
+            logger.info ( '%32s : %-s '      % ( k , list ( value ) ) ) 
         else : 
-            logger.info ( '%25s : %-s '      % ( k ,        info[k]   ) ) 
+            logger.info ( '%32s : %-s '      % ( k ,        value ) ) 
             
-    logger.info ( 12*'-'+'+'+57*'-' )
+    logger.info ( 70*'-')
+    logger.info ( ' Input files scanned: %d from %s' %  ( ifile , nfile ) )
+    logger.info ( ' Last (successful) file "%s"' % f )
+    logger.info ( 70*'-')
 
 # =============================================================================
 if '__main__' == __name__ :

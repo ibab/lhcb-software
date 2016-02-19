@@ -67,10 +67,9 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 # =============================================================================
 # logging 
 # =============================================================================
-from Bender.Logger import getLogger, make_colors
-##make_colors ()
-if '__main__' == __name__ : logger = getLogger ( 'get-db-tags' )
-else                      : logger = getLogger ( __name__      )
+from Bender.Logger import getLogger
+if '__main__' == __name__ : logger = getLogger ( 'get-dbtags' )
+else                      : logger = getLogger ( __name__     )
 # =============================================================================
 
 if '__main__' == __name__ :
