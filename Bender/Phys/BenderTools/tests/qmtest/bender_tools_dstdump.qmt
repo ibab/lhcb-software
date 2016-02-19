@@ -3,9 +3,10 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program">   <text>dst-dump</text></argument>
   <argument name="args"><set>
-      <text>-n 500</text>
+      <text>-n=500</text>
       <text>-f</text>
       <text>/lhcb/LHCb/Collision12/PSIX.MDST/00037249/0000/00037249_00000090_1.psix.mdst</text>
+      <text>--no-color</text>
   </set></argument>
   <argument name="validator"><text>
 block = """

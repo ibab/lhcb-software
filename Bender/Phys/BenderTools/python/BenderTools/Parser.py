@@ -120,10 +120,11 @@ def makeParser ( **kwargs ) :
     group_dv.add_argument (
         '-p'                          ,
         '--print'                     ,
-        type    = int                 , 
-        dest    = 'OutputLevel'       ,
-        help    = "``OutputLevel'' attribute for ApplicationMgr/MessageSvc [default : %(default)s]" ,
-        default = 3                  
+        type     = int                , 
+        choices  = range(1,7)         , 
+        dest     = 'OutputLevel'      ,
+        help     = "``OutputLevel'' attribute for ApplicationMgr/MessageSvc [default : %(default)s]"  ,
+        default  = 3                  
         )
     ##
     group_dv.add_argument (

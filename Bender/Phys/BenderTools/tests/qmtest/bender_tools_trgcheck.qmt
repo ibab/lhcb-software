@@ -6,5 +6,6 @@
       <text>-n=1000</text>
       <text>-t=Phys/SelPsiKForPsiX/Particles</text>
       <text>/lhcb/LHCb/Collision12/PSIX.MDST/00037249/0000/00037249_00000090_1.psix.mdst</text>
+      <text>--no-color</text>
   </set></argument>
 </extension>

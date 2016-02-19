@@ -29,6 +29,29 @@
 #  Last modification $Date: 2011-09-29 19:04:25 +0200 (Thu, 29 Sep 2011) $
 #                 by $Author: ibelyaev $
 # =============================================================================
+"""Bender-script to check/collect/classify trigger desisions for particles
+          from certain TES location (e.g. output of the stripping line)
+
+This file is a part of BENDER project:
+
+  ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
+
+The project has been designed with the kind help from Pere MATO and Andrey TSAREGORODTSEV. 
+
+And it is based on the LoKi project:
+ 
+   ``C++ ToolKit for Smart and Friendly Physics Analysis''
+
+By usage of this code one clearly states the disagreement with
+   the smear campaign of Dr.O.Callot et al.:
+
+   ``No Vanya's lines are allowed in LHCb/Gaudi software''
+
+                  $Revision: 189829 $
+Last modification $Date: 2015-06-08 10:41:05 +0200 (Mon, 08 Jun 2015) $
+               by $Author: ibelyaev $
+"""
+# =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2010-09-10"
 __version__ = '$Revision: 193703 $'
@@ -87,32 +110,43 @@ group.add_argument (
     help   = 'Start plain python shell [default : %(default)s]' ,
     default = False ) 
 
+parser.add_argument ( 
+    '--no-color'     ,
+    dest    = 'Color'      , 
+    action  = 'store_false' , 
+    help    = "Do not use colorization", 
+    default = True          )
+
 import sys 
 config = parser.parse_args( [ a for a in sys.argv[1:] if '--' != a ] ) 
 
 if 0 >= config.nEvents and -1 != config.nEvents : config.nEvents = 1000
-#
+
 
 # =============================================================================
 # logging 
 # =============================================================================
-from Bender.Logger import getLogger, make_colors
-make_colors()
+from Bender.Logger import getLogger
+if config.Color :
+    from Bender.Logger import make_colors
+    make_colors()
+    del make_colors 
 if '__main__' == __name__ : logger = getLogger ( 'Bender/trg-check' )
 else                      : logger = getLogger ( __name__           )
 # =============================================================================
 
-config.OutputLevel += 1 
+from Bender.Logger import setLogging
 if config.Quiet :
+    
     logger.info ( 'Script to collect/check trigger decisions for certain lines')
     import logging
     logging.disable ( logging.INFO  )
     config.OutputLevel = 5
-    
+    setLogging ( config.OutputLevel ) 
+
 else :
-    
-    import logging
-    logging.disable ( logging.DEBUG )
+
+    setLogging ( config.OutputLevel ) 
 
     logger.info ( 100*'*')
     logger.info ( __doc__ ) 
@@ -122,18 +156,25 @@ else :
     logger.info ( ' Date    : %s ' % __date__     )
     logger.info ( 100*'*')
 
+
 ## some sanity adjustments:
 config.teslocation  = config.teslocation.strip() 
 config.RootInTES    = config.RootInTES  .strip() 
 
-from BenderTools.CheckTrg import configChkTrg, chkTrg  
-configChkTrg( config , colors = True )
-              
+## from BenderTools.Utils import silence, totalSilence
+## silence()
+## if config.Quiet or 5 <=config.OutputLevel :
+##     totalSilence()
+    
+from BenderTools.CheckTrg import configChkTrg, chkTrg
+configChkTrg( config , colors = config.Color ) 
+
 #
 ## adjust configuration settings
 # 
 if config.Simulation : from Bender.MainMC   import *
 else                 : from Bender.Main     import *
+
 
 #
 ## start gaudi
@@ -142,36 +183,39 @@ else                 : from Bender.Main     import *
 gaudi = appMgr()
 
 ## create algorithm 
-ALG    = chkTrg()
+ALGTYPE    = chkTrg()
 ## .. and configure it 
 kwargs = { 'Inputs'          : [ config.teslocation ] }
-if config.OutputLevel <=3 and not config.Quiet :
+if config.OutputLevel <3 and not config.Quiet :
     kwargs.update (  { 'PropertiesPrint' : True             } ) 
 if config.RootInTES :
     kwargs.update (  { 'RootInTES'       : config.RootInTES } )
-alg = ALG ( 'CheckTrg', **kwargs )
+alg = ALGTYPE ( 'CheckTrg', **kwargs )
 
-
+rewind()
 #
 ## run events
 #
-run ( config.nEvents )              
+run_progress ( config.nEvents )              
 
 
-def checkAlg ( alg ) :
-    
-    problem = False 
-    if alg and not alg.used     :
-        alg.Error ('Algorithm was not invoked, check configuration!')
-        problem = True
-    if alg and not alg.nums     :
-        alg.Error ('Algorithm has not found particles at %s, check configuration!' % alg.Inputs ) 
-        problem = True
-    if alg and not alg.triggers :
-        alg.Error ('Algorithm has not found trigger information, check configuration!')
-        problem = True
-    if problem and not config.Quiet : 
-        alg.PropertiesPrint = True   
+## check the problems 
+def checkAlg ( algo ) :
+
+    print 'I AM ALGO: ', algo
+
+    ## problem = False 
+    ## if algo and not algo.used     :
+    ##     algo.Error ('Algorithm was not invoked, check configuration!')
+    ##     problem = True
+    ## if alg and not algo.nums     :
+    ##     algo.Error ('Algorithm has not found particles at %s, check configuration!' % alg.Inputs ) 
+    ##     problem = True
+    ## if alg and not algo.triggers :
+    ##     algo.Error ('Algorithm has not found trigger information, check configuration!')
+    ##     problem = True
+    ## if problem and not config.Quiet : 
+    ##     algo.PropertiesPrint = True   
 #
 ## stop or continue as batch?
 #
@@ -184,6 +228,8 @@ if  config.embed :
     logger.info ('Start embedded interactive shell') 
     import IPython
     IPython.embed ()
+
+    del alg 
     exit() 
 
 elif config.plain :
@@ -201,6 +247,8 @@ elif config.plain :
     
     shell = code.InteractiveConsole(__vars)
     shell.interact()
+    
+    del alg 
     exit() 
 
 elif config.interactive : 
@@ -215,6 +263,8 @@ elif config.interactive :
     
     import IPython
     IPython.start_ipython ( argv = [] , user_ns = __vars )
+    
+    del alg 
     exit() 
 
 # =============================================================================

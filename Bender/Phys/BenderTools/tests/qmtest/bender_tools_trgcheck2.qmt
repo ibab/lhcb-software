@@ -8,5 +8,6 @@
   <text>-t=Phys/DoubleDiMuonForCharmAssociative/Particles</text>
   <text>/lhcb/LHCb/Collision15/LEPTONIC.MDST/00048279/0004/00048279_00041826_1.leptonic.mdst</text>
   <text>/lhcb/LHCb/Collision15/LEPTONIC.MDST/00048279/0001/00048279_00014327_1.leptonic.mdst</text>
+  <text>--no-color</text>
   </set></argument>
 </extension>

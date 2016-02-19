@@ -161,13 +161,9 @@ def configure ( config , colors = False ) :
         logger.info('set OutputLevel to be %s ' % config.OutputLevel )
         from BenderTools.Utils import silence
         silence ()
-        
-    import logging
-    if   config.OutputLevel <= 1 : logging.disable ( logging.NOTSET  - 1 ) 
-    elif config.OutputLevel <= 2 : logging.disable ( logging.DEBUG   - 1 ) 
-    elif config.OutputLevel <= 3 : logging.disable ( logging.INFO    - 1 ) 
-    elif config.OutputLevel <= 4 : logging.disable ( logging.WARNING - 1 ) 
-    elif config.OutputLevel <= 5 : logging.disable ( logging.ERROR   - 1 )
+    #
+    from Bender.Logger import setLogging
+    setLogging ( config.OutputLevel ) 
     #
     # some sanity actions:
     #

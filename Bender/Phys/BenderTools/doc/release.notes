@@ -5,6 +5,10 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2016-02-19 - Vanya Belyaev
+
+ - dst-dump 
+
 ! 2016-02-17 - Vanya Belyaev
  - improve get-dbtags and _dump_dbtags_2_ scripts to 
    allow xml-catalogs and "import-options" fiel to be provided 

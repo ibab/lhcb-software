@@ -33,9 +33,7 @@
 #  Last modification $Date: 2015-06-08 10:41:05 +0200 (Mon, 08 Jun 2015) $
 #                 by $Author: ibelyaev $
 # =============================================================================
-
-"""
-Trivial Bender-based script to dump the content of (x,mu,s,r,...)DSTs
+"""Trivial Bender-based script to dump the content of (x,mu,s,r,...)DSTs
 
 This file is a part of BENDER project:
 
@@ -70,9 +68,6 @@ __all__     = ()  ## nothing to import
 # =============================================================================
 import ROOT, sys
 ROOT.PyConfig.IgnoreCommandLineOptions = True
-# =============================================================================
-from Bender.Logger import make_colors
-make_colors()
 # =============================================================================
 from BenderTools.Parser      import makeParser
 # make parser 
@@ -113,10 +108,20 @@ parser.add_argument (
     action  = "store_true"       ,
     default = False    
     )
+parser.add_argument ( 
+    '--no-color'     ,
+    dest    = 'Color'      , 
+    action  = 'store_false' , 
+    help    = "Do not use colorization", 
+    default = True          )
+
+# =============================================================================
 
 ## eliminate artifacts and parse command-line arguments 
 config = parser.parse_args( [ a for a in sys.argv[1:] if '--' != a ] )
-
+if config.Color :
+    from Bender.Logger import make_colors
+    make_colors()
 from BenderTools.DstDump import dumpDst
 dumpDst ( config )
 

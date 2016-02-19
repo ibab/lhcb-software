@@ -82,7 +82,6 @@ __all__     =  ( 'dumpDst' , )
 from Bender.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'BenderTools.DstDump' )
 else                      : logger = getLogger ( __name__ )
-    
 # =============================================================================
 ## table format 
 _fhdr_ = ' | %8s | %15s | %7s | %4s | %6s |'                 ## header  
@@ -106,10 +105,21 @@ def formatItem ( item ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 def dumpDst ( config ) :
     ##
+    from Bender.Logger import setLogging
+    
     logger.info ( 100*'*') 
     if config.Quiet : 
+
         logger.info(' Trivial Bender-based script to explore the content of (x,mu,s,r,...)DSTs ' ) 
+        import logging
+        logging.disable ( logging.INFO  )
+        config.OutputLevel = 5
+        setLogging ( config.OutputLevel ) 
+        
     else :
+        
+        setLogging ( config.OutputLevel )
+        
         logger.info ( 100*'*')
         logger.info ( __doc__ ) 
         logger.info ( 100*'*')
@@ -117,9 +127,9 @@ def dumpDst ( config ) :
         logger.info ( ' Version : %s ' % __version__  ) 
         logger.info ( ' Date    : %s ' % __date__     )
         logger.info ( 100*'*')
-        
+
     from BenderTools.DstExplorer import configure 
-    configure ( config , colors = True ) 
+    configure ( config , colors = config.Color ) 
 
     from BenderTools.Utils import totalSilence
     totalSilence( dod = config.DataOnDemand )
@@ -127,7 +137,9 @@ def dumpDst ( config ) :
     from Bender.Main import appMgr, run, cpp
     if config.Simulation : import Bender.MainMC
 
-
+    if 1000 < config.nEvents :
+        logger.warning('Large number of events is required to process %s ' % config.nEvents )
+        
     #
     ## instantiate the application manager
     #
@@ -148,22 +160,21 @@ def dumpDst ( config ) :
     nSelEvents = {}
     nObjects   = {}
 
-    iEvent = 0
-
-    root = config.RootInTES
-    
+    root = config.RootInTES 
     if not root :
         root = '/Event'
-        logger.warning('Use "%s" as root, can be non-efficient' % root )
-        
-    while iEvent != config.nEvents :
+        logger.warning('Use "%s" as root, could be non-efficient' % root )
+
+    from Ostap.progress_bar import progress_bar
+    for iEvent in  progress_bar ( xrange ( config.nEvents-1 ) ) :
+    ##while iEvent < config.nEvents :
         #
-        sc = run(1)
+        sc   = run(1)
         if sc.isFailure()       : break
         #
         if not evtSvc['/Event'] : break
         ##
-        iEvent += 1
+        ## iEvent += 1
         #
         nodes = evtSvc.nodes ( node      = root ,
                                forceload = True )

@@ -224,7 +224,7 @@ def _getDBTags_ ( file_name          ,
     if catalogs   : arguments += [ '-x' ] + catalogs
     if debug      : arguments += [ '-v' ] 
     #
-    logger.debug ( "Use Popen(%s)" % arguments )
+    logger.verbose( "Use Popen(%s)" % arguments )
     pipe = Popen ( arguments            ,
                    env    = os.environ  ,
                    stdout = PIPE        ,
@@ -308,7 +308,7 @@ def _getMetaInfo_ ( file_name          ,
     if catalogs   : arguments += [ '-x' ] + catalogs
     if debug      : arguments += [ '-v' ] 
     #
-    logger.debug ( "Use Popen(%s)" % arguments )
+    logger.verbose ( "Use Popen(%s)" % arguments )
     pipe = Popen (  arguments           ,
                     env    = os.environ ,
                     stdout = PIPE       ,
@@ -373,8 +373,7 @@ def getMetaInfo ( file_name          ,
 #  @author Vanya BELYAEV 
 #  @date   2012-10-24   
 def extractTags ( args ) :
-    """
-    Extract DB-tags from the files 
+    """ Extract DB-tags from the files 
     """
     
     import argparse 

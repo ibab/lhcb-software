@@ -36,9 +36,7 @@
 #  Last modification $Date$
 #                 by $Author$
 # =============================================================================
-"""
-
-Trivial Bender-based script to check trigger decisions for certain lines 
+"""Trivial Bender-based script to check trigger decisions for certain lines 
 
 This file is a part of BENDER project:
 
@@ -140,7 +138,7 @@ def chkTrg  ( ) :
                 probs = True
                 
             if not self.triggers   :
-                self.Error('No tigger information is found! check configurtaion!')
+                self.Error('No tigger information is found! check configuration!')
                 probs = True
 
             if probs :
@@ -156,7 +154,6 @@ def chkTrg  ( ) :
 def configChkTrg ( config , colors = False ) :
     """
     """
-    
     # basic configuration 
     from BenderTools.DstExplorer import configure
     configure ( config , colors )
@@ -187,6 +184,13 @@ def configChkTrg ( config , colors = False ) :
         line = line + '/Particles'
         logger.info('Line name is adjusted to be %s' % line )
 
+
+    ##from BenderTools.Utils import silence, totalSilence
+    ##silence()
+    
+    ##if config.Quiet or 5 <=config.OutputLevel :
+    ##    totalSilence()
+    
     # 
     config.teslocation = line 
     ##
@@ -200,15 +204,9 @@ def configChkTrg ( config , colors = False ) :
     from Configurables       import DaVinci
     dv = DaVinci (
         EventPreFilters = fltrs.filters('Filters')  ,
-        UserAlgorithms  = [ 'CheckTrg' ]
+        ## UserAlgorithms  = [ 'CheckTrg' ]
         )
         
-    from BenderTools.Utils import silence, totalSilence
-    silence()
-    
-    if config.Quiet or  5<=config.OutputLevel :
-        totalSilence()
-    
     
 # =============================================================================
 if '__main__' == __name__ :
