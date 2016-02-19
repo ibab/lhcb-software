@@ -46,17 +46,13 @@ __author__ = "Vanya BELYAEV Ivan.Belyaev@cern.ch "
 __date__    = "????-??-??"
 __version__ = "SVN $Revision$ "
 # =============================================================================
+from LoKiCore.basic import cpp
 
-from LoKiCore.basic import cpp as _cpp
-
-_Tuple = _cpp.Tuples.Tuple
-_Array = _cpp.LoKi.Dicts.GenTupleArray
-
+_Tuple = cpp.Tuples.Tuple
+_Array = cpp.LoKi.Dicts.GenTupleArray
 ## simple function for decoration of "Tuples::Tuple::farray" method 
 def _fArrayGP_ ( self , *args ) :
-    """
-    Simple function for decoration of 'Tuples::Tuple::farray' method
-    
+    """Simple function for decoration of 'Tuples::Tuple::farray' method
     
     >>> tup = ...
     >>> particles = ...            ## the range of particles 
@@ -67,7 +63,6 @@ def _fArrayGP_ ( self , *args ) :
                           100       )  ## maximal length 
 
     or
-
     >>> tup.fArrayGP  ( 'p'  , GP  ,  ## the first  column name and functor 
                         'pt' , GPT ,  ## the second column name and functor 
                          particles ,  ## source: the range of particles 
@@ -75,7 +70,6 @@ def _fArrayGP_ ( self , *args ) :
                          100       )  ## maximal length 
     
     or
-
     >>> tup.fArrayGP  ( 'p'  , GP  ,  ## the first  column name and functor 
                         'pt' , GPT ,  ## the second column name and functor 
                         'm'  , GM  ,  ## the third  column name and functor 
@@ -84,7 +78,6 @@ def _fArrayGP_ ( self , *args ) :
                         100       )  ## maximal length 
     
     or
-
     >>> tup.fArrayGP  ( 'p'  , GP  ,  ## the first  column name and functor 
                         'pt' , GPT ,  ## the second column name and functor 
                         'm'  , GM  ,  ## the third  column name and functor 
@@ -92,15 +85,12 @@ def _fArrayGP_ ( self , *args ) :
                         particles ,  ## source: the range of particles 
                         'Length'  ,  ## the name of 'length' column
                          100       )  ## maximal length 
-                      
     """
     return _Array.farrayp ( self , *args )
 
 _fArrayGP_ . __doc__ += '\n' + _Array.farrayp.__doc__
 
 _Tuple.fArrayGP = _fArrayGP_ 
-
-
 # =============================================================================
 if '__main__' == __name__ :
 

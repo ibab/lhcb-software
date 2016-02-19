@@ -13,15 +13,21 @@ __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
 
 import LoKiCore.decorators   as _LoKiCore
+import LoKiMC.decorators     as _LoKiMC
+import LoKiGen.decorators    as _LoKiGen
+import LoKiGenMC.decorators  as _LoKiGenMC
+import LoKiPhys.decorators   as _LoKiPhys 
 import LoKiPhysMC.decorators as _LoKiPhysMC
-from   LoKiAlgoMC.functions  import *
 import LoKiAlgo.decorators   as _LoKiAlgo
-
-import LoKiAlgoMC.fArrayMCP
-import LoKiAlgoMC.fArrayGP
+from   LoKiAlgoMC.functions  import *
 
 LoKi = _LoKiCore.LoKi
 LHCb = _LoKiCore.LHCb
+
+##_alg = LoKi.AlgoMC
+
+import LoKiAlgoMC.fArrayMCP
+import LoKiAlgoMC.fArrayGP
 
 # =============================================================================
 ## decorate MC-algorithm: 
@@ -40,7 +46,6 @@ _decorate = _LoKiAlgo._decorate
 ## perform the actual decoration
 _decorated = _decorate( _name ) 
 # =============================================================================
-
     
 # =============================================================================
 if '__main__' == __name__ :

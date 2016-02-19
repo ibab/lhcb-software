@@ -1078,8 +1078,9 @@ namespace LoKi
     std::string                  m_pv2mcName         ;
     mutable const IPV2MC*        m_pv2mc             ;
     // ========================================================================    
+    //  explicitly disable MC-truth matching ? 
     bool                         m_disableMCMatch    ;
-    // auto-collect P->MC plinks for uDST ? 
+    //  auto-collect P->MC plinks for uDST ? 
     bool                         m_collectP2MCLinks  ;
     // ========================================================================
     /// the factory to create the (MC)decay trees 

@@ -317,7 +317,7 @@ LoKi::AlgoMC::mcTruth  ( const std::string& name ) const
       }
       // finally use these tables to load MC-truth information 
       // Particle      -> MC
-      _feedIt<LoKi::Types::TableP2MC>   ( object , tables ,  false ) . ignore () ;
+      _feedIt<LoKi::Types::TableP2MC> ( object , tables ,  false ) . ignore () ;
     }
   }
   //
