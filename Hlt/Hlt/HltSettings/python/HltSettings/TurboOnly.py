@@ -60,7 +60,7 @@ class TurboOnly( object ):
         from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
         from Hlt1Lines.Hlt1CalibRICHMirrorLines     import Hlt1CalibRICHMirrorLinesConf
 
-        from Hlt2Lines.Commissioning.Lines      import CommissioningLines
+        from Hlt2Lines.Technical.Lines          import TechnicalLines
         from Hlt2Lines.DiMuon.Lines             import DiMuonLines
         from Hlt2Lines.SingleMuon.Lines         import SingleMuonLines
         from Hlt2Lines.TrackEffDiMuon.Lines     import TrackEffDiMuonLines

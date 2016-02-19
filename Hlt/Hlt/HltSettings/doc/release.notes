@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-02-19 - Sascha Stahl
+ - Fix TurboOnly settings.
+
 ! 2016-02-19 - Francesco Dettori
  - Adding 2016 settings for muons (Single and DiMuon)
 
