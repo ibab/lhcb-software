@@ -12,7 +12,7 @@ __author__  = "Vladimir Gligorov vladimir.gligorov@@cern.ch"
 __version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
 # =============================================================================
 
-import Gaudi.Configuration 
+import Gaudi.Configuration
 
 def histosfilter(name,xlower=0.,xup=100.,nbins=100):
     """ return the dictonary with the booking of the histograms associated to a filter
@@ -72,31 +72,32 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
     def localise_props( self, prefix ):
         ps = self.getProps()
         # get the list of options belonging to this prefix
-        return { key.replace(prefix + "_", "") : ps[key] for key in ps if key.find(prefix) >= 0 } 
+        return { key.replace(prefix + "_", "") : ps[key] for key in ps if key.find(prefix) >= 0 }
 
     def hlt1Track_Preambulo( self, prefix ) :
         from HltTracking.Hlt1Tracking import ( VeloCandidates, LooseForward,
                                                FitTrack, MatchVeloMuon, IsMuon )
+        from HltTracking.Hlt1Tracking import TrackCandidatesAlgos
         from HltTracking.Hlt1Tracking import TrackCandidates
- 
-        Preambulo = [ VeloCandidates( prefix ),
+
+        preambulo = [ VeloCandidates( prefix ),
                       MatchVeloMuon,
                       IsMuon ,
                       FitTrack,
                       TrackCandidates( prefix )]
-        return Preambulo
+        return preambulo, TrackCandidatesAlgos(prefix)
 
-    # line using velo+veloTT+forwardUpgrade en'block 
+    # line using velo+veloTT+forwardUpgrade en'block
     def hlt1TrackBlock_Streamer( self, name, props ) :
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from Configurables import LoKi__HltUnit as HltUnit
         props['name'] = name
-        
-        lineCode = """ 
+
+        lineCode = """
         TrackCandidates
         >>  FitTrack
         >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) ) 
+        >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
         >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
               ( TrTNORMIDC > %(TrNTHits)s ) & \
               ( TrNVELOMISS < %(Velo_Qcut)s ) )
@@ -113,13 +114,14 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         >> SINK( 'Hlt1%(name)sDecision' )
         >> ~TC_EMPTY
         """ % props
+        preambulo, trackingAlgos = self.hlt1Track_Preambulo( name )
         hlt1TrackBlock_Unit = HltUnit(
             'Hlt1'+name+'Unit',
-            Preambulo = self.hlt1Track_Preambulo( name ),
+            Preambulo = preambulo,
             Code = lineCode
-            )       
+            )
         from HltTracking.HltPVs import PV3D
-        return [ Hlt1GECUnit( props[ 'GEC' ] ), PV3D('Hlt1'), hlt1TrackBlock_Unit ]
+        return [ Hlt1GECUnit( props[ 'GEC' ] ), PV3D('Hlt1'), trackingAlgos, hlt1TrackBlock_Unit ]
 
     def hlt1TrackMuon_Streamer(self, name, props ) :
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
@@ -127,11 +129,11 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         props['name'] = name
         props['forward'] = 'LooseForward'
 
-        lineCode = """ 
+        lineCode = """
         TrackCandidates
         >>  FitTrack
         >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) ) 
+        >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
         >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
               ( TrTNORMIDC > %(TrNTHits)s ) & \
               ( TrNVELOMISS < %(Velo_Qcut)s ) )
@@ -151,14 +153,15 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         >>  SINK( 'Hlt1%(name)sDecision' )
         >>  ~TC_EMPTY
         """ % props
+        preambulo, trackingAlgos = self.hlt1Track_Preambulo( name )
         hlt1TrackMuon_Unit = HltUnit(
             'Hlt1'+name+'Unit',
+            Preambulo = preambulo,
             ##OutputLevel = 1 ,
-            Preambulo = self.hlt1Track_Preambulo( name ),
             Code = lineCode
-            )    
+            )
         from HltTracking.HltPVs import PV3D
-        return [ Hlt1GECUnit( props[ 'GEC' ] ), PV3D('Hlt1'), hlt1TrackMuon_Unit ]
+        return [ Hlt1GECUnit( props[ 'GEC' ] ), PV3D('Hlt1'), trackingAlgos, hlt1TrackMuon_Unit ]
 
     def do_timing( self, unit ):
         from Configurables import LoKi__HltUnit as HltUnit
@@ -193,7 +196,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         odin = self.getProp( 'ODINFilter' )[nickname]
         return odin
 
-    def __apply_configuration__(self) : 
+    def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt1Line
         priorities = self.getProp( "Priorities" )
         doTiming = self.getProp( 'DoTiming' )

@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2016-02-19 - Roel Aaij
+ - Explicitly add tracking algorithms to HLT1 proto-particle sequence and
+   1TrackMuon line instead of only including them in the functor.
+
 ! 2016-02-19 - Francesco Dettori
  - Adding back the Hlt1DiMuonHighMassBE, special dedicated line for BE collisions
 

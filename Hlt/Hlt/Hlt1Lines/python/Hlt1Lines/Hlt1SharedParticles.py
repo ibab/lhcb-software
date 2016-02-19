@@ -25,6 +25,7 @@ class Hlt1SharedParticles(HltLinesConfigurableUser):
         """ % props
 
         from Configurables import LoKi__HltUnit as HltUnit
+        from HltTracking.Hlt1Tracking import TrackCandidatesAlgos
         from HltTracking.Hlt1Tracking import ( TrackCandidates, FitTrack)
         preambulo = [ TrackCandidates('SharedParticles'),
                       FitTrack ]
@@ -36,7 +37,7 @@ class Hlt1SharedParticles(HltLinesConfigurableUser):
             Code = code)
 
         from HltLine.HltLine import bindMembers
-        bm = bindMembers(None, [protoUnit]).setOutputSelection(selection)
+        bm = bindMembers(None, [TrackCandidatesAlgos('SharedParticles'), protoUnit]).setOutputSelection(selection)
         return bm
 
     def pionUnit(self):
@@ -144,4 +145,3 @@ class Hlt1SharedParticles(HltLinesConfigurableUser):
         from HltLine.HltLine import bindMembers
         bm = bindMembers(None, [protoUnit, protonUnit]).setOutputSelection(selection)
         return bm
-
