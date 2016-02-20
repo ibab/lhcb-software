@@ -105,6 +105,9 @@ namespace Rich
       /// Flag to turn on the rejection of 'ambiguous' photons
       bool m_rejAmbigPhots;
 
+      /// Flag to turn on interpolation between two nearest rings, by radiator
+      std::vector<bool> m_useRingInterp;
+
       /// Cache (for speed) the minimum CK ring radius for use as a calibration source
       mutable std::vector<double> m_minCalibRingRadius;
 

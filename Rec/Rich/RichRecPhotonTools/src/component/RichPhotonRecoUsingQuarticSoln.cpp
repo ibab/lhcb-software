@@ -73,10 +73,10 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
   // Get tools
   acquireTool( "RichMirrorSegFinder", m_mirrorSegFinder, nullptr, true );
   acquireTool( "RichRayTracing",      m_rayTracing,      nullptr, true );
-  acquireTool( "RichSmartIDTool",     m_idTool, nullptr, true );
+  acquireTool( "RichSmartIDTool",     m_idTool,          nullptr, true );
 
   // loop over radiators
-  for ( const auto& rad : Rich::radiators() )
+  for ( const auto rad : Rich::radiators() )
   {
 
     // If rejection of ambiguous photons is turned on make sure test is turned on

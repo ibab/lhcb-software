@@ -4,6 +4,10 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-02-20 - Chris Jones
+ - Add a property to RichPhotonRecoUsingCKEstiFromRadius to allow the
+   inter-ring interpolation to be turned on/off via options.
+
 ! 2016-02-05 - Chris Jones
  - Improve the reconstruction in RichPhotonRecoUsingCKEstiFromRadius to 
    interpolate both in Cherenkov phi, and (new) radius.

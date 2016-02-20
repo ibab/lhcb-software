@@ -28,6 +28,8 @@ PhotonRecoUsingCKEstiFromRadius( const std::string& type,
   // Job options
   declareProperty( "MinFracCKTheta", m_minFracCKtheta = { 1.0, 0.05, 0.05 } );
   declareProperty( "RejectAmbiguousPhotons", m_rejAmbigPhots = false );
+  //                                                           Aero  R1Gas R2Gas
+  declareProperty( "UseRingInterpolation", m_useRingInterp = { true, true, true } );
 
   // Corrections for the intrinsic biases
   //                  Aerogel    Rich1Gas    Rich2Gas
@@ -62,7 +64,7 @@ StatusCode PhotonRecoUsingCKEstiFromRadius::initialize()
             << m_pidTypes << endmsg;
   release(richPartProp);
 
-  info() << "Min CK theta fraction = " << m_minFracCKtheta << endmsg;
+  _ri_debug << "Min CK theta fraction = " << m_minFracCKtheta << endmsg;
 
   return sc;
 }
@@ -122,7 +124,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   float sep_diff2 = std::numeric_limits<float>::max();
   float sep_calib{0}, last_sep_calib{0}, thetaCerenkov{-1};
   bool unambigPhoton = false;
-  for ( const auto& pid : m_pidTypes )
+  for ( const auto pid : m_pidTypes )
   {
 
     // Load the ring and select the point for this PID type
@@ -203,6 +205,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
             {
               // Update CK theta value just using this ring
               thetaCerenkov = ring->radius() * ( track_pix_sep / sep_calib );
+              // If inter-ring interpolation is turned off, break out now after first (largest) ring
+              if ( !m_useRingInterp[radiator] ) { break; }
               // If this is the first found ring, and the point is further away than
               // the calibration point, do not bother searching other (smaller) rings
               // as they are only going to get further away.
