@@ -86,6 +86,9 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 
   // Detector information
   const auto radiator = trSeg.radiator();
+  // This tool is not optimised for Aerogel. So return failure
+  if ( UNLIKELY( Rich::Aerogel == radiator ) )
+  { return Warning("Ray tracing photon reconstruction not available for Aerogel"); }
   const auto side     = pixel->panel().panel();
 
   // Emission point to use for photon reconstruction
