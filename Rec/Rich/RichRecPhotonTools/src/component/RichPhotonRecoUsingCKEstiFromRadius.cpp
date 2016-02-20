@@ -163,9 +163,10 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
           // pixel - calibration point seperation ^ 2
           const auto pix_calib_sep2 = ( std::pow( pixPRad.x() - calp_x, 2 ) +
                                         std::pow( pixPRad.y() - calp_y, 2 ) );
+          const bool calibIsCloser = ( pix_calib_sep2 < sep_diff2 );
 
           // Is this point a better calibration point to use ?
-          if ( m_useRingInterp[radiator] || ( pix_calib_sep2 < sep_diff2 ) )
+          if ( m_useRingInterp[radiator] || calibIsCloser )
           {
             // update decision variable
             sep_diff2 = pix_calib_sep2;
