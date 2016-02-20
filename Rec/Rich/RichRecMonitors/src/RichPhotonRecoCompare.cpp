@@ -23,7 +23,11 @@ using namespace Rich::Rec::MC;
 // Standard constructor, initializes variables
 PhotonRecoCompare::PhotonRecoCompare( const std::string& name,
                                       ISvcLocator* pSvcLocator )
-  : Rich::Rec::TupleAlgBase ( name, pSvcLocator ) { }
+  : Rich::Rec::TupleAlgBase ( name , pSvcLocator )
+{
+  declareProperty( "DetailedPlots",  m_detailedPlots  = true  );
+  declareProperty( "BadPhotonPlots", m_badPhotonPlots = false );
+}
 
 // Destructor
 PhotonRecoCompare::~PhotonRecoCompare() { }
@@ -110,6 +114,9 @@ StatusCode PhotonRecoCompare::execute()
         {
           // compare the photons ...
 
+          // range for 'DiffDiff' plots. 25% the normal CK theta range ...
+          const auto ckDiffDiff = 0.25 * ckRange[rad];
+
           // CK theta values
           const auto stdCKTheta  = stdPhot.CherenkovTheta();
           const auto baseCKTheta = basePhot.CherenkovTheta();
@@ -117,7 +124,10 @@ StatusCode PhotonRecoCompare::execute()
           // differences
           const auto stdMCDiff   = stdCKTheta  - mcCKTheta;
           const auto baseMCDiff  = baseCKTheta - mcCKTheta;
-          const auto stdBaseDiffDiff = fabs(stdMCDiff) - fabs(baseMCDiff);
+          auto   stdBaseDiffDiff = fabs(stdMCDiff) - fabs(baseMCDiff);
+          // sanitise outliers ...
+          if      (  ckDiffDiff < stdBaseDiffDiff ) { stdBaseDiffDiff =  0.99*ckDiffDiff; }
+          else if ( -ckDiffDiff > stdBaseDiffDiff ) { stdBaseDiffDiff = -0.99*ckDiffDiff; }
 
           // Emission point
           //const auto& stdEmissPtn  = stdPhot.emissionPoint();
@@ -127,6 +137,12 @@ StatusCode PhotonRecoCompare::execute()
           // plots
 
           // all hypos
+          richHisto1D( hid(rad,"stdRecMCDiff"),
+                       "StdRec-MC CK theta",
+                       -ckRange[rad], ckRange[rad], nBins1D() ) -> fill( stdMCDiff );
+          richHisto1D( hid(rad,"baseRecMCDiff"),
+                       "BaseRec-MC CK theta",
+                       -ckRange[rad], ckRange[rad], nBins1D() ) -> fill( baseMCDiff );
           richProfile1D( hid(rad,"stdBaseMCDiffDiffVP"),
                          "|StdRec-MC| - |BaseRec-MC| CK Theta V P",
                          minP, maxP, nBins1D() )
@@ -137,7 +153,7 @@ StatusCode PhotonRecoCompare::execute()
             -> fill( mcCKTheta, stdBaseDiffDiff );
           richHisto1D( hid(rad,"stdBaseMCDiffDiff"),
                        "|StdRec-MC| - |BaseRec-MC| CK Theta V P",
-                       -0.25*ckRange[rad],0.25*ckRange[rad], nBins1D() )
+                       -ckDiffDiff, ckDiffDiff, nBins1D() )
             -> fill( stdBaseDiffDiff );
           richHisto2D( hid(rad,"stdMCDiffVbaseMCDIff"),
                        "|StdRec-MC| CK Theta Versus |BaseRec-MC| CK Theta",
@@ -146,6 +162,12 @@ StatusCode PhotonRecoCompare::execute()
             -> fill( baseCKTheta, stdCKTheta );
 
           // true PID type
+          richHisto1D( hid(rad,mcType,"stdRecMCDiff"),
+                       "StdRec-MC CK theta",
+                       -ckRange[rad], ckRange[rad], nBins1D() ) -> fill( stdMCDiff );
+          richHisto1D( hid(rad,mcType,"baseRecMCDiff"),
+                       "BaseRec-MC CK theta",
+                       -ckRange[rad], ckRange[rad], nBins1D() ) -> fill( baseMCDiff );
           richProfile1D( hid(rad,mcType,"stdBaseMCDiffDiffVP"),
                          "|StdRec-MC| - |BaseRec-MC| CK Theta V P",
                          minP, maxP, nBins1D() )
@@ -156,7 +178,7 @@ StatusCode PhotonRecoCompare::execute()
             -> fill( mcCKTheta, stdBaseDiffDiff );
           richHisto1D( hid(rad,mcType,"stdBaseMCDiffDiff"),
                        "|StdRec-MC| - |BaseRec-MC| CK Theta V P",
-                       -0.25*ckRange[rad],0.25*ckRange[rad], nBins1D() )
+                       -ckDiffDiff, ckDiffDiff, nBins1D() )
             -> fill( stdBaseDiffDiff );
           richHisto2D( hid(rad,mcType,"stdMCDiffVbaseMCDIff"),
                        "|StdRec-MC| CK Theta Versus |BaseRec-MC| CK Theta",
@@ -164,8 +186,93 @@ StatusCode PhotonRecoCompare::execute()
                        minCkTheta[rad], maxCkTheta[rad], nBins1D() )
             -> fill( baseCKTheta, stdCKTheta );
 
+          // Detailed plots
+          if ( UNLIKELY(m_detailedPlots) )
+          {
+
+            // P binned plots
+            if ( pTot >= minP && pTot <= maxP )
+            {
+
+              // Get bin min and max
+              const auto incr   = ( maxP - minP ) / nBins1D();
+              const auto bin    = std::floor( ( pTot - minP ) / incr );
+              const auto binmin = ( (  bin * incr ) + minP ) / Gaudi::Units::GeV;
+              const auto binmax = binmin + ( incr / Gaudi::Units::GeV );
+
+              // Form ID and title
+              std::ostringstream id, title;
+              id    << "Ptot/Bin" << bin << "-" << binmin << "to" << binmax << "GeV";
+              title << " | Ptot " << binmin << " to " << binmax << " GeV/c";
+
+              // Fill plots
+
+              richHisto1D( hid(rad,id.str()+"/stdRecMCDiff"),
+                           "StdRec-MC CK theta" + title.str(),
+                           -ckRange[rad], ckRange[rad], nBins1D() ) -> fill( stdMCDiff );
+              richHisto1D( hid(rad,mcType,id.str()+"/stdRecMCDiff"),
+                           "StdRec-MC CK theta" + title.str(),
+                           -ckRange[rad], ckRange[rad], nBins1D() ) -> fill( stdMCDiff );
+              richHisto1D( hid(rad,id.str()+"/baseRecMCDiff"),
+                           "BaseRec-MC CK theta" + title.str(),
+                           -ckRange[rad], ckRange[rad], nBins1D() ) -> fill( baseMCDiff );
+              richHisto1D( hid(rad,mcType,id.str()+"/baseRecMCDiff"),
+                           "BaseRec-MC CK theta" + title.str(),
+                           -ckRange[rad], ckRange[rad], nBins1D() ) -> fill( baseMCDiff );
+              richHisto1D( hid(rad,id.str()+"/stdBaseMCDiffDiff"),
+                           "|StdRec-MC| - |BaseRec-MC| CK Theta" + title.str(),
+                           -ckDiffDiff, ckDiffDiff, nBins1D() )
+                -> fill( stdBaseDiffDiff );
+              richHisto1D( hid(rad,mcType,id.str()+"/stdBaseMCDiffDiff"),
+                           "|StdRec-MC| - |BaseRec-MC| CK Theta" + title.str(),
+                           -ckDiffDiff, ckDiffDiff, nBins1D() )
+                -> fill( stdBaseDiffDiff );
+
+            }
+
+            // CK theta binned plots
+            if ( mcCKTheta >= minCkTheta[rad] && mcCKTheta <= maxCkTheta[rad] )
+            {
+
+              // Get bin min and max
+              const auto incr   = ( maxCkTheta[rad] - minCkTheta[rad] ) / nBins1D();
+              const auto bin    = std::floor( ( mcCKTheta - minCkTheta[rad] ) / incr );
+              const auto binmin = 1000 * ( (  bin * incr ) + minCkTheta[rad] );
+              const auto binmax = binmin + ( 1000 * incr );
+
+              // Form ID and title
+              std::ostringstream id, title;
+              id    << "CKtheta/Bin" << bin << "-" << binmin << "to" << binmax << "mrad";
+              title << " | CKTheta " << binmin << " to " << binmax << " mrad";
+
+              // Fill plots
+              richHisto1D( hid(rad,id.str()+"/stdRecMCDiff"),
+                           "StdRec-MC CK theta" + title.str(),
+                           -ckRange[rad], ckRange[rad], nBins1D() ) -> fill( stdMCDiff );
+              richHisto1D( hid(rad,mcType,id.str()+"/stdRecMCDiff"),
+                           "StdRec-MC CK theta" + title.str(),
+                           -ckRange[rad], ckRange[rad], nBins1D() ) -> fill( stdMCDiff );
+              richHisto1D( hid(rad,id.str()+"/baseRecMCDiff"),
+                           "BaseRec-MC CK theta" + title.str(),
+                           -ckRange[rad], ckRange[rad], nBins1D() ) -> fill( baseMCDiff );
+              richHisto1D( hid(rad,mcType,id.str()+"/baseRecMCDiff"),
+                           "BaseRec-MC CK theta" + title.str(),
+                           -ckRange[rad], ckRange[rad], nBins1D() ) -> fill( baseMCDiff );
+              richHisto1D( hid(rad,id.str()+"/stdBaseMCDiffDiff"),
+                           "|StdRec-MC| - |BaseRec-MC| CK Theta" + title.str(),
+                           -ckDiffDiff, ckDiffDiff, nBins1D() )
+                -> fill( stdBaseDiffDiff );
+              richHisto1D( hid(rad,mcType,id.str()+"/stdBaseMCDiffDiff"),
+                           "|StdRec-MC| - |BaseRec-MC| CK Theta" + title.str(),
+                           -ckDiffDiff, ckDiffDiff, nBins1D() )
+                -> fill( stdBaseDiffDiff );
+
+            }
+
+          } // detailed plots
+
           // Look in detail at photons which differ a lot
-          if ( stdBaseDiffDiff > maxDev[rad] )
+          if ( UNLIKELY( m_badPhotonPlots && stdBaseDiffDiff > maxDev[rad] ) )
           {
 
             // Track momentum

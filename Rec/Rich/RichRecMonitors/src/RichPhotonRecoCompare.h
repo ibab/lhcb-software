@@ -74,6 +74,12 @@ namespace Rich
         /// Pointer to RichRecMCTruthTool interface
         const Rich::Rec::MC::IMCTruthTool * m_richRecMCTruth = nullptr;
 
+        /// Flag to turn on the creation of detailed bin by bin plots
+        bool m_detailedPlots;
+
+        /// Flag to turn on the creation of 'bad' photon plots
+        bool m_badPhotonPlots;
+
       };
 
     }
