@@ -126,7 +126,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   const LHCb::RichRecPointOnRing *best_point{nullptr};
   float sep_diff2 = std::numeric_limits<float>::max();
   float sep_calib{0}, last_sep_calib{0}, thetaCerenkov{-1};
-  bool unambigPhoton = false;
+  bool unambigPhoton{false}, last_unambigPhoton{false};
+  bool pointOutsideLargestRing{false};
   for ( const auto pid : m_pidTypes )
   {
 
@@ -164,23 +165,23 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                                         std::pow( pixPRad.y() - calp_y, 2 ) );
 
           // Is this point a better calibration point to use ?
-          if ( pix_calib_sep2 < sep_diff2 )
+          if ( m_useRingInterp[radiator] || ( pix_calib_sep2 < sep_diff2 ) )
           {
+            // update decision variable
+            sep_diff2 = pix_calib_sep2;
+
             // First ring found ?
             const bool firstFoundRing = ( ring == nullptr );
 
-            // updated decision variable
-            sep_diff2 = pix_calib_sep2;
-
-            // Best point pointer
+            // Update best point pointer
             best_point = ( lD < hD ? points.first : points.second );
 
-            // update calibration distance
+            // Update calibration distance
             last_sep_calib = sep_calib;
             sep_calib = std::sqrt( std::pow( segPSide.x() - calp_x, 2 ) +
                                    std::pow( segPSide.y() - calp_y, 2 ) );
 
-            // update best ring and pixel pointers
+            // Update best ring and pixel pointers
             last_ring = ring;
             ring      = ring_tmp;
 
@@ -188,33 +189,56 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
             // Not quite the same as what is done in the Quartic tool (which tests
             // reconstruction from the start and end of the track segment) but its better
             // than doing nothing.
+            last_unambigPhoton = unambigPhoton;
             unambigPhoton =
               ( ( points.first->primaryMirror()   == points.second->primaryMirror()   ) &&
                 ( points.first->secondaryMirror() == points.second->secondaryMirror() ) );
 
-            // Is pixel between (in ring radius) this ring and the last one
-            if ( !firstFoundRing                 &&
-                 track_pix_sep >= sep_calib      &&
+            // Is the data point outside the first ring ?
+            if ( firstFoundRing ) { pointOutsideLargestRing = track_pix_sep > sep_calib; }
+
+            // If interpolation is enabled, and we are between rings, use them
+            if ( m_useRingInterp[radiator]       &&
+                 !firstFoundRing                 &&
+                 track_pix_sep >=      sep_calib &&
                  track_pix_sep <  last_sep_calib  )
             {
               // Interpolate between the two rings, then break out as this is the best we can do
-              const auto diffL = track_pix_sep  - sep_calib;
-              const auto diffH = last_sep_calib - track_pix_sep;
-              thetaCerenkov = ( ( diffL * last_ring->radius() ) +
-                                ( diffH *      ring->radius() ) ) / ( diffL + diffH );
+              thetaCerenkov = 
+                ( ( (      ring->radius() * ( track_pix_sep - last_sep_calib ) ) +
+                    ( last_ring->radius() * ( sep_calib     - track_pix_sep  ) ) ) / 
+                  ( sep_calib - last_sep_calib ) );
               break;
             }
             else
             {
               // Update CK theta value just using this ring
               thetaCerenkov = ring->radius() * ( track_pix_sep / sep_calib );
-              // If inter-ring interpolation is turned off, break out now after first (largest) ring
-              if ( !m_useRingInterp[radiator] ) { break; }
               // If this is the first found ring, and the point is further away than
               // the calibration point, do not bother searching other (smaller) rings
               // as they are only going to get further away.
-              if ( firstFoundRing && track_pix_sep > sep_calib ) { break; }
+              if ( firstFoundRing && pointOutsideLargestRing ) { break; }
             }
+
+            // // If we have two rings, try and interpolate between them
+            // if ( m_useRingInterp[radiator] && ring && last_ring )
+            // {
+            //   // Interpolate between the two rings
+            //   thetaCerenkov = 
+            //     ( ( (      ring->radius() * ( track_pix_sep - last_sep_calib ) ) +
+            //         ( last_ring->radius() * ( sep_calib     - track_pix_sep  ) ) ) / 
+            //       ( sep_calib - last_sep_calib ) );
+            //   // If data point is between the last two rings, or data point is outside the largest
+            //   // ring, break out as this is the optimal combination to use for interpolation
+            //   if ( pointOutsideLargestRing || 
+            //        ( track_pix_sep >= sep_calib &&
+            //          track_pix_sep <  last_sep_calib ) ) { break; }
+            // }
+            // else
+            // {
+            //   // Update CK theta value just using this ring
+            //   thetaCerenkov = ring->radius() * ( track_pix_sep / sep_calib );
+            // }
 
           }
           else if ( ring )
@@ -222,7 +246,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
             // a ring is already found, and we are getting further away, so break out ...
             break;
           }
-
+          
         } // point found
 
       } // ring saturation check
@@ -242,7 +266,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   {
 
     // check for ambiguous photons ?
-    if ( UNLIKELY( !unambigPhoton && m_rejAmbigPhots ) )
+    const bool unambig = unambigPhoton && last_unambigPhoton;
+    if ( UNLIKELY( !unambig && m_rejAmbigPhots ) )
     {
       // Calibration points used different mirrors, so reject
       //_ri_verbo << "Ambiguous photon -> reject" << endmsg;
@@ -262,7 +287,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       gPhoton.setActiveSegmentFraction  ( fraction                 );
       gPhoton.setDetectionPoint         ( pixel->globalPosition()  );
       gPhoton.setSmartID                ( pixel->hpdPixelCluster().primaryID() );
-      gPhoton.setUnambiguousPhoton      ( unambigPhoton            );
+      gPhoton.setUnambiguousPhoton      ( unambig                  );
       gPhoton.setPrimaryMirror          ( best_point->primaryMirror()   );
       gPhoton.setSecondaryMirror        ( best_point->secondaryMirror() );
       // ------------------------------------------------------------------------
