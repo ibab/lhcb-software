@@ -21,7 +21,6 @@
 // Base class and interfaces
 #include "RichPhotonRecoBase.h"
 #include "RichRecBase/IRichPhotonReconstruction.h"
-#include "RichKernel/IRichSmartIDTool.h"
 #include "RichRecBase/IRichMassHypothesisRingCreator.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichKernel/IRichParticleProperties.h"
@@ -91,17 +90,11 @@ namespace Rich
 
     private: // data
 
-      /// RichSmartID tool
-      const ISmartIDTool * m_idTool = nullptr;
-
       /// Pointer to ring creator
       const IMassHypothesisRingCreator * m_massHypoRings = nullptr;
 
       /// Cherenkov angle tool
       const ICherenkovAngle * m_ckAngle = nullptr; 
-
-      /// Pointer to RichParticleProperties interface
-      const IParticleProperties * m_richPartProp = nullptr;
 
       /// Particle ID types to consider in the photon creation checks
       Rich::Particles m_pidTypes;

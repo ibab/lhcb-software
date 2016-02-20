@@ -23,35 +23,30 @@ PhotonRecoUsingQuarticSoln::
 PhotonRecoUsingQuarticSoln( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
-: PhotonRecoBase        ( type, name, parent ),
-  m_testForUnambigPhots ( Rich::NRadiatorTypes, true  ),
-  m_rejectAmbigPhots    ( Rich::NRadiatorTypes, false ),
-  m_useAlignedMirrSegs  ( Rich::NRadiatorTypes, true  ),
-  m_nQits               ( Rich::NRadiatorTypes, 3     ),
-  m_checkBeamPipe       ( Rich::NRadiatorTypes, true  ),
-  m_checkPrimMirrSegs   ( Rich::NRadiatorTypes, false ),
-  m_minActiveFrac       ( Rich::NRadiatorTypes, 0.2   ),
-  m_minSphMirrTolIt     ( Rich::NRadiatorTypes        )
+: PhotonRecoBase( type, name, parent )
 {
+  using namespace Gaudi::Units;
 
   // job options
-  declareProperty( "FindUnambiguousPhotons",    m_testForUnambigPhots         );
-  declareProperty( "UseMirrorSegmentAllignment", m_useAlignedMirrSegs         );
   declareProperty( "AssumeFlatSecondaries",     m_forceFlatAssumption = false );
-  declareProperty( "NQuarticIterationsForSecMirrors",         m_nQits         );
   declareProperty( "UseSecondaryMirrors",                m_useSecMirs = true  );
-  declareProperty( "RejectAmbiguousPhotons",       m_rejectAmbigPhots         );
-  declareProperty( "CheckBeamPipe",                   m_checkBeamPipe         );
-  declareProperty( "CheckPrimaryMirrorSegments",  m_checkPrimMirrSegs         );
   declareProperty( "CorrectAeroRefract",       m_applyAeroRefractCorr = true  );
-  declareProperty( "MinActiveFraction",               m_minActiveFrac         );
-  m_minSphMirrTolIt[Rich::Aerogel]  = std::pow( 0.10 * Gaudi::Units::mm, 2 );
-  m_minSphMirrTolIt[Rich::Rich1Gas] = std::pow( 0.08 * Gaudi::Units::mm, 2 );
-  m_minSphMirrTolIt[Rich::Rich2Gas] = std::pow( 0.05 * Gaudi::Units::mm, 2 );
-  declareProperty( "MinSphMirrTolIt", m_minSphMirrTolIt );
+  //                                                                      Aero  R1Gas R2Gas
+  declareProperty( "FindUnambiguousPhotons",    m_testForUnambigPhots = { true, true, true  } );
+  declareProperty( "UseMirrorSegmentAllignment", m_useAlignedMirrSegs = { true, true, true  } );
+  declareProperty( "NQuarticIterationsForSecMirrors",         m_nQits = { 3,    3,    3     } );
+  declareProperty( "RejectAmbiguousPhotons",       m_rejectAmbigPhots = { false,false,false } );
+  declareProperty( "CheckBeamPipe",                   m_checkBeamPipe = { true, true, true  } );
+  declareProperty( "CheckPrimaryMirrorSegments",  m_checkPrimMirrSegs = { false,false,false } );
+  declareProperty( "MinActiveFraction",               m_minActiveFrac = { 0.2,  0.2,  0.2   } );
+  declareProperty( "MinSphMirrTolIt", m_minSphMirrTolIt = { 
+        std::pow(0.10*mm,2), // Aerogel
+        std::pow(0.08*mm,2), // R1Has
+        std::pow(0.05*mm,2)  // R2Gas
+          } );
 
   // Corrections for the intrinsic biases
-  //                Aerogel       Rich1Gas    Rich2Gas
+  //                  Aerogel      Rich1Gas   Rich2Gas
   m_ckBiasCorrs = { -0.000358914, -7.505e-5, -4.287e-5 };
 
   //setProperty( "OutputLevel", 2 );
@@ -200,7 +195,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // find the reflection of the detection point in the sec mirror
   // (virtual detection point) starting with nominal values
   // At this we are assuming a flat nominal mirror common to all segments
-  double distance = m_rich[rich]->nominalPlane(side).Distance(detectionPoint);
+  auto distance = m_rich[rich]->nominalPlane(side).Distance(detectionPoint);
   Gaudi::XYZPoint virtDetPoint =
     ( m_useSecMirs ?
       detectionPoint - 2.0 * distance * m_rich[rich]->nominalPlane(side).Normal() :
@@ -406,7 +401,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
                                                       virtDetPoint - sphReflPoint,
                                                       secSegment->centreNormalPlane(),
                                                       secReflPoint );
-        if ( !sc )
+        if ( UNLIKELY(!sc) )
         {
           //_ri_debug << radiator << " : Failed to intersect nominal secondary mirror plane" << endmsg;
           return StatusCode::FAILURE;
@@ -540,14 +535,14 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // --------------------------------------------------------------------------------------
   // Set (remaining) photon parameters
   // --------------------------------------------------------------------------------------
-  gPhoton.setCherenkovTheta         ( (float)(thetaCerenkov) );
-  gPhoton.setCherenkovPhi           ( (float)(phiCerenkov)   );
-  gPhoton.setActiveSegmentFraction  ( fraction               );
-  gPhoton.setDetectionPoint         ( detectionPoint         );
-  gPhoton.setSmartID                ( smartIDs.primaryID()   );
-  gPhoton.setUnambiguousPhoton      ( unambigPhoton          );
-  gPhoton.setPrimaryMirror          ( sphSegment             );
-  gPhoton.setSecondaryMirror        ( secSegment             );
+  gPhoton.setCherenkovTheta         ( static_cast<float>(thetaCerenkov) );
+  gPhoton.setCherenkovPhi           ( static_cast<float>(phiCerenkov)   );
+  gPhoton.setActiveSegmentFraction  ( fraction                          );
+  gPhoton.setDetectionPoint         ( detectionPoint                    );
+  gPhoton.setSmartID                ( smartIDs.primaryID()              );
+  gPhoton.setUnambiguousPhoton      ( unambigPhoton                     );
+  gPhoton.setPrimaryMirror          ( sphSegment                        );
+  gPhoton.setSecondaryMirror        ( secSegment                        );
   //_ri_verbo << "Created photon " << gPhoton << endmsg;
   // --------------------------------------------------------------------------------------
 
@@ -608,8 +603,8 @@ correctAeroRefraction( const LHCb::RichTrackSegment& trSeg,
   // apply Snell's Law
   snellsLaw()->gasToAerogel( photonDirection, trSeg );
   // update CK theta
-  const double ctc = photonDirection.Dot( trSeg.bestMomentum().Unit() );
-  thetaCerenkov = ( ctc>1 ? 0 : vdt::fast_acos(ctc) );
+  const auto ctc = photonDirection.Dot( trSeg.bestMomentum().Unit() );
+  thetaCerenkov = ( ctc<1 ? vdt::fast_acos(ctc) : 0 );
 }
 
 //=========================================================================

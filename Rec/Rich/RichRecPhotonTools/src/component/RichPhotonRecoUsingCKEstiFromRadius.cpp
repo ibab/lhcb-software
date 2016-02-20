@@ -30,8 +30,8 @@ PhotonRecoUsingCKEstiFromRadius( const std::string& type,
   declareProperty( "RejectAmbiguousPhotons", m_rejAmbigPhots = false );
 
   // Corrections for the intrinsic biases
-  //                Aerogel    Rich1Gas    Rich2Gas
-  m_ckBiasCorrs = { 0.0,      -6.687e-5,   1.787e-6 };
+  //                  Aerogel    Rich1Gas    Rich2Gas
+  m_ckBiasCorrs = {   0.0,      -6.687e-5,   1.787e-6   };
 
   //setProperty( "OutputLevel", 1 );
 }
@@ -50,14 +50,19 @@ StatusCode PhotonRecoUsingCKEstiFromRadius::initialize()
   const StatusCode sc = PhotonRecoBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  acquireTool( "RichSmartIDTool", m_idTool, nullptr, true  );
-  acquireTool( "RichMassHypoRings",        m_massHypoRings );
-  acquireTool( "RichCherenkovAngle",       m_ckAngle       );
-  acquireTool( "RichParticleProperties",   m_richPartProp  );
+  // Load used tools
+  acquireTool( "RichMassHypoRings",  m_massHypoRings );
+  acquireTool( "RichCherenkovAngle", m_ckAngle       );
 
-  m_pidTypes = m_richPartProp->particleTypes();
-  _ri_debug << "Particle types considered for calibration points = " << m_pidTypes
-            << endmsg;
+  // Setup PID types to consider
+  const IParticleProperties * richPartProp = nullptr;
+  acquireTool( "RichParticleProperties", richPartProp );
+  m_pidTypes = richPartProp->particleTypes();
+  _ri_debug << "Particle types considered for calibration points = " 
+            << m_pidTypes << endmsg;
+  release(richPartProp);
+
+  info() << "Min CK theta fraction = " << m_minFracCKtheta << endmsg;
 
   return sc;
 }
