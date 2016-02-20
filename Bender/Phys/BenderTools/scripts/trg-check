@@ -165,9 +165,6 @@ config.RootInTES    = config.RootInTES  .strip()
 ## silence()
 ## if config.Quiet or 5 <=config.OutputLevel :
 ##     totalSilence()
-    
-from BenderTools.CheckTrg import configChkTrg, chkTrg
-configChkTrg( config , colors = config.Color ) 
 
 #
 ## adjust configuration settings
@@ -176,46 +173,36 @@ if config.Simulation : from Bender.MainMC   import *
 else                 : from Bender.Main     import *
 
 
+from BenderTools.CheckTrg import configChkTrg
+alg = configChkTrg( config , colors = config.Color ) 
+
+
 #
 ## start gaudi
 #
 
 gaudi = appMgr()
 
-## create algorithm 
-ALGTYPE    = chkTrg()
-## .. and configure it 
-kwargs = { 'Inputs'          : [ config.teslocation ] }
-if config.OutputLevel <3 and not config.Quiet :
-    kwargs.update (  { 'PropertiesPrint' : True             } ) 
-if config.RootInTES :
-    kwargs.update (  { 'RootInTES'       : config.RootInTES } )
-alg = ALGTYPE ( 'CheckTrg', **kwargs )
-
-rewind()
-#
-## run events
-#
-run_progress ( config.nEvents )              
+if config.Color : run_progress ( config.nEvents )              
+else            : run          ( config.nEvents )              
 
 
 ## check the problems 
 def checkAlg ( algo ) :
 
-    print 'I AM ALGO: ', algo
+    problem = False 
+    if algo and not algo.used     :
+        algo.Error ('Algorithm was not invoked, check configuration!')
+        problem = True
+    if alg and not algo.nums     :
+        algo.Error ('Algorithm has not found particles at %s, check configuration!' % alg.Inputs ) 
+        problem = True
+    if alg and not algo.triggers :
+        algo.Error ('Algorithm has not found trigger information, check configuration!')
+        problem = True
+    if problem and not config.Quiet : 
+        algo.PropertiesPrint = True   
 
-    ## problem = False 
-    ## if algo and not algo.used     :
-    ##     algo.Error ('Algorithm was not invoked, check configuration!')
-    ##     problem = True
-    ## if alg and not algo.nums     :
-    ##     algo.Error ('Algorithm has not found particles at %s, check configuration!' % alg.Inputs ) 
-    ##     problem = True
-    ## if alg and not algo.triggers :
-    ##     algo.Error ('Algorithm has not found trigger information, check configuration!')
-    ##     problem = True
-    ## if problem and not config.Quiet : 
-    ##     algo.PropertiesPrint = True   
 #
 ## stop or continue as batch?
 #

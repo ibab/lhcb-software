@@ -154,13 +154,14 @@ def chkTrg  ( ) :
 def configChkTrg ( config , colors = False ) :
     """
     """
-    # basic configuration 
+    config.teslocation = config.teslocation.strip()
+    # the basic configuration 
     from BenderTools.DstExplorer import configure
     configure ( config , colors )
-
-    root  = config.RootInTES  .strip() 
-    line  = config.teslocation.strip()  
-
+    
+    root  = config.RootInTES   
+    line  = config.teslocation
+    
     if root :
         if   0 == line.find ( root + '/') :
             line = line.replace( root + '/' , '' )
@@ -184,29 +185,46 @@ def configChkTrg ( config , colors = False ) :
         line = line + '/Particles'
         logger.info('Line name is adjusted to be %s' % line )
 
-
-    ##from BenderTools.Utils import silence, totalSilence
-    ##silence()
+    config.teslocation = line
     
-    ##if config.Quiet or 5 <=config.OutputLevel :
-    ##    totalSilence()
-    
-    # 
-    config.teslocation = line 
     ##
     ## add filters:
     #
+    
     from PhysConf.Filters import LoKi_Filters
     if root : location = root + '/' + line 
     else    : location = '/Event/'  + line 
     logger.info("Use filter for non-empty location:'%s'"               % location )
     fltrs = LoKi_Filters ( VOID_Code  = " 0.5 < CONTAINS ('%s',True) " % location )
     from Configurables       import DaVinci
+
     dv = DaVinci (
         EventPreFilters = fltrs.filters('Filters')  ,
-        ## UserAlgorithms  = [ 'CheckTrg' ]
+        UserAlgorithms  = [ 'CheckTrg' ]    
         )
-        
+
+    
+    from BenderTools.Utils import silence, totalSilence
+    silence()
+    
+    if config.Quiet or 5 <=config.OutputLevel :
+        totalSilence()
+
+    from   Bender.Main  import appMgr
+    gaudi = appMgr()
+
+    ## create algorithm 
+    ALGTYPE    = chkTrg()
+    ## .. and configure it 
+    kwargs = { 'Inputs'          : [ config.teslocation ] }
+    if config.OutputLevel <3 and not config.Quiet :
+        kwargs.update (  { 'PropertiesPrint' : True             } ) 
+    if config.RootInTES :
+        kwargs.update (  { 'RootInTES'       : config.RootInTES } )
+
+    alg = ALGTYPE ( 'CheckTrg', **kwargs )
+
+    return alg 
     
 # =============================================================================
 if '__main__' == __name__ :

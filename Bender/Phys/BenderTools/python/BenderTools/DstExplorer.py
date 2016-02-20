@@ -363,7 +363,7 @@ def configure ( config , colors = False ) :
             fatalColorCode   = [ 'blue'   , 'red'  ] ,
             )
             
-        def _color_pre_init_action_ () :
+        def _color_pre_start_action_ () :
             
             logger.debug( 'Add colorization to MessageSvc' )
             from GaudiPython.Bindings import AppMgr
@@ -380,8 +380,8 @@ def configure ( config , colors = False ) :
             del _g, _s
             
         from Bender.Utils import addPreInitAction
-        addPreInitAction ( _color_pre_init_action_ )
-
+        addPreInitAction ( _color_pre_start_action_ )
+        
     ## set input data
     from Bender.Utils import setData 
     setData ( files                ,
