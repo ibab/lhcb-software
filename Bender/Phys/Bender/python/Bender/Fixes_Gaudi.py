@@ -64,9 +64,10 @@ else                      : logger = getLogger ( __name__ )
 logger.info ( '*** Fix some Gaudi features' ) 
 # =============================================================================
 from LoKiCore.basic import cpp 
+StateMachine = cpp.Gaudi.StateMachine
 # =============================================================================
 import GaudiPython.Bindings
-_EvtSel = GaudiPython.Bindings.iEventSelector
+_EvtSel      = GaudiPython.Bindings.iEventSelector
 
 if not hasattr ( _EvtSel , '_openNew_') :
     
@@ -115,16 +116,16 @@ if not hasattr ( _EvtSel , '_openNew_') :
 
         from GaudiPython.Bindings import gbl as cpp
         ## we need here 'INIITALIZED' state 
-        if   cpp.Gaudi.StateMachine.OFFLINE    == state_s : 
+        if   StateMachine.OFFLINE    == state_s : 
             self.configure     ()
             self.sysInitialize ()
-        elif cpp.Gaudi.StateMachine.CONFIGURED == state_s : 
+        elif StateMachine.CONFIGURED == state_s : 
             self.sysInitialize()
-        elif cpp.Gaudi.StateMachine.RUNNING    == state_s : 
+        elif StateMachine.RUNNING    == state_s : 
             self._isvc.sysStop()
             
         state_s = self._isvc.FSMState ()
-        if cpp.Gaudi.StateMachine.INITIALIZED != state_s :
+        if StateMachine.INITIALIZED != state_s :
             logger.error( 'Invalid State of EventSelector %s ' % state_s )
             
         sc =   self._isvc.sysReinitialize ()
@@ -171,17 +172,13 @@ if not hasattr ( _iAlgorithm , 'setEnabled' ) :
         return self.Enable
     _iAlgorithm.setEnabled = __set_Enabled_ 
 
-# =============================================================================
-## decorate stat-entity 
-#_SE = cpp.StatEntity
-#_iadd_old_ = _SE.__iadd__
-#def _iadd_new_ (s,v) :
-#    print 'SE:', type(v), v 
-#    if isinstance ( v , (int,long) ) : v = float(v) 
-#    return _iadd_old_(s,v)
-#_SE.__iadd__ = _iadd_new_
-#_SE.__str__  = _SE.toString 
-#logger.debug ( 'decorate StatEntity operator += ')
+if not hasattr ( _iAlgorithm , 'sysBeginRun' ) :
+    logger.verbose ( 'decorate iAlgoritm with "sysBeginRun" method')
+    _iAlgorithm.sysBeginRun = lambda self : self.__call_interface_method__("_ialg","sysBeginRun")
+if not hasattr ( _iAlgorithm , 'sysEndRun'   ) :
+    logger.verbose ( 'decorate iAlgoritm with "sysEndRun" method')
+    _iAlgorithm.sysEndRun   = lambda self : self.__call_interface_method__("_ialg","sysEndRun")
+
 
 _AppMgr = GaudiPython.Bindings.AppMgr
 if not hasattr ( _AppMgr , '_new_topAlg_' ) :
@@ -330,7 +327,7 @@ if not hasattr ( _AppMgr , 'incSvc' ) :
         >>> iSvc  = gaudi.incSvc()
         
         """
-        if self.state() == cpp.Gaudi.StateMachine.CONFIGURED :  self.initialize()
+        if self.state() == StateMachine.CONFIGURED :  self.initialize()
         svc    = iHelper.service( self._svcloc, name )
         return iIncSvc(name, svc)
     
@@ -398,7 +395,7 @@ if not hasattr ( _AppMgr , 'cntxSvc' ) :
         >>> gaudi = ...
         >>> iSvc  = gaudi.cntxSvc()        
         """
-        if self.state() == cpp.Gaudi.StateMachine.CONFIGURED :  self.initialize()
+        if self.state() == StateMachine.CONFIGURED :  self.initialize()
         svc  = iHelper.service( self._svcloc, name )
         return iCntxSvc( name , svc )
     
@@ -567,8 +564,8 @@ if not hasattr ( _AppMgr , 'magSvc' ) :
         >>> gaudi = ...
         >>> iSvc  = gaudi.magFieldSvc()        
         """
-        if self.state() < cpp.Gaudi.StateMachine.INITIALIZED :  self.initialize()
-        if self.state() < cpp.Gaudi.StateMachine.RUNNING     :  self.start     ()
+        if self.state() < StateMachine.INITIALIZED :  self.initialize()
+        if self.state() < StateMachine.RUNNING     :  self.start     ()
         print ' I am here 1 '
         svc    = iHelper.service( self._svcloc, name )
         if not svc and not name in self.ExtSvc : self.ExtSvc += [ name ]
@@ -585,8 +582,8 @@ if not hasattr ( _AppMgr , 'magSvc' ) :
         >>> iSvc  = gaudi.magSvc()        
         """
         #
-        if self.state() < cpp.Gaudi.StateMachine.INITIALIZED :  self.initialize()
-        if self.state() < cpp.Gaudi.StateMachine.RUNNING     :  self.start     ()
+        if self.state() < StateMachine.INITIALIZED :  self.initialize()
+        if self.state() < StateMachine.RUNNING     :  self.start     ()
         #
         svc    = iHelper.service( self._svcloc, name )
         if not svc and not name in self.ExtSvc : self.ExtSvc += [ name ]
@@ -779,46 +776,90 @@ def _sc_print_ ( sc ) :
 cpp.StatusCode .__repr__ = _sc_print_
 cpp.StatusCode .__str__  = _sc_print_
 
+SUCCESS = cpp.StatusCode(cpp.StatusCode.SUCCESS,True) 
 
-if not hasattr ( GaudiPython.Bindings.AppMgr , '_old_initialize_' ) :
+if not hasattr ( _AppMgr , '_old_initialize_' ) :
     
-    _old_appmgr_initialize_ = GaudiPython.Bindings.AppMgr.initialize
+    _old_appmgr_initialize_ = _AppMgr.initialize
     def _new_initialize_ ( self ) :
+        """Initialize application manager 
+        """
+        
+        ## already initialized 
+        if self.FSMState() >= StateMachine.INITIALIZED  : return SUCCESS
         
         import Bender.Utils as BU
         with BU.Action ( BU. preInit_actions() , BU.postInit_actions() ) :
-            return self._old_initialize_ ()
+            sc = self._old_initialize_ ()
+            if sc.isFailure() :
+                logger.error('Error from AppMgr.initialize %s' %s )
+                return sc
+            
+        return sc 
         
-    GaudiPython.Bindings.AppMgr.initialize       =        _new_initialize_ 
-    GaudiPython.Bindings.AppMgr._old_initialize_ = _old_appmgr_initialize_ 
+    _AppMgr.initialize       =        _new_initialize_ 
+    _AppMgr._old_initialize_ = _old_appmgr_initialize_ 
 
-if not hasattr ( GaudiPython.Bindings.AppMgr , '_old_start_' ) :
+if not hasattr ( _AppMgr , '_old_start_' ) :
     
-    _old_appmgr_start_      = GaudiPython.Bindings.AppMgr.start    
+    _old_appmgr_start_      = _AppMgr.start    
     def _new_start_ ( self ) :
+        """Start application manager 
+        """
+        ## already running 
+        if self.FSMState() >= StateMachine.RUNNING : return SUCCESS
         
+        if self.FSMState() < StateMachine.INITIALIZED :
+            sc = self.initialize()
+            if sc.isFailure() : return sc
+            
         import Bender.Utils as BU
         with BU.Action ( BU. preStart_actions() , BU.postStart_actions() ) :
-            return self._old_start_ ()
+            sc = self._old_start_ ()
+            if sc.isFailure() :
+                logger.error('Error from AppMgr.start %s' % s )
+                return sc
+            
+        return sc
         
-    GaudiPython.Bindings.AppMgr.start            =        _new_start_ 
-    GaudiPython.Bindings.AppMgr._old_start_      = _old_appmgr_start_ 
+    _AppMgr.start            =        _new_start_ 
+    _AppMgr._old_start_      = _old_appmgr_start_ 
 
+
+if not hasattr ( _AppMgr , '_old_run_' ) :
     
-
-# =============================================================================
-## updated 'run' function for Gaudi.AppMgr 
-def _new_run_( self ,  n ) :
-    if self.FSMState() == Gaudi.StateMachine.CONFIGURED :
+    _old_appmgr_run_      = _AppMgr.run    
+    def _new_run_ ( self , nevt = -1 ) :
+        """Run ``nevt'' events
+        """
+        if self.FSMState() < StateMachine.RUNNING :
+            sc = self.start()
+            if sc.isFailure() : return sc
         
-        sc = self.initialize()
-        if sc.isFailure() or self.ReturnCode != 0 :
-            return sc
-    if self.FSMState() == Gaudi.StateMachine.INITIALIZED :
-        sc = self.start()
-        if sc.isFailure() or self.ReturnCode != 0:
-            return sc
-    return self._evtpro.executeRun(n)
+        import Bender.Utils as BU
+        with BU.Action ( BU. preRun_actions() , BU.postRun_actions() ) :
+            sc = self._old_run_ ( nevt )
+            if sc.isFailure() :
+                logger.error('Error from AppMgr.run %s' % s )
+                return sc
+            
+        return sc
+    
+    _AppMgr.run            =        _new_run_ 
+    _AppMgr._old_run_      = _old_appmgr_run_ 
+
+
+## def _new_run_( self ,  n ) :
+    
+##     if self.FSMState() == StateMachine.CONFIGURED :    
+##         sc = self.initialize()
+##         if sc.isFailure() or self.ReturnCode != 0 :
+##             return sc
+##     if self.FSMState() == StateMachine.INITIALIZED :
+##         sc = self.start()
+##         if sc.isFailure() or self.ReturnCode != 0:
+##             return sc
+##     return self._evtpro.executeRun(n)
 
 
 # =============================================================================

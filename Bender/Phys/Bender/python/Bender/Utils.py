@@ -97,8 +97,11 @@ from Bender.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'Bender.Utils' )
 else                      : logger = getLogger ( __name__ )
 ## ============================================================================
-__Bender_PreRun_Actions    = [ lambda : logger.verbose('"run"    pre-action' ) ]
-__Bender_PostRun_Actions   = [ lambda : logger.verbose('"run"   post-action' ) ]
+from LoKiCore.basic import cpp  
+SUCCESS = cpp.StatusCode(cpp.StatusCode.SUCCESS,True)
+## ============================================================================
+__Bender_PreRun_Actions    = [ lambda : logger.info('"run"    pre-action' ) ]
+__Bender_PostRun_Actions   = [ lambda : logger.info('"run"   post-action' ) ]
 __Bender_PreInit_Actions   = []
 __Bender_PostInit_Actions  = []
 __Bender_PreStart_Actions  = [] 
@@ -108,11 +111,11 @@ __Bender_PostStart_Actions = []
 def postRun_actions ( action = None ) :
     """Get the ``post-Run-actions''
     """
-    global __Bender_PostRun_Actions 
+    global      __Bender_PostRun_Actions 
     if action  and isinstance ( action , ( list , tuple ) ) : 
-        return __Bender_PostRun_Actions +   action
+        return  __Bender_PostRun_Actions +   action
     elif action : 
-        return __Bender_PostRun_Actions + [ action ]
+        return  __Bender_PostRun_Actions + [ action ]
     ##
     return list(__Bender_PostRun_Actions)
 ## ============================================================================
@@ -120,11 +123,11 @@ def postRun_actions ( action = None ) :
 def preRun_actions ( action = None ) :
     """Get the ``pre-Run-action''
     """
-    global __Bender_PreRun_Actions 
+    global      __Bender_PreRun_Actions 
     if action  and isinstance ( action , ( list , tuple ) ) : 
-        return __Bender_PreRun_Actions +   action
+        return  __Bender_PreRun_Actions +   action
     elif action : 
-        return __Bender_PreRun_Actions + [ action ]
+        return  __Bender_PreRun_Actions + [ action ]
     ##
     return list(__Bender_PreRun_Actions)
 ## ============================================================================
@@ -132,11 +135,11 @@ def preRun_actions ( action = None ) :
 def postInit_actions ( action = None  ) :
     """Get the ``post-Init-action''
     """
-    global __Bender_PostIni_Actions 
+    global      __Bender_PostIni_Actions 
     if action  and isinstance ( action , ( list , tuple ) ) : 
-        return __Bender_PostInit_Actions +   action
+        return  __Bender_PostInit_Actions +   action
     elif action : 
-        return __Bender_PostInit_Actions + [ action ]
+        return  __Bender_PostInit_Actions + [ action ]
     ##
     return list(__Bender_PostInit_Actions)
 ## ============================================================================
@@ -144,11 +147,11 @@ def postInit_actions ( action = None  ) :
 def preInit_actions ( action = None ) :
     """Get the ``pre-Init-action''
     """
-    global __Bender_PreIni_Actions 
+    global      __Bender_PreIni_Actions 
     if action  and isinstance ( action , ( list , tuple ) ) : 
-        return __Bender_PreInit_Actions +   action
+        return  __Bender_PreInit_Actions +   action
     elif action : 
-        return __Bender_PreInit_Actions + [ action ]
+        return  __Bender_PreInit_Actions + [ action ]
     ##
     return list(__Bender_PreInit_Actions)
 ## ============================================================================
@@ -157,11 +160,11 @@ def postStart_actions ( action = None ) :
     """
     Get the ``post-Start-action''
     """
-    global __Bender_PostStart_Actions 
+    global      __Bender_PostStart_Actions 
     if action  and isinstance ( action , ( list , tuple ) ) : 
-        return __Bender_PostStart_Actions +   action
+        return  __Bender_PostStart_Actions +   action
     elif action : 
-        return __Bender_PostStart_Actions + [ action ]
+        return  __Bender_PostStart_Actions + [ action ]
     ##
     return list(__Bender_PostStart_Actions)
 ## ============================================================================
@@ -169,11 +172,11 @@ def postStart_actions ( action = None ) :
 def preStart_actions ( action = None ) :
     """Get the ``pre-Start-action''
     """
-    global __Bender_PreStart_Actions 
+    global      __Bender_PreStart_Actions 
     if action  and isinstance ( action , ( list , tuple ) ) : 
-        return __Bender_PreStart_Actions +   action
+        return  __Bender_PreStart_Actions +   action
     elif action : 
-        return __Bender_PreStart_Actions + [ action ]
+        return  __Bender_PreStart_Actions + [ action ]
     ##
     return list(__Bender_PreStart_Actions)
 
@@ -182,8 +185,8 @@ def preStart_actions ( action = None ) :
 def addPostRunAction ( action ) :
     """ Add new ``post-run'' action for Bender
     """
-    global __Bender_PostRun_Actions
-    __Bender_PostRun_Actions.append ( action )
+    global       __Bender_PostRun_Actions
+    if action :  __Bender_PostRun_Actions.append ( action )
     return tuple(__Bender_PostRun_Actions)
     
 # =============================================================================
@@ -191,8 +194,8 @@ def addPostRunAction ( action ) :
 def addPreRunAction ( action ) :
     """ Add new ``pre-run'' action for Bender
     """
-    global __Bender_PreRun_Actions
-    __Bender_PreRun_Actions.append ( action ) 
+    global       __Bender_PreRun_Actions
+    if action :  __Bender_PreRun_Actions.append ( action ) 
     return tuple(__Bender_PreRun_Actions)
 
 # =============================================================================
@@ -200,8 +203,8 @@ def addPreRunAction ( action ) :
 def addPostInitAction ( action ) :
     """ Add new ``post-start'' action for Bender
     """
-    global __Bender_PostInit_Actions
-    __Bender_PostInit_Actions.append ( action ) 
+    global       __Bender_PostInit_Actions
+    if action :  __Bender_PostInit_Actions.append ( action ) 
     return tuple(__Bender_PostInit_Actions)
 
 # =============================================================================
@@ -209,8 +212,8 @@ def addPostInitAction ( action ) :
 def addPreInitAction ( action ) :
     """ Add new ``pre-start'' action for Bender
     """
-    global __Bender_PreInit_Actions
-    __Bender_PreInit_Actions.append ( action )
+    global       __Bender_PreInit_Actions
+    if action :  __Bender_PreInit_Actions.append ( action )
     return tuple(__Bender_PreInit_Actions)
     
 # =============================================================================
@@ -218,8 +221,8 @@ def addPreInitAction ( action ) :
 def addPostStartAction ( action ) :
     """ Add new ``post-start'' action for Bender
     """
-    global __Bender_PostStart_Actions
-    __Bender_PostStart_Actions.append ( action ) 
+    global       __Bender_PostStart_Actions
+    if action :  __Bender_PostStart_Actions.append ( action ) 
     return tuple(__Bender_PostStart_Actions)
 
 # =============================================================================
@@ -227,8 +230,8 @@ def addPostStartAction ( action ) :
 def addPreStartAction ( action ) :
     """ Add new ``pre-start'' action for Bender
     """
-    global __Bender_PreStart_Actions
-    __Bender_PreStart_Actions.append ( action ) 
+    global       __Bender_PreStart_Actions
+    if action :  __Bender_PreStart_Actions.append ( action ) 
     return tuple(__Bender_PreStart_Actions)
 
 # =============================================================================
@@ -243,17 +246,22 @@ class Action(object) :
                    preActions  = [] ,
                    postActions = [] ) :
         
-        self.preActions  =  preActions 
-        self.postActions = postActions 
+        if not isinstance (  preActions  , (list,tuple) ) :
+            preActions   = [  preActions ]
+        if not isinstance (  postActions , (list,tuple) ) :
+            postActions  = [  postActions ]
 
+        self. preActions = [] + [ a for a in  preActions if a ] 
+        self.postActions = [] + [ a for a in postActions if a ] 
+            
     ## context manager: ENTER 
     def __enter__ ( self ) :
                 
         while self.preActions :
             action = self.preActions.pop(0)
             if action :
-                #logger.debug ('Execute pre-action')
-                action()
+                logger.verbose ( 'Execute pre-action %s' % action)
+                _r = action()
                 
         return self
     
@@ -263,52 +271,112 @@ class Action(object) :
         while self.postActions :
             action = self.postActions.pop(0)
             if action :
-                #logger.debug ('Execute post-action')
-                action()
+                logger.verbose ('Execute post-action %s' % action )
+                _r = action()
                 
 # =============================================================================
 ## run N events
 #  @code
 #  run(10)
 #  @endcode 
-def run ( nEvents     =   -1 ,
-          postAction  = None ,
-          preAction   = None ) :
+def run ( nEvents       =   -1  ,
+          postAction    = None  ,
+          preAction     = None  ,
+          with_progress = False ) :
     """Run gauidi 
     >>> run(50)
     """
-    pre_actions  =  preRun_actions (  preAction )
-    post_actions = postRun_actions ( postAction )
-    
-    with Action ( pre_actions , post_actions ) :
-        
-        ## get the application manager
-        _g = appMgr() 
-        st = _g.run ( nEvents )
-        if st.isSuccess() and not get('/Event') :
-            logger.warning('No more events in event selection...')
-            st.setCode ( 2 )
-            
-    return st 
+    if 0 < nEvents and with_progress :
+        return run_progress ( nEvents , postAction , preAction )
 
+    with Action ( preAction , postAction ) :
+        
+        ##  get the application manager
+        _g = appMgr() 
+        sc = _g.run ( nEvents )
+        if sc.isSuccess() and not get('/Event') :
+            logger.warning ( 'No more events in event selection...' )
+            sc.setCode ( 2 )
+            
+    return sc
+
+# =============================================================================
+## helper context manager to emulate IEventProcessor::executeRun
+#  @see AppMgr.run
+#  @see IEventProcessor::executeRun
+class RunAction(object) :
+    """ Helper context manager to emulate IEventProcessor::executeRun
+    >>> with RunAction() :
+    ...      do something  here ... 
+    """
+    def __init__   ( self , g = None ) :
+        self._gaudi = g
+        self._ialgs = []
+
+    ## context manager: ENTER 
+    def __enter__  ( self ) :
+
+        print 'RN AXTION ENTER '
+        if not self._gaudi : self._gaudi = appMgr ()
+        sc = self._gaudi.start()
+        if sc.isFailure() :
+            logger.fatal ( "Can't start AppMgr %s" % sc ) 
+        self._algs = self._gaudi.topAlgs()
+        self._code = ()  
+        for _a in self._algs :
+            sc = _a.sysBeginRun()
+            if sc.isFailure() :
+                logger.error( "Error  from %s:sysBeginRun %s" % ( _a.name() , sc ) )
+                
+        return self
+    
+    ## context manager: EXIT  
+    def __exit__ ( self , *_ ) :
+
+        print 'RN AXTION EXIT '
+        while self._ialgs :
+            _i = self._ialgs.pop(0)
+            sc = _i.sysEndRun()
+            if sc.isFailure() :
+                logger.error( "Error  from %s:sysEndRun %s" % ( _a.name() , sc ) )         
+
+# =============================================================================
+def _next_event_ ( nevt = 1 ) :
+    _g = appMgr()
+    return  _g._evtpro.nextEvent( nevt )
+    
 # =============================================================================
 ## run N events with progress bar 
 #  @code
 #  run_progress (10)
 #  @endcode 
-def run_progress ( nEvents ) : 
+def run_progress ( nEvents           ,
+                   postAction = None ,
+                   preAction  = None ) : 
     """Run gaudi showing the progress bar  
     >>> run_progress ( 50 )
     """
-    if nEvents <= 0 : return run ( nEvents )
+    if nEvents <= 0 :
+        return run ( nEvents , postAction , preAction )
     ##
-    from GaudiPython.Bindings import gbl as cpp 
-    sc   = cpp.StatusCode(cpp.StatusCode.SUCCESS)
-    from Ostap.progress_bar import progress_bar
-    for i in  progress_bar ( xrange ( nEvents ) ) :
-        sc = run ( i )
+    sc = SUCCESS
+    
+    with Action ( preAction , postAction ) :
+
+        _g = appMgr()
+        sc = _g.start()
         if sc.isFailure() : return sc 
-        
+
+        with Action ( preRun_actions() , postRun_actions() ) :
+
+            with  RunAction () : 
+            
+                from Ostap.progress_bar import progress_bar
+                for i in progress_bar ( xrange ( nEvents ) ) :
+                    sc = _next_event_  ( 1 )
+                    if sc.isFailure() :
+                        logger.error('Error from run %s' % sc)
+                        return sc                 
     return sc
 
 # ==============================================================================
@@ -340,34 +408,39 @@ def irun ( nEvents                    ,
         
         ## get application manager:        
         _g = appMgr() 
-        from GaudiPython.Bindings import gbl as cpp 
-        sc   = cpp.StatusCode(cpp.StatusCode.SUCCESS)
+        sc   = SUCCESS
         evnt = True 
         iev  = 0
-        nev  = 0 
-        while sc.isSuccess() and evnt and ( nEvents < 0 or iev < nEvents ) :
+        nev  = 0
+        
+        with Action ( preRun_actions() , postRun_actions() ) :
             
-            sc      = _g.run(1)
-            evnt    = get('/Event')
-            if not evnt :
-                if sc.isSuccess() : sc.setCode(2)
-                break         ## BREAK! 
+            with  RunAction () : 
+                
+                while sc.isSuccess() and evnt and ( nEvents < 0 or iev < nEvents ) :
+                    
+                    sc      = _next_event_ ( 1 )
+                    if sc.isFailrue() : break   ## BREAK 
+                    evnt    = get('/Event')
+                    if not evnt :
+                        if sc.isSuccess() : sc.setCode(2)
+                        break                   ## BREAK! 
+                    
+                    nev   += 1                  ## total number of events
+            
+                    if 0 == nev %   10000 : 
+                        logger.debug   ('irun: run over %d, found %s ' % ( nev , iev ) )                 
+                    if 0 == nev %  100000 : 
+                        logger.info    ('irun: run over %d, found %s ' % ( nev , iev ) ) 
+                    if 0 == nev % 1000000: 
+                        logger.warning ('irun: run over %d, found %s ' % ( nev , iev ) ) 
+                
+                    ## check
+                    if accept() :              ## GOOD EVENT!  
+                        iev  += 1
+                        yield evnt,iev,nev     ## retun 
 
-            nev   += 1                  ## total number of events
-            
-            if 0 == nev %   10000 : 
-                logger.debug   ('irun: run over %d, found %s ' % ( nev , iev ) )                 
-            if 0 == nev %  100000 : 
-                logger.info    ('irun: run over %d, found %s ' % ( nev , iev ) ) 
-            if 0 == nev % 1000000: 
-                logger.warning ('irun: run over %d, found %s ' % ( nev , iev ) ) 
-                
-            ## check
-            if accept() :              ## GOOD EVENT!  
-                iev  += 1
-                yield evnt,iev,nev     ## retun 
-                
-    
+
 # =============================================================================
 ## go to next  event
 #  @code 
@@ -391,8 +464,7 @@ def setData ( files            ,
     >>> import USERSCRIPT    
     >>> USERSCRIPT.setData ( files , catalogs )    
     """
-
-        
+    
     if   type ( files    ) is str   : files    =      [ files    ]
     elif type ( files    ) is tuple : files    = list ( files    ) 
     if   type ( catalogs ) is str   : catalogs =      [ catalogs ]    
@@ -404,7 +476,6 @@ def setData ( files            ,
         catalogs = [ c for c in catalogs ] 
     
     from GaudiPython.Bindings import _gaudi
-
     if not _gaudi :               ## here we deal with configurables!
 
         from Configurables import Gaudi__RootCnvSvc
@@ -580,8 +651,7 @@ def skip ( nEvents ) :
     """Skip N-events
     >>> skip ( 50 )    
     """
-    from GaudiPython.Bindings import gbl as cpp 
-    st = cpp.StatusCode(cpp.StatusCode.FAILURE,True)
+    st = SUCCESS 
     with DisabledAlgos() :
         st = run ( nEvents )
         
