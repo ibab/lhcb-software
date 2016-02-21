@@ -100,8 +100,8 @@ else                      : logger = getLogger ( __name__ )
 from LoKiCore.basic import cpp  
 SUCCESS = cpp.StatusCode(cpp.StatusCode.SUCCESS,True)
 ## ============================================================================
-__Bender_PreRun_Actions    = [ lambda : logger.info('"run"    pre-action' ) ]
-__Bender_PostRun_Actions   = [ lambda : logger.info('"run"   post-action' ) ]
+__Bender_PreRun_Actions    = [ lambda : logger.verbose('"run"    pre-action' ) ]
+__Bender_PostRun_Actions   = [ lambda : logger.verbose('"run"   post-action' ) ]
 __Bender_PreInit_Actions   = []
 __Bender_PostInit_Actions  = []
 __Bender_PreStart_Actions  = [] 
@@ -316,13 +316,11 @@ class RunAction(object) :
     ## context manager: ENTER 
     def __enter__  ( self ) :
 
-        print 'RN AXTION ENTER '
         if not self._gaudi : self._gaudi = appMgr ()
         sc = self._gaudi.start()
         if sc.isFailure() :
             logger.fatal ( "Can't start AppMgr %s" % sc ) 
         self._algs = self._gaudi.topAlgs()
-        self._code = ()  
         for _a in self._algs :
             sc = _a.sysBeginRun()
             if sc.isFailure() :
@@ -333,7 +331,6 @@ class RunAction(object) :
     ## context manager: EXIT  
     def __exit__ ( self , *_ ) :
 
-        print 'RN AXTION EXIT '
         while self._ialgs :
             _i = self._ialgs.pop(0)
             sc = _i.sysEndRun()
@@ -420,7 +417,7 @@ def irun ( nEvents                    ,
                 while sc.isSuccess() and evnt and ( nEvents < 0 or iev < nEvents ) :
                     
                     sc      = _next_event_ ( 1 )
-                    if sc.isFailrue() : break   ## BREAK 
+                    if sc.isFailure() : break   ## BREAK 
                     evnt    = get('/Event')
                     if not evnt :
                         if sc.isSuccess() : sc.setCode(2)
@@ -428,12 +425,18 @@ def irun ( nEvents                    ,
                     
                     nev   += 1                  ## total number of events
             
-                    if 0 == nev %   10000 : 
-                        logger.debug   ('irun: run over %d, found %s ' % ( nev , iev ) )                 
-                    if 0 == nev %  100000 : 
-                        logger.info    ('irun: run over %d, found %s ' % ( nev , iev ) ) 
-                    if 0 == nev % 1000000: 
+                    if   0 == nev % 1000000 : 
+                        logger.fatal   ('irun: run over %d, found %s ' % ( nev , iev ) )
+                    elif 0 == nev %  100000 : 
+                        logger.error   ('irun: run over %d, found %s ' % ( nev , iev ) ) 
+                    elif 0 == nev %   10000 : 
                         logger.warning ('irun: run over %d, found %s ' % ( nev , iev ) ) 
+                    elif 0 == nev %    5000 : 
+                        logger.info    ('irun: run over %d, found %s ' % ( nev , iev ) )                 
+                    elif 0 == nev %    1000 : 
+                        logger.debug   ('irun: run over %d, found %s ' % ( nev , iev ) )                 
+                    elif 0 == nev %     500 : 
+                        logger.verbose ('irun: run over %d, found %s ' % ( nev , iev ) )                 
                 
                     ## check
                     if accept() :              ## GOOD EVENT!  
@@ -548,7 +551,7 @@ def appMgr( *varg , **kwarg ) :
     import GaudiPython.Bindings
     _g = GaudiPython.Bindings.AppMgr()
     if not 'LoKiSvc' in _g.ExtSvc :
-        logger.debug ('appMgr: add LoKiSvc into the list of servcies')
+        logger.debug ('appMgr: add LoKiSvc into the list of services')
         _g.ExtSvc += [ 'LoKiSvc']
     return _g
 

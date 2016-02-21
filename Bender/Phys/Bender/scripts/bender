@@ -219,17 +219,15 @@ else                      : logger = getLogger ( __name__ )
 del getLogger 
 # =============================================================================
 
+from Bender.Logger import setLogging
 if arguments.Quiet :
        
     logger.info ( '(silent) Interactive Bender session (steroid-enhanced GaudiPython)')
-    import logging
-    logging.disable ( logging.INFO  )
-    
+    config.OutputLevel = max ( 4 , config.OutputLevel )
+    setLogging ( arguments.OutputLevel ) 
+   
 else :
         
-    import logging
-    logging.disable ( logging.DEBUG )
-    
     logger.info ( 100*'*')
     logger.info ( __doc__ ) 
     logger.info ( 100*'*')
@@ -237,6 +235,9 @@ else :
     logger.info ( ' Version : %s ' % __version__  ) 
     logger.info ( ' Date    : %s ' % __date__     )
     logger.info ( 100*'*')
+
+    setLogging ( arguments.OutputLevel ) 
+    
 
 from BenderTools.DstExplorer import configure
 # =============================================================================

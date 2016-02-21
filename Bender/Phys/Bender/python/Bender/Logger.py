@@ -200,13 +200,20 @@ def getLogger ( name ) :
     if not with_colors() : return gL ( name , level = level ) 
     return gL ( name , fmt = '# %(name)-25s %(levelname)020s %(message)s' , level = level ) 
 
+
+
+# ==============================================================================
+## define the default logging threshold  
+setLogging ( 3 ) 
+
+# =============================================================================
 if '__main__' == __name__ : logger = getLogger ( 'Bender.Logger' )
 else                      : logger = getLogger ( __name__ )
 # =============================================================================
 if __name__ == '__main__' :
     
     import logging
-    logging.disable( logging.DEBUG - 5  ) 
+    logging.disable( logging.VERBOSE - 1  ) 
     
     logger.info ( 80*'*'  ) 
     logger.info ( __doc__ ) 
@@ -219,12 +226,14 @@ if __name__ == '__main__' :
     make_colors()
     
     if with_colors() :
+        logger.verbose  ( 80*'*'  )
         logger.debug    ( 80*'*'  )
         logger.info     ( 80*'*'  )
         logger.error    ( 80*'*'  )
         logger.warning  ( 80*'*'  )
         logger.critical ( 80*'*'  )
         logger.fatal    ( 80*'*'  )
+        logger.verbose  ( 80*'*'  )
         logger.debug    ( 80*'*'  )
         logger.info     ( 80*'*'  )
         logger.error    ( 80*'*'  )
