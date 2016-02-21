@@ -139,12 +139,6 @@ class TransportersTest(Algo):
         if not particles : 
             return self.Warning( "No particles are found", SUCCESS )
         
-                    
-        print '#particles: %d  %s/%s, %s/%s, %s/%s' % (
-            len(particles)  ,
-            self.tr1.type() , self.tr1.name() , 
-            self.tr2.type() , self.tr2.name() ,
-            self.tr3.type() , self.tr3.name() )
         
         if self.nevt < 10 :
 
@@ -236,7 +230,7 @@ if __name__ == '__main__' :
     configure( inputdata , castor = True )
     
     ## event loop 
-    run(110)
+    run(500)
 
 # =============================================================================
 # The END
