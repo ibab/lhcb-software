@@ -202,9 +202,6 @@ def getLogger ( name ) :
 
 
 
-# ==============================================================================
-## define the default logging threshold  
-setLogging ( 3 ) 
 
 # =============================================================================
 if '__main__' == __name__ : logger = getLogger ( 'Bender.Logger' )

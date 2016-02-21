@@ -862,6 +862,32 @@ if not hasattr ( _AppMgr , '_old_run_' ) :
 ##     return self._evtpro.executeRun(n)
 
 
+if hasattr ( cpp.LoKi.Print , 'print_string' ) :
+
+    _print_func_ = cpp.LoKi.Print.print_string
+    _MS          = cpp.MsgStream
+
+
+    def _ms_enter_ ( self ) : return self
+    def _ms_exit_  ( self, *_ ) :
+        if self.isActive() :
+            self.doOutput()
+    def _ms_lshift_ ( self,  data ) :
+        if self.isActive() :
+            if not isinstance ( data , str ) : data = str ( data )
+            if data : _print_func_ (  self , data )
+        return self
+    def _ms_rrshift_ ( self,  data ) :
+        return _ms_lshift_ ( self , data )
+
+    _MS.__enter__   = _ms_enter_
+    _MS.__exit__    = _ms_exit_
+    _MS.__lshift__  = _ms_lshift_
+    _MS.__rrshift__ = _ms_rrshift_
+    _MS.__nonzero__ = lambda s : s.isActive()
+    
+    logger.debug ( 'Decorate MsgStream' )
+    
 # =============================================================================
 if __name__ == '__main__' :
     

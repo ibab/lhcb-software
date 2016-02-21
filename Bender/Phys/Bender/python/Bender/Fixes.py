@@ -81,6 +81,14 @@ def _bender_at_exit_ () :
     from GaudiPython.Bindings import _gaudi
     rc = None 
     if _gaudi :
+
+        if hasattr ( _gaudi , 'GaudiPythonAlgos' ) :
+            _algos = _gaudi.GaudiPythonAlgos
+            while _algos :
+                _a = _algos.pop(0)
+                del _a
+                logger.debug ( "Clear list of 'GaudiPythonAlgos'" )
+
         logger.debug ( 'AppMgr.exit() is being invoked' )
         rc = _gaudi.ReturnCode 
         _gaudi.exit  ()

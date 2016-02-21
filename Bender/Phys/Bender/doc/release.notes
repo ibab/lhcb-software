@@ -24,6 +24,20 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2016-02-21 - Vanya Belyaev
+
+ - add printout for MsgStream:
+
+      with self.info() : 
+          self.info() << " This will be INFO print "
+
+  or 
+      info = self.info() 
+      with info : 
+           info << " print something "
+
+  
+
 ! ==================== Phys/Bender v28r1 2016-02-21 ===========================
 
 ! 2016-02-21 - Vanya Belyaev
