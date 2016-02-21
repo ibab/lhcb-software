@@ -49,8 +49,7 @@ Usage is fairly trivial:
 
    >>> r,histo = uStat.uPlot ( pdf , data ) 
    >>> print r                  ## print fit results
-   >>> histo.Draw()             ## plot the results  
-   
+   >>> histo.Draw()             ## plot the results     
 """
 # ============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@cern.ch"
@@ -76,8 +75,7 @@ else                       : logger = getLogger ( __name__      )
 #  @author Vanya Belyaev Ivan.Belyaev@cern.ch
 #  @date 2011-09-21
 def uDist ( x , y ) :
-    """
-    Calculate the distance between two data points 
+    """Calculate the distance between two data points 
     """
     
     ix = x.createIterator()
@@ -117,8 +115,7 @@ def uCalc ( pdf            ,
             data           ,
             histo          ,
             silent = False )  :
-    """
-    Calculate U-statistics 
+    """Calculate U-statistics 
     """
     import sys
     
@@ -189,7 +186,7 @@ def uCalc ( pdf            ,
 #    >>> pdf.fitTo( data , ... )  ## fit it!
 #    >>> vars = ...               ## get variables
 #    
-#    >>> import AnalysisPython.uStat as uStat
+#    >>> import Ostap.uStat as uStat
 #    
 #    >>> r,histo = uStat.uPlot ( pdf , data ) 
 #    >>> print r                  ## print fit results
@@ -207,19 +204,17 @@ def uPlot ( pdf            ,
             bins   = None  ,
             args   = None  ,
             silent = False ) :
-    """
-    Make the plot of U-statistics 
+    """Make the plot of U-statistics 
     
     >>> pdf  = ...               ## pdf
     >>> data = ...               ## dataset
     >>> pdf.fitTo( data , ... )  ## fit it!
     
-    >>> import AnalysisPython.uStat as uStat
+    >>> import Ostap.uStat as uStat
     
     >>> r,histo = uStat.uPlot ( pdf , data ) 
     >>> print r                  ## print fit results
     >>> histo.Draw()             ## plot the results  
-
     """
 
     if not bins or bins <= 0 :
@@ -238,7 +233,7 @@ def uPlot ( pdf            ,
             break
         print '#bins %s' % bins 
         
-    hID = AnalysisPython.PyRoUts.hID
+    hID = Ostap.PyRoUts.hID
 
     histo = ROOT.TH1F ( hID () ,'U-statistics', bins , 0 , 1 )
     histo.Sumw2      (   )

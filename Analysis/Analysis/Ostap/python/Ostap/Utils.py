@@ -47,6 +47,13 @@ __all__     = (
     'ROOTIgnore'     , ## control ROOT verbosity, suppress ROOT errors 
     ##
     'takeIt'         , ## take and later delete ...
+    ## logging   
+    'logColor'       , ## swith on locally the colored logging
+    'logVerbose'     , ## redefine (locally) the logging level
+    'logDebug'       , ## redefine (locally) the logging level
+    'logInfo'        , ## redefine (locally) the logging level
+    'logWarning'     , ## redefine (locally) the logging level
+    'logError'       , ## redefine (locally) the logging level
     )
 # =============================================================================
 import ROOT,cppyy, time, os,sys ## attention here!!
@@ -55,10 +62,11 @@ ROOT_RooFit_ERROR = 4
 # =============================================================================
 # logging 
 # =============================================================================
-from   Ostap.Logger import getLogger
+from   Ostap.Logger import getLogger, logColor 
 if '__main__' ==  __name__ : logger = getLogger( 'Ostap.Utils' )
-else                       : logger = getLogger( __name__ )    
-
+else                       : logger = getLogger( __name__ )
+del getLogger 
+from   Ostap.Logger import  logVerbose,  logDebug, logInfo, logWarning, logError 
 # =============================================================================
 ## @class Memory
 #  Simple context manager to measure the virtual memory increase

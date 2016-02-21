@@ -65,14 +65,6 @@ __version__ = '$Revision$'
 import ROOT, sys, os  
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 # =============================================================================
-# logging 
-# =============================================================================
-from AnalysisPython.Logger import getLogger 
-_my_name_ = __name__
-if _my_name_ in ( '__main__' , '__builtins__' ) : _my_name_ = 'Ostap'
-# =============================================================================
-logger = getLogger( _my_name_ , level = 2 )
-# =============================================================================
 ## parse arguments 
 def parse_args ( ) :
     """
@@ -116,10 +108,17 @@ def parse_args ( ) :
         default = False            )
     #
     parser.add_argument ( 
-        '-n' , '--nocanvas'     ,
+        '-n' , '--no-canvas'    ,
         dest    = 'canvas'      , 
         action  = 'store_false' , 
         help    = "Do not create canvas", 
+        default = True          )
+    #
+    parser.add_argument ( 
+        '--no-color'     ,
+        dest    = 'Color'      , 
+        action  = 'store_false' , 
+        help    = "Do not use colorization", 
         default = True          )
     #
     group2 = parser.add_mutually_exclusive_group()
@@ -148,8 +147,7 @@ def parse_args ( ) :
 # =============================================================================
 def with_ipython() :
     try :
-        __IPYTHON__
-        return True
+        return __IPYTHON__
     except NameError :
         return False 
 # =============================================================================
@@ -160,6 +158,17 @@ if with_ipython () :
 ## parse arguments
 # =============================================================================
 arguments = parse_args()
+
+# =============================================================================
+# logging 
+# =============================================================================
+from Ostap.Logger import getLogger
+if arguments.Color and not arguments.batch :
+    from Ostap.Logger import make_colors
+    make_colors()
+    del make_colors 
+logger = getLogger( 'ostap' )
+# =============================================================================
 
 # =============================================================================
 ## suppress extra prints from logging  
@@ -251,7 +260,7 @@ for _s in _startups :
 # =============================================================================
 ## cleanup a bit the context 
 # =============================================================================
-del with_ipython, parse_args, getLogger, _my_name_ 
+del with_ipython, parse_args, getLogger
 del _startups,_executed,_s,_ss 
 
 # =============================================================================

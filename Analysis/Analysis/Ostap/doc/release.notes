@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2016-02-21 - Vanya Belyaev
+ - improve logging 
+
 ! 2016-02-09 - Vanya Belyaev
  - improve history files 
 
