@@ -73,9 +73,15 @@ namespace LoKi
     }
     // ========================================================================
     /// make printout of DataObject
+    GAUDI_API 
     std::string toString ( const DataObject*      obj ) ;
     /// make printout of DataObject
+    GAUDI_API 
     std::string toString ( const ContainedObject* obj ) ;
+    // ========================================================================
+    /// helper function (for python)
+    GAUDI_API 
+    MsgStream&  print_string ( MsgStream& s , const std::string& what ) ;
     // ========================================================================
   } //                                             end of namespace LoKi::Print
   // ==========================================================================
