@@ -23,9 +23,18 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
-<A NAME=v28r0> 2016-02-12 Bender v28r0 based on the DaVinci v39r0</A>
+<A NAME=v28r1> 2016-02-21 Bender v28r1 based on the DaVinci v39r0p1</A>
 <ul>						 
-<li>Based on the DaVinci v39r0</li>
+<li>Based on the DaVinci v39r0p1</li>
+<li>fix a bug in treatment of <code>RawEvent</code> in <code>dst-dump</code> </li>
+<li>improve logging and colorization</li>
+<li>add more examples and qmtests in <code>Ex/BenderExample</code> package</li>
+<ul>						 
+
+
+<A NAME=v28r0> 2016-02-12 Bender v28r0 based on the DaVinci v39r0p1</A>
+<ul>						 
+<li>Based on the DaVinci v39r0p1</li>
 <li>Many changes and improvements for BenderScript</li>
 <li>remove <code>dst-explorer</code> </li>
 <li>fix all Bender-based scripts </li>
@@ -43,6 +52,7 @@
      are available at 
      https://twiki.cern.ch/twiki/bin/view/LHCb/LHCbSoftwareTutorials
 <ul>						 
+
 
 
 <A NAME=v27r0p1> 2015-11-02 Bender v27r0[1 based on the DaVinci v38r0</A>
