@@ -54,267 +54,217 @@ from   LoKiAlgo.functions    import *
 # =============================================================================
 ##get the effective formula of the loop, @see LoKi::LoopObj::formula
 def _formula_  ( s )      :
-    """
-    Get the effective 'formula' of the loop-object:
+    """Get the effective 'formula' of the loop-object:
 
     >>> l= self.loop(...)
     >>> l.formula()
-
     """
     return LoKi.Dicts.DictsLoop.formula  ( s )
 # =============================================================================
 ## get the effective dimension of the loop (== number of components)
 def _dim_      ( s ) :
-    """
-    Get the effective dimension of the loop (== number of components)
+    """Get the effective dimension of the loop (== number of components)
 
-    >>> l.dim() 
-    
+    >>> l.dim()     
     """
     return LoKi.Dicts.DictsLoop.dim  ( s )
 # =============================================================================
 ## get the estimate of number of combinations 
 def _size_     ( s )      :
-    """
-    Get the estimate of number of combinations
+    """Get the estimate of number of combinations
 
-    >>> l.dim() 
-    
+    >>> l.size()     
     """    
     return LoKi.Dicts.DictsLoop.size  ( s )
 # =============================================================================
 ## get the status of loop object
 def _status_   ( s )      :
-    """
-    Get the status of the loop object
+    """Get the status of the loop object
 
-    >>> l.status() 
-    
+    >>> l.status()     
     """    
     return LoKi.Dicts.DictsLoop.status  ( s )
 # =============================================================================
 ##  advance the loop to the next combination
 def _next_     ( s )      :
-    """
-    Advance the loop to the next combination
+    """Advance the loop to the next combination
     
-    >>> l.next() 
-    
+    >>> l.next()     
     """    
     return LoKi.Dicts.DictsLoop.next  ( s )
 # =============================================================================
 ## conversion operator to LHCb::Vertex and access to the children:
 def _vertex_ ( s ) :
-    """
-    Conversion operator to LHCb::Vertex and access to the children:
+    """Conversion operator to LHCb::Vertex and access to the children:
     
-    >>> l.vertex() 
-    
+    >>> l.vertex()     
     """
     return LoKi.Dicts.DictsLoop.vertex ( s )
 # =============================================================================
 ## conversion operator to LHCb::Particle and access to the children:
 def _particle_ ( s , *a ) :
-    """
-    Conversion operator to LHCb::Particle and access to the children:
+    """Conversion operator to LHCb::Particle and access to the children:
     
     >>> l.particle() 
     >>> l.particle(3)
     >>> l(2)
-    >>> l()
-    
+    >>> l()    
     """
     return LoKi.Dicts.DictsLoop.particle ( s , *a )
 # =============================================================================
 ## get the momentum of the particle or daughter or combination
 def _momentum_ ( s , *a ) :
-    """
-    Get the momentum of the particle or daughter or combination
+    """Get the momentum of the particle or daughter or combination
     
     >>> l.momentum() 
     >>> l.momentum(3) 
-    >>> l.momentum(1,2,3) 
-    
+    >>> l.momentum(1,2,3)     
     """
     return LoKi.Dicts.DictsLoop.momentum ( s , *a ) 
 # =============================================================================
 ## get the invarinat mass of the particle or daughter or combination
 def _mass_ ( s , *a ) :
-    """
-    Get the momentum of the particle or daughter or combination
+    """Get the momentum of the particle or daughter or combination
     
     >>> l.mass() 
     >>> l.mass(2) 
     >>> l.mass(1,4) 
     >>> l.m() 
     >>> l.m(2) 
-    >>> l.m(1,4,2) 
-    
+    >>> l.m(1,4,2)     
     """
     return LoKi.Dicts.DictsLoop.mass ( s , *a ) 
 # =============================================================================
 ## get the effective PID
 def _pid_      ( s ) :
-    """
-    Get the effective PID, associated with Loop objects
+    """Get the effective PID, associated with Loop objects
     
-    >>> l.pid() 
-    
+    >>> l.pid()     
     """
     return LoKi.Dicts.DictsLoop.pid ( s ) 
 # =============================================================================
 ## get the effective PID
 def _pp_      ( s ) :
-    """
-    Get the effective PID, associated with Loop objects
+    """Get the effective PID, associated with Loop objects
     
-    >>> l.pp() 
-    
+    >>> l.pp()     
     """
     return LoKi.Dicts.DictsLoop.pp ( s ) 
 # =============================================================================
 ## get the effective PID
 def _pidName_  ( s ) :
-    """
-    Get the effective PID, associated with Loop objects
+    """Get the effective PID, associated with Loop objects
     
-    >>> l.pidName() 
-    
+    >>> l.pidName()     
     """
     return LoKi.Dicts.DictsLoop.pidName ( s ) 
 # =============================================================================
 ## set the particle ID for the effective particle of the loop
 def _setPID_   ( s , pid ) :
-    """
-    Set the particle ID for the effective particle of the loop
+    """Set the particle ID for the effective particle of the loop
 
-    >>> l.setPID ('B0')
-    
+    >>> l.setPID ('B0')    
     """
     return LoKi.Dicts.DictsLoop.setPID ( s , pid )
 # =============================================================================
 ## set the default IParticleCombiner tool
 def _setCom_   ( s , *a ) :
-    """
-    Set the default IParticleCombiner tool
+    """Set the default IParticleCombiner tool
 
-    >>> l.setCombiner ( combiner )
-    
+    >>> l.setCombiner ( combiner )    
     """
     return LoKi.Dicts.DictsLoop.setCombiner ( s , pid )
 # =============================================================================
 ## set the default IParticleReFitter tool
 def _setFit_   ( s , *a ) :
-    """
-    Set the default IParticleReFitter tool
+    """Set the default IParticleReFitter tool
     
-    >>> l.setCombiner ( combiner )
-    
+    >>> l.setCombiner ( combiner )    
     """
     return LoKi.Dicts.DictsLoop.setReFitter ( s , pid )
 # =============================================================================
 ## get the associated vertex
 def _pv_       ( s )      :
-    """
-    Get the associated vertex
+    """Get the associated vertex
     
-    >>> primVertex = l.pv() 
-    
+    >>> primVertex = l.pv()     
     """
     return LoKi.Dicts.DictsLoop.pv       ( s )  
 # =============================================================================
 ## set the associated vertex
 def _setPV_    ( s , *a ) :
-    """
-    Set the associated vertex
+    """Set the associated vertex
     
-    >>> l.setPV( primVertex )
-    
+    >>> l.setPV( primVertex )    
     """
     return LoKi.Dicts.DictsLoop.setPV    ( s , *a )
 # =============================================================================
 ## make 'effective' particle using IParticleCombiner tool
 def _make_     ( s , *a ) :
-    """
-    Make 'effective' particle using IParticleCombiner tool
+    """Make 'effective' particle using IParticleCombiner tool
     
     >>> l.make( combiner )
-    >>> l.make()
-    
+    >>> l.make()    
     """
     return LoKi.Dicts.DictsLoop.make     ( s , *a )
 # =============================================================================
 ## refit the particle using IParticleReFitter tool
 def _reFit_    ( s , *a ) :
-    """
-    Refit the particle using IParticleReFitter tool
+    """Refit the particle using IParticleReFitter tool
     
     >>> l.reFit ( reFitter )
-    >>> l.reFit ()
-    
+    >>> l.reFit ()    
     """
     return LoKi.Dicts.DictsLoop.reFit    ( s , *a ) 
 # =============================================================================
 ## save the particle into LoKi storage
 def _save_     ( s ,name  ) :
-    """
-    Save the particle into LoKi storage
+    """Save the particle into LoKi storage
     
-    >>> l.save ('good')
-    
+    >>> l.save ('good')    
     """    
     return LoKi.Dicts.DictsLoop.save     ( s , name ) 
 # =============================================================================
 ## backup the current state of the loop
 def _backup_   ( s )      :
-    """
-    Backup the current state of the loop
+    """Backup the current state of the loop
     
-    >>> l.backup()
-    
+    >>> l.backup()    
     """
     return LoKi.Dicts.DictsLoop.backup   ( s )
 # =============================================================================
 ## restore the loop from the last backup state
 def _restore_  ( s )      :
-    """
-    Restore the loop state from the last backup state
+    """Restore the loop state from the last backup state
     
-    >>> l.restore()
-    
+    >>> l.restore()    
     """
     return LoKi.Dicts.DictsLoop.restore  ( s )      
 # =============================================================================
 ## get the combination 
 def _combination_  ( s )      :
-    """
-    get the vector:
+    """get the vector:
     
-    >>> v = l.combination ()
-    
+    >>> v = l.combination ()    
     """
     return LoKi.Dicts.DictsLoop.combination  ( s )      
 
 # =============================================================================
 ## get the combination 
 def _comb_  ( s )      :
-    """
-    get the combination :
+    """get the combination :
     
-    >>> c = l.comb ()
-    
+    >>> c = l.comb ()    
     """
     return LoKi.Dicts.DictsLoop.comb  ( s )      
 
 # =============================================================================
 ## define the iteration over the loop content
 def _iter_ ( s ) :
-    """
-    Iteration over the loop content:
+    """Iteration over the loop content:
     
     >>> l = self.loop(...)
-    >>> for B in l :
-    
+    >>> for B in l :    
     """
     loop = s
     while loop.valid() :
@@ -391,12 +341,10 @@ LoKi.Loop.p           = _momentum_
 # =============================================================================
 ## Print the decay tree for LoKi::Loop object:
 def printDecay ( s , *a ) :
-    """
-    Print the decay tree for LoKi::Loop object:
+    """Print the decay tree for LoKi::Loop object:
 
     >>> l = ...
     >>> printDecay ( l )
-
     """
     return LoKi.PrintLoop.printDecay ( s , *a )
 
@@ -419,8 +367,7 @@ _LCF.printDecay    . __doc__ += "\n" + LoKi.PrintLoop.printDecay    . __doc__
 ## ============================================================================
 ## decorate LoKi::Algo class
 def _decorateAlg ( alg ) :
-    """
-    Decorate LoKi::Algo class
+    """Decorate LoKi::Algo class
     """
     import GaudiPython.GaudiAlgs
     from   GaudiPython import iAlgorithm 
@@ -468,8 +415,7 @@ _name = _LoKiPhys.__name__
 ## make a decoration fo functions and predicates """
 ## ============================================================================
 def _decorate( name = _name ) :
-    """
-    Make a decoration fo functions and predicates
+    """Make a decoration fo functions and predicates
     """
     import LoKiCore.decorators   as     _LoKiCore
     p='const LHCb::Particle*'
