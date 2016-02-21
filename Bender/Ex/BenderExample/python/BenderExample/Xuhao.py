@@ -217,7 +217,7 @@ def configure ( inputdata        ,    ## the list of input files
                    EventPreFilters = fltrs.filters('MC-filter') ,  
                    InputType       = 'DST'  ,
                    Simulation      = True   ,
-                   TupleFile       = 'Xugao.root'      , 
+                   TupleFile       = 'Xuhao.root'      , 
                    DDDBtag         = 'Sim08-20130503-1',
                    CondDBtag       = 'Sim08-20130503-1-vc-md100'
                    )
