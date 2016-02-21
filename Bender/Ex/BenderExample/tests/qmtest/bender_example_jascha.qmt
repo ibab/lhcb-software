@@ -4,10 +4,4 @@
   <argument name="program"> 
     <text>../../python/BenderExample/Jascha.py</text>
   </argument>
-<argument name="validator"><text>
-block = """
-Jascha            SUCCESS Number of counters : 23
-"""
-findReferenceBlock(block)
-  </text></argument>
 </extension>
