@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"> 
+    <text>../../python/BenderExample/Xuhao.py</text>
+  </argument>
+  <argument name="timeout"><integer>2400</integer></argument>	
+<argument name="validator"><text>
+block = """
+Lines             SUCCESS Number of counters : 4
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "# Phys/SelD0"                                  |        13 |         13 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "# input particles"                             |        13 |         13 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ |*"#accept"                                       |        13 |          0 |(  0.00000 +- 7.69231  )%|   -------   |   -------   |
+ | "#dmesons"                                      |        13 |         13 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+"""
+findReferenceBlock(block)
+  </text></argument>
+</extension>

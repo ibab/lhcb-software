@@ -22,6 +22,15 @@
 ! ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 ! -----------------------------------------------------------------------------
 
+! 2016-02-21 - Vanya Belyaev
+ - add three examples and corresponding qmtests
+    1. Jascha
+    2. Xuhao
+    3. Transporters 
+
+! 2016-02-17 - Vanya Belyaev
+ - K0fromV0:  new example, accessing K0s from V0  (for Fedor Ratnikov) 
+
 ! 2016-02-16 - Vanya Belyaev
  - add new example for processing of MC-micro-DST 
  - add corresponding   QMtest 
