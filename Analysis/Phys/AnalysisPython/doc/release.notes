@@ -5,6 +5,9 @@
 !               GaudiPython analyses.
 !-----------------------------------------------------------------------------
 
+! 2016-02-21 - Vanya Belyaev
+ - more improvements in logging & colorization 
+
 ! 2016-02-18 - Vanya Belyaev
  - improve logging 
 

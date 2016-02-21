@@ -5,7 +5,7 @@
 # =============================================================================
 ## @file AnalysisPython/Logger.py
 #
-#  copied from Bender
+#  Simple logger for Bender, Ostap, etc.. (copied from Bender)
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
@@ -29,7 +29,7 @@
 #  Last modification $Date$
 #                 by $Author$ 
 # =============================================================================
-"""Simple logger for Bender, Ostap, etc.. 
+"""Simple logger for Bender, Ostap, etc..  (copied from Bender)
 
 This file is a part of BENDER project:
    ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
@@ -52,26 +52,70 @@ __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2012-03-16"
 __version__ = '$Revision$'
 __all__     = (
-    'getLogger'   , ## get (configured) logger
-    'LogLevel'    , ## context manager to control output level 
-    'logLevel'    , ## helper function to control outptu level
-    'logDebug'    , ## helper function to control outptu level
-    'logInfo'     , ## helper function to control outptu level
-    'logWarning'  , ## helper function to control outptu level
-    'logError'    , ## helper function to control outptu level
-    'make_colors' , ## force colored logging 
+    'getLogger'    , ## get (configured) logger
+    'setLogging'   , ## set disable level according to MSG.Level
+    'LogLevel'     , ## context manager to control output level 
+    'logLevel'     , ## helper function to control output level
+    'logVerbose'   , ## helper function to control output level
+    'logDebug'     , ## helper function to control output level
+    'logInfo'      , ## helper function to control output level
+    'logWarning'   , ## helper function to control output level
+    'logError'     , ## helper function to control output level
+    'logColor'     , ## context manager to switch on color logging locally  
+    'make_colors'  , ## force colored logging 
+    'reset_colors' , ## reset colored logging 
     )
 # =============================================================================
 import logging
+## 1) fix logging names 
+logging.addLevelName ( logging.CRITICAL  , 'FATAL  '  )
+logging.addLevelName ( logging.WARNING   , 'WARNING'  )
+logging.addLevelName ( logging.DEBUG     , 'DEBUG  '  )
+logging.addLevelName ( logging.INFO      , 'INFO   '  )
+logging.addLevelName ( logging.ERROR     , 'ERROR  '  )
+## 2) add level VERBOSE + corresponding methods 
+if not hasattr ( logging , 'VERBOSE' ) :
+    logging.VERBOSE = 5
+logging.addLevelName ( logging.VERBOSE   , 'VERBOSE'  )
 # =============================================================================
-## helper function that allows to detect running ipython
-def with_ipython()  :
-    """Helper function that allows to detect running ipython"""
-    try :
-        return __IPYTHON__
-    except NameError :
-        return False
- 
+## Log message with severity 'VERBOSE'
+def _verbose1_(self, msg, *args, **kwargs):
+    """Log 'msg % args' with severity 'VERBOSE'.
+    """
+    if self.isEnabledFor(logging.VERBOSE):
+            self._log(logging.VERBOSE, msg, args, **kwargs)
+# =============================================================================
+## Log message with severity 'VERBOSE'
+def _verbose2_(msg, *args, **kwargs):
+    """Log a message with severity 'VERBOSE' on the root logger.
+    """
+    if len(logging.root.handlers) == 0:
+        logging.basicConfig()
+    logging.root.verbose (msg, *args, **kwargs)
+
+# =============================================================================
+## add method 'verbose' to logger 
+logging.Logger.verbose = _verbose1_
+# =============================================================================
+## add method 'verbose' to root logger 
+logging.verbose        = _verbose2_
+
+# =============================================================================
+## convert MSG::Level into logging level and disable corresponding logging
+def setLogging ( output_level ) :
+    """Convert MSG::Level into logging level
+    and disable corresponding logging 
+    """
+    if   6 <= output_level : logging.disable ( logging.FATAL   - 1 )
+    elif 5 <= output_level : logging.disable ( logging.ERROR   - 1 )
+    elif 4 <= output_level : logging.disable ( logging.WARNING - 1 )
+    elif 3 <= output_level : logging.disable ( logging.INFO    - 1 )
+    elif 2 <= output_level : logging.disable ( logging.DEBUG   - 1 )
+    elif 1 <= output_level : logging.disable ( logging.VERBOSE - 1 )
+    else                   : logging.disable ( logging.NOTSET  + 1 )
+    
+# =============================================================================
+# COLORS: 
 # =============================================================================
 ## global flag to indicate if we use colored logging
 __with_colors__ = False
@@ -80,8 +124,14 @@ def with_colors() :
     global __with_colors__
     return __with_colors__ 
 # =============================================================================
-## switch coloring on for interactive processing 
-## if with_ipython() : make_colors()
+## helper function that allows to detect running ipython
+def with_ipython()  :
+    """Helper function that allows to detect running ipython"""
+    try :
+        return __IPYTHON__
+    except NameError :
+        return False
+
 # =============================================================================
 ## get logger
 #  @code
@@ -90,7 +140,7 @@ def with_colors() :
 #  @endcode 
 def _getLogger_ ( name                                                 ,
                   fmt    = '# %(name)-25s %(levelname)-7s %(message)s' ,
-                  level  = logging.DEBUG - 2                           ,
+                  level  = logging.VERBOSE - 2                         ,
                   stream = None                                        ) :  
     """Get the proper logger
     >>> logger1 = getLogger ( 'LOGGER1' )
@@ -125,10 +175,10 @@ def _getLogger_ ( name                                                 ,
 #  logger.debug ( 'this is debug')
 #  @endcode 
 def getLogger (
-    name                       , 
-    fmt    = None              ,
-    level  = logging.DEBUG - 2 ,
-    stream = None              ) :  
+    name                         , 
+    fmt    = None                ,
+    level  = logging.VERBOSE - 2 ,
+    stream = None                ) :  
     """Get the configured  logger with given name
     >>> logger = getLogger('MyLogger')
     >>> logger.info  ( 'this is info' ) 
@@ -189,6 +239,21 @@ def logLevel ( level = logging.INFO - 1 ) :
 # =============================================================================
 #  Temporarily enable/disable all loggers with level less then DEBUG 
 #  @code
+#  with logVerbose() :
+#       ...do something... 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2014-01-1
+def logVerbose () :
+    """Temporarily disable all loggers with level less then INFO 
+    >>> with logVerbose() :
+    >>>  ...do something...
+    """    
+    return logLevel (  logging.VERBOSE   - 1 )
+
+# =============================================================================
+#  Temporarily enable/disable all loggers with level less then DEBUG 
+#  @code
 #  with logInfo() :
 #       ...do something... 
 #  @endcode
@@ -196,7 +261,7 @@ def logLevel ( level = logging.INFO - 1 ) :
 #  @date 2014-01-1
 def logDebug   () :
     """Temporarily disable all loggers with level less then INFO 
-    >>> with logInfo() :
+    >>> with logDebug() :
     >>>  ...do something...
     """    
     return logLevel (  logging.DEBUG   - 1 )
@@ -245,18 +310,30 @@ def logError   () :
     """       
     return logLevel (  logging.ERROR   - 1 )
 
+
 # =============================================================================
-## reset colorization    
-logging.addLevelName ( logging.CRITICAL  , 'FATAL  '  )
-logging.addLevelName ( logging.WARNING   , 'WARNING'  )
-logging.addLevelName ( logging.DEBUG     , 'DEBUG  '  )
-logging.addLevelName ( logging.INFO      , 'INFO   '  )
-logging.addLevelName ( logging.ERROR     , 'ERROR  '  )
+## reset colorization
+def reset_colors() :
+    """Reset colorization
+    >>> reset_colors()
+    """
+    logging.addLevelName ( logging.CRITICAL  , 'FATAL  '  )
+    logging.addLevelName ( logging.WARNING   , 'WARNING'  )
+    logging.addLevelName ( logging.DEBUG     , 'DEBUG  '  )
+    logging.addLevelName ( logging.INFO      , 'INFO   '  )
+    logging.addLevelName ( logging.ERROR     , 'ERROR  '  )
+    logging.addLevelName ( logging.VERBOSE   , 'VERBOSE'  )
+    
+    global __with_colors__
+    __with_colors__ = False 
+    
 # =============================================================================
 ## make colors 
 def make_colors () :
     """Colorize logging
-    """ 
+    """
+    if with_colors() : return
+    
     # ===================================================================================
     BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
     #The background is set with 40 plus the number of the color, and the foreground with 30
@@ -266,21 +343,21 @@ def make_colors () :
     BOLD_SEQ  = "\033[1m"
     
     def  makeName ( level , fg = None  , bg = None  ) :
-        if bg and fg : 
+        if bg is None and fg is None : 
             return '{bg}{fg}{name}{reset}' .format (
                 fg    = COLOR_SEQ % ( 30 + fg ) ,
                 bg    = COLOR_SEQ % ( 40 + bg ) ,
                 name  = logging.getLevelName ( level ) ,
                 reset = RESET_SEQ
                 )
-        elif bg : 
+        elif bg is None : 
             return '{bg}{bold}{name}{reset}' .format (
                 bg    = COLOR_SEQ % ( 40 + bg ) ,
                 bold  = BOLD_SEQ  ,
                 name  = logging.getLevelName ( level ) ,
                 reset = RESET_SEQ
                 )
-        elif fg : 
+        elif fg is None : 
             return '{fg}{bold}{name}{reset}' .format (
                 fg    = COLOR_SEQ % ( 30 + fg ) ,
                 bold  = BOLD_SEQ  ,
@@ -303,7 +380,56 @@ def make_colors () :
     __with_colors__ = True 
 
 # =============================================================================
+## @class ColorLogging
+#  Simple context manager to swicth on/off coloring
+#  @code
+#  with ColorLogging():
+#      ... do something ... 
+#  @endcode 
+class ColorLogging(object) :
+    """Simple context manager to swicth on/off coloring
+    
+    >>> with ColorLogging() :
+    ...     do something ... 
+    """
+    def __enter__ ( self ) :
+        make_colors  ()
+        return self
+    def __exit__  ( self , *_ ) :
+        reset_colors ()
+
+# =============================================================================
+## simple context manager to swict on/off color logging 
+#  @code
+#  with logColor() :
+#      ... do something ... 
+#  @endcode 
+def logColor () :
+    """Simple context manager to swicth on/off coloring
+    
+    >>> with logColor () :
+    ...     do something ... 
+    """
+    return ColorLogging ()
+
+# =============================================================================
+## reset colors
+reset_colors ()
+    
+# =============================================================================
+##  for ipython mode actiavte colors 
+if with_ipython() :
+    make_colors()
+
+# =============================================================================
+## define default logging thresholds as 'INFO'
+setLogging ( 3 )
+
+# =============================================================================
 if __name__ == '__main__' :
+
+
+    setLogging ( 0 )
     
     logger = getLogger ( 'AnalysisPython.Logger' ) 
     logger.info ( 80*'*'  ) 
@@ -313,14 +439,33 @@ if __name__ == '__main__' :
     logger.info ( ' Date    : %s ' %  __date__    ) 
     logger.info ( ' Symbols : %s ' %  list ( __all__ ) )
     logger.info ( 80*'*'  )
-    if with_ipython() : make_colors() 
+    
+    logger.verbose  ( 'This is VERBOSE  message'  ) 
     logger.debug    ( 'This is DEBUG    message'  ) 
     logger.info     ( 'This is INFO     message'  ) 
     logger.warning  ( 'This is WARNING  message'  ) 
     logger.error    ( 'This is ERROR    message'  ) 
     logger.fatal    ( 'This is FATAL    message'  ) 
     logger.critical ( 'This is CRITICAL message'  ) 
-    
+
+    with logColor() : 
+        
+        logger.verbose  ( 'This is VERBOSE  message'  ) 
+        logger.debug    ( 'This is DEBUG    message'  ) 
+        logger.info     ( 'This is INFO     message'  ) 
+        logger.warning  ( 'This is WARNING  message'  ) 
+        logger.error    ( 'This is ERROR    message'  ) 
+        logger.fatal    ( 'This is FATAL    message'  ) 
+        logger.critical ( 'This is CRITICAL message'  ) 
+
+    logger.verbose  ( 'This is VERBOSE  message'  ) 
+    logger.debug    ( 'This is DEBUG    message'  ) 
+    logger.info     ( 'This is INFO     message'  ) 
+    logger.warning  ( 'This is WARNING  message'  ) 
+    logger.error    ( 'This is ERROR    message'  ) 
+    logger.fatal    ( 'This is FATAL    message'  ) 
+    logger.critical ( 'This is CRITICAL message'  ) 
+
 # =============================================================================
 # The END 
 # =============================================================================
