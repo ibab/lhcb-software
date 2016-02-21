@@ -7,6 +7,7 @@
       <text>/lhcb/LHCb/Collision15/TURBO.MDST/00047765/0000/00047765_00006076_1.turbo.mdst</text>
       <text>-b</text>
       <text>-w</text>
+      <text>--no-color</text>      
   </set></argument>
 </extension>
 

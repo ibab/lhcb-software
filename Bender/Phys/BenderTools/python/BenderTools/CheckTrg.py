@@ -205,8 +205,8 @@ def configChkTrg ( config , colors = False ) :
 
     
     from BenderTools.Utils import silence, totalSilence
-    silence()
     
+    silence()    
     if config.Quiet or 5 <=config.OutputLevel :
         totalSilence()
 

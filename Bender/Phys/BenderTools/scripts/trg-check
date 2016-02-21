@@ -141,7 +141,7 @@ if config.Quiet :
     logger.info ( 'Script to collect/check trigger decisions for certain lines')
     import logging
     logging.disable ( logging.INFO  )
-    config.OutputLevel = 5
+    config.OutputLevel = 4
     setLogging ( config.OutputLevel ) 
 
 else :
@@ -156,6 +156,8 @@ else :
     logger.info ( ' Date    : %s ' % __date__     )
     logger.info ( 100*'*')
 
+from Configurables import MessageSvc
+MessageSvc().Format = "% F%80W%S%7W%R%T %0W%M"
 
 ## some sanity adjustments:
 config.teslocation  = config.teslocation.strip() 

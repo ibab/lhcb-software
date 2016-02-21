@@ -166,8 +166,7 @@ def dumpDst ( config ) :
         logger.warning('Use "%s" as root, could be non-efficient' % root )
 
     from Ostap.progress_bar import progress_bar
-    for iEvent in  progress_bar ( xrange ( config.nEvents-1 ) ) :
-    ##while iEvent < config.nEvents :
+    for iEvent in  progress_bar ( xrange ( config.nEvents ) , silent = not config.Color ) :
         #
         sc   = run(1)
         if sc.isFailure()       : break
@@ -293,8 +292,9 @@ def dumpDst ( config ) :
     
         _printMessage += [ message ] 
         
-    _printMessage += [ lline ]     
-    _printMessage += [ "   Analysed " + str(iEvent) + " events" ] 
+    _printMessage += [ lline ]
+    iEvent += 1 
+    _printMessage += [ "   Analysed %d events" % iEvent  ] 
 
 
     logger.info ( 100*'*')

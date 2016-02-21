@@ -5,9 +5,14 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/BenderTools v28r1 2016-1102-21 ====================
+
+! 2016-02-21 - Vanya Belyaev
+ - several fixes in trg-check and other scripts 
+
 ! 2016-02-19 - Vanya Belyaev
 
- - dst-dump 
+ - fix dst-dump 
 
 ! 2016-02-17 - Vanya Belyaev
  - improve get-dbtags and _dump_dbtags_2_ scripts to 

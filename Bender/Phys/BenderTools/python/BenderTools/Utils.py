@@ -78,6 +78,7 @@ def silence ( lst = [ 'HcalDet.Quality'          ,
                       'PropertyConfigSvc'        ,
                       'IntegrateBeamCrossing'    ,
                       'ToolSvc.L0DUConfig'       ,
+                      'ConfigCDBAccessSvc'       , 
                       'ToolSvc.L0CondDBProvider' , 
                       'L0MuonFromRaw'            ] ) :
     """    
@@ -88,18 +89,33 @@ def silence ( lst = [ 'HcalDet.Quality'          ,
     if     isinstance ( lst , str  ) : lst =      [ lst ]
     if not isinstance ( lst , list ) : lst = list ( lst ) 
     #
+    def _silent_action_ () :
+
+
+        from Gaudi.Configuration import allConfigurables
+        from Gaudi.Configuration import getConfigurable
+        keys = allConfigurables.keys()
+        s1 = set( keys )
+        s2 = set( lst )
+        s  = s1.intersection()  
+        for i in s :
+            c = getConfigurable( i )
+            if c and hasattr ( c , 'OutputLevel' ) :
+                c.OutputLevel = 4
+    
     from GaudiPython.Bindings import _gaudi
     if not _gaudi :
         ## use configurables 
         from Configurables import MessageSvc
         msg = MessageSvc()
-        
+        from Gaudi.Configuration import appendPostConfigAction
+        appendPostConfigAction ( _silent_action_ ) 
+ 
     else :
         ## use GaudiPython 
         msg = _gaudi.service('MessageSvc')
     #
-    msg.setError += lst
-
+    msg.setWarning += lst
 
 # ============================================================================
 ## further suppress printout (suitbale doe "dst-dump"-like scripts
@@ -124,7 +140,7 @@ def totalSilence ( lst = [ 'RootCnvSvc'               ,
     msg = MessageSvc()
     msg.OutputLevel = 5
     
-    ToolSvc           (                                  OutputLevel = 6 )
+    ToolSvc           (                                  OutputLevel = 5 )
     RootCnvSvc        ( "RootCnvSvc"                   , OutputLevel = 6 )
     RawDataCnvSvc     (                                  OutputLevel = 6 )
     
@@ -135,9 +151,9 @@ def totalSilence ( lst = [ 'RootCnvSvc'               ,
         DataOnDemandSvc   ( Dump = True  )
     else :
         DataOnDemandSvc   ( Dump = False , OutputLevel = 6 )
-        msg.setFatal += [ 'DataOnDemandSvc' ] 
+        msg.setError += [ 'DataOnDemandSvc' ] 
         
-    msg.setFatal += lst
+    msg.setError += lst
 
     
 # =============================================================================

@@ -9,6 +9,7 @@
       <text>-w</text>
       <text>--tuplefile=MyTuples.root</text>
       <text>--histofile=MyHistos.root</text>
+      <text>--no-color</text>      
   </set></argument>
 </extension>
 
