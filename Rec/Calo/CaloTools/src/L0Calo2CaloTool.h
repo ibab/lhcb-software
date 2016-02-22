@@ -38,8 +38,6 @@ class L0Calo2CaloTool
   ,  public GaudiTool {
 
 public:
-  friend class ToolFactory<L0Calo2CaloTool>;
-  
   /// Standard constructor
   L0Calo2CaloTool( const std::string& type, 
                    const std::string& name,

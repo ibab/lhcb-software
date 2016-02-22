@@ -3,6 +3,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+! 2016-02-22 - Marco Cattaneo
+ - Remove unnecessary friend ToolFactory declaration
+
 !========================= CaloTools v6r12 2016-01-28 =========================
 ! 2015-12-19 - O. Deschamps
  - Calo2MCTool : change default MC association to rely on CaloHypo->MC Linker. In case the Linker doesn't exist
