@@ -13,11 +13,13 @@ from Configurables import SubstitutePID
 class B2DXBuilder(object):
     '''Makes all B->DX decays for the Beauty2Charm module.'''
 
-    def __init__(self,d,dst,topoPions,topoPionsLoose,topoKaons,muons,ks,pi0,hh,hhh,config):
+    def __init__(self,d,dst,topoPions,topoPionsLoose,topoKaons,topoKaons_PID,topoPions_PID,muons,ks,pi0,hh,hhh,config):
         self.config = config
         self.topoPions = [topoPions]
         self.topoPionsLoose = [topoPionsLoose]
         self.topoKaons = [topoKaons]
+        self.topoKaons_PID = [topoKaons_PID]
+        self.topoPions_PID = [topoPions_PID]
         self.muons = muons
         self.d = d
         self.dst = dst

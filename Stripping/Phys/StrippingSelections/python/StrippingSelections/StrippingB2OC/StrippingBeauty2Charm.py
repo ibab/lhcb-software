@@ -1519,7 +1519,7 @@ class Beauty2CharmConf(LineBuilder):
         xicc = XiccBuilder(lc,pions,config['D2X'])
 
         # make B->DX
-        b2dx = B2DXBuilder(d,dst,topoPions,topoPionsLoose,topoKaons,muons,ks,pi0_fromB,hh,hhh,
+        b2dx = B2DXBuilder(d,dst,topoPions,topoPionsLoose,topoKaons,topoKaons_PID,topoPions_PID,muons,ks,pi0_fromB,hh,hhh, 
                            config['B2X'])
         self._makeLines(b2dx.lines,config)
 
