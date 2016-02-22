@@ -4,6 +4,18 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2016-02-22 - Chris Jones
+ - Add 'official' V1 tuning for Run 2 data. "MC15TuneV1". This is now the
+   default for 2015 data onwards (which includes the Upgrade...).
+ - Removed the 2015 Dev1 and Dev2 tunes, to make sure they are not used in
+   production by mistake.
+ - Add a new Run 1 tuning based on MC12 samples. Called "MC12TuneV4" this
+   uses the same input variables as for the Run 2 tuning, so with Velo dE/dx
+   and track likelihood removed. It also provides a more balanced set of tunes
+   attempting to take the best of the V2 and V3 MC12 tunes.
+   Default Run 1 tune is, for the moment, still "MC12TuneV2" however this may
+   still change before release.
+
 ! 2016-02-12 - Chris Jones
  - Add a second MC15 tuning for Long tracks, called "MC15TuneDev2". A likely
    candidate to become an official "MC15TuneV1" at a later date.

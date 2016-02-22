@@ -12,11 +12,13 @@ namespace ANNGlobalPID
     addMC12TuneV2();
     // Add the MC12TuneV3 implementations to the factory
     addMC12TuneV3();
+    // Add the MC12TuneV4 implementations to the factory
+    addMC12TuneV4();
     // Bs2MuMu developmental networks
     addBs2MuMuDev1();
     addBs2MuMuDev2();
     // MC 2015 neworks
-    //addMC15TuneV1();
+    addMC15TuneV1();
   }
 
   // Method to get a static instance of the factory

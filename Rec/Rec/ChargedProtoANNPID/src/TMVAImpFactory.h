@@ -91,8 +91,11 @@ namespace ANNGlobalPID
     /// Add MC12TuneV2 networks
     void addMC12TuneV2( );
 
-    /// Add MC12TuneV3 networks
+    /// Add MC12TuneV3 networks ( No Ghost tuning )
     void addMC12TuneV3( );
+
+    /// Add MC12TuneV4 networks ( Run2 inputs )
+    void addMC12TuneV4( );
 
     /// Add Bs->MuMu Developmental V1 networks
     void addBs2MuMuDev1( );
@@ -102,7 +105,7 @@ namespace ANNGlobalPID
 
     /// Add MC15TuneV1 networks
     void addMC15TuneV1( );
-    
+
   private:
 
     /// Returns the id string for a given configuration
