@@ -50,7 +50,7 @@ public:
   StatusCode initialize() override;
 
   // added for NNTools
-  void setNNSwitch( bool nnSwitch)  { m_nnSwitch = nnSwitch;}
+  void setNNSwitch( bool nnSwitch) override { m_nnSwitch = nnSwitch;}
   bool nnSwitch()       const       { return m_nnSwitch;}
 
 private:
