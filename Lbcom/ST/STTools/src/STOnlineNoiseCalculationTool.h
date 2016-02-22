@@ -18,9 +18,6 @@
  */
 namespace ST { 
   class STOnlineNoiseCalculationTool : virtual public ST::ISTNoiseCalculationTool, public ST::STNoiseToolBase {
-  private:
-
-    friend class ToolFactory<ST::STOnlineNoiseCalculationTool>;
 
   public: 
     /// Standard constructor

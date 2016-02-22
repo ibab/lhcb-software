@@ -22,8 +22,6 @@ class STClusterSelectorOR :
   public virtual ISTClusterSelector ,
   public          GaudiTool 
 {
-  /// friend factory for instantiation
-  friend class ToolFactory<STClusterSelectorOR>;
 public:
   /// container of types&names 
   typedef std::vector<std::string> Names     ;
@@ -32,6 +30,19 @@ public:
 
 public:
 
+  /** Standard constructor
+   *  @see GaudiTool
+   *  @see  AlgTool 
+   *  @see IAlgTool 
+   *  @param type   tool type (?)
+   *  @param name   tool name 
+   *  @param parent tool parent   
+   */
+  STClusterSelectorOR
+  ( const std::string& type, 
+    const std::string& name,
+    const IInterface* parent);
+  
   /** "select"/"preselect" method 
    *  @see ISTClusterSelector
    *  @param  cluster pointer to ST cluster object to be selected 
@@ -57,19 +68,6 @@ public:
   virtual StatusCode initialize () ;
     
 protected:
-  
-  /** Standard constructor
-   *  @see GaudiTool
-   *  @see  AlgTool 
-   *  @see IAlgTool 
-   *  @param type   tool type (?)
-   *  @param name   tool name 
-   *  @param parent tool parent   
-   */
-  STClusterSelectorOR
-  ( const std::string& type, 
-    const std::string& name,
-    const IInterface* parent);
   
   /// destructor (virtual OR protected)
   virtual ~STClusterSelectorOR() ; 

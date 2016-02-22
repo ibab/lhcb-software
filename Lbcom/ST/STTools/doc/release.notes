@@ -3,6 +3,11 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2016-02-22 - Marco Cattaneo
+ - Default constructors of some tools were protected, so required to have 
+   ToolFactory as friend class. Was giving clang warnings now that (Gaudi v27r0)
+   it is a struct. Made constructors public and removed friend declaration
+
 !========================= STTools v4r19 2016-01-27 =========================
 ! 2015-12-21 - Gerhard Raven
  - replace gsl_ with std::

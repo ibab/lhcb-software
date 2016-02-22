@@ -22,8 +22,6 @@ class STChannelIDSelectorAND :
   public virtual ISTChannelIDSelector ,
   public          GaudiTool 
 {
-  /// friend factory for instantiation
-  friend class ToolFactory<STChannelIDSelectorAND>;
 public:
   /// container of types&names 
   typedef std::vector<std::string>           Names     ;
@@ -32,6 +30,19 @@ public:
 
 public:
 
+  /** Standard constructor
+   *  @see GaudiTool
+   *  @see  AlgTool 
+   *  @see IAlgTool 
+   *  @param type   tool type (?)
+   *  @param name   tool name 
+   *  @param parent tool parent   
+   */
+  STChannelIDSelectorAND
+  ( const std::string& type, 
+    const std::string& name,
+    const IInterface* parent);
+  
   /** "select"/"preselect" method 
    *  @see ISTChannelIDSelector
    *  @param  cluster pointer to st cluster object to be selected 
@@ -57,19 +68,6 @@ public:
   virtual StatusCode initialize () ;
   
 protected:
-  
-  /** Standard constructor
-   *  @see GaudiTool
-   *  @see  AlgTool 
-   *  @see IAlgTool 
-   *  @param type   tool type (?)
-   *  @param name   tool name 
-   *  @param parent tool parent   
-   */
-  STChannelIDSelectorAND
-  ( const std::string& type, 
-    const std::string& name,
-    const IInterface* parent);
   
   /// destructor (virtual and protected)
   virtual ~STChannelIDSelectorAND() ; 
