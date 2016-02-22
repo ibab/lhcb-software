@@ -25,6 +25,7 @@ public:
   bool m_enableTrending;
   DimService *m_FarmLoad;
   float m_fLoad;
+  std::string m_ForcePartition;
 //  ISimpleTrendWriter* m_trender;
 };
 #endif // ONLINE_GAUCHO_BUSYPUB_H

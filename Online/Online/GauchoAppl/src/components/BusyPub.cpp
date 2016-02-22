@@ -36,6 +36,10 @@ StatusCode BusyPub::start()
 StatusCode BusyPub::initialize()
 {
   StatusCode sc = PubSvc::initialize();
+  if (m_ForcePartition.size() == 0)
+  {
+    this->m_ForcePartition = m_PartitionName;
+  }
   if (sc.isSuccess() && m_enableTrending && m_trender == 0)
   {
     SmartIF<IToolSvc> tools;
@@ -48,7 +52,7 @@ StatusCode BusyPub::initialize()
     if (sc.isSuccess() && m_trender != 0)
     {
       std::string nnam("FarmCPULoad");
-      m_trender->setPartitionAndName(this->m_PartitionName,nnam);
+      m_trender->setPartitionAndName(this->m_ForcePartition,nnam);
 //      nnam = "CoresRunning";
 //      m_trender->setPartitionAndName(this->m_PartitionName,nnam);
       m_trender->setMaxTimeNoWrite(600);
@@ -125,17 +129,17 @@ void BusyPub::analyze(void *, int ,MonMap* mmap)
     m_trender->startEvent();
     double fload = m_fLoad;
     double f_Cores = nCores;
-    m_trender->addEntry("FarmCPULoad", fload);
-    m_trender->addEntry("CoresRunning", f_Cores);
+    m_trender->addEntry(m_PartitionName+"/FarmCPULoad", fload);
+    m_trender->addEntry(m_PartitionName+"/CoresRunning", f_Cores);
     double d;
     d = double(memfree)/double(memtot);
-    m_trender->addEntry("FreeMemoryRatio", d);
+    m_trender->addEntry(m_PartitionName+"/FreeMemoryRatio", d);
     d = double(buffers)/double(memtot);
-    m_trender->addEntry("BufferMemoryRatio", d);
+    m_trender->addEntry(m_PartitionName+"/BufferMemoryRatio", d);
     d = double(swaptot-swapfree)/double(memtot);
-    m_trender->addEntry("SwapRatio", d);
+    m_trender->addEntry(m_PartitionName+"/SwapRatio", d);
     d = double(buffers)/double(memtot);
-    m_trender->addEntry("BufferRatio", d);
+    m_trender->addEntry(m_PartitionName+"/BufferRatio", d);
     m_trender->saveEvent();
   }
 }
@@ -144,6 +148,7 @@ BusyPub::BusyPub(const std::string& name, ISvcLocator* sl)
  : PubSvc(name,sl)
 {
   declareProperty("TrendingOn",  m_enableTrending);
+  declareProperty("ForcePartition",  m_ForcePartition="");
   m_FarmLoad = 0;
   m_trender = 0;
   m_fLoad = 0.0;
