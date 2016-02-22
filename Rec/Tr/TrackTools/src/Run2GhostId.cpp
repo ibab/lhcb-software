@@ -75,6 +75,7 @@ Run2GhostId::Run2GhostId( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent)
 : GaudiTool ( type, name, parent ),
+  m_otHitCreator(nullptr),
   m_varNameMethods( largestTrackTypes, NULL)
 {
   //declareProperty( "Expectors" , m_expectorNames=std::vector<std::string>{"UTHitExpectation","FTHitExpectation"} );
@@ -132,9 +133,9 @@ StatusCode Run2GhostId::initialize()
     //m_veloExpectation = NULL;
 //  } else {
 //    m_vpExpectation = NULL;
-    m_otdecoder = tool<IOTRawBankDecoder>("OTRawBankDecoder");
-    m_veloExpectation = tool<IVeloExpectation>("VeloExpectation");
-//  }
+  m_otHitCreator = tool<Tf::IOTHitCreator>("Tf::OTHitCreator", "OTHitCreator");
+  m_veloExpectation = tool<IVeloExpectation>("VeloExpectation");
+  //  }
   for (auto entry : m_expectorNames) {
     m_Expectations.push_back(tool<IHitExpectation>(entry));
   }
@@ -212,19 +213,19 @@ StatusCode Run2GhostId::countHits() {
   //    ftCont = getIfExists<FTRawClusters>( LHCb::FTRawClusterLocation::Default );
   //  }
   //} else {
-  auto veloCont = getIfExists<LHCb::VeloLiteCluster::VeloLiteClusters>(LHCb::VeloLiteClusterLocation::Default);
-  auto ttCont = getIfExists<LHCb::STLiteCluster::STLiteClusters>(LHCb::STLiteClusterLocation::TTClusters);
-  auto itCont = getIfExists<LHCb::STLiteCluster::STLiteClusters>(LHCb::STLiteClusterLocation::ITClusters);
-  //}
-  if (veloCont) m_veloHits = veloCont->size();
-  if (ttCont) m_ttHits = ttCont->size();;
+    auto veloCont = getIfExists<LHCb::VeloLiteCluster::VeloLiteClusters>(LHCb::VeloLiteClusterLocation::Default);
+    auto ttCont = getIfExists<LHCb::STLiteCluster::STLiteClusters>(LHCb::STLiteClusterLocation::TTClusters);
+    auto itCont = getIfExists<LHCb::STLiteCluster::STLiteClusters>(LHCb::STLiteClusterLocation::ITClusters);
+    //}
+    if (veloCont) m_veloHits = veloCont->size();
+    if (ttCont) m_ttHits = ttCont->size();;
   //if (ftCont) m_ftHits = ftCont->size();;
-  if (itCont) m_itHits = itCont->size();;
-  m_otHits = m_otdecoder->totalNumberOfHits();
+    if (itCont) m_itHits = itCont->size();;
+    m_otHits = m_otHitCreator->hits().size();
     if (!((veloCont)&&(itCont)&&(ttCont))) {
       return StatusCode::FAILURE;
     }
-
+    
   }
 
   //  if (!((vpCont && utCont && ftCont) // this is upgrade, all have to be there

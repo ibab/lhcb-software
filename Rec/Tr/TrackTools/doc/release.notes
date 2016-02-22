@@ -3,6 +3,11 @@
 ! Responsible : 
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+
+! 2016-02-22 - Sascha Stahl
+ - Run2GhostID: Use OTHitCreator instead OTRawBankDecoder to get the total 
+   number of OT hits. This avoids a duplication of work.
+
 ! 2016-02-13 - Gerhard Raven
  - follow const-ification of Tr/TrackInterfaces
  - C++11 modernization

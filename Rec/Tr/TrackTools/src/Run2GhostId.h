@@ -5,12 +5,11 @@
 #include "TrackInterfaces/IHitExpectation.h"
 //#include "TrackInterfaces/IVPExpectation.h"
 #include "TrackInterfaces/IVeloExpectation.h"
-#include "OTDAQ/IOTRawBankDecoder.h"
 #include "TrackInterfaces/IGhostProbability.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "Event/Track.h"
-
+#include "TfKernel/IOTHitCreator.h"
 
 
 class IClassifierReader;
@@ -50,7 +49,7 @@ protected:
   StatusCode countHits();
 
 private:
-  IOTRawBankDecoder* m_otdecoder;
+  const Tf::IOTHitCreator* m_otHitCreator;
   IVeloExpectation   *m_veloExpectation;
   std::vector<IClassifierReader*> m_readers;
   std::vector<Rich::TabulatedFunction1D*> m_flatters;
