@@ -18,19 +18,6 @@ DefaultTrackingCuts().Cuts  = { "Chi2Cut" : [ 0, 3 ],
                                 "CloneDistCut" : [5000, 9e+99 ] }
 
 #
-#Raw event juggler to split Other/RawEvent into Velo/RawEvent and Tracker/RawEvent
-#
-from Configurables import DaVinci
-from Configurables import GaudiSequencer, RawEventJuggler
-jseq=GaudiSequencer("RawEventSplitSeq")
-juggler=RawEventJuggler("dstJuggler")
-juggler.Sequencer=jseq
-juggler.Input=2.0  # 2015 Online (Moore) format
-juggler.Output=4.2 # Reco15 format
-
-DaVinci().prependToMainSequence( [jseq] )
-
-#
 # Disable the cache in Tr/TrackExtrapolators 
 #
 from Configurables import TrackStateProvider
