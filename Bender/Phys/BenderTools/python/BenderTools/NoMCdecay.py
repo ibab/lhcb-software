@@ -66,14 +66,14 @@ __all__     = ( 'noDecays' , )
 # =============================================================================
 ## logging
 # =============================================================================
-from Bender.Logger import getLogger 
+from Bender.Logger import getLogger, setLogging 
 if '__main__' == __name__ : logger = getLogger ( 'BenderTools.NoMCdecay' )
 else                      : logger = getLogger ( __name__ )
 # =============================================================================
 ## look for ``no-decays''-events
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date  2012-09025
-def noDecays ( config  ) :
+def noDecays ( config  , colors = False ) :
     """
     Look for ``no-decays'' events 
     """
@@ -85,33 +85,33 @@ def noDecays ( config  ) :
         config.nEvents = 10000 
     if config.OutputLevel < 4 : config.OutputLevel = 4
 
+    setLogging(3) 
+    logger.info ( 100*'*')
+    logger.info ( "Generic decay      %s " % config.GenericDecay    )
+    logger.info ( "Decays-in-question %s " % config.DecayInQuestion )
+    
     #
     ## configure it!
     #
     from BenderTools.DstExplorer import configure 
-    configure ( config )
+    configure ( config , colors = colors )
     
     from Bender.MainMC  import cpp,appMgr,get,run,MCDECTREE,SUCCESS, FAILURE  
     
     ## instantiate the application manager 
     gaudi  = appMgr ()
     
-    evtSel = gaudi.evtSel()
-    
-    evtSvc = gaudi.evtSvc()
-    detSvc = gaudi.detSvc()
-        
     ## initialize and read the first event
     
-    run ( 1 )
-    mc = get('/Event/MC/Particles')
-    
+    sc = run ( 1 )
+    mc = get ('/Event/MC/Particles')
+
     ievent = 0 
 
     decay1 = MCDECTREE ( config.GenericDecay )
     if not decay1.valid() :
         raise TypeError ( 'Invalid decay descriptor "%s"' % config.GenericDecay )
-    
+
     decay2 = MCDECTREE ( config.DecayInQuestion )
     if not decay2.valid() :
         raise TypeError ( 'Invalid decay descriptor "%s"' % config.DecayInQuestion ) 
@@ -122,54 +122,55 @@ def noDecays ( config  ) :
 
     ## helper function to process the events 
     def process ( evnts = 100 ) :
-        """
-        helper function to process the events 
+        """helper function to process the events 
         """
         if evnts < 0 : evnts = 100
         
         ievent = 0
-        
+        mc     = True 
         while ievent < evnts : 
             
             ievent += 1
             
-            mc    = get ( '/Event/MC/Particles' )
+            mc    = get ( 'MC/Particles' )
             if not mc :
-                logger.error('No MC-container found: do you run over simulated data?')
-                return FAILURE 
+                logger.warning ('No MC-container found: do you run over simulated data?')
+                break 
         
-            decs1 = get ( '/Event/MC/Particles' , decay1 )
-            decs2 = get ( '/Event/MC/Particles' , decay2 )
+            decs1 = get ( 'MC/Particles' , decay1          )
+            decs2 = get ( 'MC/Particles' , decay1 & decay2 )
             
             l1 = len ( decs1 )
             l2 = len ( decs2 )
 
-            
             cnts[0] += l1
             cnts[1] += l2
             
-            if l1 : cnts[2] +=   ( 0 < l2 )
+            if l1 :
+                cnts[2] +=   ( 0 < l2 )
             
             if l1 and not l2 :
 
                 for d in decs1 :
                     decays.add( d.decay() ) 
                     
-                if config.Quiet :
+                if config.Quiet and 3 >=config.OutputLevel :
                     for d in decs1 : print d.decay()
-                else : print decs1
         
             run ( 1 )
-                
+            if not get ( '/Event') : break 
+
+        setLogging(3) 
         logger.info ( 100*'*')
         logger.info ( "Generic decays     found     %s " % cnts[0] )
         logger.info ( "Decays-in-question found(1)  %s " % cnts[1] )
         logger.info ( "Decays-in-question found(2)  %s " % cnts[2] )
         if decays : 
             logger.info ( 100*'*')
-            logger.info ( "Problematic decays are: " )
-            for d in decays : print '   %s' % d
-        logger.info ( 100*'*')
+            logger.info ( "Problematic decays [%d] are: " % len(decays) )
+            for d in decays : logger.info ( "  %s " % d)
+            logger.info ( 100*'*')
+        setLogging(config.OutputLevel) 
 
         
         return SUCCESS

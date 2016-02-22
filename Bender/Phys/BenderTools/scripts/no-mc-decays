@@ -88,22 +88,24 @@ ROOT.PyConfig.IgnoreCommandLineOptions = True
 # =============================================================================
 ## logging
 # =============================================================================
-from Bender.Logger import getLogger 
+from Bender.Logger import getLogger, setLogging  
 if '__main__' == __name__ : logger = getLogger ( 'Bender/no-mc-decay' )
 else                      : logger = getLogger ( __name__ )
 # =============================================================================
 from BenderTools.Parser import makeParser 
 parser = makeParser  (
     prog        = 'no-mc-decays' ,
-    description = "Address ``MCDecayTuple does not contain all events'' problem" ,
+    description = """Address ``MCDecayTuple does not contain all events'' problem,
+    adjusting the proper MC decay descriptor to pickup proper simulated decays
+    """,
     version     = __version__ 
     )
 group_dec = parser.add_argument_group(
     'Decays' ,
     'Properties to define the decays')
 group_dec.add_argument (
-    '-a'                      ,
-    '--decay'                 ,
+    '-b'                      ,
+    '--basic'                 ,
     type     = str            ,
     required = True           ,
     dest     = 'GenericDecay' ,
@@ -112,8 +114,8 @@ group_dec.add_argument (
     """ ,
     )
 group_dec.add_argument (
-    '-b'                         ,
-    '--missing'                  ,
+    '-t'                         ,
+    '--test'                     ,
     type     =  str              ,
     required = True              ,
     dest     = 'DecayInQuestion' ,
@@ -129,9 +131,17 @@ parser.add_argument (
     help    = "Number of events to process [default: %(default)s]" ,
     default = 5000     
     )
+parser.add_argument ( 
+    '--no-color'     ,
+    dest    = 'Color'      , 
+    action  = 'store_false' , 
+    help    = "Do not use colorization", 
+    default = True          )
 ## 
 config = parser.parse_args()
-
+if config.Color :
+    from Bender.Logger import make_colors
+    make_colors ()
 
 logger.info ( 100*'*'  ) 
 if config.Quiet :
@@ -143,9 +153,8 @@ else :
     logger.info ( ' Date    : %s ' %  __date__    ) 
     logger.info ( 100*'*'  ) 
 
-
 from BenderTools.NoMCdecay import noDecays 
-sc = noDecays  ( config )
+sc = noDecays  ( config , config.Color )
 if sc.isFailure() :
     logger.error("Error from BenderTools.NoMCdecay: %s" % sc )
     exit(1)

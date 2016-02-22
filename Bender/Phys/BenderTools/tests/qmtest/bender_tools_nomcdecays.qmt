@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>no-mc-decays</text></argument>
+  <argument name="args"><set>
+     <text>/lhcb/MC/2012/ALLSTREAMS.DST/00037532/0000/00037532_00000245_1.allstreams.dst</text>
+     <text>-n=1000</text>
+     <text>-b=(Beauty &amp; LongLived) --> (J/psi(1S) => mu+ mu-) ...         </text>
+     <text>-t=[B_s0                     -> (J/psi(1S) -> mu+ mu-) phi(1020)]CC</text>
+     <text>-q</text>
+     <text>-p5</text>
+     <text>--no-color</text>
+  </set></argument>
+  <argument name="validator"><text>
+block="""
+# BenderTools.NoMCdecay     INFO    Generic decays     found     Stat: #=1000    Sum=1000        Mean=     1.000 +- 0.0000     Min/Max=     1.000/1.000      
+# BenderTools.NoMCdecay     INFO    Decays-in-question found(1)  Stat: #=1000    Sum=658         Mean=    0.6580 +- 0.47438    Min/Max=     0.000/1.000      
+# BenderTools.NoMCdecay     INFO    Decays-in-question found(2)  Stat: #=1000    Sum=658         Mean=    0.6580 +- 0.47438    Min/Max=     0.000/1.000      
+"""
+findReferenceBlock(block)
+</text></argument>
+</extension>
