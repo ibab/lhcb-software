@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2016-02-21 - Sean Benson
+ - Move reco persistence configuration so that configured regardless of output type.
+
 ! 2016-02-02 - Rosen Matev
  - Adapt to changes in GaudiConf to speed up Moore configuration.
    As a result setting the output-related properties of all configurables

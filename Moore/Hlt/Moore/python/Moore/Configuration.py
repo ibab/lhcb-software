@@ -879,9 +879,9 @@ class Moore(LHCbConfigurableUser):
         if self.getProp("Simulation") or MooreExpert().getProp("DisableMonitors"):
             self._suppressMonitoring()
 
+        self._configRecoPersist()
         if not self.getProp("RunOnline") :
             self._profile()
-            self._configRecoPersist()
             if self.getProp("generateConfig") : self._generateConfig()
             self._configureInput()
             self._configureOutput()
