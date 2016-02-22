@@ -158,9 +158,10 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         from HltTracking.Hlt1Tracking import ( TrackCandidates, IsMuon,
                                                FitTrack, MatchVeloTTMuon,
                                                VeloTTCandidates,
-                                               ComplementForward )
+                                               ComplementForward,
+                                               LooseComplementForward )
         return [ TrackCandidates( properties[ 'name' ] ),
-                 IsMuon, ComplementForward, MatchVeloTTMuon,
+                 IsMuon, ComplementForward, LooseComplementForward, MatchVeloTTMuon,
                  VeloTTCandidates( properties[ 'name' ] ),
                  FitTrack ]
 
@@ -330,7 +331,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >>  MatchVeloTTMuon
             >>  tee  ( monitor( TC_SIZE > 0, '# MatchMuon', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
-            >>  ComplementForward
+            >>  LooseComplementForward
             >>  tee  ( monitor( TC_SIZE > 0, '# Complement', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nComp' , LoKi.Monitoring.ContextSvc ) )
             >>  FitTrack
