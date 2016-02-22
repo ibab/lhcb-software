@@ -27,6 +27,7 @@ use LoKiHlt             v*    Phys
 use LoKiTracks          v*    Phys
 
 use TrackInterfaces     v*    Tr
+use TfTools             v*    Tf
 use HltInterfaces       v*    Kernel
 
 use Boost               v*   LCG_Interfaces

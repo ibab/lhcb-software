@@ -34,7 +34,7 @@ Hlt::GEC::GEC( const std::string& type,   // the tool type
       m_minOTHits{ 50 },
       m_minITHits{ 50 },
       m_minVeloHits{ 50 },
-      m_rawBankDecoder{ nullptr },
+      m_otHitCreator(nullptr),
       m_veloDet{ nullptr },
       m_isActivity{ false }
 {
@@ -60,7 +60,7 @@ StatusCode Hlt::GEC::initialize()
 {
     StatusCode sc = GaudiTool::initialize();
     if ( sc.isFailure() ) return sc;
-    m_rawBankDecoder = tool<IOTRawBankDecoder>( "OTRawBankDecoder" );
+    m_otHitCreator = tool<Tf::IOTHitCreator>("Tf::OTHitCreator", "OTHitCreator");
     m_veloDet = getDet<DeVelo>( DeVeloLocation::Default );
     return sc;
 }
@@ -69,7 +69,6 @@ StatusCode Hlt::GEC::initialize()
 // ============================================================================
 StatusCode Hlt::GEC::finalize()
 {
-    m_rawBankDecoder = nullptr;
     return GaudiTool::finalize();
 }
 // ============================================================================
@@ -77,7 +76,7 @@ StatusCode Hlt::GEC::finalize()
 // ============================================================================
 bool Hlt::GEC::accept() const
 {
-    auto nOTHits = [&]() { return (int)m_rawBankDecoder->totalNumberOfHits(); };
+    auto nOTHits = [&]() { return (int)m_otHitCreator->hits().size(); };
     auto nITHits = [&]() {
         return (int)get<LHCb::STLiteCluster::STLiteClusters>(
             LHCb::STLiteClusterLocation::ITClusters )->size();
@@ -86,15 +85,15 @@ bool Hlt::GEC::accept() const
         return (int)get<LHCb::VeloLiteCluster::VeloLiteClusters>(
             LHCb::VeloLiteClusterLocation::Default )->size();
     };
+    // OT hits are tested last, as this call will trigger the decoding of all OT hits.
     if ( m_isActivity ) {
-        // always()<<"run activity trigger"<<endmsg;
-        return ( m_minOTHits < 0 || nOTHits() > m_minOTHits ) ||
-               ( m_minITHits < 0 || nITHits() > m_minITHits ) ||
-               ( m_minVeloHits < 0 || nVeloHits() > m_minVeloHits );
+      return ( m_minITHits < 0 || nITHits() > m_minITHits ) ||
+	     ( m_minVeloHits < 0 || nVeloHits() > m_minVeloHits ||
+	     ( m_minOTHits < 0 || nOTHits() > m_minOTHits ) );
     } else {
-        return ( m_maxOTHits < 0 || nOTHits() < m_maxOTHits ) &&
-               ( m_maxITHits < 0 || nITHits() < m_maxITHits ) &&
+        return ( m_maxITHits < 0 || nITHits() < m_maxITHits ) &&
                ( m_maxVeloHits < 0 || nVeloHits() < m_maxVeloHits ) &&
+	       ( m_maxOTHits < 0 || nOTHits() < m_maxOTHits )  &&
                ( m_maxVeloBalance < 0 || veloBalance() < m_maxVeloBalance );
     }
 }

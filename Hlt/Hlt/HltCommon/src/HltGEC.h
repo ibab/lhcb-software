@@ -26,6 +26,8 @@
 // ============================================================================
 #include "VeloDet/DeVelo.h"
 // ============================================================================
+#include "TfKernel/IOTHitCreator.h"
+
 namespace Hlt
 {
 // ==========================================================================
@@ -103,7 +105,7 @@ class GEC : public extends2<GaudiTool, IAccept, ICheckTool>
     /// the minimum number of Velo-hits
     int m_minVeloHits; // the minimum number of Velo-hits
     /// the OT decoder tool
-    IOTRawBankDecoder* m_rawBankDecoder; // the decoder tool
+    const Tf::IOTHitCreator* m_otHitCreator;
     ///
     DeVelo* m_veloDet;
     // is it a upper GEC or an activity trigger

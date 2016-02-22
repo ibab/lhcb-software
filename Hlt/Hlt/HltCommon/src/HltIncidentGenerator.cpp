@@ -57,7 +57,7 @@ StatusCode HltIncidentGenerator::initialize()
 //=============================================================================
 StatusCode HltIncidentGenerator::execute()
 {
-    if ( !m_incident.empty() )
-        m_incidentSvc->fireIncident( Incident( name(), m_incident ) );
-    return StatusCode::SUCCESS;
+  if ( !m_incident.empty() )
+    m_incidentSvc->fireIncident( Incident( name(), m_incident ) );
+  return StatusCode::SUCCESS;
 }
