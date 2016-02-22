@@ -24,10 +24,6 @@ namespace Velo
    */
   class PvssTell1Names : public GaudiTool, virtual public Velo::IPvssTell1Names {
 
-    private:
-
-      friend class ToolFactory<Velo::PvssTell1Names>;
-
     public: 
       /// Standard constructor
       PvssTell1Names( const std::string& type, 

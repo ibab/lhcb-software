@@ -24,10 +24,6 @@ namespace Velo
    */
   class TimeStamps : public GaudiTool, virtual public Velo::ITimeStampProvider {
 
-    private:
-
-      friend class ToolFactory<Velo::TimeStamps>;
-
     public: 
       /// Standard constructor
       TimeStamps( const std::string& type, 

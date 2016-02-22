@@ -25,11 +25,6 @@ namespace Velo
    */
 
   class LivDBTELL1SensorMap : public GaudiTool, virtual public Velo::ITELL1SensorMap {
-
-    private:
-
-      friend class ToolFactory<LivDBTELL1SensorMap>;
-
     public: 
       /// Standard constructor
       LivDBTELL1SensorMap( const std::string& type, 

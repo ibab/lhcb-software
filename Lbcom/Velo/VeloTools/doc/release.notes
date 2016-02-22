@@ -4,6 +4,9 @@
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
 
+! 2016-02-22 - Marco Cattaneo
+ - Remove unnecessary friend ToolFactory declarations
+
 !========================= VeloTools v4r2p1 2015-10-12 =========================
 ! 2015-08-04 - Gerhard Raven
  - remove #include of obsolete Gaudi headers        
