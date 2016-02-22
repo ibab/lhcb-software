@@ -47,7 +47,6 @@ And user scrips looks as:
 #
 #  from Ostap.PidCalib import run_pid_calib 
 #  run_pid_calib ( PION , 'PIDCALIB.db')  
-
 """
 # =============================================================================
 __version__ = "$Revision$"
@@ -61,28 +60,29 @@ __all__     = (
     'ex_func2'    , ## another example of end-user function 
     )
 # =============================================================================
-import ROOT,cppyy, os
-import Ostap.PyRoUts 
-from   Ostap.Logger import getLogger
+import ROOT
+from   Ostap.Logger import getLogger, setLogging 
 if '__main__' == __name__ : logger = getLogger ( 'Ostap.PidCalib' )
 else                      : logger = getLogger ( __name__         )
 # =============================================================================
-
+setLogging(4) 
+import Ostap.PyRoUts
+# =============================================================================
 ## prepare the parser
 #  oversimplified version of parser from MakePerfHistsRunRange.py script 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-07-19
-def makeParser ( ) :
+def makeParser () :
     """
     Prepare the parser
     - oversimplified version of parser from MakePerfHistsRunRange.py script 
     """
     import argparse, os, sys
-    for v in ( 'CALIBDATASCRIPTSROOT' ,
-               'PIDPERFTOOLSROOT'     ,
-               'PIDPERFSCRIPTSROOT'   ) :
-        if not os.environ.has_key ( v ) :
-            logger.warning ('No variable %s is defined. Check Urania environment' % v )
+    ## for v in ( ##'CALIBDATASCRIPTSROOT' ,
+    ##'PIDPERFTOOLSROOT'     ,
+    ## 'PIDPERFSCRIPTSROOT'   , ) :
+    if not os.environ.has_key ('PIDPERFSCRIPTSROOT' ) :
+        logger.warning ('No variable %s is defined. Check Urania environment [or getpack PIDCalib/PIDPerfScripts]' % v )
             
     parser = argparse.ArgumentParser (
         formatter_class = argparse.RawDescriptionHelpFormatter,
@@ -104,9 +104,9 @@ def makeParser ( ) :
                           choices = ('K', 'Pi', 'P' , 'e', 'Mu' ,  'P_LcfB' , 'P_TotLc' , 'P_IncLc' ) , 
                           help    = "Sets the particle type"     )
     
-    parser.add_argument ( '-s' , '--stripping'       , nargs = '+' , 
+    parser.add_argument ( '-s' , '--stripping'       , nargs = '+' ,
                           metavar = '<STRIPPING>'    , ## type=str ,                           
-                          help    = "Sets the stripping version"  )
+                          help    = "Sets the stripping version(s)"  )
     
     ## add the optional arguments
     parser.add_argument ( '-p' , '--polarity'            , default = 'Both' , 
@@ -184,7 +184,8 @@ def getDataSet ( particle          ,
     fname_protocol = ""
     fname_query    = ""
     fname_extra    = ""
-    
+
+    import os 
     CalibDataProtocol=os.getenv("CALIBDATAURLPROTOCOL")
     CalibDataExtra   =os.getenv("CALIBDATAEXTRA")
     
@@ -218,8 +219,6 @@ def getDataSet ( particle          ,
 #         prtcol=fname_protocol, topdir=fname_head,
 #         pol=MagPolarity, mother=DataSetNameDict['MotherName'],
 #         part=PartType, strp=StripVer, idx=index, qry=fname_query)
-
-
 
     ## if verbose:
     ##   print "Attempting to open file {0} for reading".format(fname)
@@ -311,7 +310,8 @@ def getDataSet ( particle          ,
 
 
 # =============================================================================
-## a bit modified verison of DataFuncs.GetPerfPlotList from Urania/PIDCalib/PIDPerfScripts
+## a bit modified version of DataFuncs.GetPerfPlotList
+#  from Urania/PIDCalib/PIDPerfScripts
 def makePlots ( the_func        ,
                 particle        ,  
                 stripping       ,
@@ -420,8 +420,7 @@ def runPidCalib ( the_func    ,
                   polarity    ,
                   trackcuts   , 
                   **config    ) :
-    """
-    The basic function:
+    """ The basic function:
     - oversimplified version of MakePerfHistsRunRange.py script from Urania/PIDCalib 
     """
     #
@@ -509,6 +508,7 @@ def saveHistos  (  histos         ,
     
     with ROOT.TFile.Open ( fname, "RECREATE") as outfile :
 
+        outfile.cd() 
         ## save all histograms 
         for h in histos : h.Write() 
         if verbose : outfile.ls() 
@@ -678,54 +678,66 @@ def  ex_func2 ( particle         ,
 
 # =============================================================================
 ## run pid-calib procedure
-def run_pid_calib ( FUNC , db_name = 'PID_eff.db' ) :
+def run_pid_calib ( FUNC , db_name = 'PID_eff.db' , args = [] ) :
+    """ Run PID-calib procedure 
     """
-    Run PID-calib procedure 
-    """
-
-    import Ostap.Line 
-    logger.info ( __file__  + '\n' + Ostap.Line.line  ) 
-    logger.info ( 80*'*'   )
-    logger.info ( __doc__  )
-    logger.info ( 80*'*'   )
     
     ## from Ostap.PidCalib import makeParser, runPidCalib, saveHistos
 
     ## needed ? probably not, to be removed... 
-    import ROOT 
-    RAD = ROOT.RooAbsData
-    if RAD.Tree != RAD.getDefaultStorageType() :
-        logger.info ( 'DEFINE default storage type to be TTree! ') 
-        RAD.setDefaultStorageType ( RAD.Tree )
+    #import ROOT 
+    #RAD = ROOT.RooAbsData
+    #if RAD.Tree != RAD.getDefaultStorageType() :
+    #    logger.info ( 'DEFINE default storage type to be TTree! ') 
+    #    RAD.setDefaultStorageType ( RAD.Tree )
         
     parser  = makeParser        ()
-    config  = parser.parse_args ()
+    if not args :
+        import sys
+        args =[ a for a in sys.argv[1:] if '--' != a ]  
+    config  = parser.parse_args ( args )
+
+    setLogging(3) 
+    if config.verbose :  
+        import Ostap.Line 
+        logger.info ( __file__  + '\n' + Ostap.Line.line  ) 
+        logger.info ( 80*'*'   )
+        logger.info ( __doc__  )
+        logger.info ( 80*'*'   )
+        _vars   = vars ( config )
+        _keys   = _vars.keys()
+        _keys .sort()
+        logger.info ( 'PIDCalib configuration:')
+        for _k in _keys : logger.info ( '  %15s : %-s ' % ( _k , _vars[_k] ) )
+        logger.info ( 80*'*'   )
+        setLogging(2) 
 
     polarity  =  config.polarity
-    if 'Both' == polarity  : polarity  = [ 'MagUp' , 'MagDown' ]
+    if 'Both' == polarity  : polarity  = [ 'MagUp'  , 'MagDown' ]
     else                   : polarity  = [ polarity ]
 
-    
     stripping =  config.stripping
     ##if not stripping : stripping = [ '21' , '21r1' ]
-    if not stripping : stripping = [ '20' , '20r1' ]
+    ##if not stripping : stripping = [ '20' , '20r1' ]
     ## 
     particle  = config.particle
     
-    logger.info ( 'Stripping versions:  %s' % stripping )  
-    logger.info ( 'Magnet polarities :  %s' % polarity  )  
 
     particles = [ particle ]
     if   'P' == particle :
-        if '20' in stripping or '20r1' in stripping :
+        if   '20' in stripping or '20r1' in stripping :
             particles = [ 'P_IncLc' ] + [ particle ]            
             logger.info ( 'Use reduced set of protons species %s ' % particles )
-        else :
-            particles = [ 'P_LcfB' , 'P_TotLc' , 'P_IncLc' ]
+        elif '21' in stripping or '21r1' in stripping :
+            particles = [ 'P_LcfB' , 'P_TotLc' , 'P_IncLc' ] + particles
             logger.info ( 'Use all species of protons %s ' % particles )
-            
-    hfiles = []
 
+    logger.info ( 'Stripping versions: %s' % stripping )  
+    logger.info ( 'Magnet polarities : %s' % polarity  )  
+    logger.info ( 'Particles         : %s' % particles )  
+
+
+    hfiles = []
     ## loop over the magnet polarities 
     for m in polarity :
         
