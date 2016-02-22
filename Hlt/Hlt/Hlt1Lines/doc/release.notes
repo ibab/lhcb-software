@@ -4,6 +4,8 @@
 ! Responsible : Roel Aaij, Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+! 2016-02-22 - Jessica Prisciandaro
+- LooseComplementFoward added to Hlt1DiMuonNoL0
 
 ! 2016-02-19 - Roel Aaij
  - Explicitly add tracking algorithms to HLT1 proto-particle sequence and
