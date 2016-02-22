@@ -5,7 +5,7 @@
 #include "Event/ProcStatus.h"
 
 #include "Event/STLiteCluster.h"
-#include "OTDAQ/IOTRawBankDecoder.h"
+#include "TfKernel/IOTHitCreator.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatForward
@@ -66,7 +66,7 @@ PatForward::PatForward( const std::string& name,
                         ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_fwdTime(0)
-  , m_rawBankDecoder(nullptr)
+  , m_otHitCreator(nullptr)
   , m_forwardTool(nullptr)
   , m_timerTool(nullptr)
 {
@@ -105,7 +105,7 @@ StatusCode PatForward::initialize() {
   }
 
   // tool handle to the ot raw bank decoder
-  m_rawBankDecoder = tool<IOTRawBankDecoder>("OTRawBankDecoder");
+  m_otHitCreator = tool<Tf::IOTHitCreator>("Tf::OTHitCreator", "OTHitCreator");
 
   //m_tHitManager    = tool<Tf::TStationHitManager <PatForwardHit> >("PatTStationHitManager");
 
@@ -153,7 +153,7 @@ StatusCode PatForward::execute() {
     procStat->addAlgorithmStatus(name(), "Tracking", "LimitVeloTracksExceeded", -3 , true );
     return Warning("Too many velo tracks", StatusCode::SUCCESS, 0);
   }
- // reject hot events
+  // reject hot events
   const LHCb::STLiteCluster::STLiteClusters* clusterCont
     = get<LHCb::STLiteCluster::STLiteClusters>(LHCb::STLiteClusterLocation::ITClusters);
   if (clusterCont->size() > m_maxNumberITHits ){
@@ -167,7 +167,7 @@ StatusCode PatForward::execute() {
     return Warning("Too many IT hits event rejected", StatusCode::SUCCESS, 0);
   }
 
-  const unsigned int nHitsInOT = m_rawBankDecoder->totalNumberOfHits();
+  const unsigned int nHitsInOT = m_otHitCreator->hits().size();
   if (nHitsInOT > m_maxNumberOTHits){
     LHCb::ProcStatus* procStat =
 	getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(

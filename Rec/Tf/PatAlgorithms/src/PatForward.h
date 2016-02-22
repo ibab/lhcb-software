@@ -10,7 +10,8 @@
 #include "TfKernel/TStationHitManager.h"
 #include "PatKernel/PatForwardHit.h"
 
-class IOTRawBankDecoder;
+
+class IOTHitCreator;
 
   /** @class PatForward PatForward.h
    *  Forward pattern recognition. Connect a Velo track to the T stations.
@@ -46,12 +47,12 @@ class PatForward : public GaudiAlgorithm {
     unsigned int m_maxNVelo;
     bool m_doClean;
     bool m_doTiming;
-  //    bool m_unusedVeloSeeds;
 
     unsigned int m_maxNumberOTHits;      
     unsigned int m_maxNumberITHits; 
     
-    IOTRawBankDecoder* m_rawBankDecoder;
+    const Tf::IOTHitCreator* m_otHitCreator;
+
         
     IPatForwardTool*     m_forwardTool;
     ISequencerTimerTool* m_timerTool;
