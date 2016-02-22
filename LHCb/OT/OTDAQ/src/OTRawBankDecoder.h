@@ -102,7 +102,6 @@ private:
   int  m_numberOfBX = 3;                        ///< Number of BX
   int  m_forcebankversion = OTBankVersion::UNDEFINED;                  ///< Overwrite bank version in bank header
   bool m_vetoOutOfTimeHitPairs = true;		    ///< veto out of time hit pairs?
-
   friend class OTRawBankDecoderHelpers::Detector;
   friend class OTRawBankDecoderHelpers::Module;
 };

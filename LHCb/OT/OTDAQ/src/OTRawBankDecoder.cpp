@@ -127,8 +127,10 @@ namespace OTRawBankDecoderHelpers {
 
     void clearevent() {
       m_event = nullptr;
+      m_totalNumberOfHits = 0;
       for(auto imod = begin(); imod != end(); ++imod) imod->clearevent();
       m_ottimes.clear();
+      
     }
 
     const LHCb::RawEvent* rawEvent() const { return m_event; }
@@ -139,15 +141,25 @@ namespace OTRawBankDecoderHelpers {
         //size_t ntot = std::accumulate( begin(), end(), size_t(0),
 	//	[] (size_t acc, const Module& m)
 	//	{ return acc + m.size(); });
-        return totalNumberOfHitsInWindow(); // ns...
+      if (m_totalNumberOfHits==0){
+	m_totalNumberOfHits = totalNumberOfHitsInWindow();
+	return m_totalNumberOfHits; // ns...
+      }else{
+	return m_totalNumberOfHits;
+      }
     }
 
     size_t totalNumberOfHitsInWindow() const
     {
-      return std::accumulate( begin(), end(), size_t(0),
-	                          [] (size_t acc, const Module& m) {
-                                 return acc + m.countHitsInWindow();
-      });
+      if (m_totalNumberOfHits==0){
+	m_totalNumberOfHits = std::accumulate( begin(), end(), size_t(0),
+					       [] (size_t acc, const Module& m) {
+						 return acc + m.countHitsInWindow();
+					       });
+	return m_totalNumberOfHits;
+      }else{
+      	return m_totalNumberOfHits;
+      }
     }
 
     bool isTotalNumberOfHitsLessThen(size_t nmax) const
@@ -164,7 +176,7 @@ namespace OTRawBankDecoderHelpers {
     const OTRawBankDecoder& m_parent;
     const LHCb::RawEvent* m_event = nullptr;
     LHCb::OTLiteTimeContainer m_ottimes;
-
+    mutable size_t m_totalNumberOfHits = 0;
     friend class OTRawBankDecoderHelpers::Module;
   };
 
