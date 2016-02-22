@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2016-02-21 - Sean Benson
+ - Fix misconfiguration of Turbo persist reco unpackers.
+
 ! 2016-02-09 - Marco Clemencic
  - Improved GaudiConf.QMTest.LHCbExclusions
    - small refactoring

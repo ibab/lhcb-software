@@ -434,38 +434,38 @@ class DstConf(LHCbConfigurableUser):
             from Configurables import DataPacking__Unpack_LHCb__RichPIDPacker_ as UnpackRichPIDs
             rich1=UnpackRichPIDs( name = "Hlt2UnpackRichPIDs",
                     InputName          = "Hlt2/pRec/long/RichPIDs",
-                    OutputName         = "Hlt2/long/RichPIDs" )
+                    OutputName         = "Hlt2/TrackFitted/Long/PID/RICH/electronmuonpionkaonprotondeuteronbelowThreshold/Rich1GasRich2GasLong" )
             from Configurables import DataPacking__Unpack_LHCb__MuonPIDPacker_ as UnpackMuonPIDs
             muon1=UnpackMuonPIDs( name = "Hlt2UnpackMuonPIDs",
                     InputName          = "Hlt2/pRec/long/MuonIDs",
-                    OutputName         = "Hlt2/long/MuonIDs" )
+                    OutputName         = "Hlt2/PID/Muon" )
             from Configurables import UnpackTrack
             track1=UnpackTrack( name = "UnpackLongTracks",
                     InputName          = "Hlt2/pRec/long/Tracks",
-                    OutputName         = "Hlt2/long/Tracks" )
+                    OutputName         = "Hlt2/TrackFitted/Long" )
             track2=UnpackTrack( name = "UnpackDownTracks",
                     InputName          = "Hlt2/pRec/down/Tracks",
-                    OutputName         = "Hlt2/down/Tracks" )
+                    OutputName         = "Hlt2/TrackFitted/Downstream" )
             proto3=UnpackProtoParticle( name = "UnpackNeutralProtoP",
                     InputName          = "Hlt2/pRec/neutral/Protos",
                     OutputName         = "Hlt2/neutral/Protos" )
             from Configurables import DataPacking__Unpack_LHCb__CaloClusterPacker_ as UnpackCaloClusters
             clusters1=UnpackCaloClusters( name = "UnpackCaloClusters",
                     InputName          = "Hlt2/pRec/neutral/CaloClusters", 
-                    OutputName         = "Hlt2/neutral/CaloClusters" )
+                    OutputName         = "Hlt/Calo/EcalClusters" )
             from Configurables import UnpackCaloHypo as UnpackCaloHypos
             hypos1=UnpackCaloHypos( name = "UnpackCaloElectronHypos",
                     InputName          = "Hlt2/pRec/neutral/Electrons",
-                    OutputName         = "Hlt2/neutral/Electrons" )
+                    OutputName         = "Hlt2/PID/CALO/Calo/Electrons" )
             hypos2=UnpackCaloHypos( name = "UnpackCaloPhotonHypos",
                     InputName          = "Hlt2/pRec/neutral/Photons",
-                    OutputName         = "Hlt2/neutral/Photons" )
+                    OutputName         = "Hlt2/PID/CALO/Calo/Photons" )
             hypos3=UnpackCaloHypos( name = "UnpackCaloMergedPi0Hypos",
                     InputName          = "Hlt2/pRec/neutral/MergedPi0s",
-                    OutputName         = "Hlt2/neutral/MergedPi0s" )
+                    OutputName         = "Hlt2/PID/CALO/Calo/MergedPi0s" )
             hypos4=UnpackCaloHypos( name = "UnpackCaloSplitPhotonHypos",
                     InputName          = "Hlt2/pRec/neutral/SplitPhotons",
-                    OutputName         = "Hlt2/neutral/SplitPhotons" )
+                    OutputName         = "Hlt2/PID/CALO/Calo/SplitPhotons" )
             unpackers+=[proto1,proto2,proto3,rich1,muon1,track1,track2,clusters1,hypos1,hypos2,hypos3,hypos4]
             
             # Update data on demand
