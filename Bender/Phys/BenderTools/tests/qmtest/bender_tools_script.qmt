@@ -11,6 +11,11 @@
       <text>--histofile=MyHistos.root</text>
       <text>--no-color</text>      
   </set></argument>
+ <argument name="validator"><text>
+block="""
+RCWNTupleCnv         INFO Booked TTree with ID: Tuple "Tuple" in directory MyTuples.root:/MyTuple
+"""
+</text></argument>
 </extension>
 
 
