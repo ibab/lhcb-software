@@ -12,13 +12,13 @@ ApplicationMgr.ExtSvc               += {
 //					"GenStatSvc/EVTProd",
           "GenStatSvc/DiskWR"
                                        };
-ApplicationMgr.ExtSvc               += {
-          "BusyPub"
-                                       };
+//ApplicationMgr.ExtSvc               += {
+//          "BusyPub"
+//                                       };
 ApplicationMgr.ExtSvc               += {
           "DiskWrPub"
                                        };
-ApplicationMgr.ExtSvc               += {
+ApkplicationMgr.ExtSvc               += {
           "CntrPub"
                                        };
 ApplicationMgr.ExtSvc               += {
@@ -81,14 +81,14 @@ DiskWR.ServicePattern      = "MON_<part>_Sender_00/Counter/";
 DiskWR.InDNS               = "mona08";
 DiskWR.OutDNS              = "mona08";
 
-BusyPub.MyName              = "<part>_X_BusyPub";
-BusyPub.PartitionName       = @OnlineEnv.PartitionName;
-BusyPub.TaskPattern         = "MON_<part>_HLT02_PartAdder_(.*)";
-BusyPub.ServicePattern      = "MON_<part>_Busy_00/Counter/";
-BusyPub.AdderClass          = "Counter";
-BusyPub.InDNS               = "mona08";
-BusyPub.TrendingOn          = true;
-BusyPub.OutDNS              = "mona08";
+//BusyPub.MyName              = "<part>_X_BusyPub";
+//BusyPub.PartitionName       = @OnlineEnv.PartitionName;
+//BusyPub.TaskPattern         = "MON_<part>_HLT02_PartAdder_(.*)";
+//BusyPub.ServicePattern      = "MON_<part>_Busy_00/Counter/";
+//BusyPub.AdderClass          = "Counter";
+//BusyPub.InDNS               = "mona08";
+//BusyPub.TrendingOn          = true;
+//BusyPub.OutDNS              = "mona08";
 
 DiskWrPub.MyName              = "<part>_X_DiskWrPub";
 DiskWrPub.PartitionName       = @OnlineEnv.PartitionName;

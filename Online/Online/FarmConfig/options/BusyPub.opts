@@ -1,0 +1,40 @@
+// Job options file. Simple Online monitoring example
+//==============================================================
+ApplicationMgr.ExtSvc               += {
+          "BusyPub"
+                                       };
+ApplicationMgr.ExtSvc               += {
+          "BusyPub/LHCbPub"
+                                       };
+
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+Runable.Wait                         = 3;  // 1 of running as daemon
+MessageSvc.OutputLevel               = 3; //@OnlineEnv.OutputLevel;
+
+//MessageSvc.fifoPath                = "$LOGFIFO";
+HistogramPersistencySvc.Warnings   = false;
+
+
+
+BusyPub.MyName              = "GEN_X_BusyPub";
+BusyPub.PartitionName       = "GEN";
+BusyPub.TaskPattern         = "MON_GEN_HLT02_BusyMon";
+BusyPub.ServicePattern      = "MON_GEN_Busy_00/Counter/";
+BusyPub.AdderClass          = "Counter";
+BusyPub.InDNS               = "mona08";
+BusyPub.TrendingOn          = true;
+BusyPub.OutDNS              = "mona08";
+BusyPub.ForcePartition = "LHCb";
+
+LHCbPub.MyName              = "<part>_X_BusyPub";
+LHCbPub.PartitionName       = "LHCb";
+LHCbPub.TaskPattern         = "MON_<part>_HLT02_PartAdder_(.*)";
+LHCbPub.ServicePattern      = "MON_<part>_Busy_00/Counter/";
+LHCbPub.AdderClass          = "Counter";
+LHCbPub.InDNS               = "mona08";
+LHCbPub.TrendingOn          = true;
+LHCbPub.OutDNS              = "mona08";
+
