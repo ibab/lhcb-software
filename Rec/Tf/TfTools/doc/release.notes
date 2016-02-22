@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2016-02-22 - Marco Cattaneo
+ - Add a missing override qualifier
+
 !========================= TfTools v1r20p1 2015-10-13 =========================
 ! 2015-08-28 - Gerhard Raven
  - replace endreq with endmsg

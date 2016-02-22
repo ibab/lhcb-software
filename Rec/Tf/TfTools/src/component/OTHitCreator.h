@@ -122,7 +122,7 @@ namespace Tf
 
 
     // Create a single OTHit from an lhcbid
-    OTHit hit( const LHCb::OTChannelID id ) const ;    
+    OTHit hit( const LHCb::OTChannelID id ) const override;
 
   public:
     double tmin() const { return m_tmin ; }
