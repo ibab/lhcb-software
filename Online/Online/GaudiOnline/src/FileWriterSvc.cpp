@@ -36,6 +36,8 @@
 #include <errno.h>
 #include "dic.hxx"
 #include <boost/filesystem.hpp>
+#include "sys/stat.h"
+#include <sys/statvfs.h>
 
 using MBM::Producer;
 using MBM::Consumer;
@@ -92,8 +94,9 @@ FileWriterSvc::FileWriterSvc(const string& nam, ISvcLocator* svc) :
   declareProperty("Requirements", m_req);
 //  declareProperty("MEPManager", m_mepMgrName = "LHCb::MEPManager/MEPManager");
 //  declareProperty("RoutingBits", m_routingBits = 0x400);
-  declareProperty("MEPFilePrefix", m_FilePrefixMEP="/localdisk/overflow/Run_");
-  declareProperty("EvtFilePrefix", m_FilePrefixEvt="/localdisk/HLT1/Run_");
+  declareProperty("DeviceList",m_DeviceList={"/localdisk","/localdisk1","/localdisk2"});
+  declareProperty("MEPFilePrefix", m_FilePrefixMEP="/overflow/Run_");
+  declareProperty("EvtFilePrefix", m_FilePrefixEvt="/HLT1/Run_");
   declareProperty("SizeLimit", m_SizeLimit=250);
   declareProperty("FileCloseDelay",m_FileCloseDelay=10);
   declareProperty("MaxEvents",m_maxevts=-1);
@@ -179,8 +182,14 @@ StatusCode FileWriterSvc::initialize()
         this->m_SizeLimit *= 1024*1024;
         size_t lslash = m_FilePrefixMEP.find_last_of("/");
         m_DirectoryMEP = m_FilePrefixMEP.substr(0,lslash);
+        for (size_t di=0;di<m_DeviceList.size();di++)
         {
-          boost::filesystem::path dir(m_DirectoryMEP);
+          boost::filesystem::path dev(m_DeviceList[di]);
+          if (!boost::filesystem::exists(dev))
+          {
+            continue;
+          }
+          boost::filesystem::path dir(m_DeviceList[di]+m_DirectoryMEP);
           if (!boost::filesystem::exists(dir))
           {
             if (!boost::filesystem::create_directories(dir))
@@ -192,14 +201,19 @@ StatusCode FileWriterSvc::initialize()
         }
         lslash = m_FilePrefixEvt.find_last_of("/");
         m_DirectoryEvt = m_FilePrefixEvt.substr(0,lslash);
+        for (size_t di=0;di<m_DeviceList.size();di++)
         {
-          boost::filesystem::path dir(m_DirectoryEvt);
-          if (!boost::filesystem::exists(dir))
+          struct stat s;
+          if (stat(m_DeviceList[di].c_str(),&s)==0)
           {
-            if (!boost::filesystem::create_directories(dir))
+            boost::filesystem::path dir(m_DeviceList[di]+m_DirectoryEvt);
+            if (!boost::filesystem::exists(dir))
             {
-              log<<MSG::ERROR<<"Cannot Create Directory "<<dir<<endmsg;
-              return StatusCode::FAILURE;
+              if (!boost::filesystem::create_directories(dir))
+              {
+                log<<MSG::ERROR<<"Cannot Create Directory "<<dir<<endmsg;
+                return StatusCode::FAILURE;
+              }
             }
           }
         }
@@ -488,7 +502,7 @@ FileDescr *FileWriterSvc::openFile(unsigned int runn, FTYPE t)
   FileDescr *f = new FileDescr(t,r);
   r->m_CurrentFileDescr = f;
   f->m_Sequence = seq;
-  char fname[255];
+  char fname[1024];
   std::string format;
   if (t == FILETYPE_MEP)
   {
@@ -501,13 +515,47 @@ FileDescr *FileWriterSvc::openFile(unsigned int runn, FTYPE t)
   std::string ftim = FileTime();
   sprintf(fname,format.c_str(),runn,ftim.c_str(),m_node.c_str());
   f->m_BytesWritten = 0;
-  f->m_Handle = open(fname,O_RDWR+O_CREAT+O_APPEND+O_LARGEFILE+O_NOATIME,
+  int indx = getDevice(m_DeviceList);
+  string flname;
+
+  if (indx >=0)
+  {
+    flname = m_DeviceList[indx];
+    flname += fname;
+  }
+  else
+  {
+    printf ("===========> FATAL: Cannot find a device with free space. Exiting...\n");
+    exit(0);
+  }
+
+  f->m_Handle = open(flname.c_str(),O_RDWR+O_CREAT+O_APPEND+O_LARGEFILE+O_NOATIME,
       S_IRWXU|S_IRWXG|S_IRWXO);
   f->m_FileName = fname;
   f->state = C_OPEN;
   f->m_BytesWritten = 0;
   m_NumFiles++;
   return f;
+}
+int FileWriterSvc::getDevice(std::vector<std::string> &devlist)
+{
+  struct statvfs fsstat;
+  fsblkcnt_t fblock=0;
+  int stat;
+  size_t maxindx=-1;
+  for (size_t i=0;i<devlist.size();i++)
+  {
+    stat = statvfs(devlist[i].c_str(),&fsstat);
+    if (stat == 0)
+    {
+      if (fsstat.f_bfree > fblock)
+      {
+        fblock = fsstat.f_bfree;
+        maxindx = i;
+      }
+    }
+  }
+  return maxindx;
 }
 std::vector<std::string> &FileWriterSvc::getRequirements()
 {

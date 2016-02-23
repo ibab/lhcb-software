@@ -154,6 +154,7 @@ namespace LHCb
     ///File Prefix String. Filename wil be m_FilePrefix + Runnumber + _Sequence+.MEP
     std::string m_FilePrefixEvt;
     ///Limit on the filesize in MB=1024*1024 Bytes
+    std::vector<std::string> m_DeviceList;
     std::string m_PartitionName;
     long m_maxevts;
     long m_numev;
@@ -220,6 +221,7 @@ namespace LHCb
     bool m_texit;
     pthread_t m_tid;
     int m_Steeringdata;
+    int getDevice(std::vector<std::string> &devlist);
   };
   class SteeringInfo : DimInfo
   {
