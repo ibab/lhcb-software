@@ -18,14 +18,56 @@ class lovellGui(QMainWindow):
         QMainWindow.__init__(self, parent)
         self.top_tab = QTabWidget(self)
         self.setCentralWidget(self.top_tab)
-        self.top_tab.addTab(QWidget(self), 'Overview')
-        self.top_tab.addTab(run_view(run_data_dir, self), 'Run View')
+        self.top_tab.addTab(velo_view(run_data_dir, self), 'VELO view')
+        self.top_tab.addTab(run_view(run_data_dir, self), 'Run view')
         self.top_tab.addTab(QWidget(self), 'Sensor view')
         self.top_tab.addTab(QWidget(self), 'TELL1')
         self.top_tab.addTab(QWidget(self), 'Special analyses')
         self.top_tab.setCurrentIndex(1)
         
-                
+
+class velo_view(QWidget):
+    # Class to set up VELO view tab with DQ trending
+    def __init__(self, run_data_dir, parent=None):
+        QTabWidget.__init__(self, parent)	
+        self.run_data_dir = run_data_dir
+        self.grid_layout = QGridLayout()
+        lFuncs.setPadding(self.grid_layout)
+        self.setLayout(self.grid_layout)
+        self.pages = [] 
+        self.setup_tabs()
+
+
+    def setup_tabs(self):
+        self.top_tab = QTabWidget(self)
+        veloview_config = lInterfaces.veloview_config()
+	
+        self.tab_options = lTabOptions.lTabOptions(self, self.run_data_dir)
+        nTabs = len(veloview_config)
+        i=1
+        for key, val in veloview_config.iteritems():
+            msg = 'Preparing tab (' + str(i) + '/' + str(nTabs) + '): ' + val['title']
+            print msg
+            page = lTab.lTab(val, self)
+            if val['title'] == 'Trends': page.modifyPageForTrending(self.run_data_dir) 
+            self.top_tab.addTab(page, val['title'])
+            self.pages.append(page)
+            i+=1
+        
+        self.grid_layout.addWidget(self.top_tab, 0, 0)
+        self.top_tab.currentChanged.connect(self.tab_changed)
+         
+        if self.tab_options:
+            self.tab_options.state_change.connect(self.tab_changed)
+            self.grid_layout.addWidget(self.tab_options, 1, 0)
+            # Keep options stored but don't show corresponding widget in GUI
+            self.tab_options.setVisible(False)	
+        self.tab_changed()
+    
+    def tab_changed(self):
+        iPage = self.top_tab.currentIndex()
+        self.pages[iPage].replotTrend(self.tab_options.state())
+
 class run_view(QWidget):
     def __init__(self, run_data_dir, parent=None):
         QTabWidget.__init__(self, parent)

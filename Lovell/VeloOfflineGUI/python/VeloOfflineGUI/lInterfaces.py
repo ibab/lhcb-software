@@ -1,16 +1,20 @@
 import sys
-from veloview.runview import plots, utils
+from veloview.runview import plots, utils, dq_trends
 from veloview.config import Config, run_view
-
+import velo_view
 
 def run_list(run_data_dir):
     Config().run_data_dir = run_data_dir
     return utils.run_list()
 
+def trending_variables():
+    return dq_trends.get_trending_variables()
 
 def runview_config():
     return run_view.run_view_pages
 
+def veloview_config():
+    return velo_view.velo_view_pages
 
 def runview_plot(run, name, sensor, run_data_dir, refRun = 'Auto', 
                  getRef = False, normalise = False, notifyBox = None):
@@ -43,6 +47,9 @@ def runview_plot(run, name, sensor, run_data_dir, refRun = 'Auto',
         return plots.get_run_plot(name, run, normalise = normalise,
                                   notifyBox = notifyBox)
 
+def veloview_plot(name, runRange, run_data_dir):
+    Config().run_data_dir = run_data_dir
+    return plots.get_trending_plot(name, runRange) 
     
 def IV_plot(name, moduleID, dataDate, IV_directory, sensor_mapping, refDate = None, 
             getRef = False, notifyBox = None):

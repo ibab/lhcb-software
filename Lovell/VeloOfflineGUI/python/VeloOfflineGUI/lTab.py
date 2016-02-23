@@ -14,7 +14,8 @@ from PyQt4.QtGui import (
 
 from lFuncs import setPadding
 from mplWidget import mplWidget
-
+import lInterfaces
+import pprint
 
 def numeric_compare(x, y):
     print x, y
@@ -37,6 +38,8 @@ class lTab(QWidget):
         if len(self.subpages) > 0:
             self.subpages[self.tabs.currentIndex()].replot(tabOpsState, notifyBox)
 
+    def replotTrend(self, tabOpsState):
+        for plot in self.plots: plot.on_draw_trend(tabOpsState)
 
     def dataIvDate(self):
         return self.dataIvBox.currentText()
@@ -44,6 +47,21 @@ class lTab(QWidget):
     
     def refIvDate(self):
         return self.refIvBox.currentText()
+
+    
+    def trendVariable(self):
+        index = self.variableBox.currentIndex()
+        variableList = lInterfaces.trending_variables()
+        variableListSorted = sorted(variableList, reverse=True)
+        return variableListSorted[index][0]
+
+
+    def trendStartNum(self):
+        return self.runNumStartBox.currentText()
+
+    
+    def trendEndNum(self):
+        return self.runNumEndBox.currentText()
 
 
     def setup_plots(self):
@@ -89,7 +107,49 @@ class lTab(QWidget):
         
         fn = os.path.join(os.path.dirname(__file__), 'sensor_mapping.p')
         self.sensor_mapping = pickle.load(open(fn, "rb" ))
- 
+    
+
+    def modifyPageForTrending(self, run_data_dir):
+        # Used to add options bar for trending plots
+        self.run_data_dir = run_data_dir 
+        self.variableBox = QComboBox(self)
+        self.variableBox.currentIndexChanged.connect(self.parent().tab_options.state_changed)
+        self.runNumStartBox = QComboBox(self)
+        self.runNumStartBox.currentIndexChanged.connect(self.parent().tab_options.state_changed)
+        self.runNumEndBox = QComboBox(self)
+        self.runNumEndBox.currentIndexChanged.connect(self.parent().tab_options.state_changed)
+
+        widg = QGroupBox('Trending options', self)
+        widgLayout = QGridLayout(widg)
+        lab1 = QLabel("Trend variable:")
+        lab1.setAlignment(Qt.AlignRight)
+        lab2 = QLabel("Initial run:")
+        lab2.setAlignment(Qt.AlignRight)
+        lab3 = QLabel("Final run:")
+        lab3.setAlignment(Qt.AlignRight)
+        widgLayout.addWidget(lab1, 0, widgLayout.columnCount(), 1, 1)
+        widgLayout.addWidget(self.variableBox, 0, widgLayout.columnCount(), 1, 1)
+        widgLayout.addWidget(lab2, 0, widgLayout.columnCount(), 1, 1)
+        widgLayout.addWidget(self.runNumStartBox, 0, widgLayout.columnCount(), 1, 1)
+        widgLayout.addWidget(lab3, 0, widgLayout.columnCount(), 1, 1)
+        widgLayout.addWidget(self.runNumEndBox, 0, widgLayout.columnCount(), 1, 1)
+        self.grid_layout.addWidget(widg, self.grid_layout.rowCount(), 0, 1, self.grid_layout.columnCount())
+
+        # Retrieve list of trending variables
+        variableList = lInterfaces.trending_variables()
+        variableListSorted = sorted(variableList, reverse=True)
+        
+        for i in xrange(len(variableList)):
+                self.variableBox.addItem(variableListSorted[i][1])
+        
+        runList = lInterfaces.run_list(self.run_data_dir)
+        runListSorted = sorted(runList)
+
+        for run in runListSorted:
+                self.runNumStartBox.addItem(str(run))
+                self.runNumEndBox.addItem(str(run))
+        listEntries = len(runListSorted)
+        self.runNumEndBox.setCurrentIndex(listEntries-1)
 
     def getIVfileName(self, direc):
         files = []
@@ -107,3 +167,4 @@ class lTab(QWidget):
             self.subpages.append(subpage)
             self.tabs.addTab(subpage, page['title']) 
         self.tabs.currentChanged.connect(self.parentWidget().tab_changed)
+

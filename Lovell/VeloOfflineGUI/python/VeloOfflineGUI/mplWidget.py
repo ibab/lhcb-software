@@ -20,7 +20,6 @@ matplotlib.rcParams.update({'axes.titlesize': 'medium'})
 matplotlib.rcParams.update({'legend.fontsize': 'medium'})
 matplotlib.rcParams.update({'legend.framealpha': '0.5'})
 
-
 class NavigationToolbar_mod(NavigationToolbar):
     # only display the buttons we need
     toolitems = [t for t in NavigationToolbar.toolitems if
@@ -47,7 +46,32 @@ class lPlottable():
 
     def tab(self):
         return self.plot.parent()
-    
+  
+    def on_draw_trend(self, tabOpsState):
+        initial_run = int(self.tab().trendStartNum())
+        final_run = int(self.tab().trendEndNum())
+        trend_variable = str(self.tab().trendVariable())
+        # Make sure a valid range is plotted
+        if initial_run < final_run:
+            nominal = lInterfaces.veloview_plot(trend_variable,
+                                                xrange(initial_run, final_run),
+                                                tabOpsState.run_data_dir) 
+            self.runview_trendingReturn(nominal)
+        else:
+            msg = 'Please choose valid range - final run greater then initial run'
+            print msg
+            
+        # Titles.
+        xlabel = 'Default x label'
+        ylabel = 'Default y label'
+        zlabel = 'Default z label'
+        
+        xlabel = nominal['data']['data']['axis_titles'][0]
+        ylabel = nominal['data']['data']['axis_titles'][1]        
+        
+        self.plot.axes.set_xlabel(xlabel)
+        self.plot.axes.set_ylabel(ylabel)
+ 
     def on_draw(self, tabOpsState, notifyBox):
         print self.params['name']
         if 'normalise' in self.params and self.params['normalise']: 
@@ -98,12 +122,15 @@ class lPlottable():
                                                    normalise = norm, notifyBox = notifyBox)
             reference = None
         if 'binning' in nominal['data']['data'] and len(nominal['data']['data']['binning']) > 0:
-            if not tabOpsState.displayRefs: self.runview_1d_runviewReturn(nominal)
+            if not tabOpsState.displayRefs: 
+                self.runview_1d_runviewReturn(nominal)
             elif tabOpsState.overLayRef:
                 self.runview_1d_runviewReturn(nominal)
                 if reference != None: self.runview_1d_runviewReturn(reference, True)
-            elif tabOpsState.refDiff: self.runview_1d_dataMinusRef(nominal, reference)
-            elif tabOpsState.refRatio: self.runview_1d_dataMinusRef(nominal, reference, True)
+            elif tabOpsState.refDiff: 
+                self.runview_1d_dataMinusRef(nominal, reference)
+            elif tabOpsState.refRatio: 
+                self.runview_1d_dataMinusRef(nominal, reference, True)
             
             
         elif 'xbinning' in nominal['data']['data'] and len(nominal['data']['data']['xbinning']) > 0: 
@@ -111,7 +138,7 @@ class lPlottable():
             elif tabOpsState.refDiff and tabOpsState.displayRefs: self.runview_2d_dataMinusRef(nominal, reference)
             elif tabOpsState.refRatio and tabOpsState.displayRefs: self.runview_2d_dataMinusRef(nominal, reference, True)
             else: self.runview_2d(nominal)
-        
+       
         # Titles.
         xlabel = 'Default x label'
         ylabel = 'Default y label'
@@ -127,6 +154,9 @@ class lPlottable():
             ylabel = nominal['axis_titles'][1]        
             if len(nominal['axis_titles'][1]) == 3: zlabel = ['axis_titles'][2]
             
+        elif 'axis_titles' in nominal['data']['data']:
+            xlabel = nominal['data']['data']['axis_titles'][0]
+            ylabel = nominal['data']['data']['axis_titles'][1]        
         
         self.plot.axes.set_xlabel(xlabel)
         self.plot.axes.set_ylabel(ylabel)
@@ -205,6 +235,49 @@ class lPlottable():
                 else: col = self.options['color']
                 
         ys = nominal['data']['data']['values']
+        self.add_1d_plot(xs, ys, style, col)
+        minX = min(xs)
+        maxX = max(xs)
+        minY = min(ys)
+        maxY = max(ys)
+        
+        if len(self.plot.xLims) == 0: 
+            self.plot.xLims.append(minX)
+            self.plot.xLims.append(maxX)
+        elif minX < self.plot.xLims[0]: self.plot.xLims[0] = minX
+        elif maxX > self.plot.xLims[1]: self.plot.xLims[1] = maxX
+             
+        if len(self.plot.yLims) == 0: 
+            self.plot.yLims.append(minY)
+            self.plot.yLims.append(maxY)
+        elif minY < self.plot.yLims[0]: self.plot.yLims[0] = minY
+        elif maxY > self.plot.yLims[1]: self.plot.yLims[1] = maxY
+   
+ 
+    def runview_trendingReturn(self, nominal, isRef = False):
+        #Specific method to return trending plot
+        xs = map(lambda x: x[0], nominal['data']['data']['values'])
+        style = self.options['style']
+
+        col = 'b'
+        if isRef: 
+            style = 3
+            col = 'r'
+        else: 
+            if self.options['color'] is not None: 
+                if self.options['color'] == 'r' and style == 0:
+                    msg = 'Red bars are reserved for references - defaulting to blue'
+                    print msg
+                    self.tab().notify(msg)
+                elif self.options['color'] == 'g' and style == 0:
+                    msg = 'Green bars are reserved for references - defaulting to blue'
+                    print msg
+                    self.tab().notify(msg)
+                else: col = self.options['color']
+        
+        style = 5
+        
+        ys = map(lambda x: x[1], nominal['data']['data']['values'])
         self.add_1d_plot(xs, ys, style, col)
         minX = min(xs)
         maxX = max(xs)
@@ -370,6 +443,11 @@ class lPlottable():
         elif style == 4:
             # Solid line.
             self.axes.plot(xs, ys, '-', color = col, linewidth = 2.5, label = lab)
+
+        elif style == 5:
+            # Solid line with markers
+            m = self.options['marker']
+            self.axes.plot(xs, ys, '-', marker = m, markerfacecolor = col, color = col, linewidth = 2.5, label = lab)
             
 
 
@@ -489,6 +567,46 @@ class mplWidget(QWidget):
         self.canvas.draw()
         self.fig.tight_layout()
         
+    def on_draw_trend(self, tabOpsState):
+        # Redraws the figure
+        self.axes.set_title(self.params['title'])
+        del self.xLims[:]
+        del self.yLims[:]
+        del self.zLims[:]
+        
+#         tabOpsState.outline()
+        print "(Re)Plotting:", self.params['title']
+        self.axes.clear()                
+        for p in self.plottables: p.on_draw_trend(tabOpsState)
+        self.axes.grid()
+        self.axes.set_title(self.params['title'] + self.ext)
+
+        if 'xrange' in self.params: self.axes.set_xlim(self.params['xrange'])
+        else:
+            if len(self.xLims) == 2: self.axes.set_xlim(self.xLims)
+        
+        
+        manSetY = False
+        
+        if manSetY:
+            if 'yrange' in self.params: 
+                print 'Setting y axis range as per run_view configuration'
+                self.axes.set_ylim(self.params['yrange'])
+            else: 
+                print 'Setting y axis range automatically'
+                if len(self.yLims) == 2: 
+                    print self.yLims[1], self.yLims[0]
+                    shift = 0.05*(self.yLims[1] - self.yLims[0])
+                    self.axes.set_ylim([self.yLims[0] - shift, self.yLims[1] + shift]) 
+            if 'zrange' in self.params: self.plottables[0].cax.set_clim(vmin = self.params['zrange'][0], vmax = self.params['zrange'][1])
+        else: print 'Automatically setting y axis range (using matplotlib).'
+        
+        self.fig.tight_layout()
+        if self.options['legend']:
+            if manSetY: self.axes.legend(loc = 'best')
+        self.canvas.draw()
+        self.fig.tight_layout()
+        
     
     def show_tip(self):
         if 'tip' in self.params: tip = self.params['tip']
@@ -528,3 +646,4 @@ class mplWidget(QWidget):
         self.tipBut.clicked.connect(self.show_tip)
 
         hbox.addWidget(self.tipBut)
+
