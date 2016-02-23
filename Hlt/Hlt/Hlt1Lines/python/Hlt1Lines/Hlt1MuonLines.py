@@ -83,6 +83,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  , 'MultiDiMuonNoIP_MSS'        : 200000.
                  , 'MultiDiMuonNoIP_IPChi2'     :    0.
                  , 'MultiDiMuonNoIP_NMinDiMu'   :    1.
+                 , 'MultiDiMuonNoIP_MuID'  :    'IsMuonTight'  
                  , 'MultiDiMuonNoIP_GEC'        : 'Loose'
                  , 'CalibMuonAlignJpsi_ParticlePT'             : 800     # MeV
                  , 'CalibMuonAlignJpsi_ParticleP'              : 6000    # MeV
@@ -155,13 +156,13 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                               IgnoreFilterPassed = True)
     
     def singleMuon_preambulo( self, properties ):
-        from HltTracking.Hlt1Tracking import ( TrackCandidates, IsMuon,
+        from HltTracking.Hlt1Tracking import ( TrackCandidates, IsMuon, IsMuonTight,
                                                FitTrack, MatchVeloTTMuon,
                                                VeloTTCandidates,
                                                ComplementForward,
                                                LooseComplementForward )
         return [ TrackCandidates( properties[ 'name' ] ),
-                 IsMuon, ComplementForward, LooseComplementForward, MatchVeloTTMuon,
+                 IsMuon, IsMuonTight, ComplementForward, LooseComplementForward, MatchVeloTTMuon,
                  VeloTTCandidates( properties[ 'name' ] ),
                  FitTrack ]
 
@@ -420,6 +421,12 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from Configurables import LoKi__HltUnit as HltUnit
         from HltTracking.HltPVs import PV3D
+
+        # Check that MuID is among the known tools
+        if properties["MuID"] not in [ "IsMuon", "IsMuonTight" ] :
+            raise KeyError("MuID key is %(MuID)s which is not 'IsMuon' nor 'IsMuonTight', this is NOT OK."%properties )
+
+            
         unit = HltUnit(
             'Hlt1%(name)sStreamer' % properties,
             ##OutputLevel = 1 ,
@@ -441,7 +448,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & ( Tr_HLTMIPCHI2( 'PV3D' ) > %(IPChi2)s ) )
             >>  tee  ( monitor( TC_SIZE , 'n after Tr/IPChi2' , LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE > 0, '# pass Tr/IPChi2', LoKi.Monitoring.ContextSvc ) )
-            >>  IsMuon
+            >>  %(MuID)s
             >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nIsMuon' , LoKi.Monitoring.ContextSvc ) )
             >>  MakeDiMuons
