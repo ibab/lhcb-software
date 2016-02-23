@@ -21,17 +21,18 @@ Pythia8::LHAupBcVegPy::LHAupBcVegPy(HardProduction *hard, int meson) {
 //=============================================================================
 bool Pythia8::LHAupBcVegPy::fillHepRup() {
   if (!m_hard || !m_hard->m_pythia) return false;
-  return ((m_hard->hardInitializeGenerator()).isSuccess() && 
-	  (m_hard->m_pythia->initializeGenerator()).isSuccess());
+  return (m_hard->hardInitializeGenerator()).isSuccess() && 
+    (m_hard->m_pythia->initializeGenerator()).isSuccess();
 }
 
 //=============================================================================
 // Fill the HEPEUP common block.
 //=============================================================================
+extern "C" {void bcvegpy_upevnt__();}
 bool Pythia8::LHAupBcVegPy::fillHepEup() {
   if (!m_hard || !m_hard->m_pythia) return false;
   hepeup_.idprup = 1001;
-  ::Pythia::PyUpev();
+  bcvegpy_upevnt__();
   hepeup_.istup[0] = -1;
   hepeup_.istup[1] = -1;
   if (m_meson != 541) 

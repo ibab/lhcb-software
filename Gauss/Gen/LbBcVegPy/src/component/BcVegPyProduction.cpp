@@ -54,14 +54,14 @@ BcVegPyProduction::BcVegPyProduction(const std::string &type,
   m_defaultSettings.push_back("funtrans nq2 3"); 
   m_defaultSettings.push_back("funtrans npdfu 2");
   m_defaultSettings.push_back("loggrade ievntdis 0");
-  m_defaultSettings.push_back("loggrade igenerate 0");
+  m_defaultSettings.push_back("loggrade igenerate 1");
   m_defaultSettings.push_back("loggrade ivegasopen 0");
   m_defaultSettings.push_back("loggrade igrade 1");
   m_defaultSettings.push_back("loggrade iusecurdir 0");
   m_defaultSettings.push_back("subopen subenergy 100.0");
   m_defaultSettings.push_back("subopen isubonly 0");
   m_defaultSettings.push_back("usertran ishower 1");
-  m_defaultSettings.push_back("usertran idpp 3");
+  m_defaultSettings.push_back("usertran idpp 1");
   m_defaultSettings.push_back("vegasinf number 1000000");
   m_defaultSettings.push_back("vegasinf nitmx 20");
   // Should be set to 0.
