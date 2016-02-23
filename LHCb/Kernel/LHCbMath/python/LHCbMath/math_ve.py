@@ -43,8 +43,7 @@ _zero = cpp.LHCb.Math.Zero('double')()
 # =============================================================================
 ## define ``exp'' function 
 def exp ( x ) :
-    """
-    'exp' function taking into account the uncertainties
+    """ 'exp' function taking into account the uncertainties
     """
     fun = getattr ( x , '__exp__' , None )
     if fun : return fun()
@@ -53,8 +52,7 @@ def exp ( x ) :
 # =============================================================================
 ## define ``expm1'' function 
 def expm1 ( x ) :
-    """
-    'expm1' function taking into account the uncertainties
+    """ 'expm1' function taking into account the uncertainties
     """
     fun = getattr ( x , '__expm1__' , None )
     if fun : return fun()
@@ -63,8 +61,7 @@ def expm1 ( x ) :
 # =============================================================================
 ## define ``log'' function 
 def log ( x ) :
-    """
-    'log' function taking into account the uncertainties
+    """'log' function taking into account the uncertainties
     """
     fun = getattr ( x , '__log__' , None )
     if fun : return fun()
@@ -73,8 +70,7 @@ def log ( x ) :
 # =============================================================================
 ## define ``log10'' function 
 def log10 ( x ) :
-    """
-    'log10' function taking into account the uncertainties
+    """'log10' function taking into account the uncertainties
     """
     fun = getattr ( x , '__log10__' , None )
     if fun : return fun()
@@ -83,8 +79,7 @@ def log10 ( x ) :
 # =============================================================================
 ## define ``log1p'' function 
 def log1p ( x ) :
-    """
-    'log1p' function taking into account the uncertainties
+    """'log1p' function taking into account the uncertainties
     """
     fun = getattr ( x , '__log1p__' , None )
     if fun : return fun()
@@ -93,8 +88,7 @@ def log1p ( x ) :
 # =============================================================================
 ## define ``sqrt'' function 
 def sqrt ( x ) :
-    """
-    'sqrt' function taking into account the uncertainties
+    """'sqrt' function taking into account the uncertainties
     """
     fun = getattr ( x , '__sqrt__' , None )
     if fun : return fun()
@@ -103,8 +97,7 @@ def sqrt ( x ) :
 # =============================================================================
 ## define ``cbrt'' function 
 def cbrt ( x ) :
-    """
-    'cbrt' function taking into account the uncertainties
+    """'cbrt' function taking into account the uncertainties
     """
     fun = getattr ( x , '__cbrt__' , None )
     if fun : return fun()
@@ -113,8 +106,7 @@ def cbrt ( x ) :
 # =============================================================================
 ## define ``pow'' function 
 def pow ( x , y , *a ) :
-    """
-    'pow' function taking into account the uncertainties
+    """'pow' function taking into account the uncertainties
     """
     if   isinstance ( x , VE ) or isinstance ( y , VE ) : return x**y 
     return math.pow ( x , y , *a ) 
@@ -123,8 +115,7 @@ def pow ( x , y , *a ) :
 # =============================================================================
 ## define ``sin'' function 
 def sin ( x ) :
-    """
-    'Sine' function taking into account the uncertainties
+    """'Sine' function taking into account the uncertainties
     """
     fun = getattr ( x , '__sin__' , None )
     if fun : return fun()
@@ -133,8 +124,7 @@ def sin ( x ) :
 # =============================================================================
 ## define ``cos'' function 
 def cos ( x ) :
-    """
-    'cos' function taking into account the uncertainties
+    """'Cosine' function taking into account the uncertainties
     """
     fun = getattr ( x , '__cos__' , None )
     if fun : return fun()
@@ -143,8 +133,7 @@ def cos ( x ) :
 # =============================================================================
 ## define ``tan'' function 
 def tan ( x ) :
-    """
-    'tan' function taking into account the uncertainties
+    """'tangent' function taking into account the uncertainties
     """
     fun = getattr ( x , '__tan__' , None )
     if fun : return fun()
@@ -153,8 +142,7 @@ def tan ( x ) :
 # =============================================================================
 ## define ``sinh'' function 
 def sinh ( x ) :
-    """
-    'Sinh' function taking into account the uncertainties
+    """'Sinh' function taking into account the uncertainties
     """
     fun = getattr ( x , '__sinh__' , None )
     if fun : return fun()
@@ -163,8 +151,7 @@ def sinh ( x ) :
 # =============================================================================
 ## define ``cosh'' function 
 def cosh ( x ) :
-    """
-    'cosh' function taking into account the uncertainties
+    """'Cosh' function taking into account the uncertainties
     """
     fun = getattr ( x , '__cosh__' , None )
     if fun : return fun()
@@ -173,8 +160,7 @@ def cosh ( x ) :
 # =============================================================================
 ## define ``tanh'' function 
 def tanh ( x ) :
-    """
-    'tanh' function taking into account the uncertainties
+    """'tanh' function taking into account the uncertainties
     """
     fun = getattr ( x , '__tanh__' , None )
     if fun : return fun()
@@ -205,8 +191,7 @@ def erfc ( x ) :
 # =============================================================================
 ## define ``asin'' function 
 def asin ( x ) :
-    """
-    'asin' function taking into account the uncertainties
+    """'asin' function taking into account the uncertainties
     """
     fun = getattr ( x , '__asin__' , None )
     if fun : return fun()
@@ -215,8 +200,7 @@ def asin ( x ) :
 # =============================================================================
 ## define ``acos'' function 
 def acos ( x ) :
-    """
-    'acos' function taking into account the uncertainties
+    """'acos' function taking into account the uncertainties
     """
     fun = getattr ( x , '__acos__' , None )
     if fun : return fun()
@@ -225,8 +209,7 @@ def acos ( x ) :
 # =============================================================================
 ## define ``atan'' function 
 def atan ( x ) :
-    """
-    'atan' function taking into account the uncertainties
+    """'atan' function taking into account the uncertainties
     """
     fun = getattr ( x , '__atan__' , None )
     if fun : return fun()
@@ -235,8 +218,7 @@ def atan ( x ) :
 # =============================================================================
 ## define ``asinh'' function 
 def asinh ( x ) :
-    """
-    'asinh' function taking into account the uncertainties
+    """'asinh' function taking into account the uncertainties
     """
     fun = getattr ( x , '__asinh__' , None )
     if fun : return fun()
@@ -245,8 +227,7 @@ def asinh ( x ) :
 # =============================================================================
 ## define ``acosh'' function 
 def acosh ( x ) :
-    """
-    'acosh' function taking into account the uncertainties
+    """'acosh' function taking into account the uncertainties
     """
     fun = getattr ( x , '__acosh__' , None )
     if fun : return fun()
@@ -255,8 +236,7 @@ def acosh ( x ) :
 # =============================================================================
 ## define ``atanh'' function 
 def atanh ( x ) :
-    """
-    'atanh' function taking into account the uncertainties
+    """'atanh' function taking into account the uncertainties
     """
     fun = getattr ( x , '__atanh__' , None )
     if fun : return fun()
@@ -266,8 +246,7 @@ def atanh ( x ) :
 # =============================================================================
 ## define ``tgamma'' function 
 def tgamma ( x ) :
-    """
-    'tgamma' function taking into account the uncertainties
+    """'tgamma' function taking into account the uncertainties
     """
     fun = getattr ( x , '__tgamma__' , None )
     if fun : return fun()
@@ -279,8 +258,7 @@ gamma = tgamma
 # =============================================================================
 ## define ``lgamma'' function 
 def lgamma ( x ) :
-    """
-    'lgamma' function taking into account the uncertainties
+    """'lgamma' function taking into account the uncertainties
     """
     fun = getattr ( x , '__lgamma__' , None )
     if fun : return fun()
@@ -332,6 +310,11 @@ if '__main__' == __name__ :
               asinh , acosh  , atanh  ,
               erf   , erfc   , erfcx  , probit , 
               gamma , tgamma , lgamma ]
+
+    ## use helper object:
+    from LHCbMath.deriv import EvalVE 
+    funcs += [ EvalVE ( math.sin , math.cos ) ,
+               EvalVE ( math.sin )            ]
     
     for v in vars :
         print 'Var = ' , v 

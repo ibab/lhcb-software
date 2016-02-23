@@ -6,6 +6,15 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2016-02-23 - Vanya Belyaev
+ - deriv.py: add EvalVE helper class to evaluate 
+   the genric function taking into account uncertainty in the argument:
+   >>> sin1 = EvalVE ( math.sin , math.cos ) 
+   >>> sin2 = EvalVE ( math.sin ) ## use numeric differentiation 
+   >>> x = VE(1,0.1**2) 
+   >>> print x, sin1(x) , sin2(x)
+
+
 ! 2016-02-12 - Vanya Belyaev
  - import and cleanup a bit LorenzVectorWithError 
  - add calculation of uncertanities for several quantities  

@@ -17,8 +17,7 @@
 #  Last modification $Date$
 #  by                $Author$
 # =============================================================================
-"""
-Simple adaptive numerical differentiation (for pyroot/PyRoUts/Ostap/...)
+"""Simple adaptive numerical differentiation (for pyroot/PyRoUts/Ostap/...)
 
 >>> func = lambda x : x*x
 >>> print derivative ( func , 1 )
@@ -34,7 +33,6 @@ there are also object form:
 >>> deriv = Derivative ( func )
 >>> integ = Integral   ( func , 0 )
 >>> print deriv ( 0.1 ) , integ ( 0.1 )  
-
 """
 # =============================================================================
 __version__ = "$Revision$"
@@ -48,6 +46,9 @@ __all__     = (
     "Integral"      , ## numerical integration     (as as object, using scipy)
     ##
     "IntegralCache" , ## numerical integration     (as object, using scipy and cache)
+    ##
+    'EvalVE'        , ## evaluate the function taking argument's unicertainty 
+    #
     ## stat-quantities   (based on generic SciPy-actions)
     "Moment"        , ## calculate N-th moment of functions/distribitions, etc (scipy)
     "CentralMoment" , ## calculate N-th central moment of functions/distribitions
@@ -103,8 +104,7 @@ is_equal       = cpp.LHCb.Math.Equal_To ('double')()
 #  f'      is calculated as O(h**2)
 #  f^(III) is calculated as O(h**2)
 def _h2_ ( func , x , h , der = False ) :
-    """
-    calculate 1st (and optionally 3rd) derivative  with O(h*h) precision
+    """Calculate 1st (and optionally 3rd) derivative  with O(h*h) precision
     """
     fm1 = func ( x - 1 * h )
     fp1 = func ( x + 1 * h )
@@ -123,8 +123,7 @@ def _h2_ ( func , x , h , der = False ) :
 #  f'     is calculated as O(h**4)
 #  f^(V)  is calculated as O(h**2)
 def _h4_ ( func , x , h , der = False ) :
-    """
-    calculate 1st (and optionally 5th) derivative  with O(h*h) precision
+    """Calculate 1st (and optionally 5th) derivative  with O(h*h) precision
     """    
     fm2 = func ( x - 2 * h )    
     fm1 = func ( x - 1 * h )
@@ -145,8 +144,7 @@ def _h4_ ( func , x , h , der = False ) :
 #  f'      is calculated as O(h**6)
 #  f^(VII) is calculated as O(h**2)
 def _h6_ ( func , x , h , der = False ) :
-    """
-    calculate 1st (and optionally 7th) derivative  with O(h*h) precision
+    """Calculate 1st (and optionally 7th) derivative  with O(h*h) precision
     """        
     fm3 = func ( x - 3 * h )    
     fm2 = func ( x - 2 * h )    
@@ -170,8 +168,7 @@ def _h6_ ( func , x , h , der = False ) :
 #  f'     is calculated as O(h**8)
 #  f^(IX) is calculated as O(h**2)
 def _h8_ ( func , x , h , der = False ) :
-    """
-    calculate 1st (and optionally 9th) derivative  with O(h*h) precision
+    """Calculate 1st (and optionally 9th) derivative  with O(h*h) precision
     """            
     fm4 = func ( x - 4 * h )    
     fm3 = func ( x - 3 * h )    
@@ -197,8 +194,7 @@ def _h8_ ( func , x , h , der = False ) :
 #  f'     is calculated as O(h**10)
 #  f^(XI) is calculated as O(h**2)
 def _h10_ ( func , x , h , der = False ) :
-    """
-    calculate 1st (and optionally 11th) derivative  with O(h*h) precision
+    """Calculate 1st (and optionally 11th) derivative  with O(h*h) precision
     """
     
     fm5 = func ( x - 5 * h )    
@@ -262,8 +258,7 @@ _numbers_ = (
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-06-06
 def derivative ( fun , x , h = 0  , I = 2 , err = False ) : 
-    """
-    Calculate the first derivative for the function
+    """Calculate the first derivative for the function
     #  @code
     #  >>> fun =  lambda x : x*x
     #  >>> print derivative ( fun , x = 1 ) 
@@ -313,8 +308,7 @@ def derivative ( fun , x , h = 0  , I = 2 , err = False ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-06-06
 class Derivative(object) :
-    """
-    Calculate the first derivative for the function
+    """Calculate the first derivative for the function
     R. De Levie, ``An improved numerical approximation for the first derivative''
     see http://www.ias.ac.in/chemsci/Pdf-Sep2009/935.pdf
     """
@@ -360,8 +354,7 @@ class Derivative(object) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-06-06
 def integral ( fun , x0 , x , err = False , *args ) :
-    """
-    Calculate the integral for the 1D-function using scipy
+    """Calculate the integral for the 1D-function using scipy
     
     >>> func = lambda x : x * x 
     >>> v = integral(func,0,1)
@@ -382,16 +375,15 @@ def integral ( fun , x0 , x , err = False , *args ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-06-06
 class Integral(object) :
-    """
-    Calculate the integral for the 1D-function using scipy
+    """Calculate the integral for the 1D-function using scipy
+    
     >>> func  = lambda x : x * x      ## define function 
     >>> iint  = Integral ( func , 0 ) ## specify x_low 
     >>> value = iint (  10  )         ## specify x_high 
     """
     ## Calculate the integral for the 1D-function using scipy
     def __init__ ( self , func , xlow = 0 , err = False , *args ) :
-        """
-        Calculate the integral for the 1D-function using scipy
+        """Calculate the integral for the 1D-function using scipy
         
         >>> func   = ...
         >>> func_0 = Integral(func,0)
@@ -412,8 +404,7 @@ class Integral(object) :
             
     ## Calculate the integral for the 1D-function using scipy
     def __call__ ( self , x , *args ) :
-        """
-        Calculate the integral for the 1D-function using scipy
+        """Calculate the integral for the 1D-function using scipy
         
         >>> func = ...
         >>> func_0 = Integral(func,0)
@@ -432,16 +423,14 @@ class Integral(object) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-06-06
 class IntegralCache(Integral) :
-    """
-    Calculate the integral for the 1D-function using scipy
+    """Calculate the integral for the 1D-function using scipy
     >>> func   = lambda x : x*x 
     >>> iint   = IntegralCache ( func , 0 ) ## specify x_low 
     >>> value  = iint ( 10 )                ## specify x_high
     """
     ## Calculate the integral for the 1D-function using scipy
     def __init__ ( self , func , xlow = 0 , err = False , *args ) :
-        """
-        Calculate the integral for the 1D-function using scipy
+        """Calculate the integral for the 1D-function using scipy
         
         >>> func = ...
         >>> func_0 = Integral(func,0)
@@ -451,8 +440,7 @@ class IntegralCache(Integral) :
         
     ## Calculate the integral for the 1D-function using scipy
     def __call__ ( self , x , *args ) :
-        """
-        Calculate the integral for the 1D-function using scipy
+        """Calculate the integral for the 1D-function using scipy
         
         >>> func = ...
         >>> func_0 = Integral(func,0)
@@ -482,6 +470,80 @@ class IntegralCache(Integral) :
             
         return result 
 
+
+# =============================================================================
+## @class EvalVE
+#  Evaluate the function taking into account the uncertainty in the argument
+#  @code
+#  import math 
+#  x = VE(1,0.1**2)
+#  sin = EvalVE( math.sin , lambda s : math.cos(s) )
+#  print 'sin(x) = %s ' % sin(x) 
+#  @endcode
+#  @see LHCbMath.math_ve 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2016-02-23
+class EvalVE(object) :
+    """Evaluate the function taking into account uncertainty in the argument
+    
+    >>> import math 
+    >>> x    = VE(1,0.1**2)
+    >>> sin1 = EvalVE( math.sin , lambda s : math.cos(s) )
+    >>> print 'sin1(x) = %s ' % sin1(x) 
+    >>> sin2 = EvalVE( math.sin )
+    >>> print 'sin2(x) = %s ' % sin2(x) 
+    see also LHCbMath.math_ve
+    """
+    ## constructor
+    def __init__ ( self , func , deriv = None  , name = '' ) :
+        """ Constructor from the function, derivative and name
+        >>> sin1 = EvalVE( math.sin , lambda s : math.cos(s) )
+        >>> sin2 = EvalVE( math.sin )  ## numerical derivative will be used 
+        """
+        self._func  = func
+        if    deriv : self._deriv  = deriv
+        elif  hasattr ( func , 'derivative' ) :
+            try :
+                self._deriv = func.derivative()  ## derivative as object?
+            except:
+                self._deriv = func.derivative    ## derivative as function 
+        elif  hasattr ( func , 'Derivative' ) :
+            try :
+                self._deriv = func.Derivative()  ## derivative as object?
+            except:
+                self._deriv = func.Derivative    ## derivative as function 
+        else :
+            ## use numerical differentiation
+            self._deriv = Derivative(func)
+            
+        if   name                          : self.__name__ =  name 
+        elif hasattr ( func , '__name__' ) : self.__name__ = func.__name__
+        else                               : self.__name__ = 'EvalVE'
+            
+    ## get a value 
+    def _value_ ( self , x , *args ) :
+        """Evaluate a function"""
+        return self._func( float( x ) , *args )
+    
+    ## evaluate the function 
+    def __call__ ( self , x , *args ) :
+        #
+        ## evaluate the function 
+        val  = self._value_ ( x , *args )
+        #
+        ## no uncertainties? 
+        if   isinstance ( x , ( float , int , long ) )   : return VE ( val , 0 )
+        # ignore small or invalid uncertanties 
+        elif 0 >= x.cov2() or is_zero ( x.cov2() )       : return VE ( val , 0 )
+        # evaluate the derivative  
+        d    = self._deriv ( float ( x ) , *args )
+        ## calculate the variance 
+        cov2 = d * d * x.cov2()
+        ## get a final result 
+        return VE ( val , cov2 )
+    
+    def __str__ ( self ) : return self.__name__
+    
 # =============================================================================
 ## @class Moment
 #  Calculate the N-th moment for the distribution 
@@ -556,6 +618,7 @@ class Moment(object) :
                                             self._err  ,
                                             self._x0   )                                            
                                             
+
 # =============================================================================
 ## @class CentralMoment
 #  Calculate the N-th central moment for the distribution 
