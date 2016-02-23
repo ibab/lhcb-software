@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-23-02 - Komarov Ilya
+- Replaced TH2DSummaryHist by TH1DSummaryHist in STEfficiency algorithm. Reomved "DrawProfile" option for this algorithm.
+
 ! 2016-04-02 - Komarov Ilya
 - Fixed a bug with missing TT sectors number 26 in 2D histograms. (TTTrackMonitor, STEfficiency, STTrackTuple)
 

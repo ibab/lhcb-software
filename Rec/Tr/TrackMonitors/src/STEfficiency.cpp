@@ -79,8 +79,7 @@ STEfficiency::STEfficiency( const std::string& name,
   declareProperty( "ResidualsPlot"      , m_resPlot = false );
   declareProperty( "TakeEveryHit"       , m_everyHit = true );
   declareProperty( "SingleHitPerSector" , m_singlehitpersector = false );
-  declareProperty("TH2DSummaryHist", m_2DSummaryHist = false);
-  declareProperty("ProfileSummaryHist", m_ProfileSummaryHist = false);
+  declareProperty( "TH1DSummaryHist"    , m_SummaryHist = false);
 
 }
 
@@ -369,6 +368,7 @@ StatusCode STEfficiency::finalize()
   //  double totExpected = 0; double totFound = 0;
   double nExpected, nFound, err;
   double eff  = 999.0;
+  double nBins;
 
   Histo2DProperties* prop;
   Histo2DProperties* propSectorStatus;
@@ -380,11 +380,13 @@ StatusCode STEfficiency::finalize()
     propSectorStatus = new ST::ITDetectorPlot( "SectorStatus", "Sector Status Plot" );
     propNbHits = new ST::ITDetectorPlot( "NbExpHits", "Number of Expected Hits Plot" );
     propNbFoundHits = new ST::ITDetectorPlot( "NbFoundHits", "Number of Found Hits Plot" );
+    nBins = 336;
   }else{
     prop = new ST::TTDetectorPlot( "EfficiencyPlot", "Efficiency Plot" );
     propSectorStatus = new ST::TTDetectorPlot( "SectorStatus", "Sector Status Plot" );
     propNbHits = new ST::TTDetectorPlot( "NbExpHits", "Number of Expected Hits Plot" );
     propNbFoundHits = new ST::TTDetectorPlot( "NbFoundHits", "Number of Found Hits Plot" );
+    nBins = 312;
   }
 
   IHistogram2D* histoEff = ( m_effPlot ?  book2D( prop->name() , prop->title(),
@@ -404,6 +406,10 @@ StatusCode STEfficiency::finalize()
                                            propNbFoundHits->minBinX(), propNbFoundHits->maxBinX(), propNbFoundHits->nBinX(),
                                            propNbFoundHits->minBinY(), propNbFoundHits->maxBinY(), propNbFoundHits->nBinY());
 
+
+  IHistogram1D* histoEff_1D = ( m_SummaryHist? book1D ("SummaryEfficiencyPlot", "Per sector efficiencies", -0.5, nBins+0.5, nBins+1): nullptr);
+  IHistogram1D* histoNbHits_1D = ( m_SummaryHist? book1D ("SummaryNbExpectedPlot", "Per sector Nb expected", -0.5, nBins+0.5, nBins+1): nullptr);
+  IHistogram1D* histoNbFoundHits_1D = ( m_SummaryHist? book1D ("SummaryNbFoundPlot", "Per sector Nb found", -0.5, nBins+0.5, nBins+1): nullptr);
 
   for (const auto& sector : m_nameMapSector)
   {
@@ -487,15 +493,10 @@ StatusCode STEfficiency::finalize()
               histoEff -> fill( theBins.xBin, theBins.yBin, eff );
             histoNbHits -> fill( theBins.xBin, theBins.yBin, nExpected );
             histoNbFoundHits -> fill( theBins.xBin, theBins.yBin, nFound );
-            if (m_ProfileSummaryHist){
-              profile1D(IThistoBin(channelID), eff,  "MonitoringEfficiency", "Efficiency",   -0.5, 336.5);
-              profile1D(IThistoBin(channelID), nExpected,  "MonitoringNExpected", "Number of expected hits",   -0.5, 336.5);
-              profile1D(IThistoBin(channelID), nFound,  "MonitoringNFound", "Number of found hits",   -0.5, 336.5);
-            }
-            if (m_2DSummaryHist){
-              plot2D(IThistoBin(channelID), eff,  "MonitoringEfficiency", "Efficiency",   -0.5, 336.5, -0.5, 0.5, 337, 100);
-              plot2D(IThistoBin(channelID), nExpected,  "MonitoringNExpected", "Number of expected hits",   -0.5, 336.5, -0.5, 0.5, 337, 100);
-              plot2D(IThistoBin(channelID), nFound,  "MonitoringNFound", "Number of found hits",   -0.5, 336.5, -0.5, 0.5, 337, 100);
+            if (m_SummaryHist){
+              histoEff_1D -> fill( IThistoBin(channelID), eff );
+              histoNbHits_1D -> fill( IThistoBin(channelID), nExpected );
+              histoNbFoundHits_1D -> fill( IThistoBin(channelID), nFound );
             }
 
           }else{
@@ -506,16 +507,10 @@ StatusCode STEfficiency::finalize()
                 histoEff -> fill( theBins.xBin, ybin, eff );
               histoNbHits -> fill( theBins.xBin, ybin, nExpected );
               histoNbFoundHits -> fill( theBins.xBin, ybin, nFound );
-              if (m_ProfileSummaryHist){
-                profile1D(TThistoBin(channelID), eff,  "MonitoringEfficiency", "Efficiency",   -0.5, 312.5);
-                profile1D(TThistoBin(channelID), nExpected,  "MonitoringNExpected", "Number of expected hits",   -0.5, 312.5);
-                profile1D(TThistoBin(channelID), nFound,  "MonitoringNFound", "Number of found hits",   -0.5, 312.5);
-              }
-              if (m_2DSummaryHist){
-                plot2D(TThistoBin(channelID), eff,  "MonitoringEfficiency", "Efficiency",   -0.5, 312.5, -0.5, 0.5, 313, 100);
-                plot2D(TThistoBin(channelID), nExpected,  "MonitoringNExpected", "Number of expected hits",   -0.5, 312.5, -0.5, 0.5, 313, 100);
-                plot2D(TThistoBin(channelID), nFound,  "MonitoringNFound", "Number of found hits",   -0.5, 312.5, -0.5, 0.5, 313, 100);
-              }
+              if (m_SummaryHist){
+                histoEff_1D -> fill( TThistoBin(channelID), eff );
+                histoNbHits_1D -> fill( TThistoBin(channelID), nExpected );
+                histoNbFoundHits_1D -> fill( TThistoBin(channelID), nFound );              }
 
             }
           }
@@ -528,6 +523,11 @@ StatusCode STEfficiency::finalize()
         ST::ITDetectorPlot::Bins theBins = static_cast<ST::ITDetectorPlot*>(propSectorStatus)->toBins(channelID);
         if(m_effPlot)
           histoEff -> fill( theBins.xBin, theBins.yBin, -1 );
+          if (m_SummaryHist){
+              histoEff_1D -> fill( IThistoBin(channelID), -1 );
+              histoNbHits_1D -> fill( IThistoBin(channelID), 0 );
+              histoNbFoundHits_1D -> fill( IThistoBin(channelID), 0 );
+          }                
         histoSectorStatus -> fill( theBins.xBin, theBins.yBin, -1 );
         histoNbHits -> fill( theBins.xBin, theBins.yBin, 0 );
         histoNbFoundHits -> fill( theBins.xBin, theBins.yBin, 0 );
@@ -537,6 +537,11 @@ StatusCode STEfficiency::finalize()
         for(int ybin(theBins.beginBinY);ybin<theBins.endBinY;ybin++){
           if(m_effPlot)
             histoEff -> fill( theBins.xBin, ybin, -1 );
+          if (m_SummaryHist){
+              histoEff_1D -> fill( TThistoBin(channelID), -1 );
+              histoNbHits_1D -> fill( TThistoBin(channelID), 0 );
+              histoNbFoundHits_1D -> fill( TThistoBin(channelID), 0 );
+          }        
           histoSectorStatus -> fill( theBins.xBin, ybin, -1 );
           histoNbHits -> fill( theBins.xBin, ybin, 0 );
           histoNbFoundHits -> fill( theBins.xBin, ybin, 0 );
@@ -587,7 +592,7 @@ std::string STEfficiency::formatNumber(const double& nbr,
 
 unsigned int STEfficiency::TThistoBin(const LHCb::STChannelID& chan) const {
 
-  // convert sector to a flat number (300 in total)
+  // convert sector to a flat number (312 in total)
   return (chan.station()-1)*26*3*2 + (chan.layer()-1)*26*3 + (chan.detRegion()-1)*26 + (chan.sector() -1);
   }
 

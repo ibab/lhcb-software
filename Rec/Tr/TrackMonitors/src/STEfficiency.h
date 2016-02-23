@@ -188,8 +188,7 @@ private:
    */
   bool m_resPlot;
 
-  bool m_2DSummaryHist;  
-  bool m_ProfileSummaryHist;  
+  bool m_SummaryHist;  
 
     
 };
