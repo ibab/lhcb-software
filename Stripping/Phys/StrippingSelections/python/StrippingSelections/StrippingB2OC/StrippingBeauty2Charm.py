@@ -96,24 +96,7 @@ default_config ={
     'VCHI2DOF_MAX'  : 10,
     'BPVVDCHI2_MIN' : 36,
     'BPVDIRA_MIN'   : 0, 
-    'MASS_WINDOW'   : '100*MeV',
-    "D2X_FOR_DDX"   : { # Cuts made on all D's and Lc's used in B->DDX lines 
-      'ASUMPT_MIN'    : '1800*MeV',
-      'ADOCA12_MAX'   : '0.5*mm',
-      'ADOCA13_MAX'   : '0.5*mm',
-      'ADOCA23_MAX'   : '0.5*mm',
-      'ADOCA14_MAX'   : '0.5*mm',
-      'ADOCA24_MAX'   : '0.5*mm',
-      'ADOCA34_MAX'   : '0.5*mm',
-      'ADOCA15_MAX'   : '0.5*mm',
-      'ADOCA25_MAX'   : '0.5*mm',
-      'ADOCA35_MAX'   : '0.5*mm',
-      'ADOCA45_MAX'   : '0.5*mm',
-      'VCHI2DOF_MAX'  : 8,
-      'BPVVDCHI2_MIN' : 50,
-      'BPVDIRA_MIN'   : 0, 
-      'MASS_WINDOW'   : '100*MeV'
-      }
+    'MASS_WINDOW'   : '100*MeV'
     },
     "B2X" : { # Cuts made on all B's and Lb's used in all lines
     'SUMPT_MIN'     : '5000*MeV',
@@ -528,7 +511,6 @@ default_config ={
     'StrippingB2D0PiPiPiD2HHTIGHTBeauty2CharmLine',
     'StrippingB2D0PiD2HHHHTIGHTBeauty2CharmLine',
     'StrippingB2D0D0KD02HHD02HHBeauty2CharmLine',
-    'StrippingB2D0D0PiD02HHD02HHBeauty2CharmLine',
 
     'StrippingB02DKWSD2HHHBeauty2CharmLine', ##Potentially DST move back to Bhadron if not
     'StrippingB02DPiWSD2HHHBeauty2CharmLine', ##Potentially DST 
@@ -724,9 +706,6 @@ default_config ={
     'StrippingB02DstarPiDst2D0Pi_D2KSHHLLBeauty2CharmLine', 
     'StrippingB02DstarKDst2D0Pi_D2KSHHDDBeauty2CharmLine', 
     'StrippingB02DstarPiDst2D0Pi_D2KSHHDDBeauty2CharmLine', 
-    'StrippingB2DstarKKDst2D0Pi_D2HHBeauty2CharmLine',
-    'StrippingB2DstarKPiDst2D0Pi_D2HHBeauty2CharmLine',
-    'StrippingB2DstarPiPiDst2D0Pi_D2HHBeauty2CharmLine',
 
     'StrippingB02DstarMuNuDst2D0Pi_D2KSHHLLBeauty2CharmLine', 
     'StrippingB02DstarMuNuWSDst2D0Pi_D2KSHHLLBeauty2CharmLine', 
@@ -848,9 +827,7 @@ default_config ={
     'StrippingB2DstDKWSBeauty2CharmLine', 
     'StrippingB2DstDKWSDstarD02K3PiBeauty2CharmLine', 
     'StrippingB2D0D0KD02K3PiD02K3PiBeauty2CharmLine', 
-    'StrippingB2D0D0PiD02K3PiD02K3PiBeauty2CharmLine', 
     'StrippingB2D0D0KD02HHD02K3PiBeauty2CharmLine', 
-    'StrippingB2D0D0PiD02HHD02K3PiBeauty2CharmLine', 
     'StrippingB02DstD0KBeauty2CharmLine', 
     'StrippingB02DstD0KD02K3PiBeauty2CharmLine', 
     'StrippingB02DstD0KDstarD02K3PiBeauty2CharmLine', 
@@ -1454,10 +1431,8 @@ class Beauty2CharmConf(LineBuilder):
 
         # pre-filter inputs
         pions   = filterInputs('Pi',  [StdAllNoPIDsPions],config['ALL'])
-        pions_pid = filterInputs('Pi_PID',  [pions],config['PID'])
         uppions = filterInputs('PiUP',[StdNoPIDsUpPions], config['UPSTREAM'])
         kaons   = filterInputs('K',   [StdAllNoPIDsKaons],config['ALL'])
-        kaons_pid = filterInputs('K_PID',   [kaons],config['PID'])
         upkaons = filterInputs('KaUP',[StdNoPIDsUpKaons], config['UPSTREAM'])
         protons = filterInputs('P',   [StdAllNoPIDsProtons],config['ALL'])
         ks_dd = filterInputs('KS0_DD',[dataOnDemand("StdLooseKsDD")],
@@ -1496,10 +1471,8 @@ class Beauty2CharmConf(LineBuilder):
 
         # pre-filter hard inputs (these could have been used in HLT2)
         topoPions = topoInputs('Pi',[pions])
-        topoPions_PID = topoInputs('Pi_PID',[pions_pid])
         topoPionsLoose = topoInputsLoose('PiLoose',[pions])
         topoKaons = topoInputs('K',[kaons])
-        topoKaons_PID = topoInputs('K_PID',[kaons_pid])
         topoKaonsLoose = topoInputsLoose('KLoose',[kaons])
         topoProtons = topoInputs('P',[protons])
 
@@ -1519,7 +1492,7 @@ class Beauty2CharmConf(LineBuilder):
         xicc = XiccBuilder(lc,pions,config['D2X'])
 
         # make B->DX
-        b2dx = B2DXBuilder(d,dst,topoPions,topoPionsLoose,topoKaons,topoKaons_PID,topoPions_PID,muons,ks,pi0_fromB,hh,hhh, 
+        b2dx = B2DXBuilder(d,dst,topoPions,topoPionsLoose,topoKaons,muons,ks,pi0_fromB,hh,hhh,
                            config['B2X'])
         self._makeLines(b2dx.lines,config)
 

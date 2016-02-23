@@ -13,13 +13,11 @@ from Configurables import SubstitutePID
 class B2DXBuilder(object):
     '''Makes all B->DX decays for the Beauty2Charm module.'''
 
-    def __init__(self,d,dst,topoPions,topoPionsLoose,topoKaons,topoKaons_PID,topoPions_PID,muons,ks,pi0,hh,hhh,config):
+    def __init__(self,d,dst,topoPions,topoPionsLoose,topoKaons,muons,ks,pi0,hh,hhh,config):
         self.config = config
         self.topoPions = [topoPions]
         self.topoPionsLoose = [topoPionsLoose]
         self.topoKaons = [topoKaons]
-        self.topoKaons_PID = [topoKaons_PID]
-        self.topoPions_PID = [topoPions_PID]
         self.muons = muons
         self.d = d
         self.dst = dst
@@ -155,9 +153,6 @@ class B2DXBuilder(object):
         
         # B+- -> D0(HH)  H+H-H+
         self._makeB02DstHHH('Dstar2D0PiPID',self.dst.d0pi_pid)
-        
-        # B+- -> D*-+(D0(HH)pi-+) H+ H+
-        self._makeB2DstHH('Dstar2D0PiPID',self.dst.d0pi_pid)
 
         # B -> D*H, D*(Dgamma), D(HHH) CPV
         self._makeB02DsstH('Dsstar2DGammaD2HHH',self.dst.dsgammacpv_hhh)
@@ -196,8 +191,6 @@ class B2DXBuilder(object):
         self._makeB2DstDstK()
         self._makeB2Dst2460DK()
         self._makeB2D0st2460D0K()
-        # B -> D D Pi
-        self._makeB2D0D0Pi()
         # B -> D D K*
         self._makeB02D0D0Kst()
         self._makeB02DDKst()
@@ -449,17 +442,6 @@ class B2DXBuilder(object):
                   'B02DstarK': d2x+self.topoKaons}
         b2dsth = makeB2XSels(decays,dname,inputs,self.config,True,False)
         self.lines.append(ProtoLine(b2dsth,1.0))
-
-    def _makeB2DstHH(self,dname,d2x):
-        '''Makes B+- -> D*-+ H+- H+- (H=pi,K) + c.c.'''
-        decays = {'B2DstarPiPi': ["B+ -> D*(2010)- pi+ pi+","B- -> D*(2010)+ pi- pi-"],
-                  'B2DstarKPi' : ["B+ -> D*(2010)- K+ pi+","B- -> D*(2010)+ K- pi-"],
-                  'B2DstarKK'  : ["B+ -> D*(2010)- K+ K+","B- -> D*(2010)+ K- K-"]}
-        inputs = {'B2DstarPiPi': d2x+self.topoPions,
-                  'B2DstarKPi' : d2x+self.topoKaons+self.topoPions}
-                  'B2DstarKK'  : d2x+self.topoKaons}
-        b2dsthh= makeB2XSels(decays,dname,inputs,self.config,True,False)
-        self.lines.append(ProtoLine(b2dsthh,1.0))
 
     def _makeB02DstMuNu(self,dname,d2x):
         '''Makes B0 -> D*+- H-+'''
@@ -836,17 +818,9 @@ class B2DXBuilder(object):
         '''Makes B+- -> D0 D0 K+-'''
         dec = ["B+ -> D0 D0 K+","B- -> D0 D0 K-"]
         decays = {'B2D0D0KD02HHD02HH': dec, 'B2D0D0KD02HHD02K3Pi': dec, 'B2D0D0KD02K3PiD02K3Pi': dec}
-        inputs = {'B2D0D0KD02HHD02HH': self.d.hh_ddx_pid+self.topoKaons_PID, 'B2D0D0KD02HHD02K3Pi': self.d.hh_ddx_pid+self.d.k3pi_ddx_pid+self.topoKaons_PID,  'B2D0D0KD02K3PiD02K3Pi':self.d.k3pi_ddx_pid+self.topoKaons_PID}
+        inputs = {'B2D0D0KD02HHD02HH': self.d.hh_pid+self.topoKaons, 'B2D0D0KD02HHD02K3Pi': self.d.hh_pid+self.d.k3pi_pid+self.topoKaons,  'B2D0D0KD02K3PiD02K3Pi':self.d.k3pi_pid+self.topoKaons}
         b2d0d0k = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b2d0d0k,1.0))
-
-    def _makeB2D0D0Pi(self):
-        '''Makes B+- -> D0 D0 pi+-'''
-        dec = ["B+ -> D0 D0 pi+","B- -> D0 D0 pi-"]
-        decays = {'B2D0D0PiD02HHD02HH': dec, 'B2D0D0PiD02HHD02K3Pi': dec, 'B2D0D0PiD02K3PiD02K3Pi': dec}
-        inputs = {'B2D0D0PiD02HHD02HH': self.d.hh_ddx_pid+self.topoPions_PID, 'B2D0D0PiD02HHD02K3Pi': self.d.hh_ddx_pid+self.d.k3pi_ddx_pid+self.topoPions_PID,  'B2D0D0PiD02K3PiD02K3Pi':self.d.k3pi_ddx_pid+self.topoPions_PID}
-        b2d0d0pi = makeB2XSels(decays,'',inputs,self.config)
-        self.lines.append(ProtoLine(b2d0d0pi,1.0))
 
     def _makeB2DstDK(self):
         '''Makes the RS and WS B+- -> D*+- D-+ K+- + c.c.'''

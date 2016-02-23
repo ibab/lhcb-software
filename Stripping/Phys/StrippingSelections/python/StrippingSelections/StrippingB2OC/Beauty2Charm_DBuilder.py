@@ -221,12 +221,6 @@ class DBuilder(object):
                                                   self.pi0hh_resolved)]
           d_min,d_max,ds_min,ds_max = self._massWindowD2HHHCF()
 
-          # Tighter D selections for DDX
-          self.hh_ddx_pid   = [filterSelection('D2hh_for_DDX', self.config['D2X_FOR_DDX'],self.hh_pid]
-          self.hhh_ddx_pid  = [filterSelection('D2hhh_for_DDX', self.config['D2X_FOR_DDX'],self.hhh_pid]
-          self.hhhh_ddx_pid = [filterSelection('D2hhhh_for_DDX', self.config['D2X_FOR_DDX'],self.hhhh_pid]
-          self.k3pi_ddx_pid = [filterSelection('D2k3pi_for_DDX', self.config['D2X_FOR_DDX'],self.k3pi_pid]
-
           #use this below
           d_cf_noMassWin = d_cf
           d_cf = LoKiCuts.combine([d_cf,"in_range(%s,MM,%s)"%(d_min,d_max)])
