@@ -4,6 +4,9 @@
 ! Purpose     : ANNPID training tuple tools.
 !-----------------------------------------------------------------------------
 
+! 2016-02-23 - Chris Jones
+ - Add "MC12TuneV4" and "MC15TuneV1" to the default list of ANNPID tunes.
+
 !========================= DecayTreeTupleANNPID v1r2 2014-12-15 =========================
 ! 2014-12-02 - Chris Jones
  - Add some Bs2MuMu tunings for testing (disabled by default).

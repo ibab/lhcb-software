@@ -43,7 +43,7 @@ public:
 private:
 
   /// Pointer to the ANNPID tool
-  const ANNGlobalPID::IChargedProtoANNPIDTool * m_pidTool;
+  const ANNGlobalPID::IChargedProtoANNPIDTool * m_pidTool = nullptr;
 
   /// The ANNPID tunes to fill
   std::vector<std::string> m_pidTunes;
