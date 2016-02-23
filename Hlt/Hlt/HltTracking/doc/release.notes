@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2016-02-23 - Sascha Stahl
+ - Hlt2Tracking: Update ANNPID sequence to pick up the default tuning for the given data type.
+
 ! 2016-02-18 - Sascha Stahl
  - Added options to configure z-cut in Velo tracking for SMOG data taking.
 
