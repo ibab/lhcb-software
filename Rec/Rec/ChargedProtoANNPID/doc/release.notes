@@ -4,6 +4,9 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2016-02-23 - Chris Jones
+ - 'Manual' code optimisation of the MC15TuneV1 networks. Saves O(10%).
+
 ! 2016-02-22 - Chris Jones
  - Add 'official' V1 tuning for Run 2 data. "MC15TuneV1". This is now the
    default for 2015 data onwards (which includes the Upgrade...).
