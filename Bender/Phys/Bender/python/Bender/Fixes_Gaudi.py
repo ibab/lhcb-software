@@ -792,7 +792,7 @@ if not hasattr ( _AppMgr , '_old_initialize_' ) :
         with BU.Action ( BU. preInit_actions() , BU.postInit_actions() ) :
             sc = self._old_initialize_ ()
             if sc.isFailure() :
-                logger.error('Error from AppMgr.initialize %s' %s )
+                logger.error('Error from AppMgr.initialize %s' % sc )
                 return sc
             
         return sc 
@@ -817,7 +817,7 @@ if not hasattr ( _AppMgr , '_old_start_' ) :
         with BU.Action ( BU. preStart_actions() , BU.postStart_actions() ) :
             sc = self._old_start_ ()
             if sc.isFailure() :
-                logger.error('Error from AppMgr.start %s' % s )
+                logger.error('Error from AppMgr.start %s' % sc )
                 return sc
             
         return sc
