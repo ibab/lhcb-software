@@ -40,11 +40,16 @@ namespace Tf {
       void resetUsedFlagOfHits(); ///< Reset all used flags to unused
 
   private:
-  /// Max number of clusters in phi inner region before region killed as too hot
+      /// Max number of clusters in phi inner region before region killed as too hot
       unsigned int m_maxPhiInner; 
-  /// Max number of clusters in phi outer region before region killed as too hot
+      /// Max number of clusters in phi outer region before region killed as too hot
       unsigned int m_maxPhiOuter; 
-      
+      /// Use CCE scan pattern recognition
+      bool m_CCEscan;
+      /// CCE scan sensor list to kill
+      std::vector<unsigned int> m_killSensorList;
+      /// CCE step for voltage determination
+      int m_cceStep;      
   };
 }
 #endif // INCLUDE_TF_PATVELOPHIHITMANAGER_H

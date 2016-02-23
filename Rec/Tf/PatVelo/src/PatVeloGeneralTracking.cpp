@@ -8,6 +8,9 @@
 #include "PatVeloGeneralTracking.h"
 #include "PatVeloSpaceTrack.h"
 
+#include "Event/ODIN.h"
+#include "FindKilledSensors.h"
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatVeloGeneric
 //
@@ -36,6 +39,7 @@ Tf::PatVeloGeneralTracking::PatVeloGeneralTracking( const std::string& name,
   , m_YOffsetTop(0)
   , m_YOffsetBottom(0)
   , m_timerTool(NULL)
+  , m_killSensorList()
 {
 
   declareProperty( "OutputTracksLocation" ,
@@ -68,6 +72,9 @@ Tf::PatVeloGeneralTracking::PatVeloGeneralTracking( const std::string& name,
 
   declareProperty( "MaxPointsInZone", m_ZoneMaxPoints = 500 );
   declareProperty( "TimingMeasurement", m_doTiming = false);
+
+  declareProperty( "CCEscan", m_CCEscan = false);
+  declareProperty( "KillSensorList", m_killSensorList);
 }
 
 //=============================================================================
@@ -125,6 +132,21 @@ StatusCode Tf::PatVeloGeneralTracking::initialize() {
 
 StatusCode Tf::PatVeloGeneralTracking::execute() {
 
+  if ( m_CCEscan ){
+     // Check for ODIN banks:
+     LHCb::ODIN *odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default);
+     if ( odin ){
+        m_cceStep = odin->calibrationStep();
+        if ( m_cceStep>=0 ){
+           FindKilledSensors(m_cceStep,m_killSensorList);
+        }
+     }
+     else {
+        fatal() << "There is no ODIN bank" << endmsg;	
+ 	return StatusCode::FAILURE;
+     }
+  }
+
   if ( m_doTiming ) m_timerTool->start( m_veloGeneralTime );
 
   if( m_isDebug ) debug() << "==> Execute" << endmsg;
@@ -172,6 +194,14 @@ buildAll3DClusters( PointsContainer & createdPoints ) {
     const DeVeloRType* rSensor = (*rStationReverseIter)->sensor();
     if( ! rSensor->isReadOut() ) continue; // skip unreadout sensors
     const DeVeloPhiType* phiSensor = rSensor->associatedPhiSensor();
+
+    if ( m_CCEscan ){
+       if( std::binary_search(m_killSensorList.begin(),m_killSensorList.end(),rSensor->sensorNumber()) ){
+       if(m_isDebug) debug() << "Killed sensor " << rSensor->sensorNumber()
+                          << endmsg;
+      continue; // skip as killed for readout purposes
+      }
+    }
 
     if ( phiSensor == 0 || ! phiSensor->isReadOut() ) continue;
     PatVeloPhiHitManager::StationIterator phiStationIter
@@ -434,8 +464,8 @@ bool Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
     if( pcont.first >= usedRSensor[0] ) continue;
     if( pcont.second.empty() ) continue; // skip empty containers
     // skip sensors used already
-    if ( std::find(usedRSensor.begin(),
-                   usedRSensor.end(), pcont.first ) != usedRSensor.end() ) continue;
+    if ( std::binary_search(usedRSensor.begin(),
+                   usedRSensor.end(), pcont.first ) ) continue;
     // predict the impact point
     double xPred = xFit.pred((pcont.second.begin())->z());
     double xPredErr =

@@ -3,6 +3,10 @@
 ! Responsible : David Hutchcroft
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
+! 2016-02-23 - Jon Harrison
+ - Changes to PatVeloGeneralTracking, PatVeloRHitManager and PatVeloPhiHitManager for VELO CCE scan running
+ - Addition of FindKilledSensors
+
 ! 2016-02-13 - Gerhard Raven
  - follow const-ification in Tr/TrackInterfaces
  - C++11 modernization

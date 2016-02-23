@@ -45,7 +45,12 @@ namespace Tf {
     private:
       /// Max number of clusters in R zone before region killed as too hot
       unsigned int m_maxRClustersZone;
-
+      /// Use CCE scan pattern recognition
+      bool m_CCEscan;
+      /// CCE scan sensor list to kill
+      std::vector<unsigned int> m_killSensorList;
+      /// CCE step for voltage determination
+      int m_cceStep;
   };
 }
 #endif // INCLUDE_TF_PATVELORHITMANAGER_H

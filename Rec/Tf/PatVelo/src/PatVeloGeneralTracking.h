@@ -254,6 +254,13 @@ namespace Tf {
     int  m_veloGeneralTime;
     bool m_doTiming;
 
+    /// Use CCE scan pattern recognition
+    bool m_CCEscan;
+    /// CCE scan sensor list to kill
+    std::vector<unsigned int> m_killSensorList;
+    /// CCE step for voltage determination
+    int m_cceStep;
+
   };
 
 }
