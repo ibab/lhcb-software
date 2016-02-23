@@ -6,7 +6,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2016-02-23 - Francesco Dettori
- - Adding IsMuonTight possibility for Hlt1MultiDiMuonNoIP 
+ - Adding IsMuonTight possibility for Hlt1MultiDiMuonNoIP and Hlt1DiMuonNoIP
 
 ! 2016-02-22 - Jessica Prisciandaro
 - LooseComplementFoward added to Hlt1DiMuonNoL0

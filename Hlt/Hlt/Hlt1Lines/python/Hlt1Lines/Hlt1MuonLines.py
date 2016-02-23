@@ -43,6 +43,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  , 'DiMuonHighMass_PT'        :  200.
                  , 'DiMuonHighMass_TrChi2'    :    4.
                  , 'DiMuonHighMass_M'         : 2900.
+                 , 'DiMuonHighMass_MuID'  :    'IsMuon'  
                  , 'DiMuonHighMass_GEC'       : 'Loose'
                  , 'DiMuonHighMassBE_VxDOCA'  :  0.2
                  , 'DiMuonHighMassBE_VxChi2'  :   25.
@@ -50,6 +51,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  , 'DiMuonHighMassBE_PT'      :  200.
                  , 'DiMuonHighMassBE_TrChi2'  :    4.
                  , 'DiMuonHighMassBE_M'       : 2900.
+                 , 'DiMuonHighMassBE_MuID'  :    'IsMuon'  
                  , 'DiMuonHighMassBE_GEC'     : 'Loose'
                  , 'DiMuonNoIP_VxDOCA'    :  0.1
                  , 'DiMuonNoIP_VxChi2'    :    9.
@@ -57,6 +59,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                  , 'DiMuonNoIP_PT'        : 3000.
                  , 'DiMuonNoIP_TrChi2'    :    4.
                  , 'DiMuonNoIP_M'         :  2000000.
+                 , 'DiMuonNoIP_MuID'  :    'IsMuonTight'  
                  , 'DiMuonNoIP_GEC'       : 'Loose'
                  , 'DiMuonNoL0_VxDOCA'     :  0.2
                  , 'DiMuonNoL0_VxChi2'     :  25.
@@ -225,6 +228,11 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
         """
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from Configurables import LoKi__HltUnit as HltUnit
+
+        # Check that MuID is among the known tools
+        if properties["MuID"] not in [ "IsMuon", "IsMuonTight" ] :
+            raise KeyError("MuID key is %(MuID)s which is not 'IsMuon' nor 'IsMuonTight', this is NOT OK."%properties )
+        
         unit = HltUnit(
             'Hlt1%(name)sStreamer' % properties,
             ##OutputLevel = 1 ,
@@ -244,7 +252,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             >>  tee  ( monitor( TC_SIZE , 'n after P/PT' , LoKi.Monitoring.ContextSvc ) )  
             >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )           
             >>  ( TrCHI2PDOF < %(TrChi2)s )
-            >>  IsMuon
+            >>  %(MuID)s
             >>  tee  ( monitor( TC_SIZE > 0, '# pass IsMuon', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nIsMuon' , LoKi.Monitoring.ContextSvc ) )
             >>  MakeDiMuons
