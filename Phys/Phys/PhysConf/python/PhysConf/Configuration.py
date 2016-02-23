@@ -185,30 +185,36 @@ class PhysConf(LHCbConfigurableUser) :
 
             from Gaudi.Configuration import appendPostConfigAction
 
-            # If Run I data, perform Reco14 recalibration on the fly
             datatype = self.getProp("DataType")
+
+            # Default settings for calibration is off
+            recoRegex = "v43r2(.*)"
+
+            # If Run I data, perform Reco14 recalibration on the fly
             if ( datatype == '2009' or
                  datatype == '2010' or
                  datatype == '2011' or
                  datatype == '2012' or
-                 datatype == '2013' ) :
+                 datatype == '2013' or
+                 datatype == '2015' ) :
 
-                def _ANNPIDReCalib_Reco14_() :
+                def _ANNPIDReCalib_() :
 
                     from Configurables import ( DstConf, DataOnDemandSvc,
-                                                ChargedProtoANNPIDConf, ChargedProtoParticleMapper,
+                                                ChargedProtoANNPIDConf,
+                                                ChargedProtoParticleMapper,
                                                 ApplicationVersionFilter )
 
                     # Sequence to fill
                     annPIDSeq = GaudiSequencer("ANNPIDSeq")
 
-                    # Only rerun on Reco14 samples
-                    recoRegex = "v43r2(.*)"
+                    # Only rerun on Reco14 (Run1) and Reco15 (2015) samples
+                    recoRegex = "(v43r2|v47r9|v48r2)(.*)"
                     annPIDSeq.Members += [
-                        ApplicationVersionFilter( name = "Reco14Filter",
+                        ApplicationVersionFilter( name = "ANNPIDRecoVersionFilter",
                                                   HeaderLocation = "Rec/Header",
                                                   VersionRegex = recoRegex ) ]
-                    
+
                     # ANN PID Configurable
                     annPIDConf = ChargedProtoANNPIDConf("ReDoANNPID")
 
@@ -237,7 +243,7 @@ class PhysConf(LHCbConfigurableUser) :
                     DataOnDemandSvc().AlgMappingTools  = [cppmapper] + DataOnDemandSvc().AlgMappingTools
 
                 # Append post config action
-                appendPostConfigAction( _ANNPIDReCalib_Reco14_ )
+                appendPostConfigAction( _ANNPIDReCalib_ )
 
 #
 # LoKi
