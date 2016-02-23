@@ -126,6 +126,17 @@ StatusCode Pythia8Production::initialize() {
   m_pythia = new Pythia8::Pythia(xmlpath, m_showBanner); 
   if (!m_pythia) return StatusCode::FAILURE;
 
+  // Add LhcbHooks parameters.
+  Pythia8::Settings &set = m_pythia->settings;
+  string sm("StandardModel:"), mpi("MultiPartonInteractions:"), 
+    pre("LhcbHooks:"), parm;
+  parm = "pT0Ref";      set.parm(pre + parm, set.parm(mpi + parm));
+  parm = "ecmRef";      set.parm(pre + parm, set.parm(mpi + parm));
+  parm = "ecmPow";      set.parm(pre + parm, set.parm(mpi + parm));
+  parm = "alphaSvalue"; set.parm(pre + parm, set.parm(mpi + parm));
+  parm = "alphaSorder"; set.parm(pre + parm, set.parm(mpi + parm));
+  parm = "alphaSnfmax"; set.parm(pre + parm, set.parm(sm + parm));
+
   // Initialize the Pythia beam tool.
   m_pythiaBeamTool = new BeamToolForPythia8(m_beamTool, m_pythia->settings, sc);
   if (!sc.isSuccess()) 

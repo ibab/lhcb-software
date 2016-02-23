@@ -16,16 +16,16 @@ namespace Pythia8 {
 
       // Determine the damping factor.
       double eCM    = phaseSpacePtr->ecm();
-      double pT0Ref = settingsPtr->parm("MultipartonInteractions:pT0Ref");
-      double ecmRef = settingsPtr->parm("MultipartonInteractions:ecmRef");
-      double ecmPow = settingsPtr->parm("MultipartonInteractions:ecmPow");
+      double pT0Ref = settingsPtr->parm("LhcbHooks:pT0Ref");
+      double ecmRef = settingsPtr->parm("LhcbHooks:ecmRef");
+      double ecmPow = settingsPtr->parm("LhcbHooks:ecmPow");
       double pT0    = pT0Ref * pow(eCM / ecmRef, ecmPow);
       pT20          = pT0 * pT0;
 
       // Determine alpha strong.
-      double aSvalue = settingsPtr->parm("MultipartonInteractions:alphaSvalue");
-      double aSorder = settingsPtr->mode("MultipartonInteractions:alphaSorder");
-      int    aSnfmax = settingsPtr->mode("StandardModel:alphaSnfmax");
+      double aSvalue = settingsPtr->parm("LhcbHooks:alphaSvalue");
+      double aSorder = settingsPtr->mode("LhcbHooks:alphaSorder");
+      int    aSnfmax = settingsPtr->mode("LhcbHooks:alphaSnfmax");
       alphaS.init(aSvalue, aSorder, aSnfmax, false);
       isInit = true;
     }
