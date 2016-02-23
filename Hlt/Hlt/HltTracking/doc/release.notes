@@ -4,6 +4,12 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2016-02-23 - Francesco Dettori
+ - Adding configuration information for IsMuonTight in: 
+    python/HltTracking/Hlt1Tracking.py
+		python/HltTracking/Hlt1TrackNames.py
+		python/HltTracking/Hlt1StreamerConf.py
+
 ! 2016-02-23 - Sascha Stahl
  - Hlt2Tracking: Update ANNPID sequence to pick up the default tuning for the given data type.
 

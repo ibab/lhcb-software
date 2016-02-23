@@ -223,6 +223,11 @@ MatchVeloTTMuon = ("MatchVeloTTMuon = ( execute(decodeMUON) * " +
 ## Strings for users
 IsMuon = "IsMuon = ( execute(decodeMUON) * TC_UPGRADE_TR( '', HltTracking.Hlt1StreamerConf.IsMuon ) )"
 
+# =============================================================================
+## IsMuonTight
+# =============================================================================
+IsMuonTight = "IsMuonTight = ( execute(decodeMUON) * TC_UPGRADE_TR( '', HltTracking.Hlt1StreamerConf.IsMuonTight ) )"
+
 # ==============================================================================
 # The streamer sources making the output locations of the HltHPTTracking 
 # sequence available in the streamer framework :

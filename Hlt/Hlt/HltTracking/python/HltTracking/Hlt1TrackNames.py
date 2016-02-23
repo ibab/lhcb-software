@@ -30,6 +30,7 @@ TrackName = { "Velo"              : "Velo"           # full Velo recoonstruction
             , "FilterGhostProb"   : "FilterGhostProb"
             , "VeloOnlyFitTrack"  : "VeloOnlyFitTrack"
             , "IsMuon"            : "IsMuon"
+            , "IsMuonTight"       : "IsMuonTight"
             , "TrackL0Calo"       : "TrackL0Calo"
             }    
 Hlt1TrackLoc = {name : _baseTrackLocation(Hlt1TracksPrefix, loc) for name, loc in TrackName.iteritems()}
@@ -42,6 +43,7 @@ Hlt1Tools = { "ComplementForward" : "PatForwardTool/CompForward"
             , "VeloOnlyFitTrack"  : "HltTrackFit/VeloOnlyFit"
             , "VeloL0Calo"        : "Hlt::MatchVeloL0Calo/VeloL0Calo"
             , "IsMuon"            : "IsMuonTool"
+            , "IsMuonTight"       : "IsMuonTightTool"
             , "FilterGhostProb"   : "HltTrackFilterGhostProb"
             , "MatchVeloMuon"     : "MatchVeloMuon"
             , "MatchVeloTTMuon"   : "MatchVeloTTMuon"

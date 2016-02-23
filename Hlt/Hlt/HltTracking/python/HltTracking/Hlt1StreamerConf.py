@@ -156,6 +156,17 @@ IsMuon = LoKi.Hlt1.UpgradeConf(
     True                         ,                     ##   "TransferAncestor"
     False                        ,                     ##  "TransferExtraInfo"
     True                         )                     ##          "OrderByPt"
+# =============================================================================
+IsMuonTight = LoKi.Hlt1.UpgradeConf(
+    Hlt1Tools["IsMuonTight"]          ,                     ##               "Tool" 
+    Hlt1TrackLoc["IsMuonTight"]       ,                     ##          "TESOutput"
+    Hlt1CacheLoc["IsMuonTight"]       ,                     ##              "Cache"
+    LHCb.Track.Long              ,                     ##          "TrackType"
+    True                         ,                     ##              "Owner"
+    False                        ,                     ##        "TransferIDs"
+    True                         ,                     ##   "TransferAncestor"
+    False                        ,                     ##  "TransferExtraInfo"
+    True                         )                     ##          "OrderByPt"
 
 _trUpgrader = {}
 _trUpgrader['ComplementForward'] = ComplementForward
@@ -164,6 +175,7 @@ _trUpgrader['FitTrack'         ] = FitTrack
 _trUpgrader['FilterGhostProb'     ] = FilterGhostProb
 _trUpgrader['MatchVeloMuon'    ] = MatchVeloMuon
 _trUpgrader['IsMuon'           ] = IsMuon
+_trUpgrader['IsMuonTight'           ] = IsMuonTight
 
 # =============================================================================
 
