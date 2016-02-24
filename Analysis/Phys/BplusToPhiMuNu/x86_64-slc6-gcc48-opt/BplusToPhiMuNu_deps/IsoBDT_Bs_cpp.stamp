@@ -1,1 +1,0 @@
-IsoBDT_Bs_cpp_dependencies =  ../src/IsoBDT_Bs.cpp   ../src/IsoBDT_Bs.h  $(bin)BplusToPhiMuNu_deps/IsoBDT_Bs_cpp.stamp
