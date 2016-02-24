@@ -31,7 +31,7 @@ class CaloBremMatch
 {
   // ==========================================================================
   /// friend factory for instantiation ;
-  friend class ToolFactory<CaloBremMatch> ;
+  friend struct ToolFactory<CaloBremMatch> ;
   // ==========================================================================
 public:
   // ==========================================================================

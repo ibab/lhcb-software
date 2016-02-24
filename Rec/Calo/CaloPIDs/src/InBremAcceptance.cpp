@@ -22,7 +22,7 @@ class InBremAcceptance : public InCaloAcceptance
 { 
   // ==========================================================================
   /// friend factory for instantiation 
-  friend class ToolFactory<InBremAcceptance> ; 
+  friend struct ToolFactory<InBremAcceptance> ; 
   // ==========================================================================
 public:
   // ==========================================================================

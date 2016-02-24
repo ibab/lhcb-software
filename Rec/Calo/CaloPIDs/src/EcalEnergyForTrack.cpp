@@ -16,7 +16,7 @@ class EcalEnergyForTrack : public CaloEnergyForTrack
 {
   // ==========================================================================
   // friend factory for istantiation
-  friend class ToolFactory<EcalEnergyForTrack>;
+  friend struct ToolFactory<EcalEnergyForTrack>;
   // ==========================================================================
 protected:
   // ==========================================================================

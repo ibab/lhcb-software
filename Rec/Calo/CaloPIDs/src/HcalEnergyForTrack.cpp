@@ -33,7 +33,7 @@ class HcalEnergyForTrack : public CaloEnergyForTrack
 {
   // ==========================================================================
   /// friend factory for istantiation
-  friend class ToolFactory<HcalEnergyForTrack>;
+  friend struct ToolFactory<HcalEnergyForTrack>;
   // ==========================================================================
 protected:
   // ==========================================================================

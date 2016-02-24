@@ -12,7 +12,7 @@
 class SpdEnergyForTrack : public CaloEnergyForTrack 
 {
   // friend factory for istantiation
-  friend class ToolFactory<SpdEnergyForTrack>;
+  friend struct ToolFactory<SpdEnergyForTrack>;
 protected:
   SpdEnergyForTrack
   ( const std::string& type   , // ? 

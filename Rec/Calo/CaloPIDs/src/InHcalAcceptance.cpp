@@ -15,7 +15,7 @@
 class InHcalAcceptance : public InCaloAcceptance 
 {  
   /// friend factory for instantiation 
-  friend class ToolFactory<InHcalAcceptance> ; 
+  friend struct ToolFactory<InHcalAcceptance> ; 
 protected:
   /// standard protected constructor 
   InHcalAcceptance

@@ -32,7 +32,7 @@ class InCaloAcceptance
   , public Calo::CaloTrackTool
 {
   /// friend factory for instantiation 
-  friend class ToolFactory<InCaloAcceptance> ; 
+  friend struct ToolFactory<InCaloAcceptance> ; 
 public:
   /// initialization @see IAlgTool 
   virtual StatusCode initialize() ; 

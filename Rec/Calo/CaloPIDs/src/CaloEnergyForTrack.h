@@ -41,7 +41,7 @@ class CaloEnergyForTrack
 {
   // ==========================================================================
   // friend factory for istantiation
-  friend class ToolFactory<CaloEnergyForTrack>;
+  friend struct ToolFactory<CaloEnergyForTrack>;
   // ==========================================================================
 public:
   // ==========================================================================

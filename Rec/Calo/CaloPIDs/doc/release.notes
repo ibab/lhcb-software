@@ -4,6 +4,9 @@
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+! 2016-02-24 - Olivier Deschamps
+  - fix clang warning in friend declarations of ToolFactory (class->struct)
+
 !========================= CaloPIDs v5r21 2016-01-28 =========================
 ! 2016-25-01 - Olivier Deschamps
  - CaloPhotonMatch,CaloElectronMatch, CaloBremMatch tools : 

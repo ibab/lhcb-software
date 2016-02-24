@@ -29,7 +29,7 @@ class CaloElectronMatch
   , public          CaloTrackMatch
 {
   // friend factory for instantiation ;
-  friend class ToolFactory<CaloElectronMatch> ;
+  friend struct ToolFactory<CaloElectronMatch> ;
 public:
   /// initialize the tool 
   virtual StatusCode initialize () 
