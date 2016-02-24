@@ -278,6 +278,20 @@ StatusCode LoKi::PFJetMaker::initialize ()
     return sc ;
 }
 
+namespace {
+  void extractTracks( const LHCb::Particle& p,
+		      std::vector<const LHCb::Track*>& tracks) 
+  {
+    if( p.daughters().empty() ) {
+      if( p.proto() && p.proto()->track() )
+	tracks.push_back( p.proto()->track() ) ;
+    } else {
+      for( const auto& daughter : p.daughters() )
+	extractTracks(*daughter,tracks ) ;
+    }
+  }
+}
+
 
 StatusCode LoKi::PFJetMaker::analyse   ()
 {
@@ -291,59 +305,23 @@ StatusCode LoKi::PFJetMaker::analyse   ()
 
     LoKi::Types::Cut isToBan = NONE;
     // Get the particles to be banned from jet inputs
-    for (std::vector< std::string >::const_iterator i_location = m_banCandidatesLocations.begin() ;
-            m_banCandidatesLocations.end() != i_location ; ++i_location ){
-        if( !exist<LHCb::Particles*>(*i_location) )continue;
-        const  LHCb::Particles* mypartsToBan = get<LHCb::Particles*>(*i_location);
-        for (LHCb::Particles::const_iterator i_p = mypartsToBan->begin();mypartsToBan->end()!=i_p;i_p++)
-        {
-            LHCb::Particle::ConstVector particleToBan_daug = (*i_p)->daughtersVector();
-            if( particleToBan_daug.size() == 0 ){
-                if ((*i_p)->proto()== 0)continue;
-                if ((*i_p)->proto()->track()== 0)continue;
-                tracksToBan.push_back((*i_p)->proto()->track());
-
-            }
-            else{
-                for(LHCb::Particle::ConstVector::const_iterator i_pd = particleToBan_daug.begin() ;
-                        particleToBan_daug.end() != i_pd ; ++i_pd ){
-                    if ((*i_pd)->proto()==0)continue;
-                    if ((*i_pd)->proto()->track()==0)continue;
-                    tracksToBan.push_back((*i_pd)->proto()->track());
-                }
-
-            }
-        }
-
+    for( const auto& location : m_banCandidatesLocations ) {
+      //if( !exist<LHCb::Particles*>(*i_location) )continue;
+      LHCb::Particle::Range mypartsToBan = get<LHCb::Particle::Range>(location);
+      for (const auto& p : mypartsToBan) extractTracks( *p, tracksToBan ) ;
     }
-
+    
     LoKi::Types::Fun PFType =  LoKi::Cuts::INFO(LHCb::PFParticle::Type,-10.);
     Range partComp = select("partComp", PALL && fabs(PFType- -10.)<1e-6 );
-
-
+    
     // Get the particles to be banned from jet inputs
-    for (Range::const_iterator i_p = partComp.begin() ; partComp.end() != i_p ; i_p++ ){
-        // Store the composite one
-
-        compositeParticles.push_back(*i_p);
-        // and add its daughters to the list of particles to ban
-        LHCb::Particle::ConstVector particleToBan_daug = (*i_p)->daughtersVector();
-        if( particleToBan_daug.size() == 0 ){
-            if ((*i_p)->proto()== 0)continue;
-            if ((*i_p)->proto()->track()== 0)continue;
-            tracksToBan.push_back((*i_p)->proto()->track());
-        }
-        else{
-            for(LHCb::Particle::ConstVector::const_iterator i_pd = particleToBan_daug.begin() ;
-                    particleToBan_daug.end() != i_pd ; ++i_pd ){
-                if ((*i_pd)->proto()==0)continue;
-                if ((*i_pd)->proto()->track()==0)continue;
-                tracksToBan.push_back((*i_pd)->proto()->track());
-            }
-        }
+    for (const auto& p : partComp) {
+      // Store the composite one
+      compositeParticles.push_back(p);
+      // and add its daughters to the list of particles to ban
+      extractTracks( *p, tracksToBan ) ;
     }
-
-
+    
     // Cut to ban pfparticles from the inputs which contains tracks to ban (but are PFparticles in order not to ban the composite themselves...)
     LoKi::Types::Cut hastracksintree = LoKi::Cuts::HASTRACKSINTREE( tracksToBan.begin(),tracksToBan.end());
     LoKi::Types::Cut hastracks = LoKi::Cuts::HASTRACKS( tracksToBan.begin(),tracksToBan.end());
