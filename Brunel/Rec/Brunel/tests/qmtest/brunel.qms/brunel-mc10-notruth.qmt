@@ -3,12 +3,11 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
     <text>$BRUNELROOT/tests/options/testBrunel-defaults.py</text>
-    <text>$BRUNELOPTS/Brunel-MC09-NoTruth.py</text>
-    <text>$BRUNELOPTS/MC09-Files.py</text>
+    <text>$APPCONFIGOPTS/Brunel/MC-NoTruth.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; Brunel().EvtMax=5; Brunel().WriteFSR=False; from Configurables import TrackSys; TrackSys().OldCloneKiller=True</text>
+    <text>from Brunel.Configuration import *; from PRConfig import TestFileDB; TestFileDB.test_file_db['brunel-mc10'].run(); Brunel().DataType="2010"; Brunel().WriteFSR=False; from Configurables import LHCbApp; LHCbApp().CondDBtag="sim-20140625-vc-md100"</text>
   </set></argument>
-  <argument name="reference"><text>../refs/testBrunel-MC09-NoTruth.ref</text></argument>
+  <argument name="reference"><text>../refs/testBrunel-MC10-NoTruth.ref</text></argument>
   <argument name="validator"><text>
 from Brunel.QMTest.BrunelExclusions import preprocessor as BrunelPreprocessor
 preprocessor = BrunelPreprocessor
