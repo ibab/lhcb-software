@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-02-24 - Rosen Matev
+ - Add package dependency on Hlt/HltJets
+ - Make sure HltJetConf is configured before Hlt2LinesConfigurableUser-s
+
 ! 2016-02-24 - Mark Williams
  - Changes to CharmHad pre/postscales in Lines.py:
  - Removed all postscales and replaced with prescales

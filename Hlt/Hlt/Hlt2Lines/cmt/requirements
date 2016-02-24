@@ -13,6 +13,7 @@ include_path      none
 # ======= the actual dependencies ============================================
 #
 use Hlt2SharedParticles  v*     Hlt
+use HltJets              v*     Hlt
 use HltLine              v*     Hlt
 
 # ============================================================================

@@ -3,7 +3,13 @@ from itertools import izip
 from Utilities import allCuts, makeStages
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
+from Configurables import HltJetConf
+
 class Hlt2LinesConfigurableUser(HltLinesConfigurableUser):
+    # configurables that need to be configured before me
+    __queried_configurables__ = [
+        HltJetConf
+    ]
     __slots__ = {'_stages' : {},
                  '_relatedInfo' : {},
                  'Prescale'  : {},
