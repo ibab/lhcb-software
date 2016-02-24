@@ -21,7 +21,7 @@ class CaloExtraDigits :
   public                  GaudiTool 
 {
   /// friend factory for instantiation 
-  friend class ToolFactory<CaloExtraDigits>;
+  friend struct ToolFactory<CaloExtraDigits>;
 
 public:
   

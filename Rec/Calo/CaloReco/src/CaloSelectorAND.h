@@ -43,7 +43,7 @@ class CaloSelectorAND :
   public          GaudiTool 
 {
   /// friend factory for instantiation
-  friend class ToolFactory<CaloSelectorAND>;
+  friend struct ToolFactory<CaloSelectorAND>;
 public:
   /// container of types&names 
   typedef std::vector<std::string>           Names     ;

@@ -13,7 +13,7 @@ class CaloSelectCluster :
   public          GaudiTool
 {
   /// friend factory for instantiation
-  friend class ToolFactory<CaloSelectCluster>;
+  friend struct ToolFactory<CaloSelectCluster>;
 public:
   
   

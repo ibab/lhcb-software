@@ -44,7 +44,7 @@ class ClusterSpreadTool:
 {
   // ==========================================================================
   /// friend class for instantiation
-  friend class ToolFactory<ClusterSpreadTool>;
+  friend struct ToolFactory<ClusterSpreadTool>;
   // ==========================================================================
 public:
   // ==========================================================================  

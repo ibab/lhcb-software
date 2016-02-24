@@ -12,7 +12,7 @@ class CaloSelectChargedClusterWithSpd : public CaloSelectClusterWithSpd
 {
   // ==========================================================================
   /// friend factory for instantiation
-  friend class ToolFactory<CaloSelectChargedClusterWithSpd>;
+  friend struct ToolFactory<CaloSelectChargedClusterWithSpd>;
   // ==========================================================================
 public:
   // ==========================================================================

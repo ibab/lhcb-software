@@ -7,7 +7,7 @@
 
 
 class SubClusterSelector2x2: public SubClusterSelectorBase{
-  friend class ToolFactory<SubClusterSelector2x2>;
+  friend struct ToolFactory<SubClusterSelector2x2>;
   
 public:
 

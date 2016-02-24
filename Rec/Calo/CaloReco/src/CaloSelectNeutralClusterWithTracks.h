@@ -35,7 +35,7 @@ class CaloSelectNeutralClusterWithTracks :
   public          GaudiTool
 {
   /// friend factory for instantiation
-  friend class ToolFactory<CaloSelectNeutralClusterWithTracks>;
+  friend struct ToolFactory<CaloSelectNeutralClusterWithTracks>;
   
 public:
   

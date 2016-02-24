@@ -22,7 +22,7 @@ class CaloLCorrection :
   public virtual ICaloHypoTool ,
   public              CaloCorrectionBase{
   /// friend factory for instantiation 
-  friend class ToolFactory<CaloLCorrection>;
+  friend struct ToolFactory<CaloLCorrection>;
   
 public:
   

@@ -34,7 +34,7 @@ class CaloSelector :
   public                       GaudiTool 
 {
   /// friend factory for instantiation`
-  friend class ToolFactory<CaloSelector>;
+  friend struct ToolFactory<CaloSelector>;
 public:
   
   /** "select"/"preselect" method 

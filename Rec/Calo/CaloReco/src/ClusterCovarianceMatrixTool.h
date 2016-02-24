@@ -47,7 +47,7 @@ namespace CaloCovariance{
 
 
 class ClusterCovarianceMatrixTool: public virtual ICaloClusterTool , public GaudiTool , virtual public IIncidentListener{
-  friend class ToolFactory<ClusterCovarianceMatrixTool>;
+  friend struct ToolFactory<ClusterCovarianceMatrixTool>;
 
 public:
   

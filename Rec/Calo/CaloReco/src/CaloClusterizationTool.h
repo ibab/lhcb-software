@@ -24,7 +24,7 @@ class CaloClusterizationTool
   ,  public GaudiTool {
 
 public:
-  friend class ToolFactory<CaloClusterizationTool>;
+  friend struct ToolFactory<CaloClusterizationTool>;
   
   /// container to tagged  cells with sequential access 
   typedef std::vector<CelAutoTaggedCell*> SeqVector;

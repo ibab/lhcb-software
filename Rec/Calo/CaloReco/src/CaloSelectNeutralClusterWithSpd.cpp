@@ -13,7 +13,7 @@ class CaloSelectNeutralClusterWithSpd : public CaloSelectClusterWithSpd
 {
   // ==========================================================================
   /// friend factory for instantiation
-  friend class ToolFactory<CaloSelectNeutralClusterWithSpd>;
+  friend struct ToolFactory<CaloSelectNeutralClusterWithSpd>;
   // ==========================================================================
 public:
   // ==========================================================================

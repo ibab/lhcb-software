@@ -10,7 +10,7 @@
 
 
 class SubClusterSelectorSwissCross  : public SubClusterSelectorBase{
-  friend class ToolFactory<SubClusterSelectorSwissCross>;
+  friend struct ToolFactory<SubClusterSelectorSwissCross>;
   
 public:
   virtual StatusCode initialize(); 
