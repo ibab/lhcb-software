@@ -1,0 +1,20 @@
+! -----------------------------------------------------------------------------
+! Package     : Phys/BsToKMuNu
+! Responsible : Mika Vesterinen
+! Purpose     : Code, scripts etc for the Bs->Kmunu |Vub| analysis
+! -----------------------------------------------------------------------------
+
+! 2016-02-11 - Michael Kolpin
+  - Add scripts/PIDCalib, containing PIDCalib scripts, tables with current cuts, README and log files
+
+! 2015-11-18 - Mika Vesterinen
+  - Modify all TupleTools to remove redundent/duplicated infos. from Tuples production
+  - Add option files for Bs2DsMuNu tuples creation from simulation 
+  
+! 2015-11-10 - Mika Vesterinen
+  - Add Isolation tools (author Basem Khanji)
+  - Add TupleToolSL (modified version) (author William sutcliffe)
+  - Add otpion files & ganga scripts for Tuple creation (author Basem Khanji)
+
+! 2015-10-29 - Mika Vesterinen
+  - first import of Phys/BsToKMuNu
