@@ -73,10 +73,10 @@ class FilterMVA(Hlt2ParticleFilter):
                   " %(CMB_VRT_MCOR_MAX)s)) & " + bdt)
             if which is 'Mu': pc = "(NINTREE(HASPROTO & HASMUON & ISMUON) > 0) & " + pc
             if which is 'E': pc = "(NINTREE(HASPROTO & ISLONG & (PROBNNe > %(EPROBNNE)s)) > 0) & " + pc
-            if which is 'MuMu': pc = "(NINTREE(HASPROTO & ISLONG & ISMUON & (PROBNNmu > %(MUMUPROBNNMU)s)) > 1) & " + pc
+            if which is 'MuMu': pc = "(NINTREE(HASPROTO & ISLONG & HASMUON & ISMUON & (PROBNNmu > %(MUMUPROBNNMU)s)) > 1) & " + pc
             if which is 'EE': pc = "(NINTREE(HASPROTO & ISLONG & (PROBNNe > %(EEPROBNNE)s)) > 1) & " + pc
             if which is 'MuE': 
-                pc = "(NINTREE(HASPROTO & ISLONG & ISMUON & (PROBNNmu > %(MUEPROBNNMU)s)) > 0) & " + \
+                pc = "(NINTREE(HASPROTO & ISLONG & HASMUON & ISMUON & (PROBNNmu > %(MUEPROBNNMU)s)) > 0) & " + \
                      "(NINTREE(HASPROTO & ISLONG & (PROBNNe > %(MUEPROBNNE)s)) > 0) & " + pc
             if which is 'MuMuDD':
                 pc = "(NINTREE(ID == 'KS0')==1) & " + bdt
