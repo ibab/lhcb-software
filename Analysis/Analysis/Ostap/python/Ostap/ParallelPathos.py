@@ -199,7 +199,7 @@ class WorkManager(object) :
         if ppservers :
             self._ppservers = ppservers
             self.sessions   = [ ppServer(srv) for srv in ppservers ]
-            ##self.ppservers  = tuple ( [ i.local_server for i in self.sessions ] )
+            self.ppservers  = tuple ( [ i.local_server for i in self.sessions ] )
             ##self.ppservers  = tuple ( [ i.remote_server for i in self.sessions ] )
             self.server     = PP.Server(ppservers=self.ppservers)
             self.mode       = 'cluster'
