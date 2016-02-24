@@ -5,7 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2016-02-24 Jessica Prisciandaro
-- Majorana Hlt2Lines added to Physics_pp_Draft2016.py
+- Majorana and Rare Strange Hlt2Lines added to Physics_pp_Draft2016.py
+- RareStrange settings added
 
 ! 2016-02-24 - Francesco Dettori
  - Adding DiMuonJpsiPID etc into the DiMuon settings
