@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2016-02-24 - Jibo He
+ - Hlt1Proton, tightened proton p, and added proton theta cut  
+
 ! 2016-02-23 - Francesco Dettori
  - Adding IsMuonTight possibility for Hlt1MultiDiMuonNoIP and Hlt1DiMuonNoIP
 
