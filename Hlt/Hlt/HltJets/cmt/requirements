@@ -15,7 +15,6 @@ include_path      none
 
 use GaudiKernel         v*
 use HltEvent            v*  Event
-use Hlt2Lines           v*  Hlt
 use HltCommon           v*  Hlt
 use JetAccessories      v*  Phys
 use Python              v*  LCG_Interfaces

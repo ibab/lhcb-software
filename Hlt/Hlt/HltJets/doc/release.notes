@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of Jet building in the HLT
 !-----------------------------------------------------------------------------
 
+! 2016-02-24 - Rosen Matev
+ - Remove implicit and explicit dependency on Hlt2Lines 
+
 ! 2016-02-14 - Roel Aaij
  - Change configurable to work around problems with order of it's application.
 

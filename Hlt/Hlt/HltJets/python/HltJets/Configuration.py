@@ -17,14 +17,8 @@ from Configurables import (GaudiSequencer,
                            PhotonMatchAlg)
 
 import GaudiKernel.ProcessJobOptions
-from HltConf.ThresholdUtils import importLineConfigurables
-
-import Hlt2Lines
-_hlt2linesconfs = importLineConfigurables( Hlt2Lines )
 
 class HltJetConf(LHCbConfigurableUser):
-    ## Possible used Configurables
-    __used_configurables__ = _hlt2linesconfs
     __slots__ = {'ParticleFlowOptions' : {},
                  '__particleFlow'  : 0,
                  '__caloProcessor' : 0}
