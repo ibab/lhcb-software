@@ -24,7 +24,13 @@ PatAddTTCoord::PatAddTTCoord( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
   : GaudiTool ( type, name , parent ),
-    m_bendProtoParam(0.0)
+    m_newEvent(true),
+    m_invMajAxProj2(0.0),
+    m_ttHitManager(nullptr),
+    m_magFieldSvc(nullptr),
+    m_bendProtoParam(0.0),
+    m_selected({}),
+    m_goodTT({})
 {
   declareInterface<IAddTTClusterTool>(this);
   declareProperty( "ZTTField"  , m_zTTField            =  1740. * Gaudi::Units::mm );
@@ -145,6 +151,7 @@ StatusCode PatAddTTCoord::returnTTClusters( LHCb::State& state, PatTTHits& ttHit
   std::array<int, 4> firedPlanes;
   PatTTHits::const_iterator end = m_selected.end();
   for ( PatTTHits::iterator itBeg = m_selected.begin(); itBeg+2 < end; ++itBeg ) {
+
     const double firstProj = (*itBeg)->projection();
     m_goodTT.clear();
     int nbPlane = 0;
@@ -357,7 +364,7 @@ void PatAddTTCoord::calculateChi2(double& chi2, const double& bestChi2,
     const double saveRhs[3] = { rhs[0], rhs[1], rhs[2] };
     
     CholeskyDecomp<double, 3> decomp(mat);
-    if (!decomp) {
+    if ( UNLIKELY(!decomp) ) {
       chi2 = 1e42;
       break;
     } else {
@@ -470,8 +477,6 @@ void PatAddTTCoord::handle ( const Incident& incident ) {
 //=============================================================================
 void PatAddTTCoord::initEvent () {
  
-  m_ttHitManager->prepareHits();
-  
   // -- This does not change between events
   m_bendProtoParam = m_ttParam * -1 * m_magFieldSvc->signedRelativeCurrent() ;
   

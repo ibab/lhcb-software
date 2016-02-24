@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2016-02-24 - Michel De Cian
+ - Adapt PatAddTTCoord and PatLongLivedTracking for the changes in TTStationHitManager
+
 ! 2016-02-22 - Sascha Stahl
  - PatForward: Use OTHitCreator to get the number of OT hits. This will trigger the
    creation of all OT hits, if not done before. Since we do not cut tight on the number of hits 

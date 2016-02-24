@@ -288,10 +288,6 @@ StatusCode PatLongLivedTracking::execute() {
   //=== Prepare T-Seeds
   prepareSeeds( inTracks, myInTracks );
   
-  // -- prepare the this and sort them (all done in HitManager, only runs if this is the first algorithm using TT hits)
-  initEvent();
-  
-
   //==========================================================================
   // Get the output container 
   //==========================================================================
@@ -1233,11 +1229,4 @@ double PatLongLivedTracking::evaluateFisher( const LHCb::Track* track ){
   return getFisher( vals );
 
 }
-//=============================================================================
-// -- Init event: Get the new hits and sort them
-//=============================================================================
-void PatLongLivedTracking::initEvent () {
- 
-  m_ttHitManager->prepareHits();
-  
-}
+

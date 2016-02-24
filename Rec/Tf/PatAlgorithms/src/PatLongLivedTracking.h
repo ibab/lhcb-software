@@ -131,8 +131,6 @@ private:
 
   double evaluateFisher( const LHCb::Track* track );///< Evaluate the Fisher discriminant for a preselection of seed tracks
   
-  void initEvent();///< Init the event: Put hits in local containers which are sorted
-
   void xFit( PatDownTrack& track, const PatTTHit* hit1, const PatTTHit* hit2 ); ///< Fit tracklet with hits in x layers only.
 
   /// Helper class to find lower bound of collection of hits
