@@ -120,6 +120,25 @@ public:
     // subsequent regions in current layer
     std::for_each( std::next(m_r_offsets[station][layer],region+1), std::end(m_r_offsets[station][layer]), add_n );
   }
+
+  // -- This is if we don't want to split in regions as well (the Run II PatReco does not use the regions)
+  template <typename I>
+  void insert( unsigned station, unsigned layer, I&& b, I&& e ) {
+    auto n = std::distance(b,e);
+    
+    m_hits.reserve( m_hits.size() + n );
+    m_hits.insert( std::next( std::begin(m_hits),
+                              m_s_offsets[station] + m_l_offsets[station][layer]) ,
+                   std::forward<I>(b), std::forward<I>(e) );
+    // adjust everything 'behind' the insertion point...
+    auto add_n = [n](offset_t& offset) { offset+=n; };
+    // subsequent stations
+    std::for_each( std::next(m_s_offsets,station+1), std::end(m_s_offsets), add_n );
+    // subsequent layers in current station
+    std::for_each( std::next(m_l_offsets[station],layer+1), std::end(m_l_offsets[station]), add_n );
+  }
+
+
 #endif
 };
 #endif

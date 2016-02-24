@@ -254,7 +254,7 @@ namespace Tf
     inline HitRange sortedLayerHits( const TTStationID sta,
                                      const TTLayerID lay ) const
     {
-      if (!allHitsPrepared(sta,lay)) prepareHits(sta,lay);
+      if (!allHitsPreparedLayers(sta,lay)) prepareHitsLayers(sta,lay);
       if (!allHitsSortedLayers(sta,lay)) sortHitsLayers<SORTER>(sta,lay);
       return m_sortedLayerHits.range( sta,lay );
     }
@@ -338,6 +338,15 @@ namespace Tf
     void prepareHits(const TTStationID sta,
                      const TTLayerID lay) const;
 
+    /** Initialise all the hits for the current event in the given station and layer
+     *  when sorted hits in layers are needed.
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     */
+    void prepareHitsLayers(const TTStationID sta,
+                           const TTLayerID lay) const;
+
+
     /** Initialise all the hits for the current event in the given region
      *  @param[in] sta    Station ID
      */
@@ -363,7 +372,16 @@ namespace Tf
                                     const TTRegionID region
                                   ) const { m_hits_ready.set(sta,lay,region); }
 
-    /** Set the hits sorted flag for given region
+     /** Set the hits ready flag for a given station and layer when sorting in layers
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     *  @param[in] ok     The status flag (true means hits ready, false means not ready)
+     */
+    inline void setAllHitsPreparedLayers( const TTStationID sta,
+                                          const TTLayerID lay) const { m_hits_ready_layers[2*sta+lay] = true; }
+
+
+    /** Set the hits sorted flag for a given station and layer when sorting in layers
      *  @param[in] sta    Station ID
      *  @param[in] lay    Station layer ID
      *  @param[in] ok     The status flag (true means hits sorted, false means not sorted)
@@ -402,6 +420,19 @@ namespace Tf
     inline bool allHitsPrepared(const TTStationID sta,
                                 const TTLayerID lay) const
     { return m_hits_ready.all(sta,lay); }
+
+    
+    /** Are all the hits ready in the given layer when sorting in layers
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     *  @return boolean indicating if all the hits in the given region are ready or not
+     *  @retval TRUE  Hits are ready
+     *  @retval FALSE Hits are not ready
+     */
+    inline bool allHitsPreparedLayers(const TTStationID sta,
+                                      const TTLayerID lay) const
+    { return m_hits_ready_layers[2*sta + lay]; }
+
 
     /** Are all the hits ready in the given station
      *  @param[in] sta    Station ID
@@ -447,6 +478,7 @@ namespace Tf
                            >   m_hits_ready; ///< Flags to indicate which regions have hits ready
 
     mutable std::array<bool,4 > m_hits_sorted_layers; ///< Flags to indicate which stations and layers have hits sorted
+    mutable std::array<bool,4 > m_hits_ready_layers; ///< Flags to indicate which stations and layers have hits ready
 
   };
   
@@ -499,6 +531,7 @@ namespace Tf
     m_sortedLayerHits.clear();
     
     m_hits_ready.clear();
+    m_hits_ready_layers.fill(false);
     m_hits_sorted_layers.fill(false);
   }
 
@@ -532,6 +565,23 @@ namespace Tf
       }
     }
   }
+  
+  template<class Hit>
+  void TTStationHitManager<Hit>::prepareHitsLayers(const TTStationID sta,
+                                                   const TTLayerID lay) const
+  {
+    if ( !this->allHitsPreparedLayers(sta,lay) ) {
+      Tf::STHitRange tthits = ttHitCreator()->hits(sta,lay) ;
+
+      auto fun = [](Tf::STHitRange::const_reference hit) { return new Hit(*hit); };
+      auto b =  boost::make_transform_iterator(std::begin(tthits), std::cref(fun));
+      auto e =  boost::make_transform_iterator(std::end(tthits), std::cref(fun));
+      m_sortedLayerHits.insert( sta,lay, b, e);
+      setAllHitsPreparedLayers(sta,lay);
+      
+    }
+  }
+
 
   template<class Hit>
   void TTStationHitManager<Hit>::prepareHits(const TTStationID sta,
@@ -546,7 +596,6 @@ namespace Tf
       auto b =  boost::make_transform_iterator(std::begin(tthits), std::cref(fun));
       auto e =  boost::make_transform_iterator(std::end(tthits), std::cref(fun));
       m_hits.insert( sta,lay,region, b, e);
-      m_sortedLayerHits.insert( sta,lay,region, b, e);
       setAllHitsPrepared(sta,lay,region);
     }
   }
