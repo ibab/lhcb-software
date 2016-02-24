@@ -37,7 +37,7 @@
    + Remove redundant input vector size test, that in terms of the use of the
      TMVA C++ classes in this library can never fail.
    + Remove an unused loop variable.
-   Saves in total about 16% (according to valgrind) so will iomplemt when
+   Saves in total about 16% (according to valgrind) so will implement when
    adding the final MC15 networks later on.
  - Add some nexcept qualifiers.
  - Update InTrackExInfo and InRecSummary to pass correct enum rather than int.
