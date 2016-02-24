@@ -210,6 +210,10 @@ class HltConf(LHCbConfigurableUser):
         # Overwrite settings if requested
         newSettings = self.getProp('OverwriteSettings')
         if newSettings:
+            log.warning( '############################################################' )
+            log.warning( '## WARNING You are overwriting the HLT thresholds         ##' )
+            log.warning( '## WARNING Please make sure you know what you are doing!! ##' )
+            log.warning( '## #########################################################' )
             overwriteThresholds(ThresholdSettings, newSettings)
 
         ## what L0 configuration are we running on top of?
