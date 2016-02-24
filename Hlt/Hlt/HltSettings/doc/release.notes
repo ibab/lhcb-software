@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-02-24 - Francesco Dettori
+ - Adding DiMuonJpsiPID etc into the DiMuon settings
+
 ! 2016-02-24 - Mark Williams
  - Added prescale of 0.2 for Hlt1CalibTrackingKPi in Physics_pp_Draft2016.py
  - Updated pre/postscales for Hlt2 CharmHad lines
