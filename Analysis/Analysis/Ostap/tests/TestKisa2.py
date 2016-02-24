@@ -72,7 +72,8 @@ variables = {
 
 import Ostap.Kisa as Kisa
 
-ds = Kisa.fillDataSet ( dataY.chain , variables , '8.5<=mass && mass<11.5 && -0.1<c2dtf && c2dtf<5' ) 
+ppservers = ( 'lxplus051' , )
+ds = Kisa.fillDataSet ( dataY.chain , variables , '8.5<=mass && mass<11.5 && -0.1<c2dtf && c2dtf<5' , ppservers = ppservers ) 
 
 print ds 
 # =============================================================================

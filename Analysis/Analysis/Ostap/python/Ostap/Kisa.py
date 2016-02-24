@@ -31,8 +31,7 @@ __all__     = (
     'fillDataSet'
     ) 
 # =============================================================================
-import GaudiMP.Parallel as Parallel  
-##import Ostap.Parallel as Parallel  
+import Ostap.Parallel as Parallel  
 # =============================================================================
 # logging 
 # =============================================================================
@@ -236,7 +235,7 @@ class  FillTask(Parallel.Task) :
 #  For 12-core machine, clear speed-up factor of about 8 is achieved 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-09-23 
-def  fillDataSet ( chain , variables , selection ) :
+def  fillDataSet ( chain , variables , selection , ppservers = () ) :
     """Fill dataset from loooong TChain using per-file parallelisation
     >>> chain =
     >>> vars  = ...
@@ -245,7 +244,7 @@ def  fillDataSet ( chain , variables , selection ) :
     """
     
     task  = FillTask ( variables , selection )
-    wmgr  = Parallel.WorkManager()
+    wmgr  = Parallel.WorkManager( ppservers = ppservers )
     
     cname = chain.GetName() 
     files = chain.files() 
