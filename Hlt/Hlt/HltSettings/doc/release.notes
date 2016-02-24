@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-02-24 Jessica Prisciandaro
+- Majorana Hlt2Lines added to Physics_pp_Draft2016.py
+
 ! 2016-02-24 - Francesco Dettori
  - Adding DiMuonJpsiPID etc into the DiMuon settings
 
