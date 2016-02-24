@@ -8,6 +8,14 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-02-24 - Mark Williams
+ - Changes to CharmHad pre/postscales in Lines.py:
+ - Removed all postscales and replaced with prescales
+ - Changed Xim and Omm line prescales from 0.5->1.0
+ - Removed prescale (was 0.1) on Hlt2CharmHadD02KmPipTurbo
+ - Corrected name Hlt2CharmHadDpToKmPipPip_ForKPiAsym -> Hlt2CharmHadDpToKmPipPip_ForKPiAsymTurbo
+ - Removed references to unused lines 
+
 ! 2016-02-18 - Mark Williams
  - Moved some CharmHad lines from full->turbo
 

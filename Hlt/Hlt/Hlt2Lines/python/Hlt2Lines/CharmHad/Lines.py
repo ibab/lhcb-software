@@ -45,14 +45,12 @@ SecondaryH2LamPrPiLines = SecondaryH2LamPrPiLines()
 
 
 
-theseslots = {   'Postscale' : {'Hlt2CharmHadD02KmKpTurbo'               : 0.1,
-                                'Hlt2CharmHadD02KmPipTurbo'              : 0.1,
-                                'Hlt2CharmHadD02PimPipTurbo'             : 0.1,
-                                'Hlt2CharmHadDpToKmPipPip_LTUNBTurbo'    : 0.05,
-                                'Hlt2CharmHadDspToKmKpPip_LTUNBTurbo'    : 0.05,
-                                'Hlt2CharmHadLcpToPpKmPip_LTUNBTurbo'    : 0.05,
-                                'Hlt2CharmHadXic0ToPpKmKmPip_LTUNBTurbo' : 0.05,
-                                'Hlt2CharmHadDpToKmPipPip_ForKPiAsym'    : 0.25  },
+theseslots = {   'Prescale' : { 'Hlt2CharmHadDpToKmPipPip_LTUNBTurbo'         : 0.05,
+                                'Hlt2CharmHadDspToKmKpPip_LTUNBTurbo'         : 0.05,
+                                'Hlt2CharmHadLcpToPpKmPip_LTUNBTurbo'         : 0.05,
+                                'Hlt2CharmHadXic0ToPpKmKmPip_LTUNBTurbo'      : 0.05,
+                                'Hlt2CharmHadDpToKmPipPip_ForKPiAsymTurbo'    : 0.25  },
+		 'Postscale' : {},
                  'TrackGEC' : { 'NTRACK_MAX'           : 10000},
                  'Common' : {'TisTosSpec'               : "Hlt1.*Track.*Decision%TOS",
                              'Trk_ALL_TRCHI2DOF_MAX'    :  3.0,
