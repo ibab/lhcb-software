@@ -4,6 +4,11 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+
+! 2016-02-24 - Olivier Deschamps
+  - PropertimeFitter : fix bug (the tool was returning c.tau (mm) in case of negative covariance and tau (ns) when the fit is OK)
+                       Add counters to monitor covariance problems
+
 !======================= VertexFit v6r23 2015-11-25 ========================
 
 ! 2015-11-01 - Gerhard Raven

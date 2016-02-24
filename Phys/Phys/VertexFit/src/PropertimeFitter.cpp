@@ -90,6 +90,7 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV,
   Te2m(6,6) =  BLmom.T()/BMeasuredMass;
 
   const Gaudi::SymMatrix7x7 CovBm = ROOT::Math::Similarity<double,7,7>(Te2m, CovB);
+  double massError=CovBm(6,6); 
 
   ROOT::Math::SVector<double, 10> X;
   X[0] = PVposition.x();
@@ -201,10 +202,13 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV,
     }
   }  // end chi2 minimization iteration
 
-  if ( !converged ) return StatusCode::FAILURE;
+  
+  if ( !converged ) {
+    counter("Convergence not reached")+=1;
+    return StatusCode::FAILURE;
+  }  
 
-  if ( m_applyBMassConstraint ) 
-  {
+  if ( m_applyBMassConstraint ){
     const LHCb::ParticleProperty* partProp = m_ppSvc->find(B.particleID());
     if ( !partProp )
     {
@@ -233,6 +237,7 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV,
 
   //propertime = (xb-xpv)*mb/pxb ;
   propertime = (vfit[3]-vfit[0])*vfit[9]/vfit[6];
+  propertime /= c_light;
 
   ROOT::Math::SMatrix<double,1,10> JA;
   JA(0,0) = -vfit[9]/vfit[6];
@@ -248,24 +253,20 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV,
 
   const Gaudi::SymMatrix1x1 CovTau = ROOT::Math::Similarity<double,1,10>(JA, cfit);
 
-  if ( CovTau(0,0) < 0 )
-  {
-    if ( msgLevel(MSG::DEBUG) )  
-      debug() << "unexpected negative element CovTau(0,0)" << endmsg;
-    return Warning( "Unable to estimate time error: covariance element is negative", 
-                    StatusCode::FAILURE, 3 );
-  }
+  if(massError<0      )counter("Negative Mass covariance")+=1;
+  if ( CovTau(0,0) < 0 ){
+    if ( msgLevel(MSG::DEBUG) )debug() << "unexpected negative element CovTau(0,0)" << endmsg;
+    Warning( "Unable to estimate time error: covariance element is negative",StatusCode::FAILURE, 3 ).ignore();
+    error = -std::sqrt(std::abs(CovTau(0,0)))/c_light;
+    counter("Negative Tau covariance ")+=1;
+  }else
+    error = std::sqrt(CovTau(0,0))/c_light;
 
-  error = std::sqrt(CovTau(0,0));
-
-  // convert c*tau to tau
-  propertime /= c_light;
-  error      /= c_light;
 
   chisq = chi2Fit;
 
-  return StatusCode::SUCCESS ;
-}
+  return StatusCode::SUCCESS ;}
+  
 
 //-----------------------------------------------------------------------------
 // Declaration of the Tool Factory
