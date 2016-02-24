@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2016-02-24 - Chris Jones
+ - Add a debug message to ApplicationVersionFilter
+
 !========================= LHCbAlgs v3r8 2016-01-27 =========================
 ! 2016-01-07 - Gerhard Raven
  - prefer extends over direct virtual public inheritance

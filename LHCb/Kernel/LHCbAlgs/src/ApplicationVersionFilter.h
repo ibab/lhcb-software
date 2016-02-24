@@ -1,4 +1,4 @@
-// $Id: ApplicationVersionFilter.h,v 1.3 2009-11-10 09:27:51 jonrob Exp $
+
 #ifndef ApplicationVersionFilter_H 
 #define ApplicationVersionFilter_H 1
 
@@ -25,7 +25,8 @@ class ApplicationVersionFilter : public GaudiAlgorithm
 public: 
 
   /// Standard constructor
-  ApplicationVersionFilter( const std::string& name, ISvcLocator* pSvcLocator );
+  ApplicationVersionFilter( const std::string& name, 
+                            ISvcLocator* pSvcLocator );
 
   virtual ~ApplicationVersionFilter( ); ///< Destructor
 
@@ -33,8 +34,8 @@ public:
 
 private:
 
-  std::string m_regex;   ///< String match regex
-  std::string m_loc;     ///< DataObject location in TES
+  std::string m_regex;    ///< String match regex
+  std::string m_loc;      ///< DataObject location in TES
 
 };
 
