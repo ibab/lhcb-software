@@ -1,3 +1,5 @@
+import collections
+
 #########################################################################################
 # Utility function for setting thresholds both in Hlt1 and 2
 #
@@ -36,6 +38,34 @@ def setThresholds(ThresholdSettings,conf_):
             else :
                 setattr(conf,k,v)
 
+def _recursive_update(x, other):
+    """Recursively update dictionary values."""
+    for key, value in other.iteritems():
+        if isinstance(value, collections.Mapping):
+            x[key] = _recursive_update(x.get(key, {}), value)
+        else:
+            x[key] = other[key]
+    return x
+
+def overwriteThresholds(thresholdSettings, otherSettings):
+    """Overwrite threshold settings with other settings.
+    
+    Args:
+        thresholdSettings: The original settings, modified in place
+        otherSettings: Settings in the usual structure with only the
+            values to be updated.
+
+    Example:
+        To update Param3 in TrackMVA in Hlt1MVALinesConf use:
+        otherSettings = {
+            Hlt1MVALinesConf: {
+                'TrackMVA': {
+                    'Param3': 2,
+                },
+            },
+        }
+    """
+    _recursive_update(thresholdSettings, otherSettings)
 
 def Name2Threshold(name) :
     if not hasattr(Name2Threshold,'_dict') : Name2Threshold._dict = {}

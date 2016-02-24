@@ -13,6 +13,7 @@ from Hlt2                import Hlt2Conf
 from HltAfterburner      import HltAfterburnerConf
 from HltPersistReco      import HltPersistRecoConf
 from HltMonitoring       import HltMonitoringConf
+from ThresholdUtils import overwriteThresholds, Name2Threshold
 
 def __forAll__( c, prop_value_dict, types=['FilterDesktop','CombineParticles',"DVAlgorithm", "DaVinciAlgorithm", "DaVinciHistoAlgorithm", "DaVinciTupleAlgorithm", "*" ] ) :
     """ Find all configurable algorithms and set certain properties
@@ -95,10 +96,10 @@ class HltConf(LHCbConfigurableUser):
                 , 'LumiBankKillerPredicate'        : "(HLT_PASS_SUBSTR('Hlt1Lumi') & ~HLT_PASS_RE('Hlt1(?!Lumi).*Decision'))"
                 , "LumiBankKillerAcceptFraction"   : 0.9999     # fraction of lumi-only events where raw event is stripped down
                                                                 # (only matters if EnablelumiEventWriting = True)
-                  , "AdditionalHlt1Lines"            : []         # must be configured
+                , "AdditionalHlt1Lines"            : []         # must be configured
                 , "AdditionalHlt2Lines"            : []         # must be configured
-               , "RemoveHlt1Lines"            : []         # must be configured
-                , "RemoveHlt2Lines"            : []         # must be configured
+                , "RemoveHlt1Lines"                : []         # must be configured
+                , "RemoveHlt2Lines"                : []         # must be configured
                 , "Hlt2LinesForDQ"                 : ["PIDD02KPiTagTurboCalib", "PIDLambda2PPiLLTurboCalib", "PIDDetJPsiMuMuPosTaggedTurboCalib",
                                                       "PIDDetJPsiMuMuNegTaggedTurboCalib", "PIDLambda2PPiLLhighPTTurboCalib", "PIDLambda2PPiLLveryhighPTTurboCalib",
                                                       "DiMuonDetachedJPsi"]
@@ -108,6 +109,7 @@ class HltConf(LHCbConfigurableUser):
                 , "CustomPersistRecoFilter"        : ""
                 , "PruneHltANNSvc"                 : True
                 , "EnabledStreams"                 : {"LUMI" : None, "BEAMGAS" : None, "FULL" : None, "TURBO" : None, "TURCAL" : None, "VELOCLOSING" : None}
+                , "OverwriteSettings"              : {}  # a dictionary with settings to overwrite
                 }
 
     __settings__ = None
@@ -150,7 +152,6 @@ class HltConf(LHCbConfigurableUser):
         """
         name  = self.getProp('ThresholdSettings')   # the name
         if not name : return None
-        from HltConf.ThresholdUtils import Name2Threshold
         return Name2Threshold(name)
 
     def configureFactories(self):
@@ -206,6 +207,10 @@ class HltConf(LHCbConfigurableUser):
             log.warning( '## WARNING Set a ThresholdSetting to get something well defined ##' )
             log.warning( '## ###############################################################' )
 
+        # Overwrite settings if requested
+        newSettings = self.getProp('OverwriteSettings')
+        if newSettings:
+            overwriteThresholds(ThresholdSettings, newSettings)
 
         ## what L0 configuration are we running on top of?
         L0TCK = None

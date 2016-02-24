@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2016-02-24 - Rosen Matev
+ - Implement overwriting of threshold settings from HltConf. 
+
 ! 2016-02-12 - Roel Aaij
  - Add HltJetConf to used configurables hlt Hlt2 to ensure correct order of
    configuration.
