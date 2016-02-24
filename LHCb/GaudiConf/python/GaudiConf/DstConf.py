@@ -411,19 +411,8 @@ class DstConf(LHCbConfigurableUser):
             DataOnDemandSvc().AlgMap[ "/Event/Rec/Track/FittedHLT1VeloTracks" ] = unpackFittedVeloTracks
 
         if self.getProp("Turbo"): 
-            from Configurables import DataPacking__Unpack_LHCb__CaloClusterPacker_ as UnpackCaloClusters
-            from Configurables import UnpackCaloHypo as UnpackCaloHypos
-            clustersT=UnpackCaloClusters( name = "UnpackCaloClusters",
-                    InputName          = "Turbo/pRec/neutral/Clusters", 
-                    OutputName         = "Turbo/CaloClusters" )
-            hyposT=UnpackCaloHypos( name = "UnpackCaloHypos",
-                    InputName          = "Turbo/pRec/neutral/Hypos",
-                    OutputName         = "Turbo/CaloHypos" )
-            DataOnDemandSvc().AlgMap[ "/Event/Turbo/CaloHypos" ] = hyposT
-            DataOnDemandSvc().AlgMap[ "/Event/Turbo/CaloClusters" ] = clustersT
-            
+            unpackers=[]
             ## HLT full reco unpacking
-            unpackers = []
             from Configurables import UnpackProtoParticle
             proto1=UnpackProtoParticle(name="UnpackProtoParticle",
                     InputName="Hlt2/pRec/long/Protos",
@@ -471,6 +460,20 @@ class DstConf(LHCbConfigurableUser):
             # Update data on demand
             for alg in unpackers:
                 DataOnDemandSvc().AlgMap[alg.OutputName] = alg
+
+            recProtos = GaudiSequencer("TurboProtosAsRec")
+            from Configurables import TESMergerProtoParticle
+            mergedProtos = TESMergerProtoParticle("mergedProtos")
+            mergedProtos.inputLocations+=["Hlt2/long/Protos","Hlt2/down/Protos"]
+            mergedProtos.outputLocation="Hlt2/Protos/Charged"
+            from Configurables import Gaudi__DataLink
+            gdl = Gaudi__DataLink ( 'HltRecProtos' 
+                    , What   =      'Hlt2/Protos/Charged'
+                    , Target =       'Rec/ProtoP/Charged')
+            recProtos.Members+=unpackers
+            recProtos.Members+=[mergedProtos,gdl]
+            DataOnDemandSvc().AlgMap["Hlt2/Protos/Charged"] = recProtos
+            DataOnDemandSvc().AlgMap["Rec/ProtoP/Charged"] = recProtos
 
         if "Tracking" in self.getProp("EnableUnpack") : return # skip the rest
 

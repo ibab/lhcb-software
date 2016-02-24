@@ -4,6 +4,9 @@
 !------------------------------------------------------------------------------
 
 ! 2016-02-21 - Sean Benson
+ - Add merger and linker such that standard particles work when persisting reco.
+
+! 2016-02-21 - Sean Benson
  - Fix misconfiguration of Turbo persist reco unpackers.
 
 ! 2016-02-09 - Marco Clemencic
