@@ -6,6 +6,8 @@ Purpose: LHCb reconstruction program
 - Changes to references to reflect changes since v49r2
   . Follow introduction of Deuteron particle hypothesis
   . Fix two bugs in PatLongLivedTracking, use new chi2-cut in x-layer fit
+  . Only rebuild Bdl tables on magnet polarity or current change (PatVeloTT)
+  . Add new default tuning for Run 2 data, "MC15TuneV1" (ChargedProtoANNPID)
 
 - Changes to tests
   . Remove temporary RegexpReplacer that was introduced in v49r2 to deal with the
