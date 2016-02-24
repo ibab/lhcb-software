@@ -140,8 +140,8 @@ StatusCode PatVeloTT::execute() {
         fittracks.push_back(ptr);
       }
       else
-	delete ptr;
-
+        delete ptr;
+      
     }
 
     // choose best track
@@ -163,7 +163,7 @@ StatusCode PatVeloTT::execute() {
             double qop = state_VELOTT.qOverP();
             
             //Find track state for Velo track - will write out qop to it
-            LHCb::Track* veloTr = new LHCb::Track;
+            LHCb::Track* veloTr = nullptr;
             SmartRefVector<LHCb::Track>& ancestor = bestTrack->ancestors();
             
             for( SmartRefVector<LHCb::Track>::iterator trIt = ancestor.begin();
@@ -172,11 +172,16 @@ StatusCode PatVeloTT::execute() {
             }
             
             // Add the qop estimate to all Velo track states
-            LHCb::Track::StateContainer::const_iterator istate;
-            for( istate = veloTr->states().begin();istate != veloTr->states().end(); ++istate){
-              (const_cast<LHCb::State*>(*istate))->setQOverP( qop ) ;
+            if( veloTr != nullptr){
+              LHCb::Track::StateContainer::const_iterator istate;
+              for( istate = veloTr->states().begin();istate != veloTr->states().end(); ++istate){
+                (const_cast<LHCb::State*>(*istate))->setQOverP( qop ) ;
+              }
             }
+            
           }
+          
+          
           
           outputTracks->insert(bestTrack);
           tracks++;

@@ -4,6 +4,9 @@
 ! Purpose     :
 !-----------------------------------------------------------------------------
 
+! 2016-02-24 - Michel De Cian
+ - Speed improvements of PatVeloTTHybridTool (and some efficiency improvements), cleanup of PatVeloTTHybrid, fixing a memory leak in PatVeloTT.
+
 ! 2016-02-14 - Roel Aaij
  - Only rebuild Bdl tables magnet polarity or current change.
 

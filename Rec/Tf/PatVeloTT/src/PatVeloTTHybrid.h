@@ -8,27 +8,16 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 // from TrackInterfaces
 #include "TrackInterfaces/ITracksFromTrack.h"
-#include "TrackInterfaces/ITrackFitter.h"
-#include "TrackInterfaces/ITrackSelector.h"
-#include "TfKernel/TTStationHitManager.h"
 #include "Event/Track.h"
 
-// local
-//#include "PatVeloTTHybridTool.h"
-#include "PatKernel/PatTTHit.h"
-
-  /** @class PatVeloTTHybrid PatVeloTTHybrid.h
+/** @class PatVeloTTHybrid PatVeloTTHybrid.h
    *
    *  Pat VeloTTHybrid algorithm. This is just a wrapper and contains the option to fit the VeloTT tracks with a Kalman fitter, 
    *  the actual pattern recognition is done in the 'PatVeloTTHybridTool'.
    *
    *  - InputTracksName: Input location for Velo tracks
    *  - OutputTracksName: Output location for VeloTT tracks  
-   *  - fitTracks: Fit the tracks with a Kalman fitter
-   *  - Fitter: Name of the Kalman fitter
-   *  - maxChi2: Max Chi2 of track candidate
    *  - TimingMeasurement: Do a timing measurement?
-   *
    *
    *  @author Mariusz Witek
    *  @date   2007-05-08
@@ -51,7 +40,6 @@ protected:
   
 private:
   
-  Tf::TTStationHitManager<PatTTHit> *      m_ttHitManager; ///< The hit manager for TT hits
   ITracksFromTrack* m_veloTTTool;                          ///< The tool that does the actual pattern recognition
   ISequencerTimerTool* m_timerTool;                        ///< Timing tool
   int  m_veloTTTime;                                       ///< Counter for timing tool

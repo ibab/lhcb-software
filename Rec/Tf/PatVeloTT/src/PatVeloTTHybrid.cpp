@@ -19,7 +19,6 @@ DECLARE_ALGORITHM_FACTORY( PatVeloTTHybrid )
 PatVeloTTHybrid::PatVeloTTHybrid( const std::string& name,
                       ISvcLocator* pSvcLocator)
 : GaudiAlgorithm ( name , pSvcLocator ),
-  m_ttHitManager(nullptr),
   m_veloTTTool(nullptr),
   m_timerTool(nullptr),
   m_veloTTTime(0)
@@ -51,8 +50,6 @@ StatusCode PatVeloTTHybrid::initialize() {
 
   m_veloTTTool = tool<ITracksFromTrack>("PatVeloTTHybridTool", this );
 
-  m_ttHitManager   = tool<Tf::TTStationHitManager <PatTTHit> >("PatTTStationHitManager");
-
   info() << " InputTracksName    = " << m_inputTracksName            << endmsg;
   info() << " OutputTracksName   = " << m_outputTracksName           << endmsg;
 
@@ -74,8 +71,6 @@ StatusCode PatVeloTTHybrid::execute() {
 
   if ( m_doTiming ) m_timerTool->start( m_veloTTTime );
   
-  m_ttHitManager->prepareHits();
-
   LHCb::Tracks* outputTracks  = new LHCb::Tracks();
   outputTracks->reserve(200);
   put(outputTracks, m_outputTracksName);
