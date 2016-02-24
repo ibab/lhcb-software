@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2016-02-24 - Sean Benson
+ - Add TESMerger, so that we can merge HLT2 long and downstream unpacked locations.
+
 ! 2016-02-11 - Chris Jones
  - Fix a bug in the unpacking of related info objects caused by too 
    aggressive caching of information, that caused an attempt to access a 
