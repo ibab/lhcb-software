@@ -11,7 +11,8 @@ TestFileDB.test_file_db["mc11a-xdst"].run(configurable=LHCbApp())
 
 from Brunel.Configuration import *
 Brunel().EvtMax   = 10
-Brunel().Monitors = ["SC","FPE"]
+Brunel().Monitors = ["SC","FPE"] # FPE in TrackPacker::check()
+#Brunel().Monitors = ["SC"]
 Brunel().InputType="XDST"
 Brunel().OutputType="XDST"
 Brunel().WithMC=True
@@ -19,6 +20,7 @@ Brunel().DataType="2011"
 Brunel().SplitRawEventInput=0.0
 Brunel().SplitRawEventOutput=2.0
 Brunel().DatasetName="mc11a-test"
+Brunel().Histograms="Expert"
 </text></argument>
   <argument name="reference"><text>../refs/brunel-mc11a-xdst.ref</text></argument>
   <argument name="validator"><text>

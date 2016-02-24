@@ -16,8 +16,9 @@ Purpose: LHCb reconstruction program
   . Add brunel-mc10-notruth to replace brunel-mc09-notruth
   . Modify brunel-mc10-withtruth to test some of the options that were tested by
     brunel-mc09-withtruth
+  . Modify brunel-mc11-xdst to test Brunel().Histograms="Expert". Exposes an FPE
+    in TrackPacker::check()...
   . TODO: add an invfield test to replace brunel-mc09-withtruth-invfield
-  . TODO: add a test of Brunel().Histograms="Expert", requires an XDIGI input
 
 </PRE><H1><A NAME=v49r2>2016-02-05 Brunel v49r2</A></H1><PRE>
 This version uses projects LHCb v40r0, Lbcom v18r0, Rec v19r0, Gaudi v27r0
