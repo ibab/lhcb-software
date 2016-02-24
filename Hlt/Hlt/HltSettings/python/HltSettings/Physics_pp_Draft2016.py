@@ -278,6 +278,7 @@ class Physics_pp_Draft2016( object ):
                                                         ,'Velo_Qcut'             : 999     # OFF
                                                         ,'TrNTHits'              : 0       # OFF
                                                         ,'ValidateTT'            : False
+                                                        ,'Prescale'  : { 'Hlt1CalibTrackingKPi': 0.2 }
                                                        }
                        , Hlt1CommissioningLinesConf : { 'Postscale' : { 'Hlt1ErrorEvent'   : 'RATE(0.01)'
 
