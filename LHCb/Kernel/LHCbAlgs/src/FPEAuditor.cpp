@@ -41,20 +41,26 @@ private:
  *  FPEs, and generate a SIGFPE (which leads to Gaudi
  *  providing a traceback and aborting the job).
  *
- *  Example configuration options :-
- *  @verbatim
- *  // Enable the auditor
- *  ApplicationMgr.ExtSvc += { "AuditorSvc" };
- *  AuditorSvc.Auditors += { "FPEAuditor" };
- *  // Exceptions to trap
- *  // Full list of possible types is "DivByZero","Overflow","Underflow","Invalid","Inexact".
- *  // "AllExcept" turns on all exceptions.
- *  FPEAuditor.TrapOn  = { "DivByZero","Overflow","Underflow","Invalid" };
- *  // Processing phases to enable exceptions during.
- *  FPEAuditor.ActivateAt = {"Execute" };
- *  // Disable exceptions for certain problematic components
- *  FPEAuditor.DisableTrapFor = { "Init","InitReprocSeq","BrunelInit" };
- *  @endverbatim
+ *  Example configuration options:
+\code{.py}
+from Configurables import ApplicationMgr, AuditorSvc, FPEAuditor
+# Configure the auditor
+fpe = FPEAuditor()
+
+# Exceptions to trap
+# Full list of possible types is "DivByZero","Overflow","Underflow","Invalid","Inexact".
+# "AllExcept" turns on all exceptions.
+fpe.TrapOn = ['DivByZero', 'Overflow', 'Underflow', 'Invalid']
+
+# Processing phases to enable exceptions during.
+fpe.ActivateAt = ['Execute']
+# Disable exceptions for certain problematic components
+fpe.DisableTrapFor = ['Init', 'InitReprocSeq', 'BrunelInit']
+
+AuditorSvc().Auditors.append('FPEAuditor')
+
+ApplicationMgr().ExtSvc.append(AuditorSvc())
+\endcode
  *
  *  @see FPE::Guard
  *

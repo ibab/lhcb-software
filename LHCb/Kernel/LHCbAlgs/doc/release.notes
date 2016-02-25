@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2016-02-25 - Marco Clemencic
+ - Use Python options in FPEAuditor Doxygen documentation (LHCBPS-1495)
+
 ! 2016-02-24 - Chris Jones
  - Add a debug message to ApplicationVersionFilter
 
