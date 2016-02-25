@@ -4,6 +4,11 @@
 ! Purpose     : MC tuple tools
 !-----------------------------------------------------------------------------
 
+! 2016-02-25 - Francesco Dettori
+ - Add flag "StoreStablePropertime" (off by default) to MCTupleToolKinematic 
+   to allow propertime and endvertex to be stored for particles considered 
+   stable in LHCb, e.g. for the Kaon in the K-> pi pi pi decay.
+
 !===================== DecayTreeTupleMC v1r6 2015-06-02 ======================
 
 ! 2015-06-02 - Eduardo Rodrigues

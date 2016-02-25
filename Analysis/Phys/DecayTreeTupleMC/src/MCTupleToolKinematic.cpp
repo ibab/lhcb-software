@@ -44,6 +44,13 @@ MCTupleToolKinematic::MCTupleToolKinematic( const std::string& type,
   // Store the propertime information for associated composite particle
   declareProperty( "StorePropertimeInfo", m_storePT = true );
 
+  // Store propertime and endvertex also for stable particles 
+  // This is needed in case you study, for example, K-> pi pi pi 
+  // As the Kaon is considerad stable in LHCb
+  // False by default as it will store properime also of pions, electrons etc
+  declareProperty( "StoreStablePropertime", m_storeStablePropertime = false);
+  
+
 }
 //=============================================================================
 // Destructor
@@ -95,7 +102,7 @@ StatusCode MCTupleToolKinematic::fill( const LHCb::MCParticle*
     originVertex = mcp->originVertex()->position();
     if (msgLevel(MSG::VERBOSE)) verbose() << "     origin vertex position " << originVertex << endmsg ;
 
-    if ( !isStable(mcp) )
+    if ( !isStable(mcp) || m_storeStablePropertime )
     {
       const SmartRefVector<LHCb::MCVertex> & endVertices = mcp->endVertices();
       if (msgLevel(MSG::VERBOSE)) verbose() << "     vertices " << endVertices.size() << endmsg ;

@@ -47,7 +47,8 @@ private:
   bool m_storeKinetic; //!< Store kinetic information from the associated candidate
   bool m_storePT; //!< Store the propertime information for associated composite particle
   bool m_storeVertexes; //!< Store the end and origin true vertex information
-
+  bool m_storeStablePropertime; //!< Store the propertime and vertex also for "stable" particles
+   
 
 #include "DecayTreeTupleBase/isStable.h"
 
