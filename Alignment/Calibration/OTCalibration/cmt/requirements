@@ -1,7 +1,7 @@
 package OTCalibration
 version           v1r11
 
-branches cmt src 
+branches cmt src
 
 use GSL               v*    LCG_Interfaces
 use GaudiAlg          v*
@@ -9,7 +9,7 @@ use TrackEvent        v*    Event
 use ROOT              v*    LCG_Interfaces -no_auto_imports
 use TrackFitEvent     v*    Tr
 include_path      none
-use     Boost         v*    LCG_Interfaces -no_auto_imports
+use Boost             v*    LCG_Interfaces -no_auto_imports
 use AlignKernel	      v*    Alignment
 use OTDAQ             v*    OT
 
