@@ -861,7 +861,6 @@ if not hasattr ( _AppMgr , '_old_run_' ) :
 ##             return sc
 ##     return self._evtpro.executeRun(n)
 
-
 if hasattr ( cpp.LoKi , 'Print' )  and hasattr ( cpp.LoKi.Print , 'print_string' ) :
 
     _print_func_ = cpp.LoKi.Print.print_string

@@ -24,6 +24,12 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2016-02-25 - Vanya Belyaev
+ - irun:
+   add two arguments: 
+   1. "progress" to display progress bar 
+   2. "runing"   to display running bar 
+
 ! 2016-02-21 - Vanya Belyaev
 
  - add printout for MsgStream:

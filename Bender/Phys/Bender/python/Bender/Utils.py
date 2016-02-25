@@ -71,7 +71,8 @@ __all__     = (
     'appMgr'             ,
     'dumpHistos'         ,
     #
-    'Action'             , ## trivial contetx action 
+    'Action'             , ## trivial context action 
+    'RunAction'          , ## specialized action for  sysBeginRun/sysEndRun
     #
     'setData'            ,
     ##
@@ -389,7 +390,10 @@ def run_progress ( nEvents           ,
 def irun ( nEvents                    ,
            accept     = lambda : True , 
            postAction = None          ,
-           preAction  = None          ) :
+           preAction  = None          ,
+           EvtMax     = -1            ,
+           progress   = False         ,
+           running    = False         ) : 
     """Run over events till certain number of good events is found
     >>> def accept_function () : 
     >>> for i in irun ( 100 , accept_function ) :
@@ -404,15 +408,23 @@ def irun ( nEvents                    ,
     with Action ( preAction , postAction ) :
         
         ## get application manager:        
-        _g = appMgr() 
+        _g   = appMgr() 
         sc   = SUCCESS
         evnt = True 
         iev  = 0
         nev  = 0
         
+        from Ostap.progress_bar import ProgressBar, RunningBar 
+        
         with Action ( preRun_actions() , postRun_actions() ) :
-            
+
             with  RunAction () : 
+
+                use_rbar = running
+                use_pbar = progress and 1  < nEvents and not running 
+                
+                pbar = ProgressBar ( max_value = nEvents , silent = not use_pbar ) 
+                rbar = RunningBar  (                       silent = not use_rbar ) 
                 
                 while sc.isSuccess() and evnt and ( nEvents < 0 or iev < nEvents ) :
                     
@@ -421,10 +433,14 @@ def irun ( nEvents                    ,
                     evnt    = get('/Event')
                     if not evnt :
                         if sc.isSuccess() : sc.setCode(2)
-                        break                   ## BREAK! 
+                        break                     ## BREAK! 
+
+                    pbar  += 1 
+                    rbar  += 1
+                    nev   += 1                    ## total number of event
                     
-                    nev   += 1                  ## total number of events
-            
+                    if 0 < EvtMax < nev : break  ## BREAK 
+                    
                     if   0 == nev % 1000000 : 
                         logger.fatal   ('irun: run over %d, found %s ' % ( nev , iev ) )
                     elif 0 == nev %  100000 : 
@@ -629,14 +645,15 @@ class DisabledAlgos(object) :
     >>> with DisableAlgos() :
     >>> ... do something 
     """
-    
-    def __init__  ( self )  :
-        self._disabled = ()
-
+    def __init__  ( self , disableAll = True )  :
+        self._disabled     = ()
+        self._disable_all  = disableAll 
+        
     ## enter context: disable everything 
     def __enter__ ( self ) :
-        _g  = appMgr() 
-        self._disabled = tuple( _g.disableAllAlgs() ) 
+        _g  = appMgr()
+        if self._disable_all : self._disabled = tuple( _g.disableAllAlgs() ) 
+        else                 : self._disabled = tuple( _g.disableTopAlgs() ) 
         return self._disabled
 
     ## exit the context: reenable algorithms 
