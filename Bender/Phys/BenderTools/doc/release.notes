@@ -5,6 +5,17 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2016-02-25 - Vanya Belyaev
+ - Seek.py:
+
+   1. reimplement all seek*-functions in terms of Bender.Utils.irun 
+   2. add argument 'progress' to display running bar:
+
+   In [25]: a = seekForData ('/Event/PSIX/Phys/SelPsiPiForPsiX/Particles', progress = True )
+   Done        39             
+
+      
+
 ! 2016-02-22 - Vanya Belyaev
  - prepare qmtest for no-mcdecay script 
 

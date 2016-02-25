@@ -62,7 +62,8 @@ __all__     = (
     'seekVoidDecision'  ,
     'seekAlgDecision'   ,
     'seekForData'       ,
-    'seekHltDecision'   ,
+    'seekHlt1Decision'  ,
+    'seekHlt2Decision'  ,
     'seekStripDecision' ,
     'seekForODIN'       ,
     'seekForEvtRun'     ,
@@ -82,37 +83,44 @@ else                      : logger = getLogger ( __name__ )
 #  fun  =  lambda : Time( get('/Event/DAQ/ODIN').gspTime()*1000).month(local)<=Time.June
 #  ok,n = seekForVoidDecision ( fun , 100000 )
 #  @code 
-def seekVoidDecision ( fun , EvtMax = 1000 ) :
-    """
-    Seek the Decision for the certain void-functor/function
-    e.g. find event with time before June 
+def seekVoidDecision ( fun                ,
+                       EvtMax     = 1000  ,
+                       postAction = None  ,
+                       preAction  = None  ,
+                       progress   = False ) :
+    """Seek the Decision for the certain void-functor/function
+    e.g. find event with time before June
+    ##
     >>> Time = cpp.Gaudi.Time   e.g. find event with time before June 
-    >>> fun  =  lambda : Time( get('/Event/DAQ/ODIN').gspTime()*1000).month(local)<=Time.June 
+    >>> fun  = lambda : get('DAQ/ODIN').eventTime().month(local) <= Time.June 
     >>> ok,n = seekForVoidDecision ( fun , 100000 ) 
     """
-    from Bender.Utils import appMgr, run 
-    #
-    _g   = appMgr()
-    _evt = _g.evtSvc()
+    from    Bender.Utils import irun
 
-    evt  = 0
-    ok   = False
-    
-    while _evt['/Event'] and evt < EvtMax :
-        ok  = fun()
-        if ok : return True, evt  
-        run(1)
-        evt += 1 
-        
-    return ok, evt  
+    for i in irun ( 1                  ,
+                    fun                ,
+                    postAction         ,
+                    preAction          ,
+                    EvtMax             ,
+                    running = progress ) :
+
+        evnt, iev, nev = i 
+        return 1==iev, nev
+
+    return False , EvtMax  
 
 # =============================================================================
 ## seek the decision for the certain algorithm
-def seekAlgDecision ( alg , EvtMax = 1000 ) :
+def seekAlgDecision ( alg                ,
+                      EvtMax     = 1000  ,
+                      postAction = None  ,
+                      preAction  = None  ,
+                      progress   = False ) :
+    """Seek the Decision for the certain algorithm
+    >>> alg = 'GOODKAON'
+    >>> seekAlgDecision ( alg ) 
     """
-    Seek the Decision for the certains algorithm    
-    """
-
+    
     fun = alg
     
     if isinstance ( alg , str ) :
@@ -121,150 +129,222 @@ def seekAlgDecision ( alg , EvtMax = 1000 ) :
         from LoKiHlt.algorithms import ALG_EXECUTED, ALG_PASSED
         fun = ALG_EXECUTED  ( alg ) & ALG_PASSED ( alg )
         
-    return seekVoidDecision ( fun ) 
+    return seekVoidDecision ( fun        ,
+                              EvtMax     ,
+                              postAction ,
+                              preAction  ,
+                              progress   ) 
 
 # =============================================================================
-## 
-def _dataOk_ ( o ) :
-    #
-    if not o : return False
-    #
-    if hasattr ( o , 'size' ) :
-        return True if 0 < o.size() else False
-    #
-    return True
+## @class ValidData
+#  helper object to find non-empty data
+class ValidData(object) :
+    """Helper object to find no-empty data
+    """
+    
+    def __init__ ( self , location ) :
+        self.location = location
+        from Bender.Utils import appMgr 
+        _g          = appMgr()
+        self.evtSvc = _g.evtSvc()
+        
+    def __call__ ( self ) :
+        # 
+        self.data = self.evtSvc[ self.location ]
+        #
+        if    not self.data                     : return False
+        elif  hasattr ( self.data , '__len__' ) : return 0 < len( self.data ) 
+        elif  hasattr ( self.data , 'size'    ) : return 0 < self.data.size()
+        #
+        return True
+    
+    def __del__ ( self ) :  
+        self.data    = None
+        self.evtSvc  = None
+        del self.data
+        del self.evtSvc 
 
+# =============================================================================
+## @class GoodData
+#  helper object to find good data 
+class GoodData(ValidData) :
+    """Helper object to find food data  data
+    """
+    def __init__ ( self , criterion , location ) :
+        self.good     = criterion
+        ValidData.__init__ ( self , location )
+        
+    def __call__ ( self ) :
+        # 
+        self.data = self.evtSvc[ self.location ]
+        #
+        if not self.data : return False
+        return self.good ( self.data )
+
+    def __del__ ( self ) :  
+        self.good    = None 
+        del self.good 
 
 # =============================================================================
 ## seek for data
-def seekForData ( location       ,
-                  EvtMax = 10000 ) :
+def seekForData ( location           ,
+                  EvtMax     = 10000 ,
+                  postAction = None  ,
+                  preAction  = None  ,
+                  progress   = False ) :
+    """Seek for existence of some (non-empty) data
+    >>> ps , evt = seekForData ('Phys/MyDecay/Particles')    
     """
-    Seek for existence of some (non-empty) data
-    
-    >>> ps , evt = seekForData ('/Event/Phys/MyDecay/Particles')
-    
-    """
-    from Bender.Utils import appMgr, run 
-    #    
-    _cnt      = 0
-    _g        = appMgr()
-    _evt      = _g.evtSvc()
-
-    while _evt['/Event'] and _cnt < EvtMax :        
-        _obj      = _evt[ location ]
-        if _dataOk_ ( _obj ) : return _obj, _cnt
-        run(1)
-        _cnt += 1
-        
-    return None, _cnt 
+    dataOK    = ValidData( location )
+    ok , nev  = seekVoidDecision ( dataOK     ,
+                                   EvtMax     ,
+                                   postAction ,
+                                   preAction  ,
+                                   progress   ) 
+    ##
+    if ok : ok = dataOK.data
+    else  : ok = None
+    ##
+    return ok, nev
 
 # =============================================================================
 ## seek for some ``ODIN''-expression
-def seekForODIN     ( criterion                      ,
-                      EvtMax     = 10000             ,
-                      disableAll = False             ,
-                      location   = '/Event/DAQ/ODIN' ) :
-                      
-    from Bender.Utils import appMgr, run, get
+def seekForODIN     ( criterion               ,
+                      EvtMax     = 10000      ,
+                      disableAll = False      ,
+                      location   = 'DAQ/ODIN' ,
+                      postAction = None       ,
+                      preAction  = None       ,
+                      progress   = False      ) :
+    
+    from Bender.Utils import DisablesAlgos 
     #    
-    _g        = appMgr()
-    _evt      = _g.evtSvc()
+    with DisabledAlgos( disableAll ) :
         
-    evt = 0
-
-    ## disable the algorithms 
-    _disabled = _g.disableAllAlgs() if disableAll else _g.disableTopAlgs()
-
-    try : 
-        while  _evt['/Event'] and evt < EvtMax :
-            
-            odin = get ( location )
-            if not odin : return False , evt     ## RETURN
-            ok   =  criterion ( odin )
-            if ok       : return True  , evt     ## RETURN 
-            run(1)
-            evt += 1
-            
-    finally :
-        for _a in _disabled :
-            _a.setEnabled ( True )
-        
-        
-    return ok, evt
+        odinGOOD   = GoodData( criterion , location )
+        odin , nev = seekVoidDecision ( odinGOOD   ,
+                                        EvtMax     ,
+                                        postAction ,
+                                        preAction  ,
+                                        progress   ) 
+        if odin : odin = odinGOOD.data
+        else    : odin = None
+    ##
+    return odin, nev 
 
 # =============================================================================
 ## seek for some  event-run (list)
-def seekForEvtRun  ( runevt_list                    ,
-                     EvtMax     = 10000             ,
-                     disableAll = False             ,
-                     location   = '/Event/DAQ/ODIN' ) :
-    """
-    Seek for event in runevent list
+def seekForEvtRun  ( runevt_list             ,
+                     EvtMax     = 10000      ,
+                     disableAll = False      ,
+                     location   = 'DAQ/ODIN' ,
+                     postAction = None       ,
+                     preAction  = None       ,
+                     progress   = False      ) :
     
+    """Seek for event in runevent list
     """
     from LoKiHlt.decorators import odin_runevts
-    
+    ## 
     return seekForODIN ( odin_runevts ( runevt_list ) ,
                          EvtMax     ,
                          disableAll ,
-                         location   ) 
+                         location   ,
+                         postAction ,
+                         preAction  ,
+                         progress   ) 
 
-    
 # =============================================================================
 ## seek the decision for the certain Trigger Line 
-def seekHltDecision ( expr                                 ,
-                      EvtMax     = 10000                   ,
-                      disableAll = False                   ,
-                      location   = '/Event/Hlt/DecReports' ) :
+def seekHltDecision ( expr                ,
+                      EvtMax              ,  
+                      disableAll          ,  
+                      location            , 
+                      postAction = None   ,
+                      preAction  = None   ,
+                      progress   = False  ) :
     """
-    Seek for  the event with certain Hlt-decision 
+    Seek for  the event with certain Hlt1-decision 
     """
-    from Bender.Utils       import appMgr, run, get
     from LoKiHlt.decorators import HLT_PASS_RE 
-
+    
     fun = HLT_PASS_RE ( expr ) if isinstance ( expr , str ) else expr 
+    
+    from Bender.Utils import DisabledAlgos
+    
+    with DisabledAlgos( disableAll ) :
         
-    evt = 0
+        hltGOOD    = GoodData( fun , location )
+        hlt , nev  = seekVoidDecision ( hltGOOD    ,
+                                        EvtMax     ,  
+                                        postAction ,
+                                        preAction  ,
+                                        progress   ) 
+        if hlt  : hlt = hltGOOD.data
+        else    : hlt = None
+    ##
+    return hlt, nev 
 
-    _g        = appMgr()
-    _evt      = _g.evtSvc()
-    
-    ## disable the algorithms 
-    _disabled = _g.disableAllAlgs() if disableAll else _g.disableTopAlgs()
-    
-    try : 
-        while  _evt['/Event'] and evt < EvtMax :
-            
-            hlt = get ( location )
-            if not hlt : return False , evt     ## RETURN
-            ok  = fun ( hlt )
-            if ok      : return True  , evt     ## RETURN 
-            run(1)
-            evt += 1
-            
-    finally :
-        for _a in _disabled :
-            _a.setEnabled ( True )
-        
-        
-    return ok, evt
+# =============================================================================
+## seek the decision for the certain Trigger Line 
+def seekHlt1Decision ( expr                           ,
+                       EvtMax     = 10000             ,
+                       disableAll = False             ,
+                       location   = 'Hlt1/DecReports' , 
+                       postAction = None              ,
+                       preAction  = None              ,
+                       progress   = False             ) :
+    """
+    Seek for  the event with certain Hlt1-decision 
+    """
+    return seekHltDecision ( expr       ,
+                             EvtMax     ,
+                             disableAll ,
+                             location   ,
+                             postAction ,
+                             preAction  ,
+                             progress   ) 
+
+# =============================================================================
+## seek the decision for the certain Trigger Line 
+def seekHlt2Decision ( expr                           ,
+                       EvtMax     = 10000             ,
+                       disableAll = False             ,
+                       location   = 'Hlt2/DecReports' ,
+                       postAction = None              ,
+                       preAction  = None              ,
+                       progress   = False             ) :
+    """
+    Seek for  the event with certain Hlt1-decision 
+    """
+    return seekHltDecision ( expr       ,
+                             EvtMax     ,
+                             disableAll ,
+                             location   ,
+                             postAction ,
+                             preAction  ,
+                             progress   ) 
 
 # =============================================================================
 ## seek the decision for the certain stripping line 
-def seekStripDecision ( expr                                        ,
-                        EvtMax     = 10000                          ,
-                        disableAll = False                          ,
-                        location   = '/Event/Strip/Phys/DecReports' ) :
+def seekStripDecision ( expr                                 ,
+                        EvtMax     = 10000                   ,
+                        disableAll = False                   ,
+                        location   = 'Strip/Phys/DecReports' ,
+                        postAction = None                    ,
+                        preAction  = None                    ,
+                        progress   = False                   ) :
     """
     Seek the decision for the certain Stripping Line
     """
     return seekHltDecision ( expr       ,
                              EvtMax     ,
                              disableAll , 
-                             location   ) 
+                             location   ,
+                             postAction ,
+                             preAction  ,
+                             progress   ) 
 
-        
 # =============================================================================
 if __name__ == '__main__' :
 
