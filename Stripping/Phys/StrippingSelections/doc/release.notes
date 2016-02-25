@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-02-25 - Andrea Contu
+ - Fix to StrippingForPromptCharm
+
 ! 2016-02-12 - Albert Puig
  - Add B->K pi+pi-ll lines in StrippingB2XLL.
 

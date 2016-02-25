@@ -1494,7 +1494,7 @@ class StrippingPromptCharmConf(LineBuilder) :
         return self.make_selection (
             'OmegaCstar'         ,
             CombineParticles     ,
-            [ self.LamC() , self.LamC2pKK(), self.promptKaons() ] , 
+            [ self.LamC() , self.promptKaons() ] , 
             #
             ## algorithm properties 
             DecayDescriptors  = [
