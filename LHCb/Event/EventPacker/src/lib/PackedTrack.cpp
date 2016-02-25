@@ -287,12 +287,24 @@ StatusCode TrackPacker::check( const Data & dataA,
     parent().warning() << "Wrong key : old " <<  dataA.key() << " test " << dataB.key() << endmsg;
   }
   bool isOK = true;
-  if ( 1.e-7 < fabs( (dataA.chi2PerDoF()-dataB.chi2PerDoF())/dataB.chi2PerDoF() ) ) isOK = false;
+  if ( 0. == dataB.chi2PerDoF() ) 
+  {
+    if( 0. != dataA.chi2PerDoF() ) isOK = false;
+  }
+  else if ( 1.e-7 < fabs( (dataA.chi2PerDoF()-dataB.chi2PerDoF())/dataB.chi2PerDoF() ) ) isOK = false;
   if ( 0   < abs( dataA.nDoF() - dataB.nDoF() ) ) isOK = false;
   if ( dataA.flags() != dataB.flags() )              isOK = false;
   if ( dataA.lhcbIDs().size() != dataB.lhcbIDs().size() ) isOK = false;
-  if ( 1.e-7 < fabs( (dataA.likelihood() - dataB.likelihood() )/ dataB.likelihood() ) ) isOK = false;
-  if ( 1.e-7 < fabs( (dataA.ghostProbability()-dataB.ghostProbability())/
+  if ( 0. == dataB.likelihood() ) 
+  {
+    if( 0. != dataA.likelihood() ) isOK = false;
+  }
+  else if ( 1.e-7 < fabs( (dataA.likelihood() - dataB.likelihood() )/ dataB.likelihood() ) ) isOK = false;
+  if ( 0. == dataB.ghostProbability() ) 
+  {
+    if( 0. != dataA.ghostProbability() ) isOK = false;
+  }
+  else if ( 1.e-7 < fabs( (dataA.ghostProbability()-dataB.ghostProbability())/
                      dataB.ghostProbability()) ) isOK = false;
   unsigned int kk;
   for ( kk = 0 ; dataA.lhcbIDs().size() != kk ; ++kk )
@@ -307,7 +319,11 @@ StatusCode TrackPacker::check( const Data & dataA,
   for ( kk = 0; tExtra.size() > kk; ++kk, ++oIt, ++tIt )
   {
     if ( (*oIt).first != (*tIt).first ) isOK = false;
-    if ( 1.e-7 < fabs( ((*oIt).second - (*oIt).second ) / (*oIt).second ) ) isOK = false;
+    if ( 0. == (*tIt).second ) 
+    {
+      if( 0. != (*oIt).second ) isOK = false;
+    }
+    else if ( 1.e-7 < fabs( ((*oIt).second - (*tIt).second ) / (*tIt).second ) ) isOK = false;
   }
 
   if ( dataA.nStates() != dataB.nStates() ) isOK = false;
