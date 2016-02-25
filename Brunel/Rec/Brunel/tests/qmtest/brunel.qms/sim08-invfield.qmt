@@ -4,9 +4,8 @@
 # SUMMARY OF THIS TEST
 # ...................
 # Author: M.Cattaneo
-# Purpose: Check any regressions in Brunel reconstruction of Sim08 simulation
-# Prerequisites: brunel.sim08-invfield, so that in case of failure the new 
-#                reference file of this test is the one that survives 
+# Purpose: Check that Brunel reconstruction is insensitive to direction
+#          of magnetic field
 # Common failure modes, severities and cures: 
 #          . MAJOR: Every failure should be understood. If sim08 test
 #                   also fails, check first reasons for those failures
@@ -29,13 +28,17 @@ Brunel().Monitors = ["SC","FPE"]
 Brunel().WithMC=True
 Brunel().InputType = "DIGI"
 Brunel().OutputType = "LDST"
-Brunel().DataType="2012"</text></argument>
+Brunel().DataType="2012"
+
+# invert the Magnetic field
+from Configurables import MagneticFieldSvc, STOfflinePosition
+MagneticFieldSvc().ForceToUseUpMap=True
+STOfflinePosition('ToolSvc.ITClusterPosition').applyLorentzCorrection=False
+STOfflinePosition('ToolSvc.STOfflinePosition').applyLorentzCorrection=False
+  </text></argument>
   <argument name="reference"><text>../refs/sim08.ref</text></argument>
   <argument name="validator"><text>
 from Brunel.QMTest.BrunelExclusions import preprocessor
 validateWithReference(preproc = preprocessor)
 </text></argument>
-  <argument name="prerequisites"><set>
-    <tuple><text>brunel.sim08-invfield</text><enumeral>PASS</enumeral></tuple>
-  </set></argument>
 </extension>
