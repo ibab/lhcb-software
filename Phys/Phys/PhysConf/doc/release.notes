@@ -5,6 +5,15 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2016-02-25 - Vanya Belyaev
+
+ - MicroDST.py
+   add two more links in TES 
+     /Event/Hlt1/DecReports --> "RootInTES"/Hlt1/DecReports 
+     /Event/Hlt2/DecReports --> "RootInTES"/Hlt2/DecReports 
+  it helps a lot for python prompt 
+ 
+
 ! 2016-02-23 - Chris Jones
  - Update ANNPID recalibration to also run on 2015 data.
 

@@ -141,13 +141,25 @@ def uDstConf ( rootInTes        ,
     reports = Link ( 'LinkStripReports',
                      What =        '/Event/Strip/Phys/DecReports' ,
                      Target = rootInTes + 'Strip/Phys/DecReports' )
-    
+
     dod.AlgMap [ rawEvt  . Target ] = rawEvt 
     dod.AlgMap [ odin    . Target ] = odin
     dod.AlgMap [ summary . Target ] = summary
     dod.AlgMap [ header  . Target ] = header
     dod.AlgMap [ reports . Target ] = reports
     
+    hlt1_reports = Link ( 'LinkHlt1Reports',
+                          What   = rootInTes +  'Hlt1/DecReports'  ,
+                          Target =       '/Event/Hlt1/DecReports' )
+    
+    hlt2_reports = Link ( 'LinkHlt2Reports',
+                          What   = rootInTes +  'Hlt2/DecReports'  ,
+                          Target =       '/Event/Hlt2/DecReports' )
+    
+    dod.AlgMap [ hlt1_reports . Target ] = hlt1_reports
+    dod.AlgMap [ hlt2_reports . Target ] = hlt2_reports
+
+
     logger.info  ( "Configure ODIN,Raw,Summary&Reports RootInTES='%s'" % rootInTes )
     rawEventLoc=rootInTes + 'DAQ/RawEvent' 
     from DAQSys.Decoders import DecoderDB
