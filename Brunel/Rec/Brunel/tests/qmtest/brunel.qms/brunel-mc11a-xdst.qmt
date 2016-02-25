@@ -11,8 +11,7 @@ TestFileDB.test_file_db["mc11a-xdst"].run(configurable=LHCbApp())
 
 from Brunel.Configuration import *
 Brunel().EvtMax   = 10
-Brunel().Monitors = ["SC","FPE"] # FPE in TrackPacker::check()
-#Brunel().Monitors = ["SC"]
+Brunel().Monitors = ["SC","FPE"]
 Brunel().InputType="XDST"
 Brunel().OutputType="XDST"
 Brunel().WithMC=True
