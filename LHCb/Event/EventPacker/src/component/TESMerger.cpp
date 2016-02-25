@@ -26,7 +26,7 @@ private:
   std::vector<std::string> m_inputLocations;
   std::string m_outputLocation;
 };
-
+  
 template <class T>
 TESMerger<T>::TESMerger(const std::string& name,
                        ISvcLocator* pSvcLocator):
@@ -40,23 +40,24 @@ TESMerger<T>::TESMerger(const std::string& name,
 template <class T>
 StatusCode TESMerger<T>::execute()
 {
-  SharedObjectsContainer<T>* out = new SharedObjectsContainer<T>() ;
+  //SharedObjectsContainer<T>* out = new SharedObjectsContainer<T>() ;
+  KeyedContainer<T, Containers::HashMap >* out = new KeyedContainer<T, Containers::HashMap >() ;
   put( out, m_outputLocation) ;
   
-  // loop 
   for( std::vector<std::string>::const_iterator ilist = m_inputLocations.begin() ;
        ilist != m_inputLocations.end(); ++ilist) {
-    KeyedContainer<T, Containers::HashMap>* cont_in = getIfExists<KeyedContainer<T, Containers::HashMap> >(*ilist) ;
-    for(typename KeyedContainer<T, Containers::HashMap >::const_iterator i_obj = cont_in->begin(); 
+    //typename Gaudi::NamedRange_<std::vector<const T*> > cont_in = get<typename Gaudi::NamedRange_<std::vector<const T*> > >(*ilist) ;
+    KeyedContainer<T, Containers::HashMap >* cont_in = get<KeyedContainer<T, Containers::HashMap > >(*ilist) ;
+    for(auto i_obj = cont_in->begin(); 
 	 i_obj != cont_in->end(); ++i_obj) 
-	out->insert( (*i_obj) ) ;
+	out->insert( (*i_obj)->clone() ) ;
   }
   return StatusCode::SUCCESS;
 }
 
 typedef TESMerger<LHCb::ProtoParticle> TESMergerProtoParticle;
-DECLARE_NAMED_ALGORITHM_FACTORY( TESMergerProtoParticle, TESMergerProtoParticle )
+DECLARE_ALGORITHM_FACTORY( TESMergerProtoParticle )
 typedef TESMerger<LHCb::Track> TESMergerTrack;
-DECLARE_NAMED_ALGORITHM_FACTORY( TESMergerTrack, TESMergerTrack )
+DECLARE_ALGORITHM_FACTORY( TESMergerTrack )
 typedef TESMerger<LHCb::Particle> TESMergerParticle;
-DECLARE_NAMED_ALGORITHM_FACTORY( TESMergerParticle, TESMergerParticle )
+DECLARE_ALGORITHM_FACTORY( TESMergerParticle )
