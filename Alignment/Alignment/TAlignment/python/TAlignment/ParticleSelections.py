@@ -159,6 +159,12 @@ def ReviveHltTracks(TriggerLines=[]):
     trackseq.Members += [ d.setup() for d in hltdecs ]
     trackseq.Members += [ hltTrackConv ]
 
+    # Add a filter to skip events with empty input container
+    from Configurables import LoKi__VoidFilter as Filter
+    fltr = Filter ( 'TrackConvOutput' , Code = " 1 < CONTAINS ( '%s') " % hltTrackConv.TrackDestination)
+    trackseq.Members.append( fltr )
+
+
     # create a sequence that fits the tracks and does the hit-adding
     from TAlignment.Utils import configuredFitAndHitAdderSequence
     fitseq =  configuredFitAndHitAdderSequence( Name = 'HltBest',

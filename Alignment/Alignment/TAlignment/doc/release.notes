@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2016-02-25 - Maurizio Martinelli
+ - Added a filter in ReviveHltTracks function of ParticleSelections
+
 ! 2016-02-12 - Maurizio Martinelli
  - VertexResidualTool: added a couple of includes.
  - Added boost to package requirements.
