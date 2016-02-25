@@ -179,7 +179,7 @@ void PatVeloTTHybridTool::simpleFit( const PatTTHits& theHits ) const{
     const float xd    = xTTFit + xSlopeTTFit*(zd-m_zMidTT);
     const float du    = xd - hit->x();
     
-    chi2TT += (du*du)*hit->weight();
+    chi2TT += (du*du)*hit->hit()->weight();
     
   }
   
