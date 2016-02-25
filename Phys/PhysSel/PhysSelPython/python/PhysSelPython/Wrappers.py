@@ -14,6 +14,10 @@ are available:
    - VoidEventSelection Selects event based on TES container properties, applying a LoKi__VoidFilter compatible cut to the data from a required selection.
    - PassThroughSelection
    - PrintSelection     Specialization of PassThroughSelection to print the objects
+   - LimitSelection     Specialization of PassThroughSelection to limit the selection 
+   - MomentumScaling    ``pseudo-selection'' that applyes (globally) Momentum calibration
+   - SimpleSelection    simple compact 1-step way to create the selection 
+   - FilterSelection    Specialization of SimpleSelection for filtiiering using FilterDesktop 
    """
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
@@ -30,8 +34,13 @@ __all__ = ('DataOnDemand',
            'NameError',
            'NonEmptyInputLocations',
            'IncompatibleInputLocations',
-           'PrintSelection'   , 
-           'LimitSelection'        
+           ##
+           'SimpleSelection'   , 
+           'FilterSelection'   , 
+           'PrintSelection'    , 
+           'LimitSelection'    ,  
+           ## 
+           'MomentumScaling'   ## ``pseudo-selection'' to aplly (globally) momentum sclaing         
            )
 
 from copy import copy
@@ -416,7 +425,7 @@ class ChargedProtoParticleSelection(UniquelyNamedObject,
             if pid not in ProtoParticleSelection.__allowedPIDs :
                 raise Exception(pid+" not in allowed set of PID infos")
 
-
+            
 # ========================================================================
 ## helper shortcut fot creation of 1-step selection
 #
@@ -467,61 +476,56 @@ class ChargedProtoParticleSelection(UniquelyNamedObject,
 #  @param inputs        list of input/required selection
 #  @param args          additional arguments to be used for algorithm
 #  @param kwargs        additional arguments to be used for algorithm
-#  @return the selection object
-# 
+#  @return the selection object 
 def SimpleSelection (
     name     ,   ## unique selection name 
     algotype ,   ## type of algorithm to be used
     inputs   ,   ## list of input/required selections
     *args    ,   ## additional arguments to be used for algorithm
     **kwargs ) : ## additional arguments to be used for algorithm
-    """
-    Helper shortcut fot creation of 1-step selection
+    """Helper shortcut fot creation of 1-step selection
 
     It is very simple stuff, but in practice it does save a lot of typing!
     
+    >>> from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+    >>> from StandardParticles                     import StdAllLooseMuons as muons 
+    >>> from PhysSelPython.Wrappers                import SimpleSelection
     
-    #  from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
-    #  from StandardParticles                     import StdAllLooseMuons as muons 
-    #  from PhysSelPython.Wrappers                import SimpleSelection
-    #
-    #  good_muons = SimpleSelection (
-    #       'GoodMu'          ,
-    #       FilterDesktop     ,
-    #       input = [ muons ] ,
-    #       Code  = ' PT>1 * GeV '  ## will be transferred to the algorithm 
-    #       )
-    #
+    >>> good_muons = SimpleSelection (
+    ...  'GoodMu'          ,
+    ...  FilterDesktop     ,
+    ... input = [ muons ] ,
+    ... Code  = ' PT>1 * GeV '  ## will be transferred to the algorithm 
+    ... )
 
     For 1-step decay 
     
-    #
-    #  from GaudiConfUtils.ConfigurableGenerators import CombineParticles 
-    #  from StandardParticles                     import StdAllLooseMuons as muons 
-    #  from PhysSelPython.Wrappers                import SimpleSelection
-    #
-    #  dimuons = SimpleSelection (
-    #       'DiMu'           ,
-    #       CombineParticles ,
-    #       input = [ muons ] ,
-    #       ## the rest of parameters are sent to athe algorithm:
-    #       DecayDescriptor = ' J/psi(1S) -> mu+ mu- ' ,
-    #       CombinationCut  = ' in_range( 3 * GeV  , AM , 3.2 * GeV )  ' ,
-    #       MotherCut       = ' in_range( 3 * GeV  ,  M , 3.2 * GeV )  ' ,
-    #       )
-    
-    """
+    >>> from GaudiConfUtils.ConfigurableGenerators import CombineParticles 
+    >>> from StandardParticles                     import StdAllLooseMuons as muons 
+    >>> from PhysSelPython.Wrappers                import SimpleSelection
 
+    >>> dimuons = SimpleSelection (
+    ...     'DiMu'           ,
+    ...      CombineParticles ,
+    ...      input = [ muons ] ,
+    ...      ## the rest of parameters are sent to athe algorithm:
+    ...      DecayDescriptor = ' J/psi(1S) -> mu+ mu- ' ,
+    ...     CombinationCut  = ' in_range( 3 * GeV  , AM , 3.2 * GeV )  ' ,
+    ...      MotherCut       = ' in_range( 3 * GeV  ,  M , 3.2 * GeV )  ' ,
+    ... )    
+    """
     ## get selection's properties: 
     output_branch = kwargs.pop ( 'OutputBranch'     , 'Phys'      )
     input_setter  = kwargs.pop ( 'InputDataSetter'  , 'Inputs'    ) 
     output_setter = kwargs.pop ( 'OutputDataSetter' , 'Output'    ) 
     extension     = kwargs.pop ( 'Extension'        , 'Particles' ) 
-    
     #
     ## create new algorithm or algorithm generator 
     #
     alg = algotype ( *args , **kwargs )
+    #
+    ## adjust inputs 
+    if not isinstance ( inputs , ( list , tuple ) ) : inputs = [ inputs ] 
     #
     ## create selection 
     return Selection (
@@ -533,6 +537,46 @@ def SimpleSelection (
         OutputDataSetter   = output_setter ,
         Extension          = extension             
         )
+
+# =============================================================================
+## Useful shortcut for selection with FilterDesktop algorithm
+#  @code
+#  from StandardParticles import StdAllLoosePions   as pions
+#  good_poins = FilterSelection (
+#     'good_pions'       , ## unique name 
+#      [ pions ]         , ## required selections  
+#      Code = "PT>1*GeV" , ## properties of FilterDesktop algorithm
+#      )
+#  @endcode 
+#  @see SimpleSelection
+#  @see Selection
+#  @see SelPy.Selection
+#  @see FilterDesktop
+#
+#  @param name          unique selection name 
+#  @param inputs        list of input/required selection
+#  @param Code          "Code"-property of FilterDesktop 
+#  @param args          additional arguments to be used for algorithm
+#  @param kwargs        additional arguments to be used for algorithm
+#  @return the selection object
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-02-12
+# 
+def FilterSelection ( name, inputs , Code , **kwargs ) :
+    """ Useful shortcut for selection with FilterDesktop algorithm
+    >>> from StandardParticles import StdAllLoosePions   as pions
+    >>> good_poins = FilterSelection (
+    ...    'good_pions'       , ## unique name 
+    ...    [ pions ]          , ## ``inputs'': required selections  
+    ...    Code = 'PT>1*GeV'  , ## properties of FilterDesktop algorithm
+    ...    )
+    """
+    #
+    from GaudiConfUtils.ConfigurableGenerators import FilterDesktop as _FILTER_ 
+    ## create selection
+    return SimpleSelection ( name , _FILTER_ , inputs , Code = Code , **kwargs )
+
 
 # =========================================================================
 ## helper utility to create 'Print'-selection, useful for debugging
@@ -560,14 +604,14 @@ def PrintSelection (
     InputDataSetter = 'Inputs' ,    ## it is just DaVinci. 
     *args                      ,    ## algorithm parameters 
     **kwargs                   ) :  ## algorithm parameters 
-    """
+    """Helper utility to create 'Print'-selection, useful for debugging
+    Such object can be easily inserted into selection flow
     
-    ## some input selection
-    selection =
+    >>> ## some input selection
+    >>> selection =
     
-    ## add ``Printer''
-    selection = PrintSelection ( selection )
-    
+    >>> add ``Printer''
+    >>> selection = PrintSelection ( selection )    
     """
     if printer is None :
         from GaudiConfUtils.ConfigurableGenerators import PrintDecayTree as _Printer_
@@ -636,6 +680,49 @@ def LimitSelection ( input               ,
         ) ,
         RequiredSelection = input                    )
 
+
+# =============================================================================
+## @class MomentumScaling
+#  Pseudo-selection that allows to embedd the momentum
+#  scaling algorithm into the overall flow
+#  @code
+#  selection = ....  ## some selection
+#  selection = MomentumScaling ( selection ) 
+#  @endcode
+#  @see TrackScaleState
+#  @attention it applies GLOBAL momentum scaling for *all* tracks!
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2016-02-25
+class MomentumScaling(UniquelyNamedObject ,
+                      ClonableObject      ,
+                      SelectionBase       ) :
+    """  Pseudo-selection that allows to embedd the momentum
+    scaling algorithm into the overall flow
+    
+    >>> selection = ....  ## some selection
+    >>> selection = MomentumScaling ( selection )
+    Attention: it applies GLOBAL momentum scaling for *all* tracks!
+    """
+    def __init__(self              ,
+                 RequiredSelection ) :
+
+        ## construct more or less unique name 
+        name = '%s_SCALE'
+        name = name % RequiredSelection.name()
+        
+        UniquelyNamedObject . __init__( self , name     )
+        ClonableObject      . __init__( self , locals() )
+        
+        checkName(self.name())
+
+        from Configurables import TrackScaleState as _SCALER         
+        _alg = _SCALER('SCALER')   ## NB: THE NAME is fixed, is COMMON INSTANCE
+        
+        SelectionBase.__init__( self                      ,
+                                algorithm          = _alg ,
+                                outputLocation     = RequiredSelection.outputLocation(),
+                                requiredSelections = [RequiredSelection] )
+        
 # =============================================================================
 # The END 
 # =============================================================================
