@@ -54,7 +54,7 @@ class ICaloHypoTool ;
 class CaloHypoAlg : public GaudiAlgorithm 
 {
   /// friend factory for instantiation
-  friend struct AlgFactory<CaloHypoAlg>;
+  friend class AlgFactory<CaloHypoAlg>;
 
 public:
   

@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 
+! 2016-02-25 - Olivier Deschamps
+  - fix a clang warning
+
 ! 2016-02-24 - Olivier Deschamps
   - fix clang warning in friend declarations of ToolFactory (class->struct)
 
