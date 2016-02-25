@@ -244,6 +244,7 @@ class ProgressBar(object):
         
         self.update_amount( self.min )
         self.build_bar ()
+        self.show      ()
         
     def increment_amount(self, add_amount = 1):
         return self.update_amount ( self.amount + add_amount )
@@ -260,6 +261,10 @@ class ProgressBar(object):
         self.amount = new_amount
         ##
         if self.build_bar() and not self.silent : self.show()
+        ##
+        if not self.silent :
+            if   self.amount - self.min    < 10 : self.show ()
+            elif self.max    - self.amount < 10 : self.show ()
         ##
         return self
 
