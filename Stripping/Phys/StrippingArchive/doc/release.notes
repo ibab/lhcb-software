@@ -4,6 +4,9 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+2016-02-26 - Andrea Contu
+ - Fix to StrippingPromptCharm in s20r1p1
+
 2016-02-17 - Andrea Contu
  - Modified archive for S25
 
