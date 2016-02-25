@@ -252,6 +252,8 @@ class ProgressBar(object):
         """
         Update self.amount with 'new_amount', and then rebuild& show the bar 
         """
+        if self.silent : return self   ## REALLY SILENT 
+        ## 
         if not new_amount: new_amount = self.amount
         if new_amount < self.min: new_amount = self.min
         if new_amount > self.max: new_amount = self.max
@@ -301,18 +303,18 @@ class ProgressBar(object):
             sys.stdout.write( self.bar + '\r' ) 
             sys.stdout.flush()
         
-    def end  ( self  ) : self.show() 
+    def end  ( self  ) :
+        if not self.silent : 
+            self.build_bar() 
+            self.show     () 
+        self.silent = True
         
     def __enter__ ( self      ) :
         self.show() 
         return self
     
-    def __exit__  ( self , *_ ) :
-        if not self.silent  : 
-            if self.prefix : sys.stdout.write( self.prefix ) 
-            sys.stdout.write( self.bar + '\n') 
-            sys.stdout.flush()
-        return False ##  allow propagation of exceptions 
+    def __exit__  ( self , *_ ) : self.end ()
+    def __del__   ( self      ) : self.end ()
 
 # =============================================================================
 ## helper function to display progress bar
@@ -335,12 +337,12 @@ def progress_bar ( iterable , max_value = None , **kwargs ) :
             
 
 # =============================================================================
-_bar_  =  ( 'Running ... |\r'  , 
-            'Running ... /\r'  , 
-            'Running ... -\r'  ,
-            'Running ... \\\r' )
+_bar_  =  ( 'Running ... |\r'       , 
+            'Running ... /\r'       , 
+            'Running ... -\r'       ,
+            'Running ... \\\r'      )
 _lbar  = len(_bar_)
-_done_ =    'Done        %d             \n' 
+_done_ =    'Done        %6d            \n' 
 # =============================================================================
 ## @class RunningBar 
 #  - RunningBar
@@ -384,6 +386,8 @@ class RunningBar(object):
         """
         Update self.amount with 'new_amount', and then rebuild the bar string.
         """
+        if self.silent : return self ## really silent 
+        #
         if not new_amount: new_amount = self.amount
         self.amount = new_amount 
         ##
@@ -397,23 +401,28 @@ class RunningBar(object):
         return str(self.bar)
 
     def show ( self ) :
-        if self.prefix : sys.stdout.write (  self.prefix ) 
-        iq = self.amount % self.freq
-        ib = self.amount % _lbar  
-        if iq : sys.stdout.write ( _bar_ [ ib ] )
-        else  : sys.stdout.write ( _bar_ [ ib ][:-1] + ' ' + str(self.amount) + '\r' ) 
-        sys.stdout.flush ()
+        if not self.silent : 
+            if self.prefix : sys.stdout.write (  self.prefix ) 
+            iq = self.amount % self.freq 
+            ib = self.amount % _lbar  
+            if iq < self.freq or not iq :
+                sys.stdout.write ( _bar_ [ ib ][:-1] + ' ' + str(self.amount) + '\r' ) 
+            else :
+                sys.stdout.write ( _bar_ [ ib ] )
+                
+            sys.stdout.flush ()
 
-    def end  ( self ) :
+    def end  ( self ) : 
         if not self.silent : 
             if self.prefix : sys.stdout.write (  self.prefix ) 
             sys.stdout.write ( _done_ % self.amount )
             sys.stdout.flush ()
-        
+            self.silent = True
+            
     def __enter__ ( self      ) : return self
     def __exit__  ( self , *_ ) :
-        self.end() 
-        return False ##  allow propagatuon of exceptions 
+        self.end()
+    def __del__   ( self , *_ ) : self.end()
 
             
 # ==============================================================================
