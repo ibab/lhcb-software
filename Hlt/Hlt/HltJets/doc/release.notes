@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of Jet building in the HLT
 !-----------------------------------------------------------------------------
 
+!========================= HltJets v1r0 2016-02-26 =========================
+
 ! 2016-02-24 - Rosen Matev
  - Remove implicit and explicit dependency on Hlt2Lines 
 
