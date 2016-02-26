@@ -3,7 +3,7 @@
 # Maintainer : Pieter Norbert Y David , Victor Coco
 #============================================================================
 package Hlt/HltDisplVertices
-version           v4r3
+version           v4r3p1
 #============================================================================
 # Structure, i.e. directories to process.
 #============================================================================
