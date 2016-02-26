@@ -4,6 +4,8 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================= Hlt2SharedParticles v7r9 2016-02-26 =========================
+
 ! 2016-02-14 - Simone Stracka
  - Add TightKstar2KPi to Kstar.py
 
