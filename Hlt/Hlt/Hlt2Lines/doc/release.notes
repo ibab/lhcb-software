@@ -8,6 +8,8 @@
 !
 !----------------------------------------------------------------------------
 
+!========================= Hlt2Lines v10r7 2016-02-26 =========================
+
 ! 2016-02-24 - Rosen Matev
  - Add package dependency on Hlt/HltJets
  - Make sure HltJetConf is configured before Hlt2LinesConfigurableUser-s
