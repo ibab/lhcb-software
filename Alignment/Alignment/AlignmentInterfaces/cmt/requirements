@@ -3,7 +3,7 @@
 # Maintainer : Johan Blouw
 #============================================================================
 package           AlignmentInterfaces
-version           v3r6
+version           v3r7
 
 # Structure, i.e. directories to process. 
 #============================================================================
