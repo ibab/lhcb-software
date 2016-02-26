@@ -3,6 +3,12 @@ Package             : MooreSys
 Package Coordinator : R. Aaij
 Purpose             : LHCb HLT application
 
+</PRE><H1><A NAME=v25r0>2016-02-26 MooreSys v25r0</A></H1><PRE>
+
+Based on v40r0 stack.
+First iteration of 2016 production release.
+Will be used for rates/timing evaluation and tuning.
+
 </PRE><H1><A NAME=v24r4>2015-12-17 MooreSys v24r4</A></H1><PRE>
 
 Release for 2016 preparation.
