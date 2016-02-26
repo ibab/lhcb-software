@@ -3,6 +3,8 @@
 ! Package manager : A.Kozlinskiy
 !------------------------------------------------------------------------------
 
+!========================= OTDAQ v8r1 2016-02-26 =========================
+
 ! 2016-02-22 - Sascha Stahl
  - Implemented caching of total number of hits.
 
