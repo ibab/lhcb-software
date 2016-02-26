@@ -4,6 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v7r7 2016-02-26 =========================
+
 ! 2016-02-24 Jessica Prisciandaro
 - Majorana, Rare Strange and TriMuon added to Physics_pp_Draft2016.py
 - RareStrange settings added
