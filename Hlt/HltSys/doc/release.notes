@@ -5,6 +5,12 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger
 
+</PRE><H1><A NAME=v25r0>2016-02-26 HltSys v25r0</A></H1><PRE>
+
+Based on v40r0 stack.
+First iteration of 2016 production release.
+Will be used for rates/timing evaluation and tuning.
+
 </PRE><H1><A NAME=v24r4>2016-01-18 HltSys v24r4</A></H1><PRE>
 
 Release for 2016 preparations.
