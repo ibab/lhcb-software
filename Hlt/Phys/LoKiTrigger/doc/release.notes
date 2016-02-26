@@ -4,6 +4,8 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiTrigger v15r9 2016-02-26 =========================
+
 ! 2016-02-10 - Roel Aaij
  - Fix C++ generation for Hlt1DiPhotonMaker and ToProtoParticles.
  - Improve checking for existing relations table cache in UpgradeTool and
