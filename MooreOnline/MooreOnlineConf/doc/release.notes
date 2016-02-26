@@ -4,6 +4,8 @@
 ! Purpose     : Holding the master configurable which sets up Moore for the online
 !=================================================================================
 
+!========================= MooreOnlineConf v1r12 2016-02-26 =========================
+
 ! 2016-02-09 - Roel Aaij
  - Add option to MooreOnlineConf to disable the UpdateAndReset algorithm.
 
