@@ -4,6 +4,8 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================= JetAccessories v3r16p1 2016-02-26 =========================
+
 ! 2016-02-24 - Wouter Hulsbergen
  - fix for particles-to-ban list
 
