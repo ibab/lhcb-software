@@ -6,7 +6,7 @@
 
 #============================================================================
 package MooreScripts
-version           v1r13
+version           v1r14
 
 branches doc cmt python scripts tests install
 
