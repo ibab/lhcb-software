@@ -59,12 +59,64 @@ Trying to import module StrippingArchive.Stripping21
 # ERROR: Allowed keys are: BUILDERTYPE,CONFIG,STREAMS,WGs
 # ERROR: The default_config of StrippingArchive.Stripping21.StrippingD2PiPi0.py has incorrect keys
 # ERROR: The default_config of StrippingArchive.Stripping21.StrippingBs2D0KS0.py is not a dictionary
+Trying to import module StrippingArchive.Stripping21r0p1
 Trying to import module StrippingArchive.Stripping22
 Trying to import module StrippingArchive.Stripping23
 Trying to import module StrippingArchive.Stripping23r1
 Trying to import module StrippingArchive.Stripping24
+Trying to import module StrippingArchive.Stripping25
 looping over:
-['Stripping22', 'Stripping24']
+['Stripping21r0p1', 'Stripping22', 'Stripping24', 'Stripping25', 'Stripping21r1p1']
+=============================================
+Stripping21r0p1 :
+=============================================
+Requested Stripping21r0p1
+Trying to import module StrippingArchive.Stripping21r0p1
+Creating Bhadron stream with 274 lines
+Creating Semileptonic stream with 38 lines
+Creating BhadronCompleteEvent stream with 15 lines
+# WARNING: Line StrippingB02DsstarKDsstar2DGammaD2HHHBeauty2CharmLine has prescale <= 0, it will be removed from stream BhadronCompleteEvent
+Creating Leptonic stream with 110 lines
+# WARNING: Line StrippingLFVTau2PhiMuLine has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingLFVTau2eMuMuLine has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingLFVB2hMuLine has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingLFVB2hTauMuLine has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma2pi_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma2pi_wCNVLL_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma2pi_wCNVDD_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGammapi_Ks0_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma3pi_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma3pi_wCNVLL_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma3pi_wCNVDD_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma2pi_pi0R_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma2pi_pi0M_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma2pi_Ks0_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma4pi_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma3pi_Ks0_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma3pi_pi0R_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma3pi_pi0M_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma2pi_2Ks_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGammapi_Lambda_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma2pi_Lambda_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma3pi_Lambda_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBs2MuMuLinesWideMassLine has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBs2MuMuLinesBs2JPsiPhiLine has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBs2MuMuLinesBs2KKLTUBLine has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBs2MuMuLinesNoMuIDLine has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBs2MuMuLinesSSLine has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBs2MuMuLinesBd2JPsiKstLine has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBs2MuMuLinesLTUBLine has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBs2MuMuLinesBu2JPsiKLine has prescale <= 0, it will be removed from stream Leptonic
+Creating PID stream with 13 lines
+Creating CharmCompleteEvent stream with 6 lines
+Creating Charm stream with 94 lines
+# WARNING: Line StrippingDstarD02xxDst2PiD02Kpi_untagged_BoxMB has prescale <= 0, it will be removed from stream Charm
+# WARNING: Line StrippingDstarD02xxDst2PiD02Kpi_untagged_BoxMBTrEff has prescale <= 0, it will be removed from stream Charm
+Creating EW stream with 10 lines
+Creating Dimuon stream with 13 lines
+# WARNING: Line StrippingBs2MuMuLinesNoMuIDLine has prescale <= 0, it will be removed from stream Dimuon
+# WARNING: Line StrippingBs2MuMuLinesWideMassLine has prescale <= 0, it will be removed from stream Dimuon
+# WARNING: Line StrippingBs2MuMuLinesBu2JPsiKLine has prescale <= 0, it will be removed from stream Dimuon
 =============================================
 Stripping22 :
 =============================================
@@ -116,3 +168,61 @@ Creating EW stream with 98 lines
 # WARNING: Line StrippingLowMultTMP2Line has prescale <= 0, it will be removed from stream EW
 Creating MiniBias stream with 4 lines
 Creating CharmCompleteEvent stream with 20 lines
+=============================================
+Stripping25 :
+=============================================
+Requested Stripping25
+Trying to import module StrippingArchive.Stripping25
+Creating ALL stream with 40 lines
+Creating MiniBias stream with 3 lines
+=============================================
+Stripping21r1p1 :
+=============================================
+Requested Stripping21r1p1
+Stripping21r1p1 is a duplicate of Stripping21r0p1
+Trying to import module StrippingArchive.Stripping21r0p1
+Creating Bhadron stream with 274 lines
+Creating Semileptonic stream with 38 lines
+Creating BhadronCompleteEvent stream with 15 lines
+# WARNING: Line StrippingB02DsstarKDsstar2DGammaD2HHHBeauty2CharmLine has prescale <= 0, it will be removed from stream BhadronCompleteEvent
+Creating Leptonic stream with 110 lines
+# WARNING: Line StrippingLFVTau2PhiMuLine has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingLFVTau2eMuMuLine has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingLFVB2hMuLine has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingLFVB2hTauMuLine has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma2pi_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma2pi_wCNVLL_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma2pi_wCNVDD_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGammapi_Ks0_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma3pi_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma3pi_wCNVLL_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma3pi_wCNVDD_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma2pi_pi0R_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma2pi_pi0M_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma2pi_Ks0_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma4pi_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma3pi_Ks0_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma3pi_pi0R_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma3pi_pi0M_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma2pi_2Ks_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGammapi_Lambda_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma2pi_Lambda_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBeauty2XGamma3pi_Lambda_Line has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBs2MuMuLinesWideMassLine has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBs2MuMuLinesBs2JPsiPhiLine has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBs2MuMuLinesBs2KKLTUBLine has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBs2MuMuLinesNoMuIDLine has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBs2MuMuLinesSSLine has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBs2MuMuLinesBd2JPsiKstLine has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBs2MuMuLinesLTUBLine has prescale <= 0, it will be removed from stream Leptonic
+# WARNING: Line StrippingBs2MuMuLinesBu2JPsiKLine has prescale <= 0, it will be removed from stream Leptonic
+Creating PID stream with 13 lines
+Creating CharmCompleteEvent stream with 6 lines
+Creating Charm stream with 94 lines
+# WARNING: Line StrippingDstarD02xxDst2PiD02Kpi_untagged_BoxMB has prescale <= 0, it will be removed from stream Charm
+# WARNING: Line StrippingDstarD02xxDst2PiD02Kpi_untagged_BoxMBTrEff has prescale <= 0, it will be removed from stream Charm
+Creating EW stream with 10 lines
+Creating Dimuon stream with 13 lines
+# WARNING: Line StrippingBs2MuMuLinesNoMuIDLine has prescale <= 0, it will be removed from stream Dimuon
+# WARNING: Line StrippingBs2MuMuLinesWideMassLine has prescale <= 0, it will be removed from stream Dimuon
+# WARNING: Line StrippingBs2MuMuLinesBu2JPsiKLine has prescale <= 0, it will be removed from stream Dimuon
