@@ -3,6 +3,7 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+!========================= TAlignment v6r6 2016-02-26 =========================
 ! 2016-02-25 - Maurizio Martinelli
  - Added a filter in ReviveHltTracks function of ParticleSelections
 
