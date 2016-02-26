@@ -4,6 +4,10 @@
 ! Purpose     : Holds visualization attributes for a geometry
 !-----------------------------------------------------------------------------
 
+
+! 2016-02-26 - Gloria Corti
+ - add use of GaudiPolicy to enable nightly tests
+
 !========================== XmlVis v1r22  ==========================
 ! 2016-01-20 - Thomas Ruf
  - added Herschel

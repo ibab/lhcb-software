@@ -16,3 +16,5 @@ branches          cmt doc xml DTD
 #============================================================================
 
 include_path      none
+
+use GaudiPolicy v*
