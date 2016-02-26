@@ -1,7 +1,7 @@
 ################################################################################
 # Package: AlignTrTools
 ################################################################################
-gaudi_subdir(AlignTrTools v4r17)
+gaudi_subdir(AlignTrTools v4r18)
 
 gaudi_depends_on_subdirs(Alignment/AlignmentInterfaces
                          Det/MuonDet
