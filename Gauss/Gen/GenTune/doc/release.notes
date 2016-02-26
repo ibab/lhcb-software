@@ -1,24 +1,27 @@
 !-----------------------------------------------------------------------------
 ! Package     : Gen/GenTune
 ! Responsible : Alex Grecu
-! Purpose     : Optimize various MC generators and obtain/test LHCb tunes 
-!               using Professor/Rivet system. 
+! Purpose     : Optimize various MC generators and obtain/test LHCb tunes
+!               using Professor/Rivet system.
 !-----------------------------------------------------------------------------
 
+! 2016-02-26 - Marco Clemencic
+ - Removed unneeded, redundant, wrong file tests/qmtest/gentune.qms/gentune.qms
+
 ! 2016-01-25 - Alex Grecu
- - Obtained same functionality for Rivet 2.x as previous version of package 
+ - Obtained same functionality for Rivet 2.x as previous version of package
    which is compatible with Rivet 1.9.0.
  - Improved documentation in option files from options directory
  - Removed options/beamOpts directory and its beam-options content. Users
-   should follow guide lines in Python option files from options to select 
+   should follow guide lines in Python option files from options to select
    beam options from $APPCONFIGOPTS/Gauss which are apropriate for RIVET
    runs. Details are also discussed on Twiki (https://twiki.cern.ch/twiki/bin/view/LHCb/GenTuneWithRivet).
-  
+
 ! 2016-01-22 - Alex Grecu
- - Copy and patch locally rivet-mkhtml then rename as lbrivet-mkhtml. Bugs 
+ - Copy and patch locally rivet-mkhtml then rename as lbrivet-mkhtml. Bugs
    mentioned to RIVET team and should be solved in future version of library.
-   Because of same bug in plotting sub-system RunName property of 
-   RivetAnalysisHandler algorithm is temporarily ignored and set to empty 
+   Because of same bug in plotting sub-system RunName property of
+   RivetAnalysisHandler algorithm is temporarily ignored and set to empty
    string.
 
 ! 2016-01-18 - Alex Grecu
@@ -28,36 +31,36 @@
  - Modify requirements file to use new Rivet and YODA through CMT interfaces
  - Minimally patch the RivetAnalysisHandler algorithm to comply to Rivet 2.x
    changes.
- - Adapt the example analysis module and test code to comply to changed in 
+ - Adapt the example analysis module and test code to comply to changed in
    Rivet 2.x classes; Use by default Pythia8 for QMTests with new reference file(s).
-   Duplicate analysis module code from tests was removed. Using code in 
+   Duplicate analysis module code from tests was removed. Using code in
    options/example directory only.
- - Correct output suppression for RivetAnalysisHandler internal logging. 
-   Suppression counters not affected any mores if MSG::Level above debug 
+ - Correct output suppression for RivetAnalysisHandler internal logging.
+   Suppression counters not affected any mores if MSG::Level above debug
    level used for output.
 
 !=========================== GenTune v2r3 2015-05-07 =========================
 ! 2015-04-30 - Alex Grecu
  - Improve component logging and put generator cross-section change messages
-   under the supression system as value continues to vary slightly around 
+   under the supression system as value continues to vary slightly around
    asymptotic value.
- - Minor patch to correct behaviour in automatically selecting interaction 
-   cross-section from various sources (MC generator, BeamParameters or 
-   externally force value). Previously ERROR was triggered when using 
+ - Minor patch to correct behaviour in automatically selecting interaction
+   cross-section from various sources (MC generator, BeamParameters or
+   externally force value). Previously ERROR was triggered when using
    generator provided cross-section in analysis module explicitly requiring
    cross-section, even if cross-section value was correctly read from HepMC
    stream.
 
 ! 2015-04-07 - Alex Grecu
  - Include lbInjectMathJax to inject MathJax enabling JS code in HTML pages.
-   This tool may become obsolete when rivet-mkhtml will support this feature. 
- - Changed use line for fastjet in requirements to let package properly set 
+   This tool may become obsolete when rivet-mkhtml will support this feature.
+ - Changed use line for fastjet in requirements to let package properly set
    up its corresponding link/build flags.
 
 ! 2015-04-01 - Alex Grecu
- - Adapted rivet-buildplugin from original RIVET distribution to work with 
+ - Adapted rivet-buildplugin from original RIVET distribution to work with
    LHCb specific configuration retrieved via CMT. Added bin directory containing
-   the build script named lbrivet-buildAM. Adjusted requirements to apply 
+   the build script named lbrivet-buildAM. Adjusted requirements to apply
    set_bin_path pattern for the package.
  - Remove exec_prefix env variable definition in requirements
 
@@ -67,8 +70,8 @@
 
 !=========================== GenTune v2r2 2014-08-21 =========================
 ! 2014-07-28 - Alex Grecu
- - modified qmtest to ignore -Wunused-local-typedefs warnings for BOOST 1.53 
-   when compiling with gcc48. Separate qmtests are needed for gcc46 and gcc48 
+ - modified qmtest to ignore -Wunused-local-typedefs warnings for BOOST 1.53
+   when compiling with gcc48. Separate qmtests are needed for gcc46 and gcc48
    so one of the tests will remain in UNTESTED state.
 
 !=========================== GenTune v2r1 2014-07-28 =========================
@@ -86,40 +89,40 @@
 
 !========================= GenTune v2r0p1 2013-07-17 =======================
 ! 2013-07-17 - Alex Grecu
- - added scripts/listAnalysisInfo.py to list Rivet plugin info files given 
+ - added scripts/listAnalysisInfo.py to list Rivet plugin info files given
    partial analysis names; also very nice example of using the Rivet/Python
    interface
  - corrected qmtests and optimized number of generated events for speed
- - negative invariant mass particles are detected and reported only at DEBUG 
+ - negative invariant mass particles are detected and reported only at DEBUG
    level
- - cross-section values provided by user in option files need units and are 
+ - cross-section values provided by user in option files need units and are
    automatically converted to picobarns (default unit in HepMC)
- - RivetAnalysisHandler promptly detects and reports number of collision in 
-   event if 'fix1' beam options not used. Only first collision will be sent 
+ - RivetAnalysisHandler promptly detects and reports number of collision in
+   event if 'fix1' beam options not used. Only first collision will be sent
    to analysis plugins.
  - various other mods improvide code aesthetic.
 
 !========================= GenTune v2r0 2013-06-27 =========================
 ! 2013-06-13 - Alex Grecu
- - added scripts/lhcbLFT2StdMap.py script to help plugin developers with 
-   dumping the LHCb particle lifetimes to a std::map<int, double> indexed 
-   by the particle PDG id 
- - corrected options/LHCb_MB_MC-Generics.py for the change of the 'Output' 
-   Gauss property 
+ - added scripts/lhcbLFT2StdMap.py script to help plugin developers with
+   dumping the LHCb particle lifetimes to a std::map<int, double> indexed
+   by the particle PDG id
+ - corrected options/LHCb_MB_MC-Generics.py for the change of the 'Output'
+   Gauss property
  - introduced a set of beam option files in options/beamOpts which are made
-   compatible with the Python interface changes in Gauss v45 and later. The 
-   options are mainly needed to setup the beam energy and fix the number of 
+   compatible with the Python interface changes in Gauss v45 and later. The
+   options are mainly needed to setup the beam energy and fix the number of
    primary interactions
  - modified cmt/requirements to include the dependence on the fastjet 3.*
    library needed by the main Rivet library
  - generated new reference files for the qmtests on x86_64-slc[5-6]-gcc4[3|6]
    architecture
- - corrected the mechanism of providing and forcing external value of the 
-   event production cross-section in RivetAnalysisHandler algorithm; Python 
+ - corrected the mechanism of providing and forcing external value of the
+   event production cross-section in RivetAnalysisHandler algorithm; Python
    interface changed to reflect the logic in code: xSectionNeeded eliminated,
    replaced by forceXSection (default: False) which allows user to overwrite
    the production cross-section even when provided by the MC generator
- - introduced a check in RivetAnalysisHandler to prevent the algorithm from 
+ - introduced a check in RivetAnalysisHandler to prevent the algorithm from
    running if job setup is incompatible with all the plugins in the provided
    list
 
