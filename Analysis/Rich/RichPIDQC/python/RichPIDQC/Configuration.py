@@ -87,6 +87,8 @@ class RichPIDQCConf(RichConfigurableUser):
             from DstarToDzeroPi import DstarToDzeroPiConf
             conf = self.getRichCU(DstarToDzeroPiConf)
             self.propagateOptions(conf)
+            # Force turn off running own selection...
+            conf.setProp("RunMonitors",False)
             conf.setProp("Sequencer",self.newSeq( calibSeq, "RichDstarToD0PiPIDMoni"))
 
         # Andrew's Lambda -> Proton Pion selection
@@ -94,6 +96,8 @@ class RichPIDQCConf(RichConfigurableUser):
             from LambdaToProtonPion import LambdaToProtonPionConf
             conf = self.getRichCU(LambdaToProtonPionConf)
             self.propagateOptions(conf)
+            # Force turn off running own selection...
+            conf.setProp("RunMonitors",False)
             conf.setProp("Sequencer",self.newSeq( calibSeq, "RichLambdaToPrPiPIDMoni"))
 
         # Andrew's Kshort -> Pion Pion selection
@@ -108,4 +112,6 @@ class RichPIDQCConf(RichConfigurableUser):
             from JPsiMuMu import JPsiMuMuConf
             conf = self.getRichCU(JPsiMuMuConf)
             self.propagateOptions(conf)
+            # Force turn off running own selection...
+            conf.setProp("RunMonitors",False)
             conf.setProp("Sequencer",self.newSeq( calibSeq, "RichJPsiToMuMuPIDMoni"))

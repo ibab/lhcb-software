@@ -5,6 +5,10 @@
 ! Purpose     : PID Calbriation and Monitoring on Data
 !-----------------------------------------------------------------------------
 
+! 2016-02-26 - Chris Jones
+ - Update LambdaToProtonPion.py, DstarToDzeroPi.py and JPsiMuMu.py to use
+   externally created candidates, rather than run their own selections.
+
 !========================= RichPIDQC v1r9 2015-01-16 ===========================
 
 ! 2015-01-16 - Eduardo Rodrigues

@@ -29,12 +29,13 @@ class JPsiMuMuConf(RichConfigurableUser) :
         ,"OutputLevel"     : INFO  # The output level to set all algorithms and tools to use
         ,"Sequencer"    : None      # The sequencer to add the calibration algorithms too
         ,"RunSelection" : True
-        ,"RunMonitors"  : True
+        ,"RunMonitors"  : False
         ,"MCChecks"   : False
         ,"MakeNTuple" : False
         ,"MakeSelDST" : False
         ,"DSTPreScaleFraction" : 1.0
-        ,"PlotTools" : [ ]
+        ,"PlotTools"  : [ ]
+        ,"Candidates" : [ "/Marco/To/Set/This" ]
         }
 
     ## Set general job options
@@ -83,7 +84,10 @@ class JPsiMuMuConf(RichConfigurableUser) :
 
             from Configurables import ( ParticleMonitor )
             plotter =  ParticleMonitor(self.__sel_name__+"Plots")
-            plotter.Inputs      = [ 'Phys/'+self.__sel_name__+'Sel' ]
+            if self.getProp("RunSelection") : 
+                plotter.Inputs      = [ 'Phys/'+self.__sel_name__+'Sel' ]
+            else:
+                plotter.Inputs = self.getProp("Candidates")
             plotter.PeakCut     = "(ADMASS('J/psi(1S)')<20*MeV)" # Considering sigma = 13
             plotter.SideBandCut = "(ADMASS('J/psi(1S)')>20*MeV)" # Considering sigma = 13
             plotter.PlotTools   = self.getProp("PlotTools") 
