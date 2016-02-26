@@ -5,6 +5,8 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Lines v7r21 2016-02-26 =========================
+
 ! 2016-02-24 - Jibo He
  - Hlt1Proton, tightened proton p, and added proton theta cut  
 
