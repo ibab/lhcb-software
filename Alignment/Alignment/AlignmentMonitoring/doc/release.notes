@@ -3,6 +3,7 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
+!===================== AlignmentMonitoring v1r0 - 2016-02-26============================
 ! 2016-01-22 - Giulio Dujany
  - new option for script trendPots.py
  - added script to compute updated xml files with alignment updates needed according to the thresholds

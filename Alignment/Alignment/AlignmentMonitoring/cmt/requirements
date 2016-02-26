@@ -3,7 +3,7 @@
 # Maintainer : Maurizio Martinelli
 #=====================================================================
 package           AlignmentMonitoring
-version           v0r1
+version           v1r0
 #=====================================================================
 branches          cmt doc src AlignmentMonitoring dict
 include_path      none

@@ -1,7 +1,7 @@
 ################################################################################
 # Package: AlignmentMonitoring
 ################################################################################
-gaudi_subdir(AlignmentMonitoring v0r1)
+gaudi_subdir(AlignmentMonitoring v1r0)
 
 gaudi_depends_on_subdirs(GaudiAlg
 					GaudiPython)
