@@ -4,6 +4,8 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+!========================= HltConf v13r7 2016-02-26 =========================
+
 ! 2016-02-24 - Rosen Matev
  - Implement overwriting of threshold settings from HltConf. 
 
