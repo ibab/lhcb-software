@@ -3,6 +3,8 @@
 ! Responsible : Adlene Hicheur en Wouter Hulsbergen
 !-------------------------------------------------------------------------------
 
+
+!========================= AlignKernel v3r9 2016-02-26 =========================
 ! 2015-08-12 - Wouter Hulsbergen
  - Add alignment frame as datamember to AlignData
  - Reset inittime in AlEquations::clear

@@ -1,7 +1,7 @@
 ################################################################################
 # Package: AlignKernel
 ################################################################################
-gaudi_subdir(AlignKernel v3r8)
+gaudi_subdir(AlignKernel v3r9)
 
 gaudi_depends_on_subdirs(GaudiAlg
                          GaudiGSL
