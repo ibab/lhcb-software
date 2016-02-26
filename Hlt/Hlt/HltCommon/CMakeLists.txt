@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltCommon
 ################################################################################
-gaudi_subdir(HltCommon v10r6)
+gaudi_subdir(HltCommon v10r7)
 
 gaudi_depends_on_subdirs(Det/VeloDet
                          Event/DAQEvent

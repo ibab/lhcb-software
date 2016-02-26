@@ -4,6 +4,8 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================= HltCommon v10r7 2016-02-26 =========================
+
 ! 2016-02-22 - Sascha Stahl
  - HltGEC: Use OTHitCreator to get the number of OT hits. This will trigger the
    creation of all OT hits. Since we do not cut tight on the number of hits 
