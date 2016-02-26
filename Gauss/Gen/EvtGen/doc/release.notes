@@ -4,8 +4,10 @@
 ! Purpose     :
 !-----------------------------------------------------------------------------
 
+!========================== EvtGen v14r5 2016-02-26 ==========================
+
 ! 2016-02-18 - Tom Blake
-	- Fixed bug in EvtRareLbToLll mdoel (definition of Sinit in HadronicAmpRS)
+  - Fixed bug in EvtRareLbToLll model (definition of Sinit in HadronicAmpRS).
 
 ! 2016-02-12 - John Back
   - Added extensions to the EvtHQET2(FF) model for semitauonic decays from
