@@ -25,6 +25,17 @@ use HltJets             v1r0     Hlt   # Roel Aaij
 use TCKUtils            v1r19    Hlt   # Gerhard Raven
 use LoKiTrigger         v15r9    Phys  # Vanya Belyaev
 
+# Extra packages only for v25r0
+# LHCb
+use OTDAQ               v8r1     OT
+# Rec
+use PatAlgorithms       v4r46    Tf
+use TrackTools          v6r1     Tr
+use TrackExtrapolators  v2r41    Tr
+use ChargedProtoANNPID  v2r14    Rec  
+# Phys
+use JetAccessories      v3r16p1  Phys 
+
 # Declare this as a container package
 apply_pattern container_package
 

@@ -22,6 +22,17 @@ gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Hlt/HltSettings
                          Hlt/HltTracking
                          Hlt/TCKUtils
-                         Phys/LoKiTrigger)
+                         Phys/LoKiTrigger
+                         # Extra packages only for v25r0
+                         # LHCb
+                         OT/OTDAQ
+                         # Rec
+                         Tf/PatAlgorithms
+                         Tr/TrackTools
+                         Tr/TrackExtrapolators
+                         Rec/ChargedProtoANNPID
+                         # Phys
+                         Phys/JetAccessories
+                         )
 
 gaudi_add_test(QMTest QMTEST)
