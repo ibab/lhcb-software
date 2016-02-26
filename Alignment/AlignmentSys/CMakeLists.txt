@@ -16,7 +16,8 @@ gaudi_depends_on_subdirs(Alignment/AlignEvent
                          Alignment/TAlignment
                          Alignment/VeloAlignment
                          Calibration/OTCalibration
-                         Phys/CommonParticles)
+                         Phys/CommonParticles
+			 Tr/TrackTools v6r1)
 
 gaudi_install_python_modules()
 

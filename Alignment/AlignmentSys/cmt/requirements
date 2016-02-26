@@ -29,6 +29,9 @@ use CommonParticles     		v8r20   Phys
 
 use OTCalibration			v1r11   Calibration # Wouter Hulsbergen
 
+# This is needed until LHCb v40r1 is released 
+use TrackTools				v6r1	Tr
+
 # Declare this as a container package
 apply_pattern container_package
 
