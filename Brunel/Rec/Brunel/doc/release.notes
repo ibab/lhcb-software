@@ -7,6 +7,8 @@ Purpose: LHCb reconstruction program
   . Follow introduction of Deuteron particle hypothesis
   . Fix two bugs in PatLongLivedTracking, use new chi2-cut in x-layer fit
   . Only rebuild Bdl tables on magnet polarity or current change (PatVeloTT)
+  . Speed improvements of PatVeloTTHybridTool (and some efficiency improvements)
+    (PatVeloTT)
   . Add new default tuning for Run 2 data, "MC15TuneV1" (ChargedProtoANNPID)
 
 - Changes to tests
