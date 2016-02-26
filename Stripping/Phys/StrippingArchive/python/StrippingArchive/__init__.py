@@ -208,7 +208,7 @@ def strippingDescription(stripping=None):
     strippingDescription(stripping): return the description for that stripping'''
     if stripping is None:
         return list(_listofStrippings())
-    print "porcapaletta"
+ 
     strippingname=""
 
     for _k in _strippingKeys:

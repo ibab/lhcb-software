@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 2016-02-26 - Andrea Contu
+ - Remove print statement from init
+
+2016-02-26 - Andrea Contu
  - Fix to StrippingPromptCharm in s20r1p1
 
 2016-02-17 - Andrea Contu
