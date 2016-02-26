@@ -247,7 +247,7 @@ class ProgressBar(object):
         self.show      ()
         
     def increment_amount(self, add_amount = 1):
-        return self.update_amount ( self.amount + add_amount )
+        return self if self.silent else self.update_amount ( self.amount + add_amount )
 
     def update_amount(self, new_amount = None):
         """
@@ -298,7 +298,9 @@ class ProgressBar(object):
 
         return True
 
-    def __iadd__ ( self , i ) : return self.increment_amount ( i)
+    def __iadd__ ( self , i ) : 
+        return self if self.silent else self.increment_amount ( i )
+    
     def __str__(self):
         return str(self.bar)
 
@@ -309,9 +311,11 @@ class ProgressBar(object):
             sys.stdout.flush()
         
     def end  ( self  ) :
-        if not self.silent : 
+        if not self.silent :
             self.build_bar() 
-            self.show     () 
+            if self.prefix : sys.stdout.write( self.prefix ) 
+            sys.stdout.write( self.bar + '\n' ) 
+            sys.stdout.flush()
         self.silent = True
         
     def __enter__ ( self      ) :
@@ -322,32 +326,12 @@ class ProgressBar(object):
     def __del__   ( self      ) : self.end ()
 
 # =============================================================================
-## helper function to display progress bar
-#  @code 
-#  for i in progress_bar  ( xrange(10000 ) ) :
-#      .. do something here ...
-#  @endcode 
-#  @author Vanya Belyaev Ivan.Belyaev@itep.ru
-def progress_bar ( iterable , max_value = None , **kwargs ) :
-    """ Helper function to display progress bar 
-    
-    >>> for i in progress_bar  ( xrange(10000 ) ) :
-    ...       <do something here>
-    """
-    if max_value is None : max_value = len ( iterable )
-    with ProgressBar ( max_value = max_value , **kwargs ) as bar : 
-        for i in iterable :
-            yield i
-            bar += 1
-            
-
-# =============================================================================
 _bar_  =  ( 'Running ... |\r'       , 
             'Running ... /\r'       , 
             'Running ... -\r'       ,
             'Running ... \\\r'      )
 _lbar  = len(_bar_)
-_done_ =    'Done        %6d            \n' 
+_done_ =    'Done        %-12d    \n' 
 # =============================================================================
 ## @class RunningBar 
 #  - RunningBar
@@ -379,13 +363,13 @@ class RunningBar(object):
     
     def __init__(self, *args ,**kwargs ) :
         self.amount   = 0 
-        self.freq     = int( kwargs.get( 'frequence' , 100 ) )
-        self.prefix   = kwargs.get('description' , '' ) 
-        self.silent   = kwargs.get( 'silent' , False ) 
+        self.freq     = int ( kwargs.get( 'frequence' , 100 ) )
+        self.prefix   = kwargs.get ( 'description' , ''     ) 
+        self.silent   = kwargs.get ( 'silent'      , False  )
         self.update_amount() 
         
     def increment_amount(self, add_amount = 1):
-        return self.update_amount ( self.amount + add_amount )
+        return self if self.silent else self.update_amount ( self.amount + add_amount )
 
     def update_amount(self, new_amount = None ):
         """
@@ -399,22 +383,37 @@ class RunningBar(object):
         if not self.silent : self.show() 
         ##
         return self
-
     
-    def __iadd__ ( self , i ) : return self.increment_amount ( i)
+    def __iadd__ ( self , i ) :
+        return self if self.silent else self.increment_amount ( i )
+    
     def __str__(self):
         return str(self.bar)
 
     def show ( self ) :
         if not self.silent : 
-            if self.prefix : sys.stdout.write (  self.prefix ) 
-            iq = self.amount % self.freq 
-            ib = self.amount % _lbar  
-            if iq < self.freq or not iq :
+            ir   , iq   = divmod ( self.amount , self.freq ) 
+            if self.amount <= self.freq or not iq :
+                ib      = self.amount % _lbar
+                #
+                if self.prefix : sys.stdout.write (  self.prefix ) 
                 sys.stdout.write ( _bar_ [ ib ][:-1] + ' ' + str(self.amount) + '\r' ) 
-            else :
-                sys.stdout.write ( _bar_ [ ib ] )
+                sys.stdout.flush ()
+                return
+            
+            for t in ( 53 , 23 , 11 , 3 ) :
+                if t <= ir :
+                    ie , ia = divmod ( self.amount , t )
+                    if ia : return 
+                    ib = ie % _lbar                  
+                    if self.prefix : sys.stdout.write (  self.prefix ) 
+                    sys.stdout.write ( _bar_ [ ib ] )
+                    sys.stdout.flush ()
+                    return
                 
+            if self.prefix : sys.stdout.write (  self.prefix ) 
+            ib      = self.amount % _lbar  
+            sys.stdout.write ( _bar_ [ ib ] )
             sys.stdout.flush ()
 
     def end  ( self ) : 
@@ -444,13 +443,38 @@ def running_bar ( iterable , frequency = 100 , description = '' , **kwargs ) :
     """
     with RunningBar ( frequency = frequency , description = description , **kwargs ) as bar :
         for i in iterable :
-            yield i
             bar += 1
+            yield i
 
-            
 # =============================================================================
-
-def main():
+## helper function to display progress bar
+#  @code 
+#  for i in progress_bar  ( xrange(10000 ) ) :
+#      .. do something here ...
+#  @endcode 
+#  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+def progress_bar ( iterable , max_value = None , **kwargs ) :
+    """ Helper function to display progress bar 
+    
+    >>> for i in progress_bar  ( xrange ( 10000 ) ) :
+    ...       <do something here>
+    """
+    if   max_value is None and hasattr ( iterable , '__len__' ) :
+        max_value = len ( iterable )
+    elif max_value is None and hasattr ( iterable , 'size'    ) :
+        max_value = iterable.size()
+        
+    if max_value is None : bar = RunningBar  ( **kwargs )
+    else                 : bar = ProgressBar ( max_value = max_value , **kwargs ) 
+    
+    with bar : 
+        for i in iterable :
+            bar += 1
+            yield i
+                        
+# =============================================================================
+## simlpe 
+def test_bars ():
 
     limit = 1000000
     
@@ -459,18 +483,16 @@ def main():
         for i in xrange(limit+1):
             bar += 1 
  
-    print '\n'
-    
     print 'Example 2: Dynamic Bar'
     with ProgressBar(0, limit, mode='dynamic', char='-') as bar : 
         for i in xrange(limit+1):
             bar += 1 
 
     import time 
-    for i in progress_bar( xrange(10000) , description = "Doing something ") : 
+    for i in progress_bar( xrange(15000) , description = "Doing something ") : 
         time.sleep(0.001)
         
-    for i in running_bar( xrange(10000) , description  = "Empty looping   ") :         
+    for i in running_bar( xrange(15000) , description  = "Empty looping ") :         
         time.sleep(0.001)
 
 # ==============================================================================
@@ -490,7 +512,7 @@ if __name__ == '__main__':
     logger.info ( ' Symbols : %s' %  list ( __all__     ) )
     logger.info ( 80*'*' ) 
   
-    main()
+    test_bars ()
     logger.info ( 80*'*' ) 
     
 # =============================================================================
