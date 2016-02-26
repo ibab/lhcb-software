@@ -4,6 +4,8 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+!========================= Moore v25r0 2016-02-26 =========================
+
 ! 2016-02-21 - Sean Benson
  - Move reco persistence configuration so that configured regardless of output type.
 
