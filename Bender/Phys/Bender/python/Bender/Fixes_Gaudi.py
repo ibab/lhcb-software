@@ -759,19 +759,23 @@ if not hasattr ( GaudiPython.Bindings.iToolSvc , 'tool' ) :
     
     logger.verbose ( 'Decoration for iToolSvc.tool') 
     
-    
 
 # =============================================================================
-## printout of status code 
+## colors 
+BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
+# =============================================================================
+## printout of status code
 def _sc_print_ ( sc ) :
     """Print the Status Code
     >>> st = ...
     >>> print st
     """
-    if   sc.isSuccess     () : return 'SUCCESS'
-    elif sc.isRecoverable () : return 'RECOVERABLE'
-    elif 0 != sc.getCode  () : return 'FAILURE[%d]' % sc.getCode()
-    return 'FAILURE'
+    from Bender.Logger import colored_string 
+    if   sc.isSuccess     () : return colored_string( 'SUCCESS'     , WHITE , GREEN  , True ) 
+    elif sc.isRecoverable () : return colored_string( 'RECOVERABLE' , RED   , YELLOW , True ) 
+    elif 0 != sc.getCode  () :
+        return colored_string('FAILURE[%d]' % sc.getCode() , YELLOW , RED , True ) 
+    return colored_string('FAILURE' , YELLOW , RED , True ) 
 
 cpp.StatusCode .__repr__ = _sc_print_
 cpp.StatusCode .__str__  = _sc_print_

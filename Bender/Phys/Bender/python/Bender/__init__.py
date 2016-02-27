@@ -45,6 +45,8 @@ with the smear campaign of Dr.O.Callot et al.:
 __author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 __date__    = "2007-08-15"
 __version__ = "$Revision$"
+# =============================================================================
+import ROOT, cppyy
 
 # =============================================================================
 if __name__ == '__main__' :
