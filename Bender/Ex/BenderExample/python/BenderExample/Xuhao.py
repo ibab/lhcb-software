@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$ 
+# $Id$ 
 # =============================================================================
 ## @file Xuhao.py 
 #
@@ -25,9 +25,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2016-01-14
 #
-#                    $Revision: 172885 $
-#  Last modification $Date: 2014-05-16 19:48:30 +0200 (Fri, 16 May 2014) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """Get list of trigger lines, efficient for D0 -> K- mu+ nu decays
 
@@ -52,14 +52,14 @@ By usage of this code one clearly states the disagreement
 with the smear campaign of Dr.O.Callot et al.: 
     ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-                  $Revision: 172885 $
-Last modification $Date: 2014-05-16 19:48:30 +0200 (Fri, 16 May 2014) $
-               by $Author: ibelyaev $
+                  $Revision$
+Last modification $Date$
+               by $Author$
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2006-10-12 " 
-__version__ = " $Revision: 172885 $ "
+__version__ = " $Revision$ "
 # ============================================================================= 
 ## logging
 # =============================================================================

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$ 
+# $Id$ 
 # =============================================================================
 ## @file TestTransporters.py
 #
@@ -25,9 +25,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2016-01-14
 #
-#                    $Revision: 193776 $
-#  Last modification $Date: 2015-08-16 16:25:37 +0200 (Sun, 16 Aug 2015) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """Compare CPU performance for particle transporters 
 
@@ -52,14 +52,14 @@ By usage of this code one clearly states the disagreement
 with the smear campaign of Dr.O.Callot et al.: 
     ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-                  $Revision: 193776 $
-Last modification $Date: 2015-08-16 16:25:37 +0200 (Sun, 16 Aug 2015) $
-               by $Author: ibelyaev $
+                  $Revision$
+Last modification $Date$
+               by $Author$
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2016-01-15 " 
-__version__ = "$Revision: 193776 $ "
+__version__ = "$Revision$ "
 # ============================================================================= 
 ## optional logging
 # =============================================================================
