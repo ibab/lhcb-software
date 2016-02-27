@@ -4,6 +4,10 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-02-27 - Chris Jones
+ - Update Quartic reconstruction tool to perform intersection with a sphere
+   instead of a plane for the secondary mirrors when appropriate.
+
 ! 2016-02-20 - Chris Jones
  - Add a property to RichPhotonRecoUsingCKEstiFromRadius to allow the
    inter-ring interpolation to be turned on/off via options.

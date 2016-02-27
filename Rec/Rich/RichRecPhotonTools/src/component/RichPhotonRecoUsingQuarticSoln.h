@@ -213,10 +213,15 @@ namespace Rich
        */
       bool m_forceFlatAssumption;
 
-      /** Number of iterations of the quartic solution, for each radiator, in order
+      /** Maximum number of iterations of the quartic solution, for each radiator, in order
        *  to account for the non-flat secondary mirrors.
        */
-      std::vector<int> m_nQits;
+      std::vector<int> m_nMaxQits;
+
+      /** Minimum number of iterations of the quartic solution, for each radiator, in order
+       *  to account for the non-flat secondary mirrors.
+       */
+      std::vector<int> m_nMinQits;
 
       /** Flag to turn on use of secondary mirrors (Default)
        *

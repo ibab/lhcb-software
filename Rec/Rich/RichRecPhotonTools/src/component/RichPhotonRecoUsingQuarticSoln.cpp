@@ -23,7 +23,7 @@ PhotonRecoUsingQuarticSoln::
 PhotonRecoUsingQuarticSoln( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
-: PhotonRecoBase( type, name, parent )
+  : PhotonRecoBase( type, name, parent )
 {
   using namespace Gaudi::Units;
 
@@ -34,7 +34,8 @@ PhotonRecoUsingQuarticSoln( const std::string& type,
   //                                                                      Aero  R1Gas R2Gas
   declareProperty( "FindUnambiguousPhotons",    m_testForUnambigPhots = { true, true, true  } );
   declareProperty( "UseMirrorSegmentAllignment", m_useAlignedMirrSegs = { true, true, true  } );
-  declareProperty( "NQuarticIterationsForSecMirrors",         m_nQits = { 3,    3,    3     } );
+  declareProperty( "NQuarticIterationsForSecMirrors",      m_nMaxQits = { 3,    3,    3     } );
+  declareProperty( "MinIterationsForTolCheck",             m_nMinQits = { 0,    0,    0     } );
   declareProperty( "RejectAmbiguousPhotons",       m_rejectAmbigPhots = { false,false,false } );
   declareProperty( "CheckBeamPipe",                   m_checkBeamPipe = { true, true, true  } );
   declareProperty( "CheckPrimaryMirrorSegments",  m_checkPrimMirrSegs = { false,false,false } );
@@ -133,11 +134,11 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
     else
     {
       // check iterations
-      if ( m_nQits[Rich::Aerogel]  < 1 ) return Error( "# Aerogel  iterations < 1" );
-      if ( m_nQits[Rich::Rich1Gas] < 1 ) return Error( "# Rich1Gas iterations < 1" );
-      if ( m_nQits[Rich::Rich2Gas] < 1 ) return Error( "# Rich2Gas iterations < 1" );
+      if ( m_nMaxQits[Rich::Aerogel]  < 1 ) return Error( "# Aerogel  iterations < 1" );
+      if ( m_nMaxQits[Rich::Rich1Gas] < 1 ) return Error( "# Rich1Gas iterations < 1" );
+      if ( m_nMaxQits[Rich::Rich2Gas] < 1 ) return Error( "# Rich2Gas iterations < 1" );
       _ri_debug << "Assuming spherical secondary mirrors : # iterations (Aero/R1Gas/R2Gas) = "
-                << m_nQits << endmsg;
+                << m_nMaxQits << endmsg;
     }
   }
 
@@ -198,7 +199,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   auto distance = m_rich[rich]->nominalPlane(side).Distance(detectionPoint);
   Gaudi::XYZPoint virtDetPoint =
     ( m_useSecMirs ?
-      detectionPoint - 2.0 * distance * m_rich[rich]->nominalPlane(side).Normal() :
+      //detectionPoint - 2.0 * distance * m_rich[rich]->nominalPlane(side).Normal() :
+      detectionPoint - 2.0 * distance * m_rich[rich]->nominalNormal(side) :
       detectionPoint
       );
 
@@ -389,18 +391,27 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     {
       // Default mode. Use full spherical nature of secondaries
 
+      // Update the virtual detection point using the selected mirror segment
+      distance     = secSegment->centreNormalPlane().Distance(detectionPoint);
+      virtDetPoint = detectionPoint - 2.0 * distance * secSegment->centreNormal();
+
       // Iterate to final solution, improving the secondary mirror info
       int iIt(0);
       Gaudi::XYZPoint last_mirror_point(0,0,0);
-      while ( iIt < m_nQits[radiator] )
+      while ( iIt < m_nMaxQits[radiator] )
       {
 
         // Get secondary mirror reflection point,
         // using the best actual secondary mirror segment at this point
-        const bool sc = m_rayTracing->intersectPlane( sphReflPoint,
-                                                      virtDetPoint - sphReflPoint,
-                                                      secSegment->centreNormalPlane(),
-                                                      secReflPoint );
+        // const bool sc = m_rayTracing->intersectPlane( sphReflPoint,
+        //                                               virtDetPoint - sphReflPoint,
+        //                                               secSegment->centreNormalPlane(),
+        //                                               secReflPoint );
+        const bool sc = m_rayTracing->intersectSpherical( sphReflPoint,
+                                                          virtDetPoint - sphReflPoint,
+                                                          secSegment->centreOfCurvature(),
+                                                          secSegment->radius(),
+                                                          secReflPoint );
         if ( UNLIKELY(!sc) )
         {
           //_ri_debug << radiator << " : Failed to intersect nominal secondary mirror plane" << endmsg;
@@ -430,10 +441,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 
         // for iterations after the first, see if we are still moving
         // If not, abort iterations early
-        if ( iIt > 0 )
-        {
-          if ( (last_mirror_point-secReflPoint).Mag2() < m_minSphMirrTolIt[radiator] ) break;
-        }
+        if ( iIt > m_nMinQits[radiator] &&
+             (last_mirror_point-secReflPoint).Mag2() < m_minSphMirrTolIt[radiator] ) break;
 
         // store last sec mirror point
         last_mirror_point = secReflPoint;
@@ -486,10 +495,15 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   // --------------------------------------------------------------------------------------
   if ( m_useSecMirs && m_useAlignedMirrSegs[radiator] )
   {
-    const bool sc = m_rayTracing->intersectPlane( sphReflPoint,
-                                                  virtDetPoint - sphReflPoint,
-                                                  secSegment->centreNormalPlane(),
-                                                  secReflPoint );
+    // const bool sc = m_rayTracing->intersectPlane( sphReflPoint,
+    //                                               virtDetPoint - sphReflPoint,
+    //                                               secSegment->centreNormalPlane(),
+    //                                               secReflPoint );
+    const bool sc = m_rayTracing->intersectSpherical( sphReflPoint,
+                                                      virtDetPoint - sphReflPoint,
+                                                      secSegment->centreOfCurvature(),
+                                                      secSegment->radius(),
+                                                      secReflPoint );
     if ( !sc )
     {
       //_ri_debug << radiator << " : Failed final secondary mirror plane intersection" << endmsg;
@@ -576,15 +590,21 @@ findMirrorData( const Rich::DetectorType rich,
   // If we are using full secondary mirrors, search for the secondary segment
   if ( m_useSecMirs )
   {
+    // Direction vector from primary mirror point to virtual detection point
+    const auto dir ( virtDetPoint - sphReflPoint );
     // find the sec mirror intersction point and secondary mirror segment
-    OK = m_rayTracing->intersectPlane( sphReflPoint,
-                                       virtDetPoint - sphReflPoint,
+    OK = m_rayTracing->intersectPlane( sphReflPoint, dir,
                                        m_rich[rich]->nominalPlane(side),
                                        secReflPoint );
     if ( OK )
     {
       // find the secondary mirror
       secSegment = m_mirrorSegFinder->findSecMirror( rich, side, secReflPoint );
+      // Re-find the secondary mirror reflection point using the new mirror info
+      //OK = m_rayTracing->intersectSpherical( sphReflPoint, dir,
+      //                                       secSegment->centreOfCurvature(),
+      //                                       secSegment->radius(),
+      //                                       secReflPoint );
     }
   }
   // return
