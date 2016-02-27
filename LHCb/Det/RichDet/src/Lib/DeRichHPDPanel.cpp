@@ -75,19 +75,18 @@ StatusCode DeRichHPDPanel::initialize()
   // get the HPD and SiSensor detector elements
   m_DeHPDs.clear();
   m_DeSiSensors.clear();
-  const IDetectorElement::IDEContainer & detelems = childIDetectorElements();
-  for ( IDetectorElement::IDEContainer::const_iterator det_it = detelems.begin(); 
-        det_it != detelems.end(); ++det_it )
+  const auto & detelems = childIDetectorElements();
+  for ( const auto * detelem : detelems )
   {
-    if ( std::string::npos != (*det_it)->name().find("HPD:") ) 
+    if ( std::string::npos != detelem->name().find("HPD:") ) 
     {
 
       // get HPD
-      SmartDataPtr<DeRichHPD> deHPD( dataSvc(), (*det_it)->name() );
+      SmartDataPtr<DeRichHPD> deHPD( dataSvc(), detelem->name() );
       if ( !deHPD )
       {
         msg << MSG::FATAL << "Non DeRichHPD detector element "
-            << (*det_it)->name() << endmsg;
+            << detelem->name() << endmsg;
         return StatusCode::FAILURE;
       }
 
@@ -108,7 +107,7 @@ StatusCode DeRichHPDPanel::initialize()
       }
       else
       {
-        msg << MSG::FATAL << "Problem getting SiSensor for HPD " << (*det_it)->name()
+        msg << MSG::FATAL << "Problem getting SiSensor for HPD " << detelem->name()
             << endmsg;
         return StatusCode::FAILURE;
       }
@@ -217,7 +216,7 @@ DeRichHPDPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
     return LHCb::RichTraceMode::RayTraceFailed;
 
   // Find the correct DeRichHPD
-  const DeRichHPD* HPD = deHPD( pdNumber(smartID) );
+  const DeRichHPD * HPD = deHPD( pdNumber(smartID) );
 
   // Refind intersection point using other local plane
   // ( Can reuse scalar as both local planes have the same normal vector )
@@ -230,7 +229,7 @@ DeRichHPDPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
   // how are the checks to be done ?
   if ( mode.detPrecision() == LHCb::RichTraceMode::SimpleHPDs )
   {
-    // do it quickly using a simpliefied HPD acceptance (window description)
+    // do it quickly using a simplified HPD acceptance (window description)
 
     const double x = panelIntersection.x() - HPD->hpdWinInsideCentreInMother().x();
     const double y = panelIntersection.y() - HPD->hpdWinInsideCentreInMother().y();
@@ -242,7 +241,7 @@ DeRichHPDPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
     else
     {
       // Inside an HPD
-      if ( !deRichSys()->pdIsActive(smartID) ||  // check if the HPD is active or dead
+      if ( !deRichSys()->pdIsActive(smartID) || // check if the HPD is active or dead
            ( mode.hpdKaptonShadowing() &&       // check for intersection with kapton shield
              HPD->testKaptonShadowing(pInPanel,vInPanel) ) )
       {
@@ -274,9 +273,9 @@ DeRichHPDPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
       const Gaudi::XYZVector vInWindow( HPD->fromPanelToHPDWindow() * vInPanel );
 
       ISolid::Ticks HPDWindowTicks;
-      const unsigned int numTicks =
+      const auto numTicks =
         HPD->HPDWindowSolid()->intersectionTicks( pInWindow, vInWindow, HPDWindowTicks );
-      if ( 0 == numTicks )
+      if ( UNLIKELY( 0 == numTicks ) )
       {
         // set final point using panel intersection
         windowPointGlobal = geometry()->toGlobal( panelIntersection );
@@ -287,14 +286,14 @@ DeRichHPDPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
       {
 
         // get point in HPD entrance window ( 0=outside(best) 1=inside )
-        const Gaudi::XYZPoint windowPoint      ( pInWindow + HPDWindowTicks[0]*vInWindow );
+        const Gaudi::XYZPoint windowPoint ( pInWindow + HPDWindowTicks[0]*vInWindow );
 
         // convert point in window to point in main HPD volume
         const Gaudi::XYZPoint windowPointInHPD ( HPD->fromHPDWindowToHPD()*windowPoint );
 
         // check the active radius.
-        const double hitRadiusSq = ( windowPointInHPD.x()*windowPointInHPD.x() +
-                                     windowPointInHPD.y()*windowPointInHPD.y() );
+        const double hitRadiusSq = ( std::pow( windowPointInHPD.x(), 2 ) +
+                                     std::pow( windowPointInHPD.y(), 2 ) );
         if ( hitRadiusSq > m_activeRadiusSq )
         {
           // not in an HPD, but are we in the HPD panel ?

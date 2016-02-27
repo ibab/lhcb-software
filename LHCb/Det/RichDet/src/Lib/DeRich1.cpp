@@ -50,12 +50,27 @@ StatusCode DeRich1::initialize()
 
   if ( !DeRich::initialize() ) return StatusCode::FAILURE;
 
+  // info() << "CoC Top " << param< std::vector<double> >("NominalSphMirrorTopCoC") << endmsg;
+  // info() << "CoC Bot " << param< std::vector<double> >("NominalSphMirrorBotCoC") << endmsg;
+  // info() << "CoC     " << param< std::vector<double> >("NominalSphMirrorCoC") << endmsg;
 
-  const std::vector<double>& nominalCoC = param<std::vector<double> >("NominalSphMirrorCoC");
+  // info() << "SecPlane Top " << param< std::vector<double> >("NominalSecMirrorPlaneTop") << endmsg;
+  // info() << "SecPlane Bot " << param< std::vector<double> >("NominalSecMirrorPlaneBot") << endmsg;
+  // info() << "SecPlane     " << param< std::vector<double> >("NominalSecMirrorPlane") << endmsg;
+
+  const auto nominalCoCTop = param< std::vector<double> >("NominalSphMirrorCoC");
+  const auto nominalCoCBot = param< std::vector<double> >("NominalSphMirrorCoC");
   m_nominalCentreOfCurvatureTop    =
-    Gaudi::XYZPoint( nominalCoC[0],  nominalCoC[1], nominalCoC[2] );
+    Gaudi::XYZPoint( nominalCoCTop[0],  nominalCoCTop[1], nominalCoCTop[2] );
   m_nominalCentreOfCurvatureBottom =
-    Gaudi::XYZPoint( nominalCoC[0], -nominalCoC[1], nominalCoC[2] );
+    Gaudi::XYZPoint( nominalCoCBot[0], -nominalCoCBot[1], nominalCoCBot[2] );
+
+  //const auto nominalCoCTop = param< std::vector<double> >("NominalSphMirrorTopCoC");
+  //const auto nominalCoCBot = param< std::vector<double> >("NominalSphMirrorBotCoC");
+  //m_nominalCentreOfCurvatureTop    =
+  //  Gaudi::XYZPoint( nominalCoCTop[0], nominalCoCTop[1], nominalCoCTop[2] );
+  //m_nominalCentreOfCurvatureBottom =
+  //  Gaudi::XYZPoint( nominalCoCBot[0], nominalCoCBot[1], nominalCoCBot[2] );
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Nominal centre of curvature"
@@ -66,14 +81,21 @@ StatusCode DeRich1::initialize()
 
   // get the parameters of the nominal flat mirror plane in the form
   // Ax+By+Cz+D=0
-  std::vector<double> nominalFMirrorPlane;
-  nominalFMirrorPlane = param<std::vector<double> >("NominalSecMirrorPlane");
 
-  m_nominalPlaneTop    = Gaudi::Plane3D(nominalFMirrorPlane[0],nominalFMirrorPlane[1],
-                                        nominalFMirrorPlane[2],nominalFMirrorPlane[3]);
-  m_nominalPlaneBottom = Gaudi::Plane3D(nominalFMirrorPlane[0],-nominalFMirrorPlane[1],
-                                        nominalFMirrorPlane[2],nominalFMirrorPlane[3]);
+  const auto nominalFMirrorPlaneTop = param< std::vector<double> >("NominalSecMirrorPlane");
+  const auto nominalFMirrorPlaneBot = param< std::vector<double> >("NominalSecMirrorPlane");
+  m_nominalPlaneTop    = Gaudi::Plane3D(nominalFMirrorPlaneTop[0], nominalFMirrorPlaneTop[1],
+                                        nominalFMirrorPlaneTop[2], nominalFMirrorPlaneTop[3]);
+  m_nominalPlaneBottom = Gaudi::Plane3D(nominalFMirrorPlaneBot[0],-nominalFMirrorPlaneBot[1],
+                                        nominalFMirrorPlaneBot[2], nominalFMirrorPlaneBot[3]);
 
+  // const auto nominalFMirrorPlaneTop = param< std::vector<double> >("NominalSecMirrorPlaneTop");
+  // const auto nominalFMirrorPlaneBot = param< std::vector<double> >("NominalSecMirrorPlaneBot");
+  // m_nominalPlaneTop    = Gaudi::Plane3D(nominalFMirrorPlaneTop[0],nominalFMirrorPlaneTop[1],
+  //                                       nominalFMirrorPlaneTop[2],nominalFMirrorPlaneTop[3]);
+  // m_nominalPlaneBottom = Gaudi::Plane3D(nominalFMirrorPlaneBot[0],nominalFMirrorPlaneBot[1],
+  //                                       nominalFMirrorPlaneBot[2],nominalFMirrorPlaneBot[3]);
+  
   m_nominalNormalTop    = m_nominalPlaneTop.Normal();
   m_nominalNormalBottom = m_nominalPlaneBottom.Normal();
 
@@ -81,7 +103,7 @@ StatusCode DeRich1::initialize()
     debug() << "Nominal normal " << Gaudi::XYZVector( m_nominalNormalTop ) << " "
             << Gaudi::XYZVector( m_nominalNormalBottom ) << endmsg;
 
-  const IPVolume* pvGasWindow( 0 );
+  const IPVolume* pvGasWindow( nullptr );
   const IPVolume* pvRich1SubMaster = geometry()->lvolume()->pvolume("pvRich1SubMaster");
   if ( pvRich1SubMaster )
   {
@@ -92,8 +114,7 @@ StatusCode DeRich1::initialize()
   {
     const Material::Tables& quartzWinTabProps = pvGasWindow->lvolume()->
       material()->tabulatedProperties();
-    Material::Tables::const_iterator matIter;
-    for (matIter=quartzWinTabProps.begin(); matIter!=quartzWinTabProps.end(); ++matIter)
+    for ( auto matIter = quartzWinTabProps.begin(); matIter != quartzWinTabProps.end(); ++matIter )
     {
       if( (*matIter) )
       {
