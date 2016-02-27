@@ -170,7 +170,7 @@ namespace Rich
                                          Gaudi::XYZPoint& endPoint,
                                          Gaudi::XYZVector& endDir ) const = 0;
 
-    /** Intersection a given direction, from a given point with a given plane.
+    /** Intersect a given direction, from a given point, with a given plane.
      *
      *  @param[in]  position      The start point to use for the ray tracing
      *  @param[in]  direction     The direction to ray trace from the start point
@@ -186,6 +186,25 @@ namespace Rich
                      const Gaudi::XYZVector& direction,
                      const Gaudi::Plane3D& plane,
                      Gaudi::XYZPoint& intersection ) const = 0;
+
+    /** Intersect a given direction, from a given point, with a given spherical shell.
+     *
+     *  @param[in]  position      The start point to use for the ray tracing
+     *  @param[in]  direction     The direction to ray trace from the start point
+     *  @param[in] CoC            The centre of curvature of the spherical mirror
+     *  @param[in] radius         The radius of curvature of the spherical mirror
+     *  @param[out] intersection  The intersection point of the direction with the plane
+     *
+     *  @return Boolean indicating the status of the ray tracing
+     *  @retval true  Ray tracing was successful
+     *  @retval false Ray tracing was unsuccessful
+     */
+    virtual bool
+    intersectSpherical ( const Gaudi::XYZPoint& position,
+                         const Gaudi::XYZVector& direction,
+                         const Gaudi::XYZPoint& CoC,
+                         const double radius,
+                         Gaudi::XYZPoint& intersection ) const = 0;
 
     /** Reflect a given direction off a spherical mirror. Can be used for intersection.
      *
@@ -210,7 +229,7 @@ namespace Rich
      *
      *  @param[in,out] position  On input the start point. On output the reflection point
      *  @param[in,out] direction On input the starting direction. On output the reflected direction.
-     *  @param         plane     The plane to refect off
+     *  @param[in]     plane     The plane to refect off
      *
      *  @return Boolean indicating if the ray tracing was succesful
      *  @retval true  Ray tracing was successful

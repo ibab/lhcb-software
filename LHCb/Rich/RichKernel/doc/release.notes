@@ -4,6 +4,10 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2016-02-25 - Chris Jones
+ - Add new method to IRichRayTracing to perform an intersection with a
+   spherical sphere.
+
 ! 2016-02-17 - Chris Jones
  - Invalidate merged and removed clusters pointers after merger.
  - Throw exception if pixel cluster builder is initialised with a null pointer
