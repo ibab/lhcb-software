@@ -51,7 +51,8 @@ class RichRecQCConf(RichConfigurableUser):
                            "RichPhotonGeometry", "PhotonRecoEfficiency",
                            "RichPhotonRecoCompare",
                            "RichPhotonTrajectory", "RichStereoFitterTests",
-                           "RichRayTracingTests", "RichDataObjectChecks",
+                           "RichTrackRayTracingTests", "RichPhotonRayTracingTests",
+                           "RichDataObjectChecks",
                            "RichRecoTiming", "RichFuncCKResPlots",
                            "RichPerfFromData","AerogelMonitoring",
                            "RichTracksToTextFile","RichHitsToTextFile"
@@ -83,7 +84,8 @@ class RichRecQCConf(RichConfigurableUser):
                                             "RichPhotonSignal", "RichTrackCKResolutions",
                                             "RichPhotonGeometry", "PhotonRecoEfficiency",
                                             "RichPhotonRecoCompare",
-                                            "RichPhotonTrajectory", "RichStereoFitterTests"
+                                            "RichPhotonTrajectory", "RichStereoFitterTests",
+                                            "RichPhotonRayTracingTests"
                                             #,"RichRayTracingTests","RichDataObjectChecks",
                                             #"RichRecoTiming"
                                             ],
@@ -830,7 +832,6 @@ class RichRecQCConf(RichConfigurableUser):
                 name = "RiRecPhotTraj" + self.trackSelName(trackType) + "TkMoni"
                 seq.Members += [ self.createMonitor(Rich__Rec__MC__PhotonTrajectoryMonitor,name,trackType) ]
 
-
         check = "RichPhotonRecoCompare"
         if check in checks :
             from Configurables import Rich__Rec__MC__PhotonRecoCompare
@@ -872,7 +873,16 @@ class RichRecQCConf(RichConfigurableUser):
                 mon = self.createMonitor(Rich__Rec__MC__PhotonRecoEffMonitor,name,trackType)
                 seq.Members += [ mon ]
 
-        check = "RichRayTracingTests"
+        check = "RichPhotonRayTracingTests"
+        if check in checks :
+            from Configurables import Rich__Rec__MC__PhotonRayTraceTest
+            seq = self.newSeq(sequence,check)
+            self.toolRegistry().Tools += [ "Rich::Rec::PhotonRecoUsingQuarticSoln/BaselinePhotonReco" ]
+            for trackType in tkTypes :
+                name = "RiRecPhotRayTrace" + self.trackSelName(trackType) + "TkMoni"
+                seq.Members += [ self.createMonitor(Rich__Rec__MC__PhotonRayTraceTest,name,trackType) ]
+
+        check = "RichTrackRayTracingTests"
         if check in checks :
             from Configurables import Rich__Rec__MC__PhotonRecoRayTraceTest
             seq = self.newSeq(sequence,check)

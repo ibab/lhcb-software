@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2016-02-24 - Chris Jones
+ - Add configuration for new RichPhotonRayTraceTest monitor.
+
 ! 2016-02-08 - Chris Jones
  - C++11 clean up of the remaining monitors in the package not already updated.
 
