@@ -46,7 +46,7 @@ Rich::RayTracing::RayTracing( const std::string& type,
 
   // job options
   declareProperty( "IgnoreSecondaryMirrors", m_ignoreSecMirrs = false );
-  
+
   // Debug messages
   //setProperty( "OutputLevel", 1 );
 
@@ -82,7 +82,7 @@ StatusCode Rich::RayTracing::initialize()
       const Rich::DetectorType RICH = (Rich::DetectorType)rich;
       m_photoDetPanels[rich][panel] = m_rich[rich]->pdPanel(side);
       if ( msgLevel(MSG::DEBUG) )
-        debug() << "Stored for " << Rich::text(RICH,side) 
+        debug() << "Stored for " << Rich::text(RICH,side)
                 << " PD Panel " << m_photoDetPanels[rich][side]->name() << endmsg;
     }
   }
@@ -226,10 +226,10 @@ Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
   // temporary working objects
   Gaudi::XYZPoint  tmpPos ( startPoint );
   Gaudi::XYZVector tmpDir ( startDir   );
-  
+
   // Correct start point/direction for aerogel refraction, if appropriate
-  if ( mode.aeroRefraction()            && 
-       rich             == Rich::Rich1  && 
+  if ( mode.aeroRefraction()            &&
+       rich             == Rich::Rich1  &&
        trSeg.radiator() == Rich::Aerogel )
   {
     snellsLaw()->aerogelToGas(tmpPos,tmpDir,trSeg);
@@ -252,7 +252,7 @@ Rich::RayTracing::_traceToDetector ( const Rich::DetectorType rich,
   LHCb::RichTraceMode::RayTraceResult result = LHCb::RichTraceMode::RayTraceFailed;
 
   //if ( msgLevel(MSG::VERBOSE) )
-  //  verbose() << "Ray Tracing : " << rich << " Ptn=" << startPoint 
+  //  verbose() << "Ray Tracing : " << rich << " Ptn=" << startPoint
   //            << " Dir=" << tmpDir << endmsg;
 
   // first, try and reflect of both mirrors
@@ -284,7 +284,7 @@ Rich::RayTracing::_traceToDetector ( const Rich::DetectorType rich,
       result = m_photoDetPanels[rich][side]->PDWindowPoint( tmpDir, tmpPos,
                                                             hitPosition, smartID, mode );
       //if ( msgLevel(MSG::VERBOSE) )
-      //  verbose() << "  -> After PDWindowPoint " << hitPosition 
+      //  verbose() << "  -> After PDWindowPoint " << hitPosition
       //            << " " << smartID << endmsg;
 
     }
@@ -295,7 +295,7 @@ Rich::RayTracing::_traceToDetector ( const Rich::DetectorType rich,
       result = m_photoDetPanels[rich][side]->detPlanePoint( tmpPos, tmpDir,
                                                             hitPosition, smartID, mode );
       //if ( msgLevel(MSG::VERBOSE) )
-      //  verbose() << "  -> After detPlanePoint " << hitPosition 
+      //  verbose() << "  -> After detPlanePoint " << hitPosition
       //            << " " << smartID << endmsg;
     }
 
@@ -583,7 +583,36 @@ Rich::RayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
 }
 
 //=========================================================================
-//  reflect from a spherical mirror
+// Intersect a given direction, from a given point, with a given spherical shell.
+//=========================================================================
+bool
+Rich::RayTracing::intersectSpherical ( const Gaudi::XYZPoint& position,
+                                       const Gaudi::XYZVector& direction,
+                                       const Gaudi::XYZPoint& CoC,
+                                       const double radius,
+                                       Gaudi::XYZPoint& intersection ) const
+{
+  const double a = direction.Mag2();
+  if ( 0 == a )
+  {
+    Warning( "intersectSpherical: Direction vector has zero length..." ).ignore();
+    return false;
+  }
+  const Gaudi::XYZVector delta( position - CoC );
+  const double b = 2.0 * direction.Dot( delta );
+  const double c = delta.Mag2() - radius*radius;
+  const double discr = b*b - 4.0*a*c;
+  if ( discr < 0 ) return false;
+
+  const double distance1 = 0.5 * ( std::sqrt(discr) - b ) / a;
+  // set intersection point
+  intersection = position + ( distance1 * direction );
+
+  return true;
+}
+
+//=========================================================================
+// reflect from a spherical mirror
 //=========================================================================
 bool
 Rich::RayTracing::reflectSpherical ( Gaudi::XYZPoint& position,
@@ -595,7 +624,7 @@ Rich::RayTracing::reflectSpherical ( Gaudi::XYZPoint& position,
   // for line sphere intersection look at http://www.realtimerendering.com/int/
 
   const double a = direction.Mag2();
-  if ( 0 == a )  
+  if ( 0 == a )
   {
     Warning( "reflectSpherical: Direction vector has zero length..." ).ignore();
     return false;
@@ -632,14 +661,14 @@ Rich::RayTracing::reflectFlatPlane ( Gaudi::XYZPoint& position,
 
   // refect of the plane
   const bool sc = intersectPlane( position, direction, plane, intersection );
-  if ( sc ) 
+  if ( sc )
   {
     // plane normal
     const Gaudi::XYZVector normal( plane.Normal() );
-    
+
     // update position to intersection point
     position = intersection;
-    
+
     // reflect the vector and update direction
     // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
     direction -= 2.0 * (normal.Dot(direction)) * normal;

@@ -88,7 +88,7 @@ namespace Rich
                       LHCb::RichGeomPhoton& photon,
                       const LHCb::RichTrackSegment& trSeg,
                       const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
-                      const Rich::Side forcedSide    = Rich::top ) const;
+                      const Rich::Side forcedSide    = Rich::top ) const override;
 
     /// For a given detector, raytraces a given direction from a given point to
     /// the photo detectors. Returns the result in the form of a RichGeomPhoton.
@@ -99,7 +99,7 @@ namespace Rich
                       Gaudi::XYZPoint& hitPosition,
                       const LHCb::RichTrackSegment& trSeg,
                       const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
-                      const Rich::Side forcedSide    = Rich::top ) const;
+                      const Rich::Side forcedSide    = Rich::top ) const override;
 
     /// For a given detector, raytraces a given direction from a given point to
     /// the photo detectors. Returns the result in the form of a RichGeomPhoton
@@ -110,7 +110,7 @@ namespace Rich
                      LHCb::RichGeomPhoton& photon,
                      const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
                      const Rich::Side forcedSide    = Rich::top,
-                     const double photonEnergy      = 0 ) const;
+                     const double photonEnergy      = 0 ) const override;
 
     /// For a given detector, raytraces a given direction from a given point to
     /// the photo detectors.
@@ -121,7 +121,7 @@ namespace Rich
                      Gaudi::XYZPoint& hitPosition,
                      const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
                      const Rich::Side forcedSide    = Rich::top,
-                     const double photonEnergy      = 0 ) const;
+                     const double photonEnergy      = 0 ) const override;
 
     /// Raytraces from a point in the detector panel back to the spherical mirror
     /// returning the mirror intersection point and the direction a track would
@@ -129,13 +129,20 @@ namespace Rich
     bool traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
                                  const Gaudi::XYZVector& startDir,
                                  Gaudi::XYZPoint& endPoint,
-                                 Gaudi::XYZVector& endDir ) const;
+                                 Gaudi::XYZVector& endDir ) const override;
 
     /// Intersection a given direction, from a given point with a given plane.
     bool intersectPlane( const Gaudi::XYZPoint& position,
                          const Gaudi::XYZVector& direction,
                          const Gaudi::Plane3D& plane,
-                         Gaudi::XYZPoint& intersection ) const;
+                         Gaudi::XYZPoint& intersection ) const override;
+
+    /// Intersect a given direction, from a given point, with a given spherical shell.
+    bool intersectSpherical ( const Gaudi::XYZPoint& position,
+                              const Gaudi::XYZVector& direction,
+                              const Gaudi::XYZPoint& CoC,
+                              const double radius,
+                              Gaudi::XYZPoint& intersection ) const override;
 
     /// Reflect a given direction off a spherical mirror. Can be used for intersection.
     bool reflectSpherical ( Gaudi::XYZPoint& position,
@@ -146,7 +153,7 @@ namespace Rich
     /// Ray trace from given position in given direction off flat mirrors
     bool reflectFlatPlane ( Gaudi::XYZPoint& position,
                             Gaudi::XYZVector& direction,
-                            const Gaudi::Plane3D& plane ) const;
+                            const Gaudi::Plane3D& plane ) const override;
 
   private: // methods
 

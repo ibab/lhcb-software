@@ -97,7 +97,7 @@ namespace Rich
                       LHCb::RichGeomPhoton& photon,
                       const LHCb::RichTrackSegment& trSeg,
                       const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
-                      const Rich::Side forcedSide    = Rich::top ) const;
+                      const Rich::Side forcedSide    = Rich::top ) const override;
 
     /// For a given detector, raytraces a given direction from a given point to
     /// the photo detectors. Returns the result in the form of a RichGeomPhoton.
@@ -108,7 +108,7 @@ namespace Rich
                       Gaudi::XYZPoint& hitPosition,
                       const LHCb::RichTrackSegment& trSeg,
                       const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
-                      const Rich::Side forcedSide    = Rich::top ) const;
+                      const Rich::Side forcedSide    = Rich::top ) const override;
 
     /// For a given detector, raytraces a given direction from a given point to
     /// the photo detectors. Returns the result in the form of a RichGeomPhoton
@@ -119,7 +119,7 @@ namespace Rich
                      LHCb::RichGeomPhoton& photon,
                      const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
                      const Rich::Side forcedSide    = Rich::top,
-                     const double photonEnergy      = 0 ) const;
+                     const double photonEnergy      = 0 ) const override;
 
     /// For a given detector, raytraces a given direction from a given point to
     /// the photo detectors.
@@ -130,7 +130,7 @@ namespace Rich
                      Gaudi::XYZPoint& hitPosition,
                      const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
                      const Rich::Side forcedSide    = Rich::top,
-                     const double photonEnergy      = 0 ) const;
+                     const double photonEnergy      = 0 ) const override;
 
     /// Raytraces from a point in the detector panel back to the spherical mirror
     /// returning the mirror intersection point and the direction a track would
@@ -138,24 +138,31 @@ namespace Rich
     bool traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
                                  const Gaudi::XYZVector& startDir,
                                  Gaudi::XYZPoint& endPoint,
-                                 Gaudi::XYZVector& endDir ) const;
+                                 Gaudi::XYZVector& endDir ) const override;
 
     /// Intersection a given direction, from a given point with a given plane.
     bool intersectPlane( const Gaudi::XYZPoint& position,
                          const Gaudi::XYZVector& direction,
                          const Gaudi::Plane3D& plane,
-                         Gaudi::XYZPoint& intersection ) const;
+                         Gaudi::XYZPoint& intersection ) const override;
 
+    /// Intersect a given direction, from a given point, with a given spherical shell.
+    bool intersectSpherical ( const Gaudi::XYZPoint& position,
+                              const Gaudi::XYZVector& direction,
+                              const Gaudi::XYZPoint& CoC,
+                              const double radius,
+                              Gaudi::XYZPoint& intersection ) const override;
+    
     /// Reflect a given direction off a spherical mirror. Can be used for intersection.
     bool reflectSpherical ( Gaudi::XYZPoint& position,
                             Gaudi::XYZVector& direction,
                             const Gaudi::XYZPoint& CoC,
-                            const double radius ) const;
+                            const double radius ) const override;
 
     /// Ray trace from given position in given direction off flat mirrors
     bool reflectFlatPlane ( Gaudi::XYZPoint& position,
                             Gaudi::XYZVector& direction,
-                            const Gaudi::Plane3D& plane ) const;
+                            const Gaudi::Plane3D& plane ) const override;
 
   private: // definitions
 
@@ -207,6 +214,39 @@ namespace Rich
     }
 
     /// Reflect a given direction off a spherical mirror. Can be used for intersection.
+    inline bool intersectSpherical ( const EigenXYZPoint& position,
+                                     const EigenXYZVector& direction,
+                                     const Gaudi::XYZPoint& CoC,
+                                     const float radius,
+                                     Gaudi::XYZPoint& intersection ) const
+    {
+      bool OK = true;
+      // find intersection point
+      // for line sphere intersection look at http://www.realtimerendering.com/int/
+      const EigenXYZPoint ecoc(CoC);
+      const auto a = direction.dot(direction);
+      if ( UNLIKELY( 0 == a ) ) { OK = false; }
+      else
+      {
+        const auto delta = position - ecoc;
+        const auto b     = 2.0f * direction.dot(delta);
+        const auto c     = delta.dot(delta) - radius*radius;
+        const auto discr = b*b - 4.0f*a*c;
+        if ( UNLIKELY( discr < 0 ) ) { OK = false; }
+        else
+        {
+          //const auto sd = vdt::fast_isqrt( discr );
+          //const auto distance1 = (1.0f - (b*sd) ) / ( 2.f * a * sd );
+          const auto distance1 = 0.5f * ( std::sqrt(discr) - b ) / a;
+          // intersection point
+          intersection = position + ( distance1 * direction );
+        }
+      }
+      // return
+      return OK;
+    }
+
+    /// Reflect a given direction off a spherical mirror. Can be used for intersection.
     inline bool reflectSpherical ( EigenXYZPoint& position,
                                    EigenXYZVector& direction,
                                    const Gaudi::XYZPoint& CoC,
@@ -216,7 +256,7 @@ namespace Rich
       // find intersection point
       // for line sphere intersection look at http://www.realtimerendering.com/int/
       const EigenXYZPoint ecoc(CoC);
-      const auto a     = direction.dot(direction);
+      const auto a = direction.dot(direction);
       if ( UNLIKELY( 0 == a ) ) { OK = false; }
       else
       {

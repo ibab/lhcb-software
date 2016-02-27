@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2016-02-27 - Chris Jones
+ - Add new ray tracing methods to perform intersection with a sphere.
+
 ! 2016-02-17 - Chris Jones
  - Return 'correct' (i.e. large) values from thresholdMomentum with the 
    Rich::ParticleProperties tool for BelowThreshold types.

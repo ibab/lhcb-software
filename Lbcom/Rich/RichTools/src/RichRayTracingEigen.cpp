@@ -333,6 +333,7 @@ bool Rich::RayTracingEigen::reflectBothMirrors( const Rich::DetectorType rich,
   // which side are we on ?
   Rich::Side side = ( mode.forcedSide() ? forcedSide : m_rich[rich]->side(position) );
 
+  // Make local eigen objects to work on
   EigenXYZPoint  tmpPos ( position  );
   EigenXYZVector tmpDir ( direction );
 
@@ -421,8 +422,8 @@ bool Rich::RayTracingEigen::reflectBothMirrors( const Rich::DetectorType rich,
                           sphSegment->radius() ) ) { return false; }
 
   // set primary mirror data
-  photon.setSphMirReflectionPoint( tmpPos );
-  photon.setPrimaryMirror(sphSegment);
+  photon.setSphMirReflectionPoint ( tmpPos     );
+  photon.setPrimaryMirror         ( sphSegment );
 
   // Are we ignoring the secondary mirrors ?
   if ( !m_ignoreSecMirrs )
@@ -496,8 +497,8 @@ bool Rich::RayTracingEigen::reflectBothMirrors( const Rich::DetectorType rich,
                             secSegment->radius() ) ) { return false; }
 
     // set secondary ("flat") mirror data
-    photon.setFlatMirReflectionPoint( tmpPos );
-    photon.setSecondaryMirror(secSegment);
+    photon.setFlatMirReflectionPoint ( tmpPos     );
+    photon.setSecondaryMirror        ( secSegment );
 
   } // ignore secondary mirrors
 
@@ -574,6 +575,35 @@ Rich::RayTracingEigen::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint
 
   endPoint  = storePoint;
   endDir    = storeDir;
+
+  return true;
+}
+
+//=========================================================================
+// Intersect a given direction, from a given point, with a given spherical shell.
+//=========================================================================
+bool
+Rich::RayTracingEigen::intersectSpherical ( const Gaudi::XYZPoint& position,
+                                            const Gaudi::XYZVector& direction,
+                                            const Gaudi::XYZPoint& CoC,
+                                            const double radius,
+                                            Gaudi::XYZPoint& intersection ) const
+{
+  const double a = direction.Mag2();
+  if ( 0 == a )
+  {
+    Warning( "intersectSpherical: Direction vector has zero length..." ).ignore();
+    return false;
+  }
+  const Gaudi::XYZVector delta( position - CoC );
+  const double b = 2.0 * direction.Dot( delta );
+  const double c = delta.Mag2() - radius*radius;
+  const double discr = b*b - 4.0*a*c;
+  if ( discr < 0 ) return false;
+
+  const double distance1 = 0.5 * ( std::sqrt(discr) - b ) / a;
+  // set intersection point
+  intersection = position + ( distance1 * direction );
 
   return true;
 }
