@@ -106,6 +106,13 @@ def _get_meta_info_ ( files , importOpts = [] , catalogs = [] ) :
     
     gaudi = AppMgr( outputlevel = 6 )
 
+    #
+    ## needed to solve very strange problem...
+    ## 
+    from LoKiCore.basic import cpp, LHCb
+    LHCb.ProcessHeader
+    LHCb.MCHeader
+    LHCb.GenHeader
     
     gaudi.run(1)
     evtsvc = gaudi.evtSvc()
@@ -114,7 +121,7 @@ def _get_meta_info_ ( files , importOpts = [] , catalogs = [] ) :
                     '/Event/MC/Header'      ,
                     '/Event/MC/DigiHeader'  ,
                     '/Event/Rec/Header'     ) : 
-
+        
         try    :
             hdr = evtsvc [ header ]
         except :
@@ -122,37 +129,31 @@ def _get_meta_info_ ( files , importOpts = [] , catalogs = [] ) :
         
         if not hdr : continue
         
-        try :
+        if hasattr ( hdr , 'applicationName' ) and hasattr ( hdr , 'applicationVersion' ) : 
+            info[ hdr.applicationName() ] = hdr.applicationVersion ()
             
-            if hasattr ( hdr , 'applicationName' ) and hasattr ( hdr , 'applicationVersion' ) : 
-                info[ hdr.applicationName() ] = hdr.applicationVersion ()
+        if hasattr ( hdr , 'runNumber' ) :                 
+            info[ 'Run'                 ] = hdr.runNumber          ()
                 
-            if hasattr ( hdr , 'runNumber' ) :                 
-                info[ 'Run'                 ] = hdr.runNumber          ()
+        if hasattr ( hdr , 'evtNumber' ) :                 
+            info[ 'Event'               ] = hdr.evtNumber          ()
                 
-            if hasattr ( hdr , 'evtNumber' ) :                 
-                info[ 'Event'               ] = hdr.evtNumber          ()
+        if hasattr ( hdr , 'gpsTime'   ) :                                 
+            info[ 'Time'                ] = hdr.gpsTime            () 
                 
-            if hasattr ( hdr , 'gpsTime'   ) :                                 
-                info[ 'Time'                ] = hdr.gpsTime            () 
-                
-            if hasattr ( hdr , 'rawID'     ) :                                 
-                info[ 'UUID'                ] = hdr.rawID              ()
-
-            if hasattr ( hdr , 'evType'    ) :
-                info [ 'EvtType' ] = hdr.evType() 
-
-            print hdr 
-        except :
+        if hasattr ( hdr , 'rawID'     ) :                                 
+            info[ 'UUID'                ] = hdr.rawID              ()
             
-            pass
-        
-        tgs = hdr.condDBTags()
-        for t in tgs :
-            tag = t.first
-            val = t.second 
-            if not info.has_key( tag ) : info [ tag ] = set()
-            info[tag] . add ( val )
+        if hasattr ( hdr , 'evType'    ) :
+            info [ 'EvtType' ] = hdr.evType() 
+            
+        if hasattr ( hdr , 'condDBTags' ) : 
+            tgs = hdr.condDBTags()
+            for t in tgs :
+                tag = t.first
+                val = t.second 
+                if not info.has_key( tag ) : info [ tag ] = set()
+                info[tag] . add ( val )
 
 
     ## collect information from ODIN
