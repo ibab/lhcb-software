@@ -62,7 +62,7 @@ ROOT_RooFit_ERROR = 4
 # =============================================================================
 # logging 
 # =============================================================================
-from   Ostap.Logger import getLogger, logColor 
+from   Ostap.Logger import getLogger, logColor
 if '__main__' ==  __name__ : logger = getLogger( 'Ostap.Utils' )
 else                       : logger = getLogger( __name__ )
 del getLogger 

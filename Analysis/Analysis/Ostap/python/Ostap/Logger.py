@@ -19,23 +19,35 @@ __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2012-03-16"
 __version__ = '$Revision$'
 __all__     = (
-    'getLogger'    ,  ## get logger
-    'setLogging'   ,  ## set the global logging level
-    'logColor'     ,  ## locally switch on color logging 
-    'make_colors'  ,  ## force colored logging 
-    'reset_colors' ,  ## reset colored logging 
+    'getLogger'      , ## get (configured) logger
+    'setLogging'     , ## set disable level according to MSG.Level
+    'LogLevel'       , ## context manager to control output level 
+    'logLevel'       , ## helper function to control output level
+    'logVerbose'     , ## helper function to control output level
+    'logDebug'       , ## helper function to control output level
+    'logInfo'        , ## helper function to control output level
+    'logWarning'     , ## helper function to control output level
+    'logError'       , ## helper function to control output level
+    'logColor'       , ## context manager to switch on  color logging locally  
+    'logNoColor'     , ## context manager to switch off color logging locally  
+    'noColor'        , ## context manager to switch off color logging locally  
     )
 # =============================================================================
-from AnalysisPython.Logger import getLogger 
+## import actual logger 
+from AnalysisPython.Logger import ( getLogger      , setLogging   , 
+                                    logLevel       , logVerbose   , logDebug ,
+                                    logInfo        , logWarning   , logError , 
+                                    logColor       , logNoColor   , noColor  ,
+                                    make_colors    , reset_colors , 
+                                    colored_string ) 
 # =============================================================================
-if '__main__' == __name__ : logger = getLogger ( 'Ostap.Logger' )
-else                      : logger = getLogger ( __name__       )
-# ============================================================================
-from AnalysisPython.Logger import *
-# ============================================================================
+if '__main__' == __name__ : logger = getLogger ( 'Bender.Logger' )
+else                      : logger = getLogger ( __name__ )
+# =============================================================================
 if __name__ == '__main__' :
     
-    setLogging  ( 0 )
+    import logging
+    logging.disable( logging.VERBOSE - 1  ) 
     
     logger.info ( 80*'*'  ) 
     logger.info ( __doc__ ) 
@@ -45,32 +57,22 @@ if __name__ == '__main__' :
     logger.info ( ' Symbols : %s ' %  list ( __all__ ) )
     logger.info ( 80*'*'  ) 
 
-    
-    logger.verbose  ( 'This is DEBUG    message'  ) 
-    logger.debug    ( 'This is DEBUG    message'  ) 
-    logger.info     ( 'This is INFO     message'  ) 
-    logger.warning  ( 'This is WARNING  message'  ) 
-    logger.error    ( 'This is ERROR    message'  ) 
-    logger.fatal    ( 'This is FATAL    message'  ) 
-    logger.critical ( 'This is CRITICAL message'  ) 
-
-    with logColor () : 
+    with logColor() : 
+        logger.verbose  ( 80*'*'  )
+        logger.debug    ( 80*'*'  )
+        logger.info     ( 80*'*'  )
+        logger.error    ( 80*'*'  )
+        logger.warning  ( 80*'*'  )
+        logger.critical ( 80*'*'  )
+        logger.fatal    ( 80*'*'  )
         
-        logger.verbose  ( 'This is DEBUG    message'  ) 
-        logger.debug    ( 'This is DEBUG    message'  ) 
-        logger.info     ( 'This is INFO     message'  ) 
-        logger.warning  ( 'This is WARNING  message'  ) 
-        logger.error    ( 'This is ERROR    message'  ) 
-        logger.fatal    ( 'This is FATAL    message'  ) 
-        logger.critical ( 'This is CRITICAL message'  ) 
-
-    logger.verbose  ( 'This is DEBUG    message'  ) 
-    logger.debug    ( 'This is DEBUG    message'  ) 
-    logger.info     ( 'This is INFO     message'  ) 
-    logger.warning  ( 'This is WARNING  message'  ) 
-    logger.error    ( 'This is ERROR    message'  ) 
-    logger.fatal    ( 'This is FATAL    message'  ) 
-    logger.critical ( 'This is CRITICAL message'  ) 
+    logger.verbose  ( 80*'*'  )
+    logger.debug    ( 80*'*'  )
+    logger.info     ( 80*'*'  )
+    logger.error    ( 80*'*'  )
+    logger.warning  ( 80*'*'  )
+    logger.critical ( 80*'*'  )
+    logger.fatal    ( 80*'*'  )
 
 # =============================================================================
 # The END 
