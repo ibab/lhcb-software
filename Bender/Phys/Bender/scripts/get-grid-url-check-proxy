@@ -5,12 +5,13 @@
 #  simple script to get GRID URL for certains LFN(s)  
 # =============================================================================
 
-type dirac-dms-lfn-accessURL > /dev/null 2>&1 
+lhcb-proxy-info --checkvalid > /dev/null 2>&1 
 if [[ $? -eq 1 ]] then
-    . `which SetupProject.sh` LHCbDirac >&! /dev/null
+    echo 'No valid GRID proxy' >&2 
+    exit 1 
 fi 
 
-grid_url.py  $*
+get-grid-url $* 
 
 # =============================================================================
 # The END 
