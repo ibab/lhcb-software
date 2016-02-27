@@ -5,6 +5,11 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/BenderTools v28r2 2016-02-27 ======================
+
+! 2016-02-27 - Vanya Belyaev
+ - more fixes 
+
 ! 2016-02-27 - Vanya Belyaev
  - eos_ls/cp : change csh to zsh 
 
@@ -16,8 +21,6 @@
 
    In [25]: a = seekForData ('/Event/PSIX/Phys/SelPsiPiForPsiX/Particles', progress = True )
    Done        39             
-
-      
 
 ! 2016-02-22 - Vanya Belyaev
  - prepare qmtest for no-mcdecay script 
