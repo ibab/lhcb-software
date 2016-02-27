@@ -9,5 +9,5 @@
        <text>win.*</text>
     </set>
  </argument>
-	
+<argument name="timeout"><integer>2400</integer></argument>	
 </extension>

@@ -4,6 +4,7 @@
   <argument name="program"> 
     <text>../../python/BenderExample/K0fromV0.py</text>
   </argument>
+<argument name="timeout"><integer>2400</integer></argument>
 <argument name="validator"><text>
 block = """
         250   ++----+----+----+----+----+----+----+----+----+----+  
