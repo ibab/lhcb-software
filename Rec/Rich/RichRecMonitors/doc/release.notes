@@ -4,6 +4,11 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2016-02-24 - Chris Jones
+ - Add a new monitor, RichTrackRayTraceTest that is designed to compare
+   directly reconstructed (Quartic) to ray trace information, to look for
+   biases etc.
+
 ! 2016-02-07- Chris Jones
  - Modernise a few more monitors.
  - Add some additional histograms to RichPhotonRecoCompare to investigate

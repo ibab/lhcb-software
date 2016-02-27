@@ -35,9 +35,9 @@ StatusCode TrackRayTraceTest::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRayTracing",    m_rayTrace, NULL, true );
-  acquireTool( "RichSmartIDTool",   m_idTool,   NULL, true );
-  acquireTool( "TrackSelector",     m_trSelector, this );
+  acquireTool( "RichRayTracing",  m_rayTrace, nullptr, true );
+  acquireTool( "RichSmartIDTool", m_idTool,   nullptr, true );
+  acquireTool( "TrackSelector",   m_trSelector,        this );
 
   // initialise variables
 
@@ -103,7 +103,7 @@ void TrackRayTraceTest::testRayTrace( const LHCb::RichTraceMode traceMode,
 
   // test ray tracing
   LHCb::RichGeomPhoton photon;
-  const LHCb::RichTraceMode::RayTraceResult result = 
+  const auto result = 
     m_rayTrace->traceToDetector( rich,
                                  segment->trackSegment().bestPoint(),
                                  segment->trackSegment().bestMomentum(),
