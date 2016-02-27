@@ -24,6 +24,9 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2016-02-27 - Vanya Belyaev
+ - TEMPORARY: use "long" version of Logger
+ 
 ! 2016-02-25 - Vanya Belyaev
  - irun:
    add two arguments: 
