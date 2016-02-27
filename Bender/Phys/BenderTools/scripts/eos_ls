@@ -1,4 +1,4 @@
-#!/bin/csh
+#!/bin/zsh
 # -*- coding: utf-8 -*-
 # =============================================================================
 # $Id:$ 
@@ -29,12 +29,27 @@
 #                 by $Author: ibelyaev $
 # =============================================================================
 
-if  ( -r  /afs/cern.ch/project/eos/installation/client/etc/setup.csh ) then
-  source /afs/cern.ch/project/eos/installation/client/etc/setup.csh
-  eos ls -la $*
-else 
-    echo 'No eos afs setup available!' > /dev/stderr 
-endif
+##if  ( -r  /afs/cern.ch/project/eos/installation/client/etc/setup.csh ) then
+##  source /afs/cern.ch/project/eos/installation/client/etc/setup.csh
+##  eos ls -la $*
+##else 
+##    echo 'No eos afs setup available!' > /dev/stderr 
+##endif
+
+type eos > /dev/null 2>&1 
+if [[ $? -eq 1 ]] then
+    if [[ -r /afs/cern.ch/project/eos/installation/client/etc/setup.sh ]] then 
+        source /afs/cern.ch/project/eos/installation/client/etc/setup.sh
+    fi
+fi  
+
+type eos > /dev/null 2>&1 
+if [[ $? -eq 1 ]] then
+    echo 'No EOS accessible' >&2  
+    exit 1 
+fi
+
+eos ls -la $*
 
 # =============================================================================
 # The END 

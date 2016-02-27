@@ -5,6 +5,9 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2016-02-27 - Vanya Belyaev
+ - eos_ls/cp : change csh to zsh 
+
 ! 2016-02-25 - Vanya Belyaev
  - Seek.py:
 

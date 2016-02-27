@@ -29,7 +29,18 @@
 #                 by $Author: ibelyaev $
 # =============================================================================
 
-. /afs/cern.ch/project/eos/installation/client/etc/setup.sh
+type eos > /dev/null 2>&1 
+if [[ $? -eq 1 ]] then
+    if [[ -r /afs/cern.ch/project/eos/installation/client/etc/setup.sh ]] then 
+        source /afs/cern.ch/project/eos/installation/client/etc/setup.sh
+    fi
+fi  
+
+type eos > /dev/null 2>&1 
+if [[ $? -eq 1 ]] then
+    echo 'No EOS accessible' >&2  
+    exit 1 
+fi
 
 eos cp -s $*
 
