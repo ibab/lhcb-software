@@ -27,7 +27,7 @@ use LoKiTrigger         v15r9    Phys  # Vanya Belyaev
 
 # Extra packages only for v25r0
 # LHCb
-use OTDAQ               v8r1     OT
+use OTDAQ               v8r0p1   OT
 # Rec
 use PatAlgorithms       v4r46    Tf
 use TrackTools          v6r1     Tr
