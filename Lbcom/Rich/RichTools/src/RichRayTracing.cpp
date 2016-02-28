@@ -383,8 +383,8 @@ bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
     // check the outside boundaries of the (whole) mirror
     if ( !sphSegment->intersects( position, direction ) )
     {
-      const RichMirrorSegPosition pos = m_rich[rich]->sphMirrorSegPos( sphSegment->mirrorNumber() );
-      const Gaudi::XYZPoint & mirCentre = sphSegment->mirrorCentre();
+      const auto pos = m_rich[rich]->sphMirrorSegPos( sphSegment->mirrorNumber() );
+      const auto & mirCentre = sphSegment->mirrorCentre();
       bool fail( false );
       if ( pos.row() == 0 )
       { // bottom segment
