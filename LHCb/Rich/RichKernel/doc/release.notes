@@ -4,9 +4,13 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2016-02-28 - Chris Jones
+ - Convert back to the ROOT based ray tracing to cure small precision
+   differences between the Eigen based math library to the ROOT math library.
+
 ! 2016-02-25 - Chris Jones
  - Add new method to IRichRayTracing to perform an intersection with a
-   spherical sphere.
+   spherical shell.
 
 ! 2016-02-17 - Chris Jones
  - Invalidate merged and removed clusters pointers after merger.

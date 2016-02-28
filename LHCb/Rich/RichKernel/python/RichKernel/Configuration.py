@@ -185,10 +185,10 @@ class RichTools(RichConfigurableUser):
     #  @param nickname The tool nickname
     #  @return The tool configurable
     def rayTracing(self,nickname="RichRayTracing",private=False) :
-        from Configurables import Rich__RayTracingEigen
-        tool = self.__makeRichTool( Rich__RayTracingEigen, nickname, private )
-        #from Configurables import Rich__RayTracing
-        #tool = self.__makeRichTool( Rich__RayTracing, nickname, private )
+        #from Configurables import Rich__RayTracingEigen
+        #tool = self.__makeRichTool( Rich__RayTracingEigen, nickname, private )
+        from Configurables import Rich__RayTracing
+        tool = self.__makeRichTool( Rich__RayTracing, nickname, private )
         return tool
     
     ## @brief Returns the appropriate Cherenkov resolution tool
