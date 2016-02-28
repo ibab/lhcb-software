@@ -132,7 +132,7 @@ StatusCode Rich::RayTracing::initialize()
     Warning( "Will ignore secondary mirrors", StatusCode::SUCCESS );
   }
 
-  info() << "Using ROOT based Ray Tracing" << endmsg;
+  _ri_debug << "Using ROOT based Ray Tracing" << endmsg;
 
   return sc;
 }

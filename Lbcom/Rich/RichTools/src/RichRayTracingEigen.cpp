@@ -130,7 +130,7 @@ StatusCode Rich::RayTracingEigen::initialize()
     Warning( "Will ignore secondary mirrors", StatusCode::SUCCESS );
   }
 
-  info() << "Using Eigen based Ray Tracing" << endmsg;
+  _ri_debug << "Using Eigen based Ray Tracing" << endmsg;
 
   return sc;
 }
