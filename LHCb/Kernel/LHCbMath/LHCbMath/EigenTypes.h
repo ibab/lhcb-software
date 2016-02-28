@@ -36,11 +36,14 @@ namespace LHCb
     namespace Eigen
     {
 
+      /// floating point precision
+      using FloatType = double;
+
       /// The Eigen 4D Vector type
-      typedef ::Eigen::Matrix< float , 4 , 1 > E4Vector;
+      using E4Vector = ::Eigen::Matrix< FloatType , 4 , 1 >;
 
       /// The Eigen 3D Vector type
-      typedef ::Eigen::Matrix< float , 3 , 1 > E3Vector;
+      using E3Vector = ::Eigen::Matrix< FloatType , 3 , 1 >;
       
       /** @class XYZVector EigenTypes.h LHCbMath/EigenTypes.h
        *
@@ -60,9 +63,9 @@ namespace LHCb
       public:
 
         /// Standard constructor
-        XYZVector( const float x = 0.0f, 
-                   const float y = 0.0f,
-                   const float z = 0.0f ) : E4Vector(x,y,z,0) { }
+        XYZVector( const FloatType x = 0.0, 
+                   const FloatType y = 0.0,
+                   const FloatType z = 0.0 ) : E4Vector(x,y,z,0) { }
 
         /// Constructor from a Gaudi Point
         XYZVector( const Gaudi::XYZVector& p ) : E4Vector( p.x(), p.y(), p.z(), 0 ) { }
@@ -77,33 +80,30 @@ namespace LHCb
         /// Implicit conversion back to a Gaudi Vector
         inline operator Gaudi::XYZVector() const { return { x(), y(), z() }; }
 
-        ///< Destructor
-        ~XYZVector( ) { }
-
       public:
 
         /// Dot product against a Gaudi vector
-        inline float Dot( const Gaudi::XYZVector& v ) const { return dot(XYZVector(v)); }
+        inline FloatType Dot( const Gaudi::XYZVector& v ) const { return dot(XYZVector(v)); }
 
         /// Implement 'Dot' method ( alias for dot)
         template < class TYPE >
-        inline float Dot( const TYPE& v ) const { return dot(v); }
+        inline FloatType Dot( const TYPE& v ) const { return dot(v); }
 
         /// Magnitude squared
-        inline float Mag2() const { return dot(*this); }
+        inline FloatType Mag2() const { return dot(*this); }
 
         /// Magnitude squared
-        inline float mag2() const { return Mag2(); }
+        inline FloatType mag2() const { return Mag2(); }
 
         /// Get the polar R Coordinate
-        inline float R() const { return std::sqrt(Mag2()); }
+        inline FloatType R() const { return std::sqrt(Mag2()); }
 
         /// 3D Cross product
         template < class TYPE >
         inline XYZVector Cross( const TYPE& v ) const { return cross3(v); }
 
         /// Returns a normalised unit vector
-        inline XYZVector Unit() const { return (*this) * vdt::fast_isqrtf(Mag2()); }
+        inline XYZVector Unit() const { return (*this) * vdt::fast_isqrt(Mag2()); }
 
         /// Returns a normalised unit vector
         inline XYZVector unit() const { return Unit(); }
@@ -111,22 +111,22 @@ namespace LHCb
       public: /// Alias methods for accessors and setters
 
         /// Get X Coordinate
-        inline float X() const { return x(); }
+        inline FloatType X() const noexcept { return x(); }
 
         /// Get Y Coordinate
-        inline float Y() const { return y(); }
+        inline FloatType Y() const noexcept { return y(); }
 
         /// Get Z Coordinate
-        inline float Z() const { return z(); }
+        inline FloatType Z() const noexcept { return z(); }
 
         /// Set X Coordinate
-        inline void SetX( const float x ) { (*this)[0] = x; }
+        inline void SetX( const FloatType x ) noexcept { (*this)[0] = x; }
 
         /// Set Y Coordinate
-        inline void SetY( const float y ) { (*this)[1] = y; }
+        inline void SetY( const FloatType y ) noexcept { (*this)[1] = y; }
 
         /// Set Z Coordinate
-        inline void SetZ( const float z ) { (*this)[2] = z; }
+        inline void SetZ( const FloatType z ) noexcept { (*this)[2] = z; }
 
       public:
 
@@ -141,7 +141,7 @@ namespace LHCb
       /** @class XYZPoint EigenTypes.h LHCbMath/EigenTypes.h
        *
        *  Implementation of a 3D point as an Eigen Matrix.
-       *  Uses internally a 4D float Matrix in order to utilise
+       *  Uses internally a 4D FloatType Matrix in order to utilise
        *  automatic vectorisation of the classes and operations.
        *
        *  This class is designed to 'smooth' the interaction
@@ -156,9 +156,9 @@ namespace LHCb
       public:
 
         /// Standard constructor
-        XYZPoint( const float x = 0.0f, 
-                  const float y = 0.0f,
-                  const float z = 0.0f ) : E4Vector(x,y,z,0) { }
+        XYZPoint( const FloatType x = 0.0, 
+                  const FloatType y = 0.0,
+                  const FloatType z = 0.0 ) : E4Vector(x,y,z,0) { }
 
         /// Constructor from a Gaudi Point
         XYZPoint( const Gaudi::XYZPoint& p ) : E4Vector( p.x(), p.y(), p.z(), 0 ) { }
@@ -172,9 +172,6 @@ namespace LHCb
         {
           return Gaudi::XYZPoint( x(), y(), z() );
         }
-
-        ///< Destructor
-        ~XYZPoint( ) { }
 
       public:
 
@@ -193,30 +190,30 @@ namespace LHCb
       public: /// Alias methods for accessors and setters
 
         /// Get the polar R Coordinate
-        inline float R() const { return std::sqrt( dot(*this) ); }
+        inline FloatType R() const { return std::sqrt( dot(*this) ); }
 
         /// Get X Coordinate
-        inline float X() const { return x(); }
+        inline FloatType X() const noexcept { return x(); }
 
         /// Get Y Coordinate
-        inline float Y() const { return y(); }
+        inline FloatType Y() const noexcept { return y(); }
 
         /// Get Z Coordinate
-        inline float Z() const { return z(); }
+        inline FloatType Z() const noexcept { return z(); }
 
         /// Set X Coordinate
-        inline void SetX( const float x ) { (*this)[0] = x; }
+        inline void SetX( const FloatType x ) noexcept { (*this)[0] = x; }
 
         /// Set Y Coordinate
-        inline void SetY( const float y ) { (*this)[1] = y; }
+        inline void SetY( const FloatType y ) noexcept { (*this)[1] = y; }
 
         /// Set Z Coordinate
-        inline void SetZ( const float z ) { (*this)[2] = z; }
+        inline void SetZ( const FloatType z ) noexcept { (*this)[2] = z; }
 
         /// Set all three coordinates
-        inline void SetCoordinates( const float x,
-                                    const float y,
-                                    const float z ) { *this = E4Vector(x,y,z,0); }
+        inline void SetCoordinates( const FloatType x,
+                                    const FloatType y,
+                                    const FloatType z ) noexcept { *this = E4Vector(x,y,z,0); }
 
       public:
 
@@ -243,7 +240,7 @@ namespace LHCb
       };
 
       /// The internal Eigen type to use for 3D Planes
-      typedef ::Eigen::Hyperplane< float, 3 > EPlane;
+      typedef ::Eigen::Hyperplane< FloatType, 3 > EPlane;
 
       /** @class Plane3D EigenTypes.h LHCbMath/EigenTypes.h
        *
@@ -259,7 +256,7 @@ namespace LHCb
       {
       private:
 
-        typedef ::Eigen::Matrix<float,3,1> Vec3f;
+        typedef ::Eigen::Matrix<FloatType,3,1> Vec3f;
 
       private:
 
@@ -273,12 +270,12 @@ namespace LHCb
       public :   
 
         /// Default constructor
-        Plane3D() { }
+        Plane3D() = default;
       
         /** Constructor from parameters from the general form
          *  according to the equation ax + by + cz + d = 0 */
-        Plane3D( const float a, const float b,
-                 const float c, const float d ) 
+        Plane3D( const FloatType a, const FloatType b,
+                 const FloatType c, const FloatType d ) 
           : EPlane( Vec3f(a,b,c), d ) { }
 
         /// Constructor from a normal vector and a point in the plane
@@ -317,7 +314,7 @@ namespace LHCb
 
         /// Distance to a point
         template < class POINT >
-        inline float Distance( const POINT& p ) const 
+        inline FloatType Distance( const POINT& p ) const 
         { 
           return signedDistance( Vec3f(p.x(),p.y(),p.z()) ); 
         }
