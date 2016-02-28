@@ -63,7 +63,7 @@ namespace Rich
         /// run a ray tracing test for a given photon 
         void rayTrace( const LHCb::RichRecPhoton * photon,
                        const LHCb::RichTraceMode mode,
-                       const std::string & name );
+                       const std::string & tag );
 
       private: // data
 
