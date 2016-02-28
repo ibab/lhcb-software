@@ -34,19 +34,11 @@ const CLID CLID_DeRichSphMirror = 12030;  // User defined
 
 // Standard Constructor
 DeRichSphMirror::DeRichSphMirror(const std::string & name) :
-  DeRichBase     ( name ),
-  m_reflectivity ( NULL ),
-  m_solid        ( NULL ),
-  m_radius       ( 0    ),
-  m_mirrorNumber ( -1   ),
-  m_firstUpdate  ( true )
+  DeRichBase( name )
 { }
 
 // Standard Destructor
-DeRichSphMirror::~DeRichSphMirror()
-{
-  cleanUp();
-}
+DeRichSphMirror::~DeRichSphMirror() { }
 
 // Retrieve Pointer to class defininition structure
 const CLID& DeRichSphMirror::classID()
@@ -68,11 +60,11 @@ StatusCode DeRichSphMirror::intersects( const Gaudi::XYZPoint& globalP,
                                         const Gaudi::XYZVector& globalV,
                                         Gaudi::XYZPoint& intersectionPoint ) const
 {
-  const Gaudi::XYZPoint pLocal( geometry()->toLocal(globalP) );
-  Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*globalV );
+  const auto pLocal = geometry()->toLocal(globalP);
+  const auto vLocal = geometry()->toLocalMatrix()*globalV;
 
   ISolid::Ticks ticks;
-  const unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
+  const auto noTicks = m_solid->intersectionTicks( pLocal, vLocal, ticks );
 
   if ( 0 == noTicks )
   {
@@ -92,11 +84,11 @@ StatusCode DeRichSphMirror::intersects( const Gaudi::XYZPoint& globalP,
 StatusCode DeRichSphMirror::intersects( const Gaudi::XYZPoint& globalP,
                                         const Gaudi::XYZVector& globalV ) const
 {
-  Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*globalV );
+  const auto vLocal = geometry()->toLocalMatrix()*globalV;
 
   ISolid::Ticks ticks;
-  const unsigned int noTicks = m_solid->intersectionTicks(geometry()->toLocal(globalP),
-                                                          vLocal, ticks);
+  const auto noTicks = m_solid->intersectionTicks(geometry()->toLocal(globalP),
+                                                  vLocal, ticks);
 
   return ( 0 == noTicks ? StatusCode::FAILURE : StatusCode::SUCCESS );
 }
@@ -106,8 +98,6 @@ StatusCode DeRichSphMirror::intersects( const Gaudi::XYZPoint& globalP,
 //=========================================================================
 StatusCode DeRichSphMirror::updateGeometry()
 {
-  // Clean up before (re)initalising
-  cleanUp();
 
   // If first update, set dependency on geometry
   if ( m_firstUpdate )
@@ -126,19 +116,19 @@ StatusCode DeRichSphMirror::updateGeometry()
     if      ( "1" == richNum )
     {
       rich = Rich::Rich1;
-      const std::string::size_type secPos = name().find("Mirror2");
+      const auto secPos = name().find("Mirror2");
       if ( std::string::npos != secPos ) secondary = true;
     }
     else if ( "2" == richNum )
     {
       rich = Rich::Rich2;
-      const std::string::size_type secPos = name().find("SecMirror");
+      const auto secPos = name().find("SecMirror");
       if ( std::string::npos != secPos ) secondary = true;
     }
     else if ( "/" == richNum )
     {
       rich = Rich::Rich;
-      const std::string::size_type secPos = name().find("SecMirror");
+      const auto secPos = name().find("SecMirror");
       if ( std::string::npos != secPos ) secondary = true;
     }
     else
@@ -158,7 +148,7 @@ StatusCode DeRichSphMirror::updateGeometry()
     debug() << "Initializing spherical mirror" << endmsg;
 
   // extract mirror number from detector element name
-  const std::string::size_type pos2 = name().rfind(':');
+  const auto pos2 = name().rfind(':');
   if ( std::string::npos == pos2 )
   {
     fatal() << "A spherical mirror without a number!" << endmsg;
@@ -181,7 +171,7 @@ StatusCode DeRichSphMirror::updateGeometry()
   m_solid = geometry()->lvolume()->solid();
   const std::string type = m_solid->typeName();
 
-  const SolidSphere* sphereSolid = NULL;
+  const SolidSphere* sphereSolid = nullptr;
   // find the sphere of the spherical mirror
   if ( type == "SolidSphere" )
   {
@@ -190,7 +180,7 @@ StatusCode DeRichSphMirror::updateGeometry()
   else
   {
     //assume boolean solid
-    const SolidBoolean* compSolid = dynamic_cast<const SolidBoolean*>(m_solid);
+    const auto * compSolid = dynamic_cast<const SolidBoolean*>(m_solid);
     if ( !compSolid )
     {
       error() << "Problem loading SolidBoolean" << endmsg;
@@ -240,8 +230,7 @@ StatusCode DeRichSphMirror::updateGeometry()
   const Gaudi::XYZVector toSphCentreXYZ( toSphCentre );
 
   ISolid::Ticks sphTicks;
-  const unsigned int sphTicksSize = sphereSolid->
-    intersectionTicks(m_localOrigin, toSphCentreXYZ, sphTicks);
+  const auto sphTicksSize = sphereSolid->intersectionTicks(m_localOrigin, toSphCentreXYZ, sphTicks);
   if (sphTicksSize != 2)
   {
     fatal() << "Problem getting mirror radius, noTicks: "
@@ -317,8 +306,7 @@ StatusCode DeRichSphMirror::updateGeometry()
       return StatusCode::FAILURE;
     }
 
-    DataSvcHelpers::RegistryEntry* rich2Reg =
-      dynamic_cast<DataSvcHelpers::RegistryEntry*>(rich2SurfCat->registry());
+    auto * rich2Reg = dynamic_cast<DataSvcHelpers::RegistryEntry*>(rich2SurfCat->registry());
     if ( !rich2Reg )
     {
       error() << "Problem accessing surface registry" << endmsg;
@@ -326,15 +314,15 @@ StatusCode DeRichSphMirror::updateGeometry()
     }
 
     // find the surface in the registry
-    IRegistry* storeReg = NULL;
-    for ( DataSvcHelpers::RegistryEntry::Iterator child = rich2Reg->begin();
+    IRegistry* storeReg = nullptr;
+    for ( auto child = rich2Reg->begin();
           (child != rich2Reg->end() && !foundSurface); ++child )
     {
       // child is a const_iterator of vector<IRegistry*>
-      const std::string::size_type pos3 = (*child)->name().find(sphMirrorName);
+      const auto pos3 = (*child)->name().find(sphMirrorName);
       if ( std::string::npos != pos3 )
       {
-        const std::string::size_type pos4 = (*child)->name().find(surfName);
+        const auto pos4 = (*child)->name().find(surfName);
         if ( std::string::npos != pos4 )
         {
           storeReg = (*child);
@@ -381,13 +369,11 @@ StatusCode DeRichSphMirror::updateGeometry()
   }
 
   bool foundRefl( false );
-  const Surface::Tables & surfTabProp = surf->tabulatedProperties();
-  for ( Surface::Tables::const_iterator table_iter = surfTabProp.begin();
-        table_iter != surfTabProp.end(); ++table_iter )
+  for ( const auto & table : surf->tabulatedProperties() )
   {
-    if ( (*table_iter)->type() == "REFLECTIVITY" )
+    if ( table->type() == "REFLECTIVITY" )
     {
-      m_reflectivity = new Rich::TabulatedProperty1D( (*table_iter) );
+      m_reflectivity.reset( new Rich::TabulatedProperty1D(table) );
       foundRefl = true;
       break;
     }

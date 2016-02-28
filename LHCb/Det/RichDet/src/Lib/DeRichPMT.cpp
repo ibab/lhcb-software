@@ -33,27 +33,12 @@ const CLID CLID_DeRichPMT = 12025;  // User defined
 // Standard constructor, initializes variables
 //=============================================================================
 DeRichPMT::DeRichPMT( const std::string & name )
-  : DeRichPD ( name )
-  , m_dePmtAnode(NULL)
-  , m_PmtLensFlag(false)
-  , m_Rich2UseGrandPmt(false)
-{
-}
+  : DeRichPD ( name ) { }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-DeRichPMT::~DeRichPMT()
-{
-  cleanUpInterps();
-}
-
-//=============================================================================
-
-void DeRichPMT::cleanUpInterps()
-{
-  delete m_pdQuantumEffFunc; m_pdQuantumEffFunc = NULL;
-}
+DeRichPMT::~DeRichPMT() { }
 
 //=============================================================================
 
@@ -214,10 +199,8 @@ StatusCode DeRichPMT::getPMTParameters()
 
 StatusCode DeRichPMT::initPMTQuantumEff()
 {
-  delete m_pdQuantumEffFunc;
-
   SmartDataPtr<TabulatedProperty> pmtQuantumEffTabProp( dataSvc(), m_PmtQELocation );
-  m_pdQuantumEffFunc = new Rich::TabulatedProperty1D( pmtQuantumEffTabProp );
+  m_pdQuantumEffFunc.reset( new Rich::TabulatedProperty1D( pmtQuantumEffTabProp ) );
 
   return  StatusCode::SUCCESS;
 }

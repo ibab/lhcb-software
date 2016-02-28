@@ -11,6 +11,7 @@
 
 // STL
 #include <vector>
+#include <memory>
 
 // DetDesc
 #include "RichDet/Rich1DTabProperty.h"
@@ -132,7 +133,7 @@ public:
   }
 
   /** Returns the Rich Geometry config type 0=current optics, 1 upgrade optics, 2 horizontal rich1-upgrade optics.
-   *  CRJ - This should be an enum, not an it ....
+   *  CRJ - This should be an enum, not an int ....
    *        Should also be cleaned up now the horizontal RICH1 is no longer an option
    */
   inline int RichGeometryConfig() const
@@ -151,6 +152,7 @@ public:
   {
     return m_Rich2UseGrandPmt;
   }
+
   /// Use large+small  PMTs
   inline bool Rich2UseMixedPmt () const
   {
@@ -163,9 +165,9 @@ public:
    *
    * @return Pointer to gas window refIndex
    */
-  inline const RichTabulatedProperty1D* gasWinRefIndex() const
+  inline const Rich::TabulatedProperty1D* gasWinRefIndex() const
   {
-    return m_gasWinRefIndex;
+    return m_gasWinRefIndex.get();
   }
 
   /**
@@ -174,9 +176,9 @@ public:
    *
    * @return Pointer gas window absorption length
    */
-  inline const RichTabulatedProperty1D* gasWinAbsLength() const
+  inline const Rich::TabulatedProperty1D* gasWinAbsLength() const
   {
-    return m_gasWinAbsLength;
+    return m_gasWinAbsLength.get();
   }
 
   /**
@@ -185,7 +187,7 @@ public:
    *
    * @return Pointer to quantum efficiency (can be null)
    */
-  inline const RichTabulatedProperty1D * nominalPDQuantumEff() const
+  inline const std::shared_ptr<const Rich::TabulatedProperty1D>& nominalPDQuantumEff() const
   {
     if ( !m_nominalPDQuantumEff ) { loadNominalQuantumEff(); }
     return m_nominalPDQuantumEff;
@@ -197,9 +199,9 @@ public:
    *
    * @return Pointer to nominal spherical mirror reflectivity
    */
-  inline const RichTabulatedProperty1D* nominalSphMirrorRefl() const
+  inline const Rich::TabulatedProperty1D* nominalSphMirrorRefl() const
   {
-    return m_nominalSphMirrorRefl;
+    return m_nominalSphMirrorRefl.get();
   }
 
   /**
@@ -208,9 +210,9 @@ public:
    *
    * @return Pointer to nominal flat mirror reflectivity
    */
-  inline const RichTabulatedProperty1D* nominalSecMirrorRefl() const
+  inline const Rich::TabulatedProperty1D* nominalSecMirrorRefl() const
   {
-    return m_nominalSecMirrorRefl;
+    return m_nominalSecMirrorRefl.get();
   }
 
   /**
@@ -267,18 +269,18 @@ protected:
   Rich::DetectorType m_rich;
 
   /// The nominal radius of the spherical mirror
-  double m_sphMirrorRadius;
+  double m_sphMirrorRadius{0};
 
   /// RICH PhotoDetector Configuration
-  Rich::RichPhDetConfigType m_RichPhotoDetConfig;
+  Rich::RichPhDetConfigType m_RichPhotoDetConfig = Rich::HPDConfig;
 
   /// Rich Geometry Configuration
-  int m_RichGeometryConfig;
+  int m_RichGeometryConfig{0};
 
   /** RICH2 PhotoDetector Configuration
    * This is specific to RICH2, but is part of the overall RICH geometry config.
    */
-  int m_Rich2PhotoDetectorArrayConfig;
+  int m_Rich2PhotoDetectorArrayConfig{0};
 
   /** Use large PMTs in RICH2
    * This is specific to RICH2, but the flags are in RICH1 part of DB since
@@ -288,20 +290,22 @@ protected:
    * navigate through them.
    * The mixed pmt means some pmts are large and others are with standard size.
    */
-  bool m_Rich2UseGrandPmt;
-  bool m_Rich2UseMixedPmt;
+  bool m_Rich2UseGrandPmt{false};
+
+  /// Use mixed PMTs
+  bool m_Rich2UseMixedPmt{false};
 
   /// refractive index of the quartz gas window
-  const Rich::TabulatedProperty1D* m_gasWinRefIndex;
+  std::unique_ptr<const Rich::TabulatedProperty1D> m_gasWinRefIndex;
 
   /// absorption length of the quartz gas window
-  const Rich::TabulatedProperty1D* m_gasWinAbsLength;
+  std::unique_ptr<const Rich::TabulatedProperty1D> m_gasWinAbsLength;
 
   /// spherical mirror reflectivity
-  const Rich::TabulatedProperty1D* m_nominalSphMirrorRefl;
+  std::unique_ptr<const Rich::TabulatedProperty1D> m_nominalSphMirrorRefl;
 
   /// flat mirror reflectivity
-  const Rich::TabulatedProperty1D* m_nominalSecMirrorRefl;
+  std::unique_ptr<const Rich::TabulatedProperty1D> m_nominalSecMirrorRefl;
 
 private: // data
 
@@ -309,15 +313,15 @@ private: // data
   mutable std::vector<DeRichPDPanel*> m_PDPanels;
 
   /// flag to test if the xml supports mirror position info
-  bool m_positionInfo;
+  bool m_positionInfo{false};
 
-  int m_sphMirrorSegRows;  ///< number of spherical mirror rows
-  int m_sphMirrorSegCols;  ///< number of spherical mirror columns
-  int m_secMirrorSegRows;  ///< number of secondary mirror rows
-  int m_secMirrorSegCols;  ///< number of secondary mirror columns
+  int m_sphMirrorSegRows{0};  ///< number of spherical mirror rows
+  int m_sphMirrorSegCols{0};  ///< number of spherical mirror columns
+  int m_secMirrorSegRows{0};  ///< number of secondary mirror rows
+  int m_secMirrorSegCols{0};  ///< number of secondary mirror columns
 
   /// PD quantum efficiency
-  mutable const Rich::TabulatedProperty1D * m_nominalPDQuantumEff;
+  mutable std::shared_ptr<const Rich::TabulatedProperty1D> m_nominalPDQuantumEff;
 
 };
 

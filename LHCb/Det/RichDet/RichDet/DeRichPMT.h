@@ -104,14 +104,10 @@ private:
 
 
   Gaudi::XYZPoint RichPmtLensReconFromPhCath(  const Gaudi::XYZPoint & aPhCathCoord  ) const ;
-  /// Clean up interpolators
-  void cleanUpInterps();
 
-  
-  
 private:
 
-  IDetectorElement* m_dePmtAnode; ///< The PMT Anode detector element
+  IDetectorElement* m_dePmtAnode = nullptr; ///< The PMT Anode detector element
   int m_number;                    ///<Pmt number (should be the same as copy number)
   std::string  m_PmtQELocation;
 
@@ -130,7 +126,7 @@ private:
   double m_PmtNumPixRow;
   double m_PmtQwZSize;
   double m_QwToAnodeZDist ;
-  bool m_PmtLensFlag;
+  bool m_PmtLensFlag{false};
   double m_PmtLensMagnificationRatio;
   double m_PmtLensRoc;
   
@@ -147,11 +143,11 @@ private:
   double m_GrandPmtEdgePixelXDiff;
   double m_GrandPmtEdgePixelYDiff;
   double m_GrandPmtAnodeHalfThickness;
-  bool m_Rich2UseGrandPmt;
-  bool m_Rich2UseMixedPmt;
+  bool m_Rich2UseGrandPmt{false};
+  bool m_Rich2UseMixedPmt{false};
   double m_Rich1Rich2ZDivideLimit;
   int m_Rich2PmtArrayConfig;
-  bool m_PmtIsGrand;
+  bool m_PmtIsGrand{false};
   
 };
 

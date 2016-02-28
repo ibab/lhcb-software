@@ -35,11 +35,6 @@ namespace DeRichLocations
   // Location Strings
   // ----------------------------------------------------------------------------------------
 
-  // #ifdef __INTEL_COMPILER        // Disable ICC remark
-  //  #pragma warning(disable:177) // variable was declared but never referenced
-  // #pragma warning(push)
-  // #endif
-
   /// Rich1 location in transient detector store
   static const std::string Rich1 = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1";
   /// Rich2 location in transient detector store
@@ -83,10 +78,6 @@ namespace DeRichLocations
   static const std::string Rich1BeamPipe = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/Rich1BeamPipe";
   /// Rich2 Beampipe location in TDS
   static const std::string Rich2BeamPipe = "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/Rich2BeamPipe";
-
-  // #ifdef __INTEL_COMPILER // Re-enable ICC remarks
-  // #pragma warning(pop)
-  // #endif
 
   // ----------------------------------------------------------------------------------------
   // Utility methods

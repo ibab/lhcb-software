@@ -1,3 +1,4 @@
+
 /** @file DeRich1.cpp
  *
  *  Implementation file for detector description class : DeRich1
@@ -11,6 +12,7 @@
 // Include files
 #include "RichDet/DeRich1.h"
 #include "RichDet/DeRichHPDPanel.h"
+#include "RichDet/DeRichSphMirror.h"
 
 // Gaudi
 #include "GaudiKernel/SmartDataPtr.h"
@@ -25,8 +27,7 @@
 const CLID CLID_DERich1 = 12001;  // User defined
 
 // Standard Constructors
-DeRich1::DeRich1(const std::string & name)
-  : DeRich ( name )
+DeRich1::DeRich1(const std::string & name) : DeRich ( name )
 {
   m_rich = Rich::Rich1;
   setMyName("DeRich1");
@@ -50,58 +51,15 @@ StatusCode DeRich1::initialize()
 
   if ( !DeRich::initialize() ) return StatusCode::FAILURE;
 
-  // info() << "CoC Top " << param< std::vector<double> >("NominalSphMirrorTopCoC") << endmsg;
-  // info() << "CoC Bot " << param< std::vector<double> >("NominalSphMirrorBotCoC") << endmsg;
-  // info() << "CoC     " << param< std::vector<double> >("NominalSphMirrorCoC") << endmsg;
-
-  // info() << "SecPlane Top " << param< std::vector<double> >("NominalSecMirrorPlaneTop") << endmsg;
-  // info() << "SecPlane Bot " << param< std::vector<double> >("NominalSecMirrorPlaneBot") << endmsg;
-  // info() << "SecPlane     " << param< std::vector<double> >("NominalSecMirrorPlane") << endmsg;
-
-  const auto nominalCoCTop = param< std::vector<double> >("NominalSphMirrorCoC");
-  const auto nominalCoCBot = param< std::vector<double> >("NominalSphMirrorCoC");
-  m_nominalCentreOfCurvatureTop    =
-    Gaudi::XYZPoint( nominalCoCTop[0],  nominalCoCTop[1], nominalCoCTop[2] );
-  m_nominalCentreOfCurvatureBottom =
-    Gaudi::XYZPoint( nominalCoCBot[0], -nominalCoCBot[1], nominalCoCBot[2] );
-
-  //const auto nominalCoCTop = param< std::vector<double> >("NominalSphMirrorTopCoC");
-  //const auto nominalCoCBot = param< std::vector<double> >("NominalSphMirrorBotCoC");
-  //m_nominalCentreOfCurvatureTop    =
-  //  Gaudi::XYZPoint( nominalCoCTop[0], nominalCoCTop[1], nominalCoCTop[2] );
-  //m_nominalCentreOfCurvatureBottom =
-  //  Gaudi::XYZPoint( nominalCoCBot[0], nominalCoCBot[1], nominalCoCBot[2] );
-
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "Nominal centre of curvature"
-            << m_nominalCentreOfCurvatureTop << " , " << m_nominalCentreOfCurvatureBottom
-            << endmsg;
-
-  m_sphMirrorRadius = param<double>("SphMirrorRadius");
-
-  // get the parameters of the nominal flat mirror plane in the form
-  // Ax+By+Cz+D=0
-
-  const auto nominalFMirrorPlaneTop = param< std::vector<double> >("NominalSecMirrorPlane");
-  const auto nominalFMirrorPlaneBot = param< std::vector<double> >("NominalSecMirrorPlane");
-  m_nominalPlaneTop    = Gaudi::Plane3D(nominalFMirrorPlaneTop[0], nominalFMirrorPlaneTop[1],
-                                        nominalFMirrorPlaneTop[2], nominalFMirrorPlaneTop[3]);
-  m_nominalPlaneBottom = Gaudi::Plane3D(nominalFMirrorPlaneBot[0],-nominalFMirrorPlaneBot[1],
-                                        nominalFMirrorPlaneBot[2], nominalFMirrorPlaneBot[3]);
-
-  // const auto nominalFMirrorPlaneTop = param< std::vector<double> >("NominalSecMirrorPlaneTop");
-  // const auto nominalFMirrorPlaneBot = param< std::vector<double> >("NominalSecMirrorPlaneBot");
-  // m_nominalPlaneTop    = Gaudi::Plane3D(nominalFMirrorPlaneTop[0],nominalFMirrorPlaneTop[1],
-  //                                       nominalFMirrorPlaneTop[2],nominalFMirrorPlaneTop[3]);
-  // m_nominalPlaneBottom = Gaudi::Plane3D(nominalFMirrorPlaneBot[0],nominalFMirrorPlaneBot[1],
-  //                                       nominalFMirrorPlaneBot[2],nominalFMirrorPlaneBot[3]);
-  
-  m_nominalNormalTop    = m_nominalPlaneTop.Normal();
-  m_nominalNormalBottom = m_nominalPlaneBottom.Normal();
-
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "Nominal normal " << Gaudi::XYZVector( m_nominalNormalTop ) << " "
-            << Gaudi::XYZVector( m_nominalNormalBottom ) << endmsg;
+  // Declare dependency on mirrors
+  for ( const auto mirrType : {"SphericalMirrorDetElemLocations","SecondaryMirrorDetElemLocations"} )
+  {
+    for ( const auto& loc : paramVect<std::string>(mirrType) )
+    {
+      SmartDataPtr<DeRichSphMirror> mirror( dataSvc(), loc );
+      updMgrSvc()->registerCondition( this, &*mirror, &DeRich1::updateMirrorParams );
+    }
+  }
 
   const IPVolume* pvGasWindow( nullptr );
   const IPVolume* pvRich1SubMaster = geometry()->lvolume()->pvolume("pvRich1SubMaster");
@@ -123,19 +81,19 @@ StatusCode DeRich1::initialize()
           if ( msgLevel(MSG::DEBUG) )
             debug() << "Loaded gas window refIndex from: " << (*matIter)->name()
                     << endmsg;
-          m_gasWinRefIndex = new RichTabulatedProperty1D( *matIter );
+          m_gasWinRefIndex.reset( new Rich::TabulatedProperty1D( *matIter ) );
           if ( !m_gasWinRefIndex->valid() )
           {
-            error() << "Invalid RINDEX RichTabulatedProperty1D for " << (*matIter)->name() << endmsg;
+            error() << "Invalid RINDEX Rich::TabulatedProperty1D for " << (*matIter)->name() << endmsg;
             return StatusCode::FAILURE;
           }
         }
         if ( (*matIter)->type() == "ABSLENGTH" )
         {
-          m_gasWinAbsLength = new RichTabulatedProperty1D( *matIter );
+          m_gasWinAbsLength.reset( new Rich::TabulatedProperty1D( *matIter ) );
           if ( !m_gasWinAbsLength->valid() )
           {
-            error() << "Invalid ABSLENGTH RichTabulatedProperty1D for " << (*matIter)->name() << endmsg;
+            error() << "Invalid ABSLENGTH Rich::TabulatedProperty1D for " << (*matIter)->name() << endmsg;
             return StatusCode::FAILURE;
           }
         }
@@ -166,10 +124,10 @@ StatusCode DeRich1::initialize()
     if ( msgLevel(MSG::DEBUG) )
       debug() << "Loaded spherical mirror reflectivity from: "
               << sphMirrorReflLoc << endmsg;
-    m_nominalSphMirrorRefl = new RichTabulatedProperty1D( sphMirrorRefl );
+    m_nominalSphMirrorRefl.reset( new Rich::TabulatedProperty1D( sphMirrorRefl ) );
     if ( !m_nominalSphMirrorRefl->valid() )
     {
-      error() <<"Invalid RichTabulatedProperty1D for " << sphMirrorRefl->name() << endmsg;
+      error() <<"Invalid Rich::TabulatedProperty1D for " << sphMirrorRefl->name() << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -191,10 +149,10 @@ StatusCode DeRich1::initialize()
   {
     if ( msgLevel(MSG::DEBUG) )
       debug() <<"Loaded secondary mirror reflectivity from: "<<secMirrorReflLoc<<endmsg;
-    m_nominalSecMirrorRefl = new RichTabulatedProperty1D( secMirrorRefl );
+    m_nominalSecMirrorRefl.reset( new Rich::TabulatedProperty1D( secMirrorRefl ) );
     if ( !m_nominalSecMirrorRefl->valid() )
     {
-      error() << "Invalid RichTabulatedProperty1D for " << secMirrorRefl->name() << endmsg;
+      error() << "Invalid Rich::TabulatedProperty1D for " << secMirrorRefl->name() << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -204,36 +162,170 @@ StatusCode DeRich1::initialize()
   //hpdPanel(Rich::bottom);
 
   // DC06 compatible mirror (mis)alignment
-  bool alignMirros( false );
   if ( hasCondition( "Rich1Mirror1Align" ) )
   {
     m_sphMirAlignCond = condition( "Rich1Mirror1Align" );
-    alignMirros = true;
     updMgrSvc()->registerCondition(this,m_sphMirAlignCond.path(),&DeRich1::alignSphMirrors);
   }
   else
   {
-    m_sphMirAlignCond = NULL;
+    m_sphMirAlignCond = nullptr;
   }
 
   if ( hasCondition( "Rich1Mirror2Align" ) )
   {
     m_secMirAlignCond = condition( "Rich1Mirror2Align" );
-    alignMirros = true;
     updMgrSvc()->registerCondition(this,m_secMirAlignCond.path(),&DeRich1::alignSecMirrors);
   }
   else {
-    m_secMirAlignCond = NULL;
+    m_secMirAlignCond = nullptr;
   }
-
-  const StatusCode upsc =
-    ( alignMirros ? updMgrSvc()->update(this) : StatusCode::SUCCESS );
 
   // initialize all child detector elements. This triggers the update
   // of the radiator properties
   childIDetectorElements();
 
-  return upsc;
+  // Trigger first update
+  const auto sc = updMgrSvc()->update(this);
+  if ( sc.isFailure() ) { fatal() << "UMS updates failed" << endmsg; }
+
+  return sc;
+}
+
+//===========================================================================
+
+StatusCode DeRich1::updateMirrorParams()
+{
+
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "CoC Top      " << param< std::vector<double> >("NominalSphMirrorTopCoC") << endmsg;
+    debug() << "CoC Bot      " << param< std::vector<double> >("NominalSphMirrorBotCoC") << endmsg;
+    debug() << "CoC          " << param< std::vector<double> >("NominalSphMirrorCoC") << endmsg;
+    debug() << "SecPlane Top " << param< std::vector<double> >("NominalSecMirrorPlaneTop") << endmsg;
+    debug() << "SecPlane Bot " << param< std::vector<double> >("NominalSecMirrorPlaneBot") << endmsg;
+    debug() << "SecPlane     " << param< std::vector<double> >("NominalSecMirrorPlane") << endmsg;
+    debug() << "RoC          " << param<double>("SphMirrorRadius") << endmsg;
+  }
+
+  // const auto nominalCoCTop = param< std::vector<double> >("NominalSphMirrorCoC");
+  // const auto nominalCoCBot = param< std::vector<double> >("NominalSphMirrorCoC");
+  // m_nominalCentreOfCurvatureTop    =
+  //   Gaudi::XYZPoint( nominalCoCTop[0],  nominalCoCTop[1], nominalCoCTop[2] );
+  // m_nominalCentreOfCurvatureBottom =
+  //   Gaudi::XYZPoint( nominalCoCBot[0], -nominalCoCBot[1], nominalCoCBot[2] );
+
+  // const auto nominalCoCTop = param< std::vector<double> >("NominalSphMirrorTopCoC");
+  // const auto nominalCoCBot = param< std::vector<double> >("NominalSphMirrorBotCoC");
+  // m_nominalCentreOfCurvatureTop    =
+  //  Gaudi::XYZPoint( nominalCoCTop[0], nominalCoCTop[1], nominalCoCTop[2] );
+  // m_nominalCentreOfCurvatureBottom =
+  //  Gaudi::XYZPoint( nominalCoCBot[0], nominalCoCBot[1], nominalCoCBot[2] );
+
+  // Load the primary mirror segments to compute the 'nominal' settings
+  {
+    m_nominalCentreOfCurvatureTop    = Gaudi::XYZPoint(0,0,0);
+    m_nominalCentreOfCurvatureBottom = Gaudi::XYZPoint(0,0,0);
+    unsigned int nTop(0), nBot(0);
+    double avroc{0};
+    for ( const auto& loc : paramVect<std::string>("SphericalMirrorDetElemLocations") )
+    {
+      SmartDataPtr<DeRichSphMirror> mirror( dataSvc(), loc );
+      const auto plane = mirror->centreNormalPlane();
+      const auto coc = mirror->centreOfCurvature();
+      const auto cen = mirror->mirrorCentre();
+      const auto roc = mirror->radius();
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << loc
+                << " Centre = " << cen
+                << " Plane " << plane.Normal() << " " << plane.HesseDistance()
+                << " RoC = " << roc
+                << " CoC = " << coc << endmsg;
+      if ( cen.y() > 0 ) { ++nTop; m_nominalCentreOfCurvatureTop    += Gaudi::XYZVector(coc); }
+      else               { ++nBot; m_nominalCentreOfCurvatureBottom += Gaudi::XYZVector(coc); }
+      avroc += roc;
+    }
+    m_nominalCentreOfCurvatureTop    /= (double)nTop;
+    m_nominalCentreOfCurvatureBottom /= (double)nBot;
+    m_sphMirrorRadius = avroc / (double)(nTop+nBot);
+  }
+
+  //m_sphMirrorRadius = param<double>("SphMirrorRadius");
+
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Nominal centre of curvature "
+            << m_nominalCentreOfCurvatureTop << " , " << m_nominalCentreOfCurvatureBottom
+            << endmsg;
+
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Nominal Radius of Curvature = " << m_sphMirrorRadius << endmsg;
+
+  // get the parameters of the nominal flat mirror plane in the form
+  // Ax+By+Cz+D=0
+
+  // const auto nominalFMirrorPlaneTop = param< std::vector<double> >("NominalSecMirrorPlane");
+  // const auto nominalFMirrorPlaneBot = param< std::vector<double> >("NominalSecMirrorPlane");
+  // m_nominalPlaneTop    = Gaudi::Plane3D(nominalFMirrorPlaneTop[0], nominalFMirrorPlaneTop[1],
+  //                                       nominalFMirrorPlaneTop[2], nominalFMirrorPlaneTop[3]);
+  // m_nominalPlaneBottom = Gaudi::Plane3D(nominalFMirrorPlaneBot[0],-nominalFMirrorPlaneBot[1],
+  //                                       nominalFMirrorPlaneBot[2], nominalFMirrorPlaneBot[3]);
+
+  // const auto nominalFMirrorPlaneTop = param< std::vector<double> >("NominalSecMirrorPlaneTop");
+  // const auto nominalFMirrorPlaneBot = param< std::vector<double> >("NominalSecMirrorPlaneBot");
+  // m_nominalPlaneTop    = Gaudi::Plane3D(nominalFMirrorPlaneTop[0],nominalFMirrorPlaneTop[1],
+  //                                       nominalFMirrorPlaneTop[2],nominalFMirrorPlaneTop[3]);
+  // m_nominalPlaneBottom = Gaudi::Plane3D(nominalFMirrorPlaneBot[0],nominalFMirrorPlaneBot[1],
+  //                                       nominalFMirrorPlaneBot[2],nominalFMirrorPlaneBot[3]);
+
+  // Load the secondary mirrors to compute the 'nominal' settings
+  {
+    std::vector<double> nominalFMirrorPlaneTop{0,0,0,0};
+    std::vector<double> nominalFMirrorPlaneBot{0,0,0,0};
+    unsigned int nTop(0), nBot(0);
+    for ( const auto& loc : paramVect<std::string>("SecondaryMirrorDetElemLocations") )
+    {
+      SmartDataPtr<DeRichSphMirror> mirror( dataSvc(), loc );
+      auto plane = mirror->centreNormalPlane();
+      const auto cen = mirror->mirrorCentre();
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << loc
+                << " Centre = " << mirror->mirrorCentre()
+                << " Plane = " << plane.Normal() << " " << plane.HesseDistance()
+                << " RoC = " << mirror->radius()
+                << " CoC = " << mirror->centreOfCurvature() << endmsg;
+      auto & params = ( cen.y() > 0 ? nominalFMirrorPlaneTop : nominalFMirrorPlaneBot );
+      params[0] += plane.A();
+      params[1] += plane.B();
+      params[2] += plane.C();
+      params[3] += plane.D();
+      ++( cen.y() > 0 ? nTop : nBot );
+    }
+    m_nominalPlaneTop    = Gaudi::Plane3D( nominalFMirrorPlaneTop[0]/(double)nTop,
+                                           nominalFMirrorPlaneTop[1]/(double)nTop,
+                                           nominalFMirrorPlaneTop[2]/(double)nTop,
+                                           nominalFMirrorPlaneTop[3]/(double)nTop );
+    m_nominalPlaneBottom = Gaudi::Plane3D( nominalFMirrorPlaneBot[0]/(double)nBot,
+                                           nominalFMirrorPlaneBot[1]/(double)nBot,
+                                           nominalFMirrorPlaneBot[2]/(double)nBot,
+                                           nominalFMirrorPlaneBot[3]/(double)nBot );
+  }
+
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Nominal Plane Top " << m_nominalPlaneTop.Normal()
+            << " " << m_nominalPlaneTop.HesseDistance() << endmsg;
+    debug() << "Nominal Plane Bot " << m_nominalPlaneBottom.Normal()
+            << " " << m_nominalPlaneBottom.HesseDistance() << endmsg;
+  }
+
+  m_nominalNormalTop    = m_nominalPlaneTop.Normal();
+  m_nominalNormalBottom = m_nominalPlaneBottom.Normal();
+
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Nominal normal " << m_nominalNormalTop << " "
+            << m_nominalNormalBottom << endmsg;
+
+  return StatusCode::SUCCESS;
 }
 
 //=========================================================================
@@ -245,16 +337,13 @@ StatusCode DeRich1::alignSphMirrors()
   // (mis)align spherical mirrors
   const ILVolume* lvRich1Gas = geometry()->lvolume()->pvolume(0)->lvolume();
   mirrorCont.push_back( lvRich1Gas );
-  StatusCode sc = alignMirrors(mirrorCont, "Rich1Mirror1Q",
-                               m_sphMirAlignCond, "RichSphMirrorRs");
-  if (sc == StatusCode::FAILURE) return sc;
+  const StatusCode sc = alignMirrors(mirrorCont, "Rich1Mirror1Q",
+                                     m_sphMirAlignCond, "RichSphMirrorRs");
+  if ( sc.isFailure() ) return sc;
 
   // (mis)align spherical mirrors (2nd layer)
-  sc = alignMirrors(mirrorCont, "Rich1Mirror1Be",
-                    m_sphMirAlignCond, "RichSphMirrorRs");
-  if (sc == StatusCode::FAILURE) return sc;
-
-  return StatusCode::SUCCESS;
+  return alignMirrors(mirrorCont, "Rich1Mirror1Be",
+                      m_sphMirAlignCond, "RichSphMirrorRs");
 }
 
 //=========================================================================
@@ -263,15 +352,12 @@ StatusCode DeRich1::alignSphMirrors()
 StatusCode DeRich1::alignSecMirrors()
 {
   std::vector<const ILVolume*> mirrorCont;
-  const ILVolume* lvRich1Gas = geometry()->lvolume()->pvolume(0)->lvolume();
+  const auto * lvRich1Gas = geometry()->lvolume()->pvolume(0)->lvolume();
   mirrorCont.push_back( lvRich1Gas );
 
   // (mis)align secondary mirrors
-  StatusCode sc = alignMirrors(mirrorCont, "Rich1Mirror2:",
-                               m_secMirAlignCond, "RichSecMirrorRs");
-  if (sc == StatusCode::FAILURE) return sc;
-
-  return StatusCode::SUCCESS;
+  return alignMirrors(mirrorCont, "Rich1Mirror2:",
+                      m_secMirAlignCond, "RichSecMirrorRs");
 }
 
 //=========================================================================
@@ -318,33 +404,31 @@ const std::string DeRich1::panelName( const Rich::Side panel ) const
   std::string pname = ( Rich::top == panel ?
                         DeRichLocations::Rich1Panel0 :
                         DeRichLocations::Rich1Panel1 );
-  // info()<<"DeRich1 Panel: Rich Config panelname config"<<pname
-  //      <<"  "<<RichPhotoDetConfig()<<endmsg;
-
-
+ 
   if(  RichPhotoDetConfig() == Rich::HPDConfig ) {
 
     if ( exists("Rich1HPDPanelDetElemLocations") )
     {
-      const std::vector<std::string>& panelLoc
-        = paramVect<std::string>("Rich1HPDPanelDetElemLocations");
+      const auto & panelLoc = paramVect<std::string>("Rich1HPDPanelDetElemLocations");
       pname = panelLoc[panel];
-    }else if (  exists("HPDPanelDetElemLocations") ) {  //kept for backward compatibility
-      const std::vector<std::string>& panelLoc
-        = paramVect<std::string>("HPDPanelDetElemLocations");
+    }
+    else if (  exists("HPDPanelDetElemLocations") ) 
+    {  //kept for backward compatibility
+      const auto & panelLoc = paramVect<std::string>("HPDPanelDetElemLocations");
       pname = panelLoc[panel];
     }
 
-  }else if ( RichPhotoDetConfig() == Rich::PMTConfig ) {
+  }
+  else if ( RichPhotoDetConfig() == Rich::PMTConfig ) 
+  {
 
     if ( exists("Rich1PMTPanelDetElemLocations") )
     {
-      const std::vector<std::string>& panelLoc
-        = paramVect<std::string>("Rich1PMTPanelDetElemLocations");
+      const auto& panelLoc = paramVect<std::string>("Rich1PMTPanelDetElemLocations");
       pname = panelLoc[panel];
     }
-  }
 
+  }
 
   return pname;
 }

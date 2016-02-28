@@ -16,8 +16,7 @@
 // Standard constructor, initializes variables
 //=============================================================================
 DeRichPD::DeRichPD( const std::string & name ) 
-  : DeRichBase         ( name ),
-    m_pdQuantumEffFunc ( NULL ) { }
+  : DeRichBase         ( name ) { }
 
 //=============================================================================
 // Destructor

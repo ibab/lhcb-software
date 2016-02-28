@@ -42,9 +42,7 @@ public:
    * Retrieves reference to class identifier
    * @return the class identifier for this class
    */
-  const CLID& clID() const {
-    return classID();
-  }
+  const CLID& clID() const { return classID(); }
 
   /**
    * Retrieves reference to class identifier
@@ -100,6 +98,9 @@ private:
 
   /// Access the name for a given panel
   virtual const std::string panelName( const Rich::Side panel ) const;
+
+  /// Update Nominal mirror parameters
+  StatusCode updateMirrorParams();
 
 private:
 

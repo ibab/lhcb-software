@@ -286,8 +286,8 @@ private: // methods
 
 private: // data
 
-  // RICH PhotoDetector Configuration
-  Rich::RichPhDetConfigType m_photDetConf;
+  /// RICH PhotoDetector Configuration (assume HPD by default)
+  Rich::RichPhDetConfigType m_photDetConf = Rich::HPDConfig;
 
   /// Type for mapping from RichSmartID to Rich::DAQ::HPDHardwareID
   typedef GaudiUtils::HashMap< const LHCb::RichSmartID, Rich::DAQ::HPDHardwareID > SoftToHard;
@@ -393,10 +393,10 @@ private: // data
   L1HardToLog m_l1HardToLog;
 
   /// First L1 Copy Number
-  unsigned int m_firstL1CopyN;
+  unsigned int m_firstL1CopyN{0};
 
   /// version number
-  int m_version;
+  int m_version{0};
 
 };
 

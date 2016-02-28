@@ -27,8 +27,7 @@ const CLID CLID_DeRichMultiSolidRadiator = 12041;  // User defined
 
 // Standard Constructor
 DeRichMultiSolidRadiator::DeRichMultiSolidRadiator(const std::string & name)
-  : DeRichRadiator ( name ),
-    m_firstUpdate  ( true ) 
+  : DeRichRadiator ( name )
 { 
   // reserve size in vectors for max aerogel (sub)tiles
   m_solids.reserve(300);
@@ -311,8 +310,8 @@ DeRichMultiSolidRadiator::nextIntersectionPoint( const Gaudi::XYZPoint&  pGlobal
                                                  Gaudi::XYZPoint&  returnPoint ) const
 {
 
-  const Gaudi::XYZPoint  pLocal( geometry()->toLocal(pGlobal) );
-  const Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*vGlobal );
+  const auto pLocal = geometry()->toLocal(pGlobal);
+  const auto vLocal = geometry()->toLocalMatrix()*vGlobal;
 
   ISolid::Ticks ticks;
   Gaudi::XYZPoint localNextPoint(0.0, 0.0, 1e6);
@@ -328,7 +327,7 @@ DeRichMultiSolidRadiator::nextIntersectionPoint( const Gaudi::XYZPoint&  pGlobal
     if ( m_solids[solid]->
          intersectionTicks(solidLocalPoint,solidLocalVector,ticks) )
     {
-      const Gaudi::XYZPoint localNext( solidLocalPoint+solidLocalVector*ticks[0] );
+      const auto localNext = solidLocalPoint+solidLocalVector*ticks[0];
       localNextTempPoint = m_toTopLevel[solid]*localNext;
       if ( localNextTempPoint.z() < localNextPoint.z() )
         localNextPoint = localNextTempPoint;
@@ -353,8 +352,8 @@ DeRichMultiSolidRadiator::intersectionPoints( const Gaudi::XYZPoint&  position,
                                               Gaudi::XYZPoint& exitPoint ) const
 {
 
-  const Gaudi::XYZPoint  pLocal( geometry()->toLocal(position) );
-  const Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*direction );
+  const auto pLocal = geometry()->toLocal(position);
+  const auto vLocal = geometry()->toLocalMatrix()*direction;
 
   ISolid::Ticks ticks;
   Gaudi::XYZPoint localEntryPoint(0.0, 0.0, 1e6);
@@ -372,9 +371,9 @@ DeRichMultiSolidRadiator::intersectionPoints( const Gaudi::XYZPoint&  position,
     if ( m_solids[solid]->
          intersectionTicks(solidLocalPoint,solidLocalVector,ticks) )
     {
-      const Gaudi::XYZPoint localEntryStep1( solidLocalPoint+solidLocalVector*ticks[0] );
+      const auto localEntryStep1( solidLocalPoint+solidLocalVector*ticks[0] );
       localEntryTempPoint = m_toTopLevel[solid]*localEntryStep1;
-      const Gaudi::XYZPoint localExitStep1 ( solidLocalPoint+solidLocalVector*ticks[ticks.size()-1]);
+      const auto localExitStep1 ( solidLocalPoint+solidLocalVector*ticks[ticks.size()-1]);
       localExitTempPoint = m_toTopLevel[solid]*localExitStep1;
 
       if ( localEntryTempPoint.z() < localEntryPoint.z() )
@@ -405,11 +404,10 @@ intersectionPoints( const Gaudi::XYZPoint& pGlobal,
                     std::vector<Gaudi::XYZPoint>& points ) const
 {
 
-  const Gaudi::XYZPoint pLocal = geometry()->toLocal(pGlobal);
-  const Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*vGlobal );
+  const auto pLocal = geometry()->toLocal(pGlobal);
+  const auto vLocal = geometry()->toLocalMatrix()*vGlobal;
 
   ISolid::Ticks ticks;
-  unsigned int noTicks;
   unsigned int totalTicks(0);
 
   points.reserve( m_solids.size() * 2 );
@@ -417,19 +415,18 @@ intersectionPoints( const Gaudi::XYZPoint& pGlobal,
   for ( unsigned int solid = 0; solid < m_solids.size(); ++solid )
   {
 
-    const Gaudi::XYZPoint solidLocalPoint( m_toLowLevel[solid]*pLocal);
-    const Gaudi::XYZVector solidLocalVector( m_toLowLevel[solid]*vLocal );
-    noTicks = m_solids[solid]->intersectionTicks(solidLocalPoint,
-                                                 solidLocalVector,
-                                                 ticks);
+    const auto solidLocalPoint( m_toLowLevel[solid]*pLocal);
+    const auto solidLocalVector( m_toLowLevel[solid]*vLocal );
+    const auto noTicks = m_solids[solid]->intersectionTicks(solidLocalPoint,
+                                                            solidLocalVector,
+                                                            ticks);
     if ( 0 != noTicks )
     {
       totalTicks += noTicks;
-      for ( ISolid::Ticks::iterator tick_it = ticks.begin();
-            tick_it != ticks.end(); ++tick_it )
+      for ( const auto & tick : ticks )
       {
-        points.push_back( geometry()->toGlobal
-                          (m_toTopLevel[solid]*(solidLocalPoint+solidLocalVector*(*tick_it))));
+        points.emplace_back( geometry()->toGlobal
+                             (m_toTopLevel[solid]*(solidLocalPoint+solidLocalVector*(tick))));
       }
     }
   }
@@ -445,20 +442,19 @@ intersections( const Gaudi::XYZPoint& pGlobal,
                const Gaudi::XYZVector& vGlobal,
                Rich::RadIntersection::Vector& intersections ) const
 {
-  const Gaudi::XYZPoint pLocal = geometry()->toLocal(pGlobal);
-  const Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*vGlobal );
+  const auto pLocal = geometry()->toLocal(pGlobal);
+  const auto vLocal = geometry()->toLocalMatrix()*vGlobal;
 
   ISolid::Ticks ticks;
-  unsigned int noTicks;
   unsigned int totalTicks(0);
 
   for (unsigned int solid=0; solid<m_solids.size(); ++solid)
   {
-    const Gaudi::XYZPoint solidLocalPoint( m_toLowLevel[solid]*pLocal);
-    const Gaudi::XYZVector solidLocalVector( m_toLowLevel[solid]*vLocal );
-    noTicks = m_solids[solid]->intersectionTicks(solidLocalPoint,
-                                                 solidLocalVector,
-                                                 ticks);
+    const auto solidLocalPoint( m_toLowLevel[solid]*pLocal);
+    const auto solidLocalVector( m_toLowLevel[solid]*vLocal );
+    const auto noTicks = m_solids[solid]->intersectionTicks(solidLocalPoint,
+                                                            solidLocalVector,
+                                                            ticks);
     if ( 0 != noTicks )
     {
       totalTicks += noTicks;
@@ -487,11 +483,10 @@ DeRichMultiSolidRadiator::refractiveIndex( const double energy,
 {
   double refIn(0);
   // Loop over all tiles and form an average
-  for ( DeRichRadiator::Vector::const_iterator iRad = radiators().begin();
-        iRad != radiators().end(); ++iRad )
+  for ( const auto & rad : radiators() )
   {
     // Should this be a weighted average of some form ?
-    refIn += (*((*iRad)->refIndex(hlt)))[energy*Gaudi::Units::eV];
+    refIn += (*(rad->refIndex(hlt)))[energy*Gaudi::Units::eV];
   }
   return ( radiators().empty() ? refIn : refIn/radiators().size() );
 }

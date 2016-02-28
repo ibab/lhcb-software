@@ -29,9 +29,9 @@ TabulatedProperty1D::~TabulatedProperty1D( )
   // clean up interpolators
   clearInterpolator();
   // Following lines cause a crash. ??
-  //if (NULL != m_svcLocator) m_svcLocator->release();
-  //if (NULL != m_msgSvc)     m_msgSvc->release();
-  //if (NULL != m_updMgrSvc)  m_updMgrSvc->release();
+  //if (nullptr != m_svcLocator) m_svcLocator->release();
+  //if (nullptr != m_msgSvc)     m_msgSvc->release();
+  //if (nullptr != m_updMgrSvc)  m_updMgrSvc->release();
 }
 //============================================================================
 
@@ -40,11 +40,7 @@ TabulatedProperty1D::TabulatedProperty1D( const TabulatedProperty * tab,
                                           const bool registerUMS,
                                           const gsl_interp_type * interType )
   : TabulatedFunction1D ( interType ),
-    m_tabProp     ( tab   ),
-    m_svcLocator  ( NULL  ),
-    m_msgSvc      ( NULL  ),
-    m_updMgrSvc   ( NULL  ),
-    m_registedUMS ( false )
+    m_tabProp           ( tab       )
 {
   // initialise the underlying GSL interpolator
   m_OK = initInterpolator( tab, registerUMS, interType );
@@ -59,7 +55,7 @@ bool TabulatedProperty1D::configureUMS( const TabulatedProperty * tab )
     m_registedUMS = false;
     
     // try registering updates
-    TabulatedProperty * nonconsttab = const_cast<TabulatedProperty*>(tab);
+    auto * nonconsttab = const_cast<TabulatedProperty*>(tab);
     updMgrSvc()->registerCondition( this,
                                     nonconsttab,
                                     &TabulatedProperty1D::updateTabProp );
@@ -88,7 +84,7 @@ TabulatedProperty1D::initInterpolator( const TabulatedProperty * tab,
                                    "*TabulatedProperty1D*", StatusCode::FAILURE );
 
   // set interpolator type
-  if ( NULL != interType ) m_interType = interType;
+  if ( nullptr != interType ) m_interType = interType;
 
   // UMS
   m_OK = ( registerUMS ? configureUMS(tab) : true );
@@ -96,11 +92,7 @@ TabulatedProperty1D::initInterpolator( const TabulatedProperty * tab,
 
   // copy data to internal container
   m_data.clear();
-  for ( TabulatedProperty::Table::const_iterator it = tab->table().begin();
-        it != tab->table().end(); ++it )
-  {
-    m_data[ (*it).first ] = (*it).second;
-  }
+  for ( const auto & t : tab->table() ) { m_data[t.first] = t.second; }
 
   // init the underlying GSL interpolator
   m_OK = this->TabulatedFunction1D::initInterpolator(interType);
@@ -135,9 +127,9 @@ ISvcLocator* TabulatedProperty1D::svcLocator()
   if ( !m_svcLocator )
   {
     m_svcLocator = Gaudi::svcLocator();
-    if ( 0 == m_svcLocator )
+    if ( nullptr == m_svcLocator )
     {
-      throw GaudiException( "ISvcLocator* points to NULL!",
+      throw GaudiException( "ISvcLocator* points to nullptr!",
                             "*TabulatedProperty1D*", StatusCode::FAILURE );
     }
   }
@@ -148,7 +140,7 @@ IUpdateManagerSvc* TabulatedProperty1D::updMgrSvc()
 {
   if ( !m_updMgrSvc )
   {
-    const StatusCode sc = svcLocator()->service("UpdateManagerSvc", m_updMgrSvc);
+    const auto sc = svcLocator()->service("UpdateManagerSvc", m_updMgrSvc);
     if ( sc.isFailure() )
     {
       throw GaudiException( "Could not locate UpdateManagerSvc",
@@ -162,7 +154,7 @@ IMessageSvc* TabulatedProperty1D::msgSvc()
 {
   if ( !m_msgSvc )
   {
-    const StatusCode sc = svcLocator()->service("MessageSvc", m_msgSvc);
+    const auto sc = svcLocator()->service("MessageSvc", m_msgSvc);
     if ( sc.isFailure() )
     {
       throw GaudiException( "Could not locate MessageSvc",

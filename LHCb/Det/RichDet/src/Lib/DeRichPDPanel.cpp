@@ -16,15 +16,7 @@
 // Standard constructor, initializes variables
 //=============================================================================
 DeRichPDPanel::DeRichPDPanel( const std::string & name )
-  : DeRichBase    ( name                  ),
-    m_PDColumns   ( 0                     ),
-    m_PDNumInCol  ( 0                     ),
-    m_PDMax       ( 0                     ),
-    m_rich        ( Rich::InvalidDetector ),
-    m_side        ( Rich::InvalidSide     ),
-    m_pdType      ( LHCb::RichSmartID::Undefined ), 
-    m_localOffset ( 0.0                   ),
-    m_detPlaneZ   ( 0.0                   ) { }
+  : DeRichBase ( name ) { }
 
 //=============================================================================
 // Destructor

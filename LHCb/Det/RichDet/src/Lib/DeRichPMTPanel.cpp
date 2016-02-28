@@ -1556,7 +1556,7 @@ bool DeRichPMTPanel::pdGrandSize( const LHCb::RichSmartID& smartID ) const
 
 //const DeRichPD* DeRichPMTPanel::dePD( const unsigned int PmtCopyNumber ) const
 //{
-//  const DeRichPD * dePmt = NULL;
+//  const DeRichPD * dePmt = nullptr;
 
 //  if ( ((int) PmtCopyNumber) < ( m_Rich1TotNumPmts + m_Rich2TotNumPmts  ) )
 //  {
@@ -1596,7 +1596,7 @@ const DeRichPD* DeRichPMTPanel::dePD( const unsigned int PmtCopyNumber ) const
 
 const DeRichPMT* DeRichPMTPanel::dePMT( const unsigned int PmtCopyNumber ) const
 {
-  const DeRichPMT * dePmt = NULL;
+  const DeRichPMT * dePmt = nullptr;
 
   int aTotNumPmt= m_Rich1TotNumPmts + m_Rich2TotNumPmts;
   //  if(rich() == Rich::Rich2 && m_Rich2UseGrandModule ) {

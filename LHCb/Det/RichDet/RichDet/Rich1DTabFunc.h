@@ -16,6 +16,7 @@
 #include <map>
 #include <iostream>
 #include <math.h>
+#include <memory>
 
 // GSL interpolation
 #include "gsl/gsl_errno.h"
@@ -114,9 +115,10 @@ namespace Rich
      *  @retval Non-NULL Interpolator was successfully created
      *  @retval NULL     Interpolator could not be created
      */
-    static TabulatedFunction1D * combine( const ConstVector & funcs,
-                                          const unsigned int samples = 100,
-                                          const gsl_interp_type * interType = gsl_interp_linear ); 
+    static std::unique_ptr<TabulatedFunction1D> 
+    combine( const ConstVector & funcs,
+             const unsigned int samples = 100,
+             const gsl_interp_type * interType = gsl_interp_linear ); 
 
   public:
 
@@ -328,21 +330,21 @@ namespace Rich
     Data m_data;
 
     /// Status flag
-    bool m_OK;
+    bool m_OK = false;
 
   private: // data
 
     // GSL interpolator objects
-    gsl_interp_accel * m_mainDistAcc;        ///< The accelerator for the main y(x) distribution
-    gsl_spline       * m_mainDistSpline;     ///< The spline for the main y(x) distribution
-    gsl_interp_accel * m_weightedDistAcc;    ///< The accelerator for the weighted x.y(x) distribution
-    gsl_spline       * m_weightedDistSpline; ///< The spline for the weighted x.y(x) distribution
+    gsl_interp_accel * m_mainDistAcc = nullptr;        ///< The accelerator for the main y(x) distribution
+    gsl_spline       * m_mainDistSpline = nullptr;     ///< The spline for the main y(x) distribution
+    gsl_interp_accel * m_weightedDistAcc = nullptr;    ///< The accelerator for the weighted x.y(x) distribution
+    gsl_spline       * m_weightedDistSpline = nullptr; ///< The spline for the weighted x.y(x) distribution
 
 
   protected:
 
     /// The interpolator type
-    const gsl_interp_type * m_interType;
+    const gsl_interp_type * m_interType = nullptr;
 
   };
 
@@ -350,12 +352,7 @@ namespace Rich
 
   // Default Constructor
   inline TabulatedFunction1D::TabulatedFunction1D( const gsl_interp_type * interType ) :
-    m_OK                 ( false     ),
-    m_mainDistAcc        ( NULL      ),
-    m_mainDistSpline     ( NULL      ),
-    m_weightedDistAcc    ( NULL      ),
-    m_weightedDistSpline ( NULL      ),
-    m_interType          ( interType )
+    m_interType ( interType )
   { }
 
   //============================================================================
@@ -365,12 +362,7 @@ namespace Rich
                                                    const double y[],
                                                    const int size,
                                                    const gsl_interp_type * interType ) :
-    m_OK                 ( false     ),
-    m_mainDistAcc        ( NULL      ),
-    m_mainDistSpline     ( NULL      ),
-    m_weightedDistAcc    ( NULL      ),
-    m_weightedDistSpline ( NULL      ),
-    m_interType          ( interType )
+    m_interType ( interType )
   {
     initInterpolator ( x, y, size, interType );
   }
@@ -381,12 +373,7 @@ namespace Rich
   inline TabulatedFunction1D::TabulatedFunction1D( const std::vector<double> & x,
                                                    const std::vector<double> & y,
                                                    const gsl_interp_type * interType ) :
-    m_OK                 ( false     ),
-    m_mainDistAcc        ( NULL      ),
-    m_mainDistSpline     ( NULL      ),
-    m_weightedDistAcc    ( NULL      ),
-    m_weightedDistSpline ( NULL      ),
-    m_interType          ( interType )
+    m_interType ( interType )
   {
     initInterpolator ( x, y, interType );
   }
@@ -396,12 +383,7 @@ namespace Rich
   // Constructor from map
   inline TabulatedFunction1D::TabulatedFunction1D( const std::map<double,double> & data,
                                                    const gsl_interp_type * interType ) :
-    m_OK                 ( false     ),
-    m_mainDistAcc        ( NULL      ),
-    m_mainDistSpline     ( NULL      ),
-    m_weightedDistAcc    ( NULL      ),
-    m_weightedDistSpline ( NULL      ),
-    m_interType          ( interType )
+    m_interType ( interType )
   {
     initInterpolator( data, interType );
   }
@@ -412,12 +394,7 @@ namespace Rich
   inline 
   TabulatedFunction1D::TabulatedFunction1D( const std::vector< std::pair<double,double> > & data,
                                             const gsl_interp_type * interType ) :
-    m_OK                 ( false     ),
-    m_mainDistAcc        ( NULL      ),
-    m_mainDistSpline     ( NULL      ),
-    m_weightedDistAcc    ( NULL      ),
-    m_weightedDistSpline ( NULL      ),
-    m_interType          ( interType )
+    m_interType ( interType )
   {
     initInterpolator( data, interType );
   }
@@ -536,9 +513,5 @@ namespace Rich
   //============================================================================
 
 }
-
-/** backwards compatibility
- *  @todo remove this typedef */
-typedef Rich::TabulatedFunction1D Rich1DTabFunc;
 
 #endif // RICHDET_RICH1DTABFUNC_H

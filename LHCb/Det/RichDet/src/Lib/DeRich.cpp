@@ -31,37 +31,16 @@
 //=============================================================================
 DeRich::DeRich( const std::string & name )
   : DeRichBase              ( name  ),
-    m_sphMirrorRadius       ( 0     ),
-    m_RichPhotoDetConfig    ( Rich::HPDConfig ),
-    m_RichGeometryConfig    ( 0     ),
-    m_Rich2PhotoDetectorArrayConfig ( 0 ),
-    m_gasWinRefIndex        ( NULL  ),
-    m_gasWinAbsLength       ( NULL  ),
-    m_nominalSphMirrorRefl  ( NULL  ),
-    m_nominalSecMirrorRefl  ( NULL  ),
-    m_PDPanels              ( Rich::NRiches ),
-    m_positionInfo          ( false ),
-    m_sphMirrorSegRows      ( 0     ),
-    m_sphMirrorSegCols      ( 0     ),
-    m_secMirrorSegRows      ( 0     ),
-    m_secMirrorSegCols      ( 0     ),
-    m_nominalPDQuantumEff   ( NULL  )
+    m_PDPanels              ( Rich::NRiches )
 {
-  m_PDPanels[Rich::Rich1]  = NULL;
-  m_PDPanels[Rich::Rich2]  = NULL;
+  m_PDPanels[Rich::Rich1]  = nullptr;
+  m_PDPanels[Rich::Rich2]  = nullptr;
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-DeRich::~DeRich()
-{
-  if ( m_gasWinRefIndex       ) delete m_gasWinRefIndex;
-  if ( m_gasWinAbsLength      ) delete m_gasWinAbsLength;
-  if ( m_nominalPDQuantumEff  ) delete m_nominalPDQuantumEff;
-  if ( m_nominalSphMirrorRefl ) delete m_nominalSphMirrorRefl;
-  if ( m_nominalSecMirrorRefl ) delete m_nominalSecMirrorRefl;
-}
+DeRich::~DeRich() { }
 
 //=========================================================================
 //  initialize
@@ -134,17 +113,13 @@ StatusCode DeRich::initialize ( )
 
 void DeRich::loadNominalQuantumEff() const
 {
-  // Delete current, if present, just to be safe
-  delete m_nominalPDQuantumEff;
-  m_nominalPDQuantumEff = NULL;
-
   if      ( m_RichPhotoDetConfig == Rich::HPDConfig )
   {
-    m_nominalPDQuantumEff = loadNominalHPDQuantumEff();
+    m_nominalPDQuantumEff.reset( loadNominalHPDQuantumEff() );
   }
   else if ( m_RichPhotoDetConfig == Rich::PMTConfig )
   {
-    m_nominalPDQuantumEff = loadNominalPMTQuantumEff();
+    m_nominalPDQuantumEff.reset( loadNominalPMTQuantumEff() );
   }
 }
 
@@ -152,7 +127,7 @@ void DeRich::loadNominalQuantumEff() const
 
 const Rich::TabulatedProperty1D * DeRich::loadNominalHPDQuantumEff() const
 {
-  const Rich::TabulatedProperty1D * nominalHPDQuantumEff = NULL;
+  const Rich::TabulatedProperty1D * nominalHPDQuantumEff = nullptr;
 
   // find the HPD quantum efficiency
   std::string HPD_QETabPropLoc;
@@ -198,7 +173,7 @@ const Rich::TabulatedProperty1D * DeRich::loadNominalHPDQuantumEff() const
 
 const Rich::TabulatedProperty1D * DeRich::loadNominalPMTQuantumEff() const
 {
-  const Rich::TabulatedProperty1D * nominalPMTQuantumEff = NULL;
+  const Rich::TabulatedProperty1D * nominalPMTQuantumEff = nullptr;
 
   // find the PMT quantum efficiency
   std::string PMT_QETabPropLoc;
@@ -254,7 +229,8 @@ RichMirrorSegPosition DeRich::sphMirrorSegPos( const int mirrorNumber ) const
     mirrorPos.setRow( row );
     mirrorPos.setColumn( mirrorNumber % m_sphMirrorSegCols );
   }
-  else {
+  else 
+  {
     error() << "No position information for mirrors" << endmsg;
   }
 
@@ -394,7 +370,7 @@ DeRichPDPanel * DeRich::pdPanel( const Rich::Side panel ) const
   {
     const std::string pName = panelName(panel);
 
-    DeRichPDPanel* phdePanel = NULL;
+    DeRichPDPanel* phdePanel = nullptr;
 
     if      ( RichPhotoDetConfig() == Rich::HPDConfig )
     {

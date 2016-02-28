@@ -29,16 +29,7 @@
 DeRichRadiator::DeRichRadiator(const std::string & name) :
   DeRichBase            ( name ),
   m_radiatorID          ( Rich::InvalidRadiator ),
-  m_rich                ( Rich::InvalidDetector ),
-  m_refIndex            ( NULL                  ),
-  m_hltRefIndex         ( NULL                  ),
-  m_refIndexTabProp     ( NULL                  ),
-  m_hltRefIndexTabProp  ( NULL                  ),
-  m_chkvRefIndexTabProp ( NULL                  ),
-  m_rayleigh            ( NULL                  ),
-  m_rayleighTabProp     ( NULL                  ),
-  m_absorption          ( NULL                  ),
-  m_absorptionTabProp   ( NULL                  )
+  m_rich                ( Rich::InvalidDetector )
 { }
 
 //=========================================================================
@@ -46,13 +37,13 @@ DeRichRadiator::DeRichRadiator(const std::string & name) :
 //=========================================================================
 DeRichRadiator::~DeRichRadiator()
 {
-  if ( m_hltRefIndex != m_refIndex )
-  {
-    delete m_hltRefIndex; m_hltRefIndex = NULL;
-  }
-  delete m_refIndex;   m_refIndex   = NULL;
-  delete m_rayleigh;   m_rayleigh   = NULL;
-  delete m_absorption; m_absorption = NULL;
+  // if ( m_hltRefIndex != m_refIndex )
+  // {
+  //   delete m_hltRefIndex; m_hltRefIndex = NULL;
+  // }
+  // delete m_refIndex;   m_refIndex   = NULL;
+  // delete m_rayleigh;   m_rayleigh   = NULL;
+  // delete m_absorption; m_absorption = NULL;
 }
 
 StatusCode DeRichRadiator::initialize()
@@ -64,9 +55,8 @@ StatusCode DeRichRadiator::initialize()
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Starting initialisation" << endmsg;
 
-  StatusCode setRad = setRadiatorID();
-  if ( !setRad.isSuccess() )
-    return setRad;
+  const StatusCode setRad = setRadiatorID();
+  if ( !setRad.isSuccess() ) return setRad;
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Initializing Radiator : " << rich() << " " << radiatorID() << endmsg;
@@ -85,7 +75,7 @@ StatusCode DeRichRadiator::initTabPropInterpolators()
   if ( m_refIndexTabProp )
   {
     if ( !m_refIndex )
-    { m_refIndex = new Rich::TabulatedProperty1D( m_refIndexTabProp ); }
+    { m_refIndex.reset( new Rich::TabulatedProperty1D( m_refIndexTabProp ) ); }
     else
     { m_refIndex->initInterpolator( m_refIndexTabProp ); }
     if ( !m_refIndex->valid() )
@@ -99,7 +89,7 @@ StatusCode DeRichRadiator::initTabPropInterpolators()
   if ( m_rayleighTabProp )
   {
     if ( !m_rayleigh )
-    { m_rayleigh = new Rich::TabulatedProperty1D( m_rayleighTabProp ); }
+    { m_rayleigh.reset( new Rich::TabulatedProperty1D( m_rayleighTabProp ) ); }
     else
     { m_rayleigh->initInterpolator( m_rayleighTabProp ); }
     if ( !m_rayleigh->valid() )
@@ -113,7 +103,7 @@ StatusCode DeRichRadiator::initTabPropInterpolators()
   if ( m_absorptionTabProp )
   {
     if ( !m_absorption )
-    { m_absorption = new Rich::TabulatedProperty1D( m_absorptionTabProp ); }
+    { m_absorption.reset( new Rich::TabulatedProperty1D( m_absorptionTabProp ) ); }
     else
     { m_absorption->initInterpolator( m_absorptionTabProp ); }
     if ( !m_absorption->valid() )
@@ -134,7 +124,7 @@ const Rich::TabulatedProperty1D* DeRichRadiator::generateHltRefIndex() const
 {
   // return normal refractive index
   m_hltRefIndex = m_refIndex;
-  return m_hltRefIndex;
+  return m_hltRefIndex.get();
 }
 
 //=========================================================================

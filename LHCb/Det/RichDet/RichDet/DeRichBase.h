@@ -12,6 +12,9 @@
 #ifndef RICHDET_DERICHBASE_H
 #define RICHDET_DERICHBASE_H 1
 
+// STL
+#include <memory>
+
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
 
@@ -37,12 +40,10 @@ public:
 
   /// Standard constructor
   DeRichBase( const std::string & name = "" ) 
-    : DetectorElement ( name ),
-      m_msgStream     ( NULL ),
-      m_deRichS       ( NULL ) { }
+    : DetectorElement ( name ) { }
 
   /// Destructor
-  virtual ~DeRichBase( ) { delete m_msgStream; } 
+  virtual ~DeRichBase( ) { } 
 
 protected:
 
@@ -51,8 +52,7 @@ protected:
   {
     m_myname = name;
     // force a new MsgStream object using this new name
-    delete m_msgStream;
-    m_msgStream = NULL;
+    m_msgStream.reset( nullptr );
   }
 
   /** Returns the name of this particular Detector Element
@@ -72,8 +72,8 @@ protected:
    */
   inline MsgStream & msgStream() const
   {
-    if ( !m_msgStream ) m_msgStream = new MsgStream( msgSvc(), myName() );
-    return *m_msgStream;
+    if ( !m_msgStream ) m_msgStream.reset( new MsgStream( msgSvc(), myName() ) );
+    return *m_msgStream.get();
   }
 
   /** Predefined configurable message stream for the efficient printouts
@@ -139,8 +139,8 @@ protected:
 private:
 
   mutable std::string m_myname;    ///< The name of this detector element
-  mutable MsgStream * m_msgStream; ///< Message Stream Object
-  mutable DeRichSystem* m_deRichS; ///< Pointer to the overall RICH system object
+  mutable std::unique_ptr<MsgStream> m_msgStream; ///< Message Stream Object
+  mutable DeRichSystem* m_deRichS = nullptr; ///< Pointer to the overall RICH system object
 
 };
 

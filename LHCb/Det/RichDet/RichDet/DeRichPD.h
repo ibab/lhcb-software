@@ -11,6 +11,9 @@
 #ifndef RICHDET_DERICHPD_H
 #define RICHDET_DERICHPD_H 1
 
+// STL
+#include <memory>
+
 // LHCbKernel
 #include "Kernel/RichSmartID.h"
 
@@ -49,7 +52,7 @@ public:
    */
   inline const Rich::TabulatedProperty1D* pdQuantumEff() const
   {
-    return m_pdQuantumEffFunc;
+    return m_pdQuantumEffFunc.get();
   }
 
 public: // virtual methods to be implemented by derived classes
@@ -93,7 +96,7 @@ public: // virtual methods to be implemented by derived classes
 protected: // to be initialised by derived classes
   
   ///< Interpolated property for HPD quantum efficiency
-  mutable const Rich::TabulatedProperty1D* m_pdQuantumEffFunc;
+  mutable std::shared_ptr<const Rich::TabulatedProperty1D> m_pdQuantumEffFunc;
   
 };
 

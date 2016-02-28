@@ -142,7 +142,7 @@ private:
   DeRichRadiator::Vector m_fullTiles;
 
   /// First update flag
-  bool m_firstUpdate;
+  bool m_firstUpdate{true};
 
 };
 

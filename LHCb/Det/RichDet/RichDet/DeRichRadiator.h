@@ -14,6 +14,7 @@
 
 // STL
 #include <vector>
+#include <memory>
 
 // Math typedefs
 #include "GaudiKernel/Point3DTypes.h"
@@ -108,7 +109,7 @@ public:
    */
   inline const Rich::TabulatedProperty1D* hltRefIndex() const
   {
-    return ( m_hltRefIndex ? m_hltRefIndex : generateHltRefIndex() );
+    return ( m_hltRefIndex.get() ? m_hltRefIndex.get() : generateHltRefIndex() );
   }
 
   /**
@@ -127,7 +128,7 @@ public:
    */
   inline const Rich::TabulatedProperty1D* rayleigh() const
   {
-    return m_rayleigh;
+    return m_rayleigh.get();
   }
 
   /**
@@ -147,7 +148,7 @@ public:
    */
   inline const Rich::TabulatedProperty1D* absorption() const
   {
-    return m_absorption;
+    return m_absorption.get();
   }
 
   /**
@@ -230,12 +231,12 @@ protected:
    */
   inline const Rich::TabulatedProperty1D* checkRefIndex() const
   {
-    if ( !m_refIndex )
+    if ( !m_refIndex.get() )
     {
       throw GaudiException( "Invalid refractive index",
                             "DeRichRadiator", StatusCode::FAILURE );
     }
-    return m_refIndex;
+    return m_refIndex.get();
   }
 
 protected:
@@ -246,31 +247,31 @@ protected:
   StatusCode setRadiatorID();       ///< Set rich and radiator ID
 
   /// pointer to the refractive index of the material
-  Rich::TabulatedProperty1D* m_refIndex;
+  std::shared_ptr<Rich::TabulatedProperty1D> m_refIndex;
 
   /// pointer to the refractive index of the material used by the HLT
-  mutable Rich::TabulatedProperty1D* m_hltRefIndex;
+  mutable std::shared_ptr<Rich::TabulatedProperty1D> m_hltRefIndex;
 
   /// pointer to the Tabulated property refractive index
-  const TabulatedProperty* m_refIndexTabProp;
+  const TabulatedProperty* m_refIndexTabProp = nullptr;
 
   /// pointer to the Tabulated property refractive index
-  mutable TabulatedProperty* m_hltRefIndexTabProp;
+  mutable std::unique_ptr<TabulatedProperty> m_hltRefIndexTabProp;
 
   /// pointer to the Tabulated property Cherenkov Ref Index
-  const TabulatedProperty* m_chkvRefIndexTabProp;
+  const TabulatedProperty* m_chkvRefIndexTabProp = nullptr;
 
   /// pointer to the Rayleigh scattering properties
-  Rich::TabulatedProperty1D* m_rayleigh;
+  std::unique_ptr<Rich::TabulatedProperty1D> m_rayleigh;
 
   /// pointer to the Tabulated property Rayleigh
-  const TabulatedProperty* m_rayleighTabProp;
+  const TabulatedProperty* m_rayleighTabProp = nullptr;
 
   /// pointer to the absorption tabulated function
-  Rich::TabulatedProperty1D* m_absorption;
+  std::unique_ptr<Rich::TabulatedProperty1D> m_absorption;
 
   /// pointer to the Tabulated property for the absoption
-  const TabulatedProperty* m_absorptionTabProp;
+  const TabulatedProperty* m_absorptionTabProp = nullptr;
 
 };
 

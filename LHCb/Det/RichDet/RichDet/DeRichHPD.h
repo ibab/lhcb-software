@@ -138,7 +138,7 @@ public:
    */
   inline const Rich::TabulatedFunction1D* demagnification_RtoR( const int field = 0 ) const
   {
-    return m_demagMapR[ field > 0 ? 1 : 0 ];
+    return m_demagMapR[ field > 0 ? 1 : 0 ].get();
   }
 
   /** Retrieves the demagnification interpolation function for the HPD phi coordinate.
@@ -147,7 +147,7 @@ public:
    */
   inline const Rich::TabulatedFunction1D* demagnification_RtoPhi( const int field = 0 ) const
   {
-    return m_demagMapPhi[ field > 0 ? 1 : 0 ];
+    return m_demagMapPhi[ field > 0 ? 1 : 0 ].get();
   }
 
   /** Retrieves the magnification interpolation function for the HPD R coordinate.
@@ -156,7 +156,7 @@ public:
    */
   inline const Rich::TabulatedFunction1D* magnification_RtoR( const int field = 0 ) const
   {
-    return m_magMapR[ field > 0 ? 1 : 0 ];
+    return m_magMapR[ field > 0 ? 1 : 0 ].get();
   }
 
   /** Retrieves the magnification interpolation function for the HPD phi coordinate.
@@ -165,7 +165,7 @@ public:
    */
   inline const Rich::TabulatedFunction1D* magnification_RtoPhi( const int field = 0 ) const
   {
-    return m_magMapPhi[ field > 0 ? 1 : 0 ];
+    return m_magMapPhi[ field > 0 ? 1 : 0 ].get();
   }
 
   /** Converts the given RichSmartID to the position on the silicon wafer,
@@ -230,9 +230,6 @@ public:
                             const Gaudi::XYZVector& vInPanel ) const;
 
 private: // functions
-
-  /// Clean up interpolators
-  void cleanUpInterps();
 
   /** Returns the silicon x coordinate for the given RichSmartID
    *  @param smartID The RichSmartID
@@ -334,61 +331,58 @@ private: // functions
 
 private: // data
 
-  IDetectorElement* m_deSiSensor; ///< The silicon sensor detector element
+  IDetectorElement* m_deSiSensor = nullptr;  ///< The silicon sensor detector element
 
-  const IPVolume* m_pvWindow;      ///< The pv for the HPD quartz window
-  const ISolid* m_windowSolid;     ///< The HPD window solid
+  const IPVolume* m_pvWindow = nullptr;      ///< The pv for the HPD quartz window
+  const ISolid* m_windowSolid = nullptr;     ///< The HPD window solid
 
-  const ISolid* m_kaptonSolid;     ///< Pointer to the kapton solid
+  const ISolid* m_kaptonSolid = nullptr;     ///< Pointer to the kapton solid
 
-  int m_number;                    ///< HPD number (should be the same as copy number)
+  int m_number{0};                    ///< HPD number (should be the same as copy number)
 
-  double m_winInR;            ///< Inner radius of HPD window squared
-  double m_winOutR;           ///< Outter radius of HPD window squared
-  double m_winInRsq;          ///< Inner radius of HPD window squared
-  double m_winOutRsq;         ///< Outter radius of HPD window squared
+  double m_winInR{0};            ///< Inner radius of HPD window squared
+  double m_winOutR{0};           ///< Outter radius of HPD window squared
+  double m_winInRsq{0};          ///< Inner radius of HPD window squared
+  double m_winOutRsq{0};         ///< Outter radius of HPD window squared
 
   /// The active HPD window radius (photocathode coverage)
-  double m_activeRadius;
+  double m_activeRadius{0};
 
-  double m_pixelSize;           ///< The pixel size on the silicon sensor
-  double m_siliconHalfLengthX;  ///< Si sensor half size in x
-  double m_siliconHalfLengthY;  ///< Si sensor half size in y
+  double m_pixelSize{0};           ///< The pixel size on the silicon sensor
+  double m_siliconHalfLengthX{0};  ///< Si sensor half size in x
+  double m_siliconHalfLengthY{0};  ///< Si sensor half size in y
 
   /// The demagnification factor of the HPD. Element [0] is the linear
   /// term, and element[1] the non-linear term for small corrections.
-  double m_deMagFactor[2];
-  double m_magnificationCoef1;
-  double m_magnificationCoef2;
+  double m_deMagFactor[2] = {0,0};
+  double m_magnificationCoef1{0};
+  double m_magnificationCoef2{0};
 
   /// Interpolated function for HPD R for demagnification
-  std::vector<Rich::TabulatedFunction1D*> m_demagMapR;
+  std::vector< std::unique_ptr<Rich::TabulatedFunction1D> > m_demagMapR;
   /// Interpolated function for HPD phi for demagnification
-  std::vector<Rich::TabulatedFunction1D*> m_demagMapPhi;
+  std::vector< std::unique_ptr<Rich::TabulatedFunction1D> > m_demagMapPhi;
   /// Interpolated function for HPD R for magnification
-  std::vector<Rich::TabulatedFunction1D*> m_magMapR;
+  std::vector< std::unique_ptr<Rich::TabulatedFunction1D> > m_magMapR;
   /// Interpolated function for HPD phi for magnification
-  std::vector<Rich::TabulatedFunction1D*> m_magMapPhi;
+  std::vector< std::unique_ptr<Rich::TabulatedFunction1D> > m_magMapPhi;
 
   /// Demagnification parameters condition
   std::vector< SmartRef<Condition> > m_demagConds;
 
-  /// Flag indicating if this HPD owns its HPD QE function
-  mutable bool m_ownHPDQEFunc;
-
-  std::vector<double> m_refactParams; ///< refraction parameters for quartz window
+  std::vector<double> m_refactParams = {0,0,0,0}; ///< refraction parameters for quartz window
 
   /// Flag to indicate the full treatment of magnetic distortions should be performed
-  bool m_UseHpdMagDistortions;
+  bool m_UseHpdMagDistortions{true};
 
   /// Turns on the use of a test field map
-  bool m_UseBFieldTestMap;
+  bool m_UseBFieldTestMap{false};
 
   /// magnitude of the longitudinal B field
-  double m_LongitudinalBField;
+  double m_LongitudinalBField{0};
 
   /// version of MDMS corrections, for both field polarities
-  int m_MDMS_version[2];
+  int m_MDMS_version[2] = {0,0};
 
   // Cached parameters for speed reasons.
   Gaudi::Transform3D m_SiSensorToHPDMatrix; ///< silicon to HPD transform
@@ -405,7 +399,7 @@ private: // data
   Gaudi::XYZVector m_MDMSRotCentre;
 
   /// pointer to the magnetic field service
-  mutable ILHCbMagnetSvc * m_magFieldSvc;
+  mutable ILHCbMagnetSvc * m_magFieldSvc = nullptr;
 
 };
 

@@ -10,7 +10,10 @@
 #ifndef  RICHDET_DERICHSPHMIRROR_H
 #define  RICHDET_DERICHSPHMIRROR_H 1
 
-// Include files
+// STL
+#include <memory>
+
+// Gaudi
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Plane3DTypes.h"
@@ -128,7 +131,7 @@ public:
    */
   inline const Rich::TabulatedProperty1D* reflectivity() const
   {
-    return m_reflectivity;
+    return m_reflectivity.get();
   }
 
   /**
@@ -158,15 +161,12 @@ private: // methods
    */
   StatusCode updateGeometry();
 
-  /// Cleanup 
-  void cleanUp();
-
 private: // data
 
   /// mirror reflectivity
-  const Rich::TabulatedProperty1D* m_reflectivity;
+  std::unique_ptr<const Rich::TabulatedProperty1D> m_reflectivity;
 
-  const ISolid* m_solid;                ///< The mirror solid
+  const ISolid* m_solid = nullptr;      ///< The mirror solid
 
   Gaudi::XYZPoint m_centreOfCurvature;  ///< The centre of curvature
   Gaudi::XYZPoint m_mirrorCentre;       ///< The mirror centre
@@ -174,8 +174,8 @@ private: // data
   Gaudi::XYZPoint m_localOrigin;        ///< The local centre of curvature
   Gaudi::XYZPoint m_localMirrorCentre;  ///< The local mirror centre
 
-  double m_radius;      ///< Spherical mirror radius
-  int m_mirrorNumber;   ///< mirror (segment) number
+  double m_radius{0};       ///< Spherical mirror radius
+  int m_mirrorNumber{-1};   ///< mirror (segment) number
 
   /// The normal vector at the centre of the mirror
   Gaudi::XYZVector m_centreNormal;
@@ -184,13 +184,8 @@ private: // data
   Gaudi::Plane3D m_centreNormalPlane;
 
   /// Flag for first update
-  bool m_firstUpdate;
+  bool m_firstUpdate{true};
 
 };
-
-inline void DeRichSphMirror::cleanUp()
-{
-  if ( m_reflectivity ) { delete m_reflectivity; m_reflectivity = NULL; }
-}
 
 #endif    //  RICHDET_DERICHSPHMIRROR_H

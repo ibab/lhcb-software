@@ -31,12 +31,7 @@ const CLID CLID_DeRichGasRadiator = 12042;  // User defined
 // Standard constructor, initializes variables
 //=============================================================================
 DeRichGasRadiator::DeRichGasRadiator(const std::string & name)
-  : DeRichSingleSolidRadiator(name),
-    m_temperatureCond      (),
-    m_pressureCond         (),
-    m_gasParametersCond    (),
-    m_hltGasParametersCond (),
-    m_scaleFactorCond      ()
+  : DeRichSingleSolidRadiator(name)
 { }
 
 //=============================================================================
@@ -170,12 +165,12 @@ StatusCode DeRichGasRadiator::initialize()
 StatusCode DeRichGasRadiator::updateProperties ( )
 {
   // load parameters
-  const double         photonEnergyLowLimit = param<double>("PhotonMinimumEnergy");
-  const double        photonEnergyHighLimit = param<double>("PhotonMaximumEnergy");
-  const double      ckvPhotonEnergyLowLimit = param<double>("PhotonCkvMinimumEnergy");
-  const double     ckvPhotonEnergyHighLimit = param<double>("PhotonCkvMaximumEnergy");
-  const unsigned int    photonEnergyNumBins = param<int>   ("PhotonEnergyNumBins");
-  const unsigned int ckvPhotonEnergyNumBins = param<int>   ("CkvPhotonEnergyNumBins");
+  const auto         photonEnergyLowLimit = param<double>("PhotonMinimumEnergy");
+  const auto        photonEnergyHighLimit = param<double>("PhotonMaximumEnergy");
+  const auto      ckvPhotonEnergyLowLimit = param<double>("PhotonCkvMinimumEnergy");
+  const auto     ckvPhotonEnergyHighLimit = param<double>("PhotonCkvMaximumEnergy");
+  const unsigned int    photonEnergyNumBins = param<int>("PhotonEnergyNumBins");
+  const unsigned int ckvPhotonEnergyNumBins = param<int>("CkvPhotonEnergyNumBins");
 
   if ( ( photonEnergyHighLimit   < ckvPhotonEnergyHighLimit ) ||
        ( ckvPhotonEnergyLowLimit < photonEnergyLowLimit     )  )
@@ -225,7 +220,7 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   // test the tab property pointer
   if ( !tabProp )
   {
-    error() << "NULL TabulatedProperty pointer" << endmsg;
+    error() << "nullptr TabulatedProperty pointer" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -281,7 +276,7 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
 
   double RefTemperature(293.0);
   unsigned int numOfGases( 1 );
-  Condition* compCond( NULL );
+  Condition* compCond( nullptr );
   std::vector<std::string> gasNames;
   std::vector<double> gasFractions;
 
@@ -290,7 +285,7 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
     compCond = condition( "RadiatorComposition" );
     if ( !compCond )
     {
-      error() << "NULL pointer to condition RadiatorComposition" << endmsg;
+      error() << "nullptr pointer to condition RadiatorComposition" << endmsg;
       return StatusCode::FAILURE;
     }
 
@@ -436,7 +431,7 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
     }
     else
     {
-      error() << "NULL pointer to condition RadiatorComposition" << endmsg;
+      error() << "nullptr pointer to condition RadiatorComposition" << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -510,10 +505,9 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
 const Rich::TabulatedProperty1D*
 DeRichGasRadiator::generateHltRefIndex() const
 {
-  delete m_hltRefIndexTabProp;
-  m_hltRefIndexTabProp = new TabulatedProperty("HltRefIndexTabProperty");
+  m_hltRefIndexTabProp.reset( new TabulatedProperty("HltRefIndexTabProperty") );
 
-  DeRichGasRadiator* nonConstSelf = const_cast<DeRichGasRadiator*>(this);
+  auto * nonConstSelf = const_cast<DeRichGasRadiator*>(this);
 
   // temperature
   if ( m_hltGasParametersCond != m_gasParametersCond )
@@ -533,7 +527,7 @@ DeRichGasRadiator::generateHltRefIndex() const
     nonConstSelf->updateHltProperties();
   }
 
-  return m_hltRefIndex;
+  return m_hltRefIndex.get();
 }
 
 //=========================================================================
@@ -543,9 +537,9 @@ StatusCode DeRichGasRadiator::updateHltProperties()
 {
 
   // load parameters
-  const double photonEnergyLowLimit      = param<double>("PhotonMinimumEnergy");
-  const double photonEnergyHighLimit     = param<double>("PhotonMaximumEnergy");
-  const unsigned int photonEnergyNumBins = param<int>   ("PhotonEnergyNumBins");
+  const auto photonEnergyLowLimit   = param<double>("PhotonMinimumEnergy");
+  const auto photonEnergyHighLimit  = param<double>("PhotonMaximumEnergy");
+  const auto photonEnergyNumBins    = param<int>   ("PhotonEnergyNumBins");
 
   if ( photonEnergyHighLimit < photonEnergyLowLimit )
   {
@@ -561,17 +555,17 @@ StatusCode DeRichGasRadiator::updateHltProperties()
 
   // calculate the refractive index and update Tabulated property
   sc = calcSellmeirRefIndex( photonMomentumVect,
-                             m_hltRefIndexTabProp,
+                             m_hltRefIndexTabProp.get(),
                              m_hltGasParametersCond );
   if ( !sc ) return sc;
 
   if ( !m_hltRefIndex )
   {
-    m_hltRefIndex = new Rich::TabulatedProperty1D( m_hltRefIndexTabProp );
+    m_hltRefIndex.reset( new Rich::TabulatedProperty1D(m_hltRefIndexTabProp.get()) );
   }
   else
   {
-    m_hltRefIndex->initInterpolator( m_hltRefIndexTabProp );
+    m_hltRefIndex->initInterpolator( m_hltRefIndexTabProp.get() );
   }
   if ( !m_hltRefIndex->valid() )
   {
@@ -602,7 +596,7 @@ StatusCode DeRichGasRadiator::setupOldGasConditions()
   }
   else
   {
-    m_temperatureCond = NULL;
+    m_temperatureCond = nullptr;
     if ( msgLevel(MSG::DEBUG,msg) )
       msg << MSG::DEBUG << "Cannot load Condition GasTemperature" << endmsg;
     return StatusCode::FAILURE;
@@ -618,7 +612,7 @@ StatusCode DeRichGasRadiator::setupOldGasConditions()
   }
   else
   {
-    m_pressureCond = NULL;
+    m_pressureCond = nullptr;
     if ( msgLevel(MSG::DEBUG,msg) )
       msg << MSG::DEBUG << "Cannot load Condition GasPressure" << endmsg;
     return StatusCode::FAILURE;

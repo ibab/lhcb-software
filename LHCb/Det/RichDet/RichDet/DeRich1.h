@@ -44,9 +44,7 @@ public:
    * Retrieves reference to class identifier
    * @return the class identifier for this class
    */
-  const CLID& clID() const {
-    return classID();
-  }
+  const CLID& clID() const { return classID(); }
 
   /**
    * Retrieves reference to class identifier
@@ -74,7 +72,7 @@ public:
    * @param side Which side: top or bottom
    * @return The nominal normal vector
    */
-  virtual const  Gaudi::XYZVector& nominalNormal(const Rich::Side side) const;
+  virtual const Gaudi::XYZVector& nominalNormal(const Rich::Side side) const;
 
   /**
    * Returns the nominal flat mirror plane for this Rich
@@ -102,6 +100,9 @@ private:
 
   /// Access the name for a given panel
   virtual const std::string panelName( const Rich::Side panel ) const;
+
+  /// Update Nominal mirror parameters
+  StatusCode updateMirrorParams();
 
 private:
 

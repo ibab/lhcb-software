@@ -47,40 +47,14 @@ namespace
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeRichHPD::DeRichHPD ( const std::string & name ) :
-  DeRichPD               ( name  ),
-  m_deSiSensor           ( NULL  ),
-  m_pvWindow             ( NULL  ),
-  m_windowSolid          ( NULL  ),
-  m_kaptonSolid          ( NULL  ),
-  m_number               ( 0     ),
-  m_winInR               ( 0     ),
-  m_winOutR              ( 0     ),
-  m_winInRsq             ( 0     ),
-  m_winOutRsq            ( 0     ),
-  m_activeRadius         ( 0     ),
-  m_pixelSize            ( 0     ),
-  m_siliconHalfLengthX   ( 0     ),
-  m_siliconHalfLengthY   ( 0     ),
-  m_magnificationCoef1   ( 0     ),
-  m_magnificationCoef2   ( 0     ),
-  m_ownHPDQEFunc         ( false ),
-  m_refactParams         ( 4, 0  ),
-  m_UseHpdMagDistortions ( true  ),
-  m_UseBFieldTestMap     ( false ),
-  m_LongitudinalBField   ( 0     ),
-  m_magFieldSvc          ( NULL  )
+DeRichHPD::DeRichHPD ( const std::string & name ) : DeRichPD ( name  )
 {
-  m_deMagFactor[0]  = 0;
-  m_deMagFactor[1]  = 0;
-  m_MDMS_version[0] = 0;
-  m_MDMS_version[1] = 0;
   for ( unsigned int field = 0; field < 2; ++field )
   {
-    m_demagMapR.push_back   ( new Rich::TabulatedFunction1D() );
-    m_demagMapPhi.push_back ( new Rich::TabulatedFunction1D() );
-    m_magMapR.push_back     ( new Rich::TabulatedFunction1D() );
-    m_magMapPhi.push_back   ( new Rich::TabulatedFunction1D() );
+    m_demagMapR.emplace_back   ( new Rich::TabulatedFunction1D() );
+    m_demagMapPhi.emplace_back ( new Rich::TabulatedFunction1D() );
+    m_magMapR.emplace_back     ( new Rich::TabulatedFunction1D() );
+    m_magMapPhi.emplace_back   ( new Rich::TabulatedFunction1D() );
   }
 }
 
@@ -89,26 +63,7 @@ DeRichHPD::DeRichHPD ( const std::string & name ) :
 //=============================================================================
 DeRichHPD::~DeRichHPD()
 {
-  cleanUpInterps();
-  if ( m_magFieldSvc ) { m_magFieldSvc->release(); m_magFieldSvc = NULL; }
-}
-
-//=============================================================================
-// Clean up interpolators
-//=============================================================================
-void DeRichHPD::cleanUpInterps()
-{
-  for ( unsigned int field = 0; field<2; ++field )
-  {
-    delete m_demagMapR[field];   m_demagMapR[field]   = NULL;
-    delete m_demagMapPhi[field]; m_demagMapPhi[field] = NULL;
-    delete m_magMapR[field];     m_magMapR[field]     = NULL;
-    delete m_magMapPhi[field];   m_magMapPhi[field]   = NULL;
-  }
-  if ( m_pdQuantumEffFunc && m_ownHPDQEFunc )
-  {
-    delete m_pdQuantumEffFunc; m_pdQuantumEffFunc = NULL;
-  }
+  if ( m_magFieldSvc ) { m_magFieldSvc->release(); m_magFieldSvc = nullptr; }
 }
 
 //=============================================================================
@@ -146,7 +101,7 @@ StatusCode DeRichHPD::initialize ( )
 
   // get the pointer to the silicon sensor detector element
   m_deSiSensor = ( !childIDetectorElements().empty() ?
-                   childIDetectorElements().front() : NULL );
+                   childIDetectorElements().front() : nullptr );
   if ( !m_deSiSensor )
   {
     fatal() << "Cannot find SiSensor detector element" << endmsg;
@@ -211,11 +166,10 @@ void DeRichHPD::loadMagSvc() const
     ISvcLocator* svcLocator = Gaudi::svcLocator();
     if ( !svcLocator )
     {
-      throw GaudiException( "ISvcLocator* points to NULL!",
+      throw GaudiException( "ISvcLocator* points to nullptr!",
                             "DeRichHPD" , StatusCode::FAILURE );
     }
-    const StatusCode scMag =
-      svcLocator->service("MagneticFieldSvc",m_magFieldSvc);
+    const auto scMag = svcLocator->service("MagneticFieldSvc",m_magFieldSvc);
     if ( scMag.isFailure() )
     {
       throw GaudiException( "Could not locate MagneticFieldSvc",
@@ -232,15 +186,12 @@ StatusCode DeRichHPD::initHpdQuantumEff()
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Updating Q.E. for HPD:" << m_number << endmsg;
 
-  // If we own the function object, delete it first
-  if ( m_ownHPDQEFunc ) delete m_pdQuantumEffFunc;
-
   // get quantum efficiency tabulated property from LHCBCOND if available
   if ( deRichSys()->exists( "HpdQuantumEffCommonLoc" ) )  // use hardware ID to locate QE
   {
     // convert copy number to smartID
-    const LHCb::RichSmartID id = deRichSys()->richSmartID(Rich::DAQ::HPDCopyNumber(m_number));
-    const std::string qePath   = deRichSys()->param<std::string>("HpdQuantumEffCommonLoc");
+    const auto id = deRichSys()->richSmartID(Rich::DAQ::HPDCopyNumber(m_number));
+    const auto qePath   = deRichSys()->param<std::string>("HpdQuantumEffCommonLoc");
     const std::string hID( deRichSys()->hardwareID(id) );
     SmartDataPtr<TabulatedProperty> hpdQuantumEffTabProp( dataSvc(), qePath+hID );
     if ( !hpdQuantumEffTabProp )
@@ -249,8 +200,7 @@ StatusCode DeRichHPD::initHpdQuantumEff()
               << " from " << qePath+hID << endmsg;
       return StatusCode::FAILURE;
     }
-    m_pdQuantumEffFunc = new Rich::TabulatedProperty1D( hpdQuantumEffTabProp );
-    m_ownHPDQEFunc = true;
+    m_pdQuantumEffFunc.reset( new Rich::TabulatedProperty1D( hpdQuantumEffTabProp ) );
   }
   else // use copy number to locate QE
   {
@@ -259,7 +209,6 @@ StatusCode DeRichHPD::initHpdQuantumEff()
       // use common QE for all HPDs
       SmartDataPtr<DeRich> deRich1( dataSvc(), DeRichLocations::Rich1 );
       m_pdQuantumEffFunc = deRich1->nominalPDQuantumEff();
-      m_ownHPDQEFunc = false;
     }
     else
     {
@@ -273,8 +222,7 @@ StatusCode DeRichHPD::initHpdQuantumEff()
                 << " from " << hpdQuantumEffCond.path() << endmsg;
         return StatusCode::FAILURE;
       }
-      m_pdQuantumEffFunc = new Rich::TabulatedProperty1D( hpdQuantumEffTabProp );
-      m_ownHPDQEFunc = true;
+      m_pdQuantumEffFunc.reset( new Rich::TabulatedProperty1D( hpdQuantumEffTabProp ) );
     }
   }
 
@@ -319,7 +267,7 @@ StatusCode DeRichHPD::getParameters()
     fatal() << "Could not load HpdDemagnification" << endmsg;
     return StatusCode::FAILURE;
   }
-  const TabulatedProperty::Table & DeMagTable = HPDdeMag->table();
+  const auto & DeMagTable = HPDdeMag->table();
   m_deMagFactor[0] = DeMagTable[0].second;
   m_deMagFactor[1] = DeMagTable[1].second;
 
@@ -351,7 +299,7 @@ StatusCode DeRichHPD::updateGeometry()
     if ( !pvSilicon || pvSilicon->name().find("pvRichHPDSiDet") == std::string::npos )
     {
       fatal() << "Cannot find pvRichHPDSiDet volume ";
-      if ( pvSilicon != NULL ) fatal() << pvSilicon->name();
+      if ( pvSilicon != nullptr ) fatal() << pvSilicon->name();
       fatal() << endmsg;
       return StatusCode::FAILURE;
     }
@@ -465,8 +413,7 @@ StatusCode DeRichHPD::fillHpdDemagTable(const unsigned int field)
 
   std::ostringstream paraLoc, detLoc;
   paraLoc << "hpd" << m_number << "_sim";
-  const std::vector<double> & coeff_sim =
-    m_demagConds[field]->paramVect<double>(paraLoc.str());
+  const auto & coeff_sim = m_demagConds[field]->paramVect<double>(paraLoc.str());
   detLoc << XmlHpdDemagPath << "Sim_" << m_number;
   SmartDataPtr<TabulatedProperty> dem ( dataSvc(), detLoc.str() );
 
@@ -607,7 +554,7 @@ StatusCode DeRichHPD::fillHpdMagTable( const unsigned int field )
 
     // HPD image radius from data
     const Condition * siAlignCond = ( m_deSiSensor->geometry() ? 
-                                      m_deSiSensor->geometry()->alignmentCondition() : NULL );
+                                      m_deSiSensor->geometry()->alignmentCondition() : nullptr );
     if ( !siAlignCond )
     {
       error() << "Failed to load SiSensor alignment Condition !" << endmsg;
@@ -693,7 +640,7 @@ StatusCode DeRichHPD::fillHpdMagTable( const unsigned int field )
 StatusCode DeRichHPD::magnifyToGlobalMagnetON( Gaudi::XYZPoint& detectPoint,
                                                const bool photoCathodeSide ) const
 {
-  const unsigned int field = ( magSvc()->isDown() ? 0 : 1 );
+  const auto field = ( magSvc()->isDown() ? 0 : 1 );
 
   // Only versions 0, 1 or 2 possible
   detectPoint = ( 2 > m_MDMS_version[field] ?
@@ -701,14 +648,14 @@ StatusCode DeRichHPD::magnifyToGlobalMagnetON( Gaudi::XYZPoint& detectPoint,
                   detectPoint - m_MDMSRotCentre );
   detectPoint.SetZ(0.0);
   
-  const double rAnode = detectPoint.R();
+  const auto rAnode = detectPoint.R();
 
   double rCathode(0);
   if ( UNLIKELY( 2 == m_MDMS_version[field] ) )
   {
     detectPoint = m_SiSensorToHPDMatrix * detectPoint;
     detectPoint.SetZ(0.0);
-    const double new_rAnode = detectPoint.R();
+    const auto new_rAnode = detectPoint.R();
     rCathode = ( (m_magnificationCoef1*new_rAnode) + 
                  (m_magnificationCoef2*new_rAnode*new_rAnode) );
   }
@@ -725,23 +672,23 @@ StatusCode DeRichHPD::magnifyToGlobalMagnetON( Gaudi::XYZPoint& detectPoint,
   if ( !photoCathodeSide ) rCathode += extraRadiusForRefraction(rCathode);
   
   // calculate angle phi
-  double anodePhi = vdt::fast_atan2( detectPoint.Y(), detectPoint.X() );
+  auto anodePhi = vdt::fast_atan2( detectPoint.Y(), detectPoint.X() );
   if ( detectPoint.Y() < 0 ) anodePhi += Gaudi::Units::twopi;
 
-  const double result_phi = magnification_RtoPhi(field)->value( rAnode );
+  const auto result_phi = magnification_RtoPhi(field)->value( rAnode );
 
-  double new_phi = anodePhi + result_phi + Gaudi::Units::pi;
+  auto new_phi = anodePhi + result_phi + Gaudi::Units::pi;
   if ( new_phi > Gaudi::Units::twopi ) new_phi -= Gaudi::Units::twopi;
 
-  const double& winRadius = ( photoCathodeSide ? m_winInR : m_winOutR );
+  const auto& winRadius = ( photoCathodeSide ? m_winInR : m_winOutR );
   if ( winRadius < rCathode ) return StatusCode::FAILURE;
 
   double vdtsin(0), vdtcos(0);
   vdt::fast_sincos(new_phi,vdtsin,vdtcos);
-  const double xWindow = rCathode * vdtcos;
-  const double yWindow = rCathode * vdtsin;
+  const auto xWindow = rCathode * vdtcos;
+  const auto yWindow = rCathode * vdtsin;
 
-  const double& winRadiusSq = ( photoCathodeSide ? m_winInRsq : m_winOutRsq );
+  const auto& winRadiusSq = ( photoCathodeSide ? m_winInRsq : m_winOutRsq );
   detectPoint = ( m_fromWindowToGlobal *
                   Gaudi::XYZPoint( xWindow,
                                    yWindow, 
@@ -800,8 +747,8 @@ StatusCode DeRichHPD::magnifyToGlobalMagnetOFF( Gaudi::XYZPoint& detectPoint,
 double DeRichHPD::demag(const double r, const double B)
 {
   // the coefficients of the polynomial fits
-  const double a0=0.1771, a1=1.818e-4, a2=2.2197e-5;
-  const double b0=-4.713E-4, b1=8.613E-6, b2=-1.2794E-6, b3=+1.3596E-8;
+  constexpr double a0=0.1771, a1=1.818e-4, a2=2.2197e-5;
+  constexpr double b0=-4.713E-4, b1=8.613E-6, b2=-1.2794E-6, b3=+1.3596E-8;
 
   // a and b calculated from the field
   const double a = a0 + a1*B+a2*B*B;
@@ -814,8 +761,8 @@ double DeRichHPD::demag(const double r, const double B)
 //***********************************************************************
 double DeRichHPD::mag( const double rho, const double B )
 {
-  const double c0=5.63057, c1=-1.12557e-2, c2=-4.65552e-4;
-  const double d0=0.10377, d1=-1.052e-3, d2=1.995e-4, d3=-2.734e-6;
+  constexpr double c0=5.63057, c1=-1.12557e-2, c2=-4.65552e-4;
+  constexpr double d0=0.10377, d1=-1.052e-3, d2=1.995e-4, d3=-2.734e-6;
 
   // calculate c and d from the field
   const double c = c0 + c1*B+c2*B*B;
@@ -829,20 +776,20 @@ double DeRichHPD::mag( const double rho, const double B )
 double DeRichHPD::Delta_Phi(const double r, const double B)
 {
   // calculate a
-  const double a1 = 0.0255208;
-  const double a2 = -4.78963E-5;
+  constexpr double a1 = 0.0255208;
+  constexpr double a2 = -4.78963E-5;
   const double a = a1*B + a2*B*B;
 
   // calculate b
-  const double b1 = -6.93056E-6;
-  const double b2 = -8.31286E-7;
-  const double b3 = 1.23044E-8;
+  constexpr double b1 = -6.93056E-6;
+  constexpr double b2 = -8.31286E-7;
+  constexpr double b3 = 1.23044E-8;
   const double b =  b1*B + b2*B*B + b3*B*B*B;
 
   // calculate c
-  const double c1 = 3.38129E-8;
-  const double c2 = 1.6186E-8;
-  const double c3 = -2.24814E-10;
+  constexpr double c1 = 3.38129E-8;
+  constexpr double c2 = 1.6186E-8;
+  constexpr double c3 = -2.24814E-10;
   const double c = c1*B + c2*B*B + c3*B*B*B;
 
   // this calculates and returns \Delta\phi from a, b, c and r
@@ -855,8 +802,8 @@ double DeRichHPD::Delta_Phi(const double r, const double B)
 bool DeRichHPD::testKaptonShadowing( const Gaudi::XYZPoint&  pInPanel,
                                      const Gaudi::XYZVector& vInPanel ) const
 {
-  const Gaudi::XYZPoint  pInKapton( m_fromPanelToKapton * pInPanel );
-  const Gaudi::XYZVector vInKapton( m_fromPanelToKapton * vInPanel );
+  const auto pInKapton = m_fromPanelToKapton * pInPanel;
+  const auto vInKapton = m_fromPanelToKapton * vInPanel;
   ISolid::Ticks kaptonTicks;
   return ( 0 != m_kaptonSolid->intersectionTicks( pInKapton,
                                                   vInKapton,

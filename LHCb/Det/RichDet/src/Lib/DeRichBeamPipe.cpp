@@ -20,10 +20,7 @@ const CLID CLID_DERichBeamPipe = 12050;  // User defined
 // Standard constructor, initializes variables
 //=============================================================================
 DeRichBeamPipe::DeRichBeamPipe(const std::string & name) :
-  DeRichBase  ( name ),
-  m_solid     ( NULL ),
-  m_localCone ( NULL ),
-  m_zHalfLength  ( 0 )
+  DeRichBase  ( name )
 {
   setMyName("DeRichBeamPipe");
 }
@@ -95,19 +92,19 @@ DeRichBeamPipe::intersectionPoints( const Gaudi::XYZPoint&  position,
                                     Gaudi::XYZPoint& entryPoint,
                                     Gaudi::XYZPoint& exitPoint ) const
 {
-  const Gaudi::XYZPoint  pLocal( geometry()->toLocal(position) );
-  const Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*direction );
+  const auto pLocal = geometry()->toLocal(position);
+  const auto vLocal = geometry()->toLocalMatrix()*direction;
 
   ISolid::Ticks ticks;
-  const unsigned int noTicks = m_localCone->intersectionTicks(pLocal, vLocal, ticks);
+  const auto noTicks = m_localCone->intersectionTicks(pLocal, vLocal, ticks);
 
-  if (0 == noTicks) return NoIntersection;
+  if ( 0 == noTicks ) return NoIntersection;
 
-  const Gaudi::XYZPoint entryLocal( pLocal + ticks[0] * vLocal );
+  const auto entryLocal = pLocal + ticks[0] * vLocal;
   const bool frontFaceHit = ( entryLocal.z() < -m_zHalfLength + 1*Gaudi::Units::mm );
   entryPoint = geometry()->toGlobal( entryLocal );
 
-  const Gaudi::XYZPoint exitLocal( pLocal + ticks[noTicks-1] * vLocal );
+  const auto exitLocal = pLocal + ticks[noTicks-1] * vLocal;
   const bool backFaceHit = ( exitLocal.z() > m_zHalfLength - 1*Gaudi::Units::mm );
   exitPoint  = geometry()->toGlobal( exitLocal );
 

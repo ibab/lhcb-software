@@ -28,9 +28,7 @@ const CLID CLID_DeRichSingleSolidRadiator = 12040;  // User defined
 
 // Standard Constructor
 DeRichSingleSolidRadiator::DeRichSingleSolidRadiator(const std::string & name)
-  : DeRichRadiator ( name ),
-    m_solid        ( NULL ),
-    m_material     ( NULL )
+  : DeRichRadiator ( name )
 { }
 
 // Standard Destructor
@@ -58,36 +56,34 @@ StatusCode DeRichSingleSolidRadiator::initialize()
   if ( !m_material ) 
   { error() << "Failed to load material" << endmsg; return StatusCode::FAILURE; }
 
-  const Material::Tables& myTabProp = m_material->tabulatedProperties();
-  for ( Material::Tables::const_iterator matIter = myTabProp.begin(); 
-        matIter != myTabProp.end(); ++matIter )
+  for ( const auto mat : m_material->tabulatedProperties() )
   {
-    if ( (*matIter) )
+    if ( mat )
     {
-      if ( (*matIter)->type() == "RINDEX" )
+      if ( mat->type() == "RINDEX" )
       {
-        m_refIndexTabProp = (*matIter);
+        m_refIndexTabProp = mat;
         if ( msgLevel(MSG::DEBUG) )
           debug() << "Found TabProp " << m_refIndexTabProp->name() << " type "
                   << m_refIndexTabProp->type() << endmsg;
       }
-      if ( (*matIter)->type() == "RAYLEIGH" )
+      if ( mat->type() == "RAYLEIGH" )
       {
-        m_rayleighTabProp = (*matIter);
+        m_rayleighTabProp = mat;
         if ( msgLevel(MSG::DEBUG) )
           debug() << "Found TabProp " << m_rayleighTabProp->name() << " type "
                   << m_rayleighTabProp->type() << endmsg;
       }
-      if ( (*matIter)->type() == "CKVRNDX" )
+      if ( mat->type() == "CKVRNDX" )
       {
-        m_chkvRefIndexTabProp = (*matIter);
+        m_chkvRefIndexTabProp = mat;
         if ( msgLevel(MSG::DEBUG) )
           debug() << "Found TabProp " << m_chkvRefIndexTabProp->name() << " type "
                   << m_chkvRefIndexTabProp->type() << endmsg;
       }
-      if ( (*matIter)->type() == "ABSLENGTH" )
+      if ( mat->type() == "ABSLENGTH" )
       {
-        m_absorptionTabProp = (*matIter);
+        m_absorptionTabProp = mat;
         if ( msgLevel(MSG::DEBUG) )
           debug() << "Found TabProp " << m_absorptionTabProp->name() << " type "
                   << m_absorptionTabProp->type() << endmsg;
@@ -136,10 +132,10 @@ prepareMomentumVector ( std::vector<double>& photonMomentumVect,
   photonMomentumVect.reserve( nbins );
 
   // fill momentum vector
-  const double photonEnergyStep = ( max - min ) / (double)nbins;
+  const auto photonEnergyStep = ( max - min ) / (double)nbins;
   for ( unsigned int ibin = 0; ibin < nbins; ++ibin )
   {
-    const double m = min + ( photonEnergyStep * (double)ibin );
+    const auto m = min + ( photonEnergyStep * (double)ibin );
     photonMomentumVect.push_back( m );
   }
 
@@ -154,11 +150,11 @@ DeRichSingleSolidRadiator::nextIntersectionPoint( const Gaudi::XYZPoint&  pGloba
                                                   const Gaudi::XYZVector& vGlobal,
                                                   Gaudi::XYZPoint& returnPoint ) const
 {
-  const Gaudi::XYZPoint pLocal( geometry()->toLocal(pGlobal) );
-  Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*vGlobal );
+  const auto pLocal = geometry()->toLocal(pGlobal);
+  const auto vLocal = geometry()->toLocalMatrix()*vGlobal;
 
   ISolid::Ticks ticks;
-  const unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
+  const auto noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
 
   if ( 0 == noTicks ) { return StatusCode::FAILURE; }
 
@@ -175,8 +171,8 @@ DeRichSingleSolidRadiator::intersectionPoints( const Gaudi::XYZPoint&  position,
                                                Gaudi::XYZPoint& entryPoint,
                                                Gaudi::XYZPoint& exitPoint ) const
 {
-  const Gaudi::XYZPoint pLocal( geometry()->toLocal(position) );
-  Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*direction );
+  const auto pLocal = geometry()->toLocal(position);
+  const auto vLocal = geometry()->toLocalMatrix()*direction;
 
   ISolid::Ticks ticks;
   const unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
@@ -197,19 +193,18 @@ intersectionPoints( const Gaudi::XYZPoint& pGlobal,
                     const Gaudi::XYZVector& vGlobal,
                     std::vector<Gaudi::XYZPoint>& points ) const
 {
-  const Gaudi::XYZPoint pLocal( geometry()->toLocal(pGlobal) );
-  Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*vGlobal );
+  const auto pLocal = geometry()->toLocal(pGlobal);
+  const auto vLocal = geometry()->toLocalMatrix()*vGlobal;
 
   ISolid::Ticks ticks;
-  unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
+  const auto noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
 
   if ( 0 != noTicks ) 
   {
     points.reserve( ticks.size() );
-    for ( ISolid::Ticks::iterator tick_it = ticks.begin();
-          tick_it != ticks.end(); ++tick_it ) 
+    for ( const auto & tick : ticks )
     {
-      points.push_back( geometry()->toGlobal( pLocal + (*tick_it) * vLocal) );
+      points.push_back( geometry()->toGlobal( pLocal + tick * vLocal) );
     }
   }
 
@@ -225,23 +220,23 @@ intersections( const Gaudi::XYZPoint& pGlobal,
                const Gaudi::XYZVector& vGlobal,
                Rich::RadIntersection::Vector& intersections ) const
 {
-  const Gaudi::XYZPoint pLocal( geometry()->toLocal(pGlobal) );
-  const Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*vGlobal );
+  const auto pLocal = geometry()->toLocal(pGlobal);
+  const auto vLocal = geometry()->toLocalMatrix()*vGlobal;
 
   ISolid::Ticks ticks;
-  const unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
+  const auto noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
 
   if ( 0 != noTicks )
   {
     intersections.reserve(noTicks/2);
     for ( unsigned int tick=0; tick<noTicks; tick += 2 ) 
     {
-      intersections.push_back(Rich::RadIntersection
-                              (geometry()->toGlobal(pLocal + ticks[tick]*vLocal),
-                               vGlobal,
-                               geometry()->toGlobal(pLocal + ticks[tick+1]*vLocal),
-                               vGlobal,
-                               this ) );
+      intersections.emplace_back(Rich::RadIntersection
+                                 (geometry()->toGlobal(pLocal + ticks[tick]*vLocal),
+                                  vGlobal,
+                                  geometry()->toGlobal(pLocal + ticks[tick+1]*vLocal),
+                                  vGlobal,
+                                  this ) );
     }
   }
   return (noTicks/2);

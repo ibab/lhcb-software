@@ -90,11 +90,11 @@ StatusCode DeHorizRich::initialize()
   {
     if ( msgLevel(MSG::DEBUG) )
       debug() << "Loaded gas win ref index from: "<<gasWinRefIndxLoc<<endmsg;
-    m_gasWinRefIndex = new RichTabulatedProperty1D( gasWinRefIndxTab );
+    m_gasWinRefIndex.reset( new Rich::TabulatedProperty1D( gasWinRefIndxTab ) );
     if ( !m_gasWinRefIndex->valid() )
     {
       error()
-        << "Invalid RINDEX RichTabulatedProperty1D for " << gasWinRefIndxTab->name() << endmsg;
+        << "Invalid RINDEX Rich::TabulatedProperty1D for " << gasWinRefIndxTab->name() << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -111,10 +111,10 @@ StatusCode DeHorizRich::initialize()
   {
     if ( msgLevel(MSG::DEBUG) )
       debug() << "Loaded gas win abs length from: "<<gasWinAbsLenLoc<<endmsg;
-    m_gasWinRefIndex = new RichTabulatedProperty1D( gasWinAbsLenTab );
-    if ( !m_gasWinRefIndex->valid() )
+    m_gasWinAbsLength.reset( new Rich::TabulatedProperty1D( gasWinAbsLenTab ) );
+    if ( !m_gasWinAbsLength ->valid() )
     {
-      error() << "Invalid ABSLENGTH RichTabulatedProperty1D for " << gasWinAbsLenTab->name() << endmsg;
+      error() << "Invalid ABSLENGTH Rich::TabulatedProperty1D for " << gasWinAbsLenTab->name() << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -137,10 +137,10 @@ StatusCode DeHorizRich::initialize()
   {
     if ( msgLevel(MSG::DEBUG) )
       debug() << "Loaded spherical mirror reflectivity from: "<<sphMirrorReflLoc<<endmsg;
-    m_nominalSphMirrorRefl = new RichTabulatedProperty1D( sphMirrorRefl );
+    m_nominalSphMirrorRefl.reset( new Rich::TabulatedProperty1D( sphMirrorRefl ) );
     if ( !m_nominalSphMirrorRefl->valid() )
     {
-      error()<<"Invalid RichTabulatedProperty1D for "<<sphMirrorRefl->name()<<endmsg;
+      error()<<"Invalid Rich::TabulatedProperty1D for "<<sphMirrorRefl->name()<<endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -158,11 +158,11 @@ StatusCode DeHorizRich::initialize()
   {
     if ( msgLevel(MSG::DEBUG) )
       debug() << "Loaded secondary mirror reflectivity from: "<<secMirrorReflLoc<<endmsg;
-    m_nominalSecMirrorRefl = new RichTabulatedProperty1D( secMirrorRefl );
+    m_nominalSecMirrorRefl.reset( new Rich::TabulatedProperty1D( secMirrorRefl ) );
     if ( !m_nominalSecMirrorRefl->valid() )
     {
       error()
-        << "Invalid RichTabulatedProperty1D for " << secMirrorRefl->name() << endmsg;
+        << "Invalid Rich::TabulatedProperty1D for " << secMirrorRefl->name() << endmsg;
       return StatusCode::FAILURE;
     }
   }

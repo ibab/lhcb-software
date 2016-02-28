@@ -69,8 +69,7 @@ bool TabulatedFunction1D::initInterpolator( const std::vector<double> & x,
   else
   {
     // copy data to internal container
-    std::vector<double>::const_iterator ix,iy;
-    for ( ix = x.begin(), iy = y.begin();
+    for ( auto ix(x.begin()), iy(y.begin());
           ix != x.end(); ++ix, ++iy ) { m_data[*ix] = *iy; }
 
     // initialise interpolation
@@ -122,7 +121,7 @@ bool TabulatedFunction1D::initInterpolator( const gsl_interp_type * interType )
   clearInterpolator();
 
   // set interpolator type
-  if ( NULL != interType ) m_interType = interType;
+  if ( nullptr != interType ) m_interType = interType;
 
   // Create the GSL interpolators
   m_mainDistAcc        = gsl_interp_accel_alloc();
@@ -131,7 +130,7 @@ bool TabulatedFunction1D::initInterpolator( const gsl_interp_type * interType )
   m_weightedDistSpline = gsl_spline_alloc ( m_interType, m_data.size() );
 
   // Check number of points needed to work ...
-  const unsigned int min_points = gsl_interp_min_size(m_mainDistSpline->interp);
+  const auto min_points = gsl_interp_min_size(m_mainDistSpline->interp);
   if ( m_data.size() < min_points )
   {
     std::ostringstream mess;
@@ -148,8 +147,7 @@ bool TabulatedFunction1D::initInterpolator( const gsl_interp_type * interType )
   double * y  = new double[m_data.size()];
   double * xy = new double[m_data.size()];
   unsigned int i = 0;
-  for ( Data::const_iterator iD = m_data.begin();
-        iD != m_data.end(); ++iD, ++i )
+  for ( auto iD = m_data.begin(); iD != m_data.end(); ++iD, ++i )
   {
     x[i]  = (*iD).first;
     y[i]  = (*iD).second;
@@ -157,8 +155,8 @@ bool TabulatedFunction1D::initInterpolator( const gsl_interp_type * interType )
   }
 
   // Initialise the interpolators
-  const int err1 = gsl_spline_init ( m_mainDistSpline,     x, y,  m_data.size() );
-  const int err2 = gsl_spline_init ( m_weightedDistSpline, x, xy, m_data.size() );
+  const auto err1 = gsl_spline_init ( m_mainDistSpline,     x, y,  m_data.size() );
+  const auto err2 = gsl_spline_init ( m_weightedDistSpline, x, xy, m_data.size() );
 
   // delete temporary arrays
   delete[] x;
@@ -186,22 +184,22 @@ void TabulatedFunction1D::clearInterpolator()
   if ( m_mainDistSpline )
   {
     gsl_spline_free( m_mainDistSpline );
-    m_mainDistSpline = NULL;
+    m_mainDistSpline = nullptr;
   }
   if ( m_mainDistAcc )
   {
     gsl_interp_accel_free( m_mainDistAcc );
-    m_mainDistAcc = NULL;
+    m_mainDistAcc = nullptr;
   }
   if ( m_weightedDistSpline )
   {
     gsl_spline_free( m_weightedDistSpline );
-    m_weightedDistSpline = NULL;
+    m_weightedDistSpline = nullptr;
   }
   if ( m_weightedDistAcc )
   {
     gsl_interp_accel_free( m_weightedDistAcc );
-    m_weightedDistAcc = NULL;
+    m_weightedDistAcc = nullptr;
   }
 
 }
@@ -221,7 +219,7 @@ TabulatedFunction1D::rms( const double from,
   }
 
   // x increment
-  const double xInc = (to-from)/(double)(samples-1);
+  const auto xInc = (to-from)/(double)(samples-1);
 
   double rms(0), X(from);
   for ( unsigned int i = 0; i < samples; ++i, X += xInc )
@@ -252,15 +250,15 @@ TabulatedFunction1D::standardDeviation( const double from,
   }
 
   // mean value
-  const double avgX = meanX(from,to);
+  const auto avgX = meanX(from,to);
 
   // x increment
-  const double xInc = (to-from)/(double)(samples-1);
+  const auto xInc = (to-from)/(double)(samples-1);
 
   double sd(0), sum(0), X(from);
   for ( unsigned int i = 0; i < samples; ++i, X += xInc )
   {
-    const double Y = value(X) * ( weightFunc ? weightFunc->value(X) : 1.0 );
+    const auto Y = value(X) * ( weightFunc ? weightFunc->value(X) : 1.0 );
     if ( Y>0 )
     {
       sd  += Y * std::pow(X-avgX,2);
@@ -274,9 +272,10 @@ TabulatedFunction1D::standardDeviation( const double from,
 
 //============================================================================
 
-TabulatedFunction1D * TabulatedFunction1D::combine( const ConstVector & funcs,
-                                                    const unsigned int samples,
-                                                    const gsl_interp_type * interType )
+std::unique_ptr<TabulatedFunction1D> 
+TabulatedFunction1D::combine( const ConstVector & funcs,
+                              const unsigned int samples,
+                              const gsl_interp_type * interType )
 {
   if ( samples < 2 )
   {
@@ -284,17 +283,16 @@ TabulatedFunction1D * TabulatedFunction1D::combine( const ConstVector & funcs,
                           "*Rich::TabulatedFunction1D*", StatusCode::FAILURE );
   }
   
-  // Default top a NULL pointer. Filled later on.
-  TabulatedFunction1D * combFunc = NULL;
+  // Default top a nullptr pointer. Filled later on.
+  TabulatedFunction1D * combFunc = nullptr;
 
   // Get global min and max range of function
-  double maxX(boost::numeric::bounds<double>::highest());
-  double minX(boost::numeric::bounds<double>::lowest());
-  for ( ConstVector::const_iterator iF = funcs.begin();
-        iF != funcs.end(); ++iF )
+  auto maxX(boost::numeric::bounds<double>::highest());
+  auto minX(boost::numeric::bounds<double>::lowest());
+  for ( const auto F : funcs )
   {
-    if ( (*iF)->minX() > minX ) { minX = (*iF)->minX(); }
-    if ( (*iF)->maxX() < maxX ) { maxX = (*iF)->maxX(); }
+    if ( F->minX() > minX ) { minX = F->minX(); }
+    if ( F->maxX() < maxX ) { maxX = F->maxX(); }
   }
 
   // Check all is OK
@@ -302,7 +300,7 @@ TabulatedFunction1D * TabulatedFunction1D::combine( const ConstVector & funcs,
   {
 
     // x increment
-    const double xInc = (maxX-minX)/(double)(samples-1);
+    const auto xInc = (maxX-minX)/(double)(samples-1);
 
     // Create the data points
     Data mergedData;
@@ -324,5 +322,5 @@ TabulatedFunction1D * TabulatedFunction1D::combine( const ConstVector & funcs,
   }
 
   // return
-  return combFunc;
+  return std::unique_ptr<TabulatedFunction1D>(combFunc);
 }

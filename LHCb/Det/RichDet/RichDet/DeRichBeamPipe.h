@@ -59,9 +59,7 @@ public:
    * Retrieves reference to class identifier
    * @return the class identifier for this class
    */
-  const CLID& clID() const {
-    return classID();
-  }
+  const CLID& clID() const { return classID(); }
 
   /**
    * Retrieves reference to class identifier
@@ -119,12 +117,12 @@ public:
 
 private: // data
 
-  const ISolid* m_solid;  ///< solid used for the beam pipe
+  const ISolid* m_solid = nullptr;  ///< solid used for the beam pipe
 
   /// A copy of the beam pipe cone that is solid (not hollow)
-  SolidCons* m_localCone;
+  SolidCons* m_localCone = nullptr;
 
-  double m_zHalfLength;  ///< Half length of the cone along z
+  double m_zHalfLength{0};  ///< Half length of the cone along z
 
 };
 

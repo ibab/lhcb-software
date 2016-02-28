@@ -39,12 +39,7 @@ namespace Rich
 
     /// Default Constructor with optional interpolator type argument
     TabulatedProperty1D( const gsl_interp_type * interType = gsl_interp_linear ) 
-      : TabulatedFunction1D( interType ),
-        m_tabProp     ( NULL  ),
-        m_svcLocator  ( NULL  ),
-        m_msgSvc      ( NULL  ),
-        m_updMgrSvc   ( NULL  ),
-        m_registedUMS ( false ) { }
+      : TabulatedFunction1D( interType ) { }
     
     /** Constructor from tabulated property and gsl interpolator type
      *
@@ -93,7 +88,7 @@ namespace Rich
      */
     bool initInterpolator( const TabulatedProperty * tab,
                            const bool registerUMS            = false,
-                           const gsl_interp_type * interType = NULL );
+                           const gsl_interp_type * interType = nullptr );
 
   private: // methods
 
@@ -112,26 +107,22 @@ namespace Rich
   private: // data
 
     /// Pointer to the underlying TabulatedProperty
-    const TabulatedProperty * m_tabProp;
+    const TabulatedProperty * m_tabProp = nullptr;
 
     /// The service locator
-    ISvcLocator* m_svcLocator;
+    ISvcLocator* m_svcLocator = nullptr;
 
     /// The Message service
-    IMessageSvc* m_msgSvc;
+    IMessageSvc* m_msgSvc = nullptr;
 
     /// The Update Manager Service
-    IUpdateManagerSvc* m_updMgrSvc;
+    IUpdateManagerSvc* m_updMgrSvc = nullptr;
 
     /// Flag to say if we have registered a dependency with the UMS
-    bool m_registedUMS;
+    bool m_registedUMS = false;
 
   };
 
 }
-
-/** backwards compatibility
- *  @todo remove this typedef */
-typedef Rich::TabulatedProperty1D RichTabulatedProperty1D;
 
 #endif // RICHDET_RICH1DTABPROPERTY_H

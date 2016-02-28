@@ -108,25 +108,25 @@ private:
 private:
 
   /// access to DeRich1 for user parameters
-  mutable DetectorElement* m_deRich1;
+  mutable DetectorElement* m_deRich1 = nullptr;
 
   /// Condition holding the aerogel parameters
   SmartRef<Condition> m_AerogelCond;
 
   /// conertion from nm to eV
-  double m_photMomWaveConv;
+  double m_photMomWaveConv{0};
 
   /// Aerogel tile number
-  int m_tileNumber;
+  int m_tileNumber{-1};
 
   /// Aerogel sub tile copy number
-  int m_subtilecopynumber;
+  int m_subtilecopynumber{-1};
   
   /// Aerogel subtile number in a tile
-  int m_subtileNumInTile;
+  int m_subtileNumInTile{-1};
 
   /// Flag to say if this is a sub tile or not
-  bool m_subTile;
+  bool m_subTile{true};
   
 };
 

@@ -46,9 +46,10 @@ namespace Rich
   public:
 
     /// Standard constructor
-    MirrorSegPosition( ) : m_data(0) {}
+    MirrorSegPosition( ) = default;
 
-    ~MirrorSegPosition( ) {} ///< Destructor
+    /// Destructor
+    ~MirrorSegPosition( ) = default;
 
     /** Access to the full bit-packed data word
      *
@@ -106,7 +107,7 @@ namespace Rich
   private: // data
 
     /// The bit-pack data word
-    ShortType m_data;
+    ShortType m_data{0};
 
   };
 

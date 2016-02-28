@@ -217,17 +217,19 @@ public: // virtual methods. Derived classes must implement these
 
 protected: // Parameters that must be properly configured in the derived classes
 
-  unsigned int m_PDColumns;    ///< Number of PD columns in the panel
-  unsigned int m_PDNumInCol;   ///< Number of PDs in each column
-  unsigned int m_PDMax;        ///< Total number of PDs in this panel
+  unsigned int m_PDColumns{0};    ///< Number of PD columns in the panel
+  unsigned int m_PDNumInCol{0};   ///< Number of PDs in each column
+  unsigned int m_PDMax{0};        ///< Total number of PDs in this panel
 
-  Rich::DetectorType m_rich;   ///< The RICH detector type
-  Rich::Side m_side;           ///< The RICH PD panel (up, down, left or right)
-  LHCb::RichSmartID::IDType m_pdType; ///< The PD technology type (HPD or MaPMT)
+  Rich::DetectorType m_rich = Rich::InvalidDetector;   ///< The RICH detector type
+  Rich::Side m_side = Rich::InvalidSide;    ///< The RICH PD panel (up, down, left or right)
 
-  double m_localOffset; ///< offset applied in the global to panel coordinate transformation
+  /// The PD technology type (HPD or MaPMT)
+  LHCb::RichSmartID::IDType m_pdType = LHCb::RichSmartID::Undefined;
 
-  double m_detPlaneZ;   ///< The z position of the detection plane in an PD panel
+  double m_localOffset{0}; ///< offset applied in the global to panel coordinate transformation
+
+  double m_detPlaneZ{0};   ///< The z position of the detection plane in an PD panel
 
   Gaudi::Plane3D m_detectionPlane;     ///< detection plane in global coordinates
 
