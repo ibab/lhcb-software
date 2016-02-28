@@ -24,7 +24,7 @@ InterpCKResVthetaForRecoTracks::
 InterpCKResVthetaForRecoTracks ( const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent )
-  : ToolBase   ( type, name, parent )
+  : ToolBase( type, name, parent )
 {
 
   declareInterface<ICherenkovResolution>(this);
@@ -121,7 +121,7 @@ InterpCKResVthetaForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segmen
 
 }
 
-const Rich1DTabFunc *
+const Rich::TabulatedFunction1D *
 InterpCKResVthetaForRecoTracks::getInterp( const Rich::RadiatorType rad,
                                            const Rich::Rec::Track::Type track ) const
 {
@@ -130,7 +130,7 @@ InterpCKResVthetaForRecoTracks::getInterp( const Rich::RadiatorType rad,
   if ( i == m_ckRes.end() )
   {
     _ri_verbo << "Found CK resolution data for " << rad << " " << track << endmsg;
-    m_ckRes[key] = new Rich1DTabFunc(m_joData[key]);
+    m_ckRes[key] = new Rich::TabulatedFunction1D(m_joData[key]);
     if ( !m_ckRes[key]->valid() )
     {
       Exception( "Initialisation of interpolator for "+Rich::text(rad)

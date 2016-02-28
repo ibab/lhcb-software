@@ -77,8 +77,8 @@ namespace Rich
     private: //methods
 
       /// Create and return on demand the required interpolator
-      const Rich1DTabFunc * getInterp( const Rich::RadiatorType rad,
-                                       const Rich::Rec::Track::Type track ) const;
+      const Rich::TabulatedFunction1D * getInterp( const Rich::RadiatorType rad,
+                                                   const Rich::Rec::Track::Type track ) const;
 
     private:  // Private data
 
@@ -87,7 +87,7 @@ namespace Rich
 
       /// type for map of interpolators
       typedef std::pair<const Rich::RadiatorType, const Rich::Rec::Track::Type> InterKey;
-      typedef Rich::Map< InterKey, const Rich1DTabFunc * > Interps;
+      typedef Rich::Map< InterKey, const Rich::TabulatedFunction1D * > Interps;
       typedef Rich::Map< InterKey, std::vector<std::pair<double,double> > > InterJoData;
 
       /// Interpolators
