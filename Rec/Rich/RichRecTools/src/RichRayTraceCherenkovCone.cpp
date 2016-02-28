@@ -40,7 +40,7 @@ StatusCode RayTraceCherenkovCone::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRayTracing",          m_rayTrace, nullptr, true );
+  acquireTool( "RichRayTracing",          m_rayTrace,    nullptr, true );
   acquireTool( "RichSmartIDTool",         m_smartIDTool, nullptr, true );
   acquireTool( "RichCherenkovAngle",      m_ckAngle  );
   acquireTool( "RichRecGeometry",         m_geomTool );
@@ -64,7 +64,7 @@ RayTraceCherenkovCone::traceAphoton ( const CosSinPhi& sinCosPhi,
   const auto result =
     m_rayTrace->traceToDetector( rich, emissionPoint, photDir, m_photon, 
                                  ring->richRecSegment()->trackSegment(), 
-                                 mode, Rich::top );
+                                 mode, Rich::top ); // Note forced side is not used..
 
   // Add a new point
   const auto & gP = m_photon.detectionPoint();
