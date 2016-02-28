@@ -41,7 +41,7 @@ def ConfigureFitter(fituser,fitAsIn="2015",EnergyLossFactor=1.0):
    elif fitAsIn == 'Reco14':
       ConfiguredMasterFitter( getattr(fituser.TrackInitFit, "Fit"), SimplifiedGeometry = False, LiteClusters = False, MSRossiAndGreisen = False )
       from Configurables import TrackNNGhostId
-      fituser.addTool(Run2GhostId("TrackNNGhostId"),name="Run2GhostId")
+      fituser.addTool(TrackNNGhostId("TrackNNGhostId"),name="Run2GhostId")
       log.warning("ghost probability computation not tested.")
    else:
       log.warning("no known fit configuration, falling back to TrackFitter.ConfiguredFitters.ConfiguredMasterFitter default")
