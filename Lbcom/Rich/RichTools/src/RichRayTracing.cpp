@@ -132,7 +132,7 @@ StatusCode Rich::RayTracing::initialize()
     Warning( "Will ignore secondary mirrors", StatusCode::SUCCESS );
   }
 
-  _ri_debug << "Using ROOT based Ray Tracing" << endmsg;
+  info() << "Using ROOT based Ray Tracing" << endmsg;
 
   return sc;
 }
@@ -153,7 +153,7 @@ Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
 {
   // need to think if this can be done without creating a temp RichGeomPhoton ?
   LHCb::RichGeomPhoton photon;
-  const LHCb::RichTraceMode::RayTraceResult sc =
+  const auto sc =
     traceToDetector ( rich, startPoint, startDir, photon, mode, forcedSide, photonEnergy );
   hitPosition = photon.detectionPoint();
   return sc;
@@ -175,7 +175,7 @@ Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
 {
   // need to think if this can be done without creating a temp RichGeomPhoton ?
   LHCb::RichGeomPhoton photon;
-  const LHCb::RichTraceMode::RayTraceResult sc =
+  const auto sc =
     traceToDetector ( rich, startPoint, startDir, photon, trSeg, mode, forcedSide );
   hitPosition = photon.detectionPoint();
   return sc;
@@ -343,7 +343,7 @@ bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
   if ( !reflectSpherical( tmpPos, tmpDir,
                           m_rich[rich]->nominalCentreOfCurvature(side),
                           m_rich[rich]->sphMirrorRadius() ) )
-    return false;
+  { return false; }
 
   // if not forced, check if still same side, if not change sides
   if ( !mode.forcedSide() )
@@ -356,8 +356,7 @@ bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
       tmpDir = direction;
       if ( !reflectSpherical( tmpPos, tmpDir,
                               m_rich[rich]->nominalCentreOfCurvature(side),
-                              m_rich[rich]->sphMirrorRadius() ) )
-        return false;
+                              m_rich[rich]->sphMirrorRadius() ) ) { return false; }
     }
   }
 
@@ -422,8 +421,7 @@ bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
   // Spherical mirror reflection with exact parameters
   if ( !reflectSpherical( tmpPos, tmpDir,
                           sphSegment->centreOfCurvature(),
-                          sphSegment->radius() ) )
-    return false;
+                          sphSegment->radius() ) ) { return false; }
 
   // set primary mirror data
   photon.setSphMirReflectionPoint( tmpPos );
@@ -438,11 +436,10 @@ bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
     if ( !intersectPlane( tmpPos,
                           tmpDir,
                           m_rich[rich]->nominalPlane(side),
-                          planeIntersection) )
-      return false;
+                          planeIntersection) ) { return false; }
 
     // find secondary mirror segment
-    const DeRichSphMirror* secSegment = m_mirrorSegFinder->findSecMirror(rich,side,planeIntersection);
+    const auto * secSegment = m_mirrorSegFinder->findSecMirror(rich,side,planeIntersection);
 
     // depending on the tracing flag:
     if ( mode.mirrorSegBoundary() ) {
@@ -461,25 +458,26 @@ bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
     {
 
       // check the outside boundaries of the (whole) mirror
-      if ( !secSegment->intersects( tmpPos, tmpDir ) ) {
-        const RichMirrorSegPosition pos = m_rich[rich]->secMirrorSegPos( secSegment->mirrorNumber() );
-        const Gaudi::XYZPoint& mirCentre = secSegment->mirrorCentre();
+      if ( !secSegment->intersects( tmpPos, tmpDir ) )
+      {
+        const auto pos = m_rich[rich]->secMirrorSegPos( secSegment->mirrorNumber() );
+        const auto & mirCentre = secSegment->mirrorCentre();
         bool fail( false );
-        if ( pos.row() == 0 ) {                 // bottom segment
-          if ( planeIntersection.y() < mirCentre.y() )
-            fail = true;
+        if ( pos.row() == 0 )
+        { // bottom segment
+          if ( planeIntersection.y() < mirCentre.y() ) fail = true;
         }
-        if ( pos.row() == m_secMirrorSegRows[rich]-1 ) { // top segment
-          if ( planeIntersection.y() > mirCentre.y() )
-            fail = true;
+        if ( pos.row() == m_secMirrorSegRows[rich]-1 )
+        { // top segment
+          if ( planeIntersection.y() > mirCentre.y() ) fail = true;
         }
-        if ( pos.column() == 0 ) {                 // right side
-          if ( planeIntersection.x() < mirCentre.x() )
-            fail = true;
+        if ( pos.column() == 0 )
+        { // right side
+          if ( planeIntersection.x() < mirCentre.x() ) fail = true;
         }
-        if ( pos.column() == m_secMirrorSegCols[rich]-1 ) {   // left side
-          if ( planeIntersection.x() > mirCentre.x() )
-            fail = true;
+        if ( pos.column() == m_secMirrorSegCols[rich]-1 )
+        { // left side
+          if ( planeIntersection.x() > mirCentre.x() ) fail = true;
         }
         if (fail)
         {
@@ -496,8 +494,7 @@ bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
     // Secondary mirror reflection with actual parameters
     if ( !reflectSpherical( tmpPos, tmpDir,
                             secSegment->centreOfCurvature(),
-                            secSegment->radius() ) )
-      return false;
+                            secSegment->radius() ) ) { return false; }
 
     // set secondary ("flat") mirror data
     photon.setFlatMirReflectionPoint( tmpPos );
@@ -592,23 +589,28 @@ Rich::RayTracing::intersectSpherical ( const Gaudi::XYZPoint& position,
                                        const double radius,
                                        Gaudi::XYZPoint& intersection ) const
 {
-  const double a = direction.Mag2();
-  if ( 0 == a )
+  bool OK = true;
+
+  // find intersection point
+  // for line sphere intersection look at http://www.realtimerendering.com/int/
+
+  const auto a = direction.Mag2();
+  if ( UNLIKELY( 0 == a ) ) { OK = false; }
+  else
   {
-    Warning( "intersectSpherical: Direction vector has zero length..." ).ignore();
-    return false;
+    const auto delta = position - CoC;
+    const auto     b = 2.0 * direction.Dot( delta );
+    const auto     c = delta.Mag2() - radius*radius;
+    const auto discr = b*b - 4.0*a*c;
+    if ( UNLIKELY( discr < 0 ) ) { OK = false; }
+    else
+    {
+      const auto dist = 0.5 * ( std::sqrt(discr) - b ) / a;
+      // set intersection point
+      intersection = position + ( dist * direction );
+    }
   }
-  const Gaudi::XYZVector delta( position - CoC );
-  const double b = 2.0 * direction.Dot( delta );
-  const double c = delta.Mag2() - radius*radius;
-  const double discr = b*b - 4.0*a*c;
-  if ( discr < 0 ) return false;
-
-  const double distance1 = 0.5 * ( std::sqrt(discr) - b ) / a;
-  // set intersection point
-  intersection = position + ( distance1 * direction );
-
-  return true;
+  return OK;
 }
 
 //=========================================================================
@@ -620,32 +622,32 @@ Rich::RayTracing::reflectSpherical ( Gaudi::XYZPoint& position,
                                      const Gaudi::XYZPoint& CoC,
                                      const double radius ) const
 {
+  bool OK = true;
+
   // find intersection point
   // for line sphere intersection look at http://www.realtimerendering.com/int/
 
-  const double a = direction.Mag2();
-  if ( 0 == a )
+  const auto a = direction.Mag2();
+  if ( UNLIKELY( 0 == a ) ) { OK = false; }
+  else
   {
-    Warning( "reflectSpherical: Direction vector has zero length..." ).ignore();
-    return false;
+    const auto delta = position - CoC;
+    const auto     b = 2.0 * direction.Dot( delta );
+    const auto     c = delta.Mag2() - radius*radius;
+    const auto discr = b*b - 4.0*a*c;
+    if ( UNLIKELY( discr < 0 ) ) { OK = false; }
+    else
+    {
+      const auto dist = 0.5 * ( std::sqrt(discr) - b ) / a;
+      // change position to the intersection point
+      position += dist * direction;
+      // reflect the vector
+      // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
+      const auto normal = position - CoC;
+      direction -= ( 2.0 * normal.Dot(direction) / normal.Mag2() ) * normal;
+    }
   }
-  const Gaudi::XYZVector delta( position - CoC );
-  const double b = 2.0 * direction.Dot( delta );
-  const double c = delta.Mag2() - radius*radius;
-  const double discr = b*b - 4.0*a*c;
-  if ( discr < 0 ) return false;
-
-  const double distance1 = 0.5 * ( std::sqrt(discr) - b ) / a;
-  // change position to the intersection point
-  position += distance1 * direction;
-
-  // reflect the vector
-  // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
-
-  const Gaudi::XYZVector normal( position - CoC );
-  direction -= (2.0/normal.Mag2()) * (normal.Dot(direction)) * normal;
-
-  return true;
+  return OK;
 }
 
 //=========================================================================
@@ -664,7 +666,7 @@ Rich::RayTracing::reflectFlatPlane ( Gaudi::XYZPoint& position,
   if ( sc )
   {
     // plane normal
-    const Gaudi::XYZVector normal( plane.Normal() );
+    const auto normal = plane.Normal();
 
     // update position to intersection point
     position = intersection;
@@ -687,13 +689,13 @@ Rich::RayTracing::intersectPlane ( const Gaudi::XYZPoint& position,
                                    const Gaudi::Plane3D& plane,
                                    Gaudi::XYZPoint& intersection ) const
 {
-  bool OK = false;
-  const double scalar = direction.Dot( plane.Normal() );
-  if ( fabs(scalar) > 1e-99 )
+  bool OK = true;
+  const auto scalar = direction.Dot( plane.Normal() );
+  if ( UNLIKELY( fabs(scalar) < 1e-99 ) ) { OK = false; }
+  else
   {
-    const double distance = -(plane.Distance(position)) / scalar;
-    intersection = position + distance*direction;
-    OK = true;
+    const auto distance = -(plane.Distance(position)) / scalar;
+    intersection = position + (distance*direction);
   }
   return OK;
 }

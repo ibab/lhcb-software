@@ -329,51 +329,52 @@ findSecMirror( const Rich::DetectorType rich,
 //=========================================================================
 void Rich::MirrorSegFinderLookUpTable::printMirrors() const
 {
-
-  typedef std::vector<std::pair<Rich::DetectorType,Rich::Side> > DetSide;
-  const DetSide pairs = { std::make_pair(Rich::Rich1,Rich::top),
-                          std::make_pair(Rich::Rich1,Rich::bottom),
-                          std::make_pair(Rich::Rich2,Rich::left),
-                          std::make_pair(Rich::Rich2,Rich::right) };
-  for ( const auto& D : pairs )
+  if ( msgLevel(MSG::DEBUG) )
   {
-    
-    debug() << "Found " << m_sphMirrors[D.first][D.second].mirrors.size()
-            << " primary mirrors for " << D.first << " "
-            << Rich::text(D.first,D.second) << " :";
-    for ( const auto& M : m_sphMirrors[D.first][D.second].mirrors )
-    { debug() << " " << M->mirrorNumber(); }
-    debug() << endmsg;
-    if ( msgLevel(MSG::VERBOSE) )
+    typedef std::vector<std::pair<Rich::DetectorType,Rich::Side> > DetSide;
+    const DetSide pairs = { std::make_pair(Rich::Rich1,Rich::top),
+                            std::make_pair(Rich::Rich1,Rich::bottom),
+                            std::make_pair(Rich::Rich2,Rich::left),
+                            std::make_pair(Rich::Rich2,Rich::right) };
+    for ( const auto& D : pairs )
     {
+
+      debug() << "Found " << m_sphMirrors[D.first][D.second].mirrors.size()
+              << " primary mirrors for " << D.first << " "
+              << Rich::text(D.first,D.second) << " :";
       for ( const auto& M : m_sphMirrors[D.first][D.second].mirrors )
+      { debug() << " " << M->mirrorNumber(); }
+      debug() << endmsg;
+      if ( msgLevel(MSG::VERBOSE) )
       {
-        verbose() << " -> Spherical mirror " << M->mirrorNumber()
-                  << " " << M->name()
-                  << " " << M->mirrorCentre()
-                  << endmsg;
+        for ( const auto& M : m_sphMirrors[D.first][D.second].mirrors )
+        {
+          verbose() << " -> Spherical mirror " << M->mirrorNumber()
+                    << " " << M->name()
+                    << " " << M->mirrorCentre()
+                    << endmsg;
+        }
       }
-    }
 
-    debug() << "Found " << m_secMirrors[D.first][D.second].mirrors.size()
-            << " secondary mirrors for " << D.first << " "
-            << Rich::text(D.first,D.second) << " :";
-    for ( const auto& M : m_secMirrors[D.first][D.second].mirrors )
-    { debug() << " " << M->mirrorNumber(); }
-    debug() << endmsg;
-    if ( msgLevel(MSG::VERBOSE) )
-    {
+      debug() << "Found " << m_secMirrors[D.first][D.second].mirrors.size()
+              << " secondary mirrors for " << D.first << " "
+              << Rich::text(D.first,D.second) << " :";
       for ( const auto& M : m_secMirrors[D.first][D.second].mirrors )
+      { debug() << " " << M->mirrorNumber(); }
+      debug() << endmsg;
+      if ( msgLevel(MSG::VERBOSE) )
       {
-        verbose() << " -> Secondary mirror " << M->mirrorNumber()
-                  << " " << M->name()
-                  << " " << M->mirrorCentre()
-                  << endmsg;
+        for ( const auto& M : m_secMirrors[D.first][D.second].mirrors )
+        {
+          verbose() << " -> Secondary mirror " << M->mirrorNumber()
+                    << " " << M->name()
+                    << " " << M->mirrorCentre()
+                    << endmsg;
+        }
       }
+
     }
-
   }
-
 }
 
 //=========================================================================

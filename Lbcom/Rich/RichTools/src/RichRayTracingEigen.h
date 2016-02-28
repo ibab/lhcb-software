@@ -235,11 +235,9 @@ namespace Rich
         if ( UNLIKELY( discr < 0 ) ) { OK = false; }
         else
         {
-          //const auto sd = vdt::fast_isqrt( discr );
-          //const auto distance1 = (1.0f - (b*sd) ) / ( 2.f * a * sd );
-          const auto distance1 = 0.5f * ( std::sqrt(discr) - b ) / a;
+          const auto dist = 0.5f * ( std::sqrt(discr) - b ) / a;
           // intersection point
-          intersection = position + ( distance1 * direction );
+          intersection = position + ( dist * direction );
         }
       }
       // return
@@ -267,11 +265,9 @@ namespace Rich
         if ( UNLIKELY( discr < 0 ) ) { OK = false; }
         else
         {
-          //const auto sd = vdt::fast_isqrt( discr );
-          //const auto distance1 = (1.0f - (b*sd) ) / ( 2.f * a * sd );
-          const auto distance1 = 0.5f * ( std::sqrt(discr) - b ) / a;
+          const auto dist = 0.5f * ( std::sqrt(discr) - b ) / a;
           // change position to the intersection point
-          position += distance1 * direction;
+          position += dist * direction;
           // reflect the vector
           // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
           const auto normal = position - ecoc;
@@ -294,7 +290,7 @@ namespace Rich
       if ( sc )
       {
         // plane normal
-        const EigenXYZVector normal( plane.Normal() );
+        const EigenXYZVector normal = plane.Normal();
         // update position to intersection point
         position = intersection;
         // reflect the vector and update direction

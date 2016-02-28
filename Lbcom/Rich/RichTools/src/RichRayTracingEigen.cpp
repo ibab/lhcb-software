@@ -130,7 +130,7 @@ StatusCode Rich::RayTracingEigen::initialize()
     Warning( "Will ignore secondary mirrors", StatusCode::SUCCESS );
   }
 
-  _ri_debug << "Using Eigen based Ray Tracing" << endmsg;
+  info() << "Using Eigen based Ray Tracing" << endmsg;
 
   return sc;
 }
@@ -358,7 +358,7 @@ bool Rich::RayTracingEigen::reflectBothMirrors( const Rich::DetectorType rich,
     }
   }
 
-  // find segment
+  // find primary mirror segment
   const auto * sphSegment = m_mirrorSegFinder->findSphMirror( rich, side, tmpPos );
 
   // depending on the tracing flag
@@ -434,7 +434,7 @@ bool Rich::RayTracingEigen::reflectBothMirrors( const Rich::DetectorType rich,
     if ( !intersectPlane( tmpPos,
                           tmpDir,
                           m_rich[rich]->nominalPlane(side),
-                          planeIntersection) ) { return false; }
+                          planeIntersection ) ) { return false; }
 
     // find secondary mirror segment
     const auto * secSegment = 
@@ -589,23 +589,28 @@ Rich::RayTracingEigen::intersectSpherical ( const Gaudi::XYZPoint& position,
                                             const double radius,
                                             Gaudi::XYZPoint& intersection ) const
 {
-  const double a = direction.Mag2();
-  if ( 0 == a )
+  bool OK = true;
+
+  // find intersection point
+  // for line sphere intersection look at http://www.realtimerendering.com/int/
+
+  const auto a = direction.Mag2();
+  if ( UNLIKELY( 0 == a ) ) { OK = false; }
+  else
   {
-    Warning( "intersectSpherical: Direction vector has zero length..." ).ignore();
-    return false;
+    const auto delta = position - CoC;
+    const auto     b = 2.0 * direction.Dot( delta );
+    const auto     c = delta.Mag2() - radius*radius;
+    const auto discr = b*b - 4.0*a*c;
+    if ( UNLIKELY( discr < 0 ) ) { OK = false; }
+    else
+    {
+      const auto dist = 0.5 * ( std::sqrt(discr) - b ) / a;
+      // set intersection point
+      intersection = position + ( dist * direction );
+    }
   }
-  const Gaudi::XYZVector delta( position - CoC );
-  const double b = 2.0 * direction.Dot( delta );
-  const double c = delta.Mag2() - radius*radius;
-  const double discr = b*b - 4.0*a*c;
-  if ( discr < 0 ) return false;
-
-  const double distance1 = 0.5 * ( std::sqrt(discr) - b ) / a;
-  // set intersection point
-  intersection = position + ( distance1 * direction );
-
-  return true;
+  return OK;
 }
 
 //=========================================================================
@@ -618,32 +623,32 @@ Rich::RayTracingEigen::reflectSpherical ( Gaudi::XYZPoint& position,
                                           const Gaudi::XYZPoint& CoC,
                                           const double radius ) const
 {
+  bool OK = true;
+
   // find intersection point
   // for line sphere intersection look at http://www.realtimerendering.com/int/
 
-  const double a = direction.Mag2();
-  if ( 0 == a )  
+  const auto a = direction.Mag2();
+  if ( UNLIKELY( 0 == a ) ) { OK = false; }
+  else
   {
-    Warning( "reflectSpherical: Direction vector has zero length..." ).ignore();
-    return false;
+    const auto delta = position - CoC;
+    const auto     b = 2.0 * direction.Dot( delta );
+    const auto     c = delta.Mag2() - radius*radius;
+    const auto discr = b*b - 4.0*a*c;
+    if ( UNLIKELY( discr < 0 ) ) { OK = false; }
+    else
+    {
+      const auto dist = 0.5 * ( std::sqrt(discr) - b ) / a;
+      // change position to the intersection point
+      position += dist * direction;
+      // reflect the vector
+      // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
+      const auto normal = position - CoC;
+      direction -= ( 2.0 * normal.Dot(direction) / normal.Mag2() ) * normal;
+    }
   }
-  const Gaudi::XYZVector delta( position - CoC );
-  const double b = 2.0 * direction.Dot( delta );
-  const double c = delta.Mag2() - radius*radius;
-  const double discr = b*b - 4.0*a*c;
-  if ( discr < 0 ) return false;
-
-  const double distance1 = 0.5 * ( std::sqrt(discr) - b ) / a;
-  // change position to the intersection point
-  position += distance1 * direction;
-
-  // reflect the vector
-  // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
-
-  const Gaudi::XYZVector normal( position - CoC );
-  direction -= ( 2.0 * normal.Dot(direction) / normal.Mag2() ) * normal;
-
-  return true;
+  return OK;
 }
 
 //=========================================================================
@@ -662,7 +667,7 @@ Rich::RayTracingEigen::reflectFlatPlane ( Gaudi::XYZPoint& position,
   if ( sc ) 
   {
     // plane normal
-    const Gaudi::XYZVector normal( plane.Normal() );
+    const auto normal = plane.Normal();
     
     // update position to intersection point
     position = intersection;
@@ -686,13 +691,13 @@ Rich::RayTracingEigen::intersectPlane ( const Gaudi::XYZPoint& position,
                                         const Gaudi::Plane3D& plane,
                                         Gaudi::XYZPoint& intersection ) const
 {
-  bool OK = false;
-  const double scalar = direction.Dot( plane.Normal() );
-  if ( fabs(scalar) > 1e-99 )
+  bool OK = true;
+  const auto scalar = direction.Dot( plane.Normal() );
+  if ( UNLIKELY( fabs(scalar) < 1e-99 ) ) { OK = false; }
+  else
   {
-    const double distance = -(plane.Distance(position)) / scalar;
+    const auto distance = -(plane.Distance(position)) / scalar;
     intersection = position + (distance*direction);
-    OK = true;
   }
   return OK;
 }
