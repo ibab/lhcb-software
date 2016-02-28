@@ -205,14 +205,6 @@ namespace Rich
        */
       std::vector<bool> m_useAlignedMirrSegs;
 
-      /** @brief Flag to force the assumption that the secondary mirrors are perfectly flat
-       *
-       *  If set to true then the photon reconstruction will assume the secondary mirrors
-       *  are perfectly flat. If false (default) then the true spherical nature of the
-       *  secondary mirrors is taken into account
-       */
-      bool m_forceFlatAssumption;
-
       /** Maximum number of iterations of the quartic solution, for each radiator, in order
        *  to account for the non-flat secondary mirrors.
        */
