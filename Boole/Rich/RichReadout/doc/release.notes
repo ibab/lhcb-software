@@ -4,6 +4,9 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2016-02-28 - Chris Jones
+ - Adapt to removal of typedef from RichDet.
+
 ! 2016-02-03 - Chris Jones
  - Adapt to removal of old backwards compatibility typedefs in RichKernel.
 

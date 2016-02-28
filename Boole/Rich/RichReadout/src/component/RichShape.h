@@ -4,6 +4,7 @@
 
 #include <math.h>
 #include <map>
+#include <memory>
 
 // RichKernel
 #include "RichKernel/RichMap.h"
@@ -29,8 +30,7 @@ namespace Rich
           : m_alpha   ( alpha ),
             m_tpeak   ( tpeak ),
             m_maxTime ( 200   ),
-            m_minTime ( 0     ),
-            m_tabFunc ( 0     )
+            m_minTime ( 0     )
         {
 
           // Initialise interpolator
@@ -40,13 +40,8 @@ namespace Rich
             const double time = m_minTime + (m_maxTime-m_minTime)*i/100;
             data[time] = responseFunction(time);
           }
-          m_tabFunc = new Rich1DTabFunc(data);
+          m_tabFunc.reset( new Rich::TabulatedFunction1D(data) );
 
-        }
-
-        ~RichShape()
-        {
-          if ( m_tabFunc ) { delete m_tabFunc; m_tabFunc = 0; }
         }
 
         inline double getTpeak () const
@@ -86,7 +81,7 @@ namespace Rich
         /// Min time
         double m_minTime;
 
-        Rich1DTabFunc * m_tabFunc;
+        std::unique_ptr<Rich::TabulatedFunction1D> m_tabFunc;
 
       };
 
