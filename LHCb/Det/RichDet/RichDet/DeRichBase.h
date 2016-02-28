@@ -39,8 +39,7 @@ class DeRichBase : public DetectorElement
 public:
 
   /// Standard constructor
-  DeRichBase( const std::string & name = "" ) 
-    : DetectorElement ( name ) { }
+  DeRichBase( const std::string & name = "" ) : DetectorElement ( name ) { }
 
   /// Destructor
   virtual ~DeRichBase( ) { } 

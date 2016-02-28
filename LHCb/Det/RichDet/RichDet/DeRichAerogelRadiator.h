@@ -58,22 +58,22 @@ public:
 public:
 
   /// Indicates if this represents a sub-tile(true) or full primary tile (false)
-  inline bool subTile()          const { return m_subTile; }
+  inline bool subTile()          const noexcept { return m_subTile; }
 
   /// Access the primary Aerogel tile ID number
-  inline int primaryTileID()     const { return m_tileNumber; }
+  inline int primaryTileID()     const noexcept { return m_tileNumber; }
 
   /** Returns the sub tile copy number (unique number for all subtiles)
    *
    *  If sub tiles are not active, returns -1
    */
-  inline int subtileCopynumber() const { return m_subtilecopynumber; }
+  inline int subtileCopynumber() const noexcept { return m_subtilecopynumber; }
 
   /** Returns the sub-tile number within a primary tile 
    *
    *  If sub tiles are not active, returns -1
    */
-  inline int subtileIDInTile()   const { return m_subtileNumInTile;  }
+  inline int subtileIDInTile()   const noexcept { return m_subtileNumInTile;  }
 
   /// Returns a unique tile ID number, when sub-tiles are both active and inactive
   inline int tileID() const 

@@ -74,7 +74,7 @@ public:
    * Retrieves the centre of curvarute of this mirror
    * @return The centre of curvature of this mirror as a Gaudi::XYZPoint
    */
-  inline const Gaudi::XYZPoint& centreOfCurvature() const
+  inline const Gaudi::XYZPoint& centreOfCurvature() const noexcept
   {
     return m_centreOfCurvature;
   }
@@ -83,7 +83,7 @@ public:
    * Retrieves the centre this mirror on the reflective surface.
    * @return The mirror centre as Gaudi::XYZPoint
    */
-  inline const Gaudi::XYZPoint& mirrorCentre() const
+  inline const Gaudi::XYZPoint& mirrorCentre() const noexcept
   {
     return m_mirrorCentre;
   }
@@ -92,7 +92,7 @@ public:
    * Retrieves the segment number of this spherical mirror
    * @return The number of this mirror
    */
-  inline int mirrorNumber() const
+  inline int mirrorNumber() const noexcept
   {
     return m_mirrorNumber;
   }
@@ -101,7 +101,7 @@ public:
    * Retrieves the radius of this spherical mirror
    * @return The radius of this spherical mirror
    */
-  inline double radius() const
+  inline double radius() const noexcept
   {
     return m_radius;
   }
@@ -129,7 +129,7 @@ public:
    *
    * @return Pointer to mirror reflectivity
    */
-  inline const Rich::TabulatedProperty1D* reflectivity() const
+  inline const Rich::TabulatedProperty1D* reflectivity() const noexcept
   {
     return m_reflectivity.get();
   }
@@ -138,7 +138,7 @@ public:
    * Retrieves the normal vector at the centre of the mirror
    * @return Normal vector at the mirror centre
    */
-  inline const Gaudi::XYZVector& centreNormal() const
+  inline const Gaudi::XYZVector& centreNormal() const noexcept
   {
     return m_centreNormal;
   }
@@ -148,7 +148,7 @@ public:
    * of the mirror
    * @return Plane perpendicular to the normal vector
    */
-  inline const Gaudi::Plane3D& centreNormalPlane() const
+  inline const Gaudi::Plane3D& centreNormalPlane() const noexcept
   {
     return m_centreNormalPlane;
   }

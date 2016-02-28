@@ -69,7 +69,7 @@ private:
   /**
    * Generates and returns the refractive index of the radiator for use by the HLT
    * @return A pointer to the HLT refractive index interpolated function of the radiator
-   * @retval NULL No interpolation function
+   * @retval nullptr No interpolation function
    */
   virtual const Rich::TabulatedProperty1D* generateHltRefIndex() const;
 

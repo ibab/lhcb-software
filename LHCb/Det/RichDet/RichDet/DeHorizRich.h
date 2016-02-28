@@ -26,6 +26,7 @@ extern const CLID CLID_DEHorizRich;
 
 class DeHorizRich: public DeRich
 {
+
 public:
   /**
    * Constructor for this class
@@ -41,9 +42,7 @@ public:
    * Retrieves reference to class identifier
    * @return the class identifier for this class
    */
-  const CLID& clID() const {
-    return classID();
-  }
+  const CLID& clID() const { return classID(); }
 
   /**
    * Retrieves reference to class identifier

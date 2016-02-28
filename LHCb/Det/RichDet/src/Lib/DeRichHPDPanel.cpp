@@ -1,3 +1,4 @@
+
 //----------------------------------------------------------------------------
 /** @file DeRichHPDPanel.cpp
  *
@@ -588,10 +589,10 @@ StatusCode DeRichHPDPanel::geometryUpdate()
         << endmsg;
 
   // get the first HPD and follow down to the silicon block
-  const IPVolume* pvHPDMaster0  = geometry()->lvolume()->pvolume(0);
+  const auto* pvHPDMaster0  = geometry()->lvolume()->pvolume(0);
 
   // get subMaster volume
-  const IPVolume* pvHPDSMaster0 = pvHPDMaster0->lvolume()->pvolume(0);
+  const auto* pvHPDSMaster0 = pvHPDMaster0->lvolume()->pvolume(0);
   if ( pvHPDSMaster0->name().find("HPDSMaster") == std::string::npos )
   {
     msg << MSG::FATAL << "Cannot find HPDSMaster volume : " 
@@ -600,24 +601,24 @@ StatusCode DeRichHPDPanel::geometryUpdate()
   }
 
   // find pvRichHPDSiDet volume
-  const IPVolume* pvSilicon0 = pvHPDSMaster0->lvolume()->pvolume("pvRichHPDSiDet");
-  if ( pvSilicon0 == NULL ) // multiple HPD volumes
+  const auto* pvSilicon0 = pvHPDSMaster0->lvolume()->pvolume("pvRichHPDSiDet");
+  if ( pvSilicon0 == nullptr ) // multiple HPD volumes
   {
     pvSilicon0 = pvHPDSMaster0->lvolume()->pvolume(10);
-    if ( pvSilicon0 == NULL || 
+    if ( pvSilicon0 == nullptr || 
          pvSilicon0->name().find("pvRichHPDSiDet") == std::string::npos )
     {
       msg << MSG::FATAL << "Cannot find pvRichHPDSiDet volume ";
-      if ( pvSilicon0 != NULL ) msg << MSG::FATAL << pvSilicon0->name();
+      if ( pvSilicon0 != nullptr ) msg << MSG::FATAL << pvSilicon0->name();
       msg << MSG::FATAL << endmsg;
       return StatusCode::FAILURE;
     }
   }
 
-  const ISolid* siliconSolid = pvSilicon0->lvolume()->solid();
+  const auto* siliconSolid = pvSilicon0->lvolume()->solid();
   if ( msgLevel(MSG::VERBOSE,msg) )
     msg << MSG::VERBOSE << "About to do a dynamic cast SolidBox" << endmsg;
-  const SolidBox* siliconBox = dynamic_cast<const SolidBox*>(siliconSolid);
+  const auto* siliconBox = dynamic_cast<const SolidBox*>(siliconSolid);
   if ( !siliconBox )
   {
     error() << "Failed to cast to SolidBox" << endmsg;
@@ -629,16 +630,16 @@ StatusCode DeRichHPDPanel::geometryUpdate()
   m_siliconHalfLengthY = siliconBox->yHalfLength();
 
   // get the pv and the solid for the HPD quartz window
-  const IPVolume* pvWindow0 = pvHPDSMaster0->lvolume() ->
-    pvolume("pvRichHPDQuartzWindow");
-  const ISolid* windowSolid0 = pvWindow0->lvolume()->solid();
+  const auto* pvWindow0 = pvHPDSMaster0->lvolume()->pvolume("pvRichHPDQuartzWindow");
+  const auto* windowSolid0 = pvWindow0->lvolume()->solid();
   // get the inside radius of the window
   ISolid::Ticks windowTicks;
-  unsigned int windowTicksSize = windowSolid0 ->
+  auto windowTicksSize = windowSolid0 ->
     intersectionTicks ( Gaudi::XYZPoint  ( 0.0, 0.0, 0.0 ),
                         Gaudi::XYZVector ( 0.0, 0.0, 1.0 ),
                         windowTicks );
-  if (windowTicksSize != 2) {
+  if ( windowTicksSize != 2 )
+  {
     msg << MSG::FATAL << "Problem getting window radius" << endmsg;
     return StatusCode::FAILURE;
   }
@@ -661,11 +662,11 @@ StatusCode DeRichHPDPanel::geometryUpdate()
   }
 
   // find the top of 3 HPDs to create a detection plane.
-  const Gaudi::XYZPoint pointA( deHPD(0)->windowCentreInIdeal() );
+  const auto pointA( deHPD(0)->windowCentreInIdeal() );
   // for second point go to HPD at the end of the column.
-  const Gaudi::XYZPoint pointB( deHPD(nPDsPerCol()-1)->windowCentreInIdeal() );
+  const auto pointB( deHPD(nPDsPerCol()-1)->windowCentreInIdeal() );
   // now point C at the other end.
-  const Gaudi::XYZPoint pointC( deHPD(nPDs()-nPDsPerCol()/2)->windowCentreInIdeal() );
+  const auto pointC( deHPD(nPDs()-nPDsPerCol()/2)->windowCentreInIdeal() );
 
   m_detectionPlane = Gaudi::Plane3D(pointA,pointB,pointC);
   m_localPlane = geometry()->toLocalMatrix() * m_detectionPlane;

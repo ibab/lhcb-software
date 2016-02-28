@@ -95,13 +95,13 @@ public:
   /** Access to the list of single solid radiators. 
    *  Will be either sub-tiles, or tiles, depending on which are active in the DB
    */
-  inline const DeRichRadiator::Vector& radiators() const { return m_radiators; }
+  inline const DeRichRadiator::Vector& radiators() const noexcept { return m_radiators; }
 
   /// Explicit Access to sub-tiles (if active)
-  inline const DeRichRadiator::Vector& subTileRadiators() const { return radiators(); }
+  inline const DeRichRadiator::Vector& subTileRadiators() const noexcept { return radiators(); }
 
   /// Explicit Access to full tiles
-  inline const DeRichRadiator::Vector& fullTileRadiators() const { return m_fullTiles; }
+  inline const DeRichRadiator::Vector& fullTileRadiators() const noexcept { return m_fullTiles; }
 
 private:
 

@@ -99,7 +99,7 @@ public:
    *  (panel) coodinate system
    *  @return Inside window surface centre point in panel system
    */
-  inline const Gaudi::XYZPoint hpdWinInsideCentreInMother() const
+  inline const Gaudi::XYZPoint hpdWinInsideCentreInMother() const noexcept
   {
     return m_windowInsideCentreMother;
   }
@@ -136,7 +136,8 @@ public:
    *  For a given R on the HPD cathode returns the R on the anode.
    *  @return A pointer to the demagnification function for R(R)
    */
-  inline const Rich::TabulatedFunction1D* demagnification_RtoR( const int field = 0 ) const
+  inline const Rich::TabulatedFunction1D* 
+  demagnification_RtoR( const int field = 0 ) const noexcept
   {
     return m_demagMapR[ field > 0 ? 1 : 0 ].get();
   }
@@ -145,7 +146,8 @@ public:
    *  For a given R on the HPD cathode returns the phi on the anode.
    *  @return A pointer to the demagnification function for phi(R)
    */
-  inline const Rich::TabulatedFunction1D* demagnification_RtoPhi( const int field = 0 ) const
+  inline const Rich::TabulatedFunction1D*
+  demagnification_RtoPhi( const int field = 0 ) const noexcept
   {
     return m_demagMapPhi[ field > 0 ? 1 : 0 ].get();
   }
@@ -154,7 +156,8 @@ public:
    *  For a given R on the HPD anode returns the R on the cathode.
    *  @return A pointer to the magnification function for R(R)
    */
-  inline const Rich::TabulatedFunction1D* magnification_RtoR( const int field = 0 ) const
+  inline const Rich::TabulatedFunction1D* 
+  magnification_RtoR( const int field = 0 ) const noexcept
   {
     return m_magMapR[ field > 0 ? 1 : 0 ].get();
   }
@@ -163,7 +166,8 @@ public:
    *  For a given R on the HPD anode returns the phi on the cathode.
    *  @return A pointer to the magnification function for phi(R)
    */
-  inline const Rich::TabulatedFunction1D* magnification_RtoPhi( const int field = 0 ) const
+  inline const Rich::TabulatedFunction1D* 
+  magnification_RtoPhi( const int field = 0 ) const noexcept
   {
     return m_magMapPhi[ field > 0 ? 1 : 0 ].get();
   }
@@ -181,7 +185,7 @@ public:
   /** Get the tranformation from the HPD panel coordinate system to the HPD quartz
    *  @return The HPD panel to the HPD quartz tranformation
    */
-  inline const Gaudi::Transform3D& fromPanelToHPDWindow ( ) const
+  inline const Gaudi::Transform3D& fromPanelToHPDWindow ( ) const noexcept
   {
     return m_fromPanelToWindow;
   }
@@ -189,7 +193,7 @@ public:
   /** Get the tranformation from the HPD quartz window to the HPD
    *  @return The HPD window to HPD tranformation
    */
-  inline const Gaudi::Transform3D& fromHPDWindowToHPD ( ) const
+  inline const Gaudi::Transform3D& fromHPDWindowToHPD ( ) const noexcept
   {
     return m_fromWindowToHPD;
   }
@@ -197,7 +201,7 @@ public:
   /** Get the tranformation from the HPD quartz window to the global LHCb coordinate system
    *  @return The HPD window to LHCb global tranformation
    */
-  inline const Gaudi::Transform3D& fromHPDWindowToGlobal ( ) const
+  inline const Gaudi::Transform3D& fromHPDWindowToGlobal ( ) const noexcept
   {
     return m_fromWindowToGlobal;
   }
@@ -206,7 +210,7 @@ public:
    *  system including misalignment
    *  @return The HPD to panel tranformation
    */
-  inline const Gaudi::Transform3D& fromHPDToPanel ( ) const
+  inline const Gaudi::Transform3D& fromHPDToPanel ( ) const noexcept
   {
     return m_fromHPDToPanel;
   }
@@ -214,7 +218,7 @@ public:
   /** Get the solid for the HPD window (for intersection purposes)
    *  @return The quartz window solid
    */
-  inline const ISolid* HPDWindowSolid ( ) const
+  inline const ISolid* HPDWindowSolid ( ) const noexcept
   {
     return m_windowSolid;
   }
@@ -252,8 +256,8 @@ private: // functions
   /// parameterised extra radius for the defraction in the HPD window
   inline double extraRadiusForRefraction( const double r ) const
   {
-    const double  rr = r*r;
-    const double rrr = r*rr;
+    const auto  rr = r*r;
+    const auto rrr = r*rr;
     return ( m_refactParams[3]*rrr +
              m_refactParams[2]*rr  +
              m_refactParams[1]*r   +

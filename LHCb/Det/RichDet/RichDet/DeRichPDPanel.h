@@ -48,22 +48,22 @@ public:
 public:
 
   /// Access the RICH detector type
-  inline Rich::DetectorType rich() const { return m_rich; }
+  inline Rich::DetectorType rich() const noexcept { return m_rich; }
 
   /// Access the PD panel side
-  inline Rich::Side side() const { return m_side; }
+  inline Rich::Side side() const noexcept { return m_side; }
 
   /// Access the PD type
-  inline LHCb::RichSmartID::IDType pdType() const { return m_pdType; }
+  inline LHCb::RichSmartID::IDType pdType() const noexcept { return m_pdType; }
 
   /// The number of PD columns in this panel
-  inline unsigned int nPDColumns() const { return m_PDColumns; }
+  inline unsigned int nPDColumns() const noexcept { return m_PDColumns; }
   
   /// The number of PDs in each columns
-  inline unsigned int nPDsPerCol() const { return m_PDNumInCol; }
+  inline unsigned int nPDsPerCol() const noexcept { return m_PDNumInCol; }
   
   /// The total number of PDs in this panel
-  inline unsigned int nPDs() const { return m_PDMax; }
+  inline unsigned int nPDs() const noexcept { return m_PDMax; }
 
   /** @brief Retrieves the detection plane of the PD panel.
    *
@@ -71,7 +71,7 @@ public:
    *
    *  @return The detection plane
    */
-  inline const Gaudi::Plane3D& detectionPlane() const
+  inline const Gaudi::Plane3D& detectionPlane() const noexcept
   {
     return m_detectionPlane;
   }
@@ -81,7 +81,7 @@ public:
    *
    * @return The detection plane Z coordinate (local system).
    */
-  inline double detectPlaneZcoord() const { return m_detPlaneZ; }
+  inline double detectPlaneZcoord() const noexcept { return m_detPlaneZ; }
 
   /**
    * Returns the offset (y in Rich1, x in Rich2) so that the two panels of
@@ -89,7 +89,7 @@ public:
    *
    * @return The offset for the globalToPanel method
    */
-  inline double localOffset() const { return m_localOffset; }
+  inline double localOffset() const noexcept { return m_localOffset; }
 
   /** @brief Converts a RichSmartID to a point in global coordinates.
    *
@@ -124,13 +124,13 @@ public:
    *  to accommodate both detector panels in one histogram and the x=0 in Rich1 and y=0 in
    *  Rich2 are aligned with the global x=0 and y=0.
    */
-  inline const Gaudi::Transform3D& globalToPDPanelMatrix() const
+  inline const Gaudi::Transform3D& globalToPDPanelMatrix() const noexcept
   {
     return m_globalToPDPanelTransform;
   }
 
   /// Get the transform from the local to global frame. See comments at the globalToPDPanelMatrix method
-  inline const Gaudi::Transform3D& PDPanelToGlobalMatrix() const
+  inline const Gaudi::Transform3D& PDPanelToGlobalMatrix() const noexcept
   {
     return m_PDPanelToGlobalTransform;
   }

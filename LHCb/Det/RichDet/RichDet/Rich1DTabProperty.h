@@ -61,7 +61,7 @@ namespace Rich
      *
      *  @return Pointer to the tabulated property
      */
-    inline const TabulatedProperty * tabProperty() const
+    inline const TabulatedProperty * tabProperty() const noexcept
     {
       return m_tabProp;
     }

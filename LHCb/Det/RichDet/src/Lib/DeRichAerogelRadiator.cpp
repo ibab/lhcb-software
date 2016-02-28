@@ -73,7 +73,8 @@ StatusCode DeRichAerogelRadiator::initialize ( )
 
     m_subTile = false;
     const auto pos = name().find(':');
-    if ( std::string::npos == pos ){
+    if ( std::string::npos == pos )
+    {
       fatal() << "An Aerogel full tile without a number!" << endmsg;
       return StatusCode::FAILURE;
     }
@@ -232,7 +233,7 @@ calcSellmeirRefIndex (const std::vector<double>& momVect,
   // test the tab property pointer
   if ( !tabProp )
   {
-    error() << "NULL TabulatedProperty pointer" << endmsg;
+    error() << "nullptr TabulatedProperty pointer" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -285,7 +286,7 @@ calcRayleigh (const std::vector<double>& momVect,
   // test the tab property pointer
   if ( !tabProp )
   {
-    error() << "NULL TabulatedProperty pointer" << endmsg;
+    error() << "nullptr TabulatedProperty pointer" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -325,7 +326,7 @@ calcAbsorption (const std::vector<double>& momVect,
   // test the tab property pointer
   if ( !tabProp )
   {
-    error() << "NULL TabulatedProperty pointer" << endmsg;
+    error() << "nullptr TabulatedProperty pointer" << endmsg;
     return StatusCode::FAILURE;
   }
 

@@ -26,25 +26,12 @@
 //=========================================================================
 //  default constructor
 //=========================================================================
-DeRichRadiator::DeRichRadiator(const std::string & name) :
-  DeRichBase            ( name ),
-  m_radiatorID          ( Rich::InvalidRadiator ),
-  m_rich                ( Rich::InvalidDetector )
-{ }
+DeRichRadiator::DeRichRadiator(const std::string & name) : DeRichBase(name) { }
 
 //=========================================================================
 //  destructor
 //=========================================================================
-DeRichRadiator::~DeRichRadiator()
-{
-  // if ( m_hltRefIndex != m_refIndex )
-  // {
-  //   delete m_hltRefIndex; m_hltRefIndex = NULL;
-  // }
-  // delete m_refIndex;   m_refIndex   = NULL;
-  // delete m_rayleigh;   m_rayleigh   = NULL;
-  // delete m_absorption; m_absorption = NULL;
-}
+DeRichRadiator::~DeRichRadiator() { }
 
 StatusCode DeRichRadiator::initialize()
 {
@@ -53,15 +40,9 @@ StatusCode DeRichRadiator::initialize()
   setMyName( std::string::npos != pos ? name().substr(pos) : "DeRichRadiator_NO_NAME" );
 
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Starting initialisation" << endmsg;
-
-  const StatusCode setRad = setRadiatorID();
-  if ( !setRad.isSuccess() ) return setRad;
-
-  if ( msgLevel(MSG::DEBUG) )
     debug() << "Initializing Radiator : " << rich() << " " << radiatorID() << endmsg;
 
-  return StatusCode::SUCCESS;
+  return setRadiatorID();
 }
 
 //=========================================================================
@@ -134,7 +115,7 @@ StatusCode DeRichRadiator::setRadiatorID()
 {
   if ( exists("IDVector") )
   {
-    const std::vector<int> radID = paramVect<int>("IDVector");
+    const auto radID = paramVect<int>("IDVector");
     m_rich = Rich::DetectorType(radID[0]);
     m_radiatorID = Rich::RadiatorType(radID[1]);
     return StatusCode::SUCCESS;

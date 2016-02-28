@@ -29,13 +29,7 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeRich::DeRich( const std::string & name )
-  : DeRichBase              ( name  ),
-    m_PDPanels              ( Rich::NRiches )
-{
-  m_PDPanels[Rich::Rich1]  = nullptr;
-  m_PDPanels[Rich::Rich2]  = nullptr;
-}
+DeRich::DeRich( const std::string & name ) : DeRichBase ( name  ) { }
 
 //=============================================================================
 // Destructor
@@ -217,10 +211,10 @@ const Rich::TabulatedProperty1D * DeRich::loadNominalPMTQuantumEff() const
 
 //=========================================================================
 
-RichMirrorSegPosition DeRich::sphMirrorSegPos( const int mirrorNumber ) const
+Rich::MirrorSegPosition DeRich::sphMirrorSegPos( const int mirrorNumber ) const
 {
 
-  RichMirrorSegPosition mirrorPos;
+  Rich::MirrorSegPosition mirrorPos;
 
   if ( m_positionInfo )
   {
@@ -239,10 +233,10 @@ RichMirrorSegPosition DeRich::sphMirrorSegPos( const int mirrorNumber ) const
 
 //=========================================================================
 
-RichMirrorSegPosition DeRich::secMirrorSegPos( const int mirrorNumber ) const
+Rich::MirrorSegPosition DeRich::secMirrorSegPos( const int mirrorNumber ) const
 {
 
-  RichMirrorSegPosition mirrorPos;
+  Rich::MirrorSegPosition mirrorPos;
 
   if ( m_positionInfo )
   {
@@ -286,7 +280,7 @@ DeRich::alignMirrors ( const std::vector<const ILVolume*>& mirrorContainers,
       const std::string mirrorName = pvMirror->name();
       if ( mirrorName.find(mirrorID) != std::string::npos )
       {
-        const std::string::size_type mpos = mirrorName.find(':');
+        const auto mpos = mirrorName.find(':');
         if ( std::string::npos == mpos )
         {
           fatal() << "A mirror without a number!" << endmsg;

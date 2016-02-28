@@ -76,7 +76,7 @@ public:
    * Retrieves the id of this radiator
    * @return The id of this radiator (Aerogel, C4F10, CF4)
    */
-  inline Rich::RadiatorType radiatorID() const
+  inline Rich::RadiatorType radiatorID() const noexcept
   {
     return m_radiatorID;
   }
@@ -85,7 +85,7 @@ public:
    * Retrieves the rich detector of this radiator
    * @return the rich detector of this radiator (Rich1/2)
    */
-  inline Rich::DetectorType rich() const
+  inline Rich::DetectorType rich() const noexcept
   {
     return m_rich;
   }
@@ -95,7 +95,7 @@ public:
    * conditions for pressure and temperature (first checking if it is valid)
    * @param hlt Return the HLT refractive index if true
    * @return A pointer to the refractive index  interpolated function of the radiator
-   * @retval NULL No interpolation function
+   * @retval nullptr No interpolation function
    */
   inline const Rich::TabulatedProperty1D* refIndex( bool hlt = true ) const
   {
@@ -105,7 +105,7 @@ public:
   /**
    * Retrieves The refractive index of the radiator for use by the HLT
    * @return A pointer to the HLT refractive index interpolated function of the radiator
-   * @retval NULL No interpolation function
+   * @retval nullptr No interpolation function
    */
   inline const Rich::TabulatedProperty1D* hltRefIndex() const
   {
@@ -116,7 +116,7 @@ public:
    * Retrieves The refractive index of the radiator
    * @return A pointer to the refractive index of the radiator
    */
-  inline const TabulatedProperty* refIndexTabProp() const
+  inline const TabulatedProperty* refIndexTabProp() const noexcept
   {
     return m_refIndexTabProp;
   }
@@ -124,9 +124,9 @@ public:
   /**
    * Retrieves the Rayleigh properties of the radiator
    * @return A pointer to the Rayleigh interpolated function
-   * @retval NULL No interpolation function
+   * @retval nullptr No interpolation function
    */
-  inline const Rich::TabulatedProperty1D* rayleigh() const
+  inline const Rich::TabulatedProperty1D* rayleigh() const noexcept
   {
     return m_rayleigh.get();
   }
@@ -134,9 +134,9 @@ public:
   /**
    * Retrieves the Rayleigh properties of the radiator
    * @return A pointer to the Rayleigh tab property
-   * @retval NULL No Rayleigh tab property
+   * @retval nullptr No Rayleigh tab property
    */
-  inline const TabulatedProperty* rayleighTabProp() const
+  inline const TabulatedProperty* rayleighTabProp() const noexcept
   {
     return m_rayleighTabProp;
   }
@@ -144,9 +144,9 @@ public:
   /**
    * Retrieves the absorption properties of the radiator
    * @return A pointer to the absorption interpolated function
-   * @retval NULL No interpolation function
+   * @retval nullptr No interpolation function
    */
-  inline const Rich::TabulatedProperty1D* absorption() const
+  inline const Rich::TabulatedProperty1D* absorption() const noexcept
   {
     return m_absorption.get();
   }
@@ -154,9 +154,9 @@ public:
   /**
    * Retrieves the absorption properties of the radiator
    * @return A pointer to the absorption tab property
-   * @retval NULL No tab property
+   * @retval nullptr No tab property
    */
-  inline const TabulatedProperty* absorptionTabProp() const
+  inline const TabulatedProperty* absorptionTabProp() const noexcept
   {
     return m_absorptionTabProp;
   }
@@ -192,8 +192,7 @@ public:
                                            const Gaudi::XYZVector& vGlobal,
                                            std::vector<Gaudi::XYZPoint>& points ) const = 0;
 
-
-  /**
+  /** 
    * Finds the intersections (entry/exit) with radiator. For boolean solids there
    * can be more than one intersections
    *
@@ -204,10 +203,11 @@ public:
                                       const Gaudi::XYZVector& vGlobal,
                                       Rich::RadIntersection::Vector& intersections ) const = 0;
 
-  /** Returns the refractive index at the given photon energy for this radiator
-   *  @param energy The photon energy
-   *  @param hlt Return the HLT refractive index if true
-   *  @return The refractive index at that energy
+  /**
+   * Returns the refractive index at the given photon energy for this radiator
+   * @param energy The photon energy
+   * @param hlt Return the HLT refractive index if true
+   * @return The refractive index at that energy
    */
   virtual double refractiveIndex( const double energy,
                                   const bool hlt = true ) const = 0;
@@ -220,14 +220,14 @@ protected:
   /**
    * Generates and returns the refractive index of the radiator for use by the HLT
    * @return A pointer to the HLT refractive index interpolated function of the radiator
-   * @retval NULL No interpolation function
+   * @retval nullptr No interpolation function
    */
   virtual const Rich::TabulatedProperty1D* generateHltRefIndex() const;
 
   /**
    * Checks if the refractive index is valid. If not it throws an exception
    * @return A pointer to the refractive index  interpolated function of the radiator
-   * @retval NULL No interpolation function
+   * @retval nullptr No interpolation function
    */
   inline const Rich::TabulatedProperty1D* checkRefIndex() const
   {
@@ -239,12 +239,15 @@ protected:
     return m_refIndex.get();
   }
 
+  StatusCode setRadiatorID(); ///< Set rich and radiator ID
+
 protected:
 
-  Rich::RadiatorType m_radiatorID;  ///< The radiator id (Aerogel, CF4, C4F10)
-  Rich::DetectorType m_rich;        ///< The Rich detector of this radiator
+  /// The radiator id (Aerogel, CF4, C4F10)
+  Rich::RadiatorType m_radiatorID = Rich::InvalidRadiator; 
 
-  StatusCode setRadiatorID();       ///< Set rich and radiator ID
+  /// The Rich detector of this radiator
+  Rich::DetectorType m_rich = Rich::InvalidDetector;  
 
   /// pointer to the refractive index of the material
   std::shared_ptr<Rich::TabulatedProperty1D> m_refIndex;

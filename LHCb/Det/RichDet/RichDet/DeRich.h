@@ -11,6 +11,7 @@
 
 // STL
 #include <vector>
+#include <array>
 #include <memory>
 
 // DetDesc
@@ -101,7 +102,7 @@ public:
    *
    * @return The detector type
    */
-  inline Rich::DetectorType rich() const
+  inline Rich::DetectorType rich() const noexcept
   {
     return m_rich;
   }
@@ -111,7 +112,7 @@ public:
    *
    * @return The DeRichSystem object
    */
-  inline DeRichSystem* deRichSystem() const
+  inline DeRichSystem* deRichSystem() const noexcept
   {
     return deRichSys();
   }
@@ -121,13 +122,13 @@ public:
    *
    * @return The nominal spherical mirror radius
    */
-  inline double sphMirrorRadius() const
+  inline double sphMirrorRadius() const noexcept
   {
     return m_sphMirrorRadius;
   }
 
   /// Returns the Photon Detector config type 0=hpd, 1=pmt
-  inline Rich::RichPhDetConfigType RichPhotoDetConfig() const
+  inline Rich::RichPhDetConfigType RichPhotoDetConfig() const noexcept
   {
     return m_RichPhotoDetConfig;
   }
@@ -136,25 +137,25 @@ public:
    *  CRJ - This should be an enum, not an int ....
    *        Should also be cleaned up now the horizontal RICH1 is no longer an option
    */
-  inline int RichGeometryConfig() const
+  inline int RichGeometryConfig() const noexcept
   {
     return m_RichGeometryConfig;
   }
 
   // returns phodetector array config 0=standardpmt, 1=grandpmt, 2= mixture of stand+grandpmt
-  inline int Rich2PhotoDetectorArrayConfig() const
+  inline int Rich2PhotoDetectorArrayConfig() const noexcept
   {
     return m_Rich2PhotoDetectorArrayConfig;
   }
 
   /// Use large PMTs
-  inline bool Rich2UseGrandPmt () const
+  inline bool Rich2UseGrandPmt () const noexcept
   {
     return m_Rich2UseGrandPmt;
   }
 
   /// Use large+small  PMTs
-  inline bool Rich2UseMixedPmt () const
+  inline bool Rich2UseMixedPmt () const noexcept
   {
     return m_Rich2UseMixedPmt;
   }
@@ -165,7 +166,7 @@ public:
    *
    * @return Pointer to gas window refIndex
    */
-  inline const Rich::TabulatedProperty1D* gasWinRefIndex() const
+  inline const Rich::TabulatedProperty1D* gasWinRefIndex() const noexcept
   {
     return m_gasWinRefIndex.get();
   }
@@ -176,7 +177,7 @@ public:
    *
    * @return Pointer gas window absorption length
    */
-  inline const Rich::TabulatedProperty1D* gasWinAbsLength() const
+  inline const Rich::TabulatedProperty1D* gasWinAbsLength() const noexcept
   {
     return m_gasWinAbsLength.get();
   }
@@ -187,7 +188,8 @@ public:
    *
    * @return Pointer to quantum efficiency (can be null)
    */
-  inline const std::shared_ptr<const Rich::TabulatedProperty1D>& nominalPDQuantumEff() const
+  inline const std::shared_ptr<const Rich::TabulatedProperty1D>&
+  nominalPDQuantumEff() const noexcept
   {
     if ( !m_nominalPDQuantumEff ) { loadNominalQuantumEff(); }
     return m_nominalPDQuantumEff;
@@ -199,7 +201,7 @@ public:
    *
    * @return Pointer to nominal spherical mirror reflectivity
    */
-  inline const Rich::TabulatedProperty1D* nominalSphMirrorRefl() const
+  inline const Rich::TabulatedProperty1D* nominalSphMirrorRefl() const noexcept
   {
     return m_nominalSphMirrorRefl.get();
   }
@@ -210,7 +212,7 @@ public:
    *
    * @return Pointer to nominal flat mirror reflectivity
    */
-  inline const Rich::TabulatedProperty1D* nominalSecMirrorRefl() const
+  inline const Rich::TabulatedProperty1D* nominalSecMirrorRefl() const noexcept
   {
     return m_nominalSecMirrorRefl.get();
   }
@@ -220,7 +222,7 @@ public:
    * be used to test if the mirror segment is at the edge or not
    * @return Position (row/column) for this spherical mirror segment
    */
-  virtual RichMirrorSegPosition sphMirrorSegPos( const int mirrorNumber ) const;
+  virtual Rich::MirrorSegPosition sphMirrorSegPos( const int mirrorNumber ) const;
 
   /**
    * Method to find the row/column of a flat mirror segment. It can be used to
@@ -228,7 +230,7 @@ public:
    *
    * @return Position (row/column) for this flat mirror segment
    */
-  virtual RichMirrorSegPosition secMirrorSegPos( const int mirrorNumber ) const;
+  virtual Rich::MirrorSegPosition secMirrorSegPos( const int mirrorNumber ) const;
 
   virtual StatusCode alignSphMirrors() = 0;
   virtual StatusCode alignSecMirrors() = 0;
@@ -266,7 +268,7 @@ private:
 protected:
 
   /// rich type
-  Rich::DetectorType m_rich;
+  Rich::DetectorType m_rich = Rich::InvalidDetector;
 
   /// The nominal radius of the spherical mirror
   double m_sphMirrorRadius{0};
@@ -310,7 +312,7 @@ protected:
 private: // data
 
   /// Pointers to the PD panels of this Rich detector
-  mutable std::vector<DeRichPDPanel*> m_PDPanels;
+  mutable std::array<DeRichPDPanel*,Rich::NRiches> m_PDPanels{{nullptr,nullptr}};
 
   /// flag to test if the xml supports mirror position info
   bool m_positionInfo{false};

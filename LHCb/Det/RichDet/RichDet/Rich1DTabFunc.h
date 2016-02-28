@@ -47,7 +47,12 @@ namespace Rich
   public:
 
     /// Typedef for a vector of pointers to TabulatedFunction1D
-    typedef std::vector<const TabulatedFunction1D*> ConstVector;
+    using ConstVector = std::vector<const TabulatedFunction1D*>;
+
+  protected: // definitions
+
+    /// Internal data container type
+    using Data = std::map < double, double >;
 
   public:
 
@@ -55,7 +60,8 @@ namespace Rich
      *
      *  @param interType   GSL Interpolator type.
      */
-    TabulatedFunction1D( const gsl_interp_type * interType = gsl_interp_linear );
+    TabulatedFunction1D( const gsl_interp_type * interType = gsl_interp_linear )
+      : m_interType ( interType ) { }
 
     /** Constructor from arrays containing x and y values
      *
@@ -70,8 +76,12 @@ namespace Rich
     TabulatedFunction1D( const double x[],
                          const double y[],
                          const int size,
-                         const gsl_interp_type * interType = gsl_interp_linear );
-
+                         const gsl_interp_type * interType = gsl_interp_linear )
+      : m_interType ( interType )
+    {
+      initInterpolator ( x, y, size, interType );
+    }
+    
     /** Constructor from std::vectors containing x and y values
      *
      *  Vectors must be of the same size and ordered such that entry i in each
@@ -83,7 +93,11 @@ namespace Rich
      */
     TabulatedFunction1D( const std::vector<double> & x,
                          const std::vector<double> & y,
-                         const gsl_interp_type * interType = gsl_interp_linear );
+                         const gsl_interp_type * interType = gsl_interp_linear )
+      : m_interType ( interType )
+    {
+      initInterpolator ( x, y, interType );
+    }
 
     /** Constructor from map of x,y values
      *
@@ -91,7 +105,11 @@ namespace Rich
      *  @param interType GSL Interpolator type
      */
     TabulatedFunction1D( const std::map<double,double> & data,
-                         const gsl_interp_type * interType = gsl_interp_linear );
+                         const gsl_interp_type * interType = gsl_interp_linear )
+      : m_interType ( interType )
+    {
+      initInterpolator( data, interType );
+    }
 
     /** Constructor from vector of a pair of x,y values
      *
@@ -99,8 +117,13 @@ namespace Rich
      *  @param interType GSL Interpolator type
      */
     TabulatedFunction1D( const std::vector< std::pair<double,double> > & data,
-                         const gsl_interp_type * interType = gsl_interp_linear );
-
+                         const gsl_interp_type * interType = gsl_interp_linear )
+      :
+      m_interType ( interType )
+    {
+      initInterpolator( data, interType );
+    }
+    
     /// Destructor
     virtual ~TabulatedFunction1D( );
 
@@ -112,8 +135,8 @@ namespace Rich
      *  @param samples Number of sample points to use
      *
      *  @return Pointer to an interpolator that represents the productof all functions
-     *  @retval Non-NULL Interpolator was successfully created
-     *  @retval NULL     Interpolator could not be created
+     *  @retval Non-nullptr Interpolator was successfully created
+     *  @retval nullptr     Interpolator could not be created
      */
     static std::unique_ptr<TabulatedFunction1D> 
     combine( const ConstVector & funcs,
@@ -128,7 +151,10 @@ namespace Rich
      *
      *  @return The value of the function at the given parameter value
      */
-    double value( const double x ) const;
+    inline double value( const double x ) const
+    {
+      return gsl_spline_eval( m_mainDistSpline, x, m_mainDistAcc );
+    }
 
     /**  Returns the function value (y) for the given parameter (x) value
      *
@@ -136,7 +162,10 @@ namespace Rich
      *
      *   @return The value of the function at the given parameter value
      */
-    double operator [] ( const double x ) const;
+    inline double operator [] ( const double x ) const
+    {
+      return value( x );
+    }
 
     /** Computes the mean function value between the given parameter limits
      *
@@ -145,8 +174,14 @@ namespace Rich
      *
      *  @return the mean function value
      */
-    double meanX ( const double from, 
-                   const double to ) const;
+    inline double meanX ( const double from, 
+                          const double to ) const
+    {
+      const auto bot = integral( from, to );
+      return ( fabs(bot) > 0 ?
+               gsl_spline_eval_integ( m_weightedDistSpline,
+                                      from, to, m_weightedDistAcc )/bot : 0 );
+    }
 
     /** Computes the definite integral of the function between limits
      *
@@ -155,8 +190,11 @@ namespace Rich
      *  
      *  @return the definite function integral
      */
-    double integral ( const double from,  
-                      const double to ) const;
+    inline double integral ( const double from,  
+                             const double to ) const
+    {
+      return gsl_spline_eval_integ( m_mainDistSpline, from, to, m_mainDistAcc );
+    }
 
     /** Computes the first derivative of the function at the given parameter point
      *
@@ -164,7 +202,10 @@ namespace Rich
      *
      *  @return the first derivative
      */
-    double firstDerivative( const double x ) const;
+    inline double firstDerivative( const double x ) const
+    {
+      return gsl_spline_eval_deriv( m_mainDistSpline, x, m_mainDistAcc );
+    }
 
     /** Computes the second derivative of the function at the given parameter point
      *
@@ -172,8 +213,11 @@ namespace Rich
      *
      *  @return the second derivative
      */
-    double secondDerivative( const double x ) const;
-
+    inline double secondDerivative( const double x ) const
+    {
+      return gsl_spline_eval_deriv2( m_mainDistSpline, x, m_mainDistAcc );
+    }
+    
     /** Computes the R.M.S. value between the given parameter limits.
      *
      *  Optionally, an additional weight function can be given.
@@ -188,7 +232,7 @@ namespace Rich
     double rms( const double from,
                 const double to,
                 const unsigned int samples = 100,
-                const TabulatedFunction1D * weightFunc = NULL ) const;
+                const TabulatedFunction1D * weightFunc = nullptr ) const;
 
     /** Computes the standard deviation between the given parameter limits
      *
@@ -204,37 +248,37 @@ namespace Rich
     double standardDeviation( const double from,
                               const double to,
                               const unsigned int samples = 100,
-                              const TabulatedFunction1D * weightFunc = NULL ) const;
+                              const TabulatedFunction1D * weightFunc = nullptr ) const;
 
     /** The minimum parameter value for which the function is defined
      *
      *  @return The minimum valid paramter value
      */
-    double minX() const;
+    inline double minX() const noexcept { return (*m_data.begin()).first; }
 
     /** The function value for the minimum valid parameter
      *
      *  @return The function value at the minimum valid parameter
      */
-    double minY() const;
+    inline double minY() const noexcept { return (*m_data.begin()).second; }
 
     /** The maximum parameter value for which the function is defined
      *
      *  @return The minimum valid paramter value
      */
-    double maxX() const;
+    inline double maxX() const noexcept { return (*(--m_data.end())).first; }
 
     /** The function value for the minimum valid parameter
      *
      *  @return The function value at the minimum valid parameter
      */
-    double maxY() const;
+    inline double maxY() const noexcept { return (*(--m_data.end())).second; }
 
     /** The status of the interpolator.
      *
      *  @return boolean indicating whether the interpolator was correctly initialised
      */
-    bool valid() const;
+    inline bool valid() const noexcept { return m_OK; }
 
     /** Check whether a given x parameter is within the valid input data range
      *
@@ -242,19 +286,32 @@ namespace Rich
      *
      *  @return boolean indicating if the parameter is in range
      */
-    bool withinInputRange( const double x ) const;
+    inline bool withinInputRange( const double x ) const noexcept
+    {
+      return ( x <= maxX() && minX() <= x );
+    }
 
     /** Access the number of data points defining the interpolator
      *
      *  @return The number of data (x,y) points
      */
-    unsigned int nDataPoints() const;
+    inline Data::size_type nDataPoints() const noexcept
+    {
+      return m_data.size();
+    }
 
     /// Return the interpolator name
-    std::string interpName() const;
-
+    inline std::string interpName() const
+    {
+      return ( m_mainDistSpline ?
+               std::string(gsl_interp_name(m_mainDistSpline->interp)) : "Undefined" );
+    }
+    
     /// Return the interpolator type
-    const gsl_interp_type * interType() const;
+    inline const gsl_interp_type * interType() const noexcept
+    {
+      return m_interType;
+    }
 
   public:
 
@@ -271,7 +328,7 @@ namespace Rich
     bool initInterpolator( const double x[],
                            const double y[],
                            const int size,
-                           const gsl_interp_type * interType = NULL );
+                           const gsl_interp_type * interType = nullptr );
 
     /** Initialisation from std::vectors containing x and y values
      *
@@ -284,7 +341,7 @@ namespace Rich
      */
     bool initInterpolator( const std::vector<double> & x,
                            const std::vector<double> & y,
-                           const gsl_interp_type * interType = NULL );
+                           const gsl_interp_type * interType = nullptr );
 
     /** Initialisation from a map of x,y values
      *
@@ -292,7 +349,7 @@ namespace Rich
      *  @param interType GSL Interpolator type (If not given, currently configured type is used)
      */
     bool initInterpolator( const std::map<double,double> & data,
-                           const gsl_interp_type * interType = NULL );
+                           const gsl_interp_type * interType = nullptr );
 
     /** Initialisation from a vector of a pair of x,y values
      *
@@ -300,7 +357,7 @@ namespace Rich
      *  @param interType GSL Interpolator type (If not given, currently configured type is used)
      */
     bool initInterpolator( const std::vector< std::pair<double,double> > & data,
-                           const gsl_interp_type * interType = NULL );
+                           const gsl_interp_type * interType = nullptr );
 
     /** initialise the GSL interpolator using the given type
      *
@@ -318,11 +375,6 @@ namespace Rich
 
     /// clear the interpolator
     void clearInterpolator();
-
-  protected: // definitions
-
-    /// Internal data container type
-    typedef std::map < double, double > Data;
 
   protected: // data
 
@@ -347,170 +399,6 @@ namespace Rich
     const gsl_interp_type * m_interType = nullptr;
 
   };
-
-  //============================================================================
-
-  // Default Constructor
-  inline TabulatedFunction1D::TabulatedFunction1D( const gsl_interp_type * interType ) :
-    m_interType ( interType )
-  { }
-
-  //============================================================================
-
-  // Constructor from arrays
-  inline TabulatedFunction1D::TabulatedFunction1D( const double x[],
-                                                   const double y[],
-                                                   const int size,
-                                                   const gsl_interp_type * interType ) :
-    m_interType ( interType )
-  {
-    initInterpolator ( x, y, size, interType );
-  }
-
-  //============================================================================
-
-  // Constructor from std::vector
-  inline TabulatedFunction1D::TabulatedFunction1D( const std::vector<double> & x,
-                                                   const std::vector<double> & y,
-                                                   const gsl_interp_type * interType ) :
-    m_interType ( interType )
-  {
-    initInterpolator ( x, y, interType );
-  }
-
-  //============================================================================
-
-  // Constructor from map
-  inline TabulatedFunction1D::TabulatedFunction1D( const std::map<double,double> & data,
-                                                   const gsl_interp_type * interType ) :
-    m_interType ( interType )
-  {
-    initInterpolator( data, interType );
-  }
-
-  //============================================================================
-
-  // Constructor from vector of pairs
-  inline 
-  TabulatedFunction1D::TabulatedFunction1D( const std::vector< std::pair<double,double> > & data,
-                                            const gsl_interp_type * interType ) :
-    m_interType ( interType )
-  {
-    initInterpolator( data, interType );
-  }
-
-  //============================================================================
-
-  inline double TabulatedFunction1D::value ( const double x ) const
-  {
-    return gsl_spline_eval( m_mainDistSpline, x, m_mainDistAcc );
-  }
-
-  //============================================================================
-
-  inline double TabulatedFunction1D::operator [] ( const double x ) const
-  {
-    return value( x );
-  }
-
-  //============================================================================
-
-  inline double TabulatedFunction1D::integral ( const double from,
-                                                const double to ) const
-  {
-    return gsl_spline_eval_integ( m_mainDistSpline, from, to, m_mainDistAcc );
-  }
-
-  //============================================================================
-
-  inline double TabulatedFunction1D::meanX ( const double from,
-                                             const double to ) const
-  {
-    const double bot = integral( from, to );
-    return ( fabs(bot) > 0 ?
-             gsl_spline_eval_integ( m_weightedDistSpline,
-                                    from, to, m_weightedDistAcc )/bot : 0 );
-  }
-
-  //============================================================================
-
-  inline double TabulatedFunction1D::minX () const
-  {
-    return (*m_data.begin()).first;
-  }
-
-  //============================================================================
-
-  inline double TabulatedFunction1D::minY() const
-  {
-    return (*m_data.begin()).second;
-  }
-
-  //============================================================================
-
-  inline double TabulatedFunction1D::maxX () const
-  {
-    return (*(--m_data.end())).first;
-  }
-
-  //============================================================================
-
-  inline double TabulatedFunction1D::maxY() const
-  {
-    return (*(--m_data.end())).second;
-  }
-
-  //============================================================================
-
-  inline double TabulatedFunction1D::firstDerivative( const double x ) const
-  {
-    return gsl_spline_eval_deriv( m_mainDistSpline, x, m_mainDistAcc );
-  }
-
-  //============================================================================
-
-  inline double TabulatedFunction1D::secondDerivative( const double x ) const
-  {
-    return gsl_spline_eval_deriv2( m_mainDistSpline, x, m_mainDistAcc );
-  }
-
-  //============================================================================
-
-  inline bool TabulatedFunction1D::valid() const
-  {
-    return m_OK;
-  }
-
-  //============================================================================
-
-  inline bool TabulatedFunction1D::withinInputRange( const double x ) const
-  {
-    return ( x <= maxX() && minX() <= x );
-  }
-
-  //============================================================================
-
-  inline unsigned int TabulatedFunction1D::nDataPoints() const
-  {
-    return m_data.size();
-  }
-
-  //============================================================================
-
-  inline std::string TabulatedFunction1D::interpName() const
-  {
-    return ( m_mainDistSpline ?
-             std::string(gsl_interp_name(m_mainDistSpline->interp)) : "Undefined" );
-  }
-
-  //============================================================================
-
-  inline const gsl_interp_type * TabulatedFunction1D::interType() const
-  {
-    return m_interType;
-  }
-
-  //============================================================================
 
 }
 

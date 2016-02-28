@@ -98,7 +98,7 @@ public:
    *
    * @return Pointer to the material
    */
-  inline const Material* material() const { return m_material; }
+  inline const Material* material() const noexcept { return m_material; }
 
 protected:
 

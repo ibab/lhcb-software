@@ -1,3 +1,4 @@
+
 //----------------------------------------------------------------------------
 /** @file DeRichHPDPanel.h
  *
@@ -115,7 +116,7 @@ public:
   inline const DeRichHPD* deHPD( const unsigned int HPDNumber ) const
   {
     // CRJ : should this just be < ??
-    const DeRichHPD * deHPD = ( HPDNumber <= nPDs() ? m_DeHPDs[HPDNumber] : NULL );
+    const DeRichHPD * deHPD = ( HPDNumber <= nPDs() ? m_DeHPDs[HPDNumber] : nullptr );
 #ifndef NDEBUG
     if ( !deHPD )
     {
