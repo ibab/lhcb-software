@@ -3,8 +3,14 @@ from GaudiTest import normalizeExamples, RegexpReplacer, LineSkipper
 preprocessor = (
     normalizeExamples +
     RegexpReplacer(when = "/afs/cern.ch/lhcb/software/DEV/nightlies",
-        orig = r'/DEV/nightlies',
-        repl = r'/releases') +
+        orig = r'/afs/cern.ch/lhcb/software/DEV/nightlies',
+        repl = r'') +
+    RegexpReplacer(when = "/cvmfs/lhcb.cern.ch/lib/lhcb",
+        orig = r'/cvmfs/lhcb.cern.ch/lib/lhcb',
+        repl = r'') +
+    RegexpReplacer(when = "/afs/cern.ch/lhcb/software/releases",
+        orig = r'/afs/cern.ch/lhcb/software/releases',
+        repl = r'') +
     RegexpReplacer(when = "/DBASE/TCK/HltTCK/",
         orig = r'/v[0-9]+r[0-9]+p?[0-9]*/',
         repl = r'/vXrYpZ/') +

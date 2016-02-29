@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2016-02-26 - Marco Cattaneo
+ - Normalise $LHCBRELEASE path in LHCbExclusions.py, to take into account also
+   the cvmfs release area
+
 ! 2016-02-21 - Sean Benson
  - Add merger and linker such that standard particles work when persisting reco.
 
@@ -31,7 +35,7 @@
    setPropertiesAndAddTools(). Together these replace the old functions.
    See help(...) for more details.
 
-! 2016-10-29 - Marco Cattaneo
+! 2016-01-29 - Marco Cattaneo
  - Update ioh-fsr-dressing test reference to follow changes in Gaudi v27r0 output
 
 ! 2015-12-16 - Marco Clemencic
