@@ -348,7 +348,7 @@ void Control::startControllerConfig(vector<string>& tasks)   {
     slave->setCommand("runFarmCtrl.sh");
     m_slave = slave;
   }
-  XmlTaskConfiguration cfg(m_partitionCmd,m_configCmd,m_runinfoCmd,m_modeCmd,m_numSlaves);
+  XmlTaskConfiguration cfg(m_partitionCmd,m_configCmd,m_runinfoCmd,m_modeCmd,m_numSlaves,m_numSlaves);
   if ( cfg.getTasks(tasks) )  {
     char text[256];
     for(size_t i=0; i<tasks.size(); ++i)  {

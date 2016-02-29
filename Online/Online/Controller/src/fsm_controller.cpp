@@ -74,13 +74,14 @@ extern "C" int fsm_ctrl(int argc, char** argv)  {
   string utgid = RTL::processName(), runinfo, taskdefs, mode, partition;
   string fsm_typ_name = "DAQ", slave_type="FmcSlave";
   string tag_svc = "";
-  int    print = 0, count=-1, secs_sleep=0, bind_cpus=0;
+  int    print = 0, num_workers=-1, secs_sleep=0, bind_cpus=0, max_num_workers=20;
   RTL::CLI cli(argc, argv, help_ctrl);
   cli.getopt("fsm",3,fsm_typ_name);
   cli.getopt("mode",2,mode);
   cli.getopt("type",2,slave_type);
   cli.getopt("print",2,print);
-  cli.getopt("count",2,count);
+  cli.getopt("count",2,num_workers);
+  cli.getopt("maxcount",2,max_num_workers);
   cli.getopt("runinfo",2,runinfo);
   cli.getopt("partition",2,partition);
   cli.getopt("taskconfig",2,taskdefs);
@@ -103,13 +104,13 @@ extern "C" int fsm_ctrl(int argc, char** argv)  {
   else if ( partition.empty() ) invalid_arg("Invalid argument -partition='%s'\n",partition.c_str());
   else if ( taskdefs.empty() ) invalid_arg("Invalid argument -taskcondig='%s'\n",taskdefs.c_str());
   else if ( runinfo.empty() ) invalid_arg("Invalid argument -runinfo='%s'\n",runinfo.c_str());
+  else if ( num_workers < 0 ) invalid_arg("Invalid argument -count='%d'\n",num_workers);
   else if ( mode.empty()   ) invalid_arg("Invalid argument -mode='%s'\n",mode.c_str());
-  else if ( count < 0     ) invalid_arg("Invalid argument -count='%d'\n",count);
 
   TypedObject::setPrintLevel(print);
   Machine              mach(fsm_type(fsm_typ_name),utgid+"::daq");
-  Controller           ctrl(utgid,tag_svc,&mach);
-  XmlTaskConfiguration cfg(partition,taskdefs,runinfo,mode,count);
+  Controller           ctrl(utgid,tag_svc,num_workers,&mach);
+  XmlTaskConfiguration cfg(partition,taskdefs,runinfo,mode,num_workers,max_num_workers);
   
   ctrl.display(ctrl.INFO,utgid.c_str(),"Selected running mode is:%s",mode.c_str());
   if ( !cfg.attachTasks(mach,slave_type,bind_cpus != 0) )  {

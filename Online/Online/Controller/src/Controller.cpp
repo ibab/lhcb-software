@@ -42,12 +42,14 @@ static void feed(void* tag, void** buff, int* size, int* /* first */) {
 
 /// DimInfo overload to process messages
 static void numTaskHandler(void* tag, void* address, int* size) {
-  if ( tag ) {
+  if ( tag && address ) {
     int         len = size ? *size : 0;
-    Controller*   c = *(Controller**)tag;
-    int         msg = *(int*)address;
-    if ( len == sizeof(int) && msg > 0 ) {
-      c->publishInstances(msg);
+    if ( len > 0 )  {
+      Controller*   c = *(Controller**)tag;
+      int         msg = *(int*)address;
+      if ( len == sizeof(int) && msg > 0 ) {
+	c->publishInstances(msg);
+      }
     }
   }
 }
@@ -56,6 +58,9 @@ static void error_call(int severity, int error_code, char* message) {
   static int enabled = 1;
   if ( severity == ERROR_CONTROL ) {
     enabled = error_code;
+    return;
+  }
+  if ( !message )  {
     return;
   }
   if ( enabled ) {
@@ -67,7 +72,10 @@ static void error_call(int severity, int error_code, char* message) {
       TypedObject::display(TypedObject::WARNING,"DIM",message);
       break;
     case DIM_ERROR:
-      TypedObject::display(TypedObject::ERROR,"DIM",message);
+      if ( 0 == ::strstr(message,"Client Connection to") && 
+	   0 == ::strstr(message,"Connection refused")  )   {
+	TypedObject::display(TypedObject::ERROR,"DIM",message);
+      }
       break;
     case DIM_FATAL:
       TypedObject::display(TypedObject::FATAL,"DIM",message);
@@ -80,9 +88,10 @@ static void error_call(int severity, int error_code, char* message) {
 }
 
 /// Constructor
-Controller::Controller(const string&  nam, const std::string& tag_svc, Machine* m)
+Controller::Controller(const string&  nam, const string& tag_svc, int max_instances, Machine* m)
   : CommandTarget(nam), m_errorState(0), m_machine(m), m_tagSvcName(tag_svc), 
-    m_fsmTasks(0), m_numTasks(0), m_maxInstanceTag(100000)
+    m_fsmTasks(0), m_numTasks(0), m_initInstanceTag(max_instances), 
+    m_maxInstanceTag(max_instances)
 {
   const Type* typ = m_machine->type();
   const Transition* config = typ->transition(ST_NAME_NOT_READY,ST_NAME_READY);
@@ -119,17 +128,17 @@ FSM::ErrCond Controller::fail()  {
   SlaveMap sl_map;
   stringstream msg;
   msg << "Summary:";
-  for(Slaves::const_iterator i=sl.begin(); i!= sl.end(); ++i)  {
+  for(auto i=sl.begin(); i!= sl.end(); ++i)  {
     const Slave* s = *i;
     display(DEBUG,c_name(),"Controller: Slave %s in state %s has meta-state:%s",
             s->c_name(), s->c_state(), s->metaStateName());
     sl_map[s->statusState()].push_back(s);
   }
-  for(SlaveMap::const_iterator i=sl_map.begin(); i!=sl_map.end(); ++i)  {
+  for(auto i=sl_map.begin(); i!=sl_map.end(); ++i)  {
     Slave::SlaveState slv = (*i).first;
     msg << (Slave::metaName(slv)+6) << ":" << (*i).second.size() << " ";
     if ( slv == Slave::SLAVE_FAILED || slv == Slave::SLAVE_TIMEOUT || slv ==  Slave::SLAVE_DEAD )  {
-      for(SlaveMap::mapped_type::const_iterator j=(*i).second.begin(); j!=(*i).second.end(); ++j)  {
+      for(auto j=(*i).second.begin(); j!=(*i).second.end(); ++j)  {
         string n = (*j)->name(), m = (*j)->name();
         if ( n.find('_') != string::npos ) { m = n.substr(n.find('_')+1); n = m; }
         if ( n.find('_') != string::npos ) { m = n.substr(n.find('_')+1); n = m; }
@@ -166,15 +175,18 @@ FSM::ErrCond Controller::publishSlaves()  {
   else {
     error_call(ERROR_CONTROL,1,(char*)"Enable DIM error printing");
   }
-  for(Slaves::const_iterator i=slaves.begin(); i!= slaves.end(); )  {
+  for(auto i=slaves.begin(); i!= slaves.end(); ++i )  {
     Slave* s = *i;
-    info << s->name() << "/" << s->c_state() << "/" << string(s->metaStateName());
-    if ( ++i == slaves.end() ) break;
-    info << "|";
+    if ( !s->isInternal() )  {
+      info << s->name() << "/" << s->c_state() << "/" << string(s->metaStateName());
+      info << "|";
+    }
   }
   if ( m_taskInfo != info.str() )  {
+    string tmp = info.str();
+    if ( tmp.length()>2 ) tmp[tmp.length()-2] = 0;
     ::dim_lock();
-    m_taskInfo = info.str();
+    m_taskInfo = tmp.c_str();
     ::dim_unlock();
     ::dis_update_service(m_fsmTasks);
   }
@@ -203,7 +215,6 @@ FSM::ErrCond Controller::publish()  {
 
 /// Transition pre-action for configure
 FSM::ErrCond Controller::config()  {
-  //controlInstances(m_maxInstanceTag);
   if ( 0 == m_numTasks && !m_tagSvcName.empty() )  {
     m_numTasks = ::dic_info_service(m_tagSvcName.c_str(),MONITORED,0,0,0,numTaskHandler,(long)this,0,0);
   }
@@ -335,6 +346,10 @@ void Controller::commandHandler()   {
 }
 
 void Controller::publishInstances(int count)   {
+  // If the service has an invalid value, take the initial number of instances
+  if ( count < 1 )  {
+    count = m_initInstanceTag;
+  }
   if ( count > 0 )  {
     string tag = "|";
     m_maxInstanceTag = count;
@@ -350,6 +365,7 @@ void Controller::publishInstances(int count)   {
     ::dis_update_service(m_fsmTags);
   }
   controlInstances();
+  publishSlaves();
 }
 
 /// Adjust the number of slaves to be controlled (ignore overcounted slaves)

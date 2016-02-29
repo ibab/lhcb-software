@@ -28,8 +28,14 @@ using namespace std;
 using namespace FiniteStateMachine;
 
 /// Standard constructor
-XmlTaskConfiguration::XmlTaskConfiguration(const string& part, const string& cfg, const string& info, const string& mode, int num_moore)
-  : m_partition(part), m_config(cfg), m_runinfo(info), m_mode(mode), m_instances(num_moore)
+XmlTaskConfiguration::XmlTaskConfiguration(const string& part, 
+					   const string& cfg, 
+					   const string& info, 
+					   const string& mode, 
+					   int num_moore,
+					   int max_moore)
+  : m_partition(part), m_config(cfg), m_runinfo(info), m_mode(mode), 
+    m_instances(num_moore), m_max_instances(max_moore)
 {
 }
 
@@ -66,12 +72,13 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_typ
 
   ::snprintf(instances_text,sizeof(instances_text),"%d",m_instances);
   DD4hep::XML::_toDictionary(Unicode("NUMBER_OF_INSTANCES"),Unicode(instances_text));
+  ::snprintf(instances_text,sizeof(instances_text),"%d",m_max_instances);
   xml_h inventory = DD4hep::XML::DocumentHandler().load(m_config).root();
   xml_coll_t(inventory,_Unicode(task)).for_each(analyzer);
   machine.display(print_level,"XmlConfig","------------------------------------ Task list -------------------------------------");
   for(Tasklist::Tasks::const_iterator i=tasks.begin(); i!=tasks.end(); ++i)  {
     Tasklist::Task* t = *i;
-    size_t  instances = t->instances;
+    size_t  instances = t->instances>1 ? m_max_instances : t->instances;
     string  arguments = t->arguments(), fmc_start = t->fmcStartParams(), utgid=t->utgid;
     fmc_start = RTL::str_replace(fmc_start,"${NODE}",node);
     fmc_start = RTL::str_replace(fmc_start,"${PARTITION}",m_partition);
@@ -85,23 +92,28 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_typ
     utgid     = RTL::str_replace(utgid,"${PARTITION}",m_partition);
     utgid     = RTL::str_replace(utgid,"${RUNINFO}",m_runinfo);
     utgid     = RTL::str_replace(utgid,"${NAME}",t->name);
-    map<int,int> num_instance, task_instance;
+    map<int,int> num_instance, init_instance, task_instance;
 
     // Init counters
     for(size_t j=0; j<=num_sockets; ++j) {
       num_instance[j] = 0;
+      init_instance[j] = 0;
       task_instance[j] = 0;
     }
     // Determine the number of task instances per CPU slot
+    for(size_t j=0; j<=t->instances; ++j) 
+      ++init_instance[j%num_sockets];
     for(size_t j=0; j<=instances; ++j) 
       ++num_instance[j%num_sockets];
+    
     // Create 'real' and 'internal' slaves
     for(size_t j=0; j<=instances; ++j)   {
       DimSlave* slave = 0;
-      int cpu_slot = j%num_sockets;
-      int task_id  = task_instance[cpu_slot];
-      bool forking = (m_mode != "NORMAL") && (instances != 0);
-      bool internal_slave = forking && j>=num_sockets;      
+      int  cpu_slot = j%num_sockets;
+      int  task_id  = task_instance[cpu_slot];
+      bool forking  = (m_mode != "NORMAL") && (instances != 0);
+      bool internal_slave = forking && (j>=num_sockets || j>t->instances);
+
       if ( instances>0 )
 	::snprintf(text,sizeof(text),"%1d%02d",cpu_slot,task_id);
       else
@@ -115,7 +127,7 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_typ
       if ( internal_slave )
 	::snprintf(instances_text,sizeof(instances_text),"0");
       else
-	::snprintf(instances_text,sizeof(instances_text),"%d",int(num_instance[cpu_slot]-1));
+	::snprintf(instances_text,sizeof(instances_text),"%d",int(init_instance[cpu_slot]-1));
 
       instance_args += " -instances=";
       instance_args += instances_text;
@@ -185,7 +197,7 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_typ
   return true;
 }
 
-/// Analyse the configuration file and attach the corresponding slaves to the FSM machine
+/// Retrieve the task names from the slave list
 bool XmlTaskConfiguration::getTasks(vector<string>& task_names)  {
   char text[32];
   Tasklist tasks;

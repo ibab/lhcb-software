@@ -27,15 +27,18 @@ string Tasklist::Task::fmcStartParams() const  {
   string res = "";
   if ( !group.empty() ) res += " -g "+group;
   if ( !user.empty()  ) res += " -n "+user;
-  for(Params::const_iterator i=fmcParams.begin(); i!=fmcParams.end(); ++i)
-    res += " "+(*i).second;
+  for(auto i=fmcParams.begin(); i!=fmcParams.end(); ++i)  {
+    res += " ";
+    res += (*i).second;
+    res.c_str();
+  }
   return res;
 }
 
 /// String with the argument list propery concatenated
 string Tasklist::Task::arguments() const  {
   string res;
-  for(Params::const_iterator i=args.begin(); i!=args.end(); )  {
+  for(auto i=args.begin(); i!=args.end(); )  {
     res += (*i).first;
     if ( !(*i).second.empty() ) res += "="+(*i).second;
     ++i;

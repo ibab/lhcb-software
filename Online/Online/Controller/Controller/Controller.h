@@ -55,12 +55,17 @@ namespace FiniteStateMachine   {
     int          m_fsmTags;
     /// Pointer to dim client with maximum instance tag
     int          m_numTasks;
+    /// Maximal initial instance tag
+    int          m_initInstanceTag;
     /// Maximum instance tag
     int          m_maxInstanceTag;
 
   public:
     /// Constructor
-    Controller(const std::string& nam, const std::string& tag_svc, Machine* machine);
+    Controller(const std::string& nam, 
+	       const std::string& tag_svc, 
+	       int max_instances,
+	       Machine* machine);
     /// Standard destructor
     virtual ~Controller();
     /// DimCommand overload: handle DIM commands

@@ -41,6 +41,8 @@ namespace FiniteStateMachine   {
     std::string  m_mode;
     /// The number of instances to be forked
     int          m_instances;
+    /// The maximum number of instances possibly to be forked
+    int          m_max_instances;
 
   public:
     /// Standard constructor
@@ -48,7 +50,8 @@ namespace FiniteStateMachine   {
 			 const std::string& config, 
 			 const std::string& runinfo, 
 			 const std::string& mode, 
-			 int num_moore);
+			 int num_moore,
+			 int max_moore);
     /// Default destructor
     virtual ~XmlTaskConfiguration();
     /// Analyse the configuration file and attach the corresponding slaves to the FSM machine
