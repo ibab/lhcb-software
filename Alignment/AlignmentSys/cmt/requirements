@@ -1,8 +1,8 @@
 package AlignmentSys
-version v10r6
+version v10r5
 
 branches cmt doc
- 
+
 #=======================================================
 # LHCb Alignment packages
 #=======================================================
@@ -29,13 +29,14 @@ use CommonParticles     		v8r23   Phys
 
 use OTCalibration			v1r12   Calibration # Wouter Hulsbergen
 
-# This is needed until LHCb v40r1 is released 
+# This is needed until LHCb v40r1 is released
+use TfKernel          v2r35 Tf
 use TrackTools				v6r1	Tr
 
 # Declare this as a container package
 apply_pattern container_package
 
-# Allow the generation of QMTest summary 
+# Allow the generation of QMTest summary
 apply_pattern QMTestSummarize
 
 # run QMTests
