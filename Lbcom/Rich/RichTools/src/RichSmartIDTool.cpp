@@ -139,10 +139,11 @@ Rich::SmartIDTool::pdPosition ( const LHCb::RichSmartID& pdid,
   const StatusCode sc = globalPosition(id0,a) && globalPosition(id1,b);
 
   // return average position (i.e. PD centre)
-  pdPoint = Gaudi::XYZPoint( 0.5*(a.x()+b.x()),
-                             0.5*(a.y()+b.y()),
-                             0.5*(a.z()+b.z()) );
-
+  pdPoint = ( sc.isSuccess() ? 
+              Gaudi::XYZPoint( 0.5*(a.x()+b.x()),
+                               0.5*(a.y()+b.y()),
+                               0.5*(a.z()+b.z()) ) :
+              Gaudi::XYZPoint( 0, 0, 0 ) );
   return sc;
 }
 

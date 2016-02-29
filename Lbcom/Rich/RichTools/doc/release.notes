@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2016-02-29 - Chris Jones
+ - Set average pd position return by pdPosition to (0,0,0) when returned
+   status code is failure.
+
 ! 2016-02-28 - Chris Jones
  - Clean up a bit the ray tracing tools.
 
