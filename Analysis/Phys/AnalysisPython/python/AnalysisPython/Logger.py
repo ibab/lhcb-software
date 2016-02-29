@@ -438,34 +438,19 @@ class ColorLogging(object) :
     >>> with ColorLogging() :
     ...     do something ... 
     """
+    def __init__  ( self , color = True ) :
+        self.color = color 
+        
     def __enter__ ( self ) :
-        self._colors = with_colors() 
-        if not self._colors :
-            make_colors  ()
+        self.with_color = with_colors() 
+        if   self.color      and not self.with_color  : make_colors ()
+        elif self.with_color and not self.color       : reset_colors ()
         return self
-    def __exit__  ( self , *_ ) :
-        if not self._colors :
-            reset_colors ()
-
-# =============================================================================
-## @class NoColorLogging
-#  Simple context manager to switch off coloring
-#  @code
-#  with NoColorLogging():
-#      ... do something ... 
-#  @endcode 
-class NoColorLogging(object) :
-    """Simple context manager to switch off coloring
     
-    >>> with NoColorLogging() :
-    ...     do something ... 
-    """
-    def __enter__ ( self ) :
-        self._colors = with_colors() 
-        if self._colors : reset_colors() 
-        return self
     def __exit__  ( self , *_ ) :
-        if self._colors : make_colors ()
+        if   self.color      and not self.with_color  : reset_colors ()
+        elif self.with_color and not self.color       : make_colors ()
+
 
 # =============================================================================
 ## simple context manager to switch on color logging 
@@ -473,13 +458,13 @@ class NoColorLogging(object) :
 #  with logColor() :
 #      ... do something ... 
 #  @endcode 
-def logColor () :
+def logColor ( color = True ) :
     """Simple context manager to switch on coloring
     
     >>> with logColor () :
     ...     do something ... 
     """
-    return ColorLogging ()
+    return ColorLogging ( color )
 
 # =============================================================================
 ## simple context manager to switch off color logging 
@@ -493,7 +478,7 @@ def logNoColor () :
     >>> with logNoColor () :
     ...     do something ... 
     """
-    return NoColorLogging ()
+    return ColorLogging ( False )
 
 # =============================================================================
 ## simple context manager to switch off color logging 
@@ -507,7 +492,44 @@ def noColor () :
     >>> with noColor () :
     ...     do something ... 
     """
-    return NoColorLogging ()
+    return ColorLogging ( False )
+
+
+# =============================================================================
+## @class KeepColorLogging
+#  Simple context manager to preserve coloring
+#  @code
+#  with KeepColorLogging():
+#      ... do something ... 
+#  @endcode 
+class KeepColorLogging(object) :
+    """Simple context manager to preserve coloring
+    
+    >>> with KeepColorLogging() :
+    ...     do something ... 
+    """
+    def __enter__ ( self ) :
+        self.with_color = with_colors() 
+        return self
+    
+    def __exit__  ( self , *_ ) :
+        if   self.with_color and not with_colors()   :  make_colors ()
+        elif with_colors()   and not self.with_color : reset_colors ()
+
+# =============================================================================
+## simple context manager to preserve color logging 
+#  @code
+#  with keepColor() :
+#      ... do something ... 
+#  @endcode 
+def keepColor () :
+    """Simple context manager to preserve color logging 
+    
+    >>> with keepColor () :
+    ...     do something ... 
+    """
+    return KeepColorLogging ()
+
 
 # =============================================================================
 ## reset colors
@@ -554,6 +576,35 @@ if __name__ == '__main__' :
         logger.fatal    ( 'This is FATAL    message'  ) 
         logger.critical ( 'This is CRITICAL message'  )
 
+        with noColor () : 
+            logger.verbose  ( 'This is VERBOSE  message'  ) 
+            logger.debug    ( 'This is DEBUG    message'  ) 
+            logger.info     ( 'This is INFO     message'  )
+            logger.warning  ( 'This is WARNING  message'  ) 
+            logger.error    ( 'This is ERROR    message'  ) 
+            logger.fatal    ( 'This is FATAL    message'  ) 
+            logger.critical ( 'This is CRITICAL message'  )
+            
+        logger.verbose  ( 'This is VERBOSE  message'  ) 
+        logger.debug    ( 'This is DEBUG    message'  ) 
+        logger.info     ( 'This is INFO     message'  )
+        logger.warning  ( 'This is WARNING  message'  ) 
+        logger.error    ( 'This is ERROR    message'  ) 
+        logger.fatal    ( 'This is FATAL    message'  ) 
+        logger.critical ( 'This is CRITICAL message'  )
+
+    with keepColor() :
+        logger.verbose  ( 'This is VERBOSE  message'  ) 
+        logger.debug    ( 'This is DEBUG    message'  ) 
+        logger.info     ( 'This is INFO     message'  ) 
+        logger.warning  ( 'This is WARNING  message'  )
+
+        make_colors()
+        
+        logger.error    ( 'This is ERROR    message'  ) 
+        logger.fatal    ( 'This is FATAL    message'  ) 
+        logger.critical ( 'This is CRITICAL message'  ) 
+        
     logger.verbose  ( 'This is VERBOSE  message'  ) 
     logger.debug    ( 'This is DEBUG    message'  ) 
     logger.info     ( 'This is INFO     message'  ) 
@@ -561,7 +612,7 @@ if __name__ == '__main__' :
     logger.error    ( 'This is ERROR    message'  ) 
     logger.fatal    ( 'This is FATAL    message'  ) 
     logger.critical ( 'This is CRITICAL message'  ) 
-
+    
 # =============================================================================
 # The END 
 # =============================================================================
