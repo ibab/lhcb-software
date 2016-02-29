@@ -1,0 +1,6 @@
+#include "$FARMCONFIGROOT/options/MEPInit.opts"
+ApplicationMgr.ExtSvc               += {"LHCb::GaudiTask::Configuration/Configuration"};
+Main.DeclareStateOnPAUSE             = false;
+
+// TODO: Add protection of buffers against missing consumers
+
