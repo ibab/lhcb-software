@@ -67,6 +67,8 @@ def configureTop(appMgr, node_info):
 def configureSubfarm(appMgr, node_info):
     ## The info relay ports
     from Configurables import Hlt2MonRelaySvc
+
+    ports = node_info['ports']
     infoRelay = Hlt2MonRelaySvc("InfoRelay")
     infoRelay.InPort  = ports['InfoRelay']['in']
 
@@ -80,6 +82,7 @@ def configureSubfarm(appMgr, node_info):
 def configureNode(appMgr, node_info):
     ## The info relay svc needs to be explicitly configured
     from Configurables import Hlt2MonRelaySvc
+    ports = node_info['ports']
     infoRelay = Hlt2MonRelaySvc("InfoRelay")
     infoRelay.FrontConnection = "ipc:///tmp/hlt2MonInfo_0"
     infoRelay.BackConnection  = 'tcp://hlt%s:%d' % (node_info['subfarm'], ports['InfoRelay']['in'])
