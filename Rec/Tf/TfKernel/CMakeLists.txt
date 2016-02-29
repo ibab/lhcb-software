@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TfKernel
 ################################################################################
-gaudi_subdir(TfKernel v2r34)
+gaudi_subdir(TfKernel v2r35)
 
 gaudi_depends_on_subdirs(Det/OTDet
                          Det/STDet

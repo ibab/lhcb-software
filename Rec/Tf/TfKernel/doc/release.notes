@@ -4,6 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!========================= TfKernel v2r35 2016-02-29 =========================
+! 2016-02-29 - Maurizio Martinelli
+ - Tagged package as v2r35 for inclusion in Alignment release
+
 ! 2016-02-24 - Michel De Cian
  - Separate treatment of sorted hits in layers and hits in regions, as only the former is used for the pattern recognition (and doing both is time consuming). Adapt IndexedHitContainer to deal with stations and layers only.
 
