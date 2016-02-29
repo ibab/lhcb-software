@@ -28,6 +28,7 @@ BusyPub.InDNS               = "mona08";
 BusyPub.TrendingOn          = true;
 BusyPub.OutDNS              = "mona08";
 BusyPub.ForcePartition = "LHCb";
+BusyPub.GlobalPublisher = true;
 
 LHCbPub.MyName              = "<part>_X_BusyPub";
 LHCbPub.PartitionName       = "LHCb";

@@ -35,7 +35,7 @@ def OptionsfromTasks(tasklist,level,ofile,pname,dohostdns):
     if level=="1":
       if pname=="LHCb":
         f.write("""#include "$INFO_OPTIONS"
-ApplicationMgr.ExtSvc               += {"MonitorSvc","BusySvc"};
+ApplicationMgr.ExtSvc               += {"MonitorSvc"};
 
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
@@ -48,7 +48,6 @@ MessageSvc.fifoPath                  = "$LOGFIFO";
 MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
 MonitorSvc.OutputLevel               = @OnlineEnv.OutputLevel;
 HistogramPersistencySvc.Warnings     = false;
-BusySvc.BogusMips                    = 0.0;
 MonitorSvc.CounterUpdateInterval     = 5;
 """)
       else:
@@ -159,13 +158,32 @@ MonitorSvc.CounterUpdateInterval     = 5;
                 f.write(svc+".InDNS = "+InDns+";\n")
                 f.write(svc+".OutDNS = "+OutDns+";\n")
             f.write("\n")
+        s = "BusyMon"
+        svc = s+"CountAdder"
+        f.write(svc+".PartitionName  = @OnlineEnv.PartitionName;\n")
+        f.write(svc+".MyName  = \"<part>_<node>_"+s+"\";\n")
+        f.write(svc+".TaskPattern = \"GEN_<node>_"+s+"\";\n")
+        f.write(svc+".ServicePattern  = \"MON_GEN_<node>_"+s+"/Counter/\";\n")
+        f.write(svc+".AdderClass  = \"Counter\";\n")
+        f.write(svc+".ReceiveTimeout = 2;\n")
+        if vnode:
+          if s in CounterDebugSvcs:
+            f.write(svc+".DebugOn = true;\n")
+        if pname == "LHCbA":
+          f.write(svc+".GotoPause = true;\n")
+          f.write(svc+".ReceiveTimeout = 0;\n")
+        if dohostdns:
+            f.write(svc+".InDNS = "+InDns+";\n")
+            f.write(svc+".OutDNS = "+OutDns+";\n")
+        f.write("\n")
+        f.write("ApplicationMgr.ExtSvc               += {\"AdderSvc/"+svc+"\"};\n")
     elif level == "2":
         f.write("ApplicationMgr.ExtSvc               += {\"AdderSvc/"+"BusyAdder"+"CountAdder\"};\n")
         f.write("""
 BusyAdderCountAdder.MyName                = "<part>_<node>_BusySvc";
 BusyAdderCountAdder.PartitionName         = @OnlineEnv.PartitionName;
 BusyAdderCountAdder.TaskPattern           = "<part>_<node>[0-9][0-9]_NodeAdder_0";
-BusyAdderCountAdder.ServicePattern        = "MON_<part>_<node>[0-9][0-9]_NodeAdder_0/Counter/";
+BusyAdderCountAdder.ServicePattern        = "MON_<part>_<node>[0-9][0-9]_BusyMon/Counter/";
 BusyAdderCountAdder.AdderClass            = "Counter";
 BusyAdderCountAdder.ReceiveTimeout          = 6;
 """)
