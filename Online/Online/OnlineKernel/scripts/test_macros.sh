@@ -32,6 +32,7 @@ start_gentest()
     else
 	xterm -ls -132 -geometry 132x32 -title "${HOST}::${TITLE} $*" -e "exec -a ${TITLE}_${PROCID} `which gentest.exe` ${LIB} $*" &
 	#xterm -ls -132 -geometry 132x32 -title "${HOST}::${TITLE} $*" -e "exec -a ${TITLE}_${PROCID}  numactl --membind=0 --cpunodebind=0 `which gentest.exe` ${LIB} $*" &
+	#xterm -ls -132 -geometry 132x32 -title "${HOST}::${TITLE} $*" -e "exec -a ${TITLE}_${PROCID}  numactl --membind=1 --cpunodebind=1 `which gentest.exe` ${LIB} $*" &
     fi;
 }
 #

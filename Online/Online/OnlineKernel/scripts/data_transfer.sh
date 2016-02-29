@@ -66,7 +66,7 @@ make_transfer_aliases()
 start_tan_server()
 {
     LIBRARY=$1; 
-    start_gentest ${LIBRARY} TanServer boost_asio_tan_server -d -v;
+    #start_gentest ${LIBRARY} TanServer boost_asio_tan_server -d -v;
     sleep 1;
     start_gentest ${LIBRARY} TanMon tanmon -c;
     sleep 2;
