@@ -546,7 +546,12 @@ class RichRecSysConf(RichRecSysBaseConf) :
         self.copyOptions( self.ckResConfig(),  groupConfig.ckResConfig()  )
 
         # Misc. tools
-        self.copyOptions( self.richTools().photonReco(), groupConfig.richTools().photonReco() )
+        self.copyOptions( self.richTools().photonReco(),
+                          groupConfig.richTools().photonReco() )
+        self.copyOptions( self.richTools().massHypoRingCreator(),
+                          groupConfig.richTools().massHypoRingCreator() )
+        self.copyOptions( self.richTools().expectedTrackSignal(),
+                          groupConfig.richTools().expectedTrackSignal() )
 
     ## Get the configurable for a given track type
     def getTrackGroupConf(self,tktype):

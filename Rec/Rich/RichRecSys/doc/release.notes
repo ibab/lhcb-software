@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2016-02-29 - Chris Jones
+ - Propagate properly custom options for the mass hypothesis and expected
+   track signal tools.
+
 ! 2016-02-15 - Chris Jones
  - Enable by default Deuteron.
 
