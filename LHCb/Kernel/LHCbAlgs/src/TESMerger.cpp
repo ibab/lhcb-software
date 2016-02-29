@@ -47,7 +47,7 @@ StatusCode TESMerger<T>::execute()
   for( std::vector<std::string>::const_iterator ilist = m_inputLocations.begin() ;
        ilist != m_inputLocations.end(); ++ilist) {
     //typename Gaudi::NamedRange_<std::vector<const T*> > cont_in = get<typename Gaudi::NamedRange_<std::vector<const T*> > >(*ilist) ;
-    KeyedContainer<T, Containers::HashMap >* cont_in = get<KeyedContainer<T, Containers::HashMap > >(*ilist) ;
+    KeyedContainer<T, Containers::HashMap >* cont_in = getIfExists<KeyedContainer<T, Containers::HashMap > >(*ilist) ;
     for(auto i_obj = cont_in->begin(); 
 	 i_obj != cont_in->end(); ++i_obj) 
 	out->insert( (*i_obj)->clone() ) ;
