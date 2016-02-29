@@ -378,7 +378,7 @@ int main(int argc, char **argv)
     if (oldstr != *setup_fail)
     {
       servc.updateService((char*)setup_fail->c_str(),setup_fail->size());
-      printf("===> Setup Failing Nodes: %s\n",setup_fail->c_str());
+//      printf("===> Setup Failing Nodes: %s\n",setup_fail->c_str());
       oldstr=*setup_fail;
     }
     setup_fail_mtx->unlock();
