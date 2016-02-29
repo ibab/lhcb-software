@@ -84,8 +84,9 @@ NodeStatsCollector::NodeStatsCollector(int argc, char** argv)
     if ( has_mbm ) m_mbmSvc = ::dis_add_service((char*)nam.c_str(),(char*)"C",0,0,feedMBM,(long)this);
     nam = svc + "/Hlt1";
     if ( has_mbm ) m_hlt_1_Svc = ::dis_add_service((char*)nam.c_str(),(char*)"C",0,0,feedHLT_1,(long)this);
-    nam = svc + "/HltDefer";
-    if ( has_mbm ) m_hlt_2_Svc = ::dis_add_service((char*)nam.c_str(),(char*)"C",0,0,feedHLT_2,(long)this);
+    m_hlt_2_Svc = 0;
+    //nam = svc + "/HltDefer";
+    //if ( has_mbm ) m_hlt_2_Svc = ::dis_add_service((char*)nam.c_str(),(char*)"C",0,0,feedHLT_2,(long)this);
   }
   else  {
     log() << "Unknown data type -- cannot be published." << std::endl;
@@ -228,7 +229,7 @@ int NodeStatsCollector::monitorStats() {
 }
 
 /// Monitor Deferred HLT statistics information
-int NodeStatsCollector::monitorHLT(char* buffer, const std::string& dir_name) {
+int NodeStatsCollector::monitorHLT(char* buffer, const std::vector<std::string>& dir_names) {
   int count = 0;
   map<int,int> files;
   unsigned long long blk_size=0,total_blk=0,availible_blk=0;
@@ -238,32 +239,33 @@ int NodeStatsCollector::monitorHLT(char* buffer, const std::string& dir_name) {
   ro_gettime(&h->time,&h->millitm);
   h->overflowState = ((::time(0) - m_overflowTime) > 30) ? '?' : m_overflow;
 
-  DIR* dir = ::opendir(dir_name.c_str());
-  if ( dir ) {
-    struct dirent *entry;
-    ::lib_rtl_diskspace(dir_name.c_str(),&blk_size,&total_blk,&availible_blk);
-    h->localdisk.blockSize  = blk_size;
-    h->localdisk.numBlocks  = total_blk;
-    h->localdisk.freeBlocks = availible_blk;
-    while ( (entry=::readdir(dir)) != 0 ) {
-      int run=0,date;
-      int ret = ::sscanf(entry->d_name,"Run_%07d_%8d-",&run,&date);
-      if ( ret == 2 ) {
-        map<int,int>::iterator i=files.find(run);
-        if ( i==files.end() ) files[run]=1;
-        else ++((*i).second);
-        ++count;
+  // Default: If the overflow directory does not exist, the disk-space is void!
+  h->localdisk.blockSize  = 4096;
+  h->localdisk.freeBlocks = 0;
+  h->localdisk.numBlocks  = 0;
+  for( const auto& dir_name : dir_names )  {
+    DIR* dir = ::opendir(dir_name.c_str());
+    if ( dir ) {
+      struct dirent *entry;
+      ::lib_rtl_diskspace(dir_name.c_str(),&blk_size,&total_blk,&availible_blk);
+      h->localdisk.blockSize   = blk_size;
+      h->localdisk.numBlocks  += total_blk;
+      h->localdisk.freeBlocks += availible_blk;
+      while ( (entry=::readdir(dir)) != 0 ) {
+	int run=0,date;
+	int ret = ::sscanf(entry->d_name,"Run_%07d_%8d-",&run,&date);
+	if ( ret == 2 ) {
+	  map<int,int>::iterator i=files.find(run);
+	  if ( i==files.end() ) files[run]=1;
+	  else ++((*i).second);
+	  ++count;
+	}
+	else if( !(0==::strcmp(entry->d_name,".") || 0==::strcmp(entry->d_name,"..")) ) {
+	  // log() << "Strange file name for HLT deferred processing:" << entry->d_name << endl;
+	}
       }
-      else if( !(0==::strcmp(entry->d_name,".") || 0==::strcmp(entry->d_name,"..")) ) {
-        // log() << "Strange file name for HLT deferred processing:" << entry->d_name << endl;
-      }
+      ::closedir(dir);
     }
-    ::closedir(dir);
-  }
-  else { // If the overflow directory does not exist, the disk-space is void!
-    h->localdisk.blockSize  = 4096;
-    h->localdisk.freeBlocks = 0;
-    h->localdisk.numBlocks  = 0;
   }
   DeferredHLTStats::Runs::iterator ir = h->runs.reset();
   map<int,int>::iterator           i  = files.begin();
@@ -340,8 +342,10 @@ int NodeStatsCollector::monitor() {
       }
       if ( stat_delay<=0 ) {
         monitorStats();
-        monitorHLT(m_hlt_1_Buffer,"/localdisk/hlt1");
-        monitorHLT(m_hlt_2_Buffer,"/localdisk/overflow");
+	std::vector<std::string> hlt1_dirs = {"/localdisk/hlt1"};
+        monitorHLT(m_hlt_1_Buffer,hlt1_dirs);
+	//std::vector<std::string> deferred_dirs = {"/localdisk/overflow"};
+        //monitorHLT(m_hlt_2_Buffer,deferred_dirs);
       }
     }
     catch(const std::exception& e) {
