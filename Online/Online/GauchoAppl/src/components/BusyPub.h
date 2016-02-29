@@ -26,6 +26,9 @@ public:
   DimService *m_FarmLoad;
   float m_fLoad;
   std::string m_ForcePartition;
+  bool m_GlobalPublisher;
+  static double &globalBogos();
+//  double m_GlobalBogos;
 //  ISimpleTrendWriter* m_trender;
 };
 #endif // ONLINE_GAUCHO_BUSYPUB_H

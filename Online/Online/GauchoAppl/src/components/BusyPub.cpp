@@ -79,7 +79,11 @@ StatusCode BusyPub::finalize()
   Service::finalize();
   return StatusCode::SUCCESS;
 }
-
+double &BusyPub::globalBogos()
+{
+  static double m_GlobalBogos;
+  return m_GlobalBogos;
+}
 void BusyPub::analyze(void *, int ,MonMap* mmap)
 {
   MonMap::iterator i,j,k;
@@ -100,6 +104,10 @@ void BusyPub::analyze(void *, int ,MonMap* mmap)
   Cores_d = (CntrDescr*)MonCounter::de_serialize((*k).second);
   bsy = bsy_d->d_data;
   bogo = bogo_d->d_data;
+  if (m_GlobalPublisher)
+  {
+    globalBogos() = bogo;
+  }
   nCores = Cores_d->i_data;
   if (bogo < 0.00001) return;
   m_fLoad = bsy/bogo;
@@ -149,6 +157,7 @@ BusyPub::BusyPub(const std::string& name, ISvcLocator* sl)
 {
   declareProperty("TrendingOn",  m_enableTrending);
   declareProperty("ForcePartition",  m_ForcePartition="");
+  declareProperty("GlobalPublisher",m_GlobalPublisher=false);
   m_FarmLoad = 0;
   m_trender = 0;
   m_fLoad = 0.0;
