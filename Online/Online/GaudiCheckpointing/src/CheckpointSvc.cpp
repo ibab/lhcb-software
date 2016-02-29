@@ -78,8 +78,10 @@ namespace LHCb  {
     int                       m_exit;
     /// Property: Wait for children with debugger for n seconds (default: 0 ms)
     int                       m_childWait;
-    /// Property to make children sleep after fork ( default:250 ms)
+    /// Property to make children sleep after fork ( default:150 ms)
     int                       m_childSleep;
+    /// Property: Maximal number of children to be managed ( default: 40 )
+    int                       m_maxChildren;
     /// Property to force UTGID to environ and argv[0] (default: 0 [false])
     int                       m_forceUTGID;
     /// Property: Length of queue to store time-stamps to forks
@@ -104,6 +106,8 @@ namespace LHCb  {
     bool                      m_restartChildren;
     /// Internal flag to indicate if chldren should be killed in releaseChildren
     bool                      m_killChildren;
+    /// Internal flag to know if the process is in ERROR
+    bool                      m_inError;
     /// Pointer to DIM command service of the InstanceSvc
     DimCommand               *m_instanceClient;
     /// Reference to the IncidentSvc instance
@@ -367,7 +371,7 @@ namespace  {
 
 /// Standard constructor
 CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc)
-  : Service(nam,pSvc), m_instanceClient(0),
+  : Service(nam,pSvc), m_inError(false), m_instanceClient(0),
     m_incidentSvc(0), m_fsm(0), m_files(0)
 {
   m_masterProcess = true;
@@ -384,8 +388,9 @@ CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc)
   declareProperty("ExitAfterCheckpoint",    m_exit          = 1);
   declareProperty("KillChildren",           m_killChildren  = false);
   declareProperty("FirstChild",             m_firstChild    = 1);
+  declareProperty("MaxChildren",            m_maxChildren   = 40);
   declareProperty("ChildWait",              m_childWait     = 0);
-  declareProperty("ChildSleep",             m_childSleep    = 250);
+  declareProperty("ChildSleep",             m_childSleep    = 150);
   declareProperty("ForceUtgid",             m_forceUTGID    = 0);
   declareProperty("RestoreOptionClients",   m_restoreOptionClients);
   declareProperty("CheckpointLibs",         m_libDirectory  = "/dev/shm/checkpoint");
@@ -393,7 +398,7 @@ CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc)
   declareProperty("CheckpointRestartFlags", m_restartFlags  = 0);
   declareProperty("InvokeIncident",         m_invokeIncident= false);
   declareProperty("ConnectToDIM",           m_connectDIM    = true);
-  declareProperty("ForkQueueLength",        m_forkQueLen    = 30); // Store last 10 subsequent forks
+  declareProperty("ForkQueueLength",        m_forkQueLen    = m_maxChildren); // Store last some subsequent forks
   declareProperty("ForkTimeDistance",       m_forkDistance  = 60); // Maximally once per minute
   declareProperty("DeclareStateOnPAUSE",    m_declarePAUSE  = false);
 }
@@ -443,7 +448,9 @@ StatusCode CheckpointSvc::initialize() {
     m_incidentSvc->addListener(this,"APP_INITIALIZED");
     m_incidentSvc->addListener(this,"APP_RUNNING");
     m_incidentSvc->addListener(this,"APP_STOPPED");
+    m_incidentSvc->addListener(this,"DAQ_ERROR");
     m_forkQueue.clear();
+    m_inError = false;
   }
   return sc;
 }
@@ -456,6 +463,7 @@ StatusCode CheckpointSvc::start() {
     log << MSG::FATAL << "Failed to start service base class." << endmsg;
     return sc;
   }
+  m_inError = false;
   if ( m_invokeIncident ) {
     m_incidentSvc->fireIncident(Incident(name(),"APP_INITIALIZED"));
   }
@@ -469,6 +477,13 @@ StatusCode CheckpointSvc::start() {
         if ( 0 == pid )   { // This is the child process: exit creation loop
           return execChild();
         }
+      }
+      for(int i=num_children; i<m_maxChildren; ++i)   {
+	int which = i + 1;
+	string utgid = buildChildUTGID(which);
+	m_children[which].utgid  = utgid;
+	m_children[which].pid    = -1;
+	m_children[which].active = 0;
       }
       m_restartChildren = true;
       m_state = m_targetState;     // Update internal Gaudi FSM
@@ -777,10 +792,16 @@ void CheckpointSvc::setInstanceTag(const char* tag_str)   {
   if ( m_masterProcess )  {
     // Mother process remembers tag to know which children should not be reforked.
     m_tag = tag;
+    // Set flag to unconditionally restart children, if task list changed
+    m_restartChildren = true;
+    m_forkQueue.clear();
   }
   else if ( tag.find(pattern) == string::npos )   {
     // We are NOT part of the game anymore: fire incident to gracefully stop
     log << MSG::INFO << "Stop processing -- instance tag." << endmsg;
+    if ( m_inError )   {
+      ::_exit(0);
+    }
     m_incidentSvc->fireIncident(Incident(name(),"DAQ_EXIT"));
   }
 }
@@ -1078,5 +1099,8 @@ void CheckpointSvc::handle(const Incident& inc) {
     checkpointing_dump_threads();
   }
   else if ( inc.type() == "APP_STOPPED" ) {
+  }
+  else if ( inc.type() == "DAQ_ERROR" ) {
+    m_inError = true;
   }
 }
