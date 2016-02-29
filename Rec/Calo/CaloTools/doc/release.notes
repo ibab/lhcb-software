@@ -3,6 +3,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+! 2016-02-29 - Olivier Deschamps
+  - fix coverity warning
+
 ! 2016-02-22 - Marco Cattaneo
  - Remove unnecessary friend ToolFactory declaration
 

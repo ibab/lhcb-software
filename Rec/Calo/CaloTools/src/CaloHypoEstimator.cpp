@@ -405,8 +405,8 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloCluster* cluster, const LHCb::
     int mult = 0.;
     for( LHCb::CaloCluster::Entries::const_iterator ie = cluster->entries().begin() ; cluster->entries().end() != ie ; ++ie){
       const LHCb::CaloDigit* dig = (*ie).digit();
-      double ecel = dig->e()*ie->fraction();
       if( NULL == dig)continue;
+      double ecel = dig->e()*ie->fraction();
       LHCb::CaloCellID id = dig->cellID();
       if( id.area() != sid.area() || abs((int)id.col() - (int)sid.col()) > 1 ||  abs((int)id.row() - (int)sid.row()) > 1)continue;
       if(id.col() <= sid.col() && id.row() >= sid.row() )e4s[0] += ecel;
