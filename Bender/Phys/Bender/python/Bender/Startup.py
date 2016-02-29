@@ -139,6 +139,7 @@ def write_history ( fname ) :
     """Write history file 
     """
     ## first, delete old history file
+
     try :        
         _rename_ ( __history__  )
     except :
@@ -148,15 +149,15 @@ def write_history ( fname ) :
     command  = [ a for a in sys.argv ]
     if command : command[0] = os.path.basename( command[0] )
     command  = ' '.join(command)
-    curdit   = os.path.curdir
-    
+    curdir   = os.getcwd() 
+
     if with_ipython() :
-        
+
         try :
             
             import IPython, getpass
             ip  = IPython.get_ipython()
-            me  = getpass.getuser() 
+            me  = getpass.getuser()
             with open ( fname , 'w' ) as f :
                 f.write( '# Bender session by %s started at %s\n' % ( me , start_time.strftime('%c' ) ) ) 
                 f.write( '# Command from CWD=%s \n# %s\n' % ( curdir , command  ) ) 
@@ -164,20 +165,19 @@ def write_history ( fname ) :
                     f.write( record[2] + '\n' )
                 f.write( '# Bender session by %s   ended at %s\n' % ( me ,   end_time.strftime('%c' ) ) ) 
                 
-            if os.path.exists( fname ) and os.path.isfile ( fname ) and not _empty_ ( fname ) : 
-                logger.info ( 'Bender history file: %s' % __history__ )
-                return
-            
+            if os.path.exists( fname ) :
+                if os.path.isfile ( fname ) :
+                    if not _empty_ ( fname ) :
+                        logger.info ( 'Bender history file: %s' % __history__ )
+                        return
         except:
             pass
             
     ## use 'old-style' history 
-    readline.write_history_file ( fname ) 
+    readline.write_history_file ( fname )
     if os.path.exists( fname ) and os.path.isfile ( fname ) and not _empty_ ( fname ) : 
         logger.info ( 'Bender history file: %s' % __history__ )
         
-
-
 import atexit
 atexit.register ( _prnt_ )
 atexit.register ( write_history , __history__ )    
