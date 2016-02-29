@@ -40,7 +40,7 @@ PhotonRecoUsingQuarticSoln( const std::string& type,
   declareProperty( "CheckPrimaryMirrorSegments",  m_checkPrimMirrSegs = { false,false,false } );
   declareProperty( "MinActiveFraction",               m_minActiveFrac = { 0.2,  0.2,  0.2   } );
   declareProperty( "MinSphMirrTolIt", m_minSphMirrTolIt = {
-      std::pow(0.10*mm,2), // Aerogel
+        std::pow(0.10*mm,2), // Aerogel
         std::pow(0.08*mm,2), // R1Has
         std::pow(0.05*mm,2)  // R2Gas
         } );
@@ -384,6 +384,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     }
     else
     {
+
       // Iterate to final solution, improving the secondary mirror info
       int iIt(0);
       Gaudi::XYZPoint last_mirror_point(0,0,0);
@@ -446,6 +447,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
         // increment iteration counter
         ++iIt;
       }
+
     }
 
   }
@@ -613,10 +615,10 @@ findMirrorData( const Rich::DetectorType rich,
       //        m_rayTracing->intersectPlane( sphReflPoint, dir,
       //                                      secSegment->centreNormalPlane(),
       //                                      secReflPoint ) );
-      OK = m_rayTracing->intersectSpherical( sphReflPoint, dir,
-                                             secSegment->centreOfCurvature(),
-                                             secSegment->radius(),
-                                             secReflPoint ); 
+      // OK = m_rayTracing->intersectSpherical( sphReflPoint, dir,
+      //                                        secSegment->centreOfCurvature(),
+      //                                        secSegment->radius(),
+      //                                        secReflPoint ); 
     }
   }
   // return
