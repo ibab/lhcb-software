@@ -23,10 +23,18 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
-<A NAME=v28r2> 2016-02-27 Bender v28r2 based on the DaVinci v39r0p1</A>
+<A NAME=v28r2p1> 2016-02-29 Bender v28r2p1 based on the DaVinci v39r0p1</A>
 <ul>						 
 <li>Based on the DaVinci v39r0p1</li>
 <li>very similar to v28r2</li>
+<li>fixed issue with history file</li>
+<li>dedicated to Bender and BenderScript tutoruals for Russian students</li>
+<ul>						 
+
+<A NAME=v28r2> 2016-02-27 Bender v28r2 based on the DaVinci v39r0p1</A>
+<ul>						 
+<li>Based on the DaVinci v39r0p1</li>
+<li>very similar to v28r1</li>
 <li>dedicated to Bender and BenderScript tutoruals for Russian students</li>
 <ul>						 
 

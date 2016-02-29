@@ -23,17 +23,17 @@
 # =============================================================================
 package       BenderSys
 author        Vanya BELYAEV
-version       v28r2
+version       v28r2p1
 
 
 # =========== Bender Application itself =======================================
-use           Bender         v28r2 Phys 
+use           Bender         v28r2p1 Phys 
   
 # =========== Bender-based tools and scripts ==================================
-use           BenderTools    v28r2 Phys 
+use           BenderTools    v28r2   Phys 
 
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v28r2 Ex
+use           BenderExample  v28r2   Ex
 
 # =========== Bender tutorial =================================================
 use           BenderTutor    v28r2   Tutorial
