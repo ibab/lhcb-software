@@ -1103,7 +1103,7 @@ void PresenterPage::drawPage ( TCanvas* editorCanvas, OMAlib* analysisLib, bool 
       }
     }
   }
-  rescaleHists();
+  //MSF: rescaleHists();
   for ( itHP =  m_onlineHistosOnPage.begin(); m_onlineHistosOnPage.end() != itHP; ++itHP )
   {
 
@@ -1188,7 +1188,7 @@ void PresenterPage::drawPage ( TCanvas* editorCanvas, OMAlib* analysisLib, bool 
 //  Update the pad
 //=========================================================================
 void PresenterPage::updateDrawingOptions ( ) {
-  rescaleHists();
+  //MSF: rescaleHists();
   for ( std::vector<OnlineHistoOnPage*>::iterator itHP =  m_onlineHistosOnPage.begin();
         m_onlineHistosOnPage.end() != itHP; ++itHP ) {
     DisplayHistogram* dispH =  displayHisto( (*itHP)  );
@@ -1198,7 +1198,7 @@ void PresenterPage::updateDrawingOptions ( ) {
       if ( NULL != pad ) dispH->setDrawingOptions( pad );
     }
   }
-  rescaleHists();
+  //MSF: rescaleHists();
 }
 
 //=========================================================================
