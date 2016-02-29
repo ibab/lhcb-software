@@ -2,6 +2,11 @@
 ! Package     : MuonID
 ! Responsible : Marianna Fontana, Matteo Palutan, Ricardo Vazquez Gomez
 !-----------------------------------------------------------------------------
+
+! 2016-02-29 - Roel Aaij
+ - Add the default constructor for CommonMuonHit so a dictionary for it
+   can be generated and it can be used in GaudiPython.
+
 ! 2016-01-29- Gerhard Raven
  - DistMuIDTool: replace (internal) std::vector<int> with std::bitset<4>
 
@@ -855,4 +860,3 @@
   The package builds MuonID objects as the output.
 
 ! ====================================================================
-

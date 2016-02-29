@@ -17,7 +17,9 @@
  */
 class CommonMuonHit final {
  public:
-  CommonMuonHit() = delete;
+  CommonMuonHit()
+     : m_params{{0., 0., 0., 0., 0., 0.,}}, m_uncrossed{false},
+       m_t{0.}, m_dt{0.}, m_clusize{0} {}
 
   CommonMuonHit(const LHCb::MuonTileID& tile, double x, double dx, double y,
                 double dy, double z, double dz, bool uncrossed,
