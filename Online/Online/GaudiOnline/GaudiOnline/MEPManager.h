@@ -43,6 +43,7 @@ namespace LHCb    {
     */
   class MEPManager : public Service  {
   protected:
+    typedef std::map<std::pair<std::string,std::string>, MBM::Producer*> SharedProducers;
     typedef std::vector<std::string>               ConsRequirement;
     typedef std::map<std::string, ConsRequirement> ConsRequirements;
     typedef std::map<std::string,ServerBMID>       ServedBuffers;
@@ -77,6 +78,8 @@ namespace LHCb    {
     MappedBuffers              m_buffMap;
     /// Map of server BMIDs
     ServedBuffers              m_srvBMIDs;
+    /// Map of shared producer objects
+    SharedProducers            m_sharedProducers;
 
     std::string                m_input;
 
@@ -89,6 +92,9 @@ namespace LHCb    {
 
     /// Standard destructor
     virtual ~MEPManager();
+
+    /// Create shared producer. These producers are owned by the MEPManager!
+    MBM::Producer* createSharedProducer(const std::string& buffer,const std::string& instance);
 
     /// Create producer
     MBM::Producer* createProducer(const std::string& buffer,const std::string& instance);

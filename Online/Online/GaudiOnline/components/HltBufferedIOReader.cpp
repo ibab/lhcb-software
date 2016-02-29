@@ -53,6 +53,7 @@ namespace LHCb
       MEP_INPUT_TYPE = 2
     };
   protected:
+    typedef std::vector<std::string> StringV;
     /// Flag indicating that MBM event retrieval is active
     bool                     m_receiveEvts;
     /// Lock handle
@@ -70,16 +71,18 @@ namespace LHCb
     std::string              m_goService;
     /// Property: Buffer name for data output
     std::string              m_buffer;
-    /// Property: Data directory name
-    std::string              m_directory;
     /// Property: File prefix to select files from data directory
     std::string              m_filePrefix;
     /// Property: Path to the file containing broken nodes, where no reading should happen
     std::string              m_brokenHostsFile;
+    /// Property: Data directory name
+    std::string              m_directory;
     /// Property: List of runs to be processed (as strings!)
-    std::vector<std::string> m_allowedRuns;
+    StringV                  m_dirList;
+    /// Property: List of runs to be processed (as strings!)
+    StringV                  m_allowedRuns;
     /// Property: Buffer names to be checked on special transitions
-    std::vector<std::string> m_mbmNames;
+    StringV                  m_mbmNames;
     /// Property: Maximum number of seconds to wait for consumers (default: 20 seconds)
     int                      m_maxConsWait;
     /// Property: Maximum number of seconds to wait for buffers being empty (default: 1000 seconds)
@@ -125,7 +128,9 @@ namespace LHCb
     /// DIM service update handler
     static void run_no_update(void* tag, void** buf, int* size, int* first);
 
-    /// Scan directory for matching files
+    /// Scan single directory for matching files
+    size_t scanDirectory(const std::string& dir_name);
+    /// Scan directories for matching files
     size_t scanFiles();
     /// Open a new data file
     int openFile();
@@ -253,6 +258,7 @@ HltBufferedIOReader::HltBufferedIOReader(const string& nam, ISvcLocator* svcLoc)
   declareProperty("InputType",      m_inputType       = AUTO_INPUT_TYPE );
   declareProperty("Buffer",         m_buffer          = "Mep");
   declareProperty("Directory",      m_directory       = "/localdisk");
+  declareProperty("Directories",    m_dirList );
   declareProperty("FilePrefix",     m_filePrefix      = "Run_");
   declareProperty("BrokenHosts",    m_brokenHostsFile = "");
   declareProperty("DeleteFiles",    m_deleteFiles     = true);
@@ -484,37 +490,46 @@ void HltBufferedIOReader::handle(const Incident& inc)
 }
 
 /// Scan directory for matching files
+size_t HltBufferedIOReader::scanDirectory(const string& dir_name)   {
+  DIR* dir = opendir(dir_name.c_str());
+  if (dir)  {
+    struct dirent *entry;
+    bool take_all = (m_allowedRuns.size() > 0 && m_allowedRuns[0]=="*");
+    while ((entry = ::readdir(dir)) != 0)    {
+      //cout << "File:" << entry->d_name << endl;
+      if ( 0 != ::strncmp(entry->d_name,m_filePrefix.c_str(),m_filePrefix.length()) ) {
+	continue;
+      }
+      else if ( !take_all )  {
+	bool take_run = false;
+	for(vector<string>::const_iterator i=m_allowedRuns.begin(); i!=m_allowedRuns.end(); ++i) {
+	  if ( ::strstr(entry->d_name,(*i).c_str()) == entry->d_name ) {
+	    take_run = true;
+	    break;
+	  }
+	}
+	if ( !take_run ) continue;
+      }
+      m_files.insert(dir_name + "/" + entry->d_name);
+    }
+    ::closedir(dir);
+    if ( !m_rescan ) m_disabled = true;
+    return m_files.size();
+  }
+  const char* err = RTL::errorString();
+  info("Failed to open directory:" + string(err ? err : "????????"));
+  return 0;
+}
+
+/// Scan directory for matching files
 size_t HltBufferedIOReader::scanFiles()   {
   m_files.clear();
   if ( !m_disabled )   {
-    DIR* dir = opendir(m_directory.c_str());
-    if (dir)  {
-      struct dirent *entry;
-      bool take_all = (m_allowedRuns.size() > 0 && m_allowedRuns[0]=="*");
-      while ((entry = ::readdir(dir)) != 0)    {
-        //cout << "File:" << entry->d_name << endl;
-        if ( 0 != ::strncmp(entry->d_name,m_filePrefix.c_str(),m_filePrefix.length()) ) {
-          continue;
-        }
-        else if ( !take_all )  {
-          bool take_run = false;
-          for(vector<string>::const_iterator i=m_allowedRuns.begin(); i!=m_allowedRuns.end(); ++i) {
-            if ( ::strstr(entry->d_name,(*i).c_str()) == entry->d_name ) {
-              take_run = true;
-              break;
-            }
-          }
-          if ( !take_run ) continue;
-        }
-        //cout << "SELECT:" << entry->d_name << endl;
-        m_files.insert(m_directory + "/" + entry->d_name);
-      }
-      ::closedir(dir);
-      if ( !m_rescan ) m_disabled = true;
-      return m_files.size();
+    scanDirectory(m_directory);
+    for(size_t i=0; i<m_dirList.size(); ++i)  {
+      scanDirectory(m_dirList[i]);
     }
-    const char* err = RTL::errorString();
-    info("Failed to open directory:" + string(err ? err : "????????"));
+    return m_files.size();
   }
   return 0;
 }
@@ -527,7 +542,8 @@ int HltBufferedIOReader::openFile()   {
     m_files.erase(i);
     int fd = ::open(fname.c_str(), O_RDONLY | O_BINARY, S_IREAD);
     if ( -1 != fd )    {
-      const char* ptr = fname.c_str()+m_directory.length()+1+m_filePrefix.length();
+      size_t idx = fname.rfind('/')+1+m_filePrefix.length();
+      const char* ptr = fname.c_str()+idx;
       m_currentRun = 0;
       ::sscanf(ptr,"%07d",&m_currentRun);
       if ( m_runSvcID ) {

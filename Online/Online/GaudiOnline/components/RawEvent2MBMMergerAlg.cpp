@@ -124,6 +124,10 @@ namespace LHCb  {
 }
 
 using namespace LHCb;
+#include <mutex>
+namespace {
+  static mutex s_mbm_mutex;
+}
 
 /// Standard algorithm constructor
 RawEvent2MBMMergerAlg::RawEvent2MBMMergerAlg(const string& nam, ISvcLocator* pSvc)
@@ -157,7 +161,7 @@ StatusCode RawEvent2MBMMergerAlg::initialize()   {
     return error("Failed to access MEPManager service.");
   }
   if ( m_mepMgr->connectWhen() == "initialize" ) {
-    m_prod = m_mepMgr->createProducer(m_bufferName,RTL::processName());
+    m_prod = m_mepMgr->createSharedProducer(m_bufferName,RTL::processName());
     if ( 0 == m_prod ) {
       return error("Failed to create event producer for buffer:"+m_bufferName);
     }
@@ -182,7 +186,7 @@ StatusCode RawEvent2MBMMergerAlg::initialize()   {
 /// Algorithm overload: start
 StatusCode RawEvent2MBMMergerAlg::start()     {    
   if ( m_mepMgr->connectWhen() == "start" ) {
-    m_prod = m_mepMgr->createProducer(m_bufferName,RTL::processName());
+    m_prod = m_mepMgr->createSharedProducer(m_bufferName,RTL::processName());
     if ( 0 == m_prod ) {
       return error("Failed to create event producer for buffer:"+m_bufferName);
     }
@@ -193,8 +197,7 @@ StatusCode RawEvent2MBMMergerAlg::start()     {
 /// Algorithm overload: stop
 StatusCode RawEvent2MBMMergerAlg::stop()     {    
   if ( m_mepMgr->connectWhen() == "start" ) {
-    if ( m_prod )  {
-      delete m_prod;
+    if ( m_prod )  { // Producers are shared. Do not delete them.
       m_prod = 0;
     }
   }
@@ -210,8 +213,7 @@ StatusCode RawEvent2MBMMergerAlg::finalize()     {
   if ( monitorSvc() )  {
     monitorSvc()->undeclareAll(this);
   }
-  if ( m_prod )  {
-    delete m_prod;
+  if ( m_prod )  { // Producers are shared. Do not delete them.
     m_prod = 0;
   }
   if ( m_mepMgr )  {
@@ -463,6 +465,7 @@ StatusCode RawEvent2MBMMergerAlg::writeEvent(unsigned int routingBits) {
   default:
     break;
   }
+  lock_guard<mutex> mbm_lock(s_mbm_mutex);
   StatusCode sc = MDFWriter::execute();
   if ( m_silent && !sc.isSuccess() ) {
     sc.ignore();

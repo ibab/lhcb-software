@@ -238,6 +238,10 @@ StatusCode MEPManager::stop()  {
 StatusCode MEPManager::i_fini()  {
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "Excluding from buffers. No more buffer access possible." << endmsg;
+  for(SharedProducers::iterator i=m_sharedProducers.begin(); i!= m_sharedProducers.end(); ++i)  {
+    delete (*i).second;
+  }
+  m_sharedProducers.clear();
   m_buffMap.clear();
   for(vector<BMID>::iterator i=m_bmIDs.begin(); i != m_bmIDs.end(); ++i)  {
     if ( *i != MBM_INV_DESC ) ::mbm_exclude(*i);
@@ -266,6 +270,18 @@ MBM::Producer* MEPManager::createProducer(const string& buffer,const string& ins
     return new MBM::Producer(bmid,instance,partitionID());
   }
   return 0;
+}
+
+/// Create shared producer. These producers are owned by the MEPManager!
+MBM::Producer* MEPManager::createSharedProducer(const string& buffer,const string& instance) {
+  pair<string,string> key = make_pair(buffer,instance);
+  SharedProducers::iterator i=m_sharedProducers.find(key);
+  if ( i == m_sharedProducers.end() )  {
+    MBM::Producer* p = createProducer(buffer,instance);
+    m_sharedProducers[key] = p;
+    return p;
+  }
+  return (*i).second;
 }
 
 /// Create consumer attached to a specified buffer

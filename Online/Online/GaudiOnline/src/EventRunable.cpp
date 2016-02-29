@@ -82,6 +82,11 @@ void EventRunable::handle(const Incident& inc)    {
   info("Got incident:"+inc.source()+" of type "+inc.type());  
   if ( inc.type() == "DAQ_EXIT" )  {
     m_forceExit = true;
+    // IF the event selector already got an event, continue processing.
+    // IF NOT,  cancel the event selector and trigger the exit from the runable.
+    if ( !m_processingEvt && m_mepMgr )  {
+      m_mepMgr->cancel();
+    }
   }
   else if ( inc.type() == "DAQ_PAUSE" )  {
     //m_receiveEvts = false;
