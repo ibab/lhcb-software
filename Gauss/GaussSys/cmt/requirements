@@ -111,5 +111,9 @@ apply_pattern container_package
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
 
+private
+action TestProject "cmt br - cmt TestPackage ; cmt qmtest_summarize"
+end_private
+
 #====================================================================
 
