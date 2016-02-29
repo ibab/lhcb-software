@@ -35,7 +35,7 @@ class DstarToDzeroPiConf(RichConfigurableUser) :
         ,"MakeSelDST"   : False
         ,"DSTPreScaleFraction" : 1.0
         ,"PlotTools"    : [ ]
-        ,"Candidates" : [ ]
+        ,"Candidates" : [ "/Marco/To/Set/this" ]
         }
 
     ## Set general job options
