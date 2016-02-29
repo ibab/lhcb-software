@@ -12,6 +12,11 @@
 #ifndef RICHDET_DERICHHPD_H
 #define RICHDET_DERICHHPD_H 1
 
+// STL
+#include <cmath>
+#include <array>
+#include <vector>
+
 // DetDesc
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/IPVolume.h"
@@ -21,12 +26,6 @@
 
 // RichDet
 #include "RichDet/DeRichPD.h"
-
-// GSL
-#include "gsl/gsl_math.h"
-
-// STL
-#include <cmath>
 
 // External declarations
 extern const CLID CLID_DERichHPD;

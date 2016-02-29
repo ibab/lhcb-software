@@ -96,7 +96,6 @@ StatusCode DeRich::initialize ( )
       if( m_Rich2PhotoDetectorArrayConfig == 2 ) {   
         m_Rich2UseMixedPmt = true;
       }
-      
     }
   }
 
@@ -252,90 +251,6 @@ Rich::MirrorSegPosition DeRich::secMirrorSegPos( const int mirrorNumber ) const
 
   return mirrorPos;
 
-}
-
-//=========================================================================
-
-StatusCode
-DeRich::alignMirrors ( const std::vector<const ILVolume*>& mirrorContainers,
-                       const std::string& mirrorID,
-                       const SmartRef<Condition>& mirrorAlignCond,
-                       const std::string& Rvector ) const
-{
-
-  if ( msgLevel(MSG::VERBOSE) )
-    verbose() << "Misaligning " << mirrorID << " in " << myName() << endmsg;
-
-  std::map<int, IPVolume*> mirrors;
-
-  for ( std::vector<const ILVolume*>::const_iterator contIter = mirrorContainers.begin();
-        contIter != mirrorContainers.end(); ++contIter )
-  {
-    for ( unsigned int i=0; i<(*contIter)->noPVolumes(); ++i )
-    {
-      const IPVolume* cpvMirror = (*contIter)->pvolume(i);
-      IPVolume* pvMirror = const_cast<IPVolume*>(cpvMirror);
-
-      // find mirrors that match mirrorID
-      const std::string mirrorName = pvMirror->name();
-      if ( mirrorName.find(mirrorID) != std::string::npos )
-      {
-        const auto mpos = mirrorName.find(':');
-        if ( std::string::npos == mpos )
-        {
-          fatal() << "A mirror without a number!" << endmsg;
-          return StatusCode::FAILURE;
-        }
-        const int mirrorNumber = atoi( mirrorName.substr(mpos+1).c_str() );
-        mirrors[mirrorNumber] = pvMirror;
-      }
-    }
-  }
-  if ( msgLevel(MSG::VERBOSE) )
-    verbose() << "Found " << mirrors.size() << " mirrors" << endmsg;
-
-  const std::vector<double>& rotX = mirrorAlignCond->paramVect<double>("RichMirrorRotX");
-  const std::vector<double>& rotY = mirrorAlignCond->paramVect<double>("RichMirrorRotY");
-
-  // make sure the numbers match
-  if ( rotX.size() != rotY.size() )
-  {
-    fatal() << "Mismatch in X and Y rotations in Condition:"
-            << mirrorAlignCond->name() << endmsg;
-    return StatusCode::FAILURE;
-  }
-  if ( rotX.size() != mirrors.size() )
-  {
-    fatal() << "Number of parameters does not match mirrors in:"
-            << mirrorAlignCond->name() << endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  const std::vector<double> & Rs = paramVect<double>(Rvector);
-  if ( rotX.size() != Rs.size() )
-  {
-    fatal() << "Number of Rs does not match mirrors in:"
-            << mirrorAlignCond->name() << endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  for ( unsigned int mNum=0; mNum<rotX.size(); ++mNum )
-  {
-    // create transformation matrix to rotate the mirrors around their centre
-    Gaudi::TranslationXYZ pivot( -Rs[mNum], 0.0, 0.0 );
-    Gaudi::Transform3D transl( pivot );
-    // the x rotation is around z because of the way the mirror is created
-    Gaudi::Rotation3D rot =  Gaudi::RotationZ(rotX[mNum]) * Gaudi::RotationY(rotY[mNum]);
-    Gaudi::Transform3D matrixInv = transl.Inverse() * (Gaudi::Transform3D(rot) * transl);
-    Gaudi::Transform3D matrix( matrixInv.Inverse() );
-    // Apply the mis alignment
-    mirrors[mNum]->applyMisAlignment( matrix );
-  }
-
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "Aligned " << mirrors.size() << " of type:" << mirrorID << endmsg;
-
-  return StatusCode::SUCCESS;
 }
 
 //=========================================================================

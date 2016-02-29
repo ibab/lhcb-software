@@ -259,7 +259,8 @@ DeRichHPDPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
     // Overwise slower but fully detailed checks using full HPD windows
 
     // Check for shadowing effects by HPD kapton shields
-    if ( mode.hpdKaptonShadowing() && HPD->testKaptonShadowing(pInPanel,vInPanel) )
+    if ( UNLIKELY( mode.hpdKaptonShadowing() && 
+                   HPD->testKaptonShadowing(pInPanel,vInPanel) ) )
     {
       // set final point using panel intersection
       windowPointGlobal = geometry()->toGlobal( panelIntersection );

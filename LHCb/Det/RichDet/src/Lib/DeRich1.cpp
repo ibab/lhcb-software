@@ -161,26 +161,6 @@ StatusCode DeRich1::initialize()
   //hpdPanel(Rich::top);
   //hpdPanel(Rich::bottom);
 
-  // DC06 compatible mirror (mis)alignment
-  if ( hasCondition( "Rich1Mirror1Align" ) )
-  {
-    m_sphMirAlignCond = condition( "Rich1Mirror1Align" );
-    updMgrSvc()->registerCondition(this,m_sphMirAlignCond.path(),&DeRich1::alignSphMirrors);
-  }
-  else
-  {
-    m_sphMirAlignCond = nullptr;
-  }
-
-  if ( hasCondition( "Rich1Mirror2Align" ) )
-  {
-    m_secMirAlignCond = condition( "Rich1Mirror2Align" );
-    updMgrSvc()->registerCondition(this,m_secMirAlignCond.path(),&DeRich1::alignSecMirrors);
-  }
-  else {
-    m_secMirAlignCond = nullptr;
-  }
-
   // initialize all child detector elements. This triggers the update
   // of the radiator properties
   childIDetectorElements();
@@ -326,38 +306,6 @@ StatusCode DeRich1::updateMirrorParams()
             << m_nominalNormalBottom << endmsg;
 
   return StatusCode::SUCCESS;
-}
-
-//=========================================================================
-//  alignSphMirrors
-//=========================================================================
-StatusCode DeRich1::alignSphMirrors()
-{
-  std::vector<const ILVolume*> mirrorCont;
-  // (mis)align spherical mirrors
-  const ILVolume* lvRich1Gas = geometry()->lvolume()->pvolume(0)->lvolume();
-  mirrorCont.push_back( lvRich1Gas );
-  const StatusCode sc = alignMirrors(mirrorCont, "Rich1Mirror1Q",
-                                     m_sphMirAlignCond, "RichSphMirrorRs");
-  if ( sc.isFailure() ) return sc;
-
-  // (mis)align spherical mirrors (2nd layer)
-  return alignMirrors(mirrorCont, "Rich1Mirror1Be",
-                      m_sphMirAlignCond, "RichSphMirrorRs");
-}
-
-//=========================================================================
-//  alignSecMirrors
-//=========================================================================
-StatusCode DeRich1::alignSecMirrors()
-{
-  std::vector<const ILVolume*> mirrorCont;
-  const auto * lvRich1Gas = geometry()->lvolume()->pvolume(0)->lvolume();
-  mirrorCont.push_back( lvRich1Gas );
-
-  // (mis)align secondary mirrors
-  return alignMirrors(mirrorCont, "Rich1Mirror2:",
-                      m_secMirAlignCond, "RichSecMirrorRs");
 }
 
 //=========================================================================

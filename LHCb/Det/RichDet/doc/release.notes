@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2016-02-29 - Chris Jones
+ - Remove some legacy DC06 alignment methods from DeRich(1,2).
+
 ! 2016-02-28 - Chris Jones
  - (Partial) C++11 modernisation.
  - Update how the nominal RICH mirror parameters are determined to compute 

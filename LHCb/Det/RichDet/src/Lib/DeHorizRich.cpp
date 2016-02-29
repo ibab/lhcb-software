@@ -180,59 +180,6 @@ StatusCode DeHorizRich::initialize()
 }
 
 //=========================================================================
-//  alignSphMirrors
-//=========================================================================
-StatusCode DeHorizRich::alignSphMirrors()
-{
-
-  std::vector<const ILVolume*> mirrorCont;
-  // (mis)align spherical mirrors
-  const IPVolume* pvRich2Gas = geometry()->lvolume()->pvolume(0);
-  const ILVolume* lvRich2Gas = pvRich2Gas->lvolume();
-  // ckeck if there are spherical mirror containers
-  const IPVolume* pvSphMirCont0 = lvRich2Gas->pvolume("pvRich2SphMirrorCont0");
-  if ( pvSphMirCont0 )
-  {
-    const ILVolume* lvSphMirCont0 = pvSphMirCont0->lvolume();
-    mirrorCont.push_back( lvSphMirCont0 );
-    const IPVolume* pvSphMirCont1 = lvRich2Gas->pvolume("pvRich2SphMirrorCont1");
-    const ILVolume* lvSphMirCont1 = pvSphMirCont1->lvolume();
-    mirrorCont.push_back( lvSphMirCont1 );
-  }
-  else
-    mirrorCont.push_back( lvRich2Gas );
-
-  StatusCode sc = alignMirrors(mirrorCont, "Rich2SphMirror",
-                               m_sphMirAlignCond, "RichSphMirrorRs");
-  if (sc == StatusCode::FAILURE) return sc;
-
-  return StatusCode::SUCCESS;
-}
-
-//=========================================================================
-//  alignSecMirrors
-//=========================================================================
-StatusCode DeHorizRich::alignSecMirrors()
-{
-
-  std::vector<const ILVolume*> mirrorCont;
-
-  // (mis)align secondary mirrors in both containers
-  const IPVolume* pvRich2SecMirrorCont0 = geometry()->lvolume()->pvolume(0)->
-    lvolume()->pvolume("pvRich2SecMirrorCont0");
-  mirrorCont.push_back( pvRich2SecMirrorCont0->lvolume() );
-  const IPVolume* pvRich2SecMirrorCont1 = geometry()->lvolume()->pvolume(0)->
-    lvolume()->pvolume("pvRich2SecMirrorCont1");
-  mirrorCont.push_back( pvRich2SecMirrorCont1->lvolume() );
-
-  StatusCode sc = alignMirrors(mirrorCont, "Rich2SecMirror",
-                               m_secMirAlignCond, "RichSecMirrorRs");
-  if (sc == StatusCode::FAILURE) return sc;
-
-  return StatusCode::SUCCESS;
-}
-
-//=========================================================================
 //  nominalCentreOfCurvature
 //=========================================================================
 const Gaudi::XYZPoint&

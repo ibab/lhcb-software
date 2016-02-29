@@ -153,29 +153,6 @@ StatusCode DeRich2::initialize()
   //hpdPanel(Rich::left);
   //hpdPanel(Rich::right);
 
-  // initialize Rich2Gas
-  SmartDataPtr<DeRichRadiator> rich2Gas(dataSvc(),DeRichLocations::Rich2Gas);
-  if ( !rich2Gas )
-    error() << "Cannot initialize Rich2Gas" << endmsg;
-
-  if ( hasCondition( "Rich2SphMirrorAlign" ) )
-  {
-    m_sphMirAlignCond = condition( "Rich2SphMirrorAlign" );
-    updMgrSvc()->registerCondition(this,m_sphMirAlignCond.path(),&DeRich2::alignSphMirrors );
-  }
-  else {
-    m_sphMirAlignCond = nullptr;
-  }
-
-  if ( hasCondition( "Rich2SecMirrorAlign" ) )
-  {
-    m_secMirAlignCond = condition( "Rich2SecMirrorAlign" );
-    updMgrSvc()->registerCondition(this,m_secMirAlignCond.path(),&DeRich2::alignSecMirrors );
-  }
-  else {
-    m_secMirAlignCond = nullptr;
-  }
-
    // Trigger first update
   const auto sc = updMgrSvc()->update(this);
   if ( sc.isFailure() ) { fatal() << "UMS updates failed" << endmsg; }
@@ -299,55 +276,6 @@ StatusCode DeRich2::updateMirrorParams()
             << m_nominalNormalRight << endmsg;
 
   return StatusCode::SUCCESS;
-}
-
-//=========================================================================
-//  alignSphMirrors
-//=========================================================================
-StatusCode DeRich2::alignSphMirrors()
-{
-
-  std::vector<const ILVolume*> mirrorCont;
-  // (mis)align spherical mirrors
-  const IPVolume* pvRich2Gas = geometry()->lvolume()->pvolume(0);
-  const ILVolume* lvRich2Gas = pvRich2Gas->lvolume();
-  // ckeck if there are spherical mirror containers
-  const IPVolume* pvSphMirCont0 = lvRich2Gas->pvolume("pvRich2SphMirrorCont0");
-  if ( pvSphMirCont0 )
-  {
-    const ILVolume* lvSphMirCont0 = pvSphMirCont0->lvolume();
-    mirrorCont.push_back( lvSphMirCont0 );
-    const IPVolume* pvSphMirCont1 = lvRich2Gas->pvolume("pvRich2SphMirrorCont1");
-    const ILVolume* lvSphMirCont1 = pvSphMirCont1->lvolume();
-    mirrorCont.push_back( lvSphMirCont1 );
-  }
-  else
-  {
-    mirrorCont.push_back( lvRich2Gas );
-  }
-
-  return alignMirrors(mirrorCont, "Rich2SphMirror",
-                      m_sphMirAlignCond, "RichSphMirrorRs");
-}
-
-//=========================================================================
-//  alignSecMirrors
-//=========================================================================
-StatusCode DeRich2::alignSecMirrors()
-{
-
-  std::vector<const ILVolume*> mirrorCont;
-
-  // (mis)align secondary mirrors in both containers
-  const auto pvRich2SecMirrorCont0 = 
-    geometry()->lvolume()->pvolume(0)->lvolume()->pvolume("pvRich2SecMirrorCont0");
-  mirrorCont.push_back( pvRich2SecMirrorCont0->lvolume() );
-  const auto pvRich2SecMirrorCont1 = 
-    geometry()->lvolume()->pvolume(0)->lvolume()->pvolume("pvRich2SecMirrorCont1");
-  mirrorCont.push_back( pvRich2SecMirrorCont1->lvolume() );
-
-  return alignMirrors(mirrorCont, "Rich2SecMirror",
-                      m_secMirAlignCond, "RichSecMirrorRs");
 }
 
 //=========================================================================

@@ -46,6 +46,7 @@ class DeRich: public DeRichBase
 {
 
 public:
+
   /**
    * Constructor for this class
    */
@@ -232,19 +233,8 @@ public:
    */
   virtual Rich::MirrorSegPosition secMirrorSegPos( const int mirrorNumber ) const;
 
-  virtual StatusCode alignSphMirrors() = 0;
-  virtual StatusCode alignSecMirrors() = 0;
-
   /// sensitive volume identifier for hpd version. to be phased out
   virtual int sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const;
-
-protected:
-
-  /// (Mis)align the mirrors
-  StatusCode alignMirrors( const std::vector<const ILVolume*>& mirrorContainers,
-                           const std::string& mirrorID,
-                           const SmartRef<Condition>& mirrorAlignCond,
-                           const std::string& Rvector ) const;
 
 public:
 

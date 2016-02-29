@@ -716,7 +716,7 @@ StatusCode DeRichHPD::magnifyToGlobalMagnetOFF( Gaudi::XYZPoint& detectPoint,
   // Chose the solution with the minus sign
   double rCathode =
     ( m_deMagFactor[1] > 1e-6 ?
-      ((m_deMagFactor[0]-std::sqrt(gsl_pow_2(m_deMagFactor[0])-4*m_deMagFactor[1]*rAnode))/
+      ((m_deMagFactor[0]-std::sqrt(std::pow(m_deMagFactor[0],2)-4*m_deMagFactor[1]*rAnode))/
        (2*m_deMagFactor[1])) :
       rAnode/m_deMagFactor[0] );
 
