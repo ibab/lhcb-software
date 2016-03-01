@@ -4,6 +4,8 @@
 ! Purpose     : Online calibration of the ECAL with neutral pions
 !-----------------------------------------------------------------------------
 
+!========= AlignmentOnline/PyKaliOnline v1r1 - 2016-03-01 ===========
+
 ! 2016-02-03 - Daria Savrina
  - added some scripts to python/PyKaliOnline/offline_tests
    necessry for offline tests
