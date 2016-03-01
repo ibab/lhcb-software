@@ -191,42 +191,45 @@ def dumpDst ( config ) :
         ## explore the regular nodes
         #
         for loc in nodes :
+            loc0 = loc 
             data = evtSvc[loc]
-            loc = loc[:7] + ' ' + loc[7:] 
+            loc  = loc[:7] + ' ' + loc[7:] 
             if not data :
                 addEntry ( nSelEvents , loc , 0 )
                 addEntry ( nObjects   , loc , 0 )
             elif type( data ) == cpp.DataObject  : continue 
             else :
                 #
-                lnks = data.links()
-                for l in lnks : links.add ( l )
-                #
                 if   hasattr ( data , 'size'   ) : addEntry ( nObjects , loc , data.size()  )
                 elif hasattr ( data , '__len__') : addEntry ( nObjects , loc , len ( data ) )
                 else                             : addEntry ( nObjects , loc , 1            )
-                
+                #
+                ## collect the links (if needed) 
+                if config.FollowLinks: 
+                    lnks = data.links()
+                    for l in lnks : links.add ( l )
+                    if '/pRec/DecReport' in loc0 : 
+                        links.add ( loc0.replace ( '/pRec/'  , '/Rec/'  ) )
         #
         ## follow the links? Useful for packed (u)DST
         #
         if config.FollowLinks: 
             links = links - nodes 
             for loc in links:
-            
-                if config.RootInTES :
-                    if 0 != loc.find ( config.RootInTES ) : continue 
                 
+                if config.RootInTES and not config.RootInTES in ( '/Event' , '/Event/' ) :  
+                    if not config.RootInTES in loc : continue 
+
                 data = evtSvc[loc]
-                loc = loc[:7] + '*' + loc[7:] 
-                if not data :
+                loc  = loc[:7] + '*' + loc[7:] 
+                if          data is None             : continue 
+                elif type ( data ) == cpp.DataObject : continue 
+                elif not data :
                     addEntry ( nSelEvents , loc , 0 )
                     addEntry ( nObjects   , loc , 0 )
-                elif type( data ) == cpp.DataObject : continue 
-                else :
-                #
-                    if   hasattr ( data , 'size'   ) : addEntry ( nObjects , loc , data.size()  )
-                    elif hasattr ( data , '__len__') : addEntry ( nObjects , loc , len ( data ) )
-                    else                             : addEntry ( nObjects , loc , 1            )
+                elif hasattr ( data , 'size'   ) : addEntry ( nObjects , loc , data.size()  )
+                elif hasattr ( data , '__len__') : addEntry ( nObjects , loc , len ( data ) )
+                else                             : addEntry ( nObjects , loc , 1            )
                     
         #
         ## explore locations known for DOD
@@ -245,12 +248,12 @@ def dumpDst ( config ) :
             for loc in dods :
 
                 if config.RootInTES :
-                    if 0 != loc.find ( config.RootInTES ) : continue 
+                    if not config.RootInTES in loc : continue 
                 
                 if not config.Simulation :
-                    if 0 <= loc.find ( 'MC'   ) : continue
-                    if 0 <= loc.find ( 'Prev' ) : continue
-                    if 0 <= loc.find ( 'Next' ) : continue
+                    if 'MC'   in loc : continue 
+                    if 'Prev' in loc : continue 
+                    if 'Next' in loc : continue 
                     
                 data = evtSvc[loc]
                 loc = loc[:7] + '+' + loc[7:] 
