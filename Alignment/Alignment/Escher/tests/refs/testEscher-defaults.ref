@@ -1,14 +1,14 @@
 # setting LC_ALL to "C"
-# --> Including file '/afs/cern.ch/user/m/mamartin/cmtuser/Alignment_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
-# <-- End of file '/afs/cern.ch/user/m/mamartin/cmtuser/Alignment_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
+# --> Including file '/afs/cern.ch/user/m/mamartin/SoftwareDev/Release/AlignmentDev_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
+# <-- End of file '/afs/cern.ch/user/m/mamartin/SoftwareDev/Release/AlignmentDev_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
 # skipping configuration of RawEventFormatConf
 # applying configuration of Escher
 # Initializing sequences!
 # Defining options!
 # Setting up alignment sequence
-# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v38r7/GaudiConf/options/RootHist.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v40r0/GaudiConf/options/RootHist.opts'
 # ApplicationMgr.HistogramPersistency = "ROOT";
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v38r7/GaudiConf/options/RootHist.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v40r0/GaudiConf/options/RootHist.opts'
 # /***** User Escher/Escher **************************************************************************
 # |-Persistency         = None
 # |-Upgrade             = False
@@ -18,7 +18,7 @@
 # |-Kalman              = True
 # |-DDDBtag             = ''
 # |-Millepede           = False
-# |-MainSequence        = ['ProcessPhase/Init', <GaudiSequencer/HltFilterSeq at 0x7f2edc890430>, 'ProcessPhase/Reco', 'ProcessPhase/Moni', <GaudiSequencer/AlignSequence at 0x7f2edc890810>]
+# |-MainSequence        = ['ProcessPhase/Init', <GaudiSequencer/HltFilterSeq at 0xd7e780>, 'ProcessPhase/Reco', 'ProcessPhase/Moni', <GaudiSequencer/AlignSequence at 0xd09f90>]
 # |                     (default: [])
 # |-OutputType          = 'NONE'
 # |-Incident            = ''
@@ -34,10 +34,11 @@
 # |-Simulation          = False
 # |-HltFilterCode       = None
 # |-Context             = 'Offline'
-# |-RecoSequence        = ['Decoding', 'VELO', 'Tr', 'Vertex']  (default: ['Decoding', 'VELO', 'Tr', 'Vertex'])
+# |-RecoSequence        = []  (default: [])
 # |-CondDBtag           = ''
 # |-PartitionName       = 'LHCb'
 # |-UseDBSnapshot       = False
+# |-GlobalCuts          = {}  (default: {})
 # |-InitSequence        = ['Escher']  (default: ['Escher'])
 # |-DataType            = '2011'
 # |-WithMC              = False
@@ -75,26 +76,27 @@
 # |-OutputType   = 'NONE'
 # |-Simulation   = False
 # |-Context      = 'Offline'
-# |-RecoSequence = ['Decoding', 'VELO', 'Tr', 'Vertex']  (default: None)
+# |-RecoSequence = ['Decoding', 'VELO', 'TT', 'IT', 'OT', 'Tr', 'Vertex']  (default: None)
 # |-SpecialData  = []  (default: [])
 # |-OnlineMode   = False
 # \----- (End of User RecSysConf/RecSysConf) ---------------------------------------------------------
 # /***** User TrackSys/TrackSys **********************************************************************
 # |-FilterBeforeFit          = True
 # |-GlobalCuts               = {}  (default: {})
-# |-TrackPatRecAlgorithms    = []  (default: [])
+# |-ExpertTracking           = ['simplifiedGeometry']  (default: [])
 # |-ExpertHistos             = False
 # |-TrackExtraInfoAlgorithms = []  (default: [])
 # |-DataType                 = '2011'
-# |-ForceOldSeq              = False
+# |-WithMC                   = False
 # |-TrackTypes               = []  (default: [])
-# |-OutputType               = ''
+# |-OutputType               = 'NONE'
 # |-Simulation               = False
 # |-OldCloneKiller           = False
 # |-ForceNewSeq              = False
+# |-ExcludedLayers           = []  (default: [])
+# |-ForceOldSeq              = False
 # |-SpecialData              = []  (default: [])
-# |-WithMC                   = False
-# |-ExpertTracking           = ['simplifiedGeometry']  (default: [])
+# |-TrackPatRecAlgorithms    = []  (default: [])
 # \----- (End of User TrackSys/TrackSys) -------------------------------------------------------------
 # /***** User RecMoniConf/RecMoniConf ****************************************************************
 # |-SkipTracking = False
@@ -119,10 +121,11 @@
 # |-LogFile                      = 'alignlog.txt'
 # |-DataCondType                 = 'Run2'
 # |-ParticleSelections           = []  (default: [])
-# |-TrackSelections              = [<TAlignment.TrackSelections.GoodLongTracks instance at 0x7f2edc719998>]
-# |                              (default: [<TAlignment.TrackSelections.GoodLongTracks instance at 0x7f2edc719998>])
+# |-TrackSelections              = [<TAlignment.TrackSelections.GoodLongTracks instance at 0x7fb17cf1ff38>]
+# |                              (default: [<TAlignment.TrackSelections.GoodLongTracks instance at 0x7fb17cf1ff38>])
 # |-SolvTool                     = 'DiagSolvTool'
 # |-MinNumberOfHits              = 10
+# |-RunList                      = []  (default: [])
 # |-Precision                    = 10
 # |-MuonTopLevelElement          = '/dd/Structure/LHCb/DownstreamRegion/Muon'
 # |-Incident                     = ''
@@ -146,8 +149,8 @@
 # |-TrackLocation                = ''
 # |-ElementsToAlign              = []  (default: [])
 # |-UseCorrelations              = True
-# |-Sequencer                    = <GaudiSequencer/AlignSequence at 0x7f2edc890810>
-# |                              (default: <GaudiSequencer/TAlignmentSequencer at 0x7f2edc890620>)
+# |-Sequencer                    = <GaudiSequencer/AlignSequence at 0xd09f90>
+# |                              (default: <GaudiSequencer/TAlignmentSequencer at 0xf807b0>)
 # |-VPTopLevelElement            = '/dd/Structure/LHCb/BeforeMagnetRegion/VP'
 # |-UsePreconditioning           = True
 # |-OnlineAligWorkDir            = '/group/online/AligWork/running'
@@ -156,20 +159,21 @@
 # |-OutputName          = ''
 # |-Turbo               = False
 # |-SimType             = 'None'
-# |-PackType            = 'TES'
-# |-DstType             = 'NONE'
+# |-AlwaysCreate        = False
 # |-EnablePackingChecks = False
+# |-DstType             = 'NONE'
 # |-DataType            = ''
 # |-Writer              = 'DstWriter'
 # |-Detectors           = ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Tr', 'Calo', 'Muon']
 # |                     (default: ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Tr', 'Calo', 'Muon'])
 # |-WriteFSR            = True
-# |-SplitRawEventOutput = 2.0
-# |-PackSequencer       = None
 # |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next', 'NextNext']
 # |                     (default: ['Prev', 'PrevPrev', 'Next', 'NextNext'])
+# |-SplitRawEventOutput = 2.0
+# |-PackSequencer       = None
+# |-PVPersistence       = 'RecVertex'
 # |-EnableUnpack        = []  (default: [])
-# |-AlwaysCreate        = False
+# |-PackType            = 'TES'
 # \----- (End of User DstConf/DstConf) ---------------------------------------------------------------
 ******* calling  TAlignment
 ****** setting up Kalman type alignment!
@@ -182,8 +186,8 @@
 # WARNING: Using default tag dq-20140822 for partition DQFLAGS
 ApplicationMgr    SUCCESS 
 ====================================================================================================================================
-                                                   Welcome to Escher version v5r4
-                                          running on lxplus0157.cern.ch on Sat May 30 18:39:34 2015
+                                                   Welcome to AlignmentDev version HEAD
+                                          running on lxplus056.cern.ch on Tue Mar  1 09:47:12 2016
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -191,7 +195,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   3.27 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   3.08 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 EscherSequencer      INFO Member list: ProcessPhase/Init, GaudiSequencer/HltFilterSeq, ProcessPhase/Reco, ProcessPhase/Moni, GaudiSequencer/AlignSequence
@@ -203,18 +207,21 @@ EscherInit        SUCCESS ======================================================
 RootHistSvc          INFO Writing ROOT histograms to: -10ev-histos.root
 HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
 HltFilterSeq         INFO Member list: HltDecReportsDecoder/Hlt1DecReportsDecoder, HltDecReportsDecoder/Hlt2DecReportsDecoder
-Reco                 INFO Member list: GaudiSequencer/RecoDecodingSeq, GaudiSequencer/RecoVELOSeq, GaudiSequencer/RecoTrSeq, GaudiSequencer/RecoVertexSeq
+Reco                 INFO Member list: GaudiSequencer/RecoDecodingSeq, GaudiSequencer/RecoVELOSeq, GaudiSequencer/RecoTTSeq, GaudiSequencer/RecoITSeq, GaudiSequencer/RecoOTSeq, GaudiSequencer/RecoTrSeq, GaudiSequencer/RecoVertexSeq
 RecoDecodingSeq      INFO Member list: DecodeVeloRawBuffer/createBothVeloClusters, RawBankToSTClusterAlg/createTTClusters, RawBankToSTLiteClusterAlg/createTTLiteClusters, RawBankToSTLiteClusterAlg/createITLiteClusters, RawBankToSTClusterAlg/createITClusters
 createBothVeloC...   INFO Cancel processing of events with more than 6000 Velo clusters
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/DDDB.db/DDDB"
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/DDDB.db/DDDB"
 DDDB                 INFO Using TAG "dddb-20150522-1"
-LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
+LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/LHCBCOND.db/LHCBCOND"
 LHCBCOND             INFO Using TAG "cond-20150409"
-ONLINE_2011          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/ONLINE-2011.db/ONLINE"
+ONLINE_2011          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/v7r999/db/ONLINE-2011.db/ONLINE"
 ONLINE_2011          INFO Using TAG ""
 RecoVELOSeq          INFO Member list: FastVeloTracking
+RecoTTSeq            INFO Member list: 
+RecoITSeq            INFO Member list: 
+RecoOTSeq            INFO Member list: 
 RecoTrSeq            INFO Member list: ProcessPhase/Track
 Track                INFO Member list: GaudiSequencer/TrackForwardPatSeq, GaudiSequencer/TrackSeedPatSeq, GaudiSequencer/TrackMatchPatSeq, GaudiSequencer/TrackDownstreamPatSeq, GaudiSequencer/TrackVeloTTPatSeq, GaudiSequencer/TrackFitSeq, GaudiSequencer/TrackAddExtraInfoSeq, GaudiSequencer/TrackEraseExtraInformationSeq
 TrackForwardPatSeq   INFO Member list: PatForward
@@ -277,9 +284,6 @@ ToolSvc.GetElem...   INFO ===================== GetElementsToAlign =============
 ToolSvc.GetElem...   INFO    Going to align 0 detector elements:
 ToolSvc.GetElem...   INFO    Number of elements in map: 0
 ToolSvc.GetElem...   INFO ==============================================================
-ToolSvc.Al::Ver...   INFO Adding daughter mu+ with mass 105.658
-ToolSvc.Al::Ver...   INFO Adding daughter mu+ with mass 105.658
-ToolSvc.Al::Ver...   INFO parent mass 3096.92
 ToolSvc.Al::Ali...   INFO Constraint definition:  dofs = num elements = 0
 ToolSvc.Al::Ali...   INFO Number of constraint definitions= 1,  number of active constraints = 0
 ToolSvc.Al::Ali...   INFO Number of entries in xml data: 0
@@ -287,7 +291,7 @@ ToolSvc.Al::Ali...   INFO Number of entries specified by job-option: 0
 ToolSvc.DiagSol...   INFO EigenValueThreshold = -1
 ToolSvc.DiagSol...   INFO MinEigenModeChisquare = -1
 Alignment            INFO Use correlations = 1
-AlignMonitorSeq      INFO Member list: TrackMonitor/GoodLongTracksTrackMonitor, TrackVeloOverlapMonitor/GoodLongTracksVeloOverlapMonitor, TrackITOverlapMonitor/GoodLongTracksITOverlapMonitor
+AlignMonitorSeq      INFO Member list: TrackMonitor/GoodLongTracksTrackMonitor, TrackVeloOverlapMonitor/GoodLongTracksVeloOverlapMonitor, TrackITOverlapMonitor/GoodLongTracksITOverlapMonitor, TTTrackMonitor/GoodLongTracksTTTrackMonitor, OTTrackMonitor/GoodLongTracksOTTrackMonitor, TrackFitMatchMonitor/GoodLongTracksFitMatchMonitor
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 EventSelector        INFO End of event input reached.
@@ -339,8 +343,10 @@ ITClusterMonitor  SUCCESS Booked 13 Histogram(s) : 1D=8 2D=4 1DProf=1
 Alignment            INFO Total number of tracks: 0
 Alignment            INFO Number of covariance calculation failures: 0
 ToolSvc.Al::Ali...WARNING ==> No elements to align.
-ToolSvc.WriteMu...   INFO 0x7fff422835e8
+ToolSvc.WriteMu...   INFO 0x7ffc124ede08
 GoodLongTracksI...SUCCESS Booked 2 Histogram(s) : 1D=2 
+GoodLongTracksO...SUCCESS Booked 67 Histogram(s) : 1D=47 2D=7 1DProf=13 
+GoodLongTracksF...SUCCESS Booked 10 Histogram(s) : 1D=5 1DProf=5 
 EventLoopMgr         INFO Histograms converted successfully according to request.
 TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Skip'     map has the size 0
 
@@ -358,89 +364,95 @@ ToolSvc.TrackVe...SUCCESS Number of counters : 1
  | "Number of tracks seen"                         |         1 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
 ToolSvc.FastVel...   INFO Maximum number of Velo hits 0
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
-ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
+ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3 [PatForward]'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   3.27 times the speed of a 2.8 GHz Xeon.
-TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
+TimingAuditor.T...   INFO This machine has a speed about   3.08 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max    sigma | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO  EscherSequencer              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO   Init                        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    InitEscherSeq              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     EscherInit                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO   HltFilterSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    Hlt1DecReportsDecoder      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    Hlt2DecReportsDecoder      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO   Reco                        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RecoDecodingSeq            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     createBothVeloClusters    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     createTTClusters          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     createTTLiteClusters      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     createITLiteClusters      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     createITClusters          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RecoVELOSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     FastVeloTracking          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RecoTrSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     Track                     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      TrackForwardPatSeq       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       PatForward              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      TrackSeedPatSeq          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       PatSeeding              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      TrackMatchPatSeq         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       PatMatch                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      TrackDownstreamPatSeq    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       PatDownstream           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      TrackVeloTTPatSeq        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       PatVeloTT               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      TrackFitSeq              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       TrackBestTrackCreator   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      TrackAddExtraInfoSeq     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       TrackClonesSeq          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        FindTrackClones        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        FlagTrackClones        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       TrackAddLikelihood      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       TrackAddNNGhostId       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      TrackEraseExtraInformatio|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       TrackEraseExtraInfo     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    RecoVertexSeq              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     PatPVOffline              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackV0Finder             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO   Moni                        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    MoniVELOSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     VeloClusterMonitor        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     VeloTrackMonitor          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     VeloIPResolutionMonitor   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    MoniTrSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackMonitor              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackDiMuonMonitor        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackVertexMonitor        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     AlignmentOnlineMonitor    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackV0Monitor            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackFitMatchMonitor      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackAlignMonitor         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackITOverlapMonitor     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackVeloOverlapMonitor   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TTTrackMonitor            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     ITTrackMonitor            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TrackPV2HalfAlignMonitor  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    MoniOTSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     OTTimeMonitor             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     OTTrackMonitor            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     OTHitEfficiencyMonitor    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    MoniSTSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TTClusterMonitor          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     ITClusterMonitor          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO   AlignSequence               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    AlignInputSeq              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     AlignTrackSelSeq          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      GoodLongTracksSelectorAlg|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      AlignTracks              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    AlignmentAlgSeq            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     Alignment                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    AlignMonitorSeq            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     GoodLongTracksTrackMonitor|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     GoodLongTracksVeloOverlapM|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     GoodLongTracksITOverlapMon|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO  EscherSequencer              |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO   Init                        |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    InitEscherSeq              |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     EscherInit                |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO   HltFilterSeq                |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    Hlt1DecReportsDecoder      |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    Hlt2DecReportsDecoder      |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO   Reco                        |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    RecoDecodingSeq            |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     createBothVeloClusters    |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     createTTClusters          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     createTTLiteClusters      |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     createITLiteClusters      |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     createITClusters          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    RecoVELOSeq                |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     FastVeloTracking          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    RecoTTSeq                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    RecoITSeq                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    RecoOTSeq                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    RecoTrSeq                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     Track                     |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO      TrackForwardPatSeq       |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO       PatForward              |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO      TrackSeedPatSeq          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO       PatSeeding              |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO      TrackMatchPatSeq         |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO       PatMatch                |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO      TrackDownstreamPatSeq    |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO       PatDownstream           |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO      TrackVeloTTPatSeq        |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO       PatVeloTT               |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO      TrackFitSeq              |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO       TrackBestTrackCreator   |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO      TrackAddExtraInfoSeq     |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO       TrackClonesSeq          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO        FindTrackClones        |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO        FlagTrackClones        |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO       TrackAddLikelihood      |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO       TrackAddNNGhostId       |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO      TrackEraseExtraInformatio|     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO       TrackEraseExtraInfo     |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    RecoVertexSeq              |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     PatPVOffline              |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     TrackV0Finder             |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO   Moni                        |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    MoniVELOSeq                |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     VeloClusterMonitor        |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     VeloTrackMonitor          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     VeloIPResolutionMonitor   |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    MoniTrSeq                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     TrackMonitor              |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     TrackDiMuonMonitor        |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     TrackVertexMonitor        |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     AlignmentOnlineMonitor    |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     TrackV0Monitor            |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     TrackFitMatchMonitor      |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     TrackAlignMonitor         |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     TrackITOverlapMonitor     |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     TrackVeloOverlapMonitor   |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     TTTrackMonitor            |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     ITTrackMonitor            |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     TrackPV2HalfAlignMonitor  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    MoniOTSeq                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     OTTimeMonitor             |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     OTTrackMonitor            |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     OTHitEfficiencyMonitor    |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    MoniSTSeq                  |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     TTClusterMonitor          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     ITClusterMonitor          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO   AlignSequence               |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    AlignInputSeq              |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     AlignTrackSelSeq          |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO      GoodLongTracksSelectorAlg|     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO      AlignTracks              |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    AlignmentAlgSeq            |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     Alignment                 |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO    AlignMonitorSeq            |     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     GoodLongTracksTrackMonitor|     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     GoodLongTracksVeloOverlapM|     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     GoodLongTracksITOverlapMon|     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     GoodLongTracksTTTrackMonit|     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     GoodLongTracksOTTrackMonit|     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
+TimingAuditor.T...   INFO     GoodLongTracksFitMatchMoni|     0.000 |     0.000 |    0.000       0.0     0.00 |       0 |     0.000 |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/0(Alg/Node/Total).
 ApplicationMgr       INFO Application Manager Finalized successfully

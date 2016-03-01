@@ -1,8 +1,11 @@
 <PRE>
 Package : Escher
 Package Coordinator : Maurizio Martinelli
-Purpose : Gaudi application used to perform 
+Purpose : Gaudi application used to perform
           alignment of the LHCb detector components
+
+! 2016-03-01 - Maurizio Martinelli
+ - Updated qmtests
 
 </PRE><H1><A NAME=v5r6>2015-07-29 Escher v5r6</A></H1><PRE>
 
@@ -28,14 +31,14 @@ Purpose : Gaudi application used to perform
 ! 2015-05-31 - Maurizio Martinelli
  - Updated qmtests
 
-! 2015-05-28 - Christoph Hombach				 
+! 2015-05-28 - Christoph Hombach
  - Added Velo Upgrade Alignment:
  - Added Upgrade option in Configuration.py
  - For more details see TAlignment release.notes
 
 ! 2015-05-27 - Silvia Borghi
  - change gaudipar, gaudipariter and gaudiiter to set name of the
-   alignment db type (CONDDB or CALIBOFF) 
+   alignment db type (CONDDB or CALIBOFF)
 
 ! 2015-04-21 - Stefania Vecchi
  - added script for Muon Alignment offline options/Escher-AlignMUON.py
@@ -142,10 +145,10 @@ Purpose : Gaudi application used to perform
  - Minor changes from Wouter and Mauritzio
  - added printsequence
  - removed GaudiPoolDB
- - added install scripts 
+ - added install scripts
  - added qmtests, updated references
  - added more example option files
- - modified filestager configuration to create directory 
+ - modified filestager configuration to create directory
    in /tmp or /pool/spool depending on the machine
 
 </PRE><H1><A NAME=v4r12>2011-12-01 Escher v4r12</A></H1><PRE>
@@ -201,7 +204,7 @@ alignment of HalfStations respect the tracking
    for multi-core processing
 
 ! 2010-04-19 Johan Blouw
- - if the pattern reco is not being run, the dst is unpacked autimatically. 
+ - if the pattern reco is not being run, the dst is unpacked autimatically.
 
 ! 2010-03-19 Johan Blouw
  - renamed 2009-MPede.py to Millepede.py and modified a few other python options for the M'pede style alignment.
@@ -283,12 +286,12 @@ alignment of HalfStations respect the tracking
 - 19/05/2008 Johan Blouw: tagged head as v3r3.
 
 - 19/05/2008 Johan Blouw
-  - took IT constraints for M'pede style alignment out of 
+  - took IT constraints for M'pede style alignment out of
     TAlignment.opts into IT.opts
 
 - 14/05/2008 Marco Gersabeck head
-  - VeloAlignment.opts: removed duplicate PatVelo... options  
-                        they are in VeloAlignment/TRGtune.opts  
+  - VeloAlignment.opts: removed duplicate PatVelo... options
+                        they are in VeloAlignment/TRGtune.opts
 
 - 16/04/2008 Marco Gersabeck head
   - VeloAlignment.opts: added use of WriteAlignmentConditions
