@@ -3,7 +3,7 @@
 # Maintainer : Andrii Usachov
 #============================================================================
 package           PyGeneticOnline
-version           v0r1
+version           v1r0
 
 #============================================================================
 # Structure, i.e. directories to process. 

@@ -4,6 +4,11 @@
 ! Purpose     : Python steering for genetic trigger fitter online
 !-----------------------------------------------------------------------------
 
+!========= AlignmentOnline/PyGeneticOnline - 2016-03-01 ===========
+
+! 2016-03-01 - Maurizio Martinelli
+ - tagged as v1r0 to include in AlignmentOnline release
+
 ! 2015-03-12 - Andrii Usachov
  - first update
 ! 2015-03-05 - Andrii Usachov

@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PyGeneticOnline
 ################################################################################
-gaudi_subdir(PyGeneticOnline v0r1)
+gaudi_subdir(PyGeneticOnline v1r0)
 
 gaudi_depends_on_subdirs()
 
