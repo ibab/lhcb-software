@@ -67,7 +67,7 @@ StatusCode TabulatedSignalDetectionEff::initialize()
   LHCb::RichTraceMode tmpMode ( LHCb::RichTraceMode::RespectHPDTubes,
                                 ( m_useDetailedHPDsForRayT ?
                                   LHCb::RichTraceMode::FullHPDs :
-                                  LHCb::RichTraceMode::SimpleHPDs ) );
+                                  LHCb::RichTraceMode::FlatHPDs ) );
   m_traceModeRad[Rich::Aerogel]  = tmpMode;
   m_traceModeRad[Rich::Aerogel].setAeroRefraction(true);
   m_traceModeRad[Rich::Rich1Gas] = tmpMode;

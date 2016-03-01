@@ -22,8 +22,8 @@ MassHypothesisRingCreator::
 MassHypothesisRingCreator( const std::string& type,
                            const std::string& name,
                            const IInterface* parent )
-  : ToolBase        ( type, name, parent ),
-    m_traceModeRad  ( Rich::NRadiatorTypes ),
+  : ToolBase        ( type, name, parent       ),
+    m_traceModeRad  ( Rich::NRadiatorTypes     ),
     m_nPointScale   ( Rich::NRadiatorTypes, -1 )
 {
   // tool interface
@@ -38,7 +38,6 @@ MassHypothesisRingCreator( const std::string& type,
                    contextSpecificTES(LHCb::RichRecRingLocation::SegmentHypoRings) );
 
   //setProperty( "OutputLevel", 1 );
-
 }
 
 StatusCode MassHypothesisRingCreator::initialize()
@@ -61,8 +60,8 @@ StatusCode MassHypothesisRingCreator::initialize()
   // the ray-tracing mode
   LHCb::RichTraceMode tmpMode ( LHCb::RichTraceMode::RespectHPDTubes,
                                 ( m_useDetailedHPDsForRayT ?
-                                  LHCb::RichTraceMode::FullHPDs :
-                                  LHCb::RichTraceMode::SimpleHPDs ) );
+                                  LHCb::RichTraceMode::SphericalHPDs :
+                                  LHCb::RichTraceMode::FlatHPDs ) );
   if ( m_checkBeamPipe ) { tmpMode.setBeamPipeIntersects(true); }
   m_traceModeRad[Rich::Aerogel]  = tmpMode;
   m_traceModeRad[Rich::Aerogel].setAeroRefraction(true);
