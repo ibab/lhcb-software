@@ -4,6 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2016-03-01 - Sascha Stahl
+ - PatForwardTool: Reimplement option to use momentum estimate to guide the Forward tracking.
+   Can be activated with option UseProperMomentumEstimate.
+
 ! 2016-02-24 - Michel De Cian
  - Adapt PatAddTTCoord and PatLongLivedTracking for the changes in TTStationHitManager
 

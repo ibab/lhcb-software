@@ -129,6 +129,14 @@ private:
         xMax = xExtrap + kickRange;
         dSlopeMax = kickRange/dz;
       }
+    }else if ( m_useProperMomentumEstimate && !m_withoutBField && track.qOverP() != 0 ) {
+      auto q = track.qOverP() > 0. ? 1. : -1.;
+      auto kick =  -q * m_fwdTool->magscalefactor() * dSlope_kick(std::abs( track.sinTrack()/track.qOverP()), track.sinTrack() );
+      auto kickError =  m_minRange/dz + m_momentumEstimateError * std::abs(kick);
+      dSlopeMin = kick - kickError;
+      dSlopeMax = kick + kickError;
+      xMin = xExtrap + dSlopeMin * dz;
+      xMax = xExtrap + dSlopeMax * dz;;
     }
     // compute parameters of deltaX as a function of z
     return { zMagnet, track.xStraight( zMagnet ),
@@ -216,6 +224,7 @@ private:
   //== Parameters of the algorithm
   bool   m_secondLoop;
   bool   m_useMomentumEstimate;
+  bool m_useProperMomentumEstimate;
   double m_momentumEstimateError;
   double m_zAfterVelo;
   double m_yCompatibleTol;

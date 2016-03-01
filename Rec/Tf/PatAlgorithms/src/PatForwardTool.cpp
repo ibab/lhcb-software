@@ -263,9 +263,10 @@ PatForwardTool::PatForwardTool( const std::string& type,
 
   declareProperty( "MagnetKickParams"      , m_magnetKickParams      =  { 1255 * Gaudi::Units::MeV, 175 * Gaudi::Units::MeV } );
 
-  declareProperty( "UseMomentumEstimate", m_useMomentumEstimate = false );
-  declareProperty( "MomentumEstimateError"    , m_momentumEstimateError    =  0.5 );
-  declareProperty( "MinRange"              , m_minRange              =   300. * Gaudi::Units::mm  );
+  declareProperty( "UseMomentumEstimate", m_useMomentumEstimate = false ); // Uses charge estimate only.
+  declareProperty( "UseProperMomentumEstimate", m_useProperMomentumEstimate = false ); // Uses momentum and charge estimate.
+  declareProperty( "MomentumEstimateError"    , m_momentumEstimateError    =  0.3 );
+  declareProperty( "MinRange"              , m_minRange              =   100. * Gaudi::Units::mm  ); //Only used when using momentum estimate.
 
   declareProperty("StateErrorX2",  m_stateErrorX2  =   4.0);
   declareProperty("StateErrorY2",  m_stateErrorY2  = 400.);
