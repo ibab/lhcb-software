@@ -24,6 +24,9 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2016-03-01 - Vanya Belyaev
+ - better treatment of packed classes in relations in dst-dump 
+
 ! ==================== Phys/Bender v28r2p1 2016-02-29 =========================
 
 ! 2016-02-29 - Vanya Belyaev

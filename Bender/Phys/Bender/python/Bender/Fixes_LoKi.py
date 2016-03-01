@@ -74,18 +74,30 @@ import LoKiCore.decorators as     LCD
 ## decorate some "packed" objects:
 for i in [
     ## RC 
-    ( LHCb.PackedCaloHypos        , 'hypos'    ) ,
-    ( LHCb.PackedRecVertices      , 'vertices' ) ,
-    ( LHCb.PackedTwoProngVertices , 'vertices' ) ,
-    ( LHCb.PackedParticles        , 'data'     ) ,
-    ( LHCb.PackedVertices         , 'data'     ) ,
-    ( LHCb.PackedMuonPIDs         , 'data'     ) ,
-    ( LHCb.PackedRichPIDs         , 'data'     ) ,
-    ( LHCb.PackedProtoParticles   , 'protos'   ) ,
-    ( LHCb.PackedTracks           , 'tracks'   ) ,
+    ( LHCb.PackedCaloHypos            , 'hypos'     ) ,
+    ( LHCb.PackedRecVertices          , 'vertices'  ) ,
+    ( LHCb.PackedTwoProngVertices     , 'vertices'  ) ,
+    ( LHCb.PackedParticles            , 'data'      ) ,
+    ( LHCb.PackedVertices             , 'data'      ) ,
+    ( LHCb.PackedMuonPIDs             , 'data'      ) ,
+    ( LHCb.PackedRichPIDs             , 'data'      ) ,
+    ( LHCb.PackedProtoParticles       , 'protos'    ) ,
+    ( LHCb.PackedTracks               , 'tracks'    ) ,
+    ( LHCb.PackedClusters             , 'clusters'  ) , 
+    ( LHCb.PackedDecReport            , 'reports'   ) ,
+    ( LHCb.PackedRelations            , 'relations' ) ,
+    ( LHCb.PackedWeightedRelations    , 'relations' ) ,
+    ( LHCb.PackedFlavourTags          , 'data'      ) , 
+    ( LHCb.PackedCaloClusters         , 'data'      ) , 
+    ( LHCb.PackedCaloHypos            , 'hypos'     ) , 
+    ( LHCb.PackedMuonPIDs             , 'data'      ) , 
+    ( LHCb.PackedRelatedInfoRelations , 'data'      ) ,
+    ## 
     ## MC
-    ( LHCb.PackedMCCaloHits       , 'data'     ) ,
-    ( LHCb.PackedMCHits           , 'data'     )
+    ( LHCb.PackedMCParticles          , 'mcParts'   ) ,
+    ( LHCb.PackedMCVertices           , 'mcVerts'   ) ,
+    ( LHCb.PackedMCCaloHits           , 'data'      ) ,
+    ( LHCb.PackedMCHits               , 'data'      )
     ] :
     
     t = i[0]
@@ -97,7 +109,10 @@ for i in [
         t.__len__     = lambda s : s.get_data().size()
         t.size        = lambda s : len  ( s )
 
-        
+cpp.Relations.BaseTable.__len__ = lambda s : len ( s.relations() )
+
+
+   
 # =============================================================================
 ## get iteration over raw banks in raw-event
 #  @code
