@@ -36,7 +36,9 @@ class RichPIDQCConf(RichConfigurableUser):
         ,"PlotTools"       : [ "MassPlotTool","MomentumPlotTool","RichPlotTool","CombinedPidPlotTool" ],
         ,"Candidates"      : { "JPsiMuMu"   : [ "/Marco/To/Set/This" ],
                                "DstarD0Pi"  : [ "/Marco/To/Set/This" ],
-                               "LambdaPrPi" : [ "/Marco/To/Set/This" ] }
+                               "LambdaPrPi" : [ "/Marco/To/Set/This" ],
+                               "DsPhiPi"    : [ ],
+                               "KshortPiPi" : [ ] }
         }
 
     ## Full list of 'PlotTools' = "MassPlotTool","MomentumPlotTool", "CombinedPidPlotTool",
@@ -82,18 +84,28 @@ class RichPIDQCConf(RichConfigurableUser):
             from DsToPhiPi import DsToPhiPiConf
             conf = self.getRichCU(DsToPhiPiConf)
             self.propagateOptions(conf)
+            # Do we have any external TES candidates to use
+            cands = self.getProp("Candidates")["DsPhiPi"]
+            if len(cands) > 0 :
+                # Force turn off running own selection...
+                conf.setProp("RunMonitors",False)
+                # Set TES for candidates
+                conf.setProp("Candidates",cands)
+            # Set sequencer
             conf.setProp("Sequencer",self.newSeq( calibSeq, "RichDsToPhiPiPIDMoni"))
-            #if forceInit : conf.__apply_configuration__()
 
         # Andrew's D* -> D0(KPi) Pi selection and calibration
         if "DstarD0Pi" in calibs :
             from DstarToDzeroPi import DstarToDzeroPiConf
             conf = self.getRichCU(DstarToDzeroPiConf)
             self.propagateOptions(conf)
-            # Force turn off running own selection...
-            conf.setProp("RunMonitors",False)
-            # Set TES for candidates
-            conf.setProp("Candidates",self.getProp("Candidates")["DstarD0Pi"])
+            # Do we have any external TES candidates to use
+            cands = self.getProp("Candidates")["DstarD0Pi"]
+            if len(cands) > 0 :
+                # Force turn off running own selection...
+                conf.setProp("RunMonitors",False)
+                # Set TES for candidates
+                conf.setProp("Candidates",cands)
             # Set sequencer
             conf.setProp("Sequencer",self.newSeq( calibSeq, "RichDstarToD0PiPIDMoni"))
 
@@ -102,10 +114,13 @@ class RichPIDQCConf(RichConfigurableUser):
             from LambdaToProtonPion import LambdaToProtonPionConf
             conf = self.getRichCU(LambdaToProtonPionConf)
             self.propagateOptions(conf)
-            # Force turn off running own selection...
-            conf.setProp("RunMonitors",False)
-            # Set TES for candidates
-            conf.setProp("Candidates",self.getProp("Candidates")["LambdaPrPi"])
+            # Do we have any external TES candidates to use
+            cands = self.getProp("Candidates")["LambdaPrPi"]
+            if len(cands) > 0 :
+                # Force turn off running own selection...
+                conf.setProp("RunMonitors",False)
+                # Set TES for candidates
+                conf.setProp("Candidates",cands)
             # Set sequencer
             conf.setProp("Sequencer",self.newSeq( calibSeq, "RichLambdaToPrPiPIDMoni"))
 
@@ -114,6 +129,14 @@ class RichPIDQCConf(RichConfigurableUser):
             from KshortPiPi import KshortPiPiConf
             conf = self.getRichCU(KshortPiPiConf)
             self.propagateOptions(conf)
+            # Do we have any external TES candidates to use
+            cands = self.getProp("Candidates")["KshortPiPi"]
+            if len(cands) > 0 :
+                # Force turn off running own selection...
+                conf.setProp("RunMonitors",False)
+                # Set TES for candidates
+                conf.setProp("Candidates",cands)
+            # Set sequencer
             conf.setProp("Sequencer",self.newSeq( calibSeq, "RichKsToPiPiPIDMoni"))
 
         # Nicola's J/Psi -> Mu Mu selection
@@ -121,9 +144,12 @@ class RichPIDQCConf(RichConfigurableUser):
             from JPsiMuMu import JPsiMuMuConf
             conf = self.getRichCU(JPsiMuMuConf)
             self.propagateOptions(conf)
-            # Force turn off running own selection...
-            conf.setProp("RunMonitors",False)
-            # Set TES for candidates
-            conf.setProp("Candidates",self.getProp("Candidates")["JPsiMuMu"])
+            # Do we have any external TES candidates to use
+            cands = self.getProp("Candidates")["JPsiMuMu"]
+            if len(cands) > 0 :
+                # Force turn off running own selection...
+                conf.setProp("RunMonitors",False)
+                # Set TES for candidates
+                conf.setProp("Candidates",cands)
             # Set sequencer
             conf.setProp("Sequencer",self.newSeq( calibSeq, "RichJPsiToMuMuPIDMoni"))
