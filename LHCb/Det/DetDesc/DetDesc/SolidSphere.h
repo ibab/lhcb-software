@@ -312,11 +312,12 @@ private:
 template <class aPoint>
 inline bool SolidSphere::insideR( const aPoint& point ) const 
 {
-  const double r2 = point.mag2();
-  if(  r2 >  outerR2 () ) { return false ; }
-  if(  r2 < insideR2 () ) { return false ; }
+  const auto r2 = point.mag2();
+  return ( r2 <= outerR2() && r2 >= insideR2() );
+  //if(  r2 >  outerR2 () ) { return false ; }
+  //if(  r2 < insideR2 () ) { return false ; }
   // inside! 
-  return true ;
+  //return true ;
 }
 // ===========================================================================
 
