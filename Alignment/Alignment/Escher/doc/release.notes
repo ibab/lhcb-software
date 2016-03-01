@@ -4,6 +4,8 @@ Package Coordinator : Maurizio Martinelli
 Purpose : Gaudi application used to perform
           alignment of the LHCb detector components
 
+</PRE><H1><A NAME=v5r7>2016-03-01 Escher v5r7</A></H1><PRE>
+
 ! 2016-03-01 - Maurizio Martinelli
  - Updated qmtests
  - Removed unnecessary requirement on AlignmentDBVisualisationTool
