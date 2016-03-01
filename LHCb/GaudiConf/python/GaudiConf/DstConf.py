@@ -423,7 +423,7 @@ class DstConf(LHCbConfigurableUser):
             from Configurables import DataPacking__Unpack_LHCb__RichPIDPacker_ as UnpackRichPIDs
             rich1=UnpackRichPIDs( name = "Hlt2UnpackRichPIDs",
                     InputName          = "/Event/Hlt2/pRec/long/RichPIDs",
-                    OutputName         = "/Event/Hlt2/TrackFitted/Long/PID/RICH/electronmuonpionkaonprotondeuteronbelowThreshold/Rich1GasRich2GasLong" )
+                    OutputName         = "/Event/Hlt2/TrackFitted/Long/PID/RICH/electronmuonpionkaonprotonbelowThreshold/Rich1GasRich2GasLong" )
             from Configurables import DataPacking__Unpack_LHCb__MuonPIDPacker_ as UnpackMuonPIDs
             muon1=UnpackMuonPIDs( name = "Hlt2UnpackMuonPIDs",
                     InputName          = "/Event/Hlt2/pRec/long/MuonIDs",
@@ -468,7 +468,6 @@ class DstConf(LHCbConfigurableUser):
             gdl = Gaudi__DataLink ( 'HltRecProtos' 
                     , What   =      '/Event/Hlt2/Protos/Charged'
                     , Target =       '/Event/Rec/ProtoP/Charged')
-            from Configurables import Gaudi__DataLink
             gdl_neutral = Gaudi__DataLink ( 'HltRecNeutralProtos' 
                     , What   =      '/Event/Hlt2/neutral/Protos'
                     , Target =       '/Event/Rec/ProtoP/Neutral')
