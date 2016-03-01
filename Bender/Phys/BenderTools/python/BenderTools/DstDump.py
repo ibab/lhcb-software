@@ -166,7 +166,10 @@ def dumpDst ( config ) :
         logger.warning('Use "%s" as root, could be non-efficient' % root )
 
     from Ostap.progress_bar import progress_bar
-    for iEvent in  progress_bar ( xrange ( config.nEvents ) , silent = not config.Color ) :
+    from itertools          import count 
+    for iEvent in  progress_bar (
+        xrange ( config.nEvents ) if 0 < config.nEvents else count () ,
+        silent = not config.Color ) :
         #
         sc   = run(1)
         if sc.isFailure()       : break

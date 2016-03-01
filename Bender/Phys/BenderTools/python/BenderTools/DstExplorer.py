@@ -130,7 +130,7 @@ __usage__   = 'dst_explorer [options] file1 [ file2 [ file3 [ file4 ....'
 # =============================================================================
 # logging 
 # =============================================================================
-from Bender.Logger import getLogger 
+from Bender.Logger import getLogger, setLogging
 if '__main__' == __name__ : logger = getLogger ( 'BenderTools.DstExplorer' )
 else                      : logger = getLogger ( __name__ )
 # =============================================================================
@@ -138,7 +138,7 @@ else                      : logger = getLogger ( __name__ )
 def configure ( config , colors = False ) :
     """Configure the application from parser data 
     """
-
+        
     #
     if config.OutputLevel <= 3 and not config.Quiet :
         _vars   = vars ( config )
@@ -162,7 +162,7 @@ def configure ( config , colors = False ) :
         from BenderTools.Utils import silence
         silence ()
     #
-    from Bender.Logger import setLogging
+    ## use coherent C++/Python logging levels 
     setLogging ( config.OutputLevel ) 
     #
     # some sanity actions:
@@ -172,7 +172,7 @@ def configure ( config , colors = False ) :
     #
     ## start the actual action:
     #
-    from Configurables       import DaVinci
+    from Configurables import DaVinci
     #
     ## get the file type for the file extension
     #

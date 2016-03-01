@@ -5,6 +5,10 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2016-03-01 - Vanya Belyaev
+ - fix behaviour of dst-dump for default (-1) argument
+   (thanks to Adam Davis)
+
 ! ==================== Phys/BenderTools v28r2 2016-02-27 ======================
 
 ! 2016-02-27 - Vanya Belyaev
