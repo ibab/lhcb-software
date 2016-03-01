@@ -3,15 +3,18 @@ Package: AlignmentSys
 Package Coordinator: Maurizio Martinelli
 Purpose: LHCb Alignment packages.
          This project contains 2 different alignment algorithms
-         used by the Gaudi application Escher to align the LHCb detector 
+         used by the Gaudi application Escher to align the LHCb detector
          components.
+
+! 2016-03-01 - Maurizio Martinelli
+ - Updated qmtest
 
 ! 2016-02-26 - Maurizio Martinelli
  - Updated project dependencies with tagged packages
  - Temporarly added Tr/TrackTools v6r1 to the requirements
 
 ! 2015-08-25 - Maurizio Martinelli
- - Added Alignment/AlignmentMonitoring to the requirements  
+ - Added Alignment/AlignmentMonitoring to the requirements
 
 </PRE><H1><A NAME=v10r5>2015-07-29 AlignmentSys v10r5</A></H1><PRE>
 Depends on: Phys v20r0. For 2015 25ns data.
@@ -30,7 +33,7 @@ Depends on: Phys v20r0. For 2015 25ns data.
 Depends on: Phys v19r7. For 2015 data.
 
 ! 2015-05-31 - Maurizio Martinelli
- - Removed temporary dependences on 
+ - Removed temporary dependences on
      Tr/TrackUtils
      Det/OTDet
      Kernel/LHCbMath
@@ -80,7 +83,7 @@ Depends on: Rec v15r4, Phys v17r4. For 2012 data.
 
 Miscellaneous changes to keep up with the latest stack, the last stack which will be released on slc5 gcc46, underlying stack has changed significantly lot since the previous release, but not in a way which directly affects the alignment procedures themselves.
 
-This is the first version to pick up Lbcom through the stack, rather than directly. 
+This is the first version to pick up Lbcom through the stack, rather than directly.
 This version also adds the functionality of the DecoderDB, see task #19106
 
 New package:
@@ -115,7 +118,7 @@ Required stack for 2012 data.
 - WARNING!
 - Existing known bug in python long class : https://savannah.cern.ch/bugs/?92396
 (
-needs the latest ROOT version, or work around with: 
+needs the latest ROOT version, or work around with:
 import PyCintex
 PyCintex.gbl.std.vector("long")
 At the start of the options file.
@@ -168,7 +171,7 @@ https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=A
 </PRE><H1><A NAME=v5r2>2010-10-19 AlignmentSys v5r2</A></H1><PRE>
 Based on Rec v10r5
 
-- updated packages: 
+- updated packages:
   Alignment/AlignKernel v3r4, Alignment/Escher v4r9, Alignment/TAlignment v5r2
   Alignment/VeloAlignment v4r10, Alignment/AlignTrTools v4r9
 
@@ -184,20 +187,20 @@ Based on Rec v10r5
 
 - In Alignment/TAlignment v5r2:
   . Modify the vertex residual tool to deal with any one level resonance
-  . Add  DToKPiTwoProng.h/cpp [makes two prongs from D candidates ] 
+  . Add  DToKPiTwoProng.h/cpp [makes two prongs from D candidates ]
   . fix the way tracks from (psi) vertices are identified in input list
   . make SurveyConstraints a LHCbConfigurableUser
   . added some code to run the Muon Alignment:
-   src/MakeMuonTracks.cpp(h) make a Muon stand alone track 
+   src/MakeMuonTracks.cpp(h) make a Muon stand alone track
    src/TrackMuonMatching.cpp(h) make a matching Long+Muon track
-   src/TrackFilterAlg updated with new functionalities 
-  . python/TAlignment/Alignables.py 
+   src/TrackFilterAlg updated with new functionalities
+  . python/TAlignment/Alignables.py
   . python/TAlignment/Configuration.py to write HalfStation correction in the xml
   . python/TAlignment/SurveyConstraints.py updated with survey constraints for Muon Half stations
 
 
 - In Alignment/VeloAlignment v4r10:
-  . Minor changes to AlignSensor, 
+  . Minor changes to AlignSensor,
     add scripts to compare and combine velo xml files
 
 - In Alignment/AlignTrTools v4r9:
@@ -233,60 +236,60 @@ Based on Rec v10r0p1
 
 </PRE><H1><A NAME=v5r0>2010-05-04 AlignmentSys v5r0</A></H1><PRE>
 
-- updated packages: 
+- updated packages:
   Alignment/AlignKernel v3r3
-	Alignment/AlignSolvTools  v3r2  
-	Alignment/AlignTrTools  v4r7  
-	Alignment/AlignmentInterfaces  v3r2  
-  Alignment/Escher  v4r7  
+	Alignment/AlignSolvTools  v3r2
+	Alignment/AlignTrTools  v4r7
+	Alignment/AlignmentInterfaces  v3r2
+  Alignment/Escher  v4r7
   Alignment/MisAligner v1r3
-	Alignment/TAlignment  v5r0  
-  Alignment/VeloAlignment  v4r9  
+	Alignment/TAlignment  v5r0
+  Alignment/VeloAlignment  v4r9
 
 - In Alignment/AlignKernel v3r3:
-  . made AlEquations less verbose when adding up 
+  . made AlEquations less verbose when adding up
 
 - In Alignment/AlignSolvTools  v3r2:
-  . improved verbosity 
+  . improved verbosity
 
 - In Alignment/AlignTrTools  v4r7:
-  . Changes to ATrackSelector class: 
-    1) generate uniform track distribution in OT 
-    2) correlation between hits in T1 and T3 on a track 
+  . Changes to ATrackSelector class:
+    1) generate uniform track distribution in OT
+    2) correlation between hits in T1 and T3 on a track
     3) cut on y position in OT
-  . fixed compilor warning 
+  . fixed compilor warning
 
 - In Alignment/AlignmentInterfaces  v3r2:
-  . Changes to IATrackSelector interface 
+  . Changes to IATrackSelector interface
 
 - In Alignment/MisAligner  v1r3:
-  . remove dependencies on Sys packages which crept in 
+  . remove dependencies on Sys packages which crept in
     - causing configuration errors
 
 - In Alignment/TAlignment  v5r0:
-  . Minor changes to GAlign 
-  . make alignmentelement aware of velo motion-system-transform; make sure Update fails if it cannot handle configured mother-daughter relations 
-  . small modiciation in AlParameters to work around problem with optimization in gcc4.3 
-  . another revision of survey constraints. redefinition of alignment-frame 
+  . Minor changes to GAlign
+  . make alignmentelement aware of velo motion-system-transform; make sure Update fails if it cannot handle configured mother-daughter relations
+  . small modiciation in AlParameters to work around problem with optimization in gcc4.3
+  . another revision of survey constraints. redefinition of alignment-frame
 
 - In Alignment/Escher  v4r7 :
-  . added NEEDS_PYCOOL to requirements 
+  . added NEEDS_PYCOOL to requirements
 
-- In Alignment/VeloAlignment  v4r9:  
-  . Some updates in the pnt errors 
+- In Alignment/VeloAlignment  v4r9:
+  . Some updates in the pnt errors
 
 
 </PRE><H1><A NAME=v4r7>2010-02-05 AlignmentSys v4r7</A></H1><PRE>
 - removed packages:
   Alignment/AlignT2Velo
 
-- updated packages: 
+- updated packages:
   Alignment/AlignTrTools		v4r6p1
   Alignment/AlignSolvTools  v3r1
 	Alignment/Escher					v4r6
   Alignment/TAlignment			v4r8
   Calibration/OTCalibration v1r5
-  
+
 
 - In Alignment/AlignTrTools	v4r6p1:
   . Fix in TAConfig.py to import TAConfig from the right place
@@ -336,7 +339,7 @@ Based on Rec v10r0p1
 
 </PRE><H1><A NAME=v4r4>2009-11-23 AlignmentSys v4r4</A></H1><PRE>
 
-- Updated packages: 
+- Updated packages:
 	Calibration/OTCAlibration		v1r2
 	Alignment/TAlignment			v4r5
 	Alignment/Escher			v4r4
@@ -346,10 +349,10 @@ Based on Rec v10r0p1
 </PRE><H1><A NAME=v4r3>2009-11-02 AlignmentSys v4r3</A></H1><PRE>
 
 - Updated packages:
-	Alignment/AlignKernel			v3r1	
+	Alignment/AlignKernel			v3r1
 	Alignment/Alignment/AlignTrTools 	v4r4
 	Alignment/TAlignment			v4r4
-	Alignment/VeloAlignment			v4r8	
+	Alignment/VeloAlignment			v4r8
 	Alignment/MisAligner			v1r2
 	Calibration/OTCalibration 		v1r1
 
@@ -359,12 +362,12 @@ Based on Rec v10r0p1
 ** There was a problem introduced by J. Blouw. I did not realize that
    in fact AlignSolvKernel was replaced with AligKernel. So, I had removed
    AlignSolvTools... which was wrong. I have put it back, and retagged the
-   AlignmentSys package with the same tag. 
+   AlignmentSys package with the same tag.
 
 
 - General comments: new packages & updates
 
-- Updated  Packages: 
+- Updated  Packages:
 		AlignTrTools	v4r3 (adapted to migration to TrackKernel)
 		Escher		v4r3
 		TAlignment	v4r3
@@ -374,7 +377,7 @@ Based on Rec v10r0p1
 - New Packages:
 		AlignEvent	v1r0
 		AlignKernel	v3r0 (Renaming AligSolvTools to AlignKernel)
- 
+
 - Removed Packages:
 		AlignSolvTools (renamed to AlignKernel)
 
@@ -395,7 +398,7 @@ Based on Rec v10r0p1
 		AlignTrTools	v4r1
 		TAlignment	v4r1
 		MisAligner	v1r1
-		
+
 
 </PRE><H1><A NAME=v4r0>2009-02-21 AlignmentSys v4r0</A></H1><PRE>
 - General comments/remarks
@@ -411,11 +414,11 @@ Based on Rec v10r0p1
 	. Note: for this release, only the Kalman sequence & the Millepede sequence for OT layers
           has been configured & tested. Rest will follow soon...
  	. I noticed a small problem in the Millepede sequence, which will be resolved later as well.
-	  - here, the piece of code which is used to convert the alignment constants determined by Millepede 
+	  - here, the piece of code which is used to convert the alignment constants determined by Millepede
 	    into constants in the LHCb coordinate system seems to have a bug... certain conditions are not found.
-	. a new package has been introduced, called "MisAligner". It produces an executable which can be used to 
+	. a new package has been introduced, called "MisAligner". It produces an executable which can be used to
 	  easily generate misaligned xml files (which then have to be manually uploaded into your favourite conditions
-	  databasse. 
+	  databasse.
 
 - Packages updated:
 		AlignmentSys		v4r0
@@ -425,7 +428,7 @@ Based on Rec v10r0p1
 		MisAligner		v1r0
 		AlignmentTools		v3r0
 		SolvKernel		v1r4
-	
+
 </PRE><H1><A NAME=v3r1>2008-06-17 AlignmentSys v3r1</A></H1><PRE>
 - Packages update:
 		AlignmentInterfaces	v2r8
@@ -448,27 +451,27 @@ Based on Rec v10r0p1
 
 - in AlignTrTools:
 	- Fix to AlignTrackMonitor to reflect changes in clone finder tool interface
-	- WriteAlignmentConditions: Added choice to select layers to be printed as 
+	- WriteAlignmentConditions: Added choice to select layers to be printed as
 	  needed by VELO. Default behaviour unchanged.
 	- AlignSelTool: added cuts on track eta and on number of IT and Velo clusters in event
-	- AlignTrackMonitor and AlignSaveTuple: cleaned up a bit and added: 
+	- AlignTrackMonitor and AlignSaveTuple: cleaned up a bit and added:
 	  track eta, # IT clusters and # Velo clusters
 
 - in TAlignment:
 	- added safety checks in AlParameters and AlignAlgorithm to avoid FPEs
 	- added TrackRemoveDoubleHits in Pat Rec sequence (AlConfigurable.py).
 	- added fit sequence in case pat rec is not run (ITOTTracking.py).
-	- added AlignITBoxes.py script to align IT boxes (and gives an example 
+	- added AlignITBoxes.py script to align IT boxes (and gives an example
 	  of how to set misalignments in xml or sqlite).
-	- removed cut on chi2 in TrackFilterAlg as it is better to cut after the 
+	- removed cut on chi2 in TrackFilterAlg as it is better to cut after the
 	  fit (using TrackContainerCleaner along with AlignSelTool, for example).
 	- some clean-up in Escher_nikhef.opts
 	- added alignable objects in Alignables.py
-	- added possibility to give a list of sub-detectors for which to write out 
+	- added possibility to give a list of sub-detectors for which to write out
 	  the conditions in AlConfigurable.py + some clean-up
 
 - in AlignSolvTools:
-	- Some undocumented updates have been performed such that the code 
+	- Some undocumented updates have been performed such that the code
 	  compiles & links under windows.
 
 - in Escher:
@@ -497,7 +500,7 @@ Based on Rec v10r0p1
 	- big improvement in model describing geometry of alignable object;
 	- update of iterative Newton-Rhapson method.
 	- transform M'pede's alignment constants into LHCb local reference coordinate system
-	
+
 - in SolvKernel 	v1r3
 	- Added MA27 and AlSparseSymMatrix
 	- added operator(row,col) for all matrices
@@ -550,7 +553,7 @@ Based on Rec v10r0p1
 	- Add threshold on minimum number of hits
 
 	- Plot chi2 variables vs iteration
-	
+
 	- Add more printouts in update
 	- Add option to update in finalize
 
@@ -638,14 +641,14 @@ Based on Rec v10r0p1
 	- changes to AlignTrackMonitor: save residuals in a nicer way (+ use unbiasedResiduals)
 
 - in TAlignment		v3r3
- 	- modifications by Louis Nicolas to 
+ 	- modifications by Louis Nicolas to
 		- GetElementsToAlign: added part for TT ladders
 		- GetElementsToAlign: added TT specific part to get TT stations, layers and half-modules
 	- bug fixes in AlignAlgorithm by LN
 	- GetElementsToAlign.cpp deals with OT modules and IT ladders
 	- bug fix in GetElementsToAlign
 	- modifications by Gerhard Raven:
-		- add treatment of hit-hit correlations to AlignAlgorithm using Wouter's ResidualCovarianceTool	
+		- add treatment of hit-hit correlations to AlignAlgorithm using Wouter's ResidualCovarianceTool
 		- add ResidualCovarianceTool
 	- Louis Nicolas: Added AlignITDetector: IT specific part in old framework
 		       : GetElementsToAlign: added IT specific part to get IT stations, layers and boxes
@@ -708,7 +711,7 @@ Based on Rec v10r0p1
 	 - Made AlignOTDetector more generic by using templates
 	 - Minor speed improvements and cleaning up
 	 - Removed src/IAlignDetectorSelector.h since it has been moved to AlignmentInterfaces
-	- 2007-05-15 Johan Blouw 
+	- 2007-05-15 Johan Blouw
 	  - removed *_load.cpp as it is not needed anymore
 
 - in AlignT2Velo v1r1
@@ -725,7 +728,7 @@ Based on Rec v10r0p1
                   SolvKernel     v1r1
 
 - Packages updated: AlignmentInterfaces v2r1
-                    AlignSolvTools      v2r0 
+                    AlignSolvTools      v2r0
                     AlignTrTools        v3r1
                     TAlignment          v3r1
                     Escher              v2r1
@@ -733,9 +736,9 @@ Based on Rec v10r0p1
 - AlignT2Velo is not included in this release due to problem with dependencies
 
 - in  AlignmentInterfaces v2r1
-   - added interface to Millepede (from AlignmentTools)    
+   - added interface to Millepede (from AlignmentTools)
      added interface to AlignSolvTools
-     added dict subdirectory which contains description of 
+     added dict subdirectory which contains description of
      interface classes ( *Dict.h and *Dict.xml)
    - modified requirementsfile to reflect above mentioned changes
 
@@ -758,14 +761,14 @@ Based on Rec v10r0p1
 
 - in Escher v2r1
   - update requirements file to reflect use of sqlite dbase
-                
+
 - 09/05/2007 Johan Blouw
   - small change to requirements file, to include AlignmentTools v2r5
 
 - April 25th, 2007 Johan Blouw
   - Update of the Alignment packages
   - reorganizing tools/interfaces/algorithms:
-    - AlignmentInterfaces v2r0 
+    - AlignmentInterfaces v2r0
     - AlignTrTools        v3r0
     - TAlignment          v3r0
     - Escher              v2r0
