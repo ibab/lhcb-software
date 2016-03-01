@@ -3,9 +3,11 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+!========================= TAlignment v6r6p1 2016-03-01 =========================
 ! 2016-03-01 - Maurizio Martinelli
  - Added a filter in AlignMonitorSeq to run on events where a particle candidate is found
 
+!========================= TAlignment v6r6 2016-02-25 =========================
 ! 2016-02-25 - Maurizio Martinelli
  - Added a filter in ReviveHltTracks function of ParticleSelections
 
