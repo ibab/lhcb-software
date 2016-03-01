@@ -6,6 +6,7 @@ Purpose : Gaudi application used to perform
 
 ! 2016-03-01 - Maurizio Martinelli
  - Updated qmtests
+ - Removed unnecessary requirement on AlignmentDBVisualisationTool
 
 </PRE><H1><A NAME=v5r6>2015-07-29 Escher v5r6</A></H1><PRE>
 

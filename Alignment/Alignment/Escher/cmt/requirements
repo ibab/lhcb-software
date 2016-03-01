@@ -47,7 +47,7 @@ use DaVinciKernel       v*     Phys
 use CommonParticles     v*     Phys
 #-- Alignment packages
 
-use AlignmentDBVisualisationTool	v*    Alignment -no_auto_imports
+#use AlignmentDBVisualisationTool	v*    Alignment -no_auto_imports
 
 use AlignmentInterfaces	v*    Alignment -no_auto_imports
 use AlignmentTools      v*    Alignment -no_auto_imports
