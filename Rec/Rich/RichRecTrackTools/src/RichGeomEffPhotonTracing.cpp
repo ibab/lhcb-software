@@ -68,7 +68,7 @@ StatusCode GeomEffPhotonTracing::initialize()
   m_traceMode = LHCb::RichTraceMode( LHCb::RichTraceMode::RespectHPDTubes,
                                      ( m_useDetailedHPDsForRayT ? 
                                        LHCb::RichTraceMode::FullHPDs : 
-                                       LHCb::RichTraceMode::SimpleHPDs ) );
+                                       LHCb::RichTraceMode::FlatHPDs ) );
   if ( m_checkBeamPipe ) { m_traceMode.setBeamPipeIntersects(true); }
   _ri_debug << "Sampling Mode : " << m_traceMode << endmsg;
 
