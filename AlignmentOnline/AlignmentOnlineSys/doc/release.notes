@@ -3,6 +3,9 @@ Package: AlignmentOnlineSys
 Package Coordinator: Maurizio Martinelli
 Purpose: Running and testing Alignment in the online environment
 
+! 2016-03-01 - Maurizio Martinelli
+ - Updated dependencies on tagged package on view of the forthcoming release
+
 ! 2015-08-25 - Maurizio Martinelli
  - Added dependency on Calibration/OTOnlineCalibration 
  - Added dependency on AlignmentOnline/PyGeneticOnline

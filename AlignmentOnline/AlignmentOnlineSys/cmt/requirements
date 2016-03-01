@@ -7,9 +7,10 @@ branches cmt doc tests
 # LHCb Alignment Online packages
 #=======================================================
 
-use AlignOnline v1r5 AlignmentOnline
-use OTOnlineCalibration v* Calibration
-use PyGeneticOnline v* AlignmentOnline
+use AlignOnline         v1r6 AlignmentOnline
+use OTOnlineCalibration v1r1 Calibration
+use PyGeneticOnline     v1r0 AlignmentOnline
+use PyKaliOnline        v1r1 AlignmentOnline
 
 # Declare this as a container package
 apply_pattern container_package
