@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2016-03-01 - Sean Benson
+ - GaudiLink for PVs.
+
 ! 2016-02-26 - Marco Cattaneo
  - Normalise $LHCBRELEASE path in LHCbExclusions.py, to take into account also
    the cvmfs release area

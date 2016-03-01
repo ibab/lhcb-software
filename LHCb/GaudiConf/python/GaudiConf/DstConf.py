@@ -479,6 +479,11 @@ class DstConf(LHCbConfigurableUser):
             DataOnDemandSvc().AlgMap["Rec/ProtoP/Charged"] = recProtos
             DataOnDemandSvc().AlgMap["Rec/ProtoP/Neutral"] = recNeutralProtos
             
+            gdl_pv = Gaudi__DataLink ( 'HltRec_PV' 
+                    , What   =      '/Event/Turbo/Primary'
+                    , Target =       '/Event/Rec/Vertex/Primary')
+            DataOnDemandSvc().AlgMap["Rec/Vertex/Primary"] = gdl_pv
+            
             # Update data on demand
             for alg in unpackers:
                 DataOnDemandSvc().AlgMap[alg.OutputName] = alg
