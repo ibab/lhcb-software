@@ -72,7 +72,7 @@ StatusCode TrackGeomMoni::execute()
   // Ray-tracing configuration object
   LHCb::RichTraceMode traceMode;
   // Configure the ray-tracing mode
-  traceMode.setDetPrecision      ( LHCb::RichTraceMode::SimpleHPDs );
+  traceMode.setDetPrecision      ( LHCb::RichTraceMode::FlatHPDs );
   traceMode.setDetPlaneBound     ( LHCb::RichTraceMode::IgnoreHPDAcceptance );
   traceMode.setForcedSide        ( false                 );
   traceMode.setOutMirrorBoundary ( false                 );
@@ -256,7 +256,7 @@ StatusCode TrackGeomMoni::execute()
 
     LHCb::RichGeomPhoton photon;
     // Project track direction to active detector plane and histogram hits
-    traceMode.setDetPrecision      ( LHCb::RichTraceMode::SimpleHPDs      );
+    traceMode.setDetPrecision      ( LHCb::RichTraceMode::FlatHPDs        );
     traceMode.setDetPlaneBound     ( LHCb::RichTraceMode::RespectHPDTubes );
     const LHCb::RichTraceMode::RayTraceResult result = 
       m_rayTrace->traceToDetector( trackSeg.rich(),

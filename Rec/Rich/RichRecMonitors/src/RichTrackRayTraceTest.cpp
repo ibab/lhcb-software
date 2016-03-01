@@ -78,7 +78,7 @@ StatusCode TrackRayTraceTest::execute()
     traceMode.setDetPlaneBound ( LHCb::RichTraceMode::RespectHPDPanel  );
     testRayTrace( traceMode, segment );
 
-    traceMode.setDetPrecision  ( LHCb::RichTraceMode::SimpleHPDs );
+    traceMode.setDetPrecision  ( LHCb::RichTraceMode::FlatHPDs );
     traceMode.setDetPlaneBound ( LHCb::RichTraceMode::RespectHPDTubes );
     testRayTrace( traceMode, segment );
 

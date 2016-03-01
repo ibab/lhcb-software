@@ -4,6 +4,9 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2016-03-01 - Chris Jones
+ - Adapt to changes in ray tracing enums.
+
 ! 2016-02-24 - Chris Jones
  - Add a new monitor, RichTrackRayTraceTest that is designed to compare
    directly reconstructed (Quartic) to ray trace information, to look for

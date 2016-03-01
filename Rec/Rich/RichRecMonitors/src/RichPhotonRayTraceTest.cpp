@@ -23,7 +23,10 @@ using namespace Rich::Rec::MC;
 // Standard constructor, initializes variables
 PhotonRayTraceTest::PhotonRayTraceTest( const std::string& name,
                                         ISvcLocator* pSvcLocator )
-  : Rich::Rec::TupleAlgBase ( name, pSvcLocator ) { }
+  : Rich::Rec::TupleAlgBase ( name, pSvcLocator ) 
+{ 
+  setProperty( "NBins2DHistos", 50 );
+}
 
 // Destructor
 PhotonRayTraceTest::~PhotonRayTraceTest() {}
@@ -36,7 +39,7 @@ StatusCode PhotonRayTraceTest::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRecMCTruthTool", m_richRecMCTruth );
+  //acquireTool( "RichRecMCTruthTool", m_richRecMCTruth );
   acquireTool( "TrackSelector",   m_trSelector, this );
   acquireTool( "RichRayTracing",  m_rayTrace,    nullptr, true );
   acquireTool( "RichSmartIDTool", m_smartIDTool, nullptr, true );
@@ -66,10 +69,16 @@ StatusCode PhotonRayTraceTest::execute()
       // ray trace with the simple HPD mode
       rayTrace( photon,
                 LHCb::RichTraceMode( LHCb::RichTraceMode::RespectHPDTubes,
-                                     LHCb::RichTraceMode::SimpleHPDs ),
-                "SimpleHPDs" );
+                                     LHCb::RichTraceMode::FlatHPDs ),
+                "FlatHPDs" );
 
-      // ray trace with the full HPD mode
+      // ray trace with the fast spherical model
+      rayTrace( photon,
+                LHCb::RichTraceMode( LHCb::RichTraceMode::RespectHPDTubes,
+                                     LHCb::RichTraceMode::SphericalHPDs ),
+                "SphericalHPDs" );
+
+      // ray trace with the full HPD detector description
       rayTrace( photon,
                 LHCb::RichTraceMode( LHCb::RichTraceMode::RespectHPDTubes,
                                      LHCb::RichTraceMode::FullHPDs ),
@@ -88,8 +97,6 @@ void PhotonRayTraceTest::rayTrace( const LHCb::RichRecPhoton * photon,
 {
   // Histogramming
   const Rich::HistoID hid;
-  //PD_GLOBAL_POSITIONS_X;
-  //PD_GLOBAL_POSITIONS_Y;
   PD_LOCAL_POSITIONS_X;
   PD_LOCAL_POSITIONS_Y;
   SPHERICAL_MIRROR_GLOBAL_POSITIONS_X;
@@ -148,18 +155,18 @@ void PhotonRayTraceTest::rayTrace( const LHCb::RichRecPhoton * photon,
 
     richProfile2D( hid(rich,name+"/GloPrimMirrXDiffVXY"),
                    "Global Prim Mirr | Reco X - RayTrace X V (x,y)",
-                   xMinSpheGlo[rich], xMaxSpheGlo[rich], nBins1D(),
-                   yMinSpheGlo[rich], yMaxSpheGlo[rich], nBins1D() )
+                   xMinSpheGlo[rich], xMaxSpheGlo[rich], nBins2D(),
+                   yMinSpheGlo[rich], yMaxSpheGlo[rich], nBins2D() )
       -> fill( recoPhotPrimMirr.x(), recoPhotPrimMirr.y(), xDiffPrimMirr );
     richProfile2D( hid(rich,name+"/GloPrimMirrYDiffVXY"),
                    "Global Prim Mirr | Reco Y - RayTrace Y V (x,y)",
-                   xMinSpheGlo[rich], xMaxSpheGlo[rich], nBins1D(),
-                   yMinSpheGlo[rich], yMaxSpheGlo[rich], nBins1D() )
+                   xMinSpheGlo[rich], xMaxSpheGlo[rich], nBins2D(),
+                   yMinSpheGlo[rich], yMaxSpheGlo[rich], nBins2D() )
       -> fill( recoPhotPrimMirr.x(), recoPhotPrimMirr.y(), yDiffPrimMirr );
     richProfile2D( hid(rich,name+"/GloPrimMirrZDiffVXY"),
                    "Global Prim Mirr | Reco Z - RayTrace Z V (x,y)",
-                   xMinSpheGlo[rich], xMaxSpheGlo[rich], nBins1D(),
-                   yMinSpheGlo[rich], yMaxSpheGlo[rich], nBins1D() )
+                   xMinSpheGlo[rich], xMaxSpheGlo[rich], nBins2D(),
+                   yMinSpheGlo[rich], yMaxSpheGlo[rich], nBins2D() )
       -> fill( recoPhotPrimMirr.x(), recoPhotPrimMirr.y(), zDiffPrimMirr );
 
     // secondary mirror reflection point
@@ -181,18 +188,18 @@ void PhotonRayTraceTest::rayTrace( const LHCb::RichRecPhoton * photon,
 
     richProfile2D( hid(rich,name+"/GloSecMirrXDiffVXY"),
                    "Global Sec Mirr | Reco X - RayTrace X V (x,y)",
-                   xMinFlatGlo[rich], xMaxFlatGlo[rich], nBins1D(),
-                   yMinFlatGlo[rich], yMaxFlatGlo[rich], nBins1D() )
+                   xMinFlatGlo[rich], xMaxFlatGlo[rich], nBins2D(),
+                   yMinFlatGlo[rich], yMaxFlatGlo[rich], nBins2D() )
       -> fill( recoPhotSecMirr.x(), recoPhotSecMirr.y(), xDiffSecMirr );
     richProfile2D( hid(rich,name+"/GloSecMirrYDiffVXY"),
                    "Global Sec Mirr | Reco Y - RayTrace Y V (x,y)",
-                   xMinFlatGlo[rich], xMaxFlatGlo[rich], nBins1D(),
-                   yMinFlatGlo[rich], yMaxFlatGlo[rich], nBins1D() )
+                   xMinFlatGlo[rich], xMaxFlatGlo[rich], nBins2D(),
+                   yMinFlatGlo[rich], yMaxFlatGlo[rich], nBins2D() )
       -> fill( recoPhotSecMirr.x(), recoPhotSecMirr.y(), yDiffSecMirr );
     richProfile2D( hid(rich,name+"/GloSecMirrZDiffVXY"),
                    "Global Sec Mirr | Reco Z - RayTrace Z V (x,y)",
-                   xMinFlatGlo[rich], xMaxFlatGlo[rich], nBins1D(),
-                   yMinFlatGlo[rich], yMaxFlatGlo[rich], nBins1D() )
+                   xMinFlatGlo[rich], xMaxFlatGlo[rich], nBins2D(),
+                   yMinFlatGlo[rich], yMaxFlatGlo[rich], nBins2D() )
       -> fill( recoPhotSecMirr.x(), recoPhotSecMirr.y(), zDiffSecMirr );
 
     // hit points in global coordinates
@@ -231,22 +238,52 @@ void PhotonRayTraceTest::rayTrace( const LHCb::RichRecPhoton * photon,
 
     richProfile2D( hid(rich,name+"/LocHitXDiffVXY"),
                    "Local PD hit | Reco X - RayTrace X V (x,y)",
-                   xMinPDLoc[rich], xMaxPDLoc[rich], nBins1D(),
-                   yMinPDLoc[rich], yMaxPDLoc[rich], nBins1D() )
+                   xMinPDLoc[rich], xMaxPDLoc[rich], nBins2D(),
+                   yMinPDLoc[rich], yMaxPDLoc[rich], nBins2D() )
       -> fill( recoPhotHitLoc.x(), recoPhotHitLoc.y(), xDiffHitLoc );
     richProfile2D( hid(rich,name+"/LocHitYDiffVXY"),
                    "Local PD hit | Reco Y - RayTrace Y V (x,y)",
-                   xMinPDLoc[rich], xMaxPDLoc[rich], nBins1D(),
-                   yMinPDLoc[rich], yMaxPDLoc[rich], nBins1D() )
+                   xMinPDLoc[rich], xMaxPDLoc[rich], nBins2D(),
+                   yMinPDLoc[rich], yMaxPDLoc[rich], nBins2D() )
       -> fill( recoPhotHitLoc.x(), recoPhotHitLoc.y(), yDiffHitLoc );
     richProfile2D( hid(rich,name+"/LocHitZDiffVXY"),
                    "Local PD hit | Reco Z - RayTrace Z V (x,y)",
-                   xMinPDLoc[rich], xMaxPDLoc[rich], nBins1D(),
-                   yMinPDLoc[rich], yMaxPDLoc[rich], nBins1D() )
+                   xMinPDLoc[rich], xMaxPDLoc[rich], nBins2D(),
+                   yMinPDLoc[rich], yMaxPDLoc[rich], nBins2D() )
       -> fill( recoPhotHitLoc.x(), recoPhotHitLoc.y(), zDiffHitLoc );
 
+    // Plot deviations within the PD
+    Gaudi::XYZPoint pdpos;
+    const auto pdposok = m_smartIDTool->pdPosition( recoPhot.smartID(), pdpos );
+    if ( pdposok.isSuccess() )
+    {
+      // PD position in local coords
+      const auto pdposloc = m_smartIDTool->globalToPDPanel(pdpos);
+      // rt PD hit position w.r.t. PD centre
+      const auto rtpdpos = rtPhotHitLoc - pdposloc;
+      // PD size for plots ...
+      const auto pdsize = 40.0; // radius in mm
+      // plots
+      richProfile2D( hid(rich,name+"/LocHitXDiffVpdXY"),
+                     "Local PD hit | Reco X - RayTrace X V PD (x,y)",
+                     -pdsize, pdsize, nBins2D(),
+                     -pdsize, pdsize, nBins2D() )
+        -> fill( rtpdpos.x(), rtpdpos.y(), xDiffHitLoc );
+      richProfile2D( hid(rich,name+"/LocHitYDiffVpdXY"),
+                     "Local PD hit | Reco Y - RayTrace Y V PD (x,y)",
+                     -pdsize, pdsize, nBins2D(),
+                     -pdsize, pdsize, nBins2D() )
+        -> fill( rtpdpos.x(), rtpdpos.y(), yDiffHitLoc );
+      richProfile2D( hid(rich,name+"/LocHitZDiffVpdXY"),
+                     "Local PD hit | Reco Z - RayTrace Z V PD (x,y)",
+                     -pdsize, pdsize, nBins2D(),
+                     -pdsize, pdsize, nBins2D() )
+        -> fill( rtpdpos.x(), rtpdpos.y(), zDiffHitLoc );
+    }
+
     // Associated MCRichOpticalPhoton
-    const auto * mcPhoton = m_richRecMCTruth->trueOpticalPhoton(photon);
+    const auto * mcPhoton = ( !m_richRecMCTruth ? nullptr :
+                              m_richRecMCTruth->trueOpticalPhoton(photon) );
     if ( mcPhoton )
     {
 

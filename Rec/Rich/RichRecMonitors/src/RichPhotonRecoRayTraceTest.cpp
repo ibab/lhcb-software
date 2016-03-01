@@ -55,7 +55,7 @@ StatusCode PhotonRecoRayTraceTest::initialize()
   m_mode = LHCb::RichTraceMode( LHCb::RichTraceMode::RespectHPDTubes,
                                 ( m_fullHPDs ?
                                   LHCb::RichTraceMode::FullHPDs   :
-                                  LHCb::RichTraceMode::SimpleHPDs ) );
+                                  LHCb::RichTraceMode::FlatHPDs ) );
   m_mode.setAeroRefraction(m_refractCorr);
   info() << "Ray tracing : " << m_mode << endmsg;
 
