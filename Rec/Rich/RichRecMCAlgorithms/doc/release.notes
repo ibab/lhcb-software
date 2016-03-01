@@ -4,6 +4,9 @@
 ! Purpose     : RICH reconstruction algorithms that use MC information
 !-----------------------------------------------------------------------------
 
+! 2016-03-01 - Chris Jones
+ - Adapt to changes in ray tracing enums.
+
 !========================= RichRecMCAlgorithms v1r6p1 2015-10-13 ====================
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers

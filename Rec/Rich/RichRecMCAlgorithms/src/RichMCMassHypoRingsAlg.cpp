@@ -77,8 +77,8 @@ StatusCode MCMassHypoRingsAlg::initialize()
   /// Ray-tracing configuration object
   m_traceMode = LHCb::RichTraceMode( LHCb::RichTraceMode::RespectHPDTubes,
                                      ( m_useDetailedHPDsForRayT ? 
-                                       LHCb::RichTraceMode::FullHPDs : 
-                                       LHCb::RichTraceMode::SimpleHPDs ) );
+                                       LHCb::RichTraceMode::SphericalHPDs : 
+                                       LHCb::RichTraceMode::FlatHPDs ) );
   m_traceMode.setAeroRefraction ( true );
   info() << "MCTrack " << m_traceMode << endmsg;
   
@@ -162,7 +162,7 @@ MCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
     // the ring is in the general acceptance of the HPD panels
     std::vector<Gaudi::XYZPoint> points;
     LHCb::RichTraceMode mode;
-    mode.setDetPrecision      ( LHCb::RichTraceMode::SimpleHPDs      );
+    mode.setDetPrecision      ( LHCb::RichTraceMode::FlatHPDs        );
     mode.setDetPlaneBound     ( LHCb::RichTraceMode::RespectHPDPanel );
     mode.setForcedSide        ( false                 );
     mode.setOutMirrorBoundary ( false                 );
