@@ -74,7 +74,7 @@ namespace Rich
     virtual ~RayTracing( ); ///< Destructor
 
     // Initialization of the tool after creation
-    virtual StatusCode initialize();
+    virtual StatusCode initialize() override;
 
   public: // methods (and doxygen comments) inherited from interface
 
@@ -148,7 +148,7 @@ namespace Rich
     bool reflectSpherical ( Gaudi::XYZPoint& position,
                             Gaudi::XYZVector& direction,
                             const Gaudi::XYZPoint& CoC,
-                            const double radius ) const;
+                            const double radius ) const override;
 
     /// Ray trace from given position in given direction off flat mirrors
     bool reflectFlatPlane ( Gaudi::XYZPoint& position,

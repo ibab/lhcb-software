@@ -83,7 +83,7 @@ namespace Rich
     virtual ~RayTracingEigen( ); ///< Destructor
 
     // Initialization of the tool after creation
-    virtual StatusCode initialize();
+    virtual StatusCode initialize() override;
 
   public: // methods (and doxygen comments) inherited from interface
 
