@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MisAligner
 ################################################################################
-gaudi_subdir(MisAligner v2r2)
+gaudi_subdir(MisAligner v2r3)
 
 gaudi_depends_on_subdirs(Det/MuonDet
                          Det/OTDet
