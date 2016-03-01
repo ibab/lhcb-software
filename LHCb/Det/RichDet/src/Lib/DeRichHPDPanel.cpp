@@ -203,32 +203,33 @@ DeRichHPDPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
 
   // find the intersection with the detection plane
   const auto scalar = vInPanel.Dot(m_localPlaneNormal);
-  if ( fabs(scalar) < 1e-50 ) return LHCb::RichTraceMode::RayTraceFailed;
+  if ( UNLIKELY( fabs(scalar) < 1e-50 ) ) return LHCb::RichTraceMode::RayTraceFailed;
+  const auto scalar_inv = 1.0 / scalar;
 
   // transform point to the HPDPanel coordinate system
   const auto pInPanel = geometry()->toLocal(pGlobal);
 
   // get panel intersection point
-  auto distance = -m_localPlane2.Distance(pInPanel) / scalar;
-  auto panelIntersection( pInPanel + distance*vInPanel );
+  auto distance = -m_localPlane2.Distance(pInPanel) * scalar_inv;
+  auto panelIntersection = pInPanel + distance*vInPanel;
 
-  // Get HPD column and row numbers
+  // Set HPD column and row numbers in smart ID
   if ( !findHPDColAndPos(panelIntersection,smartID) )
-    return LHCb::RichTraceMode::RayTraceFailed;
+  { return LHCb::RichTraceMode::RayTraceFailed; }
 
   // Find the correct DeRichHPD
-  const DeRichHPD * HPD = deHPD( pdNumber(smartID) );
+  const auto * HPD = deHPD( pdNumber(smartID) );
 
   // Refind intersection point using other local plane
   // ( Can reuse scalar as both local planes have the same normal vector )
-  distance = -m_localPlane.Distance(pInPanel) / scalar;
+  distance = -m_localPlane.Distance(pInPanel) * scalar_inv;
   panelIntersection = pInPanel + distance*vInPanel;
 
   // default acceptance is inside an HPD
   LHCb::RichTraceMode::RayTraceResult res = LHCb::RichTraceMode::InHPDTube;
 
   // how are the checks to be done ?
-  if ( mode.detPrecision() == LHCb::RichTraceMode::SimpleHPDs )
+  if ( mode.detPrecision() != LHCb::RichTraceMode::FullHPDs )
   {
     // do it quickly using a simplified HPD acceptance (window description)
 
@@ -250,8 +251,24 @@ DeRichHPDPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
       }
     }
 
-    // set the window point to panel intersection point
-    windowPointGlobal = geometry()->toGlobal( panelIntersection );
+    // If we are approximating the HPDs as flat circles, or if we are outside an HPD
+    // just set the panel intersection point
+    if ( mode.detPrecision() == LHCb::RichTraceMode::FlatHPDs ||
+         res                 != LHCb::RichTraceMode::InHPDTube )
+    {
+      // set the window point to panel intersection point
+      windowPointGlobal = geometry()->toGlobal( panelIntersection );
+    }
+    else
+    {
+      // perform fast intersection with the HPD entrance window
+      const auto ok = HPD->intersectEntryWindow( pGlobal, vGlobal, windowPointGlobal );
+      if ( UNLIKELY(!ok) )
+      {
+        // fall back to setting the window point to the panel intersection point
+        windowPointGlobal = geometry()->toGlobal( panelIntersection );
+      }
+    }
 
   }
   else
@@ -669,8 +686,8 @@ StatusCode DeRichHPDPanel::geometryUpdate()
   // now point C at the other end.
   const auto pointC( deHPD(nPDs()-nPDsPerCol()/2)->windowCentreInIdeal() );
 
-  m_detectionPlane = Gaudi::Plane3D(pointA,pointB,pointC);
-  m_localPlane = geometry()->toLocalMatrix() * m_detectionPlane;
+  m_detectionPlane   = Gaudi::Plane3D(pointA,pointB,pointC);
+  m_localPlane       = geometry()->toLocalMatrix() * m_detectionPlane;
   m_localPlaneNormal = m_localPlane.Normal();
 
   // store the z coordinate of the detection plane
@@ -679,7 +696,7 @@ StatusCode DeRichHPDPanel::geometryUpdate()
   // localPlane2 is used when trying to locate the HPD row/column from
   // a point in the panel.
   m_localPlaneZdiff = winR - std::sqrt( winR*winR - m_activeRadiusSq );
-  m_localPlane2 = Gaudi::Transform3D(Gaudi::XYZVector(0.0,0.0,m_localPlaneZdiff))(m_localPlane);
+  m_localPlane2     = Gaudi::Transform3D(Gaudi::XYZVector(0.0,0.0,m_localPlaneZdiff))(m_localPlane);
 
   if ( msgLevel(MSG::VERBOSE,msg) )
   {

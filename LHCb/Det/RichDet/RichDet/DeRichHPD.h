@@ -232,6 +232,21 @@ public:
   bool testKaptonShadowing( const Gaudi::XYZPoint&  pInPanel,
                             const Gaudi::XYZVector& vInPanel ) const;
 
+  /** Intersect a given direction, from a given point, with the outer surface 
+   *  of the HPD window in the global LHCb frame
+   *
+   *  @param[in]  position      The start point to use for the ray tracing
+   *  @param[in]  direction     The direction to ray trace from the start point
+   *  @param[out] intersection  The intersection point of the direction with the plane
+   *
+   *  @return Boolean indicating the status of the ray tracing
+   *  @retval true  Ray tracing was successful
+   *  @retval false Ray tracing was unsuccessful
+   */
+  bool intersectEntryWindow ( const Gaudi::XYZPoint& position,
+                              const Gaudi::XYZVector& direction,
+                              Gaudi::XYZPoint& intersection ) const;
+  
 private: // functions
 
   /** Returns the silicon x coordinate for the given RichSmartID
@@ -400,6 +415,9 @@ private: // data
 
   /// Rotional centre for MDMS corrections
   Gaudi::XYZVector m_MDMSRotCentre;
+
+  /// Centre of curvature of entrance window outer surface in global frame
+  Gaudi::XYZVector m_windowCoCglobal;
 
   /// pointer to the magnetic field service
   mutable ILHCbMagnetSvc * m_magFieldSvc = nullptr;

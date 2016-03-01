@@ -4,6 +4,11 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2016-03-01 - Chris Jones
+ - Add a new method to DeRichHPD to perform a fast line intersection with
+   the HPD entrance window, modelled as a simple sphere. 
+   Used by DeRichHPDPanel::PDWindowPoint as a new ray tracing mode.
+
 ! 2016-02-29 - Chris Jones
  - Remove some legacy DC06 alignment methods from DeRich(1,2).
 

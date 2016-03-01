@@ -284,7 +284,7 @@ StatusCode DeRichHPD::updateGeometry()
     debug() << "Updating geometry transformations for HPD:" << m_number <<endmsg;
 
   // find the subMaster volume, normally the first physical volume
-  const IPVolume * pvHPDSMaster = geometry()->lvolume()->pvolume(0);
+  const auto * pvHPDSMaster = geometry()->lvolume()->pvolume(0);
   if ( pvHPDSMaster->name().find("HPDSMaster") == std::string::npos )
   {
     fatal() << "Cannot find HPDSMaster volume : " << pvHPDSMaster->name() << endmsg;
@@ -292,7 +292,7 @@ StatusCode DeRichHPD::updateGeometry()
   }
 
   // find pvRichHPDSiDet volume
-  const IPVolume* pvSilicon = pvHPDSMaster->lvolume()->pvolume("pvRichHPDSiDet");
+  const auto * pvSilicon = pvHPDSMaster->lvolume()->pvolume("pvRichHPDSiDet");
   if ( !pvSilicon ) // multiple HPD volumes
   {
     pvSilicon = pvHPDSMaster->lvolume()->pvolume(10);
@@ -309,8 +309,8 @@ StatusCode DeRichHPD::updateGeometry()
   m_kaptonSolid =
     pvHPDSMaster->lvolume()->pvolume("pvRichHPDKaptonShield")->lvolume()->solid();
 
-  const ISolid* siliconSolid = pvSilicon->lvolume()->solid();
-  const SolidBox* siliconBox = dynamic_cast<const SolidBox*>(siliconSolid);
+  const auto * siliconSolid = pvSilicon->lvolume()->solid();
+  const auto * siliconBox = dynamic_cast<const SolidBox*>(siliconSolid);
   if ( !siliconBox )
   {
     fatal() << " Failed to get SolidBox for silicon" << endmsg;
@@ -326,8 +326,8 @@ StatusCode DeRichHPD::updateGeometry()
   m_windowSolid = m_pvWindow->lvolume()->solid();
   // find intersections with the window
   ISolid::Ticks windowTicks;
-  const unsigned int windowTicksSize =
-    m_windowSolid->intersectionTicks( Gaudi::XYZPoint(0.0, 0.0, 0.0),
+  const auto windowTicksSize =
+    m_windowSolid->intersectionTicks( Gaudi::XYZPoint (0.0, 0.0, 0.0),
                                       Gaudi::XYZVector(0.0, 0.0, 1.0),
                                       windowTicks );
   if ( windowTicksSize != 2 )
@@ -343,26 +343,34 @@ StatusCode DeRichHPD::updateGeometry()
   m_winOutRsq = m_winOutR*m_winOutR;
 
   // get kapton
-  const IPVolume * pvKapton = pvHPDSMaster->lvolume()->pvolume("pvRichHPDKaptonShield");
+  const auto * pvKapton = pvHPDSMaster->lvolume()->pvolume("pvRichHPDKaptonShield");
 
   // Transformation from HPD window to global coord system
-  m_fromWindowToGlobal = geometry()->toGlobalMatrix() * pvHPDSMaster->matrixInv() *
-    m_pvWindow->matrixInv();
+  m_fromWindowToGlobal = ( geometry()->toGlobalMatrix() * 
+                           pvHPDSMaster->matrixInv()    * 
+                           m_pvWindow->matrixInv()      );
   // Transformation from HPD panel to HPD window coord system
-  m_fromPanelToWindow = m_pvWindow->matrix() * pvHPDSMaster->matrix() *
-    geometry()->ownMatrix();
+  m_fromPanelToWindow = ( m_pvWindow->matrix()    * 
+                          pvHPDSMaster->matrix()  * 
+                          geometry()->ownMatrix() );
   // Transformation from HPD panel to kapton coord system
-  m_fromPanelToKapton = pvKapton -> matrix() * pvHPDSMaster->matrix() *
-    geometry()->ownMatrix();
+  m_fromPanelToKapton = ( pvKapton->matrix()      * 
+                          pvHPDSMaster->matrix()  * 
+                          geometry()->ownMatrix() );
   // Transformation for HPD window to HPD coord system
-  m_fromWindowToHPD = pvHPDSMaster->matrixInv() * m_pvWindow->matrixInv();
+  m_fromWindowToHPD = ( pvHPDSMaster->matrixInv() * 
+                        m_pvWindow->matrixInv() );
   // Transformation for HPD to HPD-Panel coord system
   m_fromHPDToPanel = geometry()->ownMatrix().Inverse();
 
   // cache the position of the inside window centre in the panel coordinate system
-  m_windowInsideCentreMother = geometry()->ownMatrix().Inverse() *
-    pvHPDSMaster->matrixInv() *
-    m_pvWindow->toMother(Gaudi::XYZPoint(0,0,m_winInR));
+  m_windowInsideCentreMother = ( geometry()->ownMatrix().Inverse() *
+                                 pvHPDSMaster->matrixInv()         *
+                                 m_pvWindow->toMother(Gaudi::XYZPoint(0,0,m_winInR)) );
+
+  // cache the centre of curvature of the HPD window outer surface
+  // in the global frame
+  m_windowCoCglobal = m_fromWindowToGlobal * Gaudi::XYZPoint(0,0,0);
 
   // from silicon sensor to HPD including misalignment
   m_SiSensorToHPDMatrix = m_deSiSensor->geometry()->ownMatrix().Inverse();
@@ -750,12 +758,15 @@ double DeRichHPD::demag(const double r, const double B)
   constexpr double a0=0.1771, a1=1.818e-4, a2=2.2197e-5;
   constexpr double b0=-4.713E-4, b1=8.613E-6, b2=-1.2794E-6, b3=+1.3596E-8;
 
+  const auto BB  = B*B;
+  const auto BBB = BB*B; 
+
   // a and b calculated from the field
-  const double a = a0 + a1*B+a2*B*B;
-  const double b = b0 + b1*B + b2*B*B + b3*B*B*B;
+  const auto a = a0 + a1*B+a2*BB;
+  const auto b = b0 + b1*B + b2*BB + b3*BBB;
 
   // rho calculated from r, a and b, second order, 0 constant term polynomial
-  return ( a*r + b*r*r );
+  return ( a + b*r ) * r;
 }
 
 //***********************************************************************
@@ -764,36 +775,42 @@ double DeRichHPD::mag( const double rho, const double B )
   constexpr double c0=5.63057, c1=-1.12557e-2, c2=-4.65552e-4;
   constexpr double d0=0.10377, d1=-1.052e-3, d2=1.995e-4, d3=-2.734e-6;
 
+  const auto BB  = B*B;
+  const auto BBB = BB*B; 
+
   // calculate c and d from the field
-  const double c = c0 + c1*B+c2*B*B;
-  const double d = d0 + d1*B + d2*B*B + d3*B*B*B;
+  const auto c = c0 + c1*B+c2*BB;
+  const auto d = d0 + d1*B + d2*BB + d3*BBB;
 
   // r calculated from rho, c and d, second order, 0 constant term polynomial
-  return (c*rho + d*rho*rho);
+  return ( c + d*rho ) * rho;
 }
 
 //***********************************************************************
 double DeRichHPD::Delta_Phi(const double r, const double B)
 {
+  const auto BB  = B*B;
+  const auto BBB = BB*B; 
+
   // calculate a
   constexpr double a1 = 0.0255208;
   constexpr double a2 = -4.78963E-5;
-  const double a = a1*B + a2*B*B;
+  const auto a = a1*B + a2*BB;
 
   // calculate b
   constexpr double b1 = -6.93056E-6;
   constexpr double b2 = -8.31286E-7;
   constexpr double b3 = 1.23044E-8;
-  const double b =  b1*B + b2*B*B + b3*B*B*B;
+  const auto b =  b1*B + b2*BB + b3*BBB;
 
   // calculate c
   constexpr double c1 = 3.38129E-8;
   constexpr double c2 = 1.6186E-8;
   constexpr double c3 = -2.24814E-10;
-  const double c = c1*B + c2*B*B + c3*B*B*B;
+  const auto c = c1*B + c2*BB + c3*BBB;
 
   // this calculates and returns \Delta\phi from a, b, c and r
-  return ( a + b*r*r + c*r*r*r ) ;
+  return ( a + ( ( b + c*r ) * r * r ) ) ;
 }
 
 //=========================================================================
@@ -848,3 +865,35 @@ StatusCode DeRichHPD::detectionPoint ( const LHCb::RichSmartID smartID,
            magnifyToGlobalMagnetON  ( detectPoint, photoCathodeSide ) :
            magnifyToGlobalMagnetOFF ( detectPoint, photoCathodeSide ) );
 }
+
+//=========================================================================
+// Intersect a given direction, from a given point, with the outer surface 
+// of the HPD window in the global LHCb frame
+//=========================================================================
+bool DeRichHPD::intersectEntryWindow ( const Gaudi::XYZPoint& position,
+                                       const Gaudi::XYZVector& direction,
+                                       Gaudi::XYZPoint& intersection ) const
+{
+  bool OK = true;
+  // find intersection point
+  // for line sphere intersection look at http://www.realtimerendering.com/int/
+  const auto a = direction.Mag2();
+  if ( UNLIKELY( 0 == a ) ) { OK = false; }
+  else
+  {
+    const auto delta = position - m_windowCoCglobal;
+    const auto     b = 2.0 * direction.Dot( delta );
+    const auto     c = delta.Mag2() - m_winOutRsq;
+    const auto discr = b*b - 4.0*a*c;
+    if ( UNLIKELY( discr < 0 ) ) { OK = false; }
+    else
+    {
+      const auto dist = -0.5 * ( std::sqrt(discr) + b ) / a;
+      // set intersection point
+      intersection = position + ( dist * direction );
+    }
+  }
+  return OK;
+}
+
+//=========================================================================
