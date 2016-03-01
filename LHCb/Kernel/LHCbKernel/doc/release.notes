@@ -3,6 +3,11 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
+
+! 2016-03-01 - Chris Jones
+ - Extend the HPD handling modes in RichTraceMode with a new fast mode that
+   models the entry window as a simple sphere. 
+
 ! 2016-02-09 - Gerhard Raven
  - add FastClusterContainer::emplace_back
 
