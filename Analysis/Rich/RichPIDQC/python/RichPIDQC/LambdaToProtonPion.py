@@ -35,7 +35,7 @@ class LambdaToProtonPionConf(RichConfigurableUser) :
         ,"MakeSelDST" : False
         ,"DSTPreScaleFraction" : 0.1
         ,"PlotTools" : [ ]
-        ,"Candidates" : [ "/Marco/To/Set/This" ]
+        ,"Candidates" : [ ]
         }
 
     ## Set general job options

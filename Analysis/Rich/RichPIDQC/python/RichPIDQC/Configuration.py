@@ -33,7 +33,10 @@ class RichPIDQCConf(RichConfigurableUser):
         ,"MCChecks"        : False
         ,"MakeNTuple"      : False
         ,"MakeSelDST"      : False
-        ,"PlotTools"       : [ "MassPlotTool","MomentumPlotTool","RichPlotTool","CombinedPidPlotTool" ]
+        ,"PlotTools"       : [ "MassPlotTool","MomentumPlotTool","RichPlotTool","CombinedPidPlotTool" ],
+        ,"Candidates"      : { "JPsiMuMu"   : [ "/Marco/To/Set/This" ],
+                               "DstarD0Pi"  : [ "/Marco/To/Set/This" ],
+                               "LambdaPrPi" : [ "/Marco/To/Set/This" ] }
         }
 
     ## Full list of 'PlotTools' = "MassPlotTool","MomentumPlotTool", "CombinedPidPlotTool",
@@ -89,6 +92,9 @@ class RichPIDQCConf(RichConfigurableUser):
             self.propagateOptions(conf)
             # Force turn off running own selection...
             conf.setProp("RunMonitors",False)
+            # Set TES for candidates
+            conf.setProp("Candidates",self.getProp("Candidates")["DstarD0Pi"])
+            # Set sequencer
             conf.setProp("Sequencer",self.newSeq( calibSeq, "RichDstarToD0PiPIDMoni"))
 
         # Andrew's Lambda -> Proton Pion selection
@@ -98,6 +104,9 @@ class RichPIDQCConf(RichConfigurableUser):
             self.propagateOptions(conf)
             # Force turn off running own selection...
             conf.setProp("RunMonitors",False)
+            # Set TES for candidates
+            conf.setProp("Candidates",self.getProp("Candidates")["LambdaPrPi"])
+            # Set sequencer
             conf.setProp("Sequencer",self.newSeq( calibSeq, "RichLambdaToPrPiPIDMoni"))
 
         # Andrew's Kshort -> Pion Pion selection
@@ -114,4 +123,7 @@ class RichPIDQCConf(RichConfigurableUser):
             self.propagateOptions(conf)
             # Force turn off running own selection...
             conf.setProp("RunMonitors",False)
+            # Set TES for candidates
+            conf.setProp("Candidates",self.getProp("Candidates")["JPsiMuMu"])
+            # Set sequencer
             conf.setProp("Sequencer",self.newSeq( calibSeq, "RichJPsiToMuMuPIDMoni"))

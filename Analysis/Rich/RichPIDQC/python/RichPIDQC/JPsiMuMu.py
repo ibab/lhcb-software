@@ -35,7 +35,7 @@ class JPsiMuMuConf(RichConfigurableUser) :
         ,"MakeSelDST" : False
         ,"DSTPreScaleFraction" : 1.0
         ,"PlotTools"  : [ ]
-        ,"Candidates" : [ "/Marco/To/Set/This" ]
+        ,"Candidates" : [ ]
         }
 
     ## Set general job options

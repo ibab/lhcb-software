@@ -25,9 +25,9 @@ class DstarToDzeroPiConf(RichConfigurableUser) :
     
     ## Steering options
     __slots__ = {
-         "Context"         : "Offline"  # The context within which to run
-        ,"OutputLevel"     : INFO  # The output level to set all algorithms and tools to use
-        ,"Sequencer"    : None     # The sequencer to add the calibration algorithms too
+         "Context"      : "Offline"  # The context within which to run
+        ,"OutputLevel"  : INFO       # The output level to set all algorithms and tools to use
+        ,"Sequencer"    : None       # The sequencer to add the calibration algorithms too
         ,"RunSelection" : True
         ,"RunMonitors"  : False
         ,"MCChecks"     : False
@@ -35,7 +35,7 @@ class DstarToDzeroPiConf(RichConfigurableUser) :
         ,"MakeSelDST"   : False
         ,"DSTPreScaleFraction" : 1.0
         ,"PlotTools"    : [ ]
-        ,"Candidates" : [ "/Marco/To/Set/this" ]
+        ,"Candidates" : [ ]
         }
 
     ## Set general job options
