@@ -116,7 +116,7 @@ class TAlignment( LHCbConfigurableUser ):
                 particlemerger.CloneFilteredParticles = False
                 for i in self.getProp("ParticleSelections"):
                     alg = i.algorithm()
-                    if alg: 
+                    if alg:
                         particleInputSeq.Members.append( alg )
                         print "adding particleinputsel to sequence: ", i.name(), i.algorithm(), i.location()
                     particlemerger.Inputs.append( i.location() )
@@ -152,6 +152,7 @@ class TAlignment( LHCbConfigurableUser ):
 
     def monitorSeq( self ) :
         from Configurables import (TrackVertexMonitor,ParticleToTrackContainer)
+        from Configurables import LoKi__VoidFilter as Filter
         monitorSeq = GaudiSequencer("AlignMonitorSeq", IgnoreFilterPassed = True)
         for i in self.getProp("TrackSelections"):
             if isinstance(i,str): i = TrackSelection(i)
@@ -162,12 +163,15 @@ class TAlignment( LHCbConfigurableUser ):
             location = i.location()
             name = i.name()
             pmonseq = GaudiSequencer("AlignMonitorSeq" + name)
+            # add a filter on the alignment particles
+            fltr = Filter ( 'Seq'+name+'Output' , Code = " 0 < CONTAINS ( '%s') " % location)
+            pmonseq.Members += [fltr]
             pmonseq.Members += [ ParticleToTrackContainer(name + "ParticleToTrackForMonitoring",
                                                              ParticleLocation = location,
                                                              TrackLocation = location + "Tracks")]
             pmonseq.Members += self.createTrackMonitors(name,location + "Tracks")
             monitorSeq.Members.append(pmonseq)
-            
+
         if self.getProp("VertexLocation") != "":
              monitorSeq.Members.append(TrackVertexMonitor("AlignVertexMonitor",
                                                           PVContainer = self.getProp("VertexLocation")))
@@ -376,5 +380,3 @@ class TAlignment( LHCbConfigurableUser ):
             mainSeq.Members.append( self.monitorSeq() )
             if self.getProp( "NumIterations" ) > 1 :
                 mainSeq.Members.append( self.postMonitorSeq() )
-
-
