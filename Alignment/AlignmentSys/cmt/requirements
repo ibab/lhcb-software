@@ -17,10 +17,10 @@ use AlignEvent				v1r2    Alignment # Wouter Hulsbergen
 use AlignKernel				v3r9    Alignment # Adlene Hicheur, Wouter Hulsbergen
 use AlignSolvTools			v3r6    Alignment # A. Hicheur, W. Hulsbergen
 use AlignTrTools			v4r18	Alignment # Johan Blouw, Adlene Hicheur, Louis Nicolas
-use TAlignment				v6r6	Alignment # Jan Amoraal, Johan Blouw, Marc Deissenroth, Florin Maciuc
+use TAlignment				v6r6p1	Alignment # Jan Amoraal, Johan Blouw, Marc Deissenroth, Florin Maciuc
 use VeloAlignment			v4r14	Alignment # Silvia Borghi, Marco Gersabeck
-use MisAligner				v2r2	Alignment # Johan Blouw, Manuel Schiller
-use Escher				v5r6	Alignment # Maurizio Martinelli
+use MisAligner				v2r3	Alignment # Johan Blouw, Manuel Schiller
+use Escher				v5r7	Alignment # Maurizio Martinelli
 use CommonParticles     		v8r23   Phys
 
 #=======================================================

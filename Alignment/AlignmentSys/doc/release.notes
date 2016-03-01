@@ -8,6 +8,7 @@ Purpose: LHCb Alignment packages.
 
 ! 2016-03-01 - Maurizio Martinelli
  - Updated qmtest
+ - Updated project dependencies with tagged packages
 
 ! 2016-02-26 - Maurizio Martinelli
  - Updated project dependencies with tagged packages
