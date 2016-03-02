@@ -1,7 +1,7 @@
 ################################################################################
 # Package: OnlineBase
 ################################################################################
-gaudi_subdir(OnlineBase v1r40)
+gaudi_subdir(OnlineBase v1r41)
 
 find_package(Boost COMPONENTS system)
 gaudi_add_library(OnlineBase
