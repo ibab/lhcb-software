@@ -1,7 +1,7 @@
 ################################################################################
 # Package: ZMQTransferLib
 ################################################################################
-gaudi_subdir(ZMQTransfer v0r1)
+gaudi_subdir(ZMQTransfer v0r2)
 
 gaudi_depends_on_subdirs(Online/ZeroMQ
 			 Online/OnlineBase

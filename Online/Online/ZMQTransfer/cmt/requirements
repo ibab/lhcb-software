@@ -2,4 +2,4 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           ZMQTransfer
-version           v0r1
+version           v0r2
