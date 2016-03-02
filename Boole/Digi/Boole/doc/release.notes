@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+- Changes to references to follow changes since Boole v30r0
+  . Follow introduction of SIMCOND local tag calo-20160225 for 2010 and 2011
+
 </PRE><H1><A NAME=v30r0>2016-02-01 Boole v30r0</A></H1><PRE>
 This version uses projects:
  LCG_83 (ROOT 6.06.00), Gaudi v27r0, LHCb v40r0, Lbcom v18r0
