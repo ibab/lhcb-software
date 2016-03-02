@@ -16,6 +16,9 @@
 // All code is in general Rich reconstruction namespace
 using namespace Rich::Rec;
 
+// pull in methods from Rich::RayTracingUtils
+using namespace Rich::RayTracingUtils;
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -72,7 +75,6 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
 
   // Get tools
   acquireTool( "RichMirrorSegFinder", m_mirrorSegFinder, nullptr, true );
-  acquireTool( "RichRayTracing",      m_rayTracing,      nullptr, true );
   acquireTool( "RichSmartIDTool",     m_idTool,          nullptr, true );
 
   // loop over radiators
@@ -105,16 +107,19 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
     else { _ri_debug << "Will accept ambiguous " << rad << " photons" << endmsg; }
 
     if ( m_useAlignedMirrSegs[rad] )
-    {      _ri_debug << "Will use fully alligned mirror segments for " << rad << " reconstruction" << endmsg;  }
+    {      _ri_debug << "Will use fully alligned mirror segments for " << rad << " reconstruction" 
+                     << endmsg;  }
     else { _ri_debug << "Will use nominal mirrors for " << rad << " reconstruction" << endmsg; }
 
     if ( m_checkBeamPipe[rad] )
     {      _ri_debug << "Will check for " << rad << " photons that hit the beam pipe" << endmsg; }
 
     if ( m_checkPrimMirrSegs[rad] )
-    {      _ri_debug << "Will check for full intersecton with mirror segments for " << rad << endmsg; }
+    {      _ri_debug << "Will check for full intersecton with mirror segments for " 
+                     << rad << endmsg; }
 
-    _ri_debug << "Minimum active " << rad << " segment fraction = " << m_minActiveFrac[rad] << endmsg;
+    _ri_debug << "Minimum active " << rad << " segment fraction = " << m_minActiveFrac[rad] 
+              << endmsg;
 
   }
 
@@ -395,21 +400,16 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
         // using the best actual secondary mirror segment at this point
         // For RICH2, use the spherical nature of the scondary mirrors
         // For RICH1, where they are much flatter, assume complete flatness
-        // const bool sc = ( Rich::Rich2 == rich ? 
-        //                   m_rayTracing->intersectSpherical( sphReflPoint,
-        //                                                     virtDetPoint - sphReflPoint,
-        //                                                     secSegment->centreOfCurvature(),
-        //                                                     secSegment->radius(),
-        //                                                     secReflPoint ) :
-        //                   m_rayTracing->intersectPlane( sphReflPoint,
-        //                                                 virtDetPoint - sphReflPoint,
-        //                                                 secSegment->centreNormalPlane(),
-        //                                                 secReflPoint ) );
-        const bool sc = m_rayTracing->intersectSpherical( sphReflPoint,
-                                                          virtDetPoint - sphReflPoint,
-                                                          secSegment->centreOfCurvature(),
-                                                          secSegment->radius(),
-                                                          secReflPoint );
+        const bool sc = ( Rich::Rich2 == rich ? 
+                          intersectSpherical( sphReflPoint,
+                                              virtDetPoint - sphReflPoint,
+                                              secSegment->centreOfCurvature(),
+                                              secSegment->radius(),
+                                              secReflPoint ) :
+                          intersectPlane( sphReflPoint,
+                                          virtDetPoint - sphReflPoint,
+                                          secSegment->centreNormalPlane(),
+                                          secReflPoint ) );
         if ( UNLIKELY(!sc) )
         {
           //_ri_debug << radiator << " : Failed to intersect nominal secondary mirror plane" << endmsg;
@@ -497,18 +497,14 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   if ( m_useSecMirs && m_useAlignedMirrSegs[radiator] )
   {
     const auto dir = virtDetPoint - sphReflPoint;
-    // const bool sc = ( Rich::Rich2 == rich ? 
-    //                   m_rayTracing->intersectSpherical( sphReflPoint, dir,
-    //                                                     secSegment->centreOfCurvature(),
-    //                                                     secSegment->radius(),
-    //                                                     secReflPoint ) :
-    //                   m_rayTracing->intersectPlane( sphReflPoint, dir,
-    //                                                 secSegment->centreNormalPlane(),
-    //                                                 secReflPoint ) );
-    const bool sc = m_rayTracing->intersectSpherical( sphReflPoint, dir,
-                                                      secSegment->centreOfCurvature(),
-                                                      secSegment->radius(),
-                                                      secReflPoint );
+    const bool sc = ( Rich::Rich2 == rich ? 
+                      intersectSpherical( sphReflPoint, dir,
+                                          secSegment->centreOfCurvature(),
+                                          secSegment->radius(),
+                                          secReflPoint ) :
+                      intersectPlane( sphReflPoint, dir,
+                                      secSegment->centreNormalPlane(),
+                                      secReflPoint ) );
     if ( !sc )
     {
       //_ri_debug << radiator << " : Failed final secondary mirror plane intersection" << endmsg;
@@ -598,27 +594,22 @@ findMirrorData( const Rich::DetectorType rich,
     // Direction vector from primary mirror point to virtual detection point
     const auto dir ( virtDetPoint - sphReflPoint );
     // find the sec mirror intersction point and secondary mirror segment
-    OK = m_rayTracing->intersectPlane( sphReflPoint, dir,
-                                       m_rich[rich]->nominalPlane(side),
-                                       secReflPoint );
+    OK = intersectPlane( sphReflPoint, dir,
+                         m_rich[rich]->nominalPlane(side),
+                         secReflPoint );
     if ( OK )
     {
       // find the secondary mirror
       secSegment = m_mirrorSegFinder->findSecMirror( rich, side, secReflPoint );
       // Re-find the secondary mirror reflection point using the new mirror info
-      // CRJ - Is this needed ?
       // OK = ( Rich::Rich2 == rich ? 
-      //        m_rayTracing->intersectSpherical( sphReflPoint, dir,
-      //                                          secSegment->centreOfCurvature(),
-      //                                          secSegment->radius(),
-      //                                          secReflPoint ) :
-      //        m_rayTracing->intersectPlane( sphReflPoint, dir,
-      //                                      secSegment->centreNormalPlane(),
-      //                                      secReflPoint ) );
-      // OK = m_rayTracing->intersectSpherical( sphReflPoint, dir,
-      //                                        secSegment->centreOfCurvature(),
-      //                                        secSegment->radius(),
-      //                                        secReflPoint ); 
+      //        intersectSpherical( sphReflPoint, dir,
+      //                            secSegment->centreOfCurvature(),
+      //                            secSegment->radius(),
+      //                            secReflPoint ) :
+      //        intersectPlane( sphReflPoint, dir,
+      //                        secSegment->centreNormalPlane(),
+      //                        secReflPoint ) );
     }
   }
   // return

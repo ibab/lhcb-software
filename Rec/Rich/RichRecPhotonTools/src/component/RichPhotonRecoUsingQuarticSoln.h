@@ -33,6 +33,7 @@
 // RichKernel
 #include "RichKernel/RichTrackSegment.h"
 #include "RichKernel/RichGeomPhoton.h"
+#include "RichKernel/RichRayTracingUtils.h"
 
 // Math Definitions
 #include "GaudiKernel/Point3DTypes.h"
@@ -152,9 +153,6 @@ namespace Rich
 
       /// Tool to locate the appropriate mirror segments for a given reflection point
       const IMirrorSegFinder * m_mirrorSegFinder = nullptr;
-
-      /// Raytracing tool
-      const IRayTracing * m_rayTracing = nullptr;
 
       /// RichSmartID tool
       const ISmartIDTool * m_idTool = nullptr;

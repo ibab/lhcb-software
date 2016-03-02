@@ -18,6 +18,9 @@
 // All code is in general Rich reconstruction namespace
 using namespace Rich::Rec;
 
+// pull in methods from Rich::RayTracingUtils
+using namespace Rich::RayTracingUtils;
+
 DECLARE_TOOL_FACTORY( FastTrSegMakerFromRecoTracks )
 
 //=============================================================================
@@ -27,18 +30,18 @@ FastTrSegMakerFromRecoTracks::
 FastTrSegMakerFromRecoTracks( const std::string& type,
                               const std::string& name,
                               const IInterface* parent)
-  : BaseTrSegMakerFromRecoTracks ( type, name, parent ),
-    m_nomZstates   ( Rich::NRadiatorTypes, 0    ),
-    m_zTolerance   ( Rich::NRadiatorTypes, 0    ),
-    m_minStateDiff ( Rich::NRadiatorTypes, 0    ),
-    m_entryPlanes  ( Rich::NRadiatorTypes       ),
-    m_exitPlanes   ( Rich::NRadiatorTypes       ),
-    m_entryZ       ( Rich::NRadiatorTypes       ),
-    m_exitZ        ( Rich::NRadiatorTypes       ),
-    m_maxX         ( Rich::NRadiatorTypes, 0    ),
-    m_maxY         ( Rich::NRadiatorTypes, 0    ),
-    m_minR2        ( Rich::NRadiatorTypes, 0    ),
-    m_deRads       ( Rich::NRadiatorTypes       )
+: BaseTrSegMakerFromRecoTracks ( type, name, parent ),
+  m_nomZstates   ( Rich::NRadiatorTypes, 0    ),
+  m_zTolerance   ( Rich::NRadiatorTypes, 0    ),
+  m_minStateDiff ( Rich::NRadiatorTypes, 0    ),
+  m_entryPlanes  ( Rich::NRadiatorTypes       ),
+  m_exitPlanes   ( Rich::NRadiatorTypes       ),
+  m_entryZ       ( Rich::NRadiatorTypes       ),
+  m_exitZ        ( Rich::NRadiatorTypes       ),
+  m_maxX         ( Rich::NRadiatorTypes, 0    ),
+  m_maxY         ( Rich::NRadiatorTypes, 0    ),
+  m_minR2        ( Rich::NRadiatorTypes, 0    ),
+  m_deRads       ( Rich::NRadiatorTypes       )
 {
   // job options
 
@@ -212,10 +215,10 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
 
     // Find radiator entry point
     Gaudi::XYZPoint entryPoint;
-    if ( !m_rayTracing->intersectPlane( states[0]->position(),
-                                        entryVect,
-                                        m_entryPlanes[rad],
-                                        entryPoint ) )
+    if ( !intersectPlane( states[0]->position(),
+                          entryVect,
+                          m_entryPlanes[rad],
+                          entryPoint ) )
     {
       if ( msgLevel(MSG::VERBOSE) ) verbose() << "   Failed to intersect entry plane" << endmsg;
       continue;
@@ -240,10 +243,10 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
 
     // Find radiator exit point
     Gaudi::XYZPoint exitPoint;
-    if ( !m_rayTracing->intersectPlane( states[1]->position(),
-                                        exitVect,
-                                        m_exitPlanes[rad],
-                                        exitPoint ) )
+    if ( !intersectPlane( states[1]->position(),
+                          exitVect,
+                          m_exitPlanes[rad],
+                          exitPoint ) )
     {
       if ( msgLevel(MSG::VERBOSE) ) verbose() << "   Failed to intersect exit plane" << endmsg;
       continue;

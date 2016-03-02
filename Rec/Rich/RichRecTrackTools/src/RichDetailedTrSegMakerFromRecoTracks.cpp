@@ -15,6 +15,9 @@
 // All code is in general Rich reconstruction namespace
 using namespace Rich::Rec;
 
+// pull in methods from Rich::RayTracingUtils
+using namespace Rich::RayTracingUtils;
+
 //===============================================================================
 // Standard constructor, initializes variables
 //===============================================================================
@@ -1005,10 +1008,10 @@ DetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* ra
   Gaudi::XYZPoint intersection ( state.position() );
   Gaudi::XYZVector tempDir     ( state.slopes()   );
 
-  if ( m_rayTracing->reflectSpherical( intersection,
-                                       tempDir,
-                                       m_rich[rich]->nominalCentreOfCurvature(m_rich[rich]->side(intersection)),
-                                       m_rich[rich]->sphMirrorRadius() ) )
+  if ( reflectSpherical( intersection,
+                         tempDir,
+                         m_rich[rich]->nominalCentreOfCurvature(m_rich[rich]->side(intersection)),
+                         m_rich[rich]->sphMirrorRadius() ) )
   {
     if ( intersection.z() < initialZ && radiator->geometry()->isInside(intersection) )
     {

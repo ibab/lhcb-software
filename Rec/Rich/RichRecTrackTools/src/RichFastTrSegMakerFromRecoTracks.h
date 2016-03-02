@@ -18,6 +18,7 @@
 // RichKernel
 #include "RichKernel/RichTrackSegment.h"
 #include "RichKernel/IRichRayTracing.h"
+#include "RichKernel/RichRayTracingUtils.h"
 
 namespace Rich
 {

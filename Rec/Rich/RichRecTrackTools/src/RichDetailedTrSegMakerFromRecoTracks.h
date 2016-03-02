@@ -30,6 +30,7 @@
 #include "RichKernel/IRichParticleProperties.h"
 #include "RichKernel/IRichRadiatorTool.h"
 #include "RichKernel/RichTrackSegment.h"
+#include "RichKernel/RichRayTracingUtils.h"
 
 // Track Interfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"
