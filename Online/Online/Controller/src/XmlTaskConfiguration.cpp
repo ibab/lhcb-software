@@ -107,6 +107,7 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_typ
       ++num_instance[j%num_sockets];
     
     // Create 'real' and 'internal' slaves
+    int instance_tag = 0;
     for(size_t j=0; j<=instances; ++j)   {
       DimSlave* slave = 0;
       int  cpu_slot = j%num_sockets;
@@ -154,6 +155,7 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_typ
 	}
 	slave->setArgs(instance_utgid+" "+instance_args);
 	slave->cloneEnv();
+	slave->setInstanceTag(++instance_tag);
       }
       else  {
 	FmcSlave* s = new FmcSlave(type,instance_utgid,&machine,internal_slave);
@@ -161,13 +163,18 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_typ
 	s->setFmcArgs(instance_fmc+affinity);
 	s->setArgs(instance_args);
 	slave = s;
-	if ( !internal_slave )  
+	if ( forking && !internal_slave )  {
+	  slave->setInstanceTag(0);
+	}
+	else  {
+	  slave->setInstanceTag(++instance_tag);
+	}
+	if ( !internal_slave )
 	  machine.display(print_level,"XmlConfig","|     tmStart -m %s %s %s %s %s",
 			  node.c_str(),instance_fmc.c_str(),affinity.c_str(),
 			  cmd.c_str(),instance_args.c_str());
       }
       slave->setCommand(cmd);
-      slave->setInstanceTag(int(j));
       machine.addSlave(slave);
       const Type::States& states = type->states();
       for(Tasklist::Timeouts::const_iterator it=t->timeouts.begin(); it!=t->timeouts.end(); ++it)   {
