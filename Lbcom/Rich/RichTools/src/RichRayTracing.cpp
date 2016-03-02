@@ -332,6 +332,7 @@ bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
                                            const LHCb::RichTraceMode mode,
                                            const Rich::Side forcedSide ) const
 {
+  using namespace Rich::RayTracingUtils;
 
   Gaudi::XYZPoint  tmpPos ( position  );
   Gaudi::XYZVector tmpDir ( direction );
@@ -520,6 +521,8 @@ Rich::RayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
                                           Gaudi::XYZPoint& endPoint,
                                           Gaudi::XYZVector& endDir ) const
 {
+  using namespace Rich::RayTracingUtils;
+
   Gaudi::XYZPoint  tmpStartPoint ( startPoint );
   Gaudi::XYZVector tmpStartDir   ( startDir   );
 
@@ -543,8 +546,7 @@ Rich::RayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
     { return false; }
 
     // find secondary mirror segment
-    const DeRichSphMirror* secSegment
-      = m_mirrorSegFinder->findSecMirror(rich,side,planeIntersection);
+    const auto * secSegment = m_mirrorSegFinder->findSecMirror(rich,side,planeIntersection);
 
     if ( !reflectSpherical( tmpStartPoint, tmpStartDir,
                             secSegment->centreOfCurvature(),
@@ -564,8 +566,7 @@ Rich::RayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
   { return false; }
 
   // find primary mirror segment
-  const DeRichSphMirror* sphSegment = m_mirrorSegFinder->
-    findSphMirror( rich, side,tmpStartPoint );
+  const auto * sphSegment = m_mirrorSegFinder->findSphMirror( rich, side,tmpStartPoint );
 
   // Spherical mirror reflection with exact parameters
   if ( !reflectSpherical( storePoint, storeDir,
@@ -577,127 +578,6 @@ Rich::RayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
   endDir    = storeDir;
 
   return true;
-}
-
-//=========================================================================
-// Intersect a given direction, from a given point, with a given spherical shell.
-//=========================================================================
-bool
-Rich::RayTracing::intersectSpherical ( const Gaudi::XYZPoint& position,
-                                       const Gaudi::XYZVector& direction,
-                                       const Gaudi::XYZPoint& CoC,
-                                       const double radius,
-                                       Gaudi::XYZPoint& intersection ) const
-{
-  bool OK = true;
-
-  // find intersection point
-  // for line sphere intersection look at http://www.realtimerendering.com/int/
-
-  const auto a = direction.Mag2();
-  if ( UNLIKELY( 0 == a ) ) { OK = false; }
-  else
-  {
-    const auto delta = position - CoC;
-    const auto     b = 2.0 * direction.Dot( delta );
-    const auto     c = delta.Mag2() - radius*radius;
-    const auto discr = b*b - 4.0*a*c;
-    if ( UNLIKELY( discr < 0 ) ) { OK = false; }
-    else
-    {
-      const auto dist = 0.5 * ( std::sqrt(discr) - b ) / a;
-      // set intersection point
-      intersection = position + ( dist * direction );
-    }
-  }
-  return OK;
-}
-
-//=========================================================================
-// reflect from a spherical mirror
-//=========================================================================
-bool
-Rich::RayTracing::reflectSpherical ( Gaudi::XYZPoint& position,
-                                     Gaudi::XYZVector& direction,
-                                     const Gaudi::XYZPoint& CoC,
-                                     const double radius ) const
-{
-  bool OK = true;
-
-  // find intersection point
-  // for line sphere intersection look at http://www.realtimerendering.com/int/
-
-  const auto a = direction.Mag2();
-  if ( UNLIKELY( 0 == a ) ) { OK = false; }
-  else
-  {
-    const auto delta = position - CoC;
-    const auto     b = 2.0 * direction.Dot( delta );
-    const auto     c = delta.Mag2() - radius*radius;
-    const auto discr = b*b - 4.0*a*c;
-    if ( UNLIKELY( discr < 0 ) ) { OK = false; }
-    else
-    {
-      const auto dist = 0.5 * ( std::sqrt(discr) - b ) / a;
-      // change position to the intersection point
-      position += dist * direction;
-      // reflect the vector
-      // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
-      const auto normal = position - CoC;
-      direction -= ( 2.0 * normal.Dot(direction) / normal.Mag2() ) * normal;
-    }
-  }
-  return OK;
-}
-
-//=========================================================================
-//  reflect from a flat mirror
-//=========================================================================
-bool
-Rich::RayTracing::reflectFlatPlane ( Gaudi::XYZPoint& position,
-                                     Gaudi::XYZVector& direction,
-                                     const Gaudi::Plane3D& plane ) const
-{
-  // temp intersection point
-  Gaudi::XYZPoint intersection;
-
-  // refect of the plane
-  const bool sc = intersectPlane( position, direction, plane, intersection );
-  if ( sc )
-  {
-    // plane normal
-    const auto normal = plane.Normal();
-
-    // update position to intersection point
-    position = intersection;
-
-    // reflect the vector and update direction
-    // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
-    direction -= 2.0 * (normal.Dot(direction)) * normal;
-  }
-
-  // return status code
-  return sc;
-}
-
-//=========================================================================
-//  intersect a plane
-//=========================================================================
-bool
-Rich::RayTracing::intersectPlane ( const Gaudi::XYZPoint& position,
-                                   const Gaudi::XYZVector& direction,
-                                   const Gaudi::Plane3D& plane,
-                                   Gaudi::XYZPoint& intersection ) const
-{
-  bool OK = true;
-  const auto scalar = direction.Dot( plane.Normal() );
-  if ( UNLIKELY( fabs(scalar) < 1e-99 ) ) { OK = false; }
-  else
-  {
-    const auto distance = -(plane.Distance(position)) / scalar;
-    intersection = position + (distance*direction);
-  }
-  return OK;
 }
 
 //=========================================================================

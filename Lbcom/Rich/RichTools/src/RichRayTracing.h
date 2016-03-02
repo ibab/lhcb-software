@@ -25,6 +25,7 @@
 #include "RichKernel/RichGeomPhoton.h"
 #include "RichKernel/RichTrackSegment.h"
 #include "RichKernel/IRichSnellsLawRefraction.h"
+#include "RichKernel/RichRayTracingUtils.h"
 
 // Kernel
 #include "Kernel/RichSide.h"
@@ -130,30 +131,6 @@ namespace Rich
                                  const Gaudi::XYZVector& startDir,
                                  Gaudi::XYZPoint& endPoint,
                                  Gaudi::XYZVector& endDir ) const override;
-
-    /// Intersection a given direction, from a given point with a given plane.
-    bool intersectPlane( const Gaudi::XYZPoint& position,
-                         const Gaudi::XYZVector& direction,
-                         const Gaudi::Plane3D& plane,
-                         Gaudi::XYZPoint& intersection ) const override;
-
-    /// Intersect a given direction, from a given point, with a given spherical shell.
-    bool intersectSpherical ( const Gaudi::XYZPoint& position,
-                              const Gaudi::XYZVector& direction,
-                              const Gaudi::XYZPoint& CoC,
-                              const double radius,
-                              Gaudi::XYZPoint& intersection ) const override;
-
-    /// Reflect a given direction off a spherical mirror. Can be used for intersection.
-    bool reflectSpherical ( Gaudi::XYZPoint& position,
-                            Gaudi::XYZVector& direction,
-                            const Gaudi::XYZPoint& CoC,
-                            const double radius ) const override;
-
-    /// Ray trace from given position in given direction off flat mirrors
-    bool reflectFlatPlane ( Gaudi::XYZPoint& position,
-                            Gaudi::XYZVector& direction,
-                            const Gaudi::Plane3D& plane ) const override;
 
   private: // methods
 

@@ -546,9 +546,9 @@ Rich::RayTracingEigen::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint
     const auto * secSegment =
       m_mirrorSegFinder->findSecMirror( rich, side, planeIntersection );
 
-    if ( !reflectSpherical( tmpStartPoint, tmpStartDir,
-                            secSegment->centreOfCurvature(),
-                            secSegment->radius() ) )
+    if ( !Rich::RayTracingUtils::reflectSpherical( tmpStartPoint, tmpStartDir,
+                                                   secSegment->centreOfCurvature(),
+                                                   secSegment->radius() ) )
     { return false; }
 
   }
@@ -558,9 +558,9 @@ Rich::RayTracingEigen::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint
   Gaudi::XYZVector storeDir( tmpStartDir );
 
   // Spherical mirror reflection with nominal parameters
-  if ( !reflectSpherical( tmpStartPoint, tmpStartDir,
-                          m_rich[rich]->nominalCentreOfCurvature(side),
-                          m_rich[rich]->sphMirrorRadius() ) )
+  if ( !Rich::RayTracingUtils::reflectSpherical( tmpStartPoint, tmpStartDir,
+                                                 m_rich[rich]->nominalCentreOfCurvature(side),
+                                                 m_rich[rich]->sphMirrorRadius() ) )
   { return false; }
 
   // find primary mirror segment
@@ -568,138 +568,15 @@ Rich::RayTracingEigen::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint
     m_mirrorSegFinder->findSphMirror( rich, side, tmpStartPoint );
 
   // Spherical mirror reflection with exact parameters
-  if ( !reflectSpherical( storePoint, storeDir,
-                          sphSegment->centreOfCurvature(),
-                          sphSegment->radius() ) )
+  if ( !Rich::RayTracingUtils::reflectSpherical( storePoint, storeDir,
+                                                 sphSegment->centreOfCurvature(),
+                                                 sphSegment->radius() ) )
   { return false; }
 
   endPoint  = storePoint;
   endDir    = storeDir;
 
   return true;
-}
-
-//=========================================================================
-// Intersect a given direction, from a given point, with a given spherical shell.
-//=========================================================================
-bool
-Rich::RayTracingEigen::intersectSpherical ( const Gaudi::XYZPoint& position,
-                                            const Gaudi::XYZVector& direction,
-                                            const Gaudi::XYZPoint& CoC,
-                                            const double radius,
-                                            Gaudi::XYZPoint& intersection ) const
-{
-  bool OK = true;
-
-  // find intersection point
-  // for line sphere intersection look at http://www.realtimerendering.com/int/
-
-  const auto a = direction.Mag2();
-  if ( UNLIKELY( 0 == a ) ) { OK = false; }
-  else
-  {
-    const auto delta = position - CoC;
-    const auto     b = 2.0 * direction.Dot( delta );
-    const auto     c = delta.Mag2() - radius*radius;
-    const auto discr = b*b - 4.0*a*c;
-    if ( UNLIKELY( discr < 0 ) ) { OK = false; }
-    else
-    {
-      const auto dist = 0.5 * ( std::sqrt(discr) - b ) / a;
-      // set intersection point
-      intersection = position + ( dist * direction );
-    }
-  }
-  return OK;
-}
-
-//=========================================================================
-//  reflect from a spherical mirror
-//=========================================================================
-
-bool
-Rich::RayTracingEigen::reflectSpherical ( Gaudi::XYZPoint& position,
-                                          Gaudi::XYZVector& direction,
-                                          const Gaudi::XYZPoint& CoC,
-                                          const double radius ) const
-{
-  bool OK = true;
-
-  // find intersection point
-  // for line sphere intersection look at http://www.realtimerendering.com/int/
-
-  const auto a = direction.Mag2();
-  if ( UNLIKELY( 0 == a ) ) { OK = false; }
-  else
-  {
-    const auto delta = position - CoC;
-    const auto     b = 2.0 * direction.Dot( delta );
-    const auto     c = delta.Mag2() - radius*radius;
-    const auto discr = b*b - 4.0*a*c;
-    if ( UNLIKELY( discr < 0 ) ) { OK = false; }
-    else
-    {
-      const auto dist = 0.5 * ( std::sqrt(discr) - b ) / a;
-      // change position to the intersection point
-      position += dist * direction;
-      // reflect the vector
-      // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
-      const auto normal = position - CoC;
-      direction -= ( 2.0 * normal.Dot(direction) / normal.Mag2() ) * normal;
-    }
-  }
-  return OK;
-}
-
-//=========================================================================
-//  reflect from a flat mirror
-//=========================================================================
-bool
-Rich::RayTracingEigen::reflectFlatPlane ( Gaudi::XYZPoint& position,
-                                          Gaudi::XYZVector& direction,
-                                          const Gaudi::Plane3D& plane ) const
-{
-  // temp intersection point
-  Gaudi::XYZPoint intersection;
-
-  // refect of the plane
-  const bool sc = intersectPlane( position, direction, plane, intersection );
-  if ( sc ) 
-  {
-    // plane normal
-    const auto normal = plane.Normal();
-    
-    // update position to intersection point
-    position = intersection;
-    
-    // reflect the vector and update direction
-    // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
-    direction -= 2.0 * normal.Dot(direction) * normal;
-  }
-
-  // return status code
-  return sc;
-}
-
-//=========================================================================
-//  intersect a plane
-//=========================================================================
-
-bool
-Rich::RayTracingEigen::intersectPlane ( const Gaudi::XYZPoint& position,
-                                        const Gaudi::XYZVector& direction,
-                                        const Gaudi::Plane3D& plane,
-                                        Gaudi::XYZPoint& intersection ) const
-{
-  bool OK = true;
-  const auto scalar = direction.Dot( plane.Normal() );
-  if ( UNLIKELY( fabs(scalar) < 1e-99 ) ) { OK = false; }
-  else
-  {
-    const auto distance = -(plane.Distance(position)) / scalar;
-    intersection = position + (distance*direction);
-  }
-  return OK;
 }
 
 //=========================================================================

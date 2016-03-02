@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2016-03-02 - Chris Jones
+ - Update ray tacing tools to adapt to be move of some basic methods
+   to a utility header file in Rich/RichKernel.
+
 ! 2016-02-29 - Chris Jones
  - Set average pd position return by pdPosition to (0,0,0) when returned
    status code is failure.
