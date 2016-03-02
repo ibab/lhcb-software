@@ -455,6 +455,9 @@ class CharmHadD2HHHLines() :
                    'DspToKpPimPipTurbo' : [DConeVar10DsPPK, DConeVar05,  DConeVar15,VertexIso],  
                    'DspToPimPipPipTurbo' : [DConeVar10DsPPP, DConeVar05, DConeVar15, VertexIso],  
                    'DspToKmKpKpTurbo' : [DConeVar10DsKKK, DConeVar05,  DConeVar15,VertexIso],  
-                   'DspToKmPipPipTurbo' : [DConeVar10DsKPP, DConeVar05,  DConeVar15,VertexIso]                  
+                   'DspToKmPipPipTurbo' : [DConeVar10DsKPP, DConeVar05,  DConeVar15,VertexIso],
+                   'DpToKmPipPipTurbo' : [DConeVar10DKPP, DConeVar05,  DConeVar15,VertexIso],                  
+                   'DpToKmKpPipTurbo' : [DConeVar10DKKP , DConeVar05,  DConeVar15, VertexIso],
+                   'DspToKmKpPipTurbo' : [DConeVar10DsKKP, DConeVar05,  DConeVar15,VertexIso]
 } 
         return relInfo
