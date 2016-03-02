@@ -70,6 +70,9 @@ class TrackSys(LHCbConfigurableUser):
     ## Available Pat Reco algorithms
     AvailablePatRecoAlgos = [ "Velo", "FastVelo", "VeloTT", "Forward", "ForwardHLT1","ForwardHLT2","TsaSeed", "PatSeed", "Match", "PatMatch", "Downstream", "PatLongLivedTracking" ]
 
+    ## List of DataTypes (years) for Run 2
+    Run2DataTypes = ["2015","2016","2017","2018"]
+
     ## @brief Check the options are sane etc.
     def defineOptions(self):
         
@@ -102,7 +105,7 @@ class TrackSys(LHCbConfigurableUser):
               defaultPatRecAlgorithms = self.DefaultPatRecAlgorithms
               defaultGlobalCuts       = self.DefaultGlobalCuts
           # for Run II we will use a different sequence
-          if "2015" == self.getProp("DataType"):
+          if self.getProp("DataType") in self.Run2DataTypes:
               defaultPatRecAlgorithms = self.DefaultPatRecAlgorithmsRun2
           
           ##
@@ -197,7 +200,7 @@ class TrackSys(LHCbConfigurableUser):
             RecoUpgradeTracking.RecoUpgradeTracking()
         else:
             if self.getProp( "FilterBeforeFit" ):
-                if  "2015" == self.getProp("DataType"):
+                if self.getProp("DataType") in self.Run2DataTypes:
                     from TrackSys import RecoTrackingRun2
                     # per default, run simplified geometry and use liteClusters
                     RecoTrackingRun2.RecoTrackingHLT1( simplifiedGeometryFit = not self.fullGeometryHLT1(), liteClustersFit = not self.fullClustersHLT1() )

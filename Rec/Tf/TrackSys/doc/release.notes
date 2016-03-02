@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2016-03-02 - Marco Cattaneo
+ - TrackSys: extend Run 2 support to all Run2 data types (2015,2016,2017,2018)
+   Currently all years treated like 2015.
+
 !========================= TrackSys v9r12 2016-01-28 =========================
 ! 2015-12-09 - Michel De Cian
  - Make 'PrHybridSeeding' default one in tracking sequence.
