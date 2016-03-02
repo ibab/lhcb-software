@@ -280,14 +280,14 @@ class Action(object) :
 #  @code
 #  run(10)
 #  @endcode 
-def run ( nEvents       =   -1  ,
-          postAction    = None  ,
-          preAction     = None  ,
-          with_progress = False ) :
+def run ( nEvents     =   -1  ,
+          postAction = None  ,
+          preAction  = None  ,
+          progress   = False ) :
     """Run gauidi 
     >>> run(50)
     """
-    if 0 < nEvents and with_progress :
+    if progress :
         return run_progress ( nEvents , postAction , preAction )
 
     with Action ( preAction , postAction ) :
@@ -341,7 +341,11 @@ class RunAction(object) :
 # =============================================================================
 def _next_event_ ( nevt = 1 ) :
     _g = appMgr()
-    return  _g._evtpro.nextEvent( nevt )
+    sc = _g._evtpro.nextEvent( nevt )
+    if sc.isSuccess() and not get ( '/Event' ) :
+        logger.warning ( 'No more events in event selection...' )
+        sc.setCode ( 2 )
+    return sc 
     
 # =============================================================================
 ## run N events with progress bar 
@@ -354,8 +358,6 @@ def run_progress ( nEvents           ,
     """Run gaudi showing the progress bar  
     >>> run_progress ( 50 )
     """
-    if nEvents <= 0 :
-        return run ( nEvents , postAction , preAction )
     ##
     sc = SUCCESS
     
@@ -370,7 +372,9 @@ def run_progress ( nEvents           ,
             with  RunAction () : 
             
                 from Ostap.progress_bar import progress_bar
-                for i in progress_bar ( xrange ( nEvents ) ) :
+                from itertools          import count
+                what =  xrange( nEvents ) if 0<nEvents else count() 
+                for i in progress_bar ( what ) :
                     sc = _next_event_  ( 1 )
                     if sc.isFailure() :
                         logger.error('Error from run %s' % sc)
