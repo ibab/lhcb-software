@@ -402,6 +402,12 @@ void ReportConvertTool::ProtoParticleObject2Summary( HltObjectSummary::Info* inf
       case 57: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloChargedEcal, -1000 ) ) ); break;
       case 58: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloChargedPrs, -1000 ) ) ); break;
       case 59: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::CaloChargedSpd, -1000 ) ) ); break;
+      case 60: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::ProbNNe, -1000 ) ) ); break;
+      case 61: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::ProbNNmu, -1000 ) ) ); break;
+      case 62: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::ProbNNpi, -1000 ) ) ); break;
+      case 63: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::ProbNNk, -1000 ) ) ); break;
+      case 64: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::ProbNNp, -1000 ) ) ); break;
+      case 65: info->insert( proto_it->first, float( object->info( LHCb::ProtoParticle::ProbNNghost, -1000 ) ) ); break;
     }
   }
 
@@ -879,6 +885,12 @@ void ReportConvertTool::ProtoParticleObjectFromSummary( const HltObjectSummary::
       case 57: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloChargedEcal, ( (*info)[ proto_it->first ] ) ); break;// 
       case 58: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloChargedPrs, ( (*info)[ proto_it->first ] ) ); break;// 
       case 59: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::CaloChargedSpd, ( (*info)[ proto_it->first ] ) ); break;// 
+      case 60: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::ProbNNe, ( (*info)[ proto_it->first ] ) ); break;// 
+      case 61: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::ProbNNmu, ( (*info)[ proto_it->first ] ) ); break;// 
+      case 62: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::ProbNNpi, ( (*info)[ proto_it->first ] ) ); break;// 
+      case 63: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::ProbNNk, ( (*info)[ proto_it->first ] ) ); break;// 
+      case 64: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::ProbNNp, ( (*info)[ proto_it->first ] ) ); break;// 
+      case 65: if( (*info)[ proto_it->first ] != -1000 ) object->addInfo( LHCb::ProtoParticle::ProbNNghost, ( (*info)[ proto_it->first ] ) ); break;// 
     }
   }
 

@@ -401,6 +401,73 @@ class ReportConvertTool : public GaudiTool, virtual public IReportConvert
         ,  {"58#Proto.extraInfo.CaloChargedPrs",        {54,58}}
         ,  {"59#Proto.extraInfo.CaloChargedSpd",        {55,59}}}
       }
+      , { 9
+        , {{"0#Proto.extraInfo.IsPhoton",               {0,0}}
+        ,  {"1#Proto.extraInfo.IsNotE",                 {1,1}}
+        ,  {"2#Proto.extraInfo.IsNotH",                 {12,2}}
+        ,  {"3#Proto.extraInfo.EcalPIDe",               {23,3}}
+        ,  {"4#Proto.extraInfo.PrsPIDe",                {34,4}}
+        ,  {"5#Proto.extraInfo.BremPIDe",               {45,5}}
+        ,  {"6#Proto.extraInfo.HcalPIDe",               {55,6}}
+        ,  {"7#Proto.extraInfo.HcalPIDmu",              {62,7}}
+        ,  {"8#Proto.extraInfo.EcalPIDmu",              {63,8}}
+        ,  {"9#Proto.extraInfo.CaloTrMatch",            {64,9}}
+        ,  {"10#Proto.extraInfo.CaloElectronMatch",     {2,10}}
+        ,  {"11#Proto.extraInfo.CaloBremMatch",         {3,11}}
+        ,  {"12#Proto.extraInfo.CaloNeutralSpd",        {4,12}}
+        ,  {"13#Proto.extraInfo.CaloNeutralPrs",        {5,13}}
+        ,  {"14#Proto.extraInfo.CaloNeutralEcal",       {6,14}}
+        ,  {"15#Proto.extraInfo.CaloNeutralHcal2Ecal",  {7,15}}
+        ,  {"16#Proto.extraInfo.CaloNeutralE49",        {8,16}}
+        ,  {"17#Proto.extraInfo.CaloNeutralID",         {9,17}}
+        ,  {"18#Proto.extraInfo.CaloDepositID",         {10,18}}
+        ,  {"19#Proto.extraInfo.ShowerShape",           {11,19}}
+        ,  {"20#Proto.extraInfo.ClusterMass",           {13,20}}
+        ,  {"21#Proto.extraInfo.CaloSpdE",              {14,21}}
+        ,  {"22#Proto.extraInfo.CaloPrsE",              {15,22}}
+        ,  {"23#Proto.extraInfo.CaloEcalE",             {16,23}}
+        ,  {"24#Proto.extraInfo.CaloHcalE",             {17,24}}
+        ,  {"25#Proto.extraInfo.CaloEcalChi2",          {18,25}}
+        ,  {"26#Proto.extraInfo.CaloBremChi2",          {19,26}}
+        ,  {"27#Proto.extraInfo.CaloClusChi2",          {20,27}}
+        ,  {"28#Proto.extraInfo.CaloNeutralPrsM",       {21,28}}
+        ,  {"29#Proto.extraInfo.CaloShapeFr2r4",        {22,29}}
+        ,  {"30#Proto.extraInfo.CaloShapeKappa",        {24,30}}
+        ,  {"31#Proto.extraInfo.CaloShapeAsym",         {25,31}}
+        ,  {"32#Proto.extraInfo.CaloShapeE1",           {26,32}}
+        ,  {"33#Proto.extraInfo.CaloShapeE2",           {27,33}}
+        ,  {"34#Proto.extraInfo.CaloPrsShapeE2",        {28,34}}
+        ,  {"35#Proto.extraInfo.CaloPrsShapeEmax",      {29,35}}
+        ,  {"36#Proto.extraInfo.CaloPrsShapeFr2",       {30,36}}
+        ,  {"37#Proto.extraInfo.CaloPrsShapeAsym",      {31,37}}
+        ,  {"38#Proto.extraInfo.CaloPrsM",              {32,38}}
+        ,  {"39#Proto.extraInfo.CaloPrsM15",            {33,39}}
+        ,  {"40#Proto.extraInfo.CaloPrsM30",            {35,40}}
+        ,  {"41#Proto.extraInfo.CaloPrsM45",            {36,41}}
+        ,  {"42#Proto.extraInfo.CaloClusterCode",       {37,42}}
+        ,  {"43#Proto.extraInfo.CaloClusterFrac",       {38,43}}
+        ,  {"44#Proto.extraInfo.CombDLLe",              {39,44}}
+        ,  {"45#Proto.extraInfo.CombDLLmu",             {40,45}}
+        ,  {"46#Proto.extraInfo.CombDLLpi",             {41,46}}
+        ,  {"47#Proto.extraInfo.CombDLLk",              {42,47}}
+        ,  {"48#Proto.extraInfo.CombDLLp",              {43,48}}
+        ,  {"49#Proto.extraInfo.InAccBrem",             {44,49}}
+        ,  {"50#Proto.extraInfo.InAccSpd",              {46,50}}
+        ,  {"51#Proto.extraInfo.InAccPrs",              {47,51}}
+        ,  {"52#Proto.extraInfo.InAccEcal",             {48,52}}
+        ,  {"53#Proto.extraInfo.InAccHcal",             {49,53}}
+        ,  {"54#Proto.extraInfo.VeloCharge",            {50,54}}
+        ,  {"56#Proto.extraInfo.CaloChargedID",         {51,56}}
+        ,  {"57#Proto.extraInfo.CaloChargedEcal",       {52,57}}
+        ,  {"58#Proto.extraInfo.CaloChargedPrs",        {53,58}}
+        ,  {"59#Proto.extraInfo.CaloChargedSpd",        {54,59}}
+        ,  {"60#Proto.extraInfo.ProbNNe",               {56,60}}
+        ,  {"61#Proto.extraInfo.ProbNNmu",              {57,61}}
+        ,  {"62#Proto.extraInfo.ProbNNpi",              {58,62}}
+        ,  {"63#Proto.extraInfo.ProbNNk",               {59,63}}
+        ,  {"64#Proto.extraInfo.ProbNNp",               {60,64}}
+        ,  {"65#Proto.extraInfo.ProbNNghost",           {61,65}}}
+      }
     };
     //===========================================================================
     /// Version unordered_map for LHCb::ProtoParticle in the Full stream
