@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to configuration
+  . Extend DataType support to all Run 2 DataTypes (2015,2016,2017,2018).
+    Currently all Run 2 years treated like 2015
+
 - Changes to references to reflect changes since v49r2
   . Follow introduction of Deuteron particle hypothesis
   . Fix two bugs in PatLongLivedTracking, use new chi2-cut in x-layer fit
@@ -22,6 +26,9 @@ Purpose: LHCb reconstruction program
     in TrackPacker::check()...
   . Add sim08-invfield test to replace brunel-mc09-withtruth-invfield
     TODO: understand differences with sim08 test....
+  . Remove setting of InitialTime in 2015magdown test, no longer needed
+  . Add a placeholder for 2016magdown test. Currently a copy of 2015magdown but 
+    with DataType=2015
 
 </PRE><H1><A NAME=v49r2>2016-02-05 Brunel v49r2</A></H1><PRE>
 This version uses projects LHCb v40r0, Lbcom v18r0, Rec v19r0, Gaudi v27r0

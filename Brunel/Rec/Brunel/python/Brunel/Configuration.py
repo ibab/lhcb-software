@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "v41r2"
+__version__ = "v49r2"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -140,7 +140,9 @@ class Brunel(LHCbConfigurableUser):
 
     KnownInputTypes  = [ "MDF",  "DST", "XDST", "DIGI" ]
     KnownHistograms  = [ "None", "Online", "OfflineExpress", "OfflineFull", "Expert" ]
-    Run1DataTypes = [ "2008", "2009", "2010", "2011", "2012", "2013", "MC09" ]
+    Run1DataTypes = [ "2008", "2009", "2010", "2011", "2012", "2013" ]
+    Run2DataTypes = [ "2015", "2016", "2017", "2018"]
+
 
     def defineGeometry(self):
         # DIGI is always simulation, as is usage of MC truth!
@@ -678,8 +680,8 @@ class Brunel(LHCbConfigurableUser):
             ProcessPhase("Output").DetectorList += [ "DST" ]
             GaudiSequencer("OutputDSTSeq").Members += [ trackFilter ]
             
-            ### for 2015, filter the fitted Velo tracks for PV
-            if( self.getProp("DataType") is "2015" ):
+            ### For Run 2, filter the fitted Velo tracks for PV
+            if( self.getProp("DataType") in self.Run2DataTypes ):
                 fittedVeloTracksFilter = TrackToDST("FilterFittedVeloTrackStates", veloStates = ["ClosestToBeam"])
                 fittedVeloTracksFilter.TracksInContainer = "Rec/Track/FittedHLT1VeloTracks"
                 GaudiSequencer("OutputDSTSeq").Members += [ fittedVeloTracksFilter ]
