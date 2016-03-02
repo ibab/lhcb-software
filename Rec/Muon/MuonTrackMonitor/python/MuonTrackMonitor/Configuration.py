@@ -18,11 +18,14 @@ class MuonTrackMonitorConf(LHCbConfigurableUser):
 ## List of ConfigurableUser manipulated
 ##    __used_configurables__ = [ OtherConf ]
 
+    ## List of DataTypes (years) for Run 2
+    Run2DataTypes = ["2015","2016","2017","2018"]
+
     def applyConf(self):
 
         MSRossiAndGreisen = False
-        # For 2015, we want the new multiple scattering
-        if( self.getProp("DataType") == "2015" ):
+        # For Run 2, we want the new multiple scattering
+        if( self.getProp("DataType") in self.Run2DataTypes ):
             MSRossiAndGreisen = True
 
 
@@ -60,8 +63,8 @@ class MuonTrackMonitorConf(LHCbConfigurableUser):
         monalig.chi2matchCut = 10
         monalig.IsCosmics = False
 
-        # For 2015, we want the new multiple scattering
-        if( self.getProp("DataType") == "2015" ):
+        # For Run 2, we want the new multiple scattering
+        if( self.getProp("DataType") in self.Run2DataTypes ):
             from Configurables import TrackMasterExtrapolator, DetailedMaterialLocator, StateThickMSCorrectionTool
             monalig.addTool(TrackMasterExtrapolator, name = "Extrapolator")
             monalig.Extrapolator.addTool(DetailedMaterialLocator, name="MaterialLocator")

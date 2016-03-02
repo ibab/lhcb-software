@@ -4,6 +4,9 @@
 ! Purpose     : High level Muon Monitoring after reconstruction
 !-----------------------------------------------------------------------------
 
+ - MuonTrackMonitor: extend Run 2 support to all Run2 data types
+   (2015,2016,2017,2018) Currently all years treated like 2015.
+
 !========================= MuonTrackMonitor v2r9p1 2015-10-13 =======================
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers
