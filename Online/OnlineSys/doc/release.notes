@@ -16,13 +16,16 @@
      GauchoAppl          v1r32    Online
      GaudiCheckpointing  v0r26    Online
      GaudiOnline         v2r91    Online
+     OMAlib              v5r1     Online
      Hlt2Monitoring      v1r7     Online
      OnlineAlign         v0r10    Online
      OnlineBase          v1r41    Online
+     OnlineHistDB        v8r4     Online
      OnlineKernel        v2r26    Online
      Presenter           v3r14    Online
      PyDIM               v2r19    Online
      ROMon               v1r59    Online
+     UPI                 v1r31    Online
      ZMQTransfer         v0r2     Online
 </PRE>
 
