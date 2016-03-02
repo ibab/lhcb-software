@@ -8,10 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
-!========================= Hlt2Lines v10r7 2016-02-26 =========================
-
 ! 2016-03-02 - Sandra Amato
  - Added the charged isolation variables to the Turbo D2HHHLines: DpToKmPipPip, DpToKmKpPip and DspToKmKpPip
+
+!========================= Hlt2Lines v10r7 2016-02-26 =========================
 
 ! 2016-02-24 - Rosen Matev
  - Add package dependency on Hlt/HltJets
