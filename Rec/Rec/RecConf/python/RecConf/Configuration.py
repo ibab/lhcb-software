@@ -42,6 +42,8 @@ class RecSysConf(LHCbConfigurableUser):
     DefaultSubDetsFieldOnRun2  = ["Decoding"] + DefaultTrackingSubdetsRun2 + ["RICH","CALO","MUON","PROTO","SUMMARY"]
     ## List of known special data processing options
     KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff", "beamGas", "microBiasTrigger", "pA", "pGun"]
+    ## List of DataTypes (years) for Run 2
+    Run2DataTypes       = ["2015","2016","2017","2018"]
 
     ## Steering options
     __slots__ = {
@@ -79,7 +81,7 @@ class RecSysConf(LHCbConfigurableUser):
         # Phases
         if not self.isPropertySet("RecoSequence"):
             self.setProp("RecoSequence",self.DefaultSubDetsFieldOn)
-            if self.getProp("DataType") is "2015":
+            if self.getProp("DataType") in self.Run2DataTypes:
                 self.setProp("RecoSequence",self.DefaultSubDetsFieldOnRun2)
         
         recoSeq = self.getProp("RecoSequence")
@@ -91,7 +93,7 @@ class RecSysConf(LHCbConfigurableUser):
         ProcessPhase("Reco").DetectorList += recoSeq
 
         # Primary Vertex and V0 finding
-        if "Vertex" in recoSeq  and self.getProp("DataType") is not "2015":
+        if "Vertex" in recoSeq  and self.getProp("DataType") not in self.Run2DataTypes:
             from Configurables import PatPVOffline, TrackV0Finder
             pvAlg = PatPVOffline()
             if "2009" == self.getProp("DataType"):
@@ -120,7 +122,7 @@ class RecSysConf(LHCbConfigurableUser):
 
         # for Run 2, we run a different algorithm and don't want to have
         # the V0 finder in the vertex sequence (which is now after HLT1)
-        if "Vertex" in recoSeq and self.getProp("DataType") is "2015":
+        if "Vertex" in recoSeq and self.getProp("DataType") in self.Run2DataTypes:
             from Configurables import PatPV3D, PVOfflineTool, LSAdaptPV3DFitter
             pvAlg = PatPV3D("PatPV3D")
             ## this should go in a configuration file when we know what to use

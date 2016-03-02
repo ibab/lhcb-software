@@ -4,6 +4,10 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2016-03-02 - Marco Cattaneo
+ - RecSysConf: extend Run 2 support to all Run2 data types (2015,2016,2017,2018).
+   Currently all years treated like 2015.
+
 !========================= RecConf v2r23 2015-11-23 =========================
 ! 2015-11-09 - Chris Jones
  - Only set RichRecSysConf track and pid locations if not previously set.
