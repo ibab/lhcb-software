@@ -41,10 +41,10 @@ use HistDBPython        v1r9     Online
 use Hlt2Monitoring      v1r7     Online
 use InsertDB            v1r11    Online
 use MBMDump             v1r18    Online
-use OMAlib              v5r0     Online
+use OMAlib              v5r1     Online
 use OnlineAlign         v0r10    Online
 use OnlineBase          v1r41    Online
-use OnlineHistDB        v8r3     Online
+use OnlineHistDB        v8r4     Online
 use OnlineKernel        v2r26    Online
 use OnlineTools         v1r6     Online
 use OnlineTasks         v1r54    Online
@@ -59,7 +59,7 @@ use ROLogger            v0r33    Online
 ##use $(Stomp_use)
 
 use Trending            v2r5     Online
-use UPI                 v1r30    Online
+use UPI                 v1r31    Online
 use UPIR                v1r7     Online
 use Writer              v1r52    Online
 use XML                 v0r7     Online
