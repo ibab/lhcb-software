@@ -68,6 +68,7 @@ class DstConf(LHCbConfigurableUser):
     KnownDstTypes       = ['NONE','DST','RDST', 'XDST','SDST','MDST', 'LDST']
     KnownPackTypes      = ['NONE','TES','MDF']
     KnownUnpackingTypes = ["Reconstruction","Stripping","Tracking"]
+    Run2DataTypes       = ["2015","2016","2017","2018"]
 
     def _doWrite( self, dType, pType, sType ):
         """
@@ -121,8 +122,8 @@ class DstConf(LHCbConfigurableUser):
 
         if( self.getProp("PVPersistence") is "RecVertex" ) :
             writer.ItemList += [ "/Event/" + recDir + "/Vertex/Primary"    + depth ]
-            # for 2015, fitted velo tracks are stored on DST to make PV refit possible offline
-            if( self.getProp("DataType") is "2015" ):
+            # for Run 2, fitted velo tracks are stored on DST to make PV refit possible offline
+            if( self.getProp("DataType") in self.Run2DataTypes ):
                 writer.ItemList += [ "/Event/" + recDir + "/Track/FittedHLT1VeloTracks" + depth]
         elif( self.getProp("PVPersistence") is "PrimaryVertex" ) :
             writer.ItemList += [ "/Event/" + recDir + "/Vertex/PrimaryVertices" + depth ]
@@ -279,8 +280,8 @@ class DstConf(LHCbConfigurableUser):
             packDST.Members += [ PackTrack( name               = "PackTracks",
                                             AlwaysCreateOutput = alwaysCreate,
                                             EnableCheck        = doChecks ) ]
-            # for 2015, add packed Velo tracks
-            if( (self.getProp("DataType") is "2015") and (self.getProp("PVPersistence") is "RecVertex") ):
+            # for Run2, add packed Velo tracks
+            if( (self.getProp("DataType") in self.Run2DataTypes) and (self.getProp("PVPersistence") is "RecVertex") ):
                 packFittedVelo = PackTrack( name               = "PackTracksFittedVelo",
                                             InputName          = "Rec/Track/FittedHLT1VeloTracks",
                                             OutputName         = "pRec/Track/FittedHLT1VeloTracks",
@@ -404,7 +405,7 @@ class DstConf(LHCbConfigurableUser):
         else:
              raise RuntimeError("Unknown PVPersistence type: '%s'" % self.getProp("PVPersistence") )
 
-        if( self.getProp("DataType") is "2015" ):
+        if( self.getProp("DataType") in self.Run2DataTypes ):
             unpackFittedVeloTracks = UnpackTrack("unpackFittedVeloTracks")
             unpackFittedVeloTracks.InputName = "pRec/Track/FittedHLT1VeloTracks"
             unpackFittedVeloTracks.OutputName = "Rec/Track/FittedHLT1VeloTracks"
