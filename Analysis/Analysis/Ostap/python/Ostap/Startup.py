@@ -60,9 +60,8 @@ def with_ipython() :
         __IPYTHON__
         return True
     except NameError :
-        return False 
-
-
+        return False
+    
 ## check if the file is actually "empty"
 def _empty_ ( fname ) :
     
@@ -82,99 +81,97 @@ def _empty_ ( fname ) :
         
     except IOError :
         pass
+     
+
+import datetime
+start_time = datetime.datetime.now()
+logger.info ( 'Ostap  session started %s' % start_time.strftime('%c')  )
+
+import os,sys
+## define the name of the history file
+__history__ = os.path.curdir + os.sep + '.ostap_history'
+
+def _rename_ ( base , version = 0  ) :
     
-    return False 
-
-
-try:
-
-    import datetime
-    start_time = datetime.datetime.now()
-    logger.info ( 'Ostap session started %s' % start_time.strftime('%c')  )
-    
-    import os
-    ## define the name of the history file
-    __history__ = os.path.curdir + os.sep + '.ostap_history'
-    
-
-    try :
+    if version <= 0 :
+        version = 0 
+        fname   = '%s'    %    base 
+        fnamep1 = '%s.%d' %  ( base , 1 )
+    else :
+        fname   = '%s.%d' %  ( base , version     )
+        fnamep1 = '%s.%d' %  ( base , version + 1 )
         
-        def _rename_ ( base , version = 0  ) :
-            
-            if version <= 0 :
-                version = 0 
-                fname   = '%s'    %    base 
-                fnamep1 = '%s.%d' %  ( base , 1 )
-            else :
-                fname   = '%s.%d' %  ( base , version     )
-                fnamep1 = '%s.%d' %  ( base , version + 1 )
+    if os.path.exists ( fname ) and _empty_ ( fname ) :
+        os.remove ( fname )
+        return
+    
+    if os.path.exists ( fnamep1 ) :
+        if  _empty_   ( fnamep1 ) : os.remove ( fnamep1 )
+        else : _rename_ ( base , version + 1 )
+        
+    if os.path.exists ( fname ) :
+        if _empty_    ( fname ) : os.remove ( fname )
+        else : os.rename ( fname , fnamep1 )
+        
                 
-            if os.path.exists ( fname ) and  _empty_ ( fname ) :
-                os.remove ( fname )
-                return
-            
-            if os.path.exists ( fnamep1 ) :
-                if _empty_ ( fnamep1 ) : os.remove ( fnamep1 )
-                else : _rename_ ( base , version + 1 )
-                
-            if os.path.exists ( fname ) :
-                if _empty_ ( fname   ) : os.remove ( fname )
-                else : os.rename ( fname , fnamep1 )
-                
+## write history at the end 
+def _prnt_() :
+    end_time = datetime.datetime.now()   
+    logger.info ( 'Ostap  session   ended %s' % end_time.strftime('%c')  )
+
+## line completer 
+import rlcompleter
+import readline
+readline.clear_history() 
+readline.parse_and_bind("tab: complete")
+
+## write history
+def write_history ( fname ) :
+    """Write history file 
+    """
+    ## first, delete old history file
+
+    try :        
         _rename_ ( __history__  )
-        
     except :
-        logger.warning ( "Can't erase old history files", exc_info = True ) 
-        pass
+        logger.warning ( "Can't erase old history file(s)", exc_info = True ) 
 
+    end_time = datetime.datetime.now()   
+    command  = [ a for a in sys.argv ]
+    if command : command[0] = os.path.basename( command[0] )
+    command  = ' '.join(command)
+    curdir   = os.getcwd() 
 
+    if with_ipython() :
 
-    ## write history at the end 
-    def _prnt_() :
-        end_time = datetime.datetime.now()   
-        logger.info ( 'Ostap session   ended %s' % end_time.strftime('%c')  )
+        try :
             
-    ## line completer 
-    import rlcompleter
-    import readline
-    readline.clear_history() 
-    readline.parse_and_bind("tab: complete")
-
-    def write_history ( fname ) :
-
-        if with_ipython() :
- 
-            try :
-                ##  history from IPython 
-                import IPython, getpass 
-                ip  = IPython.get_ipython()
-                me  = getpass.getuser() 
-                with open ( fname , 'w' ) as f :
-                    f.write( '# Ostap session by %s started at %s\n' % ( me , start_time.strftime('%c' ) ) ) 
-                    for record in ip.history_manager.get_range() :
-                        f.write( record[2] + '\n' )
-                    end_time = datetime.datetime.now()   
-                    f.write( '# Ostap session by %s   ended at %s\n' % ( me ,   end_time.strftime('%c' ) ) ) 
-                if os.path.exists( fname ) and os.path.isfile ( fname ) and not _empty_ ( fname ) : 
-                    logger.info ( 'Ostap history file: %s' % fname )                    
-                return
+            import IPython, getpass
+            ip  = IPython.get_ipython()
+            me  = getpass.getuser()
+            with open ( fname , 'w' ) as f :
+                f.write( '# Ostap  session by %s started at %s\n' % ( me , start_time.strftime('%c' ) ) ) 
+                f.write( '# Command from CWD=%s \n# %s\n' % ( curdir , command  ) ) 
+                for record in ip.history_manager.get_range() :
+                    f.write( record[2] + '\n' )
+                f.write( '# Bender session by %s   ended at %s\n' % ( me ,   end_time.strftime('%c' ) ) ) 
+                
+            if os.path.exists( fname ) :
+                if os.path.isfile ( fname ) :
+                    if not _empty_ ( fname ) :
+                        logger.info ( 'Bender history file: %s' % __history__ )
+                        return
+        except:
+            pass
             
-            except:
-                pass
-            
-        ##  history from readline 
-        readline.write_history_file ( fname ) 
-        if os.path.exists( fname ) and os.path.isfile ( fname ) and not _empty_ ( fname ) : 
-            logger.info ( 'Ostap history file: %s' % fname )
-            
-    import atexit
-
-    atexit.register ( _prnt_ )
-    atexit.register ( write_history , __history__ )    
-
-except:
-    ## 
-    logger.error ( 'Error in startup configuration, ignore... ' , exc_info = True ) 
+    ## use 'old-style' history 
+    readline.write_history_file ( fname )
+    if os.path.exists( fname ) and os.path.isfile ( fname ) and not _empty_ ( fname ) : 
+        logger.info ( 'Bender history file: %s' % __history__ )
+        
+import atexit
+atexit.register ( _prnt_ )
+atexit.register ( write_history , __history__ )    
 
 
 # =============================================================================

@@ -94,6 +94,14 @@ def parse_args ( ) :
         default = []  )
     #
     parser.add_argument ( 
+        '-c'        ,
+        '--command' ,
+        dest    = 'Command'   ,
+        type    = str         , 
+        help    = "The command for ``exec'' [default: %(default)s]" , 
+        default = ''          )
+    #
+    parser.add_argument ( 
         "-m" , "--modules" ,
         metavar = "MODULE" , nargs = '*' ,
         help    = "ROOT/python modules to be imported [default: %(default)s]",
@@ -374,6 +382,11 @@ if root_files :
         logger.info('%2d: %s #keys:%d: %s' % ( _n , k , len(okeys) , okeys ) )
         
 # =============================================================================
+## command to be executed:
+if arguments.Command :
+    logger.debug   ("Try to exec command:\n%s" % arguments.Command )
+    exec ( arguments.Command ) 
+    logger.verbose ("After exec...") 
 
 ## exit it! 
 if arguments.batch :

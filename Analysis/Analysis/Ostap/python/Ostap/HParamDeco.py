@@ -909,10 +909,16 @@ class H1Func(object) :
     >>> histo2.Fit ( tf1 , 'S' )
     
     """
-    def __init__ ( self , histo , func = lambda s : s.value() , interpolate = True ) :
+    def __init__ ( self                               ,
+                   histo                              ,
+                   func        = lambda s : s.value() ,
+                   interpolate = 2                    ,
+                   edges       = True                 ) :
+        
         self._histo  = histo
         self._func   = func
         self._interp = interpolate 
+        self._edges  = edges  
         
     ## evaluate the function 
     def __call__ ( self , x , par = [ 1 , 0 , 1 ] ) :
@@ -928,7 +934,7 @@ class H1Func(object) :
         #
         x0    = ( x0 - bias ) / scale
         # 
-        return norm * self._func ( self._histo ( x0 , interpolate = self._interp ) )
+        return norm * self._func ( self._histo ( x0 , interpolate = self._interp , edges = self._edges ) )
 
     ## get corresponsing ROOT.TF1 object 
     def tf1  ( self ) :
@@ -1057,10 +1063,10 @@ class H2Func(object) :
 ## construct helper class 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
-def _h1_as_fun_ ( self , func = lambda s : s.value () ) :
+def _h1_as_fun_ ( self , func = lambda s : s.value () , *args ) :
     """Construct the function from the histogram
     """
-    return H1Func ( self , func )
+    return H1Func ( self , func , *args )
 
 # =============================================================================
 ## construct helper class 
@@ -1092,7 +1098,7 @@ def _h1_as_tf1_ ( self , func = lambda s : s.value () , spline = False , *args )
     """
     #
     if spline : fun = _h1_as_spline_ ( self , func , *args )
-    else      : fun = _h1_as_fun_    ( self , func )
+    else      : fun = _h1_as_fun_    ( self , func , *args )
     #
     f1 = fun .tf1  ()
     nb = self.nbins()

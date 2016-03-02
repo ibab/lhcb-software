@@ -759,7 +759,7 @@ _interpolate_3D_ = cpp.Gaudi.Math.HistoInterpolation.interpolate_3D
 #  @see Gaudi::Math::HistoInterpolation::interpolate_1D
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
-def _h1_call_ ( h1 , x , func = lambda s : s , interpolate = 1 ) :
+def _h1_call_ ( h1 , x , func = lambda s : s , interpolate = 1 , edges = True ) :
     """ Histogram as function:
     >>> histo = ....
     >>> ve    = histo ( x )                       ## default interpolation
@@ -777,7 +777,7 @@ def _h1_call_ ( h1 , x , func = lambda s : s , interpolate = 1 ) :
         tx  = 0
     #
     ## use C++ function for fast interpolation 
-    result = _interpolate_1D_ ( h1 , x , tx )
+    result = _interpolate_1D_ ( h1 , x , tx , edges )
     #
     return func ( result )
 

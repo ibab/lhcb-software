@@ -8,6 +8,11 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2016-03-02 - Vanya Belyaev
+ - improve interpolation (mak euse of updated Gaudi::Math::HistoInterpolation
+ - improve history 
+ - add command line "-c/--command" to execute the specified command 
+ 
 ! 2016-02-26 - Vanya Belyaev
  - improve running_bar abnd progress_bar
 

@@ -463,10 +463,11 @@ def progress_bar ( iterable , max_value = None , **kwargs ) :
         max_value = len ( iterable )
     elif max_value is None and hasattr ( iterable , 'size'    ) :
         max_value = iterable.size()
-        
-    if max_value is None : bar = RunningBar  ( **kwargs )
-    else                 : bar = ProgressBar ( max_value = max_value , **kwargs ) 
-    
+
+    if   max_value is None : bar = RunningBar  ( **kwargs )
+    elif max_value <  1    : bar = RunningBar  ( **kwargs )
+    else                   : bar = ProgressBar ( max_value = max_value , **kwargs ) 
+
     with bar : 
         for i in iterable :
             bar += 1
