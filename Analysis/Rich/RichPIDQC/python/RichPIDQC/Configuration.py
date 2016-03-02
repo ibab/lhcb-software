@@ -88,7 +88,7 @@ class RichPIDQCConf(RichConfigurableUser):
             cands = self.getProp("Candidates")["DsPhiPi"]
             if len(cands) > 0 :
                 # Force turn off running own selection...
-                conf.setProp("RunMonitors",False)
+                conf.setProp("RunSelection",False)
                 # Set TES for candidates
                 conf.setProp("Candidates",cands)
             # Set sequencer
@@ -103,7 +103,7 @@ class RichPIDQCConf(RichConfigurableUser):
             cands = self.getProp("Candidates")["DstarD0Pi"]
             if len(cands) > 0 :
                 # Force turn off running own selection...
-                conf.setProp("RunMonitors",False)
+                conf.setProp("RunSelection",False)
                 # Set TES for candidates
                 conf.setProp("Candidates",cands)
             # Set sequencer
@@ -118,7 +118,7 @@ class RichPIDQCConf(RichConfigurableUser):
             cands = self.getProp("Candidates")["LambdaPrPi"]
             if len(cands) > 0 :
                 # Force turn off running own selection...
-                conf.setProp("RunMonitors",False)
+                conf.setProp("RunSelection",False)
                 # Set TES for candidates
                 conf.setProp("Candidates",cands)
             # Set sequencer
@@ -133,7 +133,7 @@ class RichPIDQCConf(RichConfigurableUser):
             cands = self.getProp("Candidates")["KshortPiPi"]
             if len(cands) > 0 :
                 # Force turn off running own selection...
-                conf.setProp("RunMonitors",False)
+                conf.setProp("RunSelection",False)
                 # Set TES for candidates
                 conf.setProp("Candidates",cands)
             # Set sequencer
@@ -148,7 +148,7 @@ class RichPIDQCConf(RichConfigurableUser):
             cands = self.getProp("Candidates")["JPsiMuMu"]
             if len(cands) > 0 :
                 # Force turn off running own selection...
-                conf.setProp("RunMonitors",False)
+                conf.setProp("RunSelection",False)
                 # Set TES for candidates
                 conf.setProp("Candidates",cands)
             # Set sequencer

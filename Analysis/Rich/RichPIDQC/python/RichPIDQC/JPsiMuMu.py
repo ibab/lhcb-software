@@ -28,8 +28,8 @@ class JPsiMuMuConf(RichConfigurableUser) :
          "Context"         : "Offline"  # The context within which to run
         ,"OutputLevel"     : INFO  # The output level to set all algorithms and tools to use
         ,"Sequencer"    : None      # The sequencer to add the calibration algorithms too
-        ,"RunSelection" : True
-        ,"RunMonitors"  : False
+        ,"RunSelection" : False
+        ,"RunMonitors"  : True
         ,"MCChecks"   : False
         ,"MakeNTuple" : False
         ,"MakeSelDST" : False
