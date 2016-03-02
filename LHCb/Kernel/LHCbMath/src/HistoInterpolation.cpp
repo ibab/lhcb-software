@@ -92,9 +92,11 @@ namespace
     const double c2 =     ( x  - x2 ) * dx ;
     //
     const double vv = v2.value() * c1      + v1.value() * c2      ;
-    const double e2 = v2.cov2 () * c1 * c1 + v1.cov2 () * c2 * c2 ;
+    const double e2 = 
+      ( 0 < v1.cov2() ? v1.cov2 () * c1 * c1 : 0.0 ) + 
+      ( 0 < v2.cov2() ? v2.cov2 () * c2 * c2 : 0.0 ) ;
     //
-    return Gaudi::Math::ValueWithError ( vv , e2 ) ;
+    return Gaudi::Math::ValueWithError ( vv , s_zero ( e2 ) ? 0.0 : e2 ) ;
   }
   // ==========================================================================
   // quadratic interpolation 
@@ -123,9 +125,54 @@ namespace
     const double vv = v0.value() * c0 + v2.value() * c2 - v1.value() * c1 ;
     //
     const double e2 = 
-      v0.cov2 () * c0 * c0 +
-      v1.cov2 () * c1 * c1 +
-      v2.cov2 () * c2 * c2 ;
+      ( 0 < v0.cov2() ? v0.cov2 () * c0 * c0 : 0.0 ) + 
+      ( 0 < v1.cov2() ? v1.cov2 () * c1 * c1 : 0.0 ) +
+      ( 0 < v2.cov2() ? v2.cov2 () * c2 * c2 : 0.0 ) ;
+    //
+    return Gaudi::Math::ValueWithError ( vv , s_zero ( e2 ) ? 0.0 : e2 ) ;
+  }
+  // ==========================================================================
+  // qubic interpolation 
+  inline 
+  Gaudi::Math::ValueWithError _qubic_ 
+  ( const double                       x  , 
+    const double                       x0 , 
+    const double                       x1 , 
+    const double                       x2 , 
+    const double                       x3 , 
+    const Gaudi::Math::ValueWithError& v0 , 
+    const Gaudi::Math::ValueWithError& v1 , 
+    const Gaudi::Math::ValueWithError& v2 ,
+    const Gaudi::Math::ValueWithError& v3 )
+  {
+    const double dx0  = x  - x0 ;
+    const double dx1  = x  - x1 ;
+    const double dx2  = x  - x2 ;
+    const double dx3  = x  - x3 ;
+    //
+    const double dx01 = x0 - x1 ;
+    const double dx02 = x0 - x2 ;
+    const double dx03 = x0 - x3 ;
+    const double dx12 = x1 - x2 ;
+    const double dx13 = x1 - x3 ;
+    const double dx23 = x2 - x3 ;
+    //
+    const double c0 =         dx1 * dx2 * dx3 / ( dx01 * dx02 * dx03 ) ;
+    const double c1 = - dx0 *       dx2 * dx3 / ( dx01 * dx12 * dx13 ) ;
+    const double c2 =   dx0 * dx1 *       dx3 / ( dx02 * dx12 * dx23 ) ;
+    const double c3 = - dx0 * dx1 * dx2       / ( dx03 * dx13 * dx23 ) ;
+    //
+    const double vv = 
+      v0.value() * c0 + 
+      v1.value() * c1 + 
+      v2.value() * c2 + 
+      v3.value() * c3 ;
+    //
+    const double e2 = 
+      ( 0 < v0.cov2() ? v0.cov2 () * c0 * c0 : 0.0 ) + 
+      ( 0 < v1.cov2() ? v1.cov2 () * c1 * c1 : 0.0 ) +
+      ( 0 < v2.cov2() ? v2.cov2 () * c2 * c2 : 0.0 ) +
+      ( 0 < v3.cov2() ? v3.cov2 () * c3 * c3 : 0.0 ) ;
     //
     return Gaudi::Math::ValueWithError ( vv , e2 ) ; 
   }
@@ -324,6 +371,32 @@ Gaudi::Math::HistoInterpolation::interpolate
   const Gaudi::Math::ValueWithError& y1 , 
   const Gaudi::Math::ValueWithError& y2 ) 
 { return _quadratic_( x , x0, x1 , x2 , y0 , y1 , y2 ) ; }
+// ======================================================================
+/*  qubic interpolation between four points 
+ *  @param x  (INPUT) the x-value
+ *  @param x0 (INPUT) x-coordinate of the first  point 
+ *  @param x1 (INPUT) x-coordinate of the second point 
+ *  @param x2 (INPUT) x-coordinate of the third  point 
+ *  @param x3 (INPUT) x-coordinate of the fourth point 
+ *  @param y0 (INPUT) y-coordinate of the first  point \f$ y(x_0) \f$  
+ *  @param y1 (INPUT) y-coordinate of the second point \f$ y(x_1) \f$ 
+ *  @param y2 (INPUT) x-coordinate of the third  point \f$ y(x_2) \f$ 
+ *  @param y3 (INPUT) x-coordinate of the third  point \f$ y(x_3) \f$ 
+ *  @return result of  quadratic (parabolic) interpolation  \f$ y(x) \f$
+ */
+// ======================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::HistoInterpolation::interpolate
+( const double                       x  , 
+  const double                       x0 , 
+  const double                       x1 ,
+  const double                       x2 ,
+  const double                       x3 ,
+  const Gaudi::Math::ValueWithError& y0 , 
+  const Gaudi::Math::ValueWithError& y1 , 
+  const Gaudi::Math::ValueWithError& y2 ,
+  const Gaudi::Math::ValueWithError& y3 ) 
+{ return _qubic_( x , x0, x1 , x2 , x3 , y0 , y1 , y2 , y3 ) ; }
 // ============================================================================
 // 2D-interpolation 
 // ============================================================================
@@ -412,17 +485,19 @@ Gaudi::Math::HistoInterpolation::interpolate
 }
 // ============================================================================
 /* interpolate 1D historgam 
- *  @param h1   (INPUT) input histogram 
- *  @param x    (INPUT) the value 
- *  @para  type (INPUT) interpolation type 
- *  @return valeu of interpolated function
+ *  @param h1    (INPUT) input histogram 
+ *  @param x     (INPUT) the x-value 
+ *  @param type  (INPUT) interpolation type 
+ *  @param edges (INPUT) use the special treatment of edges ? 
+ *  @return value of interpolated function
  */
 // ============================================================================
 Gaudi::Math::ValueWithError 
 Gaudi::Math::HistoInterpolation::interpolate_1D
-( const TH1&                                  h1 , 
-  const double                                x  ,
-  const Gaudi::Math::HistoInterpolation::Type t  ) 
+( const TH1&                                  h1    ,  
+  const double                                x     ,
+  const Gaudi::Math::HistoInterpolation::Type t     , 
+  const bool                                  edges )  
 {
   const TAxis* ax   = h1.GetXaxis()  ;
   if ( 0 == ax )                   { return ValueWithError() ; } // RETURN 
@@ -435,7 +510,7 @@ Gaudi::Math::HistoInterpolation::interpolate_1D
   const double       xmax  = ax->GetXmax  () ;
   if ( xmax < x )                  { return ValueWithError() ; } // RETURN 
   //
-  if ( s_equal ( x , xmin ) ) 
+  if ( edges && s_equal ( x , xmin ) ) 
   {
     const double v  = h1.GetBinContent ( 1    ) ;
     const double ev = h1.GetBinError   ( 1    ) ;
@@ -444,7 +519,7 @@ Gaudi::Math::HistoInterpolation::interpolate_1D
   //
   const unsigned int nbins = ax->GetNbins () ;
   //
-  if ( s_equal ( x , xmax ) ) 
+  if ( edges && s_equal ( x , xmax ) ) 
   {
     const double v  = h1.GetBinContent ( nbins ) ;
     const double ev = h1.GetBinError   ( nbins ) ;
@@ -458,7 +533,8 @@ Gaudi::Math::HistoInterpolation::interpolate_1D
     ( 1 >= nbins                    ) ? Nearest    : 
     ( 2 == nbins  && t >= Linear    ) ? Linear     :
     ( 3 == nbins  && t >= Quadratic ) ? Quadratic  :
-    (                t >= Quadratic ) ? Quadratic  : t ;
+    ( 4 == nbins  && t >= Qubic     ) ? Qubic      :
+    (                t >= Qubic     ) ? Qubic      : t ;
   //
   // the regular case 
   //
@@ -476,7 +552,7 @@ Gaudi::Math::HistoInterpolation::interpolate_1D
   //
   // treat left of the first and right half of the last bin separately:
   //
-  if ( ( 1 == ib && x <= xc ) || ( nbins == ib && xc <= x ) ) 
+  if ( edges && ( ( 1 == ib && x <= xc ) || ( nbins == ib && xc <= x ) ) )
   {
     const double v  = h1.GetBinContent ( ib ) ;
     const double ev = h1.GetBinError   ( ib ) ;
@@ -487,7 +563,8 @@ Gaudi::Math::HistoInterpolation::interpolate_1D
   //
   if ( Linear == itype )
   {
-    const unsigned int i1 = x < xc ? ib - 1 : ib ;
+    const unsigned int _i1 = x < xc ? ib - 1 : ib ;
+    const unsigned int  i1 = _i1 + 1 <= nbins ? _i1 : nbins -1 ;
     const unsigned int i2 = i1 + 1 ;
     //
     return _linear_ 
@@ -498,22 +575,45 @@ Gaudi::Math::HistoInterpolation::interpolate_1D
         _bin_            ( h1 , i2 ) ) ;
   }
   //
-  // quadratic interpolation 
+  if ( Quadratic == itype ) 
+  {
+    //
+    // quadratic interpolation 
+    //
+    const unsigned int i0 = 
+      1     >= ib ? 1         :
+      nbins <= ib ? nbins - 2 : ib - 1 ;
+    const unsigned int i1 = i0 + 1 ;
+    const unsigned int i2 = i0 + 2 ;
+    //
+    return _quadratic_ 
+      ( x                            , 
+        ax->GetBinCenter ( i0 )      , 
+        ax->GetBinCenter ( i1 )      , 
+        ax->GetBinCenter ( i2 )      , 
+        _bin_            ( h1 , i0 ) , 
+        _bin_            ( h1 , i1 ) , 
+        _bin_            ( h1 , i2 ) ) ;
+  }
   //
-  const unsigned int i0 = 
-    1     >= ib ? 1         :
-    nbins <= ib ? nbins - 2 : ib - 1 ;
-  const unsigned int i1 = i0 + 1 ;
-  const unsigned int i2 = i0 + 2 ;
+  // qubic  interpolation 
+  // 
+  const unsigned int _i0 = x < xc ? ( 3 <= ib ? ib - 2 : 1 ) : ( 2 <= ib ? ib - 1 : 1 ) ;
+  const unsigned int i0  = _i0 + 3 <= nbins ? _i0 : nbins - 3 ;
+  const unsigned int i1  = i0 + 1 ;
+  const unsigned int i2  = i0 + 2 ;
+  const unsigned int i3  = i0 + 3 ;
   //
-  return _quadratic_ 
+  return _qubic_ 
     ( x                            , 
       ax->GetBinCenter ( i0 )      , 
       ax->GetBinCenter ( i1 )      , 
       ax->GetBinCenter ( i2 )      , 
+      ax->GetBinCenter ( i3 )      , 
       _bin_            ( h1 , i0 ) , 
       _bin_            ( h1 , i1 ) , 
-      _bin_            ( h1 , i2 ) ) ;
+      _bin_            ( h1 , i2 ) ,
+      _bin_            ( h1 , i3 ) ) ;
 }
 // ============================================================================
 /* interpolate 2D historgam 

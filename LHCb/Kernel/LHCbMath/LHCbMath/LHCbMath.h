@@ -183,46 +183,6 @@ namespace LHCb
       // ======================================================================
     } ;
     // ========================================================================
-    /** @struct Zero
-     *  helper structure for comparison of floating values
-     *  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
-     *  @date 2007-11-27
-     */
-    template <class TYPE>
-    struct Zero : public std::unary_function<TYPE,bool>
-    {
-      // ======================================================================
-      typedef typename boost::call_traits<const TYPE>::param_type T ;
-      /// comparison
-      inline bool operator() ( T v ) const { return m_cmp ( v , 0 ) ; }
-      // ======================================================================
-    private:
-      // ======================================================================
-      // the comparizon criteria 
-      Equal_To<TYPE> m_cmp ;
-      // ======================================================================
-    } ;
-    // ========================================================================
-    /** @struct NotZero
-     *  helper structure for comparison of floating values
-     *  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
-     *  @date 2007-11-27
-     */
-    template <class TYPE>
-    struct NotZero : public std::unary_function<TYPE,bool>
-    {
-      // ======================================================================
-      typedef typename boost::call_traits<const TYPE>::param_type T ;
-      /// comparison
-      inline bool operator() ( T v ) const { return !m_zero ( v ) ; }
-      // ======================================================================
-    private:
-      // ======================================================================
-      // the comparison criteria 
-      Zero<TYPE> m_zero ;
-      // ======================================================================
-    } ;
-    // ========================================================================
     /// partial specialization for const-types
     template <class TYPE>
     struct Equal_To<const TYPE>: public Equal_To<TYPE> {} ;
@@ -230,22 +190,6 @@ namespace LHCb
     /// partial specialization for references
     template <class TYPE>
     struct Equal_To<TYPE&>     : public Equal_To<TYPE> {} ;
-    // ========================================================================
-    /// partial specialization for const-types
-    template <class TYPE>
-    struct Zero<const TYPE>    : public Zero<TYPE>     {} ;
-    // ========================================================================
-    /// partial specialization for references
-    template <class TYPE>
-    struct Zero<TYPE&>         : public Zero<TYPE>     {} ;
-    // ========================================================================
-    /// partial specialization for const-types
-    template <class TYPE>
-    struct NotZero<const TYPE> : public NotZero<TYPE>  {} ;
-    // ========================================================================
-    /// partial specialization for references
-    template <class TYPE>
-    struct NotZero<TYPE&>      : public NotZero<TYPE>  {} ;
     // ========================================================================
     /** explicit specialization for doubles
      *  @see LHCb::Math::mULPS_double 
@@ -414,6 +358,94 @@ using namespace std;
       // ======================================================================
     } ;
     // ========================================================================
+    template <class TYPE> struct    Zero ;
+    template <class TYPE> struct NonZero ;
+    // ========================================================================    
+    /** @struct Zero
+     *  helper structure for comparison of floating values
+     *  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
+     *  @date 2007-11-27
+     */
+    template <class TYPE>
+    struct Zero : public std::unary_function<TYPE,bool>
+    {
+      // ======================================================================
+      typedef typename boost::call_traits<const TYPE>::param_type T ;
+      /// comparison
+      inline bool operator() ( T v ) const { return m_cmp ( v , 0 ) ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      // the comparizon criteria 
+      Equal_To<TYPE> m_cmp ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    template <>
+    struct Zero<double> : public std::unary_function<double,bool>
+    {
+      // ======================================================================
+      /// comparison
+      inline bool operator() ( const double  v ) const 
+      { return !v || m_cmp ( v , 0 ) ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      // the comparizon criteria 
+      Equal_To<double> m_cmp ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    template <>
+    struct Zero<float> : public std::unary_function<float,bool>
+    {
+      // ======================================================================
+      /// comparison
+      inline bool operator() ( const float  v ) const 
+      { return !v || m_cmp ( v , 0 ) ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      // the comparizon criteria 
+      Equal_To<float> m_cmp ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /// partial specialization for const-types
+    template <class TYPE>
+    struct Zero<const TYPE>    : public Zero<TYPE>     {} ;
+    // ========================================================================
+    /// partial specialization for references
+    template <class TYPE>
+    struct Zero<TYPE&>         : public Zero<TYPE>     {} ;
+    // ========================================================================
+    /** @struct NotZero
+     *  helper structure for comparison of floating values
+     *  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
+     *  @date 2007-11-27
+     */
+    template <class TYPE>
+    struct NotZero : public std::unary_function<TYPE,bool>
+    {
+      // ======================================================================
+      typedef typename boost::call_traits<const TYPE>::param_type T ;
+      /// comparison
+      inline bool operator() ( T v ) const { return !m_zero ( v ) ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      // the comparison criteria 
+      Zero<TYPE> m_zero ;
+      // ======================================================================
+    } ;
+    /// partial specialization for const-types
+    template <class TYPE>
+    struct NotZero<const TYPE> : public NotZero<TYPE>  {} ;
+    // ========================================================================
+    /// partial specialization for references
+    template <class TYPE>
+    struct NotZero<TYPE&>      : public NotZero<TYPE>  {} ;
+    // ========================================================================
     /** specialisation for vectors 
      *  @see Gaudi::Math::Zero
      *  @see Gaudi::Math::Equal_To
@@ -460,6 +492,10 @@ using namespace std;
       TYPE m_a ;
       // ======================================================================
     } ;
+
+
+
+
     // ========================================================================
     /** specialization for vectors 
      *  vector is small, if empty or all elements are small 

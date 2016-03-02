@@ -56,7 +56,8 @@ namespace Gaudi
       // ======================================================================
       enum Type { Nearest   , 
                   Linear    , 
-                  Quadratic } ;
+                  Quadratic , 
+                  Qubic     } ;
       // ======================================================================
     public: // 1D interpolation 
       // ======================================================================
@@ -93,6 +94,29 @@ namespace Gaudi
           const Gaudi::Math::ValueWithError& y0 , 
           const Gaudi::Math::ValueWithError& y1 , 
           const Gaudi::Math::ValueWithError& y2 ) ;
+      // ======================================================================
+      /** qubic interpolation between four points 
+       *  @param x  (INPUT) the x-value
+       *  @param x0 (INPUT) x-coordinate of the first  point 
+       *  @param x1 (INPUT) x-coordinate of the second point 
+       *  @param x2 (INPUT) x-coordinate of the third  point 
+       *  @param x3 (INPUT) x-coordinate of the fourth point 
+       *  @param y0 (INPUT) y-coordinate of the first  point \f$ y(x_0) \f$  
+       *  @param y1 (INPUT) y-coordinate of the second point \f$ y(x_1) \f$ 
+       *  @param y2 (INPUT) x-coordinate of the third  point \f$ y(x_2) \f$ 
+       *  @param y3 (INPUT) x-coordinate of the third  point \f$ y(x_3) \f$ 
+       *  @return result of  quadratic (parabolic) interpolation  \f$ y(x) \f$
+       */
+      static Gaudi::Math::ValueWithError interpolate
+        ( const double                       x  , 
+          const double                       x0 , 
+          const double                       x1 ,
+          const double                       x2 ,
+          const double                       x3 ,
+          const Gaudi::Math::ValueWithError& y0 , 
+          const Gaudi::Math::ValueWithError& y1 , 
+          const Gaudi::Math::ValueWithError& y2 ,
+          const Gaudi::Math::ValueWithError& y3 ) ;
       // ======================================================================
     public: // 2D interpolation 
       // ======================================================================
@@ -163,15 +187,17 @@ namespace Gaudi
     public:
       // ======================================================================
       /** interpolate 1D historgam 
-       *  @param h1   (INPUT) input histogram 
-       *  @param x    (INPUT) the x-value 
-       *  @para  type (INPUT) interpolation type 
+       *  @param h1    (INPUT) input histogram 
+       *  @param x     (INPUT) the x-value 
+       *  @param type  (INPUT) interpolation type 
+       *  @param edges (INPUT) use the special treatment of edges ? 
        *  @return value of interpolated function
        */
       static Gaudi::Math::ValueWithError interpolate_1D
-        ( const TH1&   h1         , 
-          const double x          ,
-          const Type   t = Linear ) ;
+        ( const TH1&   h1             , 
+          const double x              ,
+          const Type   t     = Linear , 
+          const bool   edges = true   ) ;
       // ======================================================================
       /** interpolate 2D historgam 
        *  @param h2   (INPUT) input histogram 

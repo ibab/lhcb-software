@@ -6,6 +6,11 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2016-03-02 - Vanya Belyaev
+    HistoInterpolation
+ - add qubic interpolation 
+ - add possibiilty to suppress special treatment of edges 
+
 ! 2016-02-28 - Chris Jones
  - Change from float to double in EigenTypes.h to cure some small precision 
    problems in the RICH ray tracing.
