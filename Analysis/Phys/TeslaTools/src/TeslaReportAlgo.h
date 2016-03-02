@@ -102,5 +102,6 @@ private:
         IANNSvc* m_hltANNSvc;
         IIndexedANNSvc* m_tckANNSvc;
         unsigned int m_lastTCK;
+        int m_versionNum;
 };
 #endif // TESLAREPORTALGO_H
