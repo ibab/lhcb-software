@@ -4,6 +4,14 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2016-03-02 - Chris Jones
+ - Add a new header file, RichRayTracingUtils.h, that contains some basic
+   ray tracing methods, previous part of the ray tracing tools in RichTools.
+   Moved here as they are stateless, and perfectly mathematical, and thus
+   independent of the tool implementation. It also allows them to be inlined,
+   rather than virtual, which is useful as they are used deep inside the
+   Quartic photon reconstruction and thus heavily called.
+
 ! 2016-02-28 - Chris Jones
  - Convert back to the ROOT based ray tracing to cure small precision
    differences between the Eigen based math library to the ROOT math library.

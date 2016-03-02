@@ -76,4 +76,9 @@
   <variable name = "Rich::DAQ::NumPixelRows" />
   <variable name = "Rich::DAQ::PixelSize" />
 
+  <function name  = "Rich::RayTracingUtils::intersectPlane" />
+  <function name  = "Rich::RayTracingUtils::intersectSpherical" />
+  <function name  = "Rich::RayTracingUtils::reflectSpherical" />
+  <function name  = "Rich::RayTracingUtils::reflectFlatPlane" />
+
 </lcgdict>

@@ -15,12 +15,12 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-// from LHCbKernel
+// LHCbKernel
 #include "Kernel/RichDetectorType.h"
 #include "Kernel/RichSide.h"
 #include "Kernel/RichTraceMode.h"
 
-// from MathCore
+// MathCore
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Plane3DTypes.h"
@@ -169,76 +169,6 @@ namespace Rich
                                          const Gaudi::XYZVector& startDir,
                                          Gaudi::XYZPoint& endPoint,
                                          Gaudi::XYZVector& endDir ) const = 0;
-
-    /** Intersect a given direction, from a given point, with a given plane.
-     *
-     *  @param[in]  position      The start point to use for the ray tracing
-     *  @param[in]  direction     The direction to ray trace from the start point
-     *  @param[in]  plane         The plane to intersect
-     *  @param[out] intersection  The intersection point of the direction with the plane
-     *
-     *  @return Boolean indicating the status of the ray tracing
-     *  @retval true  Ray tracing was successful
-     *  @retval false Ray tracing was unsuccessful
-     */
-    virtual bool
-    intersectPlane ( const Gaudi::XYZPoint& position,
-                     const Gaudi::XYZVector& direction,
-                     const Gaudi::Plane3D& plane,
-                     Gaudi::XYZPoint& intersection ) const = 0;
-
-    /** Intersect a given direction, from a given point, with a given spherical shell.
-     *
-     *  @param[in]  position      The start point to use for the ray tracing
-     *  @param[in]  direction     The direction to ray trace from the start point
-     *  @param[in] CoC            The centre of curvature of the spherical mirror
-     *  @param[in] radius         The radius of curvature of the spherical mirror
-     *  @param[out] intersection  The intersection point of the direction with the plane
-     *
-     *  @return Boolean indicating the status of the ray tracing
-     *  @retval true  Ray tracing was successful
-     *  @retval false Ray tracing was unsuccessful
-     */
-    virtual bool
-    intersectSpherical ( const Gaudi::XYZPoint& position,
-                         const Gaudi::XYZVector& direction,
-                         const Gaudi::XYZPoint& CoC,
-                         const double radius,
-                         Gaudi::XYZPoint& intersection ) const = 0;
-
-    /** Reflect a given direction off a spherical mirror. Can be used for intersection.
-     *
-     *  @param[in,out] position   The start point to use for the ray tracing.
-     *                            Afterwards gives the reflection point on the spherical mirror.
-     *  @param[in,out] direction  The direction to ray trace from the start point.
-     *                            Afterwards represents the reflection direction from the spherical mirror.
-     *  @param[in] CoC        The centre of curvature of the spherical mirror
-     *  @param[in] radius     The radius of curvature of the spherical mirror
-     *
-     *  @return Boolean indicating if the ray tracing was succesful
-     *  @retval true  Ray tracing was successful
-     *  @retval false Ray tracing was unsuccessful
-     */
-    virtual bool
-    reflectSpherical ( Gaudi::XYZPoint& position,
-                       Gaudi::XYZVector& direction,
-                       const Gaudi::XYZPoint& CoC,
-                       const double radius ) const = 0;
-
-    /** Ray trace from given position in given direction off flat mirrors
-     *
-     *  @param[in,out] position  On input the start point. On output the reflection point
-     *  @param[in,out] direction On input the starting direction. On output the reflected direction.
-     *  @param[in]     plane     The plane to refect off
-     *
-     *  @return Boolean indicating if the ray tracing was succesful
-     *  @retval true  Ray tracing was successful
-     *  @retval false Ray tracing was unsuccessful
-     */
-    virtual bool
-    reflectFlatPlane ( Gaudi::XYZPoint& position,
-                       Gaudi::XYZVector& direction,
-                       const Gaudi::Plane3D& plane ) const = 0;
 
   };
 

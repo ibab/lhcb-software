@@ -15,6 +15,7 @@
 #include "RichKernel/RichSmartIDCnv.h"
 #include "RichKernel/RichHPDIdentifier.h"
 #include "RichKernel/RichDAQL0Header.h"
+#include "RichKernel/RichRayTracingUtils.h"
 
 // Interfaces
 #include "RichKernel/IRichDetParameters.h"
