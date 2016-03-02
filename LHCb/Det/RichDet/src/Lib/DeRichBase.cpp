@@ -9,7 +9,7 @@
 // Access DeRichSystem on demand
 DeRichSystem * DeRichBase::deRichSys() const
 {
-  if ( !m_deRichS )
+  if ( UNLIKELY(!m_deRichS) )
   {
     // find the RichSystem
     SmartDataPtr<DetectorElement> afterMag(dataSvc(),"/dd/Structure/LHCb/AfterMagnetRegion");

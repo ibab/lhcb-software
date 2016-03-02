@@ -488,11 +488,7 @@ StatusCode DeRichHPDPanel::geometryUpdate()
   MsgStream msg ( msgSvc(), "DeRichHPDPanel" );
 
   SmartDataPtr<DetectorElement> deRich1(dataSvc(),DeRichLocations::Rich1 );
-  if ( !deRich1 ) 
-  {
-    msg << MSG::ERROR << "Could not load DeRich1" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  if ( !deRich1 ) { return Error("Could not load DeRich1"); }
 
   const Gaudi::XYZPoint zero(0.0, 0.0, 0.0);
   const Gaudi::XYZPoint centreGlobal(geometry()->toGlobal(zero));

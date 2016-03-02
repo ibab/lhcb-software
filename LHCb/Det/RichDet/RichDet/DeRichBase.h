@@ -42,7 +42,7 @@ public:
   DeRichBase( const std::string & name = "" ) : DetectorElement ( name ) { }
 
   /// Destructor
-  virtual ~DeRichBase( ) { } 
+  virtual ~DeRichBase( ) = default;
 
 protected:
 
@@ -130,6 +130,22 @@ protected:
     return UNLIKELY( msgStream.level() <= level ); 
   }
 
+  /// Report an error
+  inline StatusCode Error( const std::string& mess, 
+                           const StatusCode sc = StatusCode::FAILURE ) const
+  {
+    error() << mess << endmsg;
+    return sc;
+  }
+
+  /// Report a warning
+  inline StatusCode Warning( const std::string& mess, 
+                             const StatusCode sc = StatusCode::FAILURE ) const
+  {
+    warning() << mess << endmsg;
+    return sc;
+  }
+
 protected:
 
   /// Access DeRichSystem on demand
@@ -137,9 +153,9 @@ protected:
 
 private:
 
-  mutable std::string m_myname;    ///< The name of this detector element
+  mutable std::string m_myname = "UNDEFINED";     ///< The name of this detector element
   mutable std::unique_ptr<MsgStream> m_msgStream; ///< Message Stream Object
-  mutable DeRichSystem* m_deRichS = nullptr; ///< Pointer to the overall RICH system object
+  mutable DeRichSystem* m_deRichS = nullptr;      ///< Pointer to the overall RICH system object
 
 };
 

@@ -87,8 +87,7 @@ StatusCode DeRichSystem::initialize()
   // check if the numbers match.
   if ( 0 != detCondNames.size()%deRichLocs.size() )
   {
-    error() << "Number of rich detector does not match detector number conditions" << endmsg;
-    return StatusCode::FAILURE;
+    return Error( "Number of rich detector does not match detector number conditions" );
   }
 
   // for version 1 there are separate conditions for inactive PDs
@@ -102,16 +101,6 @@ StatusCode DeRichSystem::initialize()
   // loop over detectors and conditions to set things up
   for ( unsigned int i = 0; i < deRichLocs.size(); ++i)
   {
-    //SmartDataPtr<DeRich> deR( dataSvc(), deRichLocs[i] );
-
-    // if ( !deR )
-    // {
-    //   error() << "Cannot get Rich detector at: " << deRichLocs[i] << endmsg;
-    //   return StatusCode::FAILURE;
-    // }
-    // m_deRich[deR->rich()] = deR;
-    // m_detNumConds[deR->rich()] = condNames[i];
-
     m_detNumConds[(Rich::DetectorType)i] = detCondNames[i];
 
     updMgrSvc()->registerCondition( this,
@@ -433,7 +422,7 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
     if ( m_hard2soft.find(hardID) != m_hard2soft.end() )
     {
       error() << "Multiple entries for PD hardware ID "
-              << (std::string)hardID << pdID << endmsg;
+              << (std::string)hardID << " " << pdID << endmsg;
       return StatusCode::FAILURE;
     }
     if ( m_l0hard2soft.find(L0ID) != m_l0hard2soft.end() )
@@ -544,8 +533,7 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
   }
   else
   {
-    error() << "Could not load Condition " << L1LogToHardMapName << endmsg;
-    return StatusCode::FAILURE;
+    return Error( "Could not load Condition " + L1LogToHardMapName );
   }
 
   // L1 Logical ID to Copy Numbers

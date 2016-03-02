@@ -34,7 +34,7 @@ DeRich1::DeRich1(const std::string & name) : DeRich ( name )
 }
 
 // Standard Destructor
-DeRich1::~DeRich1() { }
+DeRich1::~DeRich1() = default;
 
 // Retrieve Pointer to class defininition structure
 const CLID& DeRich1::classID()
@@ -65,36 +65,31 @@ StatusCode DeRich1::initialize()
   const IPVolume* pvRich1SubMaster = geometry()->lvolume()->pvolume("pvRich1SubMaster");
   if ( pvRich1SubMaster )
   {
-    pvGasWindow = pvRich1SubMaster->lvolume()->pvolume("pvRich1MagShH0:0")->
-      lvolume()->pvolume("pvRich1GQuartzWH0:0");
+    pvGasWindow = pvRich1SubMaster->lvolume()->pvolume("pvRich1MagShH0:0")->lvolume()->pvolume("pvRich1GQuartzWH0:0");
   }
   if ( pvGasWindow )
   {
-    const Material::Tables& quartzWinTabProps = pvGasWindow->lvolume()->
-      material()->tabulatedProperties();
-    for ( auto matIter = quartzWinTabProps.begin(); matIter != quartzWinTabProps.end(); ++matIter )
+    for ( const auto& mat : pvGasWindow->lvolume()->material()->tabulatedProperties() )
     {
-      if( (*matIter) )
+      if ( mat )
       {
-        if ( (*matIter)->type() == "RINDEX" )
+        if      ( mat->type() == "RINDEX" )
         {
           if ( msgLevel(MSG::DEBUG) )
-            debug() << "Loaded gas window refIndex from: " << (*matIter)->name()
+            debug() << "Loaded gas window refIndex from: " << mat->name()
                     << endmsg;
-          m_gasWinRefIndex.reset( new Rich::TabulatedProperty1D( *matIter ) );
+          m_gasWinRefIndex.reset( new Rich::TabulatedProperty1D(mat) );
           if ( !m_gasWinRefIndex->valid() )
           {
-            error() << "Invalid RINDEX Rich::TabulatedProperty1D for " << (*matIter)->name() << endmsg;
-            return StatusCode::FAILURE;
+            return Error( "Invalid RINDEX Rich::TabulatedProperty1D for " + mat->name() );
           }
         }
-        if ( (*matIter)->type() == "ABSLENGTH" )
+        else if ( mat->type() == "ABSLENGTH" )
         {
-          m_gasWinAbsLength.reset( new Rich::TabulatedProperty1D( *matIter ) );
+          m_gasWinAbsLength.reset( new Rich::TabulatedProperty1D(mat) );
           if ( !m_gasWinAbsLength->valid() )
           {
-            error() << "Invalid ABSLENGTH Rich::TabulatedProperty1D for " << (*matIter)->name() << endmsg;
-            return StatusCode::FAILURE;
+            return Error( "Invalid ABSLENGTH Rich::TabulatedProperty1D for " + mat->name() );
           }
         }
       }
@@ -102,8 +97,7 @@ StatusCode DeRich1::initialize()
   }
   else
   {
-    error() << "Could not find gas window properties" << endmsg;
-    return StatusCode::FAILURE;
+    return Error( "Could not find gas window properties" );
   }
 
   // get the nominal reflectivity of the spherical mirror
@@ -116,8 +110,7 @@ StatusCode DeRich1::initialize()
   SmartDataPtr<TabulatedProperty> sphMirrorRefl( dataSvc(), sphMirrorReflLoc );
   if ( !sphMirrorRefl )
   {
-    error() <<"No info on spherical mirror reflectivity at " << sphMirrorReflLoc << endmsg;
-    return StatusCode::FAILURE;
+    return Error( "No info on spherical mirror reflectivity at " + sphMirrorReflLoc );
   }
   else
   {
@@ -127,8 +120,7 @@ StatusCode DeRich1::initialize()
     m_nominalSphMirrorRefl.reset( new Rich::TabulatedProperty1D( sphMirrorRefl ) );
     if ( !m_nominalSphMirrorRefl->valid() )
     {
-      error() <<"Invalid Rich::TabulatedProperty1D for " << sphMirrorRefl->name() << endmsg;
-      return StatusCode::FAILURE;
+      return Error( "Invalid Rich::TabulatedProperty1D for " + sphMirrorRefl->name() );
     }
   }
 
@@ -142,8 +134,7 @@ StatusCode DeRich1::initialize()
   SmartDataPtr<TabulatedProperty> secMirrorRefl(dataSvc(),secMirrorReflLoc);
   if ( !secMirrorRefl )
   {
-    error() << "No info on secondary mirror reflectivity at " << secMirrorReflLoc << endmsg;
-    return StatusCode::FAILURE;
+    return Error( "No info on secondary mirror reflectivity at " + secMirrorReflLoc );
   }
   else
   {
@@ -152,8 +143,7 @@ StatusCode DeRich1::initialize()
     m_nominalSecMirrorRefl.reset( new Rich::TabulatedProperty1D( secMirrorRefl ) );
     if ( !m_nominalSecMirrorRefl->valid() )
     {
-      error() << "Invalid Rich::TabulatedProperty1D for " << secMirrorRefl->name() << endmsg;
-      return StatusCode::FAILURE;
+      return Error( "Invalid Rich::TabulatedProperty1D for " + secMirrorRefl->name() );
     }
   }
 
