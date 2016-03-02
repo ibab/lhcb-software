@@ -61,10 +61,7 @@ public:
    * Retrieves reference to class identifier
    * @return the class identifier for this class
    */
-  const CLID& clID() const
-  {
-    return classID();
-  }
+  const CLID& clID() const { return classID(); }
 
   /**
    * Retrieves reference to class identifier
@@ -143,7 +140,7 @@ private: // methods
    * @retval true   HPD is found
    * @retval false  The point is outside the coverage of the HPDs.
    */
-  bool findHPDColAndPos(const Gaudi::XYZPoint& inPanel, LHCb::RichSmartID& id) const;
+  bool findHPDColAndPos( const Gaudi::XYZPoint& inPanel, LHCb::RichSmartID& id ) const;
 
   /// Returns the PD number for the given RichSmartID
   unsigned int pdNumber( const LHCb::RichSmartID& smartID ) const;

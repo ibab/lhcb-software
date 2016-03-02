@@ -35,12 +35,7 @@ const CLID CLID_DERichSystem = 12005;  // User defined
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeRichSystem::DeRichSystem( const std::string & name )
-  : DeRichBase ( name )
-{
-  m_deRich[Rich::Rich1] = nullptr;
-  m_deRich[Rich::Rich2] = nullptr;
-}
+DeRichSystem::DeRichSystem( const std::string & name ) : DeRichBase(name) { }
 
 //=============================================================================
 // Destructor
@@ -48,10 +43,7 @@ DeRichSystem::DeRichSystem( const std::string & name )
 DeRichSystem::~DeRichSystem() { }
 
 // Retrieve Pointer to class defininition structure
-const CLID& DeRichSystem::classID()
-{
-  return CLID_DERichSystem;
-}
+const CLID& DeRichSystem::classID() { return CLID_DERichSystem; }
 
 //=========================================================================
 //  initialize
@@ -440,7 +432,7 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
 
     // set up mappings etc.
 
-    CondData::const_iterator & myID = ( inactivePDListInSmartIDs ? iSoft : iHard );
+    auto & myID = ( inactivePDListInSmartIDs ? iSoft : iHard );
     if ( std::find( inacts.begin(), inacts.end(), *myID ) == inacts.end() )
     {
       m_activePDSmartIDs.push_back ( pdID  );

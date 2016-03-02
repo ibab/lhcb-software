@@ -76,8 +76,7 @@ StatusCode DeRichHPDPanel::initialize()
   // get the HPD and SiSensor detector elements
   m_DeHPDs.clear();
   m_DeSiSensors.clear();
-  const auto & detelems = childIDetectorElements();
-  for ( const auto * detelem : detelems )
+  for ( const auto * detelem : childIDetectorElements() )
   {
     if ( std::string::npos != detelem->name().find("HPD:") ) 
     {
@@ -93,6 +92,7 @@ StatusCode DeRichHPDPanel::initialize()
 
       // save to list of HPDs
       m_DeHPDs.push_back( deHPD );
+
       // register UMS dependency
       updMgrSvc()->registerCondition( this, deHPD->geometry(), &DeRichHPDPanel::geometryUpdate );
 
@@ -115,10 +115,8 @@ StatusCode DeRichHPDPanel::initialize()
     }
   }
 
-  // trigger first UMS update
-  const StatusCode update = updMgrSvc()->update(this);
- 
-  return update;
+  // trigger first UMS update and return
+  return updMgrSvc()->update(this);
 }
 
 //=========================================================================
@@ -203,7 +201,8 @@ DeRichHPDPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
 
   // find the intersection with the detection plane
   const auto scalar = vInPanel.Dot(m_localPlaneNormal);
-  if ( UNLIKELY( fabs(scalar) < 1e-50 ) ) return LHCb::RichTraceMode::RayTraceFailed;
+  if ( UNLIKELY( fabs(scalar) < 1e-50 ) ) 
+  { return LHCb::RichTraceMode::RayTraceFailed; }
   const auto scalar_inv = 1.0 / scalar;
 
   // transform point to the HPDPanel coordinate system
@@ -252,7 +251,7 @@ DeRichHPDPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
     }
 
     // If we are approximating the HPDs as flat circles, or if we are outside an HPD
-    // just set the panel intersection point
+    // just using the panel intersection point
     if ( mode.detPrecision() == LHCb::RichTraceMode::FlatHPDs ||
          res                 != LHCb::RichTraceMode::InHPDTube )
     {
@@ -261,7 +260,7 @@ DeRichHPDPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
     }
     else
     {
-      // perform fast intersection with the HPD entrance window
+      // perform fast intersection with the HPD entrance window sphere
       const auto ok = HPD->intersectEntryWindow( pGlobal, vGlobal, windowPointGlobal );
       if ( UNLIKELY(!ok) )
       {

@@ -888,6 +888,7 @@ bool DeRichHPD::intersectEntryWindow ( const Gaudi::XYZPoint& position,
     if ( UNLIKELY( discr < 0 ) ) { OK = false; }
     else
     {
+      // note this is optimised for the 'outside to in' solution...
       const auto dist = -0.5 * ( std::sqrt(discr) + b ) / a;
       // set intersection point
       intersection = position + ( dist * direction );

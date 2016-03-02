@@ -316,7 +316,7 @@ private: // data
   /// List of all inactive PD hardware IDs
   Rich::DAQ::HPDHardwareIDs m_inactivePDHardIDs;
 
-  /// List of all inactive PD hardware IDs
+  /// List of all PD hardware IDs
   Rich::DAQ::HPDHardwareIDs m_allPDHardIDs;
 
   /// Typedef for mapping from RichSmartID to Level0 ID
@@ -376,7 +376,8 @@ private: // data
   L1HIDToCopyN m_l1H2CopyN;
 
   /// Rich1 & Rich2 detector elements
-  mutable std::map<Rich::DetectorType, DetectorElement*> m_deRich;
+  mutable std::map<Rich::DetectorType, DetectorElement*> m_deRich = 
+    { { {Rich::Rich1,nullptr}, {Rich::Rich2,nullptr} } };
 
   /// Location of RICH Numbering schemes in Conditions DB
   std::map<Rich::DetectorType, std::string> m_detNumConds;
@@ -453,11 +454,8 @@ inline const Rich::DAQ::HPDHardwareIDs& DeRichSystem::allPDHardwareIDs() const
 //=========================================================================
 inline bool DeRichSystem::pdIsActive( const LHCb::RichSmartID& id ) const
 {
-  // is this id in the inactive list
-  return ( m_inactivePDSmartIDs.empty() ||
-           std::find( m_inactivePDSmartIDs.begin(),
-                      m_inactivePDSmartIDs.end(),
-                      id.pdID() ) == m_inactivePDSmartIDs.end() );
+  const auto & c = m_inactivePDSmartIDs;
+  return ( c.empty() || std::find(c.begin(),c.end(),id.pdID()) == c.end() );
 }
 
 //=========================================================================
@@ -465,11 +463,8 @@ inline bool DeRichSystem::pdIsActive( const LHCb::RichSmartID& id ) const
 //=========================================================================
 inline bool DeRichSystem::pdIsActive( const Rich::DAQ::HPDHardwareID& id ) const
 {
-  // is this id in the inactive list
-  return ( m_inactivePDHardIDs.empty() ||
-           std::find( m_inactivePDHardIDs.begin(),
-                      m_inactivePDHardIDs.end(),
-                      id ) == m_inactivePDHardIDs.end() );
+  const auto & c = m_inactivePDHardIDs;
+  return ( c.empty() || std::find(c.begin(),c.end(),id) == c.end() );
 }
 
 //=========================================================================

@@ -130,6 +130,14 @@ protected:
     return UNLIKELY( msgStream.level() <= level ); 
   }
 
+  /// Report a fatal
+  inline StatusCode Fatal( const std::string& mess, 
+                           const StatusCode sc = StatusCode::FAILURE ) const
+  {
+    fatal() << mess << endmsg;
+    return sc;
+  }
+
   /// Report an error
   inline StatusCode Error( const std::string& mess, 
                            const StatusCode sc = StatusCode::FAILURE ) const
