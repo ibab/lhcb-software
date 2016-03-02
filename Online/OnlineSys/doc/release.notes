@@ -4,7 +4,28 @@
 ! Responsible : Markus Frank
 ! Purpose     : Confining package of the Online cmt project
 !-----------------------------------------------------------------------------
+
+<H1><A NAME=v5r30>2016-03-02 OnlineSys v5r30</A></H1>
+<PRE>
+     MDF                 v3r44    DAQ
+     DAQEvent            v9r21    Event
+     GaudiObjDesc        v11r24
+     Controller          v0r26    Online
+     DIM                 v20r16p1 Online
+     FarmConfig          v0r25    Online
+     GauchoAppl          v1r32    Online
+     GaudiCheckpointing  v0r26    Online
+     GaudiOnline         v2r91    Online
+     Hlt2Monitoring      v1r7     Online
+     OnlineAlign         v0r10    Online
+     OnlineBase          v1r41    Online
+     OnlineKernel        v2r26    Online
+     Presenter           v3r14    Online
+     PyDIM               v2r19    Online
+     ROMon               v1r59    Online
+     ZMQTransfer         v0r2     Online
 </PRE>
+
 <H1><A NAME=v5r29>2016-01-20 OnlineSys v5r29</A></H1>
 <PRE>
   v5r28 is unusable. Fix project number.
