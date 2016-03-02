@@ -33,7 +33,7 @@ class RichPIDQCConf(RichConfigurableUser):
         ,"MCChecks"        : False
         ,"MakeNTuple"      : False
         ,"MakeSelDST"      : False
-        ,"PlotTools"       : [ "MassPlotTool","MomentumPlotTool","RichPlotTool","CombinedPidPlotTool" ],
+        ,"PlotTools"       : [ "MassPlotTool","MomentumPlotTool","RichPlotTool","CombinedPidPlotTool" ]
         ,"Candidates"      : { "JPsiMuMu"   : [ "/Marco/To/Set/This" ],
                                "DstarD0Pi"  : [ "/Marco/To/Set/This" ],
                                "LambdaPrPi" : [ "/Marco/To/Set/This" ],
