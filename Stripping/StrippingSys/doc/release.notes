@@ -3,6 +3,150 @@ Package     : StrippingSys
 Package Coordinator : Andrea.Contu@cern.ch, Ricardo.Vazquez.Gomez@cern.ch
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v10r1 2016-03-02 ===========================
+
+*Phys/CommonParticlesArchive
+- Added Archive for s25 (proton-Argon)
+
+*Phys/DisplVertices
+- retag (probably unnecessary but realised too late)
+
+*Phys/IsolationTools
+- Fix bug in initialising myDau
+
+*Phys/StrippingArchive
+ - Updated qmtest
+ - Remove print statement from init
+ - Fix to StrippingPromptCharm in s20r1p1
+ - Modified archive for S25
+ - Added archive for S25
+ - Add lines for LFV to archive for incremental stripping
+ - Add lines for B2XLL to archive for incremental stripping
+ - Update StrippingCC2DD.py for S21rXp1
+ - Update Bd2JpsieeKS for S21rXp1
+ - Fix typo in __init__.py
+- Add Stripping S21r0p1 to the archive
+
+*Phys/StrippingSelections
+ - Fix to StrippingForPromptCharm
+ - Add B->K pi+pi-ll lines in StrippingB2XLL.
+ - BandQ/CC2DD cuts tightened a bit (vertexChi2, proton PID)
+ - changes in StrippingB2CC/StrippingBd2JpsieeKS.py:
+   removed IPCHI2 cuts on K* daughters for prescaled Line which is needed
+   for decaytime resolution studies on data
+ - changes in StrippingB2CC/StrippingBd2JpsieeKS.py:
+   Introduced IPCHI2 cuts on K* daughters / K+ and tightened K+ PT
+   to reduce retention rate for: 
+    - StrippingBd2JpsieeKSBd2JpsieeKstarFromTracksDetachedLine
+    - StrippingBd2JpsieeKSBu2JpsieeKFromTracksDetachedLine
+ - Fix to utils.py in documentation (from Anton)
+ - Fix to documentation code
+ - Added various tests for coordinators 
+ - Added flavour tagging to StrippingBnoC/Stripping_Bu2hhh.py lines
+ - Prescaled Kaon lines in StrippingD2HMuNu
+ - Added muon raw banks and RelInfoMuonIsolation to StrippingDstarD02xx
+ - Moved Stripping D2HMuNu to Charm WG and reduced rate.
+ - Updated BDTs for B2LLXBDT lines, require the head of TMVAWeights
+ - Added StrippingExcitedDsSpectroscopy line for S21p1  
+ - Changed name of Working group in B24p default_config to BnoC
+ - The Lines B23Mu, B24p, BLV, D23Mu and Lc23Mu have MDSTFlag keyword in the dictionary
+   to be configurable from outside, default = False
+ - Changed WG in StrippingCalib.StrippingV0ForPID from Calib to PID
+ - Corrected SL __init__ to include Strippingbhad2PMuX
+ - Corrected QEE's __init__
+ - Added Omegab2XicKpi line for S21p1
+  - First commit of StrippingB2LLXBDT lines
+	-  Tuned B24pLine in StrippingB24pLines: 
+	   softer PID selections, mass window from +/- 500MeV -> +/- 400MeV
+  - Tuned mutau line in StrippingBu2LLK.py
+ - Add new isolation tools to StrippingB2XMuMu. Comment out most of the decays, relax cuts on pi0 PT and B mass window.
+	-	Made prescale configurable for StrippingB2DMuForTauMu.py
+	-   Adding /\b -> p tau nu lines to StrippingB2XTauNu.py
+ - Update in B2CC lines
+   - Added StrippingFullDiJets.py and StrippingMicroDiJets.py to StrippingQEE
+   - Added hhgammagamma and hhhgammagamma lines to StrippingBeauty2Xgamma
+   - Adjustments to Lb2L0Gamma converted lines
+   - StrippingLb2pMuNuVub.py added Lb->ppipimunu and B->ppmunu lines
+   - StrippingB2KstTauTau.py code for s21, fixed bug of DecayDescriptor, added additional cuts on B_FD and MaxCandidates
+  - Updated StrippingBu2Ksthh.py and StrippingB2Ksthh.py for Run1 data
+	-	Added B2KTauMu lines in StrippingB2XTauMu.py
+	-	Added muon RawBank to StrippingLowPtMuID.py
+  - Updated RelInfo for StrippingBu2LLK.py
+  - Update QEE's __init__
+  - move StrippingB24pLines from StrippingRD to StrippingBnoC 
+    and updated module for linebuilders ( __init__.py )
+  - Further tuning StrippingBandQ/StrippingCC2DD.py for Lambda_c+ and Xi_c0 
+ - Added B2JpsiPi0 line for S21p1
+  - Lines added to StrippingRareStrange: 
+    - Sigma-> p e e and Sigma-> p mu mu detached 
+    - Sigma-> p e mu 
+    - Lambda-> p pi 
+    - Lambda-> p pi e e 
+    - Phi-> K mu 
+  - Modified B2CC lines for s21p1
+  - Updated RelInfo for StrippingBu2LLK.py
+  - Added K*+ll, K1ll and Ltaumu
+  - Added Bs2MuMuLinesBsstLine to Bs2MuMuLines.py 
+  - Tighten selection criteria in Bs2st2KKMuX lines
+  - added RelatedInfo from RelInfoMuonIsolation for PID calibration lines
+	-	Added StrippingLowPtMuID.py
+	-	Added missing import to TestMyWGfromSettings_Run1.py
+  - bug fix in StrippingCharm/StrippingD2PiPi0.py
+  - Fixed overwrite of TISTOS requirement in StrippingB2DMuNuX.py
+  - bug fix in StrippingCharm/StrippingD2PiPi0.py
+  - added StrippingBnoC/StrippingBs2PhiKst0.py module
+  - Prepare QEE's __init__ for S21rXp1
+  - Tuned QEE's Ditau.
+  - Added XB2DPiPLine
+  - Added RelatedInfo to Lb2EtacKpLine
+  - Added LFVTau2MuEtaP2pipigLine and Tau2MuEtaP2pipipiLine in LFV lines, RD
+  - Further tuning StrippingBandQ/StrippingCC2DD.py for Lambda_c+ and Xi_c0 
+  - Added Lb2dp and Lb2dppipi lines to StrippingQEE/StrippingLb2dp.py
+  - Changed location of BDT isolation variabiles in LFV lines, RD
+  - Added B2Dst0H lines B2OC _B2DXBuilder.py
+  - Added Dstar02D0Gamma line to B2OC _DBuilder.py
+  - 6 lines added to StrippingBeauty2Charm.py module
+  - Added baryons to StrippingBandQ/StrippingCC2DD.py. 
+    Possibly need further tuning.
+ - Add WS lines in B2DX builder and implement in StrippingBeauty2Charm.py
+	StrippingB2D0KsPiLLD2HHWSBeauty2CharmLine
+	StrippingB2D0KsPiDDD2HHWSBeauty2CharmLine
+	StrippingB2D0KsPiLLD2KSHHLLWSBeauty2CharmLine
+	StrippingB2D0KsPiLLD2KSHHDDWSBeauty2CharmLine
+	StrippingB2D0KsPiDDD2KSHHLLWSBeauty2CharmLine
+	StrippingB2D0KsPiDDD2KSHHDDWSBeauty2CharmLine
+ -  Add prescale for StrippingB2D0KsPiD2HHHHWSBeauty2CharmLine in B2DX builder
+ - Uncomment related info config. 
+   StrippingRD/StrippingBu2LLK 
+ - Update related info : 
+   StrippingRD/StrippingBu2LLK
+
+*Phys/StrippingSettings
+ - Modified settings for S25
+ - added configuration and dbase for S25
+ - update dictionaries in RD for incremental stripping of Run 1
+ - Revert last change in S24 and apply it to S21r0,1p1
+ - Modified LineConfigDictionaries_B2CC for S24 (changes in StrippingBd2JpsieeKSLines)
+ - Patch fix in QEE/Ditau for S21rXp1
+ - create dbase for S21r0p1 and S21r1p1
+ - Modified LineConfigDictionaries_Charm for S21r0p1 and S21r1p1
+ - Prescale StrippingBs2MuMuLinesNoMuIDLine to 0 in RD dictionaries.
+ - Fix STREAM name in B2OC line config
+ - Fix Charm config dictionaries for S21r0,1p1.
+ - Modified LineConfigDictionaries_Charm for S21r0p1 and S21r1p1
+ - Added LineConfigDictionaries_Charm for S21r0p1 and S21r1p1
+ - Modifications to XLLBDT and Bs2MuMu lines dictionaries.
+ - Modifications to XLLBDT and RareStrange lines dictionaries.
+ - Updated BandQ LineConfig adding PromptCharm baryonic lines for S21r0p1 and S21r1p1   
+ - Updated BandQ LineConfig dictionaries for S21r0p1 and S21r1p1
+ - Updated BnoC LineConfigDictionaries for S21r0p1 and S21r1p1
+ - Updated Calib dictionary for S21r0p1
+ - Removed B23Mu, BLV, D23Mu and Lc23Mu dictionaries from S21rXp1
+ - Updated settings SL 21rXp1 lines
+ - Modifications to B2XLL dictionaries in RD
+ - Created LineConfigDictionary for Calibration
+  - Update QEE's S21rXp1 with new lines: FullDiJets, MicroDiJets
+
 !========================= StrippingSys v10r0 2016-02-09 ===========================
 
 - Trivial release to follow the new software stack atop LHCb v40r0.
