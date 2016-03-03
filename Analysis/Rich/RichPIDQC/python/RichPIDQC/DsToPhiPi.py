@@ -35,6 +35,7 @@ class DsToPhiPiConf(RichConfigurableUser) :
         ,"MakeSelDST"   : False
         ,"DSTPreScaleFraction" : 1.0
         ,"PlotTools"    : [ ]
+        ,"Candidates"   : [ ]
         }
 
     ## Set general job options
@@ -95,7 +96,10 @@ class DsToPhiPiConf(RichConfigurableUser) :
             
             from Configurables import ParticleMonitor
             plotter =  ParticleMonitor(self.__sel_name__+"Plots")
-            plotter.Inputs      = [ 'Phys/'+self.__sel_name__+'Sel' ]
+            if self.getProp("RunSelection") : 
+                plotter.Inputs = [ 'Phys/'+self.__sel_name__+'Sel' ]
+            else:
+                plotter.Inputs = self.getProp("Candidates")
             plotter.PeakCut     = "(ADMASS('D_s+')<100*MeV)"
             plotter.SideBandCut = "(ADMASS('D_s+')>100*MeV)"
             plotter.PlotTools   = self.getProp("PlotTools") 
@@ -292,7 +296,7 @@ class DsToPhiPiConf(RichConfigurableUser) :
             Tuple.TupleToolMCTruth.MCTupleToolKinematic.StoreKineticInfo = True
             Tuple.TupleToolMCTruth.MCTupleToolKinematic.StoreVertexInfo = True
             Tuple.TupleToolMCTruth.MCTupleToolKinematic.StorePropertimeInfo = True
-	    Tuple.TupleToolMCTruth.MCTupleToolKinematic.OutputLevel = outputLevel
+            Tuple.TupleToolMCTruth.MCTupleToolKinematic.OutputLevel = outputLevel
             
             Tuple.addTool(TupleToolPid)
             Tuple.TupleToolPid.OutputLevel = outputLevel
@@ -308,7 +312,7 @@ class DsToPhiPiConf(RichConfigurableUser) :
 
             seq.Members += [Tuple]
 
-	    Tuple.NTupleLUN = "DSPHIPI"
+            Tuple.NTupleLUN = "DSPHIPI"
 
             from Configurables import NTupleSvc
             NTupleSvc().Output = ["DSPHIPI DATAFILE='DsToPhiPi.root'  TYP='ROOT'  OPT='NEW'"]

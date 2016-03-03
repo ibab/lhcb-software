@@ -34,11 +34,17 @@ class RichPIDQCConf(RichConfigurableUser):
         ,"MakeNTuple"      : False
         ,"MakeSelDST"      : False
         ,"PlotTools"       : [ "MassPlotTool","MomentumPlotTool","RichPlotTool","CombinedPidPlotTool" ]
-        ,"Candidates"      : { "JPsiMuMu"   : [ "/Marco/To/Set/This" ],
-                               "DstarD0Pi"  : [ "/Marco/To/Set/This" ],
-                               "LambdaPrPi" : [ "/Marco/To/Set/This" ],
-                               "DsPhiPi"    : [ ],
-                               "KshortPiPi" : [ ] }
+        ,"Candidates"      : { "JPsiMuMu"   : [ "/Event/Turbo/Hlt2PIDDetJPsiMuMuPosTaggedTurboCalib/Particles",
+                                                "/Event/Turbo/Hlt2PIDDetJPsiMuMuNegTaggedTurboCalib/Particles" ],
+                               "DstarD0Pi"  : [ "/Event/Turbo/Hlt2PIDD02KPiTagTurboCalib/Particles"],
+                               "LambdaPrPi" : [ "/Event/Turbo/Hlt2PIDLambda2PPiLLTurboCalib/Particles",
+                                                "/Event/Turbo/Hlt2PIDLambda2PPiLLhighPTTurboCalib/Particles",
+                                                "/Event/Turbo/Hlt2PIDLambda2PPiLLveryhighPTTurboCalib/Particles"],
+                               "DsPhiPi"    : [ "/Event/Turbo/Hlt2PIDDs2PiPhiKKNegTaggedTurboCalib/Particles",
+                                                "/Event/Turbo/Hlt2PIDDs2PiPhiKKPosTaggedTurboCalib/Particles",
+                                                "/Event/Turbo/Hlt2PIDDs2PiPhiKKUnbiasedTurboCalib/Particles"
+                                                ],
+                               "KshortPiPi" : [ "/Event/Turbo/Hlt2PIDKs2PiPiLLTurboCalib/Particles"] }
         }
 
     ## Full list of 'PlotTools' = "MassPlotTool","MomentumPlotTool", "CombinedPidPlotTool",

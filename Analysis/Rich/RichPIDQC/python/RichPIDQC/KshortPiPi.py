@@ -35,6 +35,7 @@ class KshortPiPiConf(RichConfigurableUser) :
         ,"MakeSelDST"          : False
         ,"DSTPreScaleFraction" : 0.01
         ,"PlotTools"           : [ ]
+        ,"Candidates"          : [ ]
         }
 
     ## Set general job options
@@ -87,7 +88,10 @@ class KshortPiPiConf(RichConfigurableUser) :
 
             from Configurables import ParticleMonitor
             plotter = ParticleMonitor(self.__sel_name__+"Plots")
-            plotter.Inputs     = [ 'Phys/'+self.__sel_name__+'Sel/Particles' ]
+            if self.getProp("RunSelection") : 
+                plotter.Inputs = [ 'Phys/'+self.__sel_name__+'Sel' ]
+            else:
+                plotter.Inputs = self.getProp("Candidates")
             plotter.PeakCut     = "(ADMASS('KS0')<7*MeV)"
             plotter.SideBandCut = "(ADMASS('KS0')>7*MeV)"
             plotter.PlotTools   = self.getProp("PlotTools") 

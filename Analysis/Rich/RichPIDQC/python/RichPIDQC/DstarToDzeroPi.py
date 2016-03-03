@@ -54,7 +54,6 @@ class DstarToDzeroPiConf(RichConfigurableUser) :
         seq = self.getProp("Sequencer")
 
         if self.getProp("RunSelection") : 
-
             # STD particles
             from StandardParticles import StdNoPIDsPions,StdNoPIDsKaons
             
@@ -113,7 +112,6 @@ class DstarToDzeroPiConf(RichConfigurableUser) :
 
         # Particle Monitoring plots
         if self.getProp("RunMonitors") :
-
             from Configurables import ParticleMonitor
             plotter =  ParticleMonitor(self.__sel_name__+"Plots")
             if self.getProp("RunSelection") : 
