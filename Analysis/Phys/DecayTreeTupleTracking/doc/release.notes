@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2016-03-03 - Francesco Dettori
+ - Adding TupleToolTrackTime, which computes the average residual time of a track from OT hits
+
+
 !================= DecayTreeTupleTracking v1r4 2015-11-30 ====================
 
 ! 2015-11-01 - Gerhard Raven
