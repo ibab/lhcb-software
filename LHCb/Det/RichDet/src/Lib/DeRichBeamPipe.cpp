@@ -46,13 +46,13 @@ StatusCode DeRichBeamPipe::initialize ( )
     debug() << "Initialize " << name() << endmsg;
     debug() << geometry()->lvolume()->name() << endmsg;
   }
-
-  m_solid = geometry()->lvolume()->solid();
-  if ( m_solid )
+  
+  const auto * solid = geometry()->lvolume()->solid();
+  if ( solid )
   {
-    if ( m_solid->typeName() == "SolidCons" )
+    if ( solid->typeName() == "SolidCons" )
     {
-      const auto * coneSolid = dynamic_cast<const SolidCons*>(m_solid);
+      const auto * coneSolid = dynamic_cast<const SolidCons*>(solid);
       if ( coneSolid )
       {
         m_zHalfLength = coneSolid->zHalfLength();
@@ -96,7 +96,7 @@ DeRichBeamPipe::intersectionPoints( const Gaudi::XYZPoint&  position,
   // get the position and point in local coordinates as a line object
   const LINE lPhot ( geometry()->toLocal(position),
                      geometry()->toLocalMatrix()*direction );
-
+  
   // Try first fast test to see if we are close enough to the beampipe
   const bool inter = isCloseBy( lPhot );
   if ( inter )

@@ -144,8 +144,6 @@ private:
 
 private: // data
 
-  const ISolid* m_solid = nullptr;  ///< solid used for the beam pipe
-
   /// A copy of the beam pipe cone that is solid (not hollow)
   std::unique_ptr<SolidCons> m_localCone;
 
