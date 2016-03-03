@@ -2,14 +2,17 @@
 ! Responsible : F. Zhang
 !=============================================================================
 
+!========================= LbGenXicc v5r1 2016-03-03 =========================
 ! 2016-01-26 - Giacomo Graziani
- - removed option GenXiccProduction.AllowBaryonNumberViolation (for not duplicating functionality with the Commands option) 
+ - removed option GenXiccProduction.AllowBaryonNumberViolation (for not duplicating 
+   functionality with the Commands option) 
 
 ! 2015-11-18 - Marco Clemencic
  - Disabled warnings for FORTRAN code.
 
 ! 2015-11-05 - Giacomo Graziani
- - option GenXiccProduction.AllowBaryonNumberViolation added to switch on/off creation of light baryon
+ - option GenXiccProduction.AllowBaryonNumberViolation added to switch on/off creation of 
+   light baryon
    in GenXicc output to conserve baryon number (dafault is False, needed by Pythia6, can be set to
    True for Pythia8)
 
