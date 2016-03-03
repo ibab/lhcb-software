@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2016-03-03 - Sascha Stahl
+ - HltAfterBurner: Removed calculation of TrackLikelihood.
+
 !========================= HltConf v13r7 2016-02-26 =========================
 
 ! 2016-02-24 - Rosen Matev

@@ -113,13 +113,6 @@ class HltAfterburnerConf(LHCbConfigurableUser):
                 cloneCleaner.linkerLocation = cloneTable.outputLocation
                 trackClones.Members += [ cloneTable, cloneCleaner ]
 
-                ## Add the likelihood information
-                from Configurables import TrackAddLikelihood, TrackLikelihood
-                trackAddLikelihood = TrackAddLikelihood(prefix + "TrackAddLikelihood" )
-                trackAddLikelihood.addTool( TrackLikelihood, name = "TrackMatching_likTool" )
-                trackAddLikelihood.TrackMatching_likTool.otEff = 0.9
-                trackAddLikelihood.inputLocation = location
-                trackClones.Members += [ trackAddLikelihood ]
                 infoSeq.Members += [trackClones]
 
             Afterburner.Members += [infoSeq]
