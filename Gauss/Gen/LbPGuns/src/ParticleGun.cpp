@@ -36,6 +36,7 @@
 // Implementation file for class : ParticleGun
 //
 // 2008-05-18 : Patrick Robbe
+// 2016-03-01 : Dan Johnson [adding mass-sampling]
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -92,6 +93,11 @@ ParticleGun::ParticleGun( const std::string& name,
                    m_genCutToolName = "" ) ;
   // Flag to generate signal
   declareProperty( "SignalPdgCode" , m_sigPdgCode = 0) ;
+
+  // Flag to sample mass of generated particle
+  declareProperty( "SampleMass" , m_sampleMass = false ) ;
+  declareProperty( "MassRange_min" , m_MassRange_min = -1. ) ;
+  declareProperty( "MassRange_max" , m_MassRange_max = -1. ) ;
 }
 
 //=============================================================================
@@ -126,6 +132,15 @@ StatusCode ParticleGun::initialize() {
     m_decayTool = tool< IDecayTool >( m_decayToolName ) ;
     if ( m_decayTool && m_sigPdgCode!=0 ) m_decayTool -> setSignal( m_sigPdgCode ) ;
   }
+
+  // If trying to sample mass but meaningless mass range, throw an error
+  if (m_sampleMass) {
+    if (m_MassRange_min<0. || m_MassRange_max<0. || m_MassRange_min > m_MassRange_max )  {
+      debug() << "==> Min: " << m_MassRange_min << endmsg ;
+      debug() << "==> Max: " << m_MassRange_max << endmsg ;
+      return Error( "You asked to sample the particle mass, but defined a meaningless mass range" ) ;
+    }
+  }  
 
   // Retrieve generation method tool
   if ( "" == m_particleGunToolName )
@@ -218,6 +233,13 @@ StatusCode ParticleGun::execute() {
     for ( unsigned int i = 0 ; i < nParticles ; ++i ) {
       // Prepare event container
       prepareInteraction( theEvents , theCollisions , theGenEvent , theGenCollision ) ;
+
+      // If sampling the mass, change the energy of the particle appropriately
+      if (m_sampleMass) {
+        double massToGenerate = m_MassRange_min + RandomForGenerator::flat() * (m_MassRange_max-m_MassRange_min) ;
+        double energy = sqrt( massToGenerate * massToGenerate + theFourMomentum.P() * theFourMomentum.P() ) ;
+        theFourMomentum.SetE( energy ) ;
+      }
 
       // generate one particle
       m_particleGunTool -> generateParticle( theFourMomentum , origin , thePdgId );

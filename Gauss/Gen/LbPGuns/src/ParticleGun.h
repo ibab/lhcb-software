@@ -134,5 +134,10 @@ private:
 
   /// PDG id of signal particle.
   int          m_sigPdgCode ;
+
+  /// Flag if want to sample particle mass and range
+  bool         m_sampleMass ;
+  double       m_MassRange_min ;
+  double       m_MassRange_max ;
 };
 #endif // PARTICLEGUNS_PARTICLEGUN_H

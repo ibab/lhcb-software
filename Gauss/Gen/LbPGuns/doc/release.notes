@@ -4,6 +4,10 @@
 ! Purpose     : Holds code for generaion of particle guns
 !-----------------------------------------------------------------------------
 
+! 2016-03-01 - Dan Johnson
+ - Add FlatPtRapidity particle-gun, allowing also for mass-sampling of a 
+   composite particle.
+
 !========================= LbPGuns v6r0p1 2015-01-26 =========================
 ! 2015-01-26 - Gloria Corti
  - Fix bug in particle guns that does not reject events that do not satisfy the
