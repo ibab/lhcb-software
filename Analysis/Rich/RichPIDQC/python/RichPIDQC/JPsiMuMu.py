@@ -25,17 +25,17 @@ class JPsiMuMuConf(RichConfigurableUser) :
 
     ## Steering options
     __slots__ = {
-         "Context"         : "Offline"  # The context within which to run
-        ,"OutputLevel"     : INFO  # The output level to set all algorithms and tools to use
+         "Context"      : "Offline"  # The context within which to run
+        ,"OutputLevel"  : INFO  # The output level to set all algorithms and tools to use
         ,"Sequencer"    : None      # The sequencer to add the calibration algorithms too
         ,"RunSelection" : False
         ,"RunMonitors"  : True
-        ,"MCChecks"   : False
-        ,"MakeNTuple" : False
-        ,"MakeSelDST" : False
+        ,"MCChecks"     : False
+        ,"MakeNTuple"   : False
+        ,"MakeSelDST"   : False
         ,"DSTPreScaleFraction" : 1.0
-        ,"PlotTools"  : [ ]
-        ,"Candidates" : [ ]
+        ,"PlotTools"    : [ ]
+        ,"Candidates"   : [ ]
         }
 
     ## Set general job options
@@ -87,7 +87,16 @@ class JPsiMuMuConf(RichConfigurableUser) :
             if self.getProp("RunSelection") : 
                 plotter.Inputs      = [ 'Phys/'+self.__sel_name__+'Sel' ]
             else:
-                plotter.Inputs = self.getProp("Candidates")
+                musel = "(PT>1400*MeV) & (P>5*GeV) & (TRCHI2DOF<2.0) & "\
+                        "(PPINFO(LHCb.ProtoParticle.MuonBkgLL,-10000)<-2.5) & "\
+                        "(PPINFO(LHCb.ProtoParticle.MuonMuLL,-10000)>-10)"
+                _code = "( INTREE( ('mu+'==ID) & "+musel+" ) | INTREE( ('mu-'==ID) & "+musel+" ) )"
+                from Configurables import FilterDesktop
+                filter = FilterDesktop( name = self.__sel_name__+"RICHFiltered",
+                                        Code = _code,
+                                        Inputs = self.getProp("Candidates") )
+                plotter.Inputs = [ 'Phys/'+filter.name() ]
+                seq.Members += [filter]
             plotter.PeakCut     = "(ADMASS('J/psi(1S)')<20*MeV)" # Considering sigma = 13
             plotter.SideBandCut = "(ADMASS('J/psi(1S)')>20*MeV)" # Considering sigma = 13
             plotter.PlotTools   = self.getProp("PlotTools") 
