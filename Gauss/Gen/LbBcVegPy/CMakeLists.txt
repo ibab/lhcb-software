@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LbBcVegPy
 ################################################################################
-gaudi_subdir(LbBcVegPy v6r0)
+gaudi_subdir(LbBcVegPy v6r1)
 
 gaudi_depends_on_subdirs(Gen/BcVegPy
                          Gen/LbHard)
