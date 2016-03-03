@@ -76,14 +76,14 @@ class DiMuon_25ns_Draft2016(object) :
                                             'VertexChi2'  :    25,
                                             'MassWindow'  :   120 * MeV},
                    'Psi2S' :               {'MassWindow'  :   120 * MeV,
-                                            'Pt'          :  2000 * MeV,
+                                            'Pt'          :     0 * MeV,
                                             'MuPt'        :     0 * MeV,
                                             'VertexChi2'  :    25},
-                   'Psi2SLowPT' :    {'MassWindow' :   120 * MeV,
-                                      'PtMax'      :  2500 * MeV,
-                                      'MuPt'       :     0 * MeV,
-                                      'VertexChi2' :    25},
-                   'Psi2SHighPT' :         {'Pt'          :  3500 * MeV,
+                   'Psi2SLowPT' :          {'MassWindow' :   120 * MeV,
+                                            'PtMax'      :  2500 * MeV,
+                                            'MuPt'       :     0 * MeV,
+                                            'VertexChi2' :    25},
+                   'Psi2SHighPT' :         {'Pt'          :  2000 * MeV,
                                             'MassWindow'  :   120 * MeV,
                                             'MuPt'        :     0 * MeV,
                                             'VertexChi2'  :    25},
@@ -124,48 +124,47 @@ class DiMuon_25ns_Draft2016(object) :
                                       'DLS'        :     5},
 
                    # Turbo lines
-                                    # Turbo lines
-                 'JPsiTurbo' :          {'MassWindow' :   120 * MeV,
-                                         'Pt'         :     0 * MeV,
-                                         'MuPt'       :     0 * MeV,
-                                         'VertexChi2' :    25},
-                 'Psi2STurbo' :         {'MassWindow' :   120 * MeV,
-                                         'Pt'         :  2000 * MeV,
-                                         'MuPt'       :     0 * MeV,
-                                         'VertexChi2' :    25},
-                 'Psi2SLowPTTurbo' :    {'MassWindow' :   120 * MeV,
-                                         'PtMax'      :  2500 * MeV,
-                                         'MuPt'       :     0 * MeV,
-                                         'VertexChi2' :    25},
-                 'JPsiPIDTurbo' :          {'MassWindow' :   120 * MeV,
-                                            'Pt'         :     0 * MeV,
-                                            'MuPt'       :     0 * MeV,
-                                            'VertexChi2' :    25,
-                                            'PIDCut'     : "MINTREE('mu-' == ABSID, PIDmu) > 1" },
-                 'Psi2SPIDTurbo' :         {'MassWindow' :   120 * MeV,
-                                            'Pt'         :     0 * MeV,
-                                            'MuPt'       :     0 * MeV,
-                                            'VertexChi2' :    25, 
-                                            'PIDCut'     : "MINTREE('mu-' == ABSID, PIDmu) > 1" },
+                   'JPsiTurbo' :          {'MassWindow' :   120 * MeV,
+                                           'Pt'         :     0 * MeV,
+                                           'MuPt'       :     0 * MeV,
+                                           'VertexChi2' :    25},
+                   'Psi2STurbo' :         {'MassWindow' :   120 * MeV,
+                                           'Pt'         :     0 * MeV,
+                                           'MuPt'       :     0 * MeV,
+                                           'VertexChi2' :    25},
+                   'Psi2SLowPTTurbo' :    {'MassWindow' :   120 * MeV,
+                                           'PtMax'      :  2500 * MeV,
+                                           'MuPt'       :     0 * MeV,
+                                           'VertexChi2' :    25},
+                   'JPsiPIDTurbo' :          {'MassWindow' :   120 * MeV,
+                                              'Pt'         :     0 * MeV,
+                                              'MuPt'       :     0 * MeV,
+                                              'VertexChi2' :    25,
+                                              'PIDCut'     : "MINTREE('mu-' == ABSID, PIDmu) > -1" },
+                   'Psi2SPIDTurbo' :         {'MassWindow' :   120 * MeV,
+                                              'Pt'         :     0 * MeV,
+                                              'MuPt'       :     0 * MeV,
+                                              'VertexChi2' :    25, 
+                                              'PIDCut'     : "MINTREE('mu-' == ABSID, PIDmu) > -1" },
                    'Psi2SLowPTPIDTurbo' :    {'MassWindow' :   120 * MeV,
-                                            'PtMax'      :  2500 * MeV,
-                                            'MuPt'       :     0 * MeV,
-                                            'VertexChi2' :    25,
-                                            'PIDCut'     : "MINTREE('mu-' == ABSID, PIDmu) > 1" },
-                 'BTurbo' :             {'MinMass'    :   4700 * MeV,
-                                         'VertexChi2' :    25},
-
+                                              'PtMax'      :  2500 * MeV,
+                                              'MuPt'       :     0 * MeV,
+                                              'VertexChi2' :    25,
+                                              'PIDCut'     : "MINTREE('mu-' == ABSID, PIDmu) > -1" },
+                   'BTurbo' :             {'MinMass'    :   4700 * MeV,
+                                           'VertexChi2' :    25},
+                   
                    },
-
-
-                   # Prescales
-                   'Prescale'   : {'Hlt2DiMuon'        :  0,   
-                                   'Hlt2DiMuonJPsi'    :  0.2,
-                                   'Hlt2DiMuonPsi2S'   :  0.1}
                   
-                 })
-
+                  
+                  # Prescales
+                  'Prescale'   : {'Hlt2DiMuon'        :  0,   
+                                  'Hlt2DiMuonJPsi'    :  0.2,
+                                  'Hlt2DiMuonPsi2S'   :  0.1}
+                  
+                  })
+        
         return d
-
-
+    
+    
 
