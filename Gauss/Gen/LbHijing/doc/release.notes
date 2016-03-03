@@ -4,6 +4,7 @@
 ! Purpose     : "Interface" to Hijing
 !-----------------------------------------------------------------------------
 
+!======================= LbHijing v10r0p2 2016-03-03 =========================
 ! 2015-11-18 - Marco Clemencic
  - Disabled warnings for FORTRAN code.
 
