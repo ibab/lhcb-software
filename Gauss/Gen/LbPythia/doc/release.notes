@@ -4,6 +4,7 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+!======================== LbPythia v15r0p1 2016-03-03 ========================
 ! 2015-11-18 - Marco Clemencic
  - Disabled warnings for FORTRAN code.
 
