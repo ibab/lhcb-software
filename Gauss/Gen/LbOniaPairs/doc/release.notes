@@ -6,6 +6,7 @@
 ! Purpose     : Generator for onia pairs production
 ! -----------------------------------------------------------------------------
 
+!======================= LbOniaPairs v2r1p2 2016-03-03 ========================
 ! 2015-11-18 - Marco Clemencic
  - Disabled warnings for FORTRAN code.
 
