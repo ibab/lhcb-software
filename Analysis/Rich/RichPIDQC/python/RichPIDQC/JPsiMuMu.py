@@ -90,7 +90,7 @@ class JPsiMuMuConf(RichConfigurableUser) :
                 musel = "(PT>1400*MeV) & (P>5*GeV) & (TRCHI2DOF<2.0) & "\
                         "(PPINFO(LHCb.ProtoParticle.MuonBkgLL,-10000)<-2.5) & "\
                         "(PPINFO(LHCb.ProtoParticle.MuonMuLL,-10000)>-10)"
-                _code = "( INTREE( ('mu+'==ID) & "+musel+" ) | INTREE( ('mu-'==ID) & "+musel+" ) )"
+                _code = "( ( INTREE( ('mu+'==ID) & "+musel+" ) ) | ( INTREE( ('mu-'==ID) & "+musel+" ) ) )"
                 from Configurables import FilterDesktop
                 filter = FilterDesktop( name = self.__sel_name__+"RICHFiltered",
                                         Code = _code,
