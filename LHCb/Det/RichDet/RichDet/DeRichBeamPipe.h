@@ -10,6 +10,9 @@
 #ifndef RICHDET_DERICHBEAMPIPE_H
 #define RICHDET_DERICHBEAMPIPE_H 1
 
+// STL
+#include <memory>
+
 // DetDesc
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/ISolid.h"
@@ -18,7 +21,9 @@
 // Local
 #include "RichDet/DeRichBase.h"
 
-// LHCbKernel
+// LHCbMath
+#include "LHCbMath/Line.h"
+#include "LHCbMath/GeomFun.h"
 
 // External declarations
 extern const CLID CLID_DERichBeamPipe;
@@ -33,10 +38,15 @@ extern const CLID CLID_DERichBeamPipe;
 class DeRichBeamPipe : public DeRichBase
 {
 
+private:
+  
+  // Internally representation of a line
+  using LINE = Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>;
+
 public:
 
   /// Enum describing the various possible types of intersection
-  enum BeamPipeIntersectionType 
+  enum BeamPipeIntersectionType
     {
       NoIntersection = 0, ///< Did not intersect the beam pipe at all
       FrontAndBackFace,   ///< Entered via the front face and left via the back face (i.e. totally inside the beampipe)
@@ -44,6 +54,8 @@ public:
       BackFaceAndCone,    ///< Entered via the cone surafece and left via the backface
       ConeOnly            ///< Entered via the cone surafece and left via the cone surface
     };
+
+public:
 
   /**
    * Constructor for this class
@@ -75,6 +87,8 @@ public:
    */
   virtual StatusCode initialize();
 
+public:
+
   /**
    * Finds the entry and exit points of the beam pipe equivalent (central
    * tube in Rich2). For boolean solids
@@ -101,28 +115,54 @@ public:
    *  @retval true  The beam pipe was intersected
    *  @retval false The beam pipe was NOT intersected
    */
-  inline bool testForIntersection( const Gaudi::XYZPoint&  position,
-                                   const Gaudi::XYZVector& direction ) const
-  {
-    ISolid::Ticks ticks;
-    return ( 0 != m_localCone->intersectionTicks ( geometry()->toLocal(position),
-                                                   geometry()->toLocalMatrix()*direction,
-                                                   ticks ) );
-  }
+  bool testForIntersection( const Gaudi::XYZPoint&  position,
+                            const Gaudi::XYZVector& direction ) const;
+
+public:
 
   /**
    * Convert the enum to text for easy reading
    */
   static std::string text(const DeRichBeamPipe::BeamPipeIntersectionType& type);
 
+private:
+
+  /// Fast check to see if a LINE is close to the beampipe or not
+  inline bool isCloseBy( const LINE & line ) const
+  {
+    /// Get the point on the line at the beam pipe start
+    const auto entP = Gaudi::Math::closestPoint( m_startP, line );
+    bool isClose = ( entP.Perp2() < m_startRad2 );
+    if ( !isClose )
+    {
+      /// Get the point on the line at the beam pipe end and try with that
+      const auto endP = Gaudi::Math::closestPoint( m_endP, line );
+      isClose = ( endP.Perp2() < m_endRad2 );
+    }
+    return isClose;
+  }
+
 private: // data
 
   const ISolid* m_solid = nullptr;  ///< solid used for the beam pipe
 
   /// A copy of the beam pipe cone that is solid (not hollow)
-  SolidCons* m_localCone = nullptr;
+  std::unique_ptr<SolidCons> m_localCone;
 
-  double m_zHalfLength{0};  ///< Half length of the cone along z
+  /// Half length of the cone along z
+  double m_zHalfLength{0};  
+
+  /// Radius squared at start point
+  double m_startRad2{0}; 
+
+  /// Radius squared at end point
+  double m_endRad2{0}; 
+
+  /// Position on the z axis for the start of the beampipe
+  Gaudi::XYZPoint m_startP;
+
+  /// Position on the z axis for the end of the beampipe
+  Gaudi::XYZPoint m_endP;
 
 };
 

@@ -4,6 +4,13 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2016-03-03 - Chris Jones
+ - Improvements to DeRichBeamPipe. Add a fast first check to the intersection
+   methods to first test if the line in question is close enough to the
+   beam pipe to then proceed to the full, slow, intersection check.
+   Speeds up testForIntersection by ~40%, which leads to an O(2%) speed up
+   in PhotonRecoUsingQuarticSoln::reconstructPhoton.
+
 ! 2016-03-01 - Chris Jones
  - Add a new method to DeRichHPD to perform a fast line intersection with
    the HPD entrance window, modelled as a simple sphere. 

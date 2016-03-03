@@ -28,7 +28,7 @@ DeRichBeamPipe::DeRichBeamPipe(const std::string & name) :
 //=============================================================================
 // Destructor
 //=============================================================================
-DeRichBeamPipe::~DeRichBeamPipe() { delete m_localCone; }
+DeRichBeamPipe::~DeRichBeamPipe() { }
 
 // Retrieve Pointer to class defininition structure
 const CLID& DeRichBeamPipe::classID()
@@ -50,36 +50,37 @@ StatusCode DeRichBeamPipe::initialize ( )
   m_solid = geometry()->lvolume()->solid();
   if ( m_solid )
   {
-    if ( m_solid->typeName() == "SolidCons" ) 
+    if ( m_solid->typeName() == "SolidCons" )
     {
-      const SolidCons* coneSolid = dynamic_cast<const SolidCons*>(m_solid);
+      const auto * coneSolid = dynamic_cast<const SolidCons*>(m_solid);
       if ( coneSolid )
       {
         m_zHalfLength = coneSolid->zHalfLength();
-        m_localCone = new SolidCons( "LocalRichCone",
-                                     m_zHalfLength,
-                                     coneSolid->outerRadiusAtMinusZ(),
-                                     coneSolid->outerRadiusAtPlusZ()
-                                     );
+        m_localCone.reset( new SolidCons( "LocalRichCone",
+                                          m_zHalfLength,
+                                          coneSolid->outerRadiusAtMinusZ(),
+                                          coneSolid->outerRadiusAtPlusZ() ) );
+        // get the start and end radius square + some tolerence factor
+        m_startRad2 = 2 * std::pow( coneSolid->outerRadiusAtMinusZ(), 2 );
+        m_endRad2   = 2 * std::pow( coneSolid->outerRadiusAtPlusZ(),  2 );
+        m_startP    = Gaudi::XYZPoint( 0, 0, -m_zHalfLength );
+        m_endP      = Gaudi::XYZPoint( 0, 0,  m_zHalfLength );
       }
       else
       {
-        fatal() << "Problem casting to SolidCons" << endmsg;
-        return StatusCode::FAILURE;
+        return Fatal( "Problem casting to SolidCons" );
       }
     }
     else
     {
-      fatal() << "Beam pipe solid is not a cone" << endmsg;
-      return StatusCode::FAILURE;
+      return Fatal( "Beam pipe solid is not a cone" );
     }
   }
   else
   {
-    fatal() << "Problem loading Geometry" << endmsg;
-    return StatusCode::FAILURE;
+    return Fatal( "Problem loading Geometry" );
   }
-    
+
   return StatusCode::SUCCESS;
 }
 
@@ -92,33 +93,85 @@ DeRichBeamPipe::intersectionPoints( const Gaudi::XYZPoint&  position,
                                     Gaudi::XYZPoint& entryPoint,
                                     Gaudi::XYZPoint& exitPoint ) const
 {
-  const auto pLocal = geometry()->toLocal(position);
-  const auto vLocal = geometry()->toLocalMatrix()*direction;
+  // get the position and point in local coordinates as a line object
+  const LINE lPhot ( geometry()->toLocal(position),
+                     geometry()->toLocalMatrix()*direction );
 
-  ISolid::Ticks ticks;
-  const auto noTicks = m_localCone->intersectionTicks(pLocal, vLocal, ticks);
+  // Try first fast test to see if we are close enough to the beampipe
+  const bool inter = isCloseBy( lPhot );
+  if ( inter )
+  {
+    // OK, try the full check ...
+    ISolid::Ticks ticks;
+    const auto noTicks = m_localCone->intersectionTicks( lPhot.beginPoint(),
+                                                         lPhot.direction(),
+                                                         ticks );
+    if ( 0 != noTicks )
+    {
+      // set entry point
+      const auto entryLocal = lPhot.beginPoint() + ticks[0] * lPhot.direction();
+      const bool frontFaceHit = ( entryLocal.z() < -m_zHalfLength + 1*Gaudi::Units::mm );
+      entryPoint = geometry()->toGlobal( entryLocal );
 
-  if ( 0 == noTicks ) return NoIntersection;
+      // set exit point
+      const auto exitLocal = lPhot.beginPoint() + ticks[noTicks-1] * lPhot.direction();
+      const bool backFaceHit = ( exitLocal.z() > m_zHalfLength - 1*Gaudi::Units::mm );
+      exitPoint  = geometry()->toGlobal( exitLocal );
 
-  const auto entryLocal = pLocal + ticks[0] * vLocal;
-  const bool frontFaceHit = ( entryLocal.z() < -m_zHalfLength + 1*Gaudi::Units::mm );
-  entryPoint = geometry()->toGlobal( entryLocal );
+      // return the status
+      return ( frontFaceHit && backFaceHit ? FrontAndBackFace :
+               frontFaceHit                ? FrontFaceAndCone :
+               backFaceHit                 ? BackFaceAndCone  :
+               ConeOnly );
+    }
 
-  const auto exitLocal = pLocal + ticks[noTicks-1] * vLocal;
-  const bool backFaceHit = ( exitLocal.z() > m_zHalfLength - 1*Gaudi::Units::mm );
-  exitPoint  = geometry()->toGlobal( exitLocal );
+  }
 
-  return ( frontFaceHit && backFaceHit ? FrontAndBackFace :
-           frontFaceHit                ? FrontFaceAndCone :
-           backFaceHit                 ? BackFaceAndCone  :
-           ConeOnly );
+  // if get here, no intersection
+  return NoIntersection;
+}
+
+//=========================================================================
+// Test if a given direction intersects the beam-pipe volume at all.
+//=========================================================================
+bool
+DeRichBeamPipe::testForIntersection( const Gaudi::XYZPoint&  position,
+                                     const Gaudi::XYZVector& direction ) const
+{
+
+  // get the position and point in local coordinates as a line object
+  const LINE lPhot ( geometry()->toLocal(position),
+                     geometry()->toLocalMatrix()*direction );
+
+  // Try first fast test to see if we are close enough to the beampipe
+  bool inter = isCloseBy( lPhot );
+  if ( inter )
+  {
+    // OK, try the full check ...
+    ISolid::Ticks ticks;
+    inter = 0 != m_localCone->intersectionTicks( lPhot.beginPoint(),
+                                                 lPhot.direction(),
+                                                 ticks );
+  }
+
+  // // test against running the full test
+  // ISolid::Ticks ticks;
+  // const bool testinter = ( 0 != m_localCone->intersectionTicks( lPhot.beginPoint(),
+  //                                                               lPhot.direction(),
+  //                                                               ticks ) );
+  // if ( testinter != inter )
+  // {
+  //   info() << "Mis-match : " << testinter << " " << inter << m_zHalfLength << " " << lPhot << endmsg;
+  // }
+
+  return inter;
 }
 
 //=========================================================================
 //  text conversion
 //=========================================================================
 std::string
-DeRichBeamPipe::text (const  DeRichBeamPipe::BeamPipeIntersectionType& type )
+DeRichBeamPipe::text( const DeRichBeamPipe::BeamPipeIntersectionType& type )
 {
   switch( type ) {
   case DeRichBeamPipe::NoIntersection:   return "NoIntersection";
