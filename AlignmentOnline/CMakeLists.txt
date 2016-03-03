@@ -7,5 +7,5 @@ find_package(GaudiProject)
 
 # Declare project name and version and dependencies
 gaudi_project(AlignmentOnline v10r6
-              USE Online v5r29
+              USE Online v5r30
                   Alignment v10r6)
