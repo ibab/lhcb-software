@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2016-03-03 - Michel De Cian
+ - Put in protection against empty layers in PatAddTTCoord (again...).
+
 ! 2016-03-01 - Sascha Stahl
  - PatForwardTool: Reimplement option to use momentum estimate to guide the Forward tracking.
    Can be activated with option UseProperMomentumEstimate.

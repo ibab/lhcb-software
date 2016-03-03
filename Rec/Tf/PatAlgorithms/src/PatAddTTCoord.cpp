@@ -244,7 +244,8 @@ void PatAddTTCoord::selectHits(const LHCb::State& state, const double p){
     for(int iLayer = 0; iLayer < 2; ++iLayer){
   
       Tf::TTStationHitManager<PatTTHit>::HitRange range =  m_ttHitManager->sortedLayerHits<Tf::increasingByXAtYEq0<PatTTHit>>(iStation,iLayer);
-      
+      if( range.empty() ) continue;
+
       const double zLayer = range.front()->z();
       const double yPredLay = stateY + ( zLayer -stateZ ) * stateTy;
       const double xPredLay = stateX + ( zLayer -stateZ ) * stateTx + bendParam * ( zLayer - m_zTTField );
