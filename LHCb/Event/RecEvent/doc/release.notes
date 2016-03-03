@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output)
 !-----------------------------------------------------------------------------
 
+! 2016-03-03 - Sascha Stahl
+ - Update convertExtraInfo of a ProtoParticle to include ProbNNghost.
+
 ! 2016-01-28 - Chris Jones
  - Update (from Ulrik Egede) to support Deuteron RICH PID type.
  - Some small C++11 clean ups in RichPID.cpp and ProtoParticle.cpp

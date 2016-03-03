@@ -268,6 +268,7 @@ LHCb::ProtoParticle::convertExtraInfo(const std::string& name)
   if ( "ProbNNpi"          == name ) { return LHCb::ProtoParticle::ProbNNpi; }
   if ( "ProbNNk"           == name ) { return LHCb::ProtoParticle::ProbNNk; }
   if ( "ProbNNp"           == name ) { return LHCb::ProtoParticle::ProbNNp; }
+  if ( "ProbNNghost"       == name ) { return LHCb::ProtoParticle::ProbNNghost; }
   if ( "LastGlobal"        == name ) { return LHCb::ProtoParticle::LastGlobal; }
 
   // if get here something bad happened
