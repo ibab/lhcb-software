@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2016-03-03 - Michel De Cian
+ - Remove calculation of TrackLikelihood from 2016 on per default (in Configuration.py).
+
 ! 2016-03-02 - Marco Cattaneo
  - TrackSys: extend Run 2 support to all Run2 data types (2015,2016,2017,2018)
    Currently all years treated like 2015.

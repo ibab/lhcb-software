@@ -60,6 +60,8 @@ class TrackSys(LHCbConfigurableUser):
     DefaultpAGlobalCuts        = { 'Velo':80000, 'IT':999999, 'OT':999999 }
     ## Default track 'extra info' algorithms to run
     DefaultExtraInfoAlgorithms = ["CloneFlagging","TrackLikelihood","GhostProbability"]
+    ## Default track 'extra info' algorithms to run, from 2016 on (no track likelihood and ghost probability directly in the TrackBestTrackCreator)
+    DefaultExtraInfoAlgorithms2016Plus = ["CloneFlagging"]
     ## Cosmic track pattern recognition algorithms to run
     CosmicPatRecAlgorithms    = ["PatSeed"]
     ## Cosmic expert switches
@@ -115,7 +117,11 @@ class TrackSys(LHCbConfigurableUser):
           if len(self.getProp("TrackPatRecAlgorithms")) == 0 :
               self.setProp("TrackPatRecAlgorithms",defaultPatRecAlgorithms)
           if len(self.getProp("TrackExtraInfoAlgorithms")) == 0 :
-              self.setProp("TrackExtraInfoAlgorithms",self.DefaultExtraInfoAlgorithms)
+              if self.getProp("DataType") in self.Run2DataTypes and self.getProp("DataType") != "2015" :
+                  self.setProp("TrackExtraInfoAlgorithms",self.DefaultExtraInfoAlgorithms2016Plus)
+              else:
+                  self.setProp("TrackExtraInfoAlgorithms",self.DefaultExtraInfoAlgorithms)
+                  
           for prop in self.getProp("ExpertTracking"):
               if prop not in self.KnownExpertTracking:
                   raise RuntimeError("Unknown expertTracking option '%s'"%prop)
