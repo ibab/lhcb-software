@@ -19,6 +19,7 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================== LbHidValley v4r1 2016-03-03 =======================
 ! 2016-01-07 - Marco Clemencic
  - Work-around for a problem with builds of LHAPDF without -std=c++11
    Changed link order such that lhapdf is picked up before LHCbMath.
