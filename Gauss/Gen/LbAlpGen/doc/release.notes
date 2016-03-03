@@ -1,10 +1,11 @@
 ! $Id: release.notes,v 1.3 2007-08-10 08:38:17 gcorti Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Gen/LbAlpGen
-! Responsible : Stephane Tourneur, Patrick Robbe
+! Responsible : Xabier Cid Vidal, Patrick Robbe
 ! Purpose     : read ALPGEN-generated partonic level events
 ! -----------------------------------------------------------------------------
 
+!========================== LbAlpGen v6r2 2016-03-03 ==========================
 ! 2016-01-07 - Marco Clemencic
  - Work-around for a problem with builds of LHAPDF without -std=c++11
    Changed link order such that lhapdf is picked up before LHCbMath.
