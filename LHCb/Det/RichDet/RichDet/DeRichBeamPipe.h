@@ -40,7 +40,7 @@ class DeRichBeamPipe : public DeRichBase
 
 private:
   
-  // Internally representation of a line
+  /// Internal representation of a line
   using LINE = Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>;
 
 public:
