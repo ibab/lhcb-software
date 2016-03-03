@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LbHard
 ################################################################################
-gaudi_subdir(LbHard v1r0)
+gaudi_subdir(LbHard v1r0p1)
 
 gaudi_depends_on_subdirs(Gen/Generators
                          Gen/LbPythia
