@@ -175,7 +175,7 @@ class MultiPlot:
                     self.lines2[val] = r.TLine(val,self.hs.GetYaxis().GetXmin(),val,self.hs.GetYaxis().GetXmax())
                 else:
                     r.gPad.Update()
-                    self.lines2[val] = r.TLine(val,0, val, r.gPad.GetUymax())
+                    self.lines2[val] = r.TLine(val,r.gPad.GetUymin(), val, r.gPad.GetUymax())
                 self.lines2[val].Draw('same')
                 if val == 0:
                     self.lines2[val].SetLineStyle(self.vlines_styles.get(val, 1))

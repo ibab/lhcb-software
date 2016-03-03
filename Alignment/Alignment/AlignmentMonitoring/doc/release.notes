@@ -3,7 +3,12 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
+! 2016-03-03
+ - new TT mapping lookup table (histogram bin id <-> TT sector name) due to the changes in TTTrackMonitor
+ - small change in MultiPlot.py to allow vertical line range goes below 0
+
 !===================== AlignmentMonitoring v1r0 - 2016-02-26============================
+
 ! 2016-01-22 - Giulio Dujany
  - new option for script trendPots.py
  - added script to compute updated xml files with alignment updates needed according to the thresholds
