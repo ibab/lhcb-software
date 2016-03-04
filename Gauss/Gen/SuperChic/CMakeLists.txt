@@ -1,7 +1,7 @@
 ################################################################################
 # Package: SuperChic
 ################################################################################
-gaudi_subdir(SuperChic v1r0)
+gaudi_subdir(SuperChic v1r0p1)
 
 gaudi_depends_on_subdirs(Gen/Generators)
 
