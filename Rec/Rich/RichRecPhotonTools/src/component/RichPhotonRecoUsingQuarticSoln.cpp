@@ -232,8 +232,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       }
       if ( m_checkBeamPipe[radiator] )
       {
-        beamTestOK = !deBeam(rich)->testForIntersection( emissionPoint1,
-                                                         sphReflPoint1-emissionPoint1 );
+        beamTestOK = !deBeam(rich)->testForIntersection( emissionPoint1, sphReflPoint1 );
       }
       // -------------------------------------------------------------------------------
 
@@ -253,8 +252,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       }
       if ( !beamTestOK && m_checkBeamPipe[radiator] )
       {
-        beamTestOK = !deBeam(rich)->testForIntersection( emissionPoint2,
-                                                         sphReflPoint2-emissionPoint2 );
+        beamTestOK = !deBeam(rich)->testForIntersection( emissionPoint2, sphReflPoint2 );
       }
       // -------------------------------------------------------------------------------
 
@@ -479,8 +477,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   if ( UNLIKELY( m_checkBeamPipe[radiator] &&
                  ( radiator == Rich::Aerogel || !m_testForUnambigPhots[radiator] ) ) )
   {
-    if ( UNLIKELY( deBeam(rich)->testForIntersection( emissionPoint,
-                                                      sphReflPoint-emissionPoint ) ) )
+    if ( UNLIKELY( deBeam(rich)->testForIntersection( emissionPoint, sphReflPoint ) ) )
     {
       //_ri_debug << radiator << " : Failed final beampipe intersection checks" << endmsg;
       return StatusCode::FAILURE;

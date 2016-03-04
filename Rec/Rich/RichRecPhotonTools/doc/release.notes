@@ -4,6 +4,9 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-03-04 - Chris Jones
+ - Adapt to changes in DeRichBeamPipe.
+
 ! 2016-03-02 - Chris Jones
  - Adapt to be move of some basic methods to a utility header file 
    in Rich/RichKernel.

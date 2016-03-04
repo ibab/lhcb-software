@@ -270,10 +270,10 @@ FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
     if ( checkBeamPipe(rad) )
     {
       // Get intersections with beam pipe using DeRich object
-      const Gaudi::XYZVector vect = exitPoint - entryPoint;
+      //const Gaudi::XYZVector vect = exitPoint - entryPoint;
       Gaudi::XYZPoint inter1, inter2;
       const DeRichBeamPipe::BeamPipeIntersectionType intType
-        = deBeam(rad)->intersectionPoints( entryPoint, vect, inter1, inter2 );
+        = deBeam(rad)->intersectionPoints( entryPoint, exitPoint, inter1, inter2 );
 
       if (msgLevel(MSG::VERBOSE))
         verbose() << "  --> Beam Intersects : " << intType << " : " << inter1 << " " << inter2 << endmsg;

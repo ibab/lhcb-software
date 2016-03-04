@@ -545,10 +545,11 @@ constructSegments( const ContainedObject * obj,
     {
 
       // Get intersections with beam pipe using DeRich object
-      const Gaudi::XYZVector vect = exitPState->position() - entryPState->position();
+      //const Gaudi::XYZVector vect = exitPState->position() - entryPState->position();
       Gaudi::XYZPoint inter1, inter2;
       const DeRichBeamPipe::BeamPipeIntersectionType intType
-        = deBeam(rad)->intersectionPoints( entryPState->position(), vect, inter1, inter2 );
+        = deBeam(rad)->intersectionPoints( entryPState->position(), 
+                                           exitPState->position(), inter1, inter2 );
 
       _ri_verbo << "  --> Beam Intersects : " << intType << " : "
                 << inter1 << " " << inter2 << endmsg;
