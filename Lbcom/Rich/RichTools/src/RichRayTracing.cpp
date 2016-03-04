@@ -308,7 +308,7 @@ Rich::RayTracing::_traceToDetector ( const Rich::DetectorType rich,
     {
       // test for intersections between emission point and spherical reflection point
       if ( deBeam(rich)->testForIntersection( startPoint,
-                                              photon.sphMirReflectionPoint()-startPoint ) )
+                                              photon.sphMirReflectionPoint() ) )
       {
         result = LHCb::RichTraceMode::OutsideHPDPanel; // CRJ : Do we need a special result flag ?
       }
