@@ -4,7 +4,7 @@
 # Maintainer : Vanya BELYAEV
 # ============================================================================
 package           LoKiTracks
-version           v3r5
+version           v3r6
 
 # =============================================================================
 branches          cmt doc src dict python LoKi 
