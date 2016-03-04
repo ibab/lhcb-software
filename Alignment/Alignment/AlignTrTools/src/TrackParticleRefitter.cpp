@@ -29,9 +29,9 @@
 #include "LHCbMath/LorentzVectorWithError.h"
 
 class TrackParticleRefitter: public GaudiAlgorithm {
-  
+
 public:
-  
+
   // Constructors and destructor
   TrackParticleRefitter(const std::string& name,
               ISvcLocator* pSvcLocator);
@@ -64,9 +64,9 @@ TrackParticleRefitter::TrackParticleRefitter(const std::string& name,
 StatusCode TrackParticleRefitter::initialize()
 {
   StatusCode sc = GaudiAlgorithm::initialize() ;
-  if(sc.isSuccess()) 
+  if(sc.isSuccess())
     sc = m_trackfitter.retrieve() ;
-  if(sc.isSuccess()) 
+  if(sc.isSuccess())
     sc = m_stateprovider.retrieve() ;
   return sc ;
 }
@@ -105,15 +105,15 @@ StatusCode TrackParticleRefitter::execute()
   LHCb::Particle::Range inputparticles  = get<LHCb::Particle::Range>(m_inputLocation) ;
   BOOST_FOREACH( const LHCb::Particle* p, inputparticles) {
     double z = p->referencePoint().z() ;
-    
+
     std::vector< const LHCb::Track* > tracks ;
     std::vector< double > masshypos ;
     addTracks(*p, tracks, masshypos) ;
     if( tracks.size()<2 ) {
       warning()<< "Not enough tracks! .. skipping particle" << p->daughters().size() << " " << tracks.size() << endreq ;
-      
+
     } else {
-      
+
       std::vector< const LHCb::State* > states ;
       BOOST_FOREACH( const LHCb::Track* tr, tracks) {
 	if( !dynamic_cast<const LHCb::KalmanFitResult*>(tr->fitResult())) {
@@ -126,7 +126,7 @@ StatusCode TrackParticleRefitter::execute()
 	if(!sc.isSuccess()) warning() << "problem getting state from stateprovider" << endreq ;
 	states.push_back(state) ;
       }
-      
+
       LHCb::TrackStateVertex vertex( states ) ;
       vertex.fit() ;
       // now copy everything
@@ -140,18 +140,18 @@ StatusCode TrackParticleRefitter::execute()
       ncp->setMeasuredMass( ncp->momentum().M() ) ;
       //ncp->setMeasuredMassErr(  vertex.massErr(masshypos) ) ;
       ncp->setMeasuredMassErr( Gaudi::Math::LorentzVectorWithError( ncp->momentum(),
-								    ncp->momCovMatrix() ).sigmaMass() ) ;
+								    ncp->momCovMatrix() ).m().error() ) ;
       LHCb::Vertex* endvertex = ncp->endVertex() ;
       if( endvertex ) {
 	endvertex->setPosition( vertex.position() ) ;
 	endvertex->setChi2AndDoF( vertex.chi2(), vertex.nDoF() ) ;
 	endvertex->setCovMatrix( vertex.covMatrix() ) ;
       }
-      
+
       // don't forget to delete all  states !
       BOOST_FOREACH( const LHCb::State* s, states) delete s ;
     }
   }
-  
+
   return StatusCode::SUCCESS;
 }

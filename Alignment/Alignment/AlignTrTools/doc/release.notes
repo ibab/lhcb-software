@@ -4,6 +4,9 @@ Package Coordinator : Wouter Hulsbergen
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+!2016-03-04 - Maurizio Martinelli
+- Changed the function that calcualtes the vertex mass error in TrackParticleRefitter
+
 !========================= AlignTrTools v4r18 2016-02-26 =========================
 !2016-02-09 - Maurizio Martinelli
 - Added an empty __init__.py file to avoid cmake warning
