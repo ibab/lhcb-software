@@ -12,7 +12,13 @@
    Add release notes for all commits.
 
 ! 2016-01-21 - Jonas Rademacker
- - important bug fix
+ - Important bug fix SymmLorentzMatrix.h (line 63 p.T() -> p.Z()). 
+   This will affect many D-wave spin factors (all those that use ZTspin2).
+   Since many (but probably not all) spin factors, including D-wave spin 
+   factors, were tested and compared to other methods, and no large differences
+   were seen, we might be lucky and the impact is in practice minor. 
+   But in principle there is not a-priory reason why it should not be a big 
+   effect.
 
 ! 2016-01-05 - Maxime Schubiger
  - Reversed 3-momenta of D0bar in D_hhhh.cpp for generation in Gauss
