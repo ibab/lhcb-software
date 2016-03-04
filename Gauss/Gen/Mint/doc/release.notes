@@ -6,6 +6,24 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+!=========================== Mint v3r3 2016-03-94 ============================
+! 2015-03-04 - Gloria Corti
+ - Increase major version to highligth that behavioru may be different
+   Add release notes for all commits.
+
+! 2016-01-21 - Jonas Rademacker
+ - important bug fix
+
+! 2016-01-05 - Maxime Schubiger
+ - Reversed 3-momenta of D0bar in D_hhhh.cpp for generation in Gauss
+
+! 2015-07-21 - Jonas Rademacker
+ - getting KKpipiDataFile_eff to compile
+
+! 2015-04-29 - Jonas Rademacker
+ - a bit more flexibility in DalitzEvents? (added possibility to add additional
+   values/parameters
+
 !=========================== Mint v3r3 2015-03-18 ============================
 ! 2015-03-13 - Jonas Rademacker
  - Some methods in MINT use std::polar, assuming that the 'magnitude' in polar
