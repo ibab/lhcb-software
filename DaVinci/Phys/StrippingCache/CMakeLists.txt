@@ -1,7 +1,7 @@
 ################################################################################
 # Package: StrippingCache
 ################################################################################
-gaudi_subdir(StrippingCache v1r4)
+gaudi_subdir(StrippingCache v1r5)
 
 gaudi_depends_on_subdirs(Phys/DaVinci
                          Phys/LoKiArrayFunctors
