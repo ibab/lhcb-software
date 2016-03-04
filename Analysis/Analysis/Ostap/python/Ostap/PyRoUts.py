@@ -741,6 +741,23 @@ ROOT.TH3D . __reversed__ = _h3_iter_reversed_
 #  @see Gaudi::Math::HistoInterpolation
 #  @see Gaudi::Math::HistoInterpolation::interpolate_1D
 _interpolate_1D_ = cpp.Gaudi.Math.HistoInterpolation.interpolate_1D
+
+try :
+    
+    h1 = ROOT.TH1D(hID(),'test',10,0,1)
+    v   = _interpolate_1D_ ( h1 , 0.5 , 2 , False )
+    logger.info ('1D-interpolation: everything is fine') 
+
+except TypeError :
+
+    _tmp_interp_tmp_ = cpp.Gaudi.Math.HistoInterpolation.interpolate_1D
+    
+    def _interpolate_1D_ ( histo , x , order = 1 , edges = True ) :
+        return  _tmp_interp_tmp_ ( h1 , x , order )
+    
+    logger.warning ('1D-interpolation: "edges" will be ignored ') 
+
+
 # =============================================================================
 ## C++ function for 2D-histogram interpolation
 #  @see Gaudi::Math::HistoInterpolation
