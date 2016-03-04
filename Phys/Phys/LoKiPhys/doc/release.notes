@@ -5,6 +5,10 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2016-03-04 - Vanya Belyaev
+ - Phys.py:
+   add function for transverse kinetic energy 
+
 !========================== LoKiPhys v11r8 2016-03-04 =========================
 
 ! 2016-02-17 - Vanya Belyaev

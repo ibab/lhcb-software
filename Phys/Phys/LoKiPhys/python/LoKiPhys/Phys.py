@@ -549,7 +549,7 @@ def _p_ek_ ( p ) :
     """Get the kinetic energy (with uncertainty) of the particle
     - eK = e - m 
     >>> p = ...
-    >>> print p.ek() / GeV 
+    >>> print p.eK() / GeV 
     """
     return cpp.Gaudi.Math.Kinematics.kineticEnergy ( p.momentum() , p.momCovMatrix() )
 
@@ -568,6 +568,21 @@ def _p_mt_ ( p ) :
     >>> print p.mt() / GeV 
     """
     return cpp.Gaudi.Math.Kinematics.transverseMass ( p.momentum() , p.momCovMatrix() )
+
+# =============================================================================
+## get the transverse kinetic energe  (with uncertainty) of the particle
+#  \f$ e_{T,k} = m_T - m = \sqrt{ m^2+p_T^2} - m  \ \f$
+#  @code
+#  p = ...
+#  print p.eTk() 
+#  @encode
+def _p_eTk_ ( p ) :
+    """Get the transverse kinetic energy (with uncertainty) of the particle
+    - m_T = \sqrt{ m^2 + pT^2} 
+    >>> p = ...
+    >>> print p.eTk() / GeV 
+    """
+    return cpp.Gaudi.Math.Kinematics.transverseKineticEnergy ( p.momentum() , p.momCovMatrix() )
 
 # =============================================================================
 ## get the rapidity (with uncertainty) of the particle
@@ -642,16 +657,17 @@ def _p_all_ ( p ) :
     """
     return cpp.Gaudi.Math.LorentzVectorWithError ( p.momentum() , p.momCovMatrix() )
 
-_p_mass_  . __doc__ += '\n' + cpp.Gaudi.Math.Kinematics.mass               .__doc__ 
-_p_p_     . __doc__ += '\n' + cpp.Gaudi.Math.Kinematics.momentum           .__doc__ 
-_p_pt_    . __doc__ += '\n' + cpp.Gaudi.Math.Kinematics.transverseMomentum .__doc__ 
-_p_et_    . __doc__ += '\n' + cpp.Gaudi.Math.Kinematics.transverseEnergy   .__doc__ 
-_p_mt_    . __doc__ += '\n' + cpp.Gaudi.Math.Kinematics.transverseMass     .__doc__ 
-_p_ek_    . __doc__ += '\n' + cpp.Gaudi.Math.Kinematics.kineticEnergy      .__doc__ 
-_p_y_     . __doc__ += '\n' + cpp.Gaudi.Math.Kinematics.rapidity           .__doc__ 
-_p_eta_   . __doc__ += '\n' + cpp.Gaudi.Math.Kinematics.pseudorapidity     .__doc__ 
-_p_phi_   . __doc__ += '\n' + cpp.Gaudi.Math.Kinematics.phi                .__doc__ 
-_p_theta_ . __doc__ += '\n' + cpp.Gaudi.Math.Kinematics.theta              .__doc__ 
+_p_mass_  . __doc__ += '\n' + cpp.Gaudi.Math.Kinematics.mass                    .__doc__ 
+_p_p_     . __doc__ += '\n' + cpp.Gaudi.Math.Kinematics.momentum                .__doc__ 
+_p_pt_    . __doc__ += '\n' + cpp.Gaudi.Math.Kinematics.transverseMomentum      .__doc__ 
+_p_et_    . __doc__ += '\n' + cpp.Gaudi.Math.Kinematics.transverseEnergy        .__doc__ 
+_p_mt_    . __doc__ += '\n' + cpp.Gaudi.Math.Kinematics.transverseMass          .__doc__ 
+_p_ek_    . __doc__ += '\n' + cpp.Gaudi.Math.Kinematics.kineticEnergy           .__doc__ 
+_p_y_     . __doc__ += '\n' + cpp.Gaudi.Math.Kinematics.rapidity                .__doc__ 
+_p_eta_   . __doc__ += '\n' + cpp.Gaudi.Math.Kinematics.pseudorapidity          .__doc__ 
+_p_phi_   . __doc__ += '\n' + cpp.Gaudi.Math.Kinematics.phi                     .__doc__ 
+_p_theta_ . __doc__ += '\n' + cpp.Gaudi.Math.Kinematics.theta                   .__doc__ 
+_p_eTk_   . __doc__ += '\n' + cpp.Gaudi.Math.Kinematics.transverseKineticEnergy .__doc__ 
 
 LHCb.Particle.mass              = _p_mass_
 LHCb.Particle.m                 = _p_mass_
@@ -664,6 +680,8 @@ LHCb.Particle.mt                = _p_mt_
 LHCb.Particle.mT                = _p_mt_
 LHCb.Particle.ek                = _p_ek_
 LHCb.Particle.eK                = _p_ek_
+LHCb.Particle.eTK               = _p_eTk_
+LHCb.Particle.eTk               = _p_eTk_
 
 LHCb.Particle.rapidity          = _p_y_
 LHCb.Particle.y                 = _p_y_
