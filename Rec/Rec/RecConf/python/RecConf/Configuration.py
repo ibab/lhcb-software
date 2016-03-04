@@ -139,8 +139,14 @@ class RecSysConf(LHCbConfigurableUser):
             pvAlg.PVOfflineTool.InputTracks = [ "Rec/Track/FittedHLT1VeloTracks" ]
             pvAlg.OutputVerticesName = "Rec/Vertex/Primary"
             pvAlg.PrimaryVertexLocation = "Rec/Vertex/PrimaryVertices"
-            
-            GaudiSequencer("RecoVertexSeq").Members += [ pvAlg ];
+
+            # Remove all tracks that don't belong to a PV (to save space on a DST)
+            from Configurables import TrackContainerCleaner, SelectTrackInVertex
+            pvVeloTracksCleaner = TrackContainerCleaner("PVVeloTracksCleaner")
+            pvVeloTracksCleaner.inputLocation = "Rec/Track/FittedHLT1VeloTracks" 
+            pvVeloTracksCleaner.selectorName = "SelectTrackInVertex"
+
+            GaudiSequencer("RecoVertexSeq").Members += [ pvAlg, pvVeloTracksCleaner ];
             GaudiSequencer("RecoVertexSeq").IgnoreFilterPassed = True
 
         ## Upgrade type?
