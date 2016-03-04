@@ -769,6 +769,20 @@ namespace Gaudi
     ValueWithError atan
     ( const ValueWithError& b ) ;
     // ========================================================================    
+    /** evaluate atan2(y,x)
+     *  @param y    (INPUT) the parameter 
+     *  @param x    (INPUT) the parameter 
+     *  @param corr (INPUT) the correlation coefficient   -1<=corr<=1 
+     *  @return  atan2(y,x)
+     *  @warning invalid and small covariances are ignored
+     *  @warning no error estimate for x=y=0 point 
+     */
+    GAUDI_API
+    ValueWithError atan2
+    ( const ValueWithError& y        ,
+      const ValueWithError& x        , 
+      const double          corr = 0 ) ;
+    // ========================================================================    
     /** evaluate asinh(b)
      *  @param b (INPUT) the parameter 
      *  @return  asinh(b)

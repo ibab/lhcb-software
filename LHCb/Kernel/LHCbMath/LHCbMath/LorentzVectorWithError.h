@@ -147,58 +147,63 @@ namespace Gaudi
     public: // useful accessors
       // ======================================================================
       /// get the mass with error 
-      inline Gaudi::Math::ValueWithError invariantMass      () const ;
+      inline Gaudi::Math::ValueWithError invariantMass           () const ;
       /// get the momentum with error 
-      inline Gaudi::Math::ValueWithError scalarMomentum     () const ; 
+      inline Gaudi::Math::ValueWithError scalarMomentum          () const ; 
       /// get the transverse momentum with error
-      inline Gaudi::Math::ValueWithError transverseMomentum () const ;      
+      inline Gaudi::Math::ValueWithError transverseMomentum      () const ;      
       /// get the transverse mass     with error
-      inline Gaudi::Math::ValueWithError transverseMass     () const ;      
+      inline Gaudi::Math::ValueWithError transverseMass          () const ;      
       /// get the transverse energy with error
-      inline Gaudi::Math::ValueWithError transverseEnergy   () const ;      
+      inline Gaudi::Math::ValueWithError transverseEnergy        () const ;      
       /// get the kinetic energy with error
-      inline Gaudi::Math::ValueWithError kineticEnergy      () const ;
+      inline Gaudi::Math::ValueWithError kineticEnergy           () const ;
+      /// get the transverse kinetic energy with error
+      inline Gaudi::Math::ValueWithError transverseKineticEnergy () const ;
       /// get the rapidity with error
-      inline Gaudi::Math::ValueWithError rapidity           () const ;
+      inline Gaudi::Math::ValueWithError rapidity                () const ;
       /// get the pseudorapidity with error
-      inline Gaudi::Math::ValueWithError pseudorapidity     () const ;
+      inline Gaudi::Math::ValueWithError pseudorapidity          () const ;
       /// get the phi-angle with error
-      inline Gaudi::Math::ValueWithError phi                () const ;
+      inline Gaudi::Math::ValueWithError phi                     () const ;
       /// get the theta-angle with error
-      inline Gaudi::Math::ValueWithError theta              () const ;
+      inline Gaudi::Math::ValueWithError theta                   () const ;
       // ======================================================================
     public: // useful accessors
       // ======================================================================
       /// get the mass with error 
       inline Gaudi::Math::ValueWithError mass () const 
-      { return invariantMass      () ; }
+      { return invariantMass           () ; }
       /// get the mass with error 
       inline Gaudi::Math::ValueWithError m    () const 
-      { return invariantMass      () ; }
+      { return invariantMass           () ; }
       /// get the scalar momentum with error 
       inline Gaudi::Math::ValueWithError p    () const
-      { return scalarMomentum     () ; }
+      { return scalarMomentum          () ; }
       /// get the transverse momentum with error 
       inline Gaudi::Math::ValueWithError pt   () const
-      { return transverseMomentum () ; }
+      { return transverseMomentum      () ; }
       /// get the transverse momentum with error 
       inline Gaudi::Math::ValueWithError pT   () const
-      { return transverseMomentum () ; }
+      { return transverseMomentum      () ; }
       /// get the transverse energy with error 
       inline Gaudi::Math::ValueWithError et   () const
-      { return transverseEnergy   () ; }
+      { return transverseEnergy        () ; }
       /// get the transverse energy  with error 
       inline Gaudi::Math::ValueWithError eT   () const
-      { return transverseEnergy   () ; }
+      { return transverseEnergy        () ; }
       /// get the transverse mass with error 
       inline Gaudi::Math::ValueWithError mt   () const 
-      { return transverseMass     () ; }
+      { return transverseMass          () ; }
       /// get the transverse mass  with error 
       inline Gaudi::Math::ValueWithError mT   () const
-      { return transverseMass     () ; }
+      { return transverseMass          () ; }
       /// get the kinetic energy with error
       inline Gaudi::Math::ValueWithError eK   () const 
-      { return kineticEnergy      () ; }
+      { return kineticEnergy           () ; }
+      /// get the transverse kinetic energy with error
+      inline Gaudi::Math::ValueWithError eTk   () const 
+      { return transverseKineticEnergy () ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -455,6 +460,17 @@ namespace Gaudi
       ( const Gaudi::LorentzVector& mom , 
         const Gaudi::SymMatrix4x4&  cov ) ;
       // ======================================================================
+      /** calculate the transverse kinetic energy  (eTK) with uncertainty 
+       *  \f$ e_{T,k} = m_T - m \f$ 
+       *  @param mom 4-momentum 
+       *  @param cov covariance 
+       *  @return eTK with uncertainty 
+       */
+      GAUDI_API 
+      Gaudi::Math::ValueWithError transverseKineticEnergy
+      ( const Gaudi::LorentzVector& mom , 
+        const Gaudi::SymMatrix4x4&  cov ) ;
+      // ======================================================================
     } //                               end of namespace Gaudi::Math::Kinematics 
     // ========================================================================
     // get the mass with error 
@@ -492,6 +508,12 @@ namespace Gaudi
     inline Gaudi::Math::ValueWithError 
     Gaudi::Math::LorentzVectorWithError::kineticEnergy      () const 
     { return Gaudi::Math::Kinematics::kineticEnergy    ( *this , cov2() ) ; }
+    // ========================================================================
+    // get the transverse kinetic energy with error 
+    // ========================================================================
+    inline Gaudi::Math::ValueWithError 
+    Gaudi::Math::LorentzVectorWithError::transverseKineticEnergy () const 
+    { return Gaudi::Math::Kinematics::transverseKineticEnergy ( *this , cov2() ) ; }
     // ========================================================================
     // get the rapidity with error 
     // ========================================================================

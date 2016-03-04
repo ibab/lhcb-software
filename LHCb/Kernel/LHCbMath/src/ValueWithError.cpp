@@ -50,18 +50,24 @@
 namespace
 {
   // ==========================================================================
-  const unsigned int _maxULPs = 10000 ;
+  // const unsigned int _maxULPs = 10000 ;
   // ==========================================================================
+  /// equality of doubles 
+  const LHCb::Math::Equal_To<double> s_equal ;
+  /// equality of doubles
   inline bool _equal ( const double value1 ,
                        const double value2 )
-  { return value1 == value2 ||
-      Gaudi::Math::lomont_compare_double ( value1 ,value2 , _maxULPs ) ; }
+  { return value1 == value2 || s_equal ( value1 , value2 ) ; }
+  //{ return value1 == value2 ||
+  //    Gaudi::Math::lomont_compare_double ( value1 ,value2 , _maxULPs ) ; }
   // ==========================================================================
   // check if the double value close to zero
-  inline bool _zero  ( const double value ) { return _equal ( value , 0 ) ; }
+  const LHCb::Math::Zero<double> s_zero ;
+  // check if the double value close to zero
+  inline bool _zero  ( const double value ) { return s_zero ( value) ; }
   // check if the double value close to zero
   inline bool _zero  ( const Gaudi::Math::ValueWithError& a ) 
-  { return _zero ( a.value() ) && _zero ( a.cov2() ) ; }  
+  { return s_zero ( a.value() ) && s_zero ( a.cov2() ) ; }  
   // ==========================================================================
   // check if the double value close to one
   inline bool _one   ( const double value ) { return _equal ( value , 1 ) ; }
@@ -1917,6 +1923,56 @@ Gaudi::Math::ValueWithError Gaudi::Math::atan
   const double d1 = 1.0 / ( 1 + b2 ) ;
   const double d2 = d1 * d1 ;
   const double e2 = d2      * b.cov2() ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e2 ) ;
+}
+// ============================================================================
+/*  evalute atan2(y,x)
+ *  @param y    (INPUT) the parameter 
+ *  @param x    (INPUT) the parameter 
+ *  @param corr (INPUT) the correlation coefficient: -1<=corr<=1 
+ *  @return  atan2(y,x)
+ *  @warning invalid and small covariances are ignored 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::atan2
+( const Gaudi::Math::ValueWithError& y    ,
+  const Gaudi::Math::ValueWithError& x    ,
+  const double                       corr ) 
+{
+  //
+  const double yv = y.value () ;
+  const double xv = x.value () ;
+  //
+  const double v  = std::atan2 ( yv , xv ) ;
+  //  
+  const double y2 = yv * yv ;
+  const double x2 = yv * yv ;
+  const double r2 = x2 + y2 ;
+  //
+  const bool x_err =  0 < x.cov2() && !s_zero ( x.cov2() ) ;
+  const bool y_err =  0 < y.cov2() && !s_zero ( y.cov2() ) ;
+  
+  // no releable error estimates is possible
+  if ( s_zero ( r2 ) ) 
+  {
+    if      ( x_err || y_err )
+    { return  Gaudi::Math::ValueWithError ( v , M_PI * M_PI ) ; }
+    else 
+    { return  Gaudi::Math::ValueWithError ( v               ) ; }
+  }  
+  //
+  const double      r4 = r2 * r2 ;
+  const double dphidx2 = y2 / r4  ;
+  const double dphidy2 = x2 / r4  ;
+  //
+  const double cor = std::max ( std::min ( corr , 1.0 ) , -1.0 ) ; 
+  //
+  const double e2 = 
+    ( x_err ? dphidx2 * x.cov2() : 0.0 ) + 
+    ( y_err ? dphidy2 * y.cov2() : 0.0 ) + 
+    ( x_err && y_err && !s_zero ( cor ) ? 
+      -cor * xv * yv * x.error() * y.error() / r4 : 0.0 ) ;
   //
   return Gaudi::Math::ValueWithError ( v , e2 ) ;
 }

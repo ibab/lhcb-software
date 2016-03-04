@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2016-03-04 - Vanya Belyaev
+ - add transverseKineticEnergy 
+ - add atan2 
+
 ! 2016-03-02 - Vanya Belyaev
     HistoInterpolation
  - add qubic interpolation 

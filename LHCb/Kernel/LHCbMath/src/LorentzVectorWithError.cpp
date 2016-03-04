@@ -720,6 +720,45 @@ Gaudi::Math::Kinematics::theta
     Gaudi::Math::ValueWithError ( theta           ) : 
     Gaudi::Math::ValueWithError ( theta , s2theta ) ;
 }
+// ============================================================================
+/* calculate the transverse kinetic energy  (eTK) with uncertainty 
+ *  \f$ e_{T,k} = m_T - m \f$ 
+ *  @param mom 4-momentum 
+ *  @param cov covariance 
+ *  @return eTK with uncertainty 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::Kinematics::transverseKineticEnergy
+( const Gaudi::LorentzVector& mom , 
+  const Gaudi::SymMatrix4x4&  cov )
+{
+  //
+  const double e    = mom.E  () ;
+  const double px   = mom.Px () ;
+  const double py   = mom.Py () ;
+  const double pz   = mom.Pz () ;
+  const double m    = mom.M  () ;
+  //
+  const double mt2  = m * m + px * px + py * py ;
+  const double mt   = std::sqrt ( mt2 ) ;
+  //
+  const double etk  = mt - m ;
+  if ( m <= 0 || s_zero ( m ) ) { return Gaudi::Math::ValueWithError ( etk ) ; }
+  //
+  // get the vector d(etk)/dp_i :
+  ROOT::Math::SVector<double,4> dEtk_dP;
+  dEtk_dP [0] = px / m                  ;
+  dEtk_dP [1] = py / m                  ;
+  dEtk_dP [2] = pz / m * ( 1 - m / mt ) ;
+  dEtk_dP [3] = -e / m * ( 1 - m / mt ) ;
+  //
+  const double s2etk = ROOT::Math::Similarity ( cov , dEtk_dP ) ;
+  return 
+    s2etk <= 0 || s_zero ( s2etk )  ? 
+    Gaudi::Math::ValueWithError ( etk         ) : 
+    Gaudi::Math::ValueWithError ( etk , s2etk ) ;
+}
 
 
 // ============================================================================

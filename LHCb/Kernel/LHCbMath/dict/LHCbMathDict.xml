@@ -184,6 +184,7 @@
   <function name = "Gaudi::Math::asin"            />
   <function name = "Gaudi::Math::acos"            />
   <function name = "Gaudi::Math::atan"            />
+  <function name = "Gaudi::Math::atan2"           />
   <function name = "Gaudi::Math::sinh"            />
   <function name = "Gaudi::Math::cosh"            />
   <function name = "Gaudi::Math::tanh"            />
