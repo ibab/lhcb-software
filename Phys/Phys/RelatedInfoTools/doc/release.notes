@@ -4,6 +4,8 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+!======================= RelatedInfoTools v1r5 2016-03-04 ====================
+
 ! 2016-02-18 - Ricardo Vazquez Gomez
  - Change the default location from m_maxPtParticleLocation = "Phys/StdAllLooseMuons/Particles" to
    m_maxPtParticleLocation = "Phys/StdNoPIDsMuons/Particles to avoid errors in RelInfoConeIsolation

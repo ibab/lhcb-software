@@ -3,7 +3,7 @@
 # Maintainer : Anton Poluektov anton.poluektov@cern.ch
 #============================================================================
 package           RelatedInfoTools
-version           v1r4
+version           v1r5
 
 #============================================================================
 # Structure, i.e. directories to process. 
