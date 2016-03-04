@@ -26,6 +26,10 @@
 
 class DeRichSystem;
 
+// Some defines for debug/verbose messages...
+#define _ri_debug if( msgLevel(MSG::DEBUG)   ) debug()
+#define _ri_verbo if( msgLevel(MSG::VERBOSE) ) verbose()
+
 /** @class DeRichBase RichDet/DeRichBase.h
  *
  *  Base class for all Rich DetectorElements

@@ -12,6 +12,7 @@
 
 // STL
 #include <memory>
+#include <array>
 
 // DetDesc
 #include "DetDesc/IGeometryInfo.h"
@@ -22,8 +23,8 @@
 #include "RichDet/DeRichBase.h"
 
 // LHCbMath
-#include "LHCbMath/Line.h"
-#include "LHCbMath/GeomFun.h"
+//#include "LHCbMath/Line.h"
+//#include "LHCbMath/GeomFun.h"
 
 // External declarations
 extern const CLID CLID_DERichBeamPipe;
@@ -41,7 +42,7 @@ class DeRichBeamPipe : public DeRichBase
 private:
   
   /// Internal representation of a line
-  using LINE = Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>;
+  //using LINE = Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>;
 
 public:
 
@@ -90,77 +91,97 @@ public:
 public:
 
   /**
-   * Finds the entry and exit points of the beam pipe equivalent (central
-   * tube in Rich2). For boolean solids
-   * this is the first and last intersection point.
+   *  Finds the entry and exit points of the beam pipe equivalent (central
+   *  tube in Rich2). For boolean solids
+   *  this is the first and last intersection point.
    *
-   * @param[in]  position   The start point to ray trace from
-   * @param[in]  direction  The vector to ray trace from the start point
-   * @param[out] entryPoint The entry point to the beam-pipe volume
-   * @param[out] exitPoint  The exit point from the beam-pipe volume
+   *  @param[in]  start The start point of the vector to test
+   *  @param[in]  end   The end point of the vector to test
+   *  @param[out] entryPoint The entry point to the beam-pipe volume
+   *  @param[out] exitPoint  The exit point from the beam-pipe volume
    *
-   * @return Enum describing the status of the intersection
+   *  @return Enum describing the status of the intersection
    */
-  BeamPipeIntersectionType intersectionPoints( const Gaudi::XYZPoint& position,
-                                               const Gaudi::XYZVector& direction,
+  BeamPipeIntersectionType intersectionPoints( const Gaudi::XYZPoint& start,
+                                               const Gaudi::XYZPoint& end,
                                                Gaudi::XYZPoint& entryPoint,
                                                Gaudi::XYZPoint& exitPoint ) const;
-
-  /** Test if a given direction intersects the beam-pipe volume at all.
+  /** 
+   *  Test if a given direction intersects the beam-pipe volume at all.
    *  Faster than intersectionPoints since it does not compute the intersection points
    *  in global coordinates.
-   *  @param[in]  position    The start point to ray trace from
-   *  @param[in]  direction   The vector to ray trace from the start point
+   *
+   *  @param[in]  start The start point of the vector to test
+   *  @param[in]  end   The end point of the vector to test
+   *
    *  @return boolean indicating if the beam pipe was intersected or not
    *  @retval true  The beam pipe was intersected
    *  @retval false The beam pipe was NOT intersected
    */
-  bool testForIntersection( const Gaudi::XYZPoint&  position,
-                            const Gaudi::XYZVector& direction ) const;
+  bool testForIntersection( const Gaudi::XYZPoint& start,
+                            const Gaudi::XYZPoint& end ) const;
 
 public:
 
-  /**
-   * Convert the enum to text for easy reading
-   */
+  /// Convert the enum to text for easy reading
   static std::string text(const DeRichBeamPipe::BeamPipeIntersectionType& type);
 
 private:
 
-  /// Fast check to see if a LINE is close to the beampipe or not
-  inline bool isCloseBy( const LINE & line ) const
+  /// Returns the 'average' of two points
+  template< class POINT >
+  inline POINT average( const POINT& p1, const POINT& p2 ) const
   {
-    /// Get the point on the line at the beam pipe start
-    const auto entP = Gaudi::Math::closestPoint( m_startP, line );
-    bool isClose = ( entP.Perp2() < m_startRad2 );
-    if ( !isClose )
-    {
-      /// Get the point on the line at the beam pipe end and try with that
-      const auto endP = Gaudi::Math::closestPoint( m_endP, line );
-      isClose = ( endP.Perp2() < m_endRad2 );
-    }
-    return isClose;
+    return POINT( 0.5*(p1.x()+p2.x()),
+                  0.5*(p1.y()+p2.y()),
+                  0.5*(p1.z()+p2.z()) );
+  }
+
+  /// Test if the given start and end points are 'close' to the beampipe or not
+  inline bool isCloseBy( const Gaudi::XYZPoint& start,
+                         const Gaudi::XYZPoint& end ) const
+  {
+    return ( isCloseBy(start) || isCloseBy(end)
+             // || isCloseBy(average(start,end))
+             );
+  }
+
+  /// Test if the given point is 'close' to the beampipe or not
+  inline bool isCloseBy( const Gaudi::XYZPoint& p ) const
+  {
+    // Get the closest z coord in the beam pipe
+    const auto beamz  = ( p.z() > m_endPGlo.z()   ? m_endPGlo.z()   :
+                          p.z() < m_startPGlo.z() ? m_startPGlo.z() :
+                          p.z() );
+    // Get (beam pipe axis (x,y) and R^2 at this point in z position
+    const auto beamx  = ( m_m[0] * beamz ) + m_c[0];
+    const auto beamy  = ( m_m[1] * beamz ) + m_c[1];
+    const auto beamR2 = ( m_m[2] * beamz ) + m_c[2];
+    const auto dist2  = ( std::pow(beamx-p.x(),2) + 
+                          std::pow(beamy-p.y(),2) + 
+                          std::pow(beamz-p.z(),2) );
+    //info() << "Point " << p << endmsg;
+    //info() << "Beam  " << beamx << " " << beamy << " " << beamz << endmsg;
+    //info() << " -> Dist2 " << dist2 << " " << beamR2 << " " << ( dist2 < beamR2 ) << endmsg;
+    return ( dist2 < beamR2 );
   }
 
 private: // data
 
+  // The RICH detector
+  Rich::DetectorType m_rich = Rich::InvalidDetector;
+
   /// A copy of the beam pipe cone that is solid (not hollow)
   std::unique_ptr<SolidCons> m_localCone;
 
-  /// Half length of the cone along z
-  double m_zHalfLength{0};  
+  /// Global position on the z axis for the start of the beampipe
+  Gaudi::XYZPoint m_startPGlo;
 
-  /// Radius squared at start point
-  double m_startRad2{0}; 
+  /// Global position on the z axis for the end of the beampipe
+  Gaudi::XYZPoint m_endPGlo;
 
-  /// Radius squared at end point
-  double m_endRad2{0}; 
-
-  /// Position on the z axis for the start of the beampipe
-  Gaudi::XYZPoint m_startP;
-
-  /// Position on the z axis for the end of the beampipe
-  Gaudi::XYZPoint m_endP;
+  // parameters for y = mx +c scaling of cone axis (x,y) and R^2 as a function of z
+  std::array<double,3> m_m, m_c;
 
 };
 

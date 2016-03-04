@@ -33,9 +33,8 @@
 const CLID CLID_DeRichSphMirror = 12030;  // User defined
 
 // Standard Constructor
-DeRichSphMirror::DeRichSphMirror(const std::string & name) :
-  DeRichBase( name )
-{ }
+DeRichSphMirror::DeRichSphMirror(const std::string & name)
+  : DeRichBase( name ) { }
 
 // Standard Destructor
 DeRichSphMirror::~DeRichSphMirror() { }

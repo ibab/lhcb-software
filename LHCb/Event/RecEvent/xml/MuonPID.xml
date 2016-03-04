@@ -13,8 +13,7 @@
 
     <class name="MuonPID"
       author="M. Gandelman, E. Polycarpo"
-      desc="Stores the output of the Muon Identification in the muon
-system"
+      desc="Stores the output of the Muon Identification in the muon system"
       id="11050" >
       <base name="KeyedObject&lt;int&gt;"/>
       &KeyedObject;

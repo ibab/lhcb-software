@@ -4,6 +4,17 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2016-03-04 - Chris Jones
+ - More improvements to DeRichBeamPipe. Change the API to take a start and end
+   point for the direction to be tested, rather than a point and direction.
+   Allows for a faster test on if either point is close enough to the beampipe.
+   (In any case the direction was always created in the caller on the fly
+   from end-start...)
+ - Implement the faster start/end point check, that allows for many photons to
+   to rejected as not passing near the beampipe, before the conversion to
+   local coordinates is required. In all saves another O(5%) on
+   PhotonRecoUsingQuarticSoln::reconstructPhoton.
+
 ! 2016-03-03 - Chris Jones
  - Improvements to DeRichBeamPipe. Add a fast first check to the intersection
    methods to first test if the line in question is close enough to the
