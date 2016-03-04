@@ -12,7 +12,7 @@
 #include <vector>
 #include <utility>
 #include <algorithm>
-#include <boost/array.hpp>
+#include <array>
 
 #include "Kernel/STDAQDefinitions.h"
 
@@ -41,7 +41,7 @@ private:
 
  unsigned int m_maxClustersPerPPx;
  mutable ClusterVector m_clusCont;
- boost::array<unsigned int,4> m_ppxCount;
+ std::array<unsigned int,4> m_ppxCount;
  
  class Less_by_Channel
     : public std::binary_function<boardPair,boardPair,bool>
@@ -97,7 +97,7 @@ inline bool STClustersOnBoard::inOverflow(const unsigned int ppx) const {
 
 inline bool STClustersOnBoard::inOverflow() const{
   
-  boost::array<unsigned int,4>::const_iterator iter = m_ppxCount.begin();
+  auto iter = m_ppxCount.begin();
   while ((iter != m_ppxCount.end()) && (*iter < m_maxClustersPerPPx )){
     ++iter;
   }

@@ -4,6 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!2016-03-04 - Gerhard Raven
+ - C++11 modernization
+
 !2016-01-29 - Michel De Cian
  - Change string comparison in RawBankToSTLiteCluster, such that it is not performed for each cluster.
 

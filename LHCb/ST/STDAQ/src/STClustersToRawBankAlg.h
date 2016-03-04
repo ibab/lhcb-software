@@ -28,7 +28,7 @@
 class STTell1ID;
 class ISTDAQDataSvc;
 
-class STBoardToBankMap;
+#include "STBoardToBankMap.h"
 namespace LHCb {class RawBank;}
 
 class ISTReadoutTool;
@@ -47,9 +47,7 @@ public:
   virtual StatusCode execute();       ///< Algorithm execution
   virtual StatusCode finalize();      ///< Algorithm finalization
 
-private: 
-   
-  typedef std::map<STTell1ID,STClustersOnBoard* > ClusterMap;
+private:
 
   /// convert string to enum
   StatusCode configureBankType();
@@ -60,33 +58,30 @@ private:
   /// fill the banks
   StatusCode groupByBoard(const LHCb::STClusters* clusCont);
 
-
   unsigned int bankSize(STClustersOnBoard::ClusterVector& clusCont) const;
 
   unsigned int getPCN() const;
 
   // create a new bank
-  void writeBank(STClustersOnBoard::ClusterVector& clusCont , 
+  void writeBank(const STClustersOnBoard::ClusterVector& clusCont ,
                  LHCb::BankWriter& bWriter,
                  const STTell1ID aBoardID);
-  
+
   std::string m_clusterLocation;
   std::string m_summaryLocation;
   std::string m_rawLocation;
 
   LHCb::RawBank::BankType m_bankType;
 
-  STBoardToBankMap* m_bankMapping;
+  STBoardToBankMap m_bankMapping;
 
-  ClusterMap m_clusMap;  
-  std::vector<STClustersOnBoard* > m_clusVectors;
+  std::map<STTell1ID,STClustersOnBoard* > m_clusMap;
+  std::vector<STClustersOnBoard> m_clusVectors;
 
- 
   unsigned int m_overflow;
   int m_maxClustersPerPPx;
   unsigned int m_maxClusterSize;
   unsigned int m_pcn;
 
-   
 };
 #endif // STClustersToRawBankAlg

@@ -1,32 +1,17 @@
 #include "STBoardToBankMap.h"
-#include "Kernel/STTell1ID.h"
-
-STBoardToBankMap::STBoardToBankMap(){
-
-  // constructer
-  m_bankMapping.clear();
-}
-
-
-STBoardToBankMap::~STBoardToBankMap(){
-  // destructer
-}
+#include <algorithm>
 
 void STBoardToBankMap::addEntry(STTell1ID aBoard, unsigned int aBank){
   // add entry to map
  m_bankMapping[aBoard] =aBank;
 }
 
-STTell1ID STBoardToBankMap::findBoard(const unsigned int aBank){
+STTell1ID STBoardToBankMap::findBoard(const unsigned int aBank) const {
   // board to bank
-  std::map<STTell1ID,unsigned int>::iterator iterMap = m_bankMapping.begin();
-  while ((iterMap !=  m_bankMapping.end())&&(iterMap->second != aBank)){
-    ++iterMap;
-  } // iterMap
-  return (iterMap != m_bankMapping.end() ? iterMap->first : STTell1ID(STTell1ID::nullBoard));
+  auto i = std::find_if( m_bankMapping.begin(), m_bankMapping.end(),
+                         [&](const std::pair<const STTell1ID, unsigned int>& p ) {
+                             return p.second == aBank;
+  });
+  return i != m_bankMapping.end() ? i->first : STTell1ID(STTell1ID::nullBoard);
 }
 
-unsigned int STBoardToBankMap::findBank(const STTell1ID aBoard){
-  // bank to board
-  return m_bankMapping[aBoard];
-}

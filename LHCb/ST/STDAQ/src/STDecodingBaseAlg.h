@@ -37,9 +37,7 @@ public:
   /// Standard constructor
   STDecodingBaseAlg( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~STDecodingBaseAlg( ); ///< Destructor
-
-  virtual StatusCode initialize();    ///< Algorithm initialization
+  StatusCode initialize() override;    ///< Algorithm initialization
    
 
 protected:
@@ -83,7 +81,7 @@ protected:
  LHCb::STCluster::Spill spill() const;
 
  unsigned int byteSize(const std::vector<LHCb::RawBank*>& banks) const;
- 
+
  bool m_skipErrors;
  std::string m_bankTypeString;
 

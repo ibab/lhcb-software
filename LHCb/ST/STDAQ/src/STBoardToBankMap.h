@@ -12,18 +12,22 @@
 
 #include <map>
 
-class STTell1ID;
+#include "Kernel/STTell1ID.h"
 
-class STBoardToBankMap {
+class STBoardToBankMap final {
 
 public:
 
- STBoardToBankMap();
- virtual ~STBoardToBankMap();
+ STBoardToBankMap() = default;
 
  void addEntry(STTell1ID aBoard, unsigned int aBank);
- STTell1ID findBoard(const unsigned int aBank);
- unsigned int findBank(const STTell1ID aBoard);
+ STTell1ID findBoard(const unsigned int aBank) const;
+
+ // bank to board
+ unsigned int findBank(const STTell1ID aBoard) const
+ { return m_bankMapping.at(aBoard); }
+
+ void clear() { m_bankMapping.clear(); }
 
 private:
 
