@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-03-04 - Michel De Cian
+ - Protect against non-existing input location in TrackContainerCleaner, add two counters.
+
 !========================= TrackUtils v1r63 2016-01-28 =========================
 ! 2016-01-25 - Gerhard Raven
  - speed up TrackBuildCloneTable and TrackCloneCleaner

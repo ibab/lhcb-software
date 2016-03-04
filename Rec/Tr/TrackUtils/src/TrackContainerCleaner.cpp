@@ -16,11 +16,11 @@ DECLARE_ALGORITHM_FACTORY( TrackContainerCleaner )
 TrackContainerCleaner::TrackContainerCleaner(const std::string& name,
                                              ISvcLocator* pSvcLocator)
   : GaudiAlgorithm(name, pSvcLocator)
-  , m_selector(0)
+  , m_selector(nullptr)
 {
   // constructor
- this->declareProperty("selectorName", m_selectorName = "TrackSelector");
- this->declareProperty("inputLocation", m_inputLocation = TrackLocation::Default);
+ declareProperty("selectorName", m_selectorName = "TrackSelector");
+ declareProperty("inputLocation", m_inputLocation = TrackLocation::Default);
 }
 
 TrackContainerCleaner::~TrackContainerCleaner()
@@ -45,8 +45,12 @@ StatusCode TrackContainerCleaner::initialize()
 
 StatusCode TrackContainerCleaner::execute(){
 
-  Tracks* trackCont = get<Tracks>(m_inputLocation);
-
+  Tracks* trackCont = getIfExists<Tracks>(m_inputLocation);
+  if( trackCont == nullptr){
+    Warning( "Input container "+m_inputLocation+" does not exist", StatusCode::SUCCESS, 20 );
+    return StatusCode::SUCCESS;
+  }
+    
   std::vector<Track*> tVec;
   
   // loop and select bad tracks
@@ -56,10 +60,15 @@ StatusCode TrackContainerCleaner::execute(){
   } // iterT
    
   // remove from the container and delete the bad tracks
+  std::size_t nRemoved = 0;
   std::vector<Track*>::reverse_iterator iterVec = tVec.rbegin(); 
   for (; iterVec != tVec.rend(); ++iterVec){
     trackCont->erase(*iterVec);
+    ++nRemoved;
   } // iterVec
 
+  counter("# input tracks") += trackCont->size();
+  counter("# removed tracks") += nRemoved;
+  
   return StatusCode::SUCCESS;
 }
