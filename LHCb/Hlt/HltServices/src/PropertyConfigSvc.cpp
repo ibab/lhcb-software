@@ -453,7 +453,7 @@ PropertyConfigSvc::outOfSyncConfigs(const ConfigTreeNode::digest_type& configID,
 
         if ( current == m_configPushed.end() ||  current->second != i ) {  // not present, or different; needs to be pushed
           if(msgLevel(MSG::DEBUG)) debug() << " " << config->name()
-                                           << " current: " <<  current->second
+                                           << " current: " <<  ( current == m_configPushed.end() ? PropertyConfig::digest_type::createInvalid() : current->second )
                                            << " requested: " << i << endmsg;
           *newConfigs = config;
         }

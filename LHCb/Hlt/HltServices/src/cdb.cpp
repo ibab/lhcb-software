@@ -68,7 +68,7 @@ cdb_init(struct cdb *cdbp, int fd)
 #endif
 
   /* get file size */
-  if (fstat(fd, &st) < 0)
+  if ( fd<0 || fstat(fd, &st) < 0)
     return -1;
   /* trivial sanity check: at least toc should be here */
   if (st.st_size < 2048)
