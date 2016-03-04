@@ -7,6 +7,11 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiJets v6r15 2016-03-04 ==========================
+
+! 2016-02-14 - Phil Ilten
+ - Added option to turn off banner for HLT.
+
 !========================= LoKiJets v6r14 2015-11-25 ==========================
 
 ! 2015-11-01 - Gerhard Raven
