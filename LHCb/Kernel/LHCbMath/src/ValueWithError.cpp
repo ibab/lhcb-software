@@ -1947,18 +1947,18 @@ Gaudi::Math::ValueWithError Gaudi::Math::atan2
   const double v  = std::atan2 ( yv , xv ) ;
   //  
   const double y2 = yv * yv ;
-  const double x2 = yv * yv ;
+  const double x2 = xv * xv ;
   const double r2 = x2 + y2 ;
   //
   const bool x_err =  0 < x.cov2() && !s_zero ( x.cov2() ) ;
   const bool y_err =  0 < y.cov2() && !s_zero ( y.cov2() ) ;
   
-  // no releable error estimates is possible
   if ( s_zero ( r2 ) ) 
   {
+    // no reliable error estimates is possible
     if      ( x_err || y_err )
     { return  Gaudi::Math::ValueWithError ( v , M_PI * M_PI ) ; }
-    else 
+    else  
     { return  Gaudi::Math::ValueWithError ( v               ) ; }
   }  
   //
@@ -1972,7 +1972,7 @@ Gaudi::Math::ValueWithError Gaudi::Math::atan2
     ( x_err ? dphidx2 * x.cov2() : 0.0 ) + 
     ( y_err ? dphidy2 * y.cov2() : 0.0 ) + 
     ( x_err && y_err && !s_zero ( cor ) ? 
-      -cor * xv * yv * x.error() * y.error() / r4 : 0.0 ) ;
+      - 2 * cor * xv * yv * x.error() * y.error() / r4 : 0.0 ) ;
   //
   return Gaudi::Math::ValueWithError ( v , e2 ) ;
 }

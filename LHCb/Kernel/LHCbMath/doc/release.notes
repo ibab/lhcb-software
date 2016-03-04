@@ -7,6 +7,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2016-03-04 - Vanya Belyaev
+ - minor fix 
+
+! 2016-03-04 - Vanya Belyaev
  - add transverseKineticEnergy 
  - add atan2 
 
