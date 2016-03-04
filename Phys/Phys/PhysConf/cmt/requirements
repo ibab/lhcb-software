@@ -4,7 +4,7 @@
 # Maintainer : DaVinci coordinator
 # ============================================================================
 package           PhysConf
-version           v1r31
+version           v1r32
 
 # ============================================================================
 # Structure, i.e. directories to process.
