@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2016-03-05 - Sascha Stahl
+ - Fixed bug when switching off fitting of TTracks.
+
 ! 2016-02-23 - Francesco Dettori
  - Adding configuration information for IsMuonTight in: 
     python/HltTracking/Hlt1Tracking.py

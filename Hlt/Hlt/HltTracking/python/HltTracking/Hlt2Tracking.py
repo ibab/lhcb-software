@@ -1248,7 +1248,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 if HltRecoConf().getProp("ApplyGHOSTPROBCutInTBTC"):
                     bestTrackCreator.AddGhostProb = True
                     bestTrackCreator.MaxGhostProb = HltRecoConf().getProp("MaxTrGHOSTPROB")
-                hlt2TrackingOutput = [ self.__trackLocationByType("Long"), self.__trackLocationByType("Downstream"), self.__trackLocationByType("Ttrack") ]
+                hlt2TrackingOutput = [ self.__trackLocationByType("Long"), self.__trackLocationByType("Downstream") ]
+                if self.getProp("FitTTracks"):
+                    hlt2TrackingOutput += [ self.__trackLocationByType("Ttrack") ]
                 trackRecoSequence        +=      [bestTrackCreator]
                 from Configurables import HltRecoConf
                 if HltRecoConf().getProp("AddGhostProb") and not HltRecoConf().getProp("ApplyGHOSTPROBCutInTBTC"):
