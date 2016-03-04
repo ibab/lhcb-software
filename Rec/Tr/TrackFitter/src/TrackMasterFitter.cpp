@@ -171,6 +171,7 @@ DECLARE_TOOL_FACTORY( TrackMasterFitter )
   declareProperty( "MakeMeasurements", m_makeMeasurements = false           );
   declareProperty( "MaterialLocator", m_materialLocator);
   declareProperty( "UpdateTransport", m_updateTransport = true );
+  declareProperty( "MaxUpdateTransports", m_maxUpdateTransports = 10 );
   declareProperty( "UpdateMaterial", m_updateMaterial  = false );
   declareProperty( "UpdateReferenceInOutlierIterations", m_updateReferenceInOutlierIters = true ) ;
   declareProperty( "MinMomentumELossCorr", m_minMomentumForELossCorr = 10.*Gaudi::Units::MeV );
@@ -295,7 +296,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid ) const
       return failureInfo( "unable to make nodes from the measurements" );
     }
   } else {
-    sc = updateRefVectors( track, pid ) ;
+    sc = updateRefVectors( track, pid , m_updateTransport) ;
     if ( sc.isFailure() )
       return failureInfo( "unable to update the ref vectors" );
   }
@@ -339,7 +340,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid ) const
     // update reference trajectories with smoothed states
     // TODO: combine this with the projection of the residuals which now resides in TrackKalmanFilter
     if( iter > 1) {
-      sc = updateRefVectors( track, pid );
+      sc = updateRefVectors( track, pid, m_updateTransport && iter <= m_maxUpdateTransports+1 );
       if ( sc.isFailure() ) return failureInfo( "problem updating ref vectors" );
     }
 
@@ -369,7 +370,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid ) const
 
     // update reference trajectories with smoothed states
     if (m_updateReferenceInOutlierIters) {
-      sc = updateRefVectors( track, pid );
+      sc = updateRefVectors( track, pid , m_updateTransport);
       if ( sc.isFailure() ) return failureInfo( "problem updating ref vectors" );
     }
 
@@ -589,7 +590,7 @@ LHCb::Node* TrackMasterFitter::outlierRemoved( Track& track ) const
 //=========================================================================
 // Update the measurements before a refit
 //=========================================================================
-StatusCode TrackMasterFitter::updateRefVectors( Track& track, LHCb::ParticleID pid ) const
+StatusCode TrackMasterFitter::updateRefVectors( Track& track, LHCb::ParticleID pid , bool doUpdateTransport ) const
 {
   if( m_debugLevel )
     debug() << "TrackMasterFitter::updateRefVectors" << endmsg ;
@@ -613,7 +614,7 @@ StatusCode TrackMasterFitter::updateRefVectors( Track& track, LHCb::ParticleID p
   }
 
   // update the transport using the new ref vectors
-  if(m_updateTransport) {
+  if( doUpdateTransport ){
     sc = updateTransport(track) ;
     if ( sc.isFailure() ) return failureInfo( "problem updating transport" );
   }

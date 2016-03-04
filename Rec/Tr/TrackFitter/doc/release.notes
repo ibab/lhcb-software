@@ -2,6 +2,12 @@
 ! Package     : Tr/TrackFitter
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
+
+! 2016-03-04 - Sascha Stahl
+ - TrackMasterFitter: Implement property MaxUpdateTransports to restrict maximum
+   number of transport updates. Default is the same as number of iterations
+   to not change fitter behaviour by default.
+
 ! 2016-02-13 - Gerhard Raven
  - follow const-ification of Tr/TrackInterfaces
  - C++11 modernization
