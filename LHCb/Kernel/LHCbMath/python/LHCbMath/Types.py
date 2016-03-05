@@ -199,6 +199,10 @@ Gaudi.Math.ValueWithError.Vector = std.vector(Gaudi.Math.ValueWithError)
 Gaudi.Math.ValueWithError.Vector .__str__   = lambda s : str( [ i for i in s ])
 Gaudi.Math.ValueWithError.Vector .__repr__  = lambda s : str( [ i for i in s ])
 
+
+
+
+
 ## Sum the contents of the vector
 def _ve_sum_ ( s ) :
     """
@@ -236,6 +240,8 @@ _VVVE = std.vector( _VVE )
 _VVVE . __str__  = lambda s : str( [ i for i in s ] )
 _VVVE . __repr__ = lambda s : str( [ i for i in s ] )
 _VVVE . __len__  = lambda s : s.size ()
+
+
 
 _VVE.Vector = _VVVE
 Gaudi.Math.ValueWithError.Vector = _VVE
@@ -1947,12 +1953,98 @@ def ulongs ( arg1 , *args ) :
     ## 
     return vct
 
-
 SPD = std.pair('double','double')
 SPD.asTuple  = lambda s : (s.first,s.second)
 SPD.__str__  = lambda s : str( (s.first,s.second) )
 SPD.__repr__ = SPD.__str__
 
+VE = Gaudi.Math.ValueWithError
+
+_is_equal_ = cpp.LHCb.Math.Equal_To    ( 'double' )()
+_is_zero_  = cpp.LHCb.Math.Zero        ( 'double' )()
+_is_le_    = cpp.LHCb.Math.LessOrEqual ( 'double' )()
+
+# =============================================================================
+## Comparison of ValueWithError object with other objects
+#  @attention it is comparison by value only, errors are ignored 
+def _ve_lt_ ( self , other ) :
+    """Comparison of ValueWithError object with other objects
+    >>> a = VE( ... )
+    >>> print a < b 
+    Attention: comparison by value only!
+    """
+    return float(self) < float(other)
+
+# =============================================================================
+## Comparison of ValueWithError object with other objects
+#  @attention it is comparison by value only, errors are ignored 
+def _ve_le_ ( self , other ) :
+    """Comparison of ValueWithError object with other objects
+    >>> a = VE( ... )
+    >>> print a <= b 
+    Attention: comparison by value only!
+    """
+    return _is_le_ ( float(self) , float(other) )
+
+# =============================================================================
+## Comparison of ValueWithError object with other objects
+#  @attention it is comparison by value only, errors are ignored 
+def _ve_gt_ ( self , other ) :
+    """Comparison of ValueWithError object with other objects
+    >>> a = VE( ... )
+    >>> print a > b 
+    Attention: comparison by value only!
+    """
+    return float(self) > float(other)
+
+# =============================================================================
+## Comparison of ValueWithError object with other objects
+#  @attention it is comparison by value only, errors are ignored 
+def _ve_ge_ ( self , other ) :
+    """Comparison of ValueWithError object with other objects
+    >>> a = VE( ... )
+    >>> print a >= b 
+    Attention: comparison by value only!
+    """
+    return _is_le_ ( float(other) , float(self) )
+    
+VE.__lt__ = _ve_lt_ 
+VE.__le__ = _ve_le_ 
+VE.__gt__ = _ve_gt_ 
+VE.__ge__ = _ve_ge_ 
+
+# =============================================================================
+## Equality for ValueWithError objects
+def _ve_eq_ ( self , other ) :
+    """Equality for ValueWithError objects
+    >>> a = VE( ... )
+    >>> b = VE( ... )
+    >>> print a == b 
+    """
+    if isinstance ( other , VE ) :
+        v1 = self .value()
+        v2 = other.value()
+        return _is_equal_ ( v1 , v2 ) and _is_equal_ ( self.cov2() , other.cov2() )
+    elif _is_zero_ ( self.cov2() )  :
+        return _is_equal_ ( float ( self ) ,  float ( other )  ) 
+    else :
+        raise NotImplementedError,' Equality for %s and  %s is not implemented' % ( self, other) 
+
+# =============================================================================
+## inequality for ValueWithError objects
+def _ve_ne_ ( self , other ) :
+    """Inequality for ValueWithError objects
+    >>> a = VE( ... )
+    >>> b = VE( ... )
+    >>> print a != b 
+    """
+    try: 
+        return not self == other
+    except NotImplemented,s :
+        raise NotImplementedError,' Inequality for %s and  %s is not implemented' % ( self, other) 
+
+VE . __eq__ = _ve_eq_
+VE . __ne__ = _ve_ne_
 
 # =============================================================================
 if '__main__' == __name__ :

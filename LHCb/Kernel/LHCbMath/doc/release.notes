@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2016-03-05 - Vanya Belyaev
+ - implement comparison criteria for ValueWithErrors 
+
 ! 2016-03-04 - Vanya Belyaev
  - minor fix 
 
