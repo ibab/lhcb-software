@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2016-03-05 - Luca Pescatore
+  - Minor bug fix in TargetSummary.py that caused plot creation to break
+
 !========================== SimChecks v1r6p1 2015-11-21 ========================
 
 ! 2015-11-18 - Luca Pescatore

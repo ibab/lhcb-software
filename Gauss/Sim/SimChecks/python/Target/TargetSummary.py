@@ -169,10 +169,10 @@ class Plotter :
             multi_txtout = open(outputPath+"/MultiSummary_"+self._models[m]+".txt","w")
     
             xsec_txtout.write( "\\begin{tabular}{ c | c | c | c | c  } \n" )
-            xsec_txtout.write( "PGun in Material & $N^{inel}/N^{gen}$ ($10^{-3}$) & $\\sigma_{inel}$ (mb) & $N^{el}/N^{gen}$ ($10^{-3}$) & $\\sigma_{el}$ (mb) \\\\ \\hline \n")
+            xsec_txtout.write( "PGun in Material & $P_{inel}$ ($10^{-3}$) & $\\sigma_{inel}$ (mb) & $P_{el}$ ($10^{-3}$) & $\\sigma_{el}$ (mb) \\\\ \\hline \n")
     
-            multi_txtout.write( "\\begin{tabular}{ c | c | c } \n" )
-            multi_txtout.write( "PGun in Material & $< Mult >$ & RMS \\\\ \\hline \n" )
+            multi_txtout.write( "\\begin{tabular}{ c | c  } \n" )
+            multi_txtout.write( "PGun in Material & $< Mult >$  \\\\ \\hline \n" )
     
     
             for g in self._energies :
@@ -209,12 +209,6 @@ class Plotter :
                                     thick = j,
                                     material = matname )
 
-                            xsec_txtout.write( '{0} & $ {1:.2f} \pm {2:.2f}$ & $ {3:.2f} \pm {4:.2f}$ & $ {5:.2f} \pm {6:.2f}$ & $ {7:.2f} \pm {8:.2f}$ \\\\ \n'
-                                    .format(head, res[1] * 1e3, res[2] * 1e3, res[1] * SigmaOverPint * 1e3, res[2] * SigmaOverPint * 1e3,
-                                        res[3] * 1e3, res[4] * 1e3, res[3] * SigmaOverPint * 1e3, res[4] * SigmaOverPint * 1e3) )
-
-                            multi_txtout.write( '{0} & {1:.1f} & {2:.1f}  \\\\ \n'.format(head,res[5],res[6]) )
-    
                             tvars.pGun = self._all_pguns[k].GetPDG()
                             tvars.energy = g
                             tvars.thickness = Dx
@@ -242,7 +236,16 @@ class Plotter :
         
                             dataTree.Fill()
 
+                            ## Fill Summary files
+                            xsec_txtout.write( 
+                            '{0} & $ {1:.2f} \pm {2:.2f}$ & $ {3:.2f} \pm {4:.2f}$ & $ {5:.2f} \pm {6:.2f}$ & $ {7:.2f} \pm {8:.2f}$ \\\\ \n'
+                                    .format(head, tvars.inel_xsec * 1e3, tvars.inel_xsec_err * 1e3, 
+                                        tvars.inel_xsec * SigmaOverPint * 1e3, tvars.inel_xsec_err * SigmaOverPint * 1e3,
+                                        tvars.el_xsec * 1e3, tvars.el_xsec_err * 1e3, 
+                                        tvars.el_xsec * SigmaOverPint * 1e3, tvars.el_xsec_err * SigmaOverPint * 1e3) )
 
+                            multi_txtout.write( '{0} & {1:.1f} \pm {2:.1f}  \\\\ \n'.format(head,tvars.multi,tvars.multi_err) )
+    
                     xsec_txtout.write( "\\hline \n" )
                     multi_txtout.write( "\\hline \n" )
 
@@ -498,9 +501,9 @@ def doMultiHistos(nt, curdir, mod, mat, Dx, pgun, eng) :
                    }
     
     if(countinel>0):
-        reult["NChPerc"]   = avg_nChPerc/countinel
-        reult["PlusPerc"]  = avg_ChPlusPerc/countinel
-        reult["MinusPerc"] = avg_ChMinusPerc/countinel
+        result["NChPerc"]   = avg_nChPerc/countinel
+        result["PlusPerc"]  = avg_ChPlusPerc/countinel
+        result["MinusPerc"] = avg_ChMinusPerc/countinel
         
 
     curdir.Write()
