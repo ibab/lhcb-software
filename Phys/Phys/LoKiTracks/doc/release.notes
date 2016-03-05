@@ -5,6 +5,17 @@
 ! Purpose     : track-related functors for LoKi-framework
 ! -----------------------------------------------------------------------------
 
+! 2016-03-05 - Vanya Belyaev
+ - add the functions for tracks and state to allow easy getting the 
+   values and uncertainties
+  >>> for t in tracks : print t.pt () 
+  >>> for s in states : print t.p  () 
+  functions: 
+    p,pt,theta,phi,eta,tx,ty,x,y,qOverP, ....
+
+
+
+
 !========================= LoKiTracks v3r6 2016-03-04 =========================
 
 ! 2016-02-17 - Vanya Belyaev

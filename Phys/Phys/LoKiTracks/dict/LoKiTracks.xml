@@ -44,6 +44,8 @@
   <class pattern    = "LoKi::ExtraInfo::CheckInfo<*LHCb::Track*>"  />
   <class pattern    = "LoKi::ExtraInfo::GetInfo<*LHCb::Track*>"    />
 
+  <function pattern = "LoKi::Tracks::state_*"    />
+
   <class name = "LoKi::ITrackFunctorFactory"     />
   <class name = "LoKi::ITrackFunctorAntiFactory" />
   <class name = "LoKi::Hybrid::TrackEngine"      />

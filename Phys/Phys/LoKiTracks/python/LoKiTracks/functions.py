@@ -256,7 +256,274 @@ def  recSummaryTrack ( index , trtype, location='Rec/Track/Best' ) :
                     RECSUMMARY    ( index , -1 ) ,
                     TrNUM      ( location , trtype  ) )  
 
-# 
+
+
+# ==============================================================================
+## some decoration for States and Tracks
+if not hasattr ( LHCb.State , '_decorated_' ) :
+
+    VE = cpp.Gaudi.Math.ValueWithError
+    
+    LHCb.State._old_p_      = LHCb.State.p
+    LHCb.State._old_pt_     = LHCb.State.pt
+    LHCb.State._old_tx_     = LHCb.State.tx
+    LHCb.State._old_ty_     = LHCb.State.ty
+    LHCb.State._old_x_      = LHCb.State.x
+    LHCb.State._old_y_      = LHCb.State.y
+    LHCb.State._old_qOverP_ = LHCb.State.qOverP
+    
+    def _state_p_ ( state ) :
+        """ Get a momentum (+uncertainty) of the state
+        >>> state = ...
+        >>> print state.p() 
+        """
+        _p  = state._old_p_ () 
+        _e2 = state.errP2   ()
+        return VE ( _p , _e2 )
+
+    def _state_pt_ ( state ) :
+        """ Get a transvserse momentum (+uncertainty) of the state
+        >>> state = ...
+        >>> print state.pt() 
+        """
+        return cpp.LoKi.Tracks.state_pt ( state )
+    
+    def _state_phi_ ( state ) :
+        """ Get an angle phi (+uncertainty) of the state
+        >>> state = ...
+        >>> print state.phi() 
+        """
+        return cpp.LoKi.Tracks.state_phi ( state )
+
+    def _state_theta_ ( state ) :
+        """ Get an angle theta (+uncertainty) of the state
+        >>> state = ...
+        >>> print state.theta() 
+        """
+        return cpp.LoKi.Tracks.state_theta ( state )
+    
+    def _state_eta_ ( state ) :
+        """ Get a pseudorapidity (+uncertainty) of the state
+        >>> state = ...
+        >>> print state.eta() 
+        """
+        return cpp.LoKi.Tracks.state_eta ( state )
+
+    def _state_tx_ ( state ) :
+        """ Get a slope t_x(+uncertainty) of the state
+        >>> state = ...
+        >>> print state.tx()
+        """
+        _tx = state._old_tx_ () 
+        _e2 = state.errTx2   ()
+        return VE ( _tx , _e2 )
+    
+    def _state_ty_ ( state ) :
+        """ Get a slope t_y(+uncertainty) of the state
+        >>> state = ...
+        >>> print state.ty()
+        """
+        _ty = state._old_ty_ () 
+        _e2 = state.errTy2   ()
+        return VE ( _ty , _e2 )
+
+    def _state_x_ ( state ) :
+        """ Get a position x (+uncertainty) of the state
+        >>> state = ...
+        >>> print state.x()
+        """
+        _x  = state._old_x_ () 
+        _e2 = state.errX2   ()
+        return VE ( _x , _e2 )
+    
+    def _state_y_ ( state ) :
+        """ Get a positon y(+uncertainty) of the state
+        >>> state = ...
+        >>> print state.y()
+        """
+        _y  = state._old_y_ () 
+        _e2 = state.errY2   ()
+        return VE ( _y , _e2 )
+
+    def _state_qOverP_ ( state ) :
+        """ Get q/p (+uncertainty) of the state
+        >>> state = ...
+        >>> print state.qOverP()
+        """
+        _q  = state._old_qOverP_ () 
+        _e2 = state.errQOverP2   ()
+        return VE ( _q , _e2 )
+
+    LHCb.State.p           = _state_p_
+    LHCb.State.P           = _state_p_
+    
+    LHCb.State.pt          = _state_pt_
+    LHCb.State.pT          = _state_pt_
+    LHCb.State.Pt          = _state_pt_
+    LHCb.State.PT          = _state_pt_
+
+    LHCb.State.tx          = _state_tx_
+    LHCb.State.tX          = _state_tx_
+    LHCb.State.Tx          = _state_tx_
+
+    LHCb.State.ty          = _state_ty_
+    LHCb.State.tY          = _state_ty_
+    LHCb.State.Ty          = _state_ty_
+
+    LHCb.State.x           = _state_x_
+    LHCb.State.X           = _state_x_
+
+    LHCb.State.y           = _state_x_
+    LHCb.State.Y           = _state_y_
+
+    LHCb.State.phi         = _state_phi_
+    LHCb.State.theta       = _state_theta_
+    LHCb.State.eta         = _state_eta_
+    
+    LHCb.State.qOverP      = _state_qOverP_
+
+    LHCb.State._decorated_ = True 
+
+# ==============================================================================
+## some decoration for States and Tracks
+if not hasattr ( LHCb.Track , '_decorated_' ) :
+
+    LHCb.Track._old_p_   = LHCb.Track.p
+    LHCb.Track._old_pt_  = LHCb.Track.pt
+    LHCb.Track._old_phi_ = LHCb.Track.phi
+    
+    def _track_p_ ( track ) :
+        """ Get a momentum (+uncertainty) of the track
+        >>> track = ...
+        >>> print track.p() 
+        """
+        s = track.stateAt ( LHCb.State.ClosestToBeam ) 
+        if not s : s = track.firstState() 
+        return s.p()
+
+    def _track_pt_ ( track ) :
+        """ Get transverse a momentum (+uncertainty) of the track
+        >>> track = ...
+        >>> print track.pt() 
+        """
+        s = track.stateAt ( LHCb.State.ClosestToBeam ) 
+        if not s : s = track.firstState() 
+        return s.pt()
+    
+    def _track_phi_ ( track ) :
+        """ Get angle phi (+uncertainty) of the track
+        >>> track = ...
+        >>> print track.phi() 
+        """
+        s = track.stateAt ( LHCb.State.ClosestToBeam ) 
+        if not s : s = track.firstState() 
+        return s.phi()
+
+    def _track_theta_ ( track ) :
+        """ Get angle theta (+uncertainty) of the track
+        >>> track = ...
+        >>> print track.theta() 
+        """
+        s = track.stateAt ( LHCb.State.ClosestToBeam ) 
+        if not s : s = track.firstState() 
+        return s.theta()
+    
+    def _track_eta_ ( track ) :
+        """ Get pseudorapidity (+uncertainty) of the track
+        >>> track = ...
+        >>> print track.eta() 
+        """
+        s = track.stateAt ( LHCb.State.ClosestToBeam ) 
+        if not s : s = track.firstState() 
+        return s.eta()
+
+    def _track_tx_ ( track ) :
+        """ Get slope tx (+uncertainty) of the track
+        >>> track = ...
+        >>> print track.tx() 
+        """
+        s = track.stateAt ( LHCb.State.ClosestToBeam ) 
+        if not s : s = track.firstState() 
+        return s.tx()
+
+    def _track_ty_ ( track ) :
+        """ Get slope ty (+uncertainty) of the track
+        >>> track = ...
+        >>> print track.ty() 
+        """
+        s = track.stateAt ( LHCb.State.ClosestToBeam ) 
+        if not s : s = track.firstState() 
+        return s.ty()
+
+    def _track_x_ ( track ) :
+        """ Get x (+uncertainty) of the track
+        >>> track = ...
+        >>> print track.x() 
+        """
+        s = track.stateAt ( LHCb.State.ClosestToBeam ) 
+        if not s : s = track.firstState() 
+        return s.x()
+
+    def _track_y_ ( track ) :
+        """ Get y (+uncertainty) of the track
+        >>> track = ...
+        >>> print track.y() 
+        """
+        s = track.stateAt ( LHCb.State.ClosestToBeam ) 
+        if not s : s = track.firstState() 
+        return s.y()
+
+    def _track_z_ ( track ) :
+        """ Get z of the track
+        >>> track = ...
+        >>> print track.z() 
+        """
+        s = track.stateAt ( LHCb.State.ClosestToBeam ) 
+        if not s : s = track.firstState() 
+        return s.z()
+
+    def _track_qOverP_ ( track ) :
+        """ Get q/p of the track
+        >>> track = ...
+        >>> print track.qOverP() 
+        """
+        s = track.stateAt ( LHCb.State.ClosestToBeam ) 
+        if not s : s = track.firstState() 
+        return s.qOverP()
+
+    LHCb.Track.p           = _track_p_
+    LHCb.Track.P           = _track_p_
+    
+    LHCb.Track.pt          = _track_pt_
+    LHCb.Track.pT          = _track_pt_
+    LHCb.Track.Pt          = _track_pt_
+    LHCb.Track.PT          = _track_pt_
+
+    LHCb.Track.tx          = _track_tx_
+    LHCb.Track.tX          = _track_tx_
+    LHCb.Track.Tx          = _track_tx_
+
+    LHCb.Track.ty          = _track_ty_
+    LHCb.Track.tY          = _track_ty_
+    LHCb.Track.Ty          = _track_ty_
+
+    LHCb.Track.x           = _track_x_
+    LHCb.Track.X           = _track_x_
+    LHCb.Track.y           = _track_y_
+    LHCb.Track.Y           = _track_y_
+    LHCb.Track.z           = _track_z_
+    LHCb.Track.Z           = _track_z_
+
+    LHCb.Track.qOverP      = _track_qOverP_
+
+    LHCb.Track.phi         = _track_phi_
+    LHCb.Track.theta       = _track_theta_
+    LHCb.Track.eta         = _track_eta_
+
+    LHCb.Track._decorated_ = True 
+
+
+
 # =============================================================================
 if __name__ == '__main__' :
     print '*'*120
