@@ -10,12 +10,12 @@ ConfigTreeNode::ConfigTreeNode(const LeafRef& leaf, const NodeRefs& nodes, std::
       , m_leaf(leaf)
       , m_label( std::move(label))
       , m_digest( digest_type::createInvalid() )
-{ 
+{
  if (this->label().find(':')!=std::string::npos)
     throw GaudiException("':' is not allowed in label",label,StatusCode::FAILURE);
 }
 
-void ConfigTreeNode::updateCache() const { 
+void ConfigTreeNode::updateCache() const {
     m_digest = digest_type::compute(str());
 }
 
@@ -39,9 +39,9 @@ void read_custom(std::istream& is, ptree& top) {
         getline(is,s);
         if (s.empty()) continue;
         if (parsing_nodes)  {
-            if (boost::regex_match(s,what,nodeend) ) { 
+            if (boost::regex_match(s,what,nodeend) ) {
                 parsing_nodes = false;
-            } else if (boost::regex_match(s,what,node) ) { 
+            } else if (boost::regex_match(s,what,node) ) {
                 nodes.push_back(std::make_pair(std::string{},ptree{what[1].str()}));
             } else {
                 std::cerr << "ConfigTreeNode: read_custom: parsing error while looking for nodes!!! : [" << s << "]" << std::endl;
@@ -65,16 +65,16 @@ void read_custom(std::istream& is, ptree& top) {
 struct MD5Translator {
     typedef std::string                  internal_type;
     typedef ConfigTreeNode::digest_type  external_type;
-    boost::optional<external_type> get_value( internal_type const & v) 
+    boost::optional<external_type> get_value( internal_type const & v)
     { return external_type::createFromStringRep(v); }
-    boost::optional<internal_type> put_value( external_type const & v) 
+    boost::optional<internal_type> put_value( external_type const & v)
     { return v.str(); }
 };
 
 }
 
 namespace boost { namespace property_tree {
-    template <> 
+    template <>
     struct translator_between<std::string,ConfigTreeNode::digest_type> {
         typedef MD5Translator type;
     };
@@ -84,22 +84,18 @@ namespace boost { namespace property_tree {
 std::istream& ConfigTreeNode::read(std::istream& is) {
     m_digest = digest_type::createInvalid();
     ptree top;
-    int fmt = is.peek();
-    if (fmt=='{')      { read_json(is,top);   }
-    else if (fmt=='<') { read_xml(is,top);    }
-    else               { read_custom(is,top); }
-    if (top.empty()) {
-        // flag as invalid 'forever' -- needs to interact with updateCache
-        m_label.clear();
-        m_nodes.clear();
-        m_leaf = digest_type::createInvalid();
-        m_digest = digest_type::createInvalid();
-    } else {
-        m_label = top.get<std::string>("Label",std::string()); // add default: empty string (most nodes have no label)
-        m_leaf  = top.get<digest_type>("Leaf",digest_type::createInvalid());  // add default: digest_type::createInvalid() (top level has no leaf)
-        const auto& nodes = top.get_child("Nodes", ptree{});
-        m_nodes.clear(); m_nodes.reserve( nodes.size() );
-        std::transform( std::begin(nodes), std::end(nodes), 
+    switch( is.peek() ) {
+        case '{' : read_json(is,top);   break;
+        case '<' : read_xml(is,top);    break;
+        default  : read_custom(is,top); break;
+    }
+    m_label = top.get<std::string>("Label",std::string{}); // add default: empty string (most nodes have no label)
+    m_leaf  = top.get<digest_type>("Leaf",digest_type::createInvalid());  // add default: digest_type::createInvalid() (top level has no leaf)
+    m_nodes.clear();
+    auto nodes = top.get_child_optional("Nodes");
+    if (nodes) {
+        m_nodes.reserve( nodes->size() );
+        std::transform( std::begin(*nodes), std::end(*nodes),
                         std::back_inserter(m_nodes),
                         []( const ptree::value_type& i ) { return i.second.get_value<ConfigTreeNode::digest_type>() ; } );
     }

@@ -2,6 +2,8 @@
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
+! 2016-03-05 - Gerhard Raven
+ - fix coverity warnings
 
 ! 2016-02-05 - Marco Clemencic
  - Ported to the CMT configuration the workaround for Boost bug 11743.
