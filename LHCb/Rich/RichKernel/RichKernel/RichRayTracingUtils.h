@@ -73,7 +73,6 @@ namespace Rich
                          Gaudi::XYZPoint& intersection )
     {
       bool OK = true;
-      // find intersection point
       // for line sphere intersection look at http://www.realtimerendering.com/int/
       const auto a = direction.Mag2();
       if ( UNLIKELY( 0 == a ) ) { OK = false; }
@@ -118,7 +117,6 @@ namespace Rich
                        const double radius )
     {
       bool OK = true;
-      // find intersection point
       // for line sphere intersection look at http://www.realtimerendering.com/int/
       const auto a = direction.Mag2();
       if ( UNLIKELY( 0 == a ) ) { OK = false; }
@@ -154,30 +152,24 @@ namespace Rich
      *  @retval false Ray tracing was unsuccessful
      */
     inline bool
-    reflectFlatPlane ( Gaudi::XYZPoint& position,
-                       Gaudi::XYZVector& direction,
-                       const Gaudi::Plane3D& plane )
+    reflectPlane ( Gaudi::XYZPoint& position,
+                   Gaudi::XYZVector& direction,
+                   const Gaudi::Plane3D& plane )
     {
-      // temp intersection point
-      Gaudi::XYZPoint intersection;
-
-      // refect of the plane
-      const bool sc = intersectPlane( position, direction, plane, intersection );
-      if ( sc )
+      bool OK = true;
+      // Plane normal
+      const auto normal = plane.Normal();
+      // compute distance to the plane
+      const auto scalar = direction.Dot(normal);
+      if ( UNLIKELY( fabs(scalar) < 1e-99 ) ) { OK = false; }
+      else
       {
-        // plane normal
-        const auto normal = plane.Normal();
-
-        // update position to intersection point
-        position = intersection;
-
-        // reflect the vector and update direction
-        // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
+        const auto distance = -(plane.Distance(position)) / scalar;
+        // change position to reflection point and direction
+        position  += distance * direction;
         direction -= 2.0 * (normal.Dot(direction)) * normal;
       }
-
-      // return status code
-      return sc;
+      return OK;
     }
 
   }
