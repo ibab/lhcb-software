@@ -3,6 +3,82 @@ Package             : PhysSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v21r1>2016-03-06 Phys v21r1</A></H1><PRE>
+Development release for 2016 data taking.
+Also needed for the stack for the run-I restripping.
+It is based on Gaudi v27r0, LHCb v40r0 and Rec v19r0 and uses LCG_83 with ROOT 6.06.00.
+
+- Packages updated :
+  Phys/DaVinciKernel v12r4, Phys/PhysConf v1r32, Phys/VertexFit v6r24, Phys/RelatedInfoTools v1r5,
+  Phys/LoKiJets v6r15, Phys/LoKiAlgo v9r11, Phys/LoKiTracks v3r6, Phys/JetAccessories v3r16p1,
+  PhysSel/PhysSelPython v9r9.
+
+- In Phys/DaVinciKernel v12r4 :
+  . PVSentry: extend a bit to allow protect the whole decay tree.
+  . Add helper class GetTESLocation that allows in easy way to collect all relevant TES locations
+    for collections of particles (useful for processing of MC-micro-DST).
+
+- In Phys/PhysConf v1r32 :
+  . MicroDST.py: add two more links in TES 
+     /Event/Hlt1/DecReports --> "RootInTES"/Hlt1/DecReports 
+     /Event/Hlt2/DecReports --> "RootInTES"/Hlt2/DecReports 
+    It helps a lot for python prompt.
+  . Update ANNPID recalibration to also run on 2015 data.
+
+- In Phys/VertexFit v6r24 :
+  . PropertimeFitter :
+    - Fixed bug (the tool was returning c.tau (mm) in case of negative covariance and tau (ns) when the fit is OK).
+    - Added counters to monitor covariance problems.
+
+- In Phys/RelatedInfoTools v1r5 :
+  . Changed the default location from m_maxPtParticleLocation = "Phys/StdAllLooseMuons/Particles" to
+    m_maxPtParticleLocation = "Phys/StdNoPIDsMuons/Particles to avoid errors in RelInfoConeIsolation.
+
+- In Phys/LoKiJets v6r15 :
+  . Added option to turn off banner for HLT.
+
+- In Phys/LoKiAlgo v9r11 :
+  . Tiny fix.
+
+- In Phys/LoKiTracks v3r6 :
+  . Removed explicit loading of TrackEvent library.
+  . Do not insert "dir()" function in case of debug; this causes cache misses
+    when using the generated C++ of functors.
+
+- In Phys/JetAccessories v3r16p1 :
+  . Fix for particles-to-ban list.
+
+- In PhysSel/PhysSelPython v9r9 :
+  . FilterSelection:  
+    simple short cut for 1-step creatio of selection withFilterDesktop algorithm
+
+    >>> from StandardParticles import StdAllLoosePions   as pions
+    >>> good_poins = FilterSelection (
+    ...    'good_pions'       , ## unique name 
+    ...    [ pions ]          , ## ``inputs'': required selections  
+    ...    Code = 'PT>1*GeV'  , ## properties of FilterDesktop algorithm
+    ...    )
+
+  . MomentumScaling  helper ``pseudo-selection'' (PassThroughSelection)
+    that globally applies momentum cailbration in safe way and it 
+    saves a lot of CPU, ap[lyin momenutm calibration only for interesting ivents 
+ 
+    >>> selection = ....  ## some selection
+    >>> selection = MomentumScaling ( selection )
+
+  . Added 'limit' selection, that checks the size of input selection  
+
+    >>> my_selection = ....
+    >>> my_selection_limit = LimitSelection ( my_selection , maxsize = 100 )
+
+  . Removed 'name' from PrintSelection, name is constructed automatically
+    now the code could look a bit better:
+
+    >>> from PhysSelPython.Wrappers import LimitSelection, PrintSelection
+    >>> selection = ... 
+    >>> selection = LimitSelection ( selection , maxsize = 100 )
+    >>> selection = PrintSelection ( selection , PrintDecayTool = 'LoKi::PrintDecay' )
+
 </PRE><H1><A NAME=v21r0>2016-02-05 Phys v21r0</A></H1><PRE>
 Development release for 2016 data taking.
 It is based on Gaudi v27r0, LHCb v40r0 and Rec v19r0 and uses LCG_83 with ROOT 6.06.00.

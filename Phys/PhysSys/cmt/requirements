@@ -1,5 +1,5 @@
 package PhysSys
-version v21r0
+version v21r1
 
 branches doc cmt
 
@@ -13,18 +13,18 @@ use  HltDAQ    v4r25    Hlt
 use  DaVinciInterfaces          v2r26    Phys    # Current DV Maintainer
 use  DaVinciTypes               v2r15    Phys    # Current DV Maintainer
 use  DaVinciUtils               v1r1p1   Phys    # Current DV Maintainer
-use  DaVinciKernel              v12r3    Phys    # Current DV Maintainer
+use  DaVinciKernel              v12r4    Phys    # Current DV Maintainer
 use  SelectionLine              v1r7     Kernel  # Gerhard Raven
 use  SelPy                      v4r4     Phys    # Current DV Maintainer
-use  PhysSelPython              v9r8     PhysSel # Current DV Maintainer
+use  PhysSelPython              v9r9     PhysSel # Current DV Maintainer
 
 #===================================================================
 
-use  PhysConf                   v1r31    Phys    # Current DV Maintainer
+use  PhysConf                   v1r32    Phys    # Current DV Maintainer
 use  ProtoParticleFilter        v1r9     Phys    # Current DV Maintainer
 use  DaVinciTransporter 	v3r14    Phys    # Current DV Maintainer
 use  ParticleMaker      	v6r17    Phys    # Current DV Maintainer
-use  VertexFit			v6r23    Phys    # Yuehong Xie
+use  VertexFit			v6r24    Phys    # Yuehong Xie
 use  LoKiFitters                v4r20    Phys    # Vanya Belyaev
 use  DecayTreeFitter            v1r22    Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2p4   Phys    # Current DV Maintainer
@@ -34,7 +34,7 @@ use  BBDecTreeTool              v1r8     Phys    # Mike Williams
 #===================================================================
 
 use  DaVinciTools       	v24r4    Phys    # DaVinci coordinator
-use  RelatedInfoTools           v1r4     Phys    # Anton Poluektov
+use  RelatedInfoTools           v1r5     Phys    # Anton Poluektov
 use  ExtraInfoTools             v1r2     Phys    # Anton Poluektov
 use  ParticleCombiners          v1r5     Phys    # Chris Jones
 use  DaVinciPVTools             v1r3     Phys    # Chris Jones
@@ -47,13 +47,13 @@ use  DaVinciNeutralTools        v1r1     Phys    # CALO Group
 #===================================================================
 
 use  LoKiUtils                  v1r3p1   Phys    # Vanya Belyaev
-use  LoKiJets                   v6r14    Phys    # Vanya Belyaev, Victor Coco
-use  LoKiAlgo                   v9r10    Phys    # Vanya Belyaev
+use  LoKiJets                   v6r15    Phys    # Vanya Belyaev, Victor Coco
+use  LoKiAlgo                   v9r11    Phys    # Vanya Belyaev
 use  LoKiArrayFunctors          v11r5    Phys    # Vanya Belyaev
 use  LoKiPhys                   v11r7    Phys    # Vanya Belyaev
 use  LoKiProtoParticles         v3r2     Phys    # Vanya Belyaev
 use  LoKi                       v9r0p1   Phys    # Vanya Belyaev
-use  LoKiTracks                 v3r5     Phys    # Vanya Belyaev
+use  LoKiTracks                 v3r6     Phys    # Vanya Belyaev
 use  KalmanFilter               v1r16    Phys    # Vanya Belyaev
 
 #===================================================================
@@ -74,7 +74,7 @@ use FlavourTagging              v14r2    Phys   # Flavour tagging coordinators
 
 #===================================================================
 
-use JetAccessories              v3r16    Phys   # Victor Coco, Cedric Potterat
+use JetAccessories              v3r16p1  Phys   # Victor Coco, Cedric Potterat
 use JetTagging                  v1r10    Phys   # Cedric Potterat
 
 #===================================================================
