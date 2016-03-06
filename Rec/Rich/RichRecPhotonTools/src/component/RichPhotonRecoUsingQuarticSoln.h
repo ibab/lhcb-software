@@ -15,6 +15,8 @@
 
 // STL
 #include <sstream>
+//#include <array>
+#include <vector>
 
 // Base class
 #include "RichPhotonRecoBase.h"
@@ -149,7 +151,7 @@ namespace Rich
     private: // data
 
       /// Rich1 and Rich2 detector elements
-      const DeRich * m_rich[Rich::NRiches];
+      std::array<const DeRich *,Rich::NRiches> m_rich{{nullptr,nullptr}};
 
       /// Tool to locate the appropriate mirror segments for a given reflection point
       const IMirrorSegFinder * m_mirrorSegFinder = nullptr;
@@ -234,6 +236,9 @@ namespace Rich
 
       /// Minimum tolerance for mirror reflection point during iterations
       std::vector<double> m_minSphMirrTolIt;
+
+      /// Flag to control if the secondary mirrors are treated as if they are completely flat
+      std::vector<bool> m_treatSecMirrsFlat; 
 
     };
 

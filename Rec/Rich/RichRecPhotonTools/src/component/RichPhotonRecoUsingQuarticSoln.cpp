@@ -33,6 +33,8 @@ PhotonRecoUsingQuarticSoln( const std::string& type,
   // job options
   declareProperty( "UseSecondaryMirrors",                m_useSecMirs = true  );
   declareProperty( "CorrectAeroRefract",       m_applyAeroRefractCorr = true  );
+  //                                                                      RICH1   RICH2
+  declareProperty( "AssumeFlatSecondaryMirrors", m_treatSecMirrsFlat  = { true,   false } );
   //                                                                      Aero  R1Gas R2Gas
   declareProperty( "FindUnambiguousPhotons",    m_testForUnambigPhots = { true, true, true  } );
   declareProperty( "UseMirrorSegmentAllignment", m_useAlignedMirrSegs = { true, true, true  } );
@@ -396,18 +398,16 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 
         // Get secondary mirror reflection point,
         // using the best actual secondary mirror segment at this point
-        // For RICH2, use the spherical nature of the scondary mirrors
-        // For RICH1, where they are much flatter, assume complete flatness
-        const bool sc = ( Rich::Rich2 == rich ? 
+        const bool sc = ( m_treatSecMirrsFlat[rich] ? 
+                          intersectPlane( sphReflPoint,
+                                          virtDetPoint - sphReflPoint,
+                                          secSegment->centreNormalPlane(),
+                                          secReflPoint ) :
                           intersectSpherical( sphReflPoint,
                                               virtDetPoint - sphReflPoint,
                                               secSegment->centreOfCurvature(),
                                               secSegment->radius(),
-                                              secReflPoint ) :
-                          intersectPlane( sphReflPoint,
-                                          virtDetPoint - sphReflPoint,
-                                          secSegment->centreNormalPlane(),
-                                          secReflPoint ) );
+                                              secReflPoint ) );
         if ( UNLIKELY(!sc) )
         {
           //_ri_debug << radiator << " : Failed to intersect nominal secondary mirror plane" << endmsg;
@@ -494,14 +494,14 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   if ( m_useSecMirs && m_useAlignedMirrSegs[radiator] )
   {
     const auto dir = virtDetPoint - sphReflPoint;
-    const bool sc = ( Rich::Rich2 == rich ? 
+    const bool sc = ( m_treatSecMirrsFlat[rich] ? 
+                      intersectPlane( sphReflPoint, dir,
+                                      secSegment->centreNormalPlane(),
+                                      secReflPoint ) :
                       intersectSpherical( sphReflPoint, dir,
                                           secSegment->centreOfCurvature(),
                                           secSegment->radius(),
-                                          secReflPoint ) :
-                      intersectPlane( sphReflPoint, dir,
-                                      secSegment->centreNormalPlane(),
-                                      secReflPoint ) );
+                                          secReflPoint ) );
     if ( !sc )
     {
       //_ri_debug << radiator << " : Failed final secondary mirror plane intersection" << endmsg;
@@ -599,7 +599,7 @@ findMirrorData( const Rich::DetectorType rich,
       // find the secondary mirror
       secSegment = m_mirrorSegFinder->findSecMirror( rich, side, secReflPoint );
       // Re-find the secondary mirror reflection point using the new mirror info
-      // OK = ( Rich::Rich2 == rich ? 
+      // OK = ( !m_treatSecMirrsFlat[rich] ? 
       //        intersectSpherical( sphReflPoint, dir,
       //                            secSegment->centreOfCurvature(),
       //                            secSegment->radius(),
