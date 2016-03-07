@@ -1,8 +1,6 @@
-// $Id: DetDesc.cpp,v 1.6 2008-05-20 08:15:22 smenzeme Exp $ 
-
 // Include files
 #include <string> 
-#include <stdio.h>
+#include <cstdio>
 #include "DetDesc/DetDesc.h"
 
 
@@ -11,10 +9,10 @@
  *  @param format  desirable format
  *  @return string representation of the "value"
  */
-const std::string DetDesc::print (const double value, const char*  format) {
+std::string DetDesc::print (const double value, const char*  format) {
   static const unsigned int buflen = 128;
   static char  buffer[buflen];
-  return std::string( buffer , buffer + sprintf( buffer , format , value ) );
+  return { buffer , buffer + snprintf( buffer , buflen, format , value ) };
 }
 
 /** print double value using format
@@ -22,12 +20,11 @@ const std::string DetDesc::print (const double value, const char*  format) {
  *  @param format  desirable format
  *  @return string representation of the "value"
  */
-const std::string DetDesc::print (const long value, const char*  format) {
+std::string DetDesc::print (const long value, const char*  format) {
   static const unsigned int buflen = 128;
   static char  buffer[buflen];
-  return std::string( buffer , buffer + sprintf( buffer , format , value ) );
+  return { buffer , buffer + snprintf( buffer , buflen, format , value ) };
 }
-
 
 /**
  * Gets an instance of Services

@@ -1,4 +1,3 @@
-// $Id: GeometryInfoException.h,v 1.3 2006-04-20 14:39:56 ranjard Exp $
 #ifndef     DETDESC_GEOMETRYINFOEXCEPTION_H
 #define     DETDESC_GEOMETRYINFOEXCEPTION_H 1 
 /// GaudiKernel
@@ -26,15 +25,15 @@ class GeometryInfoException : public GaudiException
 public:
   /// constructor 
   GeometryInfoException( const std::string  & name     , 
-                         const IGeometryInfo * gi   = 0 ,
+                         const IGeometryInfo * gi   = nullptr ,
                          const StatusCode   & sc = StatusCode::FAILURE );
   ///
   GeometryInfoException( const std::string    & name      , 
                          const GaudiException & ge        , 
-                         const IGeometryInfo   * gi   =  0 ,
+                         const IGeometryInfo   * gi   =  nullptr ,
                          const StatusCode     & sc = StatusCode::FAILURE ) ;
   /// destructor 
-  virtual ~GeometryInfoException() throw();
+  virtual ~GeometryInfoException() noexcept;
   ///
   virtual std::ostream& printOut( std::ostream& os = std::cerr ) const ; 
   virtual MsgStream&    printOut( MsgStream&    os             ) const ;
@@ -49,4 +48,3 @@ private:
 ///
 
 #endif  //  DETDESC_GEOMETRYINFOEXCEPTION_H
-

@@ -54,7 +54,6 @@ PVolume::PVolume
   , m_lvname    ( LogVol_name    ) 
   , m_nominal   (                )
   , m_matrix    (                )
-  , m_imatrix   ( 0              )
   , m_lvolume   ( 0              )
   , m_services  ( 0              )
   //, m_copy      ( copy_number    ) 
@@ -96,7 +95,6 @@ PVolume::PVolume
   , m_lvname    ( LogVol_name    ) 
   , m_nominal   ( Transform      )
   , m_matrix    ( Transform      )
-  , m_imatrix   ( 0              )
   , m_lvolume   ( 0              )
   , m_services  ( 0              )
   //, m_copy      ( copy_number    ) 
@@ -117,7 +115,6 @@ PVolume::PVolume
 // ============================================================================
 PVolume::~PVolume() 
 {
-  if( 0 != m_imatrix ) { delete m_imatrix   ; m_imatrix = 0 ; }
   m_services->release();
   --s_volumeCounter;
 }
@@ -157,17 +154,6 @@ ILVolume* PVolume::findLogical() const
   return m_lvolume;
 }
 
-// ============================================================================
-/** inverse the matrix
- *  @return pointer to inverse matrix 
- */
-// ============================================================================
-Gaudi::Transform3D* PVolume::findMatrix() const 
-{
-  delete m_imatrix;
-  m_imatrix = new Gaudi::Transform3D( matrix().Inverse() ) ;
-  return m_imatrix;
-}
 
 // ============================================================================
 /** the static accessor to the data service
@@ -293,7 +279,7 @@ const ILVolume* PVolume::lvolume () const
 // ============================================================================
 const Gaudi::Transform3D&  PVolume::matrixInv  () const 
 {
-  if( !m_imatrix ) { m_imatrix = findMatrix() ; }
+  if( !m_imatrix ) { m_imatrix = matrix().Inverse(); }
   return *m_imatrix ;
 }
 // ============================================================================
@@ -321,7 +307,7 @@ Gaudi::XYZPoint PVolume::toLocal
 // ============================================================================
 Gaudi::XYZPoint PVolume::toMother ( const Gaudi::XYZPoint& PointInLocal  ) const 
 {
-  if( !m_imatrix ) { m_imatrix = findMatrix() ; }  
+  if( !m_imatrix ) { m_imatrix = matrix().Inverse(); }
   return (*m_imatrix) * PointInLocal ;
 }
 // ============================================================================
@@ -348,7 +334,7 @@ bool PVolume::isInside
 IPVolume* PVolume::reset () 
 {
   if( m_lvolume ) { m_lvolume->reset() ; m_lvolume = nullptr ; }
-  delete m_imatrix   ; m_imatrix = nullptr ;
+  m_imatrix = boost::none;
   return this;
 }
 // ============================================================================

@@ -41,7 +41,7 @@ public:
            const eState        s       = stateUndefined   );
 
   /// Destructor
-  virtual ~Mixture();
+  ~Mixture() override;
 
   /// Number of components in the material mixture
   inline int nOfItems() const;
@@ -84,43 +84,43 @@ public:
   // Obligatory implementation of Material interface
 
   //       Atomic mass [g/mole]
-  virtual inline double    A() const;
-  virtual inline void   setA( const double value );
+  virtual inline double    A() const override;
+  virtual inline void   setA( const double value ) override;
   //       Atomic number
-  virtual inline double    Z() const;
-  virtual inline void   setZ( const double value );
+  virtual inline double    Z() const override;
+  virtual inline void   setZ( const double value ) override;
   //       Mean excitation energy
-  virtual inline double    I() const;
-  virtual inline void   setI( const double value );
+  virtual inline double    I() const override;
+  virtual inline void   setI( const double value ) override;
   //       Parameters for Density Effect Correction
-  virtual inline double    C() const;
-  virtual inline void   setC( const double value );
-  virtual inline double    a() const;
-  virtual inline void   seta( const double value );
-  virtual inline double    m() const;
-  virtual inline void   setm( const double value );
-  virtual inline double    X0() const;
-  virtual inline void   setX0( const double value );
-  virtual inline double    X1() const;
-  virtual inline void   setX1( const double value );
+  virtual inline double    C() const override;
+  virtual inline void   setC( const double value ) override;
+  virtual inline double    a() const override;
+  virtual inline void   seta( const double value ) override;
+  virtual inline double    m() const override;
+  virtual inline void   setm( const double value ) override;
+  virtual inline double    X0() const override;
+  virtual inline void   setX0( const double value ) override;
+  virtual inline double    X1() const override;
+  virtual inline void   setX1( const double value ) override;
 
 
 
   ///        Number of nucleons
-  virtual inline double    N() const;
+  virtual inline double    N() const override;
   
-  virtual inline const CLID& clID    () const { return Mixture::classID(); }
+  inline const CLID& clID    () const override { return Mixture::classID(); }
   static         const CLID& classID ()       { return CLID_Mixture      ; }
 
   /// Fill the output stream (ASCII)
-  virtual std::ostream& fillStream ( std::ostream& s ) const ;
+  virtual std::ostream& fillStream ( std::ostream& s ) const  override;
   /// Fill the output stream (ASCII)
-  virtual MsgStream&    fillStream ( MsgStream&    s ) const ;
+  virtual MsgStream&    fillStream ( MsgStream&    s ) const  override;
 
 public:
 
   /// Reset the properties back to defaults
-  virtual void reset();
+  virtual void reset() override;
 
 protected:
 
@@ -140,7 +140,7 @@ private:
   Atoms          m_atoms    ;
 
   /// own element (if needed)
-  Element*       m_own      ;
+  std::unique_ptr<Element>       m_own      ;
 
   
   double         m_A ;

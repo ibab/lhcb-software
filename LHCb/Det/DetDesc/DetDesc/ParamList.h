@@ -1,4 +1,3 @@
-// $Id: ParamList.h,v 1.5 2006-10-25 13:45:01 marcocle Exp $
 #ifndef DETDESC_PARAMLIST_H 
 #define DETDESC_PARAMLIST_H 1
 
@@ -10,8 +9,8 @@
 
 /** @class ParamList ParamList.h DetDesc/ParamList.h
  *  
- *  Simple implementation of a polimorfic list of parameters idetified by
- *  a std::string.
+ *  Simple implementation of a polymorfic list of parameters identified by
+ *  an std::string.
  *
  *  @author Marco CLEMENCIC
  *  @date   2005-02-22
@@ -33,7 +32,7 @@ public:
   /// Add a new parameter to the list (or replace if already there)
   template <class T>
   inline void add(const std::string &key, const T &val) {
-    iterator i = find(key);
+    auto i = find(key);
     if ( i != end() ) { // key already used
       i->second->set(val);
     } else {
@@ -65,8 +64,6 @@ public:
   
   /// Remove all elements from the list, deleting the objects
   void clear();
-
-protected:
 
 private:
   void deleteItems();

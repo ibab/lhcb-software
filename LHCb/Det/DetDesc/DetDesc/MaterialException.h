@@ -1,4 +1,3 @@
-// $Id: MaterialException.h,v 1.5 2003-04-25 08:52:23 sponce Exp $
 #ifndef    DETDESC_MATERIALEXCEPTION_H
 #define    DETDESC_MATERIALEXCEPTION_H
 /// GaudiKernel
@@ -18,15 +17,15 @@ class MaterialException: public GaudiException
 public:
   ///
   MaterialException( const std::string    & message     , 
-                     const Material       * mat     = 0 );
+                     const Material       * mat     = nullptr );
   ///
   MaterialException( const std::string    &  message    ,
                      const GaudiException &  Exception  ,  
-                     const Material       *  mat    = 0 );
+                     const Material       *  mat    = nullptr );
   ///
   MaterialException( const MaterialException& );
   ///
-  virtual ~MaterialException() throw();
+  virtual ~MaterialException() noexcept;
   ///
   virtual std::ostream& printOut ( std::ostream& os = std::cerr ) const;
   virtual MsgStream&    printOut ( MsgStream&    os             ) const;

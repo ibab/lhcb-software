@@ -432,7 +432,7 @@ private:
     if( !assertion ) { throw GeometryInfoException( name , ge , this ); }
   }
 
-  Gaudi::Transform3D* accumulateMatrices(const ILVolume::PVolumePath& volumePath) const;
+  std::unique_ptr<Gaudi::Transform3D> accumulateMatrices(const ILVolume::PVolumePath& volumePath) const;
 
   bool idealMatrixLoaded() { return ( nullptr != m_idealMatrix ); }
 

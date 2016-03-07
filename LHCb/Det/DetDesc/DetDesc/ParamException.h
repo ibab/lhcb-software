@@ -1,4 +1,3 @@
-//$Id: ParamException.h,v 1.2 2006-01-19 08:51:54 marcocle Exp $
 #ifndef DETDESC_PARAMEXCEPTION_H
 #define DETDESC_PARAMEXCEPTION_H 1 
 
@@ -34,7 +33,7 @@ public:
   ParamException( const std::string& name , const std::type_info &req, const std::type_info &actual );
 
   /// Destructor 
-  virtual ~ParamException() throw();
+  virtual ~ParamException() noexcept;
 
   /// Returns the type of ParamException.
   inline ExceptionType type() const { return m_type; }
@@ -47,15 +46,3 @@ private:
 };
 
 #endif  // DETDESC_PARAMEXCEPTION_H
-
-
-
-
-
-
-
-
-
-
-
-

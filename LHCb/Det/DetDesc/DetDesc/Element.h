@@ -39,7 +39,7 @@ public:
            const double        press    =  Gaudi::Units::STP_Pressure,
            const eState        s        =  stateUndefined );
   // Destructor
-  virtual ~Element();
+  ~Element() override = default;
   ///
   virtual inline const CLID& clID    () const { return Element::classID() ; };
   static         const CLID& classID ()       { return CLID_Element       ; }; 
@@ -74,27 +74,27 @@ public:
   void removeIsotope ( const SmartRef<Isotope>& iPtr , const bool comp = false );
 
   ///        Atomic mass [g/mole]
-  virtual inline double    A() const;
-  virtual inline void   setA( const double value ) ;
+  double    A() const override;
+  void   setA( const double value ) override;
   ///        Atomic number
-  virtual inline double    Z() const;
-  virtual inline void   setZ( const double value );
+  double    Z() const override;
+  void   setZ( const double value ) override;
   ///        Mean excitation energy
-  virtual inline double    I() const;
-  virtual inline void   setI( const double value );
+  double    I() const override;
+  void   setI( const double value ) override;
   ///        Parameters for density effect correction
-  virtual inline double    C() const;
-  virtual inline void   setC( const double value);
-  virtual inline double    a() const;
-  virtual inline void   seta( const double value);
-  virtual inline double    m() const;
-  virtual inline void   setm( const double value);
-  virtual inline double    X0() const;
-  virtual inline void   setX0( const double value);
-  virtual inline double    X1() const;
-  virtual inline void   setX1( const double value);
+  double    C() const override;
+  void   setC( const double value) override;
+  double    a() const override;
+  void   seta( const double value) override;
+  double    m() const override;
+  void   setm( const double value) override;
+  double    X0() const override;
+  void   setX0( const double value) override;
+  double    X1() const override;
+  void   setX1( const double value) override;
   ///        Number of nucleons
-  virtual inline double    N() const;
+  double    N() const override;
   ///  Coulomb factor 
   inline double  coulombFactor() const ;
   ///  Tsai    factor 
@@ -122,9 +122,9 @@ public:
 
 
   /// Fill the output stream (ASCII)
-  virtual std::ostream& fillStream ( std::ostream& s ) const ;
+  std::ostream& fillStream ( std::ostream& s ) const override;
   /// Fill the output stream (ASCII)
-  virtual MsgStream&    fillStream ( MsgStream&    s ) const ;
+  MsgStream&    fillStream ( MsgStream&    s ) const override;
   ///
 private:  
   /// Effective atomic mass

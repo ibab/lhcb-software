@@ -1,4 +1,3 @@
-// $Id: LogVolBase.h,v 1.16 2007-01-17 12:10:13 cattanem Exp $ 
 #ifndef     DETDESC_LOGVOLBASE_H
 #define     DETDESC_LOGVOLBASE_H
 /// STD and STL includes
@@ -92,8 +91,8 @@ public:
   inline virtual const IPVolume* operator[]
   ( const ILVolume::ReplicaType& index ) const
   {
-    return m_pvolumes.size() > index ? 
-      *(m_pvolumes.begin()+index) : 0 ;
+    return index < m_pvolumes.size() ? 
+      *(m_pvolumes.begin()+index) : nullptr ;
   };
   
   /** daughter (Physical Volume) by name 
@@ -104,11 +103,10 @@ public:
   inline virtual const IPVolume* operator[]
   ( const std::string&           name  ) const
   { 
-    ILVolume::PVolumes::const_iterator pvi = 
-      std::find_if( m_pvolumes.begin  () , 
-                    m_pvolumes.end    () , 
-                    IPVolume_byName( name ) ) ;
-    return m_pvolumes.end() != pvi ? *pvi : 0 ;
+    auto pvi = std::find_if( m_pvolumes.begin  () , 
+                             m_pvolumes.end    () , 
+                             IPVolume_byName( name ) ) ;
+    return pvi != m_pvolumes.end() ? *pvi : nullptr ;
   };
   
   /** get daughter (Physical Volume) by index
@@ -118,8 +116,8 @@ public:
   virtual const IPVolume* pvolume   
   ( const ILVolume::ReplicaType& index ) const
   {
-    return m_pvolumes.size() > index ? 
-      *(m_pvolumes.begin()+index) : 0 ;
+    return index < m_pvolumes.size() ? 
+      *(m_pvolumes.begin()+index) : nullptr ;
   };
   
   /** get daughter (Physical Volume) by name 
@@ -129,11 +127,10 @@ public:
   virtual const IPVolume* pvolume   
   ( const std::string&           name  ) const 
   { 
-    ILVolume::PVolumes::const_iterator pvi = 
-      std::find_if( m_pvolumes.begin  () , 
-                    m_pvolumes.end    () , 
-                    IPVolume_byName( name ) ) ;
-    return m_pvolumes.end() != pvi ? *pvi : 0 ;
+    auto pvi = std::find_if( m_pvolumes.begin  () , 
+                             m_pvolumes.end    () , 
+                             IPVolume_byName( name ) ) ;
+    return pvi != m_pvolumes.end() ? *pvi : nullptr ;
   };
   
   /** begin iterator  for manipulation with daughters

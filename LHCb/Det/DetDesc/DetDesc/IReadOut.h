@@ -1,4 +1,3 @@
-//$Id: IReadOut.h,v 1.1 2001-12-13 19:20:29 andreav Exp $
 #ifndef DETDESC_IREADOUT_H
 #define DETDESC_IREADOUT_H 1
 

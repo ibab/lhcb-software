@@ -1,4 +1,3 @@
-//$Id: ICalibration.h,v 1.1 2001-12-13 19:20:29 andreav Exp $
 #ifndef DETDESC_ICALIBRATION_H
 #define DETDESC_ICALIBRATION_H 1
 

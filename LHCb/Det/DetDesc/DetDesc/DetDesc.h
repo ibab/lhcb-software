@@ -1,4 +1,3 @@
-// $Id: DetDesc.h,v 1.4 2009-04-17 08:54:24 cattanem Exp $
 #ifndef DETDESC_DETDESC_H 
 #define DETDESC_DETDESC_H 1
 
@@ -25,7 +24,7 @@ namespace DetDesc {
    * @param format  desirable format
    * @return string representation of the "value"
    */
-  const std::string print (const double value, const char* format = "%9.3g");
+  std::string print (const double value, const char* format = "%9.3g");
   
   /**
    * print  long value using format
@@ -33,7 +32,7 @@ namespace DetDesc {
    * @param format  desirable format
    * @return string representation of the "value"
    */
-  const std::string print (const long value, const char* format = "%d");
+  std::string print (const long value, const char* format = "%d");
 
   /**
    * Gets an instance of Services

@@ -46,7 +46,7 @@ class TransportSvcException: public GaudiException
   /// nothing specific (yet) :-))) 
   ///
   
-  virtual ~TransportSvcException() throw() {};
+  virtual ~TransportSvcException() noexcept = default;
 
   ///
   ///
@@ -56,7 +56,5 @@ class TransportSvcException: public GaudiException
 ///
 ///
 ///
-
-
 
 #endif  //  __DETDESC_TRANSPORTSVC_TRANSPORTSVCEXCEPTION_H__ 

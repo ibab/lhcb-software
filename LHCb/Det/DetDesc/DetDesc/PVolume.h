@@ -1,4 +1,3 @@
-// $Id: PVolume.h,v 1.6 2007-01-17 12:10:14 cattanem Exp $ 
 #ifndef    DETDESC_PVOLUME_H
 #define    DETDESC_PVOLUME_H 1 
 
@@ -7,6 +6,8 @@
 /// DetDesc includes 
 #include "DetDesc/Services.h"
 #include "DetDesc/IPVolume.h"
+
+#include "boost/optional/optional.hpp"
 
 /// forward declarations
 class IDataProviderSvc;
@@ -228,11 +229,6 @@ protected:
    */
   ILVolume*       findLogical () const ; 
   
-  /** inverse the matrix
-   *  @return pointer to inverse matrix 
-   */
-  Gaudi::Transform3D* findMatrix  () const ;
-  
   /** Assertion 
    *  @exception PVolumeException for wrong condition 
    *  @param assertion condition 
@@ -284,7 +280,7 @@ private:
   // transformation matrix 
   Gaudi::Transform3D          m_matrix        ;
   // pointer to inverse transformation matrix 
-  mutable Gaudi::Transform3D* m_imatrix       ;
+  mutable boost::optional<Gaudi::Transform3D> m_imatrix       ;
   // pointer to logical volume 
   mutable ILVolume*       m_lvolume       ;
   // reference/object counter 

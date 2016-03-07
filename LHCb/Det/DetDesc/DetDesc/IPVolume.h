@@ -1,5 +1,3 @@
-// $Id: IPVolume.h,v 1.12 2007-01-17 12:10:11 cattanem Exp $ 
-// ===========================================================================
 #ifndef  DETDESC_IPVOLUME_H 
 #define  DETDESC_IPVOLUME_H 1 
 /// STD & STL includes 

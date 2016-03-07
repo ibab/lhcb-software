@@ -1,5 +1,3 @@
-// $Id: LogVolumeException.cpp,v 1.4 2009-04-17 08:54:24 cattanem Exp $
-// ============================================================================
 // Include files
 // local
 #include "DetDesc/LogVolumeException.h"
@@ -51,8 +49,8 @@ LogVolumeException::LogVolumeException
 /** destructor 
  */
 // ============================================================================
-LogVolumeException::~LogVolumeException() throw()
-{ m_logvol = 0 ; }
+LogVolumeException::~LogVolumeException() noexcept
+{ m_logvol = nullptr ; }
 
 // ============================================================================
 /** printout to standard STD/STL stream 

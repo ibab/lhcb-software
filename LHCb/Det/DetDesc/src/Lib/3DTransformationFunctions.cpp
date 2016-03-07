@@ -1,4 +1,3 @@
-// $Id: 3DTransformationFunctions.cpp,v 1.7 2010-01-08 16:13:19 wouter Exp $
 // Include files 
 
 
@@ -92,7 +91,6 @@ ROOT::Math::SMatrix<double,6,6> getTransformJacobian( const Gaudi::Transform3D& 
 
   // We also need the inverse of R, which is of course just its transpose:
   Matrix3x3 Rinv = ROOT::Math::Transpose(R) ;
-  //invR.Invert() ;
   
   // const matrices for derivative of rotations to rotation pars
   Matrix3x3 drot[3] ;
@@ -141,9 +139,6 @@ ROOT::Math::SMatrix<double,6,6> getTransformJacobian( const Gaudi::Transform3D& 
   return jacobian ;
 }
 
-
-
   
 } // namespace DetDesc
 //=============================================================================
-

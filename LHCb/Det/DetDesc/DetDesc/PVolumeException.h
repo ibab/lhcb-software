@@ -1,4 +1,3 @@
-// $Id: PVolumeException.h,v 1.1 2006-04-20 14:39:56 ranjard Exp $
 #ifndef    DETDESC_PVOLUMEEXCEPTION_H
 #define    DETDESC_PVOLUMEEXCEPTION_H 1 
 ///
@@ -13,13 +12,13 @@ class PVolumeException : public GaudiException
 public:
   ///
   PVolumeException( const std::string& name          , 
-                    const PVolume*     pvolume =  0  ) ;
+                    const PVolume*     pvolume =  nullptr  ) ;
   ///
   PVolumeException( const std::string&     name          ,
                     const GaudiException&  Exception     ,  
-                    const PVolume*         pvolume =  0  );
+                    const PVolume*         pvolume =  nullptr  );
   ///
-  virtual ~PVolumeException() throw();
+  virtual ~PVolumeException() noexcept;
   ///
   virtual std::ostream&   printOut ( std::ostream& os = std::cerr ) const ;
   virtual MsgStream&      printOut ( MsgStream&    os             ) const ; 

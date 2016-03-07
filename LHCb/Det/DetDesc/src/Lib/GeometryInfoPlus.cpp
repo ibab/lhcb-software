@@ -182,17 +182,17 @@ Gaudi::XYZPoint GeometryInfoPlus::toLocal( const Gaudi::XYZPoint& globalPoint ) 
 //=============================================================================
 Gaudi::XYZPoint GeometryInfoPlus::toGlobal( const Gaudi::XYZPoint& localPoint  ) const
 {
-  return ( toGlobalMatrix() * localPoint  );
+  return toGlobalMatrix() * localPoint;
 }
 //=============================================================================
 Gaudi::XYZVector GeometryInfoPlus::toLocal( const Gaudi::XYZVector& globalDirection ) const
 {
-  return ( toLocalMatrix() * globalDirection );
+  return toLocalMatrix() * globalDirection;
 }
 //=============================================================================
 Gaudi::XYZVector GeometryInfoPlus::toGlobal( const Gaudi::XYZVector& localDirection  ) const
 {
-  return ( toGlobalMatrix() * localDirection  );
+  return toGlobalMatrix() * localDirection;
 }
 //=============================================================================
 bool GeometryInfoPlus::isInside( const Gaudi::XYZPoint& globalPoint ) const
@@ -251,7 +251,7 @@ StatusCode GeometryInfoPlus::calculateMatrices()
 
     gi = gi->supportIGeometryInfo();
 
-  } while ( nullptr != gi );
+  } while (gi);
 
   VERBO << "calculateMatrices: stored "
         << m_pvMatrices.size() << " ideal and "
@@ -287,16 +287,15 @@ StatusCode GeometryInfoPlus::calculateFullMatrices(matrix_iterator deltaFirst,
                                                    matrix_iterator deltaEnd,
                                                    matrix_iterator pvFirst)
 {
-
-  Gaudi::Transform3D init;
-  m_matrix.reset( new Gaudi::Transform3D( std::inner_product(deltaFirst,
-                                                             deltaEnd,
-                                                             pvFirst,
-                                                             init,
-                                                             std::multiplies<Gaudi::Transform3D>(),
-                                                             std::multiplies<Gaudi::Transform3D>()
-                                                             ) )
-                  );
+  m_matrix.reset(
+    new Gaudi::Transform3D( std::inner_product(deltaFirst,
+                                           deltaEnd,
+                                           pvFirst,
+                                           Gaudi::Transform3D{},
+                                           std::multiplies<Gaudi::Transform3D>(),
+                                           std::multiplies<Gaudi::Transform3D>()
+                                           )
+                        ) );
 
   // Recover precision in cases of rotations by pi or halfpi
   double xx, xy, xz, dx, yx, yy, yz, dy, zx, zy, zz, dz;
@@ -342,12 +341,12 @@ StatusCode GeometryInfoPlus::calculateFullMatrices(matrix_iterator deltaFirst,
 void GeometryInfoPlus::calculateIdealMatrix(matrix_iterator pvFirst,
                                             matrix_iterator pvEnd)
 {
-  Gaudi::Transform3D init;
 
-  m_idealMatrix.reset( new Gaudi::Transform3D( std::accumulate(pvFirst,
-                                                               pvEnd,
-                                                               init,
-                                                               std::multiplies<Gaudi::Transform3D>())) );
+  m_idealMatrix.reset(
+    new Gaudi::Transform3D( std::accumulate(pvFirst,
+                                        pvEnd,
+                                        Gaudi::Transform3D {},
+                                        std::multiplies<Gaudi::Transform3D>())) );
   m_idealMatrixInv.reset( new Gaudi::Transform3D( m_idealMatrix->Inverse()) );
 
 }
@@ -417,12 +416,12 @@ void GeometryInfoPlus::clearMatrices()
   if (!m_pvMatrices.empty()) m_pvMatrices.clear();
   if (!m_deltaMatrices.empty()) m_deltaMatrices.clear();
 
-  m_matrix           .reset( nullptr );
-  m_idealMatrix      .reset( nullptr );
-  m_localIdealMatrix .reset( nullptr );
-  m_localDeltaMatrix .reset( nullptr );
-  m_matrixInv        .reset( nullptr );
-  m_idealMatrixInv   .reset( nullptr );
+  m_matrix           .reset();
+  m_idealMatrix      .reset();
+  m_localIdealMatrix .reset();
+  m_localDeltaMatrix .reset();
+  m_matrixInv        .reset();
+  m_idealMatrixInv   .reset();
 
 }
 //=============================================================================
@@ -494,7 +493,7 @@ const Gaudi::Transform3D& GeometryInfoPlus::ownToLocalMatrixNominal() const
 
     Assert( sc.isSuccess()  ,
             " GeometryInfoPlus::localIdealMatrix(): could not traverse the path!");
-    m_localIdealMatrix.reset( accumulateMatrices(volumePath) );
+    m_localIdealMatrix = accumulateMatrices(volumePath);
   }
 
   return  *m_localIdealMatrix;
@@ -526,25 +525,19 @@ IGeometryInfo* GeometryInfoPlus::supportIGeometryInfo() const
   VERBO << "supportIGeometryInfo with support "
         << m_gi_supportName << endmsg;
 
-  if ( !m_gi_support )
-  {
+  if ( !m_gi_support ) {
     IGeometryInfo* gi = nullptr;
-    if ( !m_gi_supportName.empty() )
-    {
+    if ( !m_gi_supportName.empty() ) {
       gi = geoByName( m_gi_supportName );
     }
     m_gi_support = gi;
   }
 
-  if ( isVerbose() )
-  {
-    if ( m_gi_support )
-    {
+  if ( isVerbose() ) {
+    if ( m_gi_support ) {
       VERBO << "supportIGeometryInfo return IGeometryInfo* with volume "
             << m_gi_support->lvolumeName() << endmsg;
-    }
-    else
-    {
+    } else {
       VERBO << "supportIGeometryInfo found no IGeometryInfo* with support "
             << m_gi_supportName << endmsg;
     }
@@ -554,14 +547,14 @@ IGeometryInfo* GeometryInfoPlus::supportIGeometryInfo() const
 
 }
 //=============================================================================
-Gaudi::Transform3D* 
-GeometryInfoPlus::accumulateMatrices(const ILVolume::PVolumePath& volumePath) const
+std::unique_ptr<Gaudi::Transform3D> GeometryInfoPlus::accumulateMatrices(const ILVolume::PVolumePath& volumePath) const
 {
-  const Gaudi::Transform3D init;
-  return new Gaudi::Transform3D( std::accumulate( volumePath.begin() ,
-                                                  volumePath.end  () ,
-                                                  init               ,
-                                                  IPVolume_accumulateMatrix() ) );
+  auto return_value=std::accumulate( volumePath.begin() ,
+                                     volumePath.end  () ,
+                                     Gaudi::Transform3D{},
+                                     IPVolume_accumulateMatrix() );
+  return std::unique_ptr<Gaudi::Transform3D>(new Gaudi::Transform3D(return_value));
+
 }
 
 //=============================================================================
@@ -687,7 +680,7 @@ StatusCode GeometryInfoPlus::fullGeoInfoForPoint
   ILVolume::ReplicaPath&   replicaPath )
 {
   // reset output values
-  start = std::string("");
+  start.clear();
   if( !replicaPath.empty() ) { replicaPath.clear()       ; }
   if( !isInside( point )   ) { return StatusCode::FAILURE; }
   //
@@ -702,15 +695,15 @@ StatusCode GeometryInfoPlus::fullGeoInfoForPoint
 std::string GeometryInfoPlus::belongsToPath( const Gaudi::XYZPoint& globalPoint )
 {
   if( !isInside( globalPoint )                     )
-  { return std::string(""); }
+    { return {}; }
   if( !childLoaded() && loadChildren().isFailure() )
-  { return std::string(""); }
+    { return {}; }
   //
   auto it =  // Look children
     std::find_if( childBegin() , childEnd  () ,
                   IGeometryInfo_isInside(globalPoint) ) ;
   //
-  return ( ( childEnd() == it ) ? std::string("") :
+  return ( ( childEnd() == it ) ? std::string{} :
            *(m_gi_childrensNames.begin()+(it-childBegin())) );
 }
 //=============================================================================
@@ -756,27 +749,26 @@ StatusCode GeometryInfoPlus::loadChildren() const
   while( IDEchildrens.end() != it )
   {
     IDetectorElement* ide = *it++;
-    try
-    {
+    try {
       auto * igi      = ( ide  ? ide->geometry() : nullptr );
       auto * pObj     = ( ide  ? dynamic_cast<DataObject*>(ide) : nullptr );
       auto * pReg     = ( pObj ? pObj->registry() : nullptr );
       const auto path = ( pReg ? pReg->identifier() : "" );
       if ( igi && !path.empty() )
-      { 
+      {
         m_gi_childrensNames.push_back( path );
         m_gi_childrens.push_back     ( igi  );
       }
     }
     catch( const GaudiException& Exception )
-    {  
+    {
       m_gi_childrensNames.clear();
       m_gi_childrens.clear();
       Assert( false ,
               "GeometryInfoPlus::loadChildren(): exception caught!" ,
               Exception ) ; }   ///  throw new exception
     catch(...)
-    {  
+    {
       m_gi_childrensNames.clear();
       m_gi_childrens.clear();
       Assert( false ,
@@ -795,8 +787,8 @@ IGeometryInfo*  GeometryInfoPlus::reset()
   m_gi_lvolume = nullptr;
 
   /// reset matrices
-  m_matrix   .reset( nullptr );
-  m_matrixInv.reset( nullptr );
+  m_matrix   .reset();
+  m_matrixInv.reset();
 
   /// reset support
   m_gi_support      = nullptr;
@@ -807,7 +799,7 @@ IGeometryInfo*  GeometryInfoPlus::reset()
   /// reset daughters
   std::for_each( m_gi_childrens.begin () ,
                  m_gi_childrens.end   () ,
-                 std::mem_fun(&IGeometryInfo::reset) );
+                 [](IGeometryInfo* gi) { gi->reset(); } );
   m_gi_childrens.clear()      ;
   m_gi_childrensNames.clear() ;
   m_gi_childLoaded  = false   ;
@@ -905,7 +897,7 @@ const ILVolume* GeometryInfoPlus::lvolume( IGeometryInfo* start,
   //
   if( volumePath.empty() ) { return lv; }
   //
-  const auto * pv = *(volumePath.rbegin()); // get "the last" element
+  const auto* pv = volumePath.back();
   //
   return pv ? pv->lvolume() : nullptr;
 }
@@ -923,7 +915,7 @@ std::string GeometryInfoPlus::lvolumePath( IGeometryInfo* start,
                     replicaPath.end  ()  ,
                     volumePath           ).isFailure() ) { return ""; }
   if( volumePath.empty() ) { return start->lvolumeName(); }
-  const auto * pv = *(volumePath.rbegin()); // get "the last" element
+  const auto* pv = volumePath.back();
   return pv ? pv->lvolumeName() : std::string{};
 }
 //=============================================================================

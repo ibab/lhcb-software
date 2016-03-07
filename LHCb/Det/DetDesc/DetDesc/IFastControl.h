@@ -1,4 +1,3 @@
-//$Id: IFastControl.h,v 1.1 2001-12-13 19:20:29 andreav Exp $
 #ifndef DETDESC_IFASTCONTROL_H
 #define DETDESC_IFASTCONTROL_H 1
 

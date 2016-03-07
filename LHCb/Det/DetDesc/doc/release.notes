@@ -2,6 +2,8 @@
 ! package DetDesc
 ! package manager : Marco Clemencic
 ! =====================================================================
+! 2016-03-07 - Gerhard Raven
+ - C++11 modernization
 
 ! 2016-01-31 - Chris Jones
  - Modernise IGeometryInfo and GeometryInfoPlus.

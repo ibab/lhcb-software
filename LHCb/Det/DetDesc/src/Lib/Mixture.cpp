@@ -17,9 +17,6 @@ Mixture::Mixture( const std::string&  name    ,
                   const double        press   ,
                   const eState s              )
   : Material( name , density , rl, al , temp , press , s )
-  , m_elements(   )
-  , m_atoms   (   )
-  , m_own     ( 0 )
   , m_A       ( a )
   , m_Z       ( z )
   , m_I       ( i )
@@ -28,17 +25,16 @@ Mixture::Mixture( const std::string&  name    ,
   , m_C       ( 0 )
   , m_X0      ( 0.)
   , m_X1      ( 0.)
-{
-}
+{ }
 
-Mixture::~Mixture() {}
+
+Mixture::~Mixture() = default;
 
 void Mixture::reset()
 {
   m_elements.clear();
   m_atoms.clear();
-  delete m_own;
-  m_own = NULL;
+  m_own.reset();
   m_A  = 0;
   m_Z  = 0;
   m_I  = 0;
@@ -84,7 +80,7 @@ void Mixture::addElement( const SmartRef<Element>& e,
   if( m_elements.size() != m_atoms.size() )
   { throw MaterialException("Mixture::mismatch container sizes! ",this);}
   //
-  m_elements.push_back( Entry( 0 , e ) );
+  m_elements.emplace_back(  0 , e );
   m_atoms.push_back   ( nOfAtoms       ) ;
   //
   if ( comp )  { computeByAtoms(); }
@@ -103,32 +99,29 @@ void Mixture::addElement( const SmartRef<Element>& e,
   if( !m_atoms.empty() )
   { throw MaterialException("Mixture:could not add element!",this); }
   //
-  Elements::iterator it  = m_elements.begin() ;
-  while ( m_elements.end() != it )
+  auto it = std::find_if( m_elements.begin(), m_elements.end(),
+                          [&](const Entry& i) { return e->name() == i.second->name(); }
+  );
+  if( it == m_elements.end() )
   {
-    if( e->name() == it->second->name() )
-    { it->first += fraction ; break ; } ; ++it ; 
-  }
-  //
-  if( m_elements.end() == it )
-  {
-    m_elements.push_back( Entry( fraction , e ) ); 
+    m_elements.emplace_back( fraction , e );
+  } else {
+      it->first += fraction;
   }
   //
   if ( comp ) { compute() ; }
 }
 //
 void Mixture::addMixture( const SmartRef<Mixture>& mx,
-                          const double fraction, 
+                          const double fraction,
                           const bool comp )
 {
   //std::cout << name() << ":: Called addMixture()" << std::endl;
   if( !mx ) { throw MaterialException("Mixture::non valid pointer!");}
   //
-  for( Elements::const_iterator it = mx->elements().begin() ;
-       mx->elements().end() != it ; ++it )
+  for( const auto& e : mx->elements() )
   {
-    addElement( it->second , fraction*(it->first) );
+    addElement( e.second , fraction*e.first );
   }
   //
   if ( comp ) { compute() ; }
@@ -138,15 +131,15 @@ StatusCode Mixture::compute()
 {
   //std::cout << name() << ":: Called compute()" << std::endl;
   if      ( m_atoms.empty()                      )
-  { 
-    return computeByFraction() ; 
+  {
+    return computeByFraction() ;
   }
   else if ( m_atoms.size () == m_elements.size() )
   {
     return computeByAtoms   () ;
   }
   else
-  { 
+  {
     throw MaterialException("Mixture::compute: could not compute "+name() );
   }
 }
@@ -158,21 +151,21 @@ StatusCode Mixture::computeByAtoms()
   if( m_elements.empty() ) { addMyself() ;}
   //
   if ( m_elements.size() != m_atoms.size() )
-  { 
+  {
     throw MaterialException(std::string("Mixture::computeByAtoms::")
                             + "mismatch in container sizes!",this);
   }
   //
   // Compute molecular weight
   double sum     = 0.0;
-  for( unsigned int i1 = 0 ; i1 < m_elements.size() ; ++i1 ) 
+  for( unsigned int i1 = 0 ; i1 < m_elements.size() ; ++i1 )
   {
     Element* elem = m_elements[i1].second ;
     sum += m_atoms[i1] * elem->A();
   }
   //
   // Compute proprotion by weight for each element
-  for( unsigned int i2 = 0; i2 < m_elements.size() ; ++i2 ) 
+  for( unsigned int i2 = 0; i2 < m_elements.size() ; ++i2 )
   {
     Element* elem = m_elements[i2].second ;
     m_elements[i2].first = m_atoms[i2]*elem->A() / sum;
@@ -194,23 +187,17 @@ StatusCode Mixture::computeByFraction()
   if( m_elements.empty() ) { addMyself() ; m_atoms.clear() ; }
   //
   // recompute fractions
-  double frsum = 0.0  ;
-  for( Elements::iterator it1 = m_elements.begin() ;
-       m_elements.end() != it1 ; ++it1 )
-  { 
-    frsum += it1->first ; 
-  }
+  double frsum = std::accumulate(m_elements.begin(), m_elements.end(),
+                                 0.0 , [](double s, std::pair<double,SmartRef<Element>>& i) {
+        return s + i.first;
+  });
   if ( frsum < 0 )
-  { 
+  {
     throw MaterialException(std::string("Mixture::computeByFractions::")
                             + "not positive fraction sum!",this);
   }
   // rescale  fractions
-  for( Elements::iterator it2 = m_elements.begin() ;
-       m_elements.end() != it2 ; ++it2 )
-  {
-    it2->first /= frsum ; 
-  }
+  for( auto& e : m_elements ) e.first /= frsum ;
   //
   m_A = 0 ;
   m_Z = 0 ;
@@ -219,8 +206,7 @@ StatusCode Mixture::computeByFraction()
   double radleninv = 0 ;
   double lambdainv = 0 ;
   //
-  for( Elements::iterator it3 = m_elements.begin() ;
-       m_elements.end() != it3 ; ++it3 )
+  for( auto it3 = m_elements.begin() ; m_elements.end() != it3 ; ++it3 )
   {
     const double   frac = it3->first  ;
     const Element* elem = it3->second ;
@@ -231,7 +217,7 @@ StatusCode Mixture::computeByFraction()
     m_I += frac*elem->Z()*std::log(elem->I());
     //
     // Use the aproximate formula for radiation lengh of mixtures 1/x0 = sum(wi/Xi)
-    if( elem->radiationLength() > 0.0 && elem->density() > 0.0) 
+    if( elem->radiationLength() > 0.0 && elem->density() > 0.0)
     {
       radleninv += frac/(elem->radiationLength() * elem->density());
     }
@@ -240,7 +226,7 @@ StatusCode Mixture::computeByFraction()
       radleninv += frac * Gaudi::Units::Avogadro * elem->tsaiFactor() / elem->A();
     }
     //
-    if( elem->absorptionLength() > 0.0 ) 
+    if( elem->absorptionLength() > 0.0 )
     {
       lambdainv += frac/(elem->absorptionLength() * elem->density());
     }
@@ -263,7 +249,7 @@ StatusCode Mixture::computeByFraction()
       m_X0 = 0.326*m_C-1.0;
       m_X1 = 2;
     }
-    else 
+    else
     {
       m_X0 = 0.2;
       m_X1 = 2;
@@ -310,7 +296,7 @@ StatusCode Mixture::computeByFraction()
 StatusCode Mixture::addMyself()
 {
   //std::cout << name() << ":: Called addMyself()" << std::endl;
-  if( 0 != m_own         )
+  if( m_own         )
   { throw MaterialException(std::string("Mixture::addMyself: ")
                             + "could not add myself twice! ",this); }
   if( !m_elements.empty() )
@@ -321,7 +307,7 @@ StatusCode Mixture::addMyself()
   { throw MaterialException(std::string("Mixture::addMyself: could ")
                             +  "not add myself to existing atoms! ",this); }
   //
-  m_own = new Element( name             () ,
+  m_own.reset( new Element( name             () ,
                        "XX"                ,
                        A                () ,
                        Z                () ,
@@ -331,12 +317,12 @@ StatusCode Mixture::addMyself()
                        absorptionLength () ,
                        temperature      () ,
                        pressure         () ,
-                       state            () ) ;
+                       state            () ) );
   //
   m_own->compute();
   m_own->setName( m_own->name() + "[ownElementForMixture]" );
   //
-  m_elements.push_back( Entry( 1 , m_own ) );
+  m_elements.emplace_back( 1 , m_own.get() );
   m_atoms.push_back( 1 );
   //
   return StatusCode::SUCCESS;

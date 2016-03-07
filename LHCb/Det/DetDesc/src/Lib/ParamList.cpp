@@ -1,6 +1,5 @@
-// $Id: ParamList.cpp,v 1.2 2005-11-17 16:30:17 marcocle Exp $
 // Include files 
-
+#include <algorithm>
 
 
 // local
@@ -32,16 +31,14 @@ ParamList::~ParamList(){deleteItems();}
 //=============================================================================
 ParamList& ParamList::operator= (const ParamList &pl){
   clear();
-  const_iterator i;
-  for ( i = pl.begin(); i != pl.end() ; ++i ){
+  for (auto  i = pl.begin(); i != pl.end() ; ++i ){
   	insert(make_pair(i->first,i->second->new_copy()));
     //(*this)[i->first] = i->second->new_copy();
   }
   return *this;
 }
 ParamList& ParamList::operator+= (const ParamList &pl){
-  const_iterator i;
-  for ( i = pl.begin(); i != pl.end() ; ++i ){
+  for ( auto i = pl.begin(); i != pl.end() ; ++i ){
 	auto old = find(i->first);
     if ( old != end() ) { // key already used
       delete old->second;
@@ -66,23 +63,20 @@ void ParamList::clear(){
 // Delete the object referenced by the stored pointers
 //=============================================================================
 void ParamList::deleteItems(){
-  iterator i;
-  for (i = begin(); i != end(); ++i){
-    delete i->second;
-  }
+  std::for_each(begin(),end(),[](const std::pair<const std::string, BasicParam*>& i) 
+                { delete i.second; } );
 }
 
 //=============================================================================
 // return a vector containing all the stored keys
 //=============================================================================
 std::vector<std::string> ParamList::getKeys() const {
-  std::vector<std::string> v;
-  const_iterator i;
-  for (i = begin(); i != end(); ++i){
-    v.push_back(i->first);
-  }
+  std::vector<std::string> v; v.reserve(size());
+  std::transform(begin(),end(),std::back_inserter(v),
+                 [](const std::pair<const std::string,BasicParam*>& i) {
+        return i.first;
+  });
   return v;
 }
-
 
 //=============================================================================

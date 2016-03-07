@@ -1,7 +1,3 @@
-// $Id: LAssembly.h,v 1.13 2006-12-14 13:03:38 ranjard Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
 #ifndef DETDESC_LASSEMBLY_H 
 #define DETDESC_LASSEMBLY_H 1
 // Include files
@@ -25,8 +21,7 @@ static const std::string EmptyString("");
  *  @date   18/11/2001
  */
 
-class LAssembly : 
-  public LogVolBase
+class LAssembly : public LogVolBase
 {
   /// friend factory for instantiation 
   friend class DataObjectFactory<LAssembly>;
@@ -65,7 +60,7 @@ public:
    *  @return the solid, associated with the Logical Volume  
    */
   inline virtual const ISolid*   
-  solid      () const { return 0       ; }
+  solid      () const { return nullptr ; }
   
  /** the material, associated with the Logical Volume  
    *  For Assembly Volumes material pointes to NULL!
@@ -74,7 +69,7 @@ public:
    *  @return the material, associated with the Logical Volume  
    */
   inline virtual const Material* 
-  material   () const { return 0       ; };
+  material   () const { return nullptr ; };
   
   /** the material(by name), associated with the Logical Volume  
    *  @see ILVolume 
@@ -212,7 +207,6 @@ public:
   double zMax() const   { return m_zMax;  }
   
   void   computeCover ();
-  //protected:
   
   /** default constructor
    */
