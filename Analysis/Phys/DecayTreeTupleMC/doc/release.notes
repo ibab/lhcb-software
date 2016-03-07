@@ -4,6 +4,8 @@
 ! Purpose     : MC tuple tools
 !-----------------------------------------------------------------------------
 
+!===================== DecayTreeTupleMC v1r7 2016-03-07 ======================
+
 ! 2016-02-25 - Francesco Dettori
  - Add flag "StoreStablePropertime" (off by default) to MCTupleToolKinematic 
    to allow propertime and endvertex to be stored for particles considered 

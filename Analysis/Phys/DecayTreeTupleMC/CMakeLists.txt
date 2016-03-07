@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DecayTreeTupleMC
 ################################################################################
-gaudi_subdir(DecayTreeTupleMC v1r6)
+gaudi_subdir(DecayTreeTupleMC v1r7)
 
 gaudi_depends_on_subdirs(Phys/DaVinciMCKernel
                          Phys/DecayTreeTupleBase
