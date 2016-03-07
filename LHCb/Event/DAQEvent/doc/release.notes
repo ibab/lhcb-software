@@ -3,6 +3,9 @@
 !Author:  Markus Frank (based on work by Jose' Helder Lopes)
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
+! 2016-03-07 - Gerhard Raven
+ - RawBankReadoutStatus: add 'const' where appropriate, avoid duplicate lookup,
+   remove redundant 'if'
 
 !========================= DAQEvent v9r21 2016-01-27 =========================
 ! 2015-11-26 - Marco Clemencic

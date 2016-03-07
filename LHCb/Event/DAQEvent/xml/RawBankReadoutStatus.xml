@@ -8,12 +8,12 @@
 <!-- ****************************************************************
      * ODIN                                                         *
      ****************************************************************-->
-    <class 
+    <class
       author="Olivier Deschamps"
       name="RawBankReadoutStatus"
       desc="Class for the status of RawBank decoding"
       >
-      
+
 
        <location name = "Default"   place = "Transient/DAQ/Status" />
 
@@ -21,30 +21,31 @@
         name   = 'Status'
         desc   = 'Status value'
         value  = '
-        OK         = 0, 
-        Corrupted  = 1, 
-        Incomplete = 2, 
-        Missing    = 4, 
-        Empty      = 8 , 
-        NonUnique  = 16, 
-        Tell1Sync  = 32, 
-        Tell1Link  = 64, 
-        Tell1Error = 128,  
-        ErrorBank  = 256,  
-        MissingStatus = 512,  
+        OK         = 0,
+        Corrupted  = 1,
+        Incomplete = 2,
+        Missing    = 4,
+        Empty      = 8 ,
+        NonUnique  = 16,
+        Tell1Sync  = 32,
+        Tell1Link  = 64,
+        Tell1Error = 128,
+        ErrorBank  = 256,
+        MissingStatus = 512,
         BadMagicPattern  = 1024,
         DuplicateEntry   = 2048,
-        Unknown    = 4096 ' 
+        Unknown    = 4096 '
         access = 'PUBLIC' />
       <!-- 'Unknown' MUST BE THE LAST ITEM -->
 
-   
+
 
       <base   name = "KeyedObject&lt;LHCb::RawBank::BankType&gt;" />
       &KeyedObject;
 
-      <import name="sstream" std="TRUE"/>
-      <import name="map"     std="TRUE"/>
+      <import name="sstream"   std="TRUE"/>
+      <import name="map"       std="TRUE"/>
+      <import name="algorithm" std="TRUE"/>
       <import name="Event/RawBank"/>
 
       <typedef
@@ -54,7 +55,7 @@
         access = "PROTECTED"
         />
 
- 
+
 
       <constructor
         desc     = "non-default constructor"
@@ -64,62 +65,60 @@
 
 
 
-      <constructor 
-        desc     = "Copy Constructor" 
+      <constructor
+        desc     = "Copy Constructor"
         argList  = "LHCb::RawBankReadoutStatus rh"
         initList = "Base(rh.key() ), m_status(rh.m_status)"
         > <code/> </constructor>
 
 
       <attribute name="status" desc=" mapping of source status" type="std::map&lt; int, long &gt;" getMeth='FALSE' setMeth='FALSE' />
-        
-        
-      <method 
+
+
+      <method
         name   = "status"
         desc   = "get Readout status for a given source"
         argList= "int source"
-        type   = "long">
+        type   = "long"
+        const  = "TRUE">
         <code>
-          if( 0 == m_status.size() )return Unknown;
-          std::map&lt;int, long&gt;::iterator it = m_status.find(source);
-          if( it == m_status.end() )return Unknown;
-          return m_status[source];
+          auto it = m_status.find(source);
+          return it != m_status.end() ? it->second : long(Unknown);
         </code>
       </method>
 
-      <method 
+      <method
         name   = "addStatus"
         desc   = "set Readout status for a given source"
         argList= "int source, long stat"
         type   = "void">
-        <code>          
-          long newStat = stat;
-          std::map&lt;int, long&gt;::iterator it = m_status.find(source);
-          if( it != m_status.end() )newStat |= status(source);
-          m_status[source] = newStat;
+        <code>
+          auto it = m_status.find(source);
+          if( it != m_status.end() ) it->second |= stat;
+          else m_status.emplace( source, stat );
         </code>
       </method>
 
-      
-      
-      <method 
+
+
+      <method
         name   = "status"
         desc   = "get Readout status for the whole bank"
-        type   = "long">
+        type   = "long"
+        const  = "TRUE" >
         <code>
-          if( 0 == m_status.size() )return Unknown;
-          long stat = 0;
-          for(std::map&lt;int,long&gt;::iterator it = m_status.begin() ; it != m_status.end() ; ++it){
-          stat |= (*it).second;
-          }
-          return stat;
+          return m_status.empty() ? long(Unknown)
+                                  : std::accumulate( m_status.begin(), m_status.end(), 0L,
+                                                     [](long s, const std::pair&lt;int,long&gt;&amp; p)
+                                                     { return s | p.second; } );
         </code>
       </method>
 
-      <method 
+      <method
         name   = "statusMap"
         desc   = "return the status map attribute"
-        type   = "std::map&lt; int, long &gt;">
+        type   = "const std::map&lt; int, long &gt;&amp;"
+        const  = "TRUE" >
         <code>
           return m_status;
         </code>
