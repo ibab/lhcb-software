@@ -4,10 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== SimChecks v1r7 2016-03-07 ========================
 ! 2016-03-05 - Luca Pescatore
   - Minor bug fix in TargetSummary.py that caused plot creation to break
 
-!========================== SimChecks v1r6p1 2015-11-21 ========================
+!========================= SimChecks v1r6p1 2015-11-21 =======================
 
 ! 2015-11-18 - Luca Pescatore
   - The line added to bix the CALIBOFF bug breaks and is not needed in v45.
