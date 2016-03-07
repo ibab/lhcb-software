@@ -52,7 +52,7 @@ namespace
   const unsigned short     s_digits = ULLTYPE::digits - 2         ;
   // ==========================================================================
   /// zero for doubles  
-  LHCb::Math::Zero<double>     s_zero  ;       // zero for doubles
+  const LHCb::Math::Zero<double> s_zero{}  ;       // zero for doubles
   // ==========================================================================
 }
 // ============================================================================

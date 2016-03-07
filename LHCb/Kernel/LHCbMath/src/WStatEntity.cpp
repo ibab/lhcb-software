@@ -34,10 +34,7 @@
 namespace 
 {
   // ==========================================================================
-  const LHCb::Math::Equal_To<double> s_equal ;
-  // ==========================================================================
-  inline bool isnull ( const double value ) 
-  { return 0 == value || s_equal ( 0 , value ) ; }
+  const LHCb::Math::Zero    <double> s_zero  {} ;
   // ==========================================================================
 }
 // ============================================================================
@@ -71,7 +68,7 @@ Gaudi::Math::WStatEntity::add
   m_sum     += weight * value         ;
   m_sum2    += weight * value * value ;  
   //
-  if ( !isnull ( weight ) ) { m_values += value ; }
+  if ( !s_zero ( weight ) ) { m_values += value ; }
   //
   m_weights += weight ;
   //
@@ -83,8 +80,8 @@ Gaudi::Math::WStatEntity::add
 double Gaudi::Math::WStatEntity::mean () const
 {
   return ( 0 == nEntries () 
-           || isnull ( m_sum            ) 
-           || isnull ( m_weights.sum () ) ) ? 0.0 
+           || s_zero ( m_sum            ) 
+           || s_zero ( m_weights.sum () ) ) ? 0.0 
     : m_sum / m_weights.sum () ;
 }
 // ============================================================================
@@ -93,7 +90,7 @@ double Gaudi::Math::WStatEntity::mean () const
 double Gaudi::Math::WStatEntity::meanErr () const
 {
   const double neff = nEff() ;
-  if ( isnull ( neff ) ) { return 0 ; }
+  if ( s_zero ( neff ) ) { return 0 ; }
   //
   const double v = dispersion() / neff ;
   //
@@ -105,7 +102,7 @@ double Gaudi::Math::WStatEntity::meanErr () const
 double Gaudi::Math::WStatEntity::dispersion () const
 { 
   //
-  if ( 1 >= nEntries() || isnull ( m_weights.sum() ) ) { return 0 ; }
+  if ( 1 >= nEntries() || s_zero ( m_weights.sum() ) ) { return 0 ; }
   //
   return m_sum2 / m_weights.sum () - Gaudi::Math::pow ( mean() , 2 ) ;
 }
@@ -116,7 +113,7 @@ double Gaudi::Math::WStatEntity::rms () const
 {
   const double d = dispersion () ;
   //
-  if ( 0 >= d || isnull ( d ) ) { return 0 ; }
+  if ( 0 >= d || s_zero ( d ) ) { return 0 ; }
   return std::sqrt ( d ) ;
 }
 // ============================================================================
@@ -125,7 +122,7 @@ double Gaudi::Math::WStatEntity::rms () const
 double Gaudi::Math::WStatEntity::nEff () const
 {
   //
-  if ( 0 == nEntries() || isnull ( m_weights.sum2 () ) ) { return 0 ; }
+  if ( 0 == nEntries() || s_zero ( m_weights.sum2 () ) ) { return 0 ; }
   //
   return Gaudi::Math::pow ( m_weights.sum() , 2 ) /  m_weights.sum2 () ;
 }

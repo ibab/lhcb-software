@@ -37,11 +37,11 @@ namespace
                   "mumeric_limits are not specialized for doubles"      ) ;
   // ==========================================================================
   /// equality criteria for doubles
-  LHCb::Math::Equal_To<double> s_equal ;       // equality criteria for doubles
+  const LHCb::Math::Equal_To<double> s_equal {} ;       // equality criteria for doubles
   /// zero for doubles  
-  LHCb::Math::Zero<double>     s_zero  ;       // zero for doubles
+  const LHCb::Math::Zero<double>     s_zero  {} ;       // zero for doubles
   /// zero fo vectors 
-  LHCb::Math::Zero< std::vector<double> > s_vzero ; // zero for vectors
+  const LHCb::Math::Zero< std::vector<double> > s_vzero {} ; // zero for vectors
   /// small element 
   const long double            s_epsilon =  2 * std::numeric_limits<double>::epsilon() ;
   /// small element 

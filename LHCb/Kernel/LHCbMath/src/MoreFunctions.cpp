@@ -43,9 +43,9 @@ namespace
                   "mumeric_limits are not specialized for long doubles" ) ;
   // ==========================================================================
   /// equality criteria for doubles
-  LHCb::Math::Equal_To<double> s_equal ;       // equality criteria for doubles
+  const LHCb::Math::Equal_To<double> s_equal{} ;       // equality criteria for doubles
   /// zero for doubles  
-  LHCb::Math::Zero<double>     s_zero  ;       // zero for doubles
+  const LHCb::Math::Zero<double>     s_zero {} ;       // zero for doubles
   /// "almost infinity" 
   const long double s_infinity = 0.9 * std::numeric_limits<double>::max () ;
   /// "relatively large value" 

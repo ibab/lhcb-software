@@ -53,7 +53,7 @@ namespace
   // const unsigned int _maxULPs = 10000 ;
   // ==========================================================================
   /// equality of doubles 
-  const LHCb::Math::Equal_To<double> s_equal ;
+  const LHCb::Math::Equal_To<double> s_equal{} ;
   /// equality of doubles
   inline bool _equal ( const double value1 ,
                        const double value2 )
@@ -62,7 +62,7 @@ namespace
   //    Gaudi::Math::lomont_compare_double ( value1 ,value2 , _maxULPs ) ; }
   // ==========================================================================
   // check if the double value close to zero
-  const LHCb::Math::Zero<double> s_zero ;
+  const LHCb::Math::Zero<double> s_zero{} ;
   // check if the double value close to zero
   inline bool _zero  ( const double value ) { return s_zero ( value) ; }
   // check if the double value close to zero
