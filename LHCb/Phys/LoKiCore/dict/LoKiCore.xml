@@ -41,6 +41,7 @@
   <!--function name = "LoKi::Assert"          /-->
   <function name = "LoKi::Print::toString"     />
   <function name = "LoKi::Print::print_string" />
+  <class    name = "LoKi::Print::Printer"      />
 
   <class name    = "LoKi::Dump"            />
   <class name    = "LoKi::FirstN"          />

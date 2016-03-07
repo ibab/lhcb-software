@@ -1296,6 +1296,28 @@ for t in ( 'int'    ,
     k.__repr__ = k.__str__
     k.__iadd__ = _iadd_
     k.__add__  = _add_
+
+    
+_tes_location_ = LoKi.Print.Printer.tesLocation 
+# =============================================================================
+##  make print for TES-location for the object 
+def tesLocation ( o ) :
+    """Get TES location for the object:
+    >>> particle = ...
+    >>> print tesLocation ( particle )
+    """
+    return _tes_location_ ( o )
+
+## decorate DataObject and ContainedObject
+for _t in ( cpp.DataObject      ,
+            cpp.ContainedObject ) :
+    
+    _t.tesLocation = tesLocation 
+    _t.TESLocation = tesLocation 
+    _t.TES         = tesLocation 
+    _t.tes         = tesLocation 
+    _t.location    = tesLocation 
+
     
 # =============================================================================
 if '__main__' == __name__ :

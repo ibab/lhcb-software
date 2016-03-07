@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2016-03-07 - Vanya Belyaev
+ - add methods to get TES location in python 
+
 ! 2016-02-21 - Vanya Belyaev
  - add a function into namespace LoKi::Print 
 

@@ -83,6 +83,33 @@ namespace LoKi
     GAUDI_API 
     MsgStream&  print_string ( MsgStream& s , const std::string& what ) ;
     // ========================================================================
+    /** @class Printer 
+     *  helper prints for DataObject&ContainesObject 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2016-3-07
+     */
+    class GAUDI_API Printer 
+    {
+    public:
+      // ======================================================================
+      /// make printout of DataObject
+      static std::string toString    ( const DataObject*      obj ) ;
+      /// make printout of DataObject
+      static std::string toString    ( const ContainedObject* obj ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get tes location for DataObject 
+      static std::string tesLocation ( const DataObject*      obj ) ;
+      /// get tes location for ContainedObject 
+      static std::string tesLocation ( const ContainedObject* obj ) ;
+      // ========================================================================
+    public:
+      // ========================================================================      
+      /// helper function (for python)
+      static MsgStream& print_string ( MsgStream& s , const std::string& what ) ;
+      // ========================================================================      
+    };  
   } //                                             end of namespace LoKi::Print
   // ==========================================================================
 } //                                                      end of namespace LoKi
