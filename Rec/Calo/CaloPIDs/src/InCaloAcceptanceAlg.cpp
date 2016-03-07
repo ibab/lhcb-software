@@ -99,8 +99,7 @@ StatusCode InCaloAcceptanceAlg::execute()
   table -> i_sort () ;
   
   // a bit of statistics 
-  if ( statPrint() || msgLevel ( MSG::DEBUG ) )
-  {
+  if ( statPrint() || msgLevel ( MSG::DEBUG ) ){
     counter ( "#tracks" ) += nTracks ;
     counter ( "#accept" ) += nAccept ;
     counter ( "#links"  ) += table->i_relations().size() ;

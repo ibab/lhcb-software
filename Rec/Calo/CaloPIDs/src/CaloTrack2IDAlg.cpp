@@ -95,16 +95,11 @@ StatusCode CaloTrack2IDAlg::execute ()
   
   size_t nTracks = 0 ;
   // loop over input containers 
-  for ( Inputs::const_iterator input = m_inputs.begin() ;
-        m_inputs.end() != input ; ++input ) 
-  {
-
+  for ( Inputs::const_iterator input = m_inputs.begin() ;m_inputs.end() != input ; ++input ){
     if( !exist<Tracks>( *input ) )continue;
     const Tracks* tracks = get<Tracks>( *input ) ;
     // loop over all tracks 
-    for ( Tracks::const_iterator itrack = tracks->begin() ; 
-          tracks->end() != itrack ; ++itrack ) 
-    {
+    for ( Tracks::const_iterator itrack = tracks->begin() ;tracks->end() != itrack ; ++itrack ){
       const LHCb::Track* track = *itrack ;
       ++nTracks ;
       // use the track ?

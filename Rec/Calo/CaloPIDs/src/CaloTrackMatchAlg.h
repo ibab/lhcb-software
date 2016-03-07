@@ -208,6 +208,13 @@ inline StatusCode CaloTrackMatchAlg::doTheJob ( TABLE* table ) const
 
   // a bit of statistics 
   if ( statPrint() || msgLevel ( MSG::DEBUG ) ){
+    for(int t = 0 ; t <= LHCb::Track::UT ; ++ t){
+      int c = std::count_if(tracks.begin(), tracks.end(), [t](const LHCb::Track* tr){ return tr->type()==t; });
+      if(c==0)continue;
+      std::ostringstream s("");
+      s<< (LHCb::Track::Types) t;
+      counter("#tracks["+s.str()+"]")+=c;
+    }
     counter ( "#tracks"   ) += nTracks   ;
     counter ( "#calos"    ) += nCalos    ;
     counter ( "#overflow" ) += nOverflow ;

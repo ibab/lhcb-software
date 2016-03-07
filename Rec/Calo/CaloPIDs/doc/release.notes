@@ -4,6 +4,10 @@
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+! 2016-03-05 - Olivier Deschamps
+  - CaloPIDs configurable :  add slots to configure the Accepted Track::Types 
+  - src : add counter per track type in match algs
+
 ! 2016-02-24 - Olivier Deschamps
   - fix clang warning in friend declarations of ToolFactory (class->struct)
 

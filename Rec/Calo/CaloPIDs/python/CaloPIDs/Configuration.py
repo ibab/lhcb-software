@@ -60,6 +60,9 @@ class CaloPIDsConf(LHCbConfigurableUser):
         ##
         , 'DataType'           : 'MC09'      # Data type  
         , 'TrackLocations'     : []          # track locations to be used (default use CaloAlgUtils default)
+        , 'ClMatchTrTypes'     : []          # Track types for Cluster matching (if not set the alg. default is used i.e. Long + Downstream + TTracks)  
+        , 'CaloPIDTrTypes'      : []         # Track types for CaloPID (if not set the alg. default is used i.e. Long + Downstream + TTracks)
+        , 'BremPIDTrTypes'      : []         # Track types for BremPID (if not set the alg. default is used i.e. Long + Upstream + Velo)
         , 'SkipNeutrals'       : False       # skip neutralID (already run in CaloRecoConf by default)
         , 'SkipCharged'        : False       # skip chargedID 
         , 'FastPID'            : False       # speed-up PID (lighter sequence)
@@ -88,15 +91,16 @@ class CaloPIDsConf(LHCbConfigurableUser):
                          self.getProp( 'EnablePIDsOnDemand' )  ,
                          self.getProp('PIDList'),
                          _elocs  ,
+                         self.getProp('ClMatchTrTypes'),
+                         self.getProp('CaloPIDTrTypes'),
+                         self.getProp('BremPIDTrTypes'),                       
                          self.getProp('SkipNeutrals'),
                          self.getProp('SkipCharged'),
                          self.getProp('FastPID'),
                          self.getProp('ExternalClusters'),
                          self.getName(),
-                         self.getProp('NoSpdPrs')
+                         self.getProp('NoSpdPrs')                       
                          ) 
-
-
 
         referencePIDs( self.getProp("DataType" ) )
 
