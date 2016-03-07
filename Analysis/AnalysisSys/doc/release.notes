@@ -3,6 +3,63 @@ Package             : AnalysisSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb analysis packages
 
+</PRE><H1><A NAME=v15r1>2016-03-07 Analysis v15r1</A></H1><PRE>
+
+Development release for 2016 data taking.
+Also needed for the stack for the run-I restripping.
+It is based on Gaudi v27r0, LHCb v40r0, Rec v19r0 and Phys v21r1, and uses LCG_83 with ROOT 6.06.00.
+
+- Packages updated :
+  Analysis/Ostap v1r14, Phys/AnalysisPython v2r41, Phys/DaVinciTrackRefitting v2r5, Phys/DecayTreeTupleMC v1r7,
+  Phys/DecayTreeTupleTracking v1r5, Phys/LoKiAlgoMC v9r8, Phys/TeslaTools v1r19, Rich/RichPIDQC v1r10.
+
+- In Analysis/Ostap v1r14 :
+  . PyRoUts:: fix in 1D-interpolation to allow release of Analysis with OLD LHCbMath.
+  . Improved interpolation (make use of updated Gaudi::Math::HistoInterpolation).
+  . Improved history.
+  . Added command line "-c/--command" to execute the specified command.
+  . Improved running_bar and progress_bar.
+  . Updated Parallel-stuff... (TEMPORARY!).
+  . Updated PidCalib stuff.
+  . Improved logging.
+  . FitSignalModels.py
+    Bugg_pgf - fix a bug in Bugg's function  (thanks to Katya Govorkova).
+  . Added new test TestKisa2.py. The test is not activated now,
+    it will wait pathos' suite (pathos, multiprocess, pox, dill and ppft).
+
+- In Phys/AnalysisPython v2r41 :
+  . Improved logging & colorization.
+  . Removed PyCintex stuff.
+
+- In Phys/DaVinciTrackRefitting v2r5 :
+  . Bugfix for ghost probability configuration as in Reco14.
+
+- In Phys/DecayTreeTupleMC v1r7 :
+  . Added flag "StoreStablePropertime" (off by default) to MCTupleToolKinematic to allow propertime and endvertex
+    to be stored for particles considered stable in LHCb, e.g. for the Kaon in the K-> pi pi pi decay.
+
+- In Phys/DecayTreeTupleTracking v1r5 :
+  . Adding TupleToolTrackTime, which computes the average residual time of a track from OT hits.
+
+- In Phys/LoKiAlgoMC v9r8 :
+  . Simplify processing of MC-uDST via auto-collection of all relevant Particle -> MCParticle relation tables.
+  . Make use of GetTESLocations class.
+  . Add new property 'CollectP2MCPLinks'  (default is False) to activate autocollections of Particle -> MCParticle
+    links for MC-micro-DST one needs to set it to 'True'.
+  . Reshuffling of lines.
+
+- In Phys/TeslaTools v1r19 :
+  . Make sure shared PVs are created even if line wants refitted ones.
+  . Allow backwards compatibility pre-deuteron.
+  . Ensure for neutral candidates, tracks/muons/rich IDs are not included.
+
+
+
+- In Rich/RichPIDQC v1r10 :
+  . Expose the candidates TES locations to use as a dictionary in RichPIDQCConf.
+  . Update LambdaToProtonPion.py, DstarToDzeroPi.py and JPsiMuMu.py to use
+    externally created candidates, rather than run their own selections.
+
 </PRE><H1><A NAME=v15r0>2016-02-09 Analysis v15r0</A></H1><PRE>
 
 Development release for 2016 data taking.
