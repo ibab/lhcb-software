@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2016-07-03 - Komarov Ilya
+- Code style fix for STEfficiency.cpp
+
+! 2016-07-03 - Komarov Ilya
 - Fixed a bug in STEfficiency.cpp for TT sectors (Efficiency was filled several times for some sectors)
 
 ! 2016-23-02 - Komarov Ilya
