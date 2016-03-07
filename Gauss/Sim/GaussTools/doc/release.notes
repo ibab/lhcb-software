@@ -4,6 +4,7 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v20r1 2016-03-07 ========================
 ! 2015-11-15 - Marco Clemencic
  - Fixed compilation with CLHEP 2.
 
