@@ -168,10 +168,8 @@ namespace TrackFunctor
   template <class T>
   void deleteFromList( std::vector<T*>& List, const T* value )
   {
-    typename std::vector<T*>::iterator it;
-    it = std::find( List.begin(), List.end(), value );
-    delete *it;
-    List.erase( it );
+    auto it = std::find( List.begin(), List.end(), value );
+    if (it!=List.end()) { delete *it ; List.erase(it); }
   }
 
 //=============================================================================
@@ -180,7 +178,7 @@ namespace TrackFunctor
   struct deleteObject
   { 
     template <typename T>
-    void operator()(T *ptr){ delete ptr; ptr=0 ; }
+    void operator()(T *ptr){ delete ptr; ptr=nullptr ; }
   };
 
 //=============================================================================
@@ -192,8 +190,7 @@ namespace TrackFunctor
   LHCb::State& closestState( LHCb::Track& track, const T& t )
   {
     const std::vector<LHCb::State*>& allstates = track.states();
-    std::vector<LHCb::State*>::iterator iter = 
-      std::min_element( allstates.begin(), allstates.end(), t );
+    auto iter = std::min_element( allstates.begin(), allstates.end(), t );
     if ( iter == allstates.end() )
       throw GaudiException( "No state closest to z","TrackFunctor.h",
                             StatusCode::FAILURE );
@@ -207,8 +204,7 @@ namespace TrackFunctor
   const LHCb::State& closestState( const LHCb::Track& track, const T& t )
   {
     const std::vector<LHCb::State*>& allstates = track.states();
-    std::vector<LHCb::State*>::const_iterator iter = 
-      std::min_element( allstates.begin(), allstates.end(), t );
+    auto iter = std::min_element( allstates.begin(), allstates.end(), t );
     if ( iter == allstates.end() )
       throw GaudiException( "No state closest to z","TrackFunctor.h",
                             StatusCode::FAILURE );

@@ -10,7 +10,7 @@ using namespace LHCb ;
 TrackFitResult::TrackFitResult()
   : m_nIter(-1),
     m_pScatter(0)
-{ 
+{
 }
 
 //=============================================================================
@@ -76,46 +76,25 @@ void TrackFitResult::removeFromNodes( Node* node )
     Measurement& meas = node -> measurement();
     TrackFunctor::deleteFromList<Node>(m_nodes,node);
     removeFromMeasurements( &meas );
-  }
-  else {
+  } else {
     TrackFunctor::deleteFromList<Node>(m_nodes,node);
   }
 }
-
-// //=============================================================================
-// // Check whether the given Measurement is on the Track
-// //=============================================================================
-// bool TrackFitResult::isOnTrack( const Measurement& value ) const
-// {
-//   for ( std::vector<Measurement*>::const_iterator it = m_measurements.begin();
-//         it != m_measurements.end(); ++it ) {
-//     if ( (*it) == (Measurement*) &value ) return true;
-//   }
-//   return false;
-// };
-//=============================================================================
-// Check whether the Measurement on the Track corresponding to the input LHCbID
-// is present
-//=============================================================================
-// bool TrackFitResult::isMeasurementOnTrack( const LHCbID& value ) const
-// {
-//   return measurement(value) != 0 ;
-// };
 
 //=============================================================================
 // Return the Measurement on the Track corresponding to the input LHCbID
 //=============================================================================
 const Measurement* TrackFitResult::measurement( const LHCbID& value ) const
 {
-  MeasurementContainer::const_iterator it = m_measurements.begin() ;
-  for ( ; (it != m_measurements.end()) && !((*it)->lhcbID() == value) ; ++it ) {}
-  return it == m_measurements.end() ? 0 : *it ;
+  auto it = std::find_if( m_measurements.begin(), m_measurements.end(),
+                          [&](const Measurement* m) { return m->lhcbID() == value; } );
+  return it != m_measurements.end() ? *it : nullptr;
 }
 
 //=============================================================================
 // Remove all measurements from the track
 //=============================================================================
-void TrackFitResult::clearMeasurements() 
+void TrackFitResult::clearMeasurements()
 {
   // remove all nodes first
   clearNodes() ;
@@ -127,7 +106,7 @@ void TrackFitResult::clearMeasurements()
 //=============================================================================
 // Remove all nodes from the track
 //=============================================================================
-void TrackFitResult::clearNodes() 
+void TrackFitResult::clearNodes()
 {
   std::for_each(m_nodes.begin(), m_nodes.end(),TrackFunctor::deleteObject()) ;
   m_nodes.clear() ;
@@ -154,29 +133,25 @@ void TrackFitResult::copy( const TrackFitResult& rhs )
   m_nIter    = rhs.m_nIter ;
   m_pScatter = rhs.m_pScatter ;
 
-  
+
   // copy the measurements. make a map from old to new measurements.
-  typedef std::map<const Measurement*, Measurement*> MeasurementMap ;
-  MeasurementMap measurementmap ;
+  std::map<const Measurement*, Measurement*> measurementmap ;
   m_measurements.reserve(rhs.measurements().size()) ;
-  for( std::vector<Measurement*>::const_iterator imeas = rhs.m_measurements.begin() ;
-       imeas != rhs.m_measurements.end(); ++imeas) {
-    m_measurements.push_back( (*imeas)->clone() ) ;
-    measurementmap[*imeas] = m_measurements.back() ;
+  for( const auto& meas : rhs.m_measurements) {
+    m_measurements.push_back( meas->clone() ) ;
+    measurementmap[meas] = m_measurements.back() ;
   }
 
   // copy the nodes. be sure to remap the measurement.
   m_nodes.reserve(rhs.m_nodes.size()) ;
-  for (std::vector<Node*>::const_iterator inode = rhs.m_nodes.begin();
-       inode != rhs.m_nodes.end(); ++inode) {
-    m_nodes.push_back((*inode)->clone()) ;
-    if( (*inode)->hasMeasurement() ) {
-      MeasurementMap::const_iterator it = measurementmap.find( &(*inode)->measurement() );
-      if(it != measurementmap.end()) 
-        m_nodes.back()->setMeasurement(*(it->second)) ;
-      else 
+  for (const auto& node : rhs.m_nodes) {
+    m_nodes.push_back(node->clone()) ;
+    if( node->hasMeasurement() ) {
+      auto it = measurementmap.find( &node->measurement() );
+      if(it == measurementmap.end())
         throw GaudiException( "TrackFitResult::copy: found a node pointing to a measurement not on track!",
                               "Track.cpp",StatusCode::FAILURE );
+      m_nodes.back()->setMeasurement(*(it->second)) ;
     }
   }
 }
@@ -185,20 +160,19 @@ void TrackFitResult::copy( const TrackFitResult& rhs )
 // Count the number of outliers
 //=============================================================================
 
-unsigned int LHCb::TrackFitResult::nOutliers() const 
+unsigned int LHCb::TrackFitResult::nOutliers() const
 {
-  size_t noutlier(0) ;
-  for( NodeContainer::const_iterator inode = nodes().begin() ;
-       inode != nodes().end(); ++inode)
-    if( (*inode)->type() == LHCb::Node::Outlier ) ++noutlier ;
-  return noutlier ;
+  return std::count_if( nodes().begin(), nodes().end(),
+                        [](const Node* node) {
+                            return node->type() == LHCb::Node::Outlier;
+  } );
 }
 
 //=============================================================================
 // Count the number of outliers
 //=============================================================================
 
-unsigned int LHCb::TrackFitResult::nActiveMeasurements() const 
+unsigned int LHCb::TrackFitResult::nActiveMeasurements() const
 {
   return m_measurements.size() - nOutliers() ;
 }
@@ -207,13 +181,10 @@ unsigned int LHCb::TrackFitResult::nActiveMeasurements() const
 // Count the number of measurement of a certain type
 //=============================================================================
 
-unsigned int LHCb::TrackFitResult::nMeasurements( const LHCb::Measurement::Type& type) const 
+unsigned int LHCb::TrackFitResult::nMeasurements( const LHCb::Measurement::Type& type) const
 {
-  unsigned int rc(0) ;
-  for( MeasurementContainer::const_iterator it = m_measurements.begin() ;
-       it != m_measurements.end() ; ++it ) 
-    if( (*it)->type() == type ) ++rc ;
-  return rc ;
+  return std::count_if( m_measurements.begin(), m_measurements.end(),
+                        [&](const Measurement* m) { return m->type() == type; } );
 }
 
 //=============================================================================
@@ -222,12 +193,9 @@ unsigned int LHCb::TrackFitResult::nMeasurements( const LHCb::Measurement::Type&
 
 unsigned int LHCb::TrackFitResult::nActiveMeasurements( const LHCb::Measurement::Type& type ) const
 {
-  unsigned int rc(0) ;
-  for( NodeContainer::const_iterator inode = nodes().begin() ; 
-       inode != nodes().end() ; ++inode) 
-    if( (*inode)->type() == LHCb::Node::HitOnTrack &&
-	(*inode)->measurement().type() == type ) ++rc ;
-  return rc ;
+  return std::count_if( nodes().begin(), nodes().end(),
+                        [&](const Node* node) {
+    return node->type() == LHCb::Node::HitOnTrack &&
+           node->measurement().type() == type;
+  });
 }
-
-

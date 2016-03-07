@@ -3,6 +3,12 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for the tracking event model classes
 !-------------------------------------------------------------------------------
+! 2016-03-07 - Gerhard Raven
+ - C++11 modernization
+ - fix Track::deleteFromList in case a value not actually in the list is passed
+ - fix Track::removeFromLhcbIds in case an id is passed which is not actually 
+   on the track
+ - Track::addSortedToLHcbIDs: avoid redundant initial write to container
 
 !========================= TrackEvent v6r5 2016-01-27 =========================
 ! 2016-01-03 - Gerhard Raven
