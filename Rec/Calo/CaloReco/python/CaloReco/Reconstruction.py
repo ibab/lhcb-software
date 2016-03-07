@@ -143,7 +143,7 @@ def clusterReco ( context , enableRecoOnDemand , clusterPt = 0.  , fastReco = Fa
 # ============================================================================
 ## define the recontruction of  Single Photons
 def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False, usePrs = False , trackLocations = [], neutralID = True,
-                 photonPt=50.*MeV, fastReco = False, external = '',noSpdPrs=False) :
+                 photonPt=50.*MeV, fastReco = False, external = '',noSpdPrs=False,matchTrTypes=[]) :
     """
     Define the recontruction of Single Photon Hypo
     """
@@ -172,7 +172,7 @@ def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False
     # 1/ PhotonMatch from CaloPIDs (if tracking is requested)
     if useTracks : 
         from CaloPIDs.PIDs import trackMatch
-        tm =  trackMatch ( context,enableRecoOnDemand, trackLocations , fastReco, external)
+        tm =  trackMatch ( context,enableRecoOnDemand, trackLocations , matchTrTypes, fastReco, external)
         addAlgs ( seq , tm ) 
     
 
@@ -250,7 +250,7 @@ def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False
 # ============================================================================
 ## define the recontruction of Electorn Hypos
 def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = True, usePrsE = True, trackLocations = [] ,
-                   electronPt=50.*MeV , fastReco = False, external = '' ,noSpdPrs=False) :
+                   electronPt=50.*MeV , fastReco = False, external = '' ,noSpdPrs=False,matchTrTypes=[]) :
     """
     Define the reconstruction of
     """
@@ -278,7 +278,7 @@ def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = 
     # 1/ ElectronMatch from CaloPIDs (if useTracks)
     if useTracksE :
         from CaloPIDs.PIDs import trackMatch
-        tm =  trackMatch ( context,enableRecoOnDemand, trackLocations , fastReco , external)
+        tm =  trackMatch ( context,enableRecoOnDemand, trackLocations , matchTrTypes, fastReco , external)
         addAlgs ( seq , tm ) 
 
     ## 2/ Electron Rec alg

@@ -4,6 +4,8 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2016-03-05 - Olivier Deschamps
+  - CaloProcessor configurables :  add slots to configure the Accepted Track::Types at CaloPID level
 
 ! 2016-02-25 - Olivier Deschamps
   - fix a clang warning

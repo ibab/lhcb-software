@@ -83,6 +83,7 @@ class CaloRecoConf(LHCbConfigurableUser):
         , 'NeutralID'           : False      # Apply neutralID (CaloPIDs is in charge + problems with onDemand to be fixed)
         , 'EnableRecoOnDemand'  : False      # Enable Reco-On-Demand (only for components on RecList)
         , 'TrackLocations'      : []         # Track locations (Neutral/Charged cluster selection with UseTrack(E) )
+        , 'ClMatchTrTypes'      : []         # Accepted track types for cluster matching (default Long, Downstream , TTracks)
         , 'ExternalClusters'    : ''         # Start the reconstruction sequence from an external cluster container (HLT)
         , 'FastReco'            : False      # faster reconstruction (HLT)
         , 'SkipNeutrals'        : False
@@ -121,6 +122,7 @@ class CaloRecoConf(LHCbConfigurableUser):
         , 'NeutralID'          : """ Apply neutralID """ 
         , 'EnableRecoOnDemand' : """ Enable Reco-On-Demand (for components in RecList) """ 
         , 'TrackLocations'     : """ TrackLocations (Photon/Electron selection)""" 
+        , 'ClMatchTrTypes'     : """ Accepted track types for cluster matching (default Long, Downstream , TTracks) """
         , 'SkipNeutrals'       : """ Skip Neutral reco components in RecList""" 
         , 'SkipCharged'        : """ Skip Charged reco components in RecList"""
         , 'ForceOnDemand'      : """ force DoD for ALL components"""
@@ -222,7 +224,8 @@ class CaloRecoConf(LHCbConfigurableUser):
                              self.getProp('PhotonPt')            ,
                              self.getProp('FastReco')            ,
                              self.getProp('ExternalClusters')    ,
-                             noSpdPrs=self.getProp('NoSpdPrs')
+                             self.getProp('NoSpdPrs')            ,
+                             self.getProp('ClMatchTrTypes')
                              )
         ##
         _log.info ('Configured Single Photons Reco : %s ' % cmp.name()  )
@@ -262,7 +265,8 @@ class CaloRecoConf(LHCbConfigurableUser):
                              self.getProp('ElectronPt')          ,
                              self.getProp('FastReco')            ,
                              self.getProp('ExternalClusters'),
-                             self.getProp('NoSpdPrs')
+                             self.getProp('NoSpdPrs')  ,
+                             self.getProp('ClMatchTrTypes')  
                              )
 
 
@@ -460,7 +464,9 @@ class CaloProcessor( CaloRecoConf,LHCbConfigurableUser ):
                            ,"Upstream"   : { "Chi2Cut" : [0,10] }
                            ,"Downstream" : { "Chi2Cut" : [0,10] } },
         ##
-        'DataType'               : 'MC09',
+        'DataType'           : 'MC09',
+        'CaloPIDTrTypes'      : []   ,
+        'BremPIDTrTypes'      : []   ,
         'PIDList'            : ['InAcceptance',
                                   'Match',
                                   'Energy',
@@ -485,6 +491,9 @@ class CaloProcessor( CaloRecoConf,LHCbConfigurableUser ):
         pidConf.EnablePIDsOnDemand=self.getProp( 'EnableOnDemand' )  
         pidConf.PIDList=self.getProp('PIDList')
         pidConf.TrackLocations=self.getProp('TrackLocations')
+        pidConf.ClMatchTrTypes=self.getProp('ClMatchTrTypes')
+        pidConf.CaloPIDTrTypes=self.getProp('CaloPIDTrTypes')
+        pidConf.BremPIDTrTypes=self.getProp('BremPIDTrTypes')        
         pidConf.SkipNeutrals=self.getProp('SkipNeutrals')
         pidConf.SkipCharged=self.getProp('SkipCharged')
         pidConf.FastPID=self.getProp('FastReco')
@@ -582,6 +591,7 @@ class CaloProcessor( CaloRecoConf,LHCbConfigurableUser ):
             self.setProp("ChargedProtoLocation",cloc)
             self.setProp("NeutralProtoLocation",nloc)            
             _log.info("CaloProcessor.sequence : update protoP Location with prefix %s: " % protoPrefix)
+
         self.applyConf()
         return seq
 
@@ -636,9 +646,6 @@ class CaloProcessor( CaloRecoConf,LHCbConfigurableUser ):
             tsvc=ToolSvc()
             tsvc.addTool(CaloGetterTool,name="CaloGetter")
             tsvc.CaloGetter.DetectorMask=12
-
-
-
 
         # overwrite Reco & PID onDemand
         dod = self.getProp('EnableOnDemand')
