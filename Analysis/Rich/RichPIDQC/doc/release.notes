@@ -5,6 +5,8 @@
 ! Purpose     : PID Calbriation and Monitoring on Data
 !-----------------------------------------------------------------------------
 
+!======================== RichPIDQC v1r10 2016-03-07 =========================
+
 ! 2016-03-01 - Chris Jones
  - Expose the candidates TES locations to use as a dictionary in RichPIDQCConf
 
