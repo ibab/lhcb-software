@@ -23,22 +23,24 @@ __version__ = "$Revision$"
 # =============================================================================
 __all__     = (
     'exp'    , 'expm1'  ,
-    'log'    , 'log10'  , 'log1p' , 
-    'sqrt'   , 'cbrt'   , 'pow'   ,   
-    'sin'    , 'cos'    , 'tan'   , 
-    'sinh'   , 'cosh'   , 'tanh'  ,
-    'asin'   , 'acos'   , 'atan'  , 
-    'asinh'  , 'acosh'  , 'atanh' ,
-    'erf'    , 'erfc'   , 'erfcx' , 'probit' , 
-    'gamma'  , 'tgamma' , 'lgamma' 
+    'log'    , 'log10'  , 'log1p'  , 
+    'sqrt'   , 'cbrt'   , 'pow'    ,   
+    'sin'    , 'cos'    , 'tan'    , 
+    'sinh'   , 'cosh'   , 'tanh'   ,
+    'asin'   , 'acos'   , 'atan'   , 
+    'asinh'  , 'acosh'  , 'atanh'  ,
+    'erf'    , 'erfc'   , 'erfcx'  , 'probit' , 
+    'gamma'  , 'tgamma' , 'lgamma' ,
+    'exp2'   , 'log2'   ,
+    'hypot'  , 'fma'  
     )
 # =============================================================================
 import math
 from   LHCbMath.Types import cpp
-VE    = cpp.Gaudi.Math.ValueWithError
-_zero = cpp.LHCb.Math.Zero('double')() 
+VE     = cpp.Gaudi.Math.ValueWithError
+_zero  = cpp.LHCb.Math.Zero('double')()
+_ln2_i = 1/math.log(2.0)                 ## useful constant 
 # =============================================================================
-
 
 # =============================================================================
 ## define ``exp'' function 
@@ -48,6 +50,15 @@ def exp ( x ) :
     fun = getattr ( x , '__exp__' , None )
     if fun : return fun()
     return math.exp ( x )
+
+# =============================================================================
+## define ``exp2'' function 
+def exp2 ( x ) :
+    """ 'exp2' function taking into account the uncertainties
+    """
+    fun = getattr ( x , '__exp2__' , None )
+    if fun : return fun()
+    return 2**x 
 
 # =============================================================================
 ## define ``expm1'' function 
@@ -66,6 +77,16 @@ def log ( x ) :
     fun = getattr ( x , '__log__' , None )
     if fun : return fun()
     return math.log ( x )
+
+# =============================================================================
+## define ``log2'' function 
+def log2 ( x ) :
+    """'log2' function taking into account the uncertainties
+    """
+    fun = getattr ( x , '__log2__' , None )
+    if fun : return fun()
+    ## 
+    return _ln2_i * math.log ( x ) 
 
 # =============================================================================
 ## define ``log10'' function 
@@ -288,6 +309,43 @@ def probit ( x ) :
     fun = getattr ( x , '__probit__' , None )
     if fun : return fun()
     return _probit_ ( x )
+
+_fma_ = cpp.Gaudi.Math.fma
+# =============================================================================
+## evaluate fma(x,y,z) = x*y+x 
+#  @param y    (INPUT) the parameter 
+#  @param x    (INPUT) the parameter 
+#  @param z    (INPUT) the parameter 
+#  @param cxy  (INPUT) the correlation coefficient   -1<=c_xy<=1 
+#  @param cxz  (INPUT) the correlation coefficient   -1<=c_xz<=1 
+#  @param cyz  (INPUT) the correlation coefficient   -1<=c_yz<=1 
+#  @return  fma(x,y,z)
+#  @warning invalid and small covariances are ignored
+def fma ( x , y , z , cxy = 0 , cxz = 0 , cyz = 0 ) : 
+    """ evaluate fma(x,y,z)=x*y+z witn uncertainties 
+    """
+    _x = VE ( x )
+    _y = VE ( y )
+    _z = VE ( z )
+    return _fma_ ( _x , _y , _z , cxy , cxz , cyz )
+
+
+_hypot_ = cpp.Gaudi.Math.hypot
+# =============================================================================
+## evaluate hypot(x,y) = sqrt(x*x+y*y)
+#   \f$ \sqrt( x^2 + y^2 ) \f$
+#  @param x (INPUT) the first parameter
+#  @param y (INPUT) the second parameter
+#  @param c (INPUT) the correlation coefficient  (-1<=c<=1)
+#  @return the value of <code>hypot</code> function
+#  @warning invalid and small covariances are ignored
+def hypot ( x , y , c = 0 ) : 
+    """ evaluate hypot(x,y)=sqrt{x*x+y*y} witn uncertainties 
+    """
+    _x = VE ( x )
+    _y = VE ( y )
+    return _hypot_ ( _x , _y , c )
+
 
 # =============================================================================
 if '__main__' == __name__ :

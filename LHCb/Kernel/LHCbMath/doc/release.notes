@@ -7,6 +7,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2016-03-07 - Vanya Belyaev
+ - ValueWithError.h/.cpp, math_ve.py
+   add few more functions to be coherent with cmath
+
+! 2016-03-07 - Vanya Belyaev
  - fix clang probem?
 
 ! 2016-03-05 - Vanya Belyaev

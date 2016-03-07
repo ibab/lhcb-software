@@ -242,10 +242,14 @@ namespace Gaudi
       ValueWithError __rpow__ ( const double          e ) const ;
       /// exp(me) 
       ValueWithError __exp__    () const ;
+      /// exp2(me) 
+      ValueWithError __exp2__   () const ;
       /// expm1(me) 
       ValueWithError __expm1__  () const ;
       /// log(me) 
       ValueWithError __log__    () const ;
+      /// log2(me) 
+      ValueWithError __log2__   () const ;
       /// log10(me) 
       ValueWithError __log10__  () const ;
       /// log1p(me) 
@@ -590,6 +594,15 @@ namespace Gaudi
     ValueWithError exp
     ( const ValueWithError& b ) ;
     // ========================================================================    
+    /** evaluate exp2(b)
+     *  @param b (INPUT) the exponent 
+     *  @return the <c>2</c> raised to power <c>b</b> 
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError exp2
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
     /** evaluate expm1(b)
      *  @param b (INPUT) the exponent 
      *  @return  expm1(b) 
@@ -606,6 +619,15 @@ namespace Gaudi
      */
     GAUDI_API
     ValueWithError log
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate log2(b)
+     *  @param b (INPUT) the parameter 
+     *  @return logarithm on base 2 
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError log2
     ( const ValueWithError& b ) ;
     // ========================================================================    
     /** evaluate log10(b)
@@ -832,13 +854,34 @@ namespace Gaudi
      *  \f$ \sqrt( x^2 + y^2 ) \f$
      *   @param x (INPUT) the first parameter
      *   @param y (INPUT) the second parameter
-     *   @return the valueof <code>hypot</code> function
+     *   @param c (INPUT) the correlation coefficient  (-1<=c<=1)
+     *   @return the value of <code>hypot</code> function
      */
     GAUDI_API 
     ValueWithError  hypot
-    ( const ValueWithError& x , 
-      const ValueWithError& y ) ;
+    ( const ValueWithError& x     , 
+      const ValueWithError& y     , 
+      const double          c = 0 ) ;
     // ========================================================================    
+    /** evaluate fma(x,y,z) = x*y+x 
+     *  @param y    (INPUT) the parameter 
+     *  @param x    (INPUT) the parameter 
+     *  @param z    (INPUT) the parameter 
+     *  @param cxy  (INPUT) the correlation coefficient   -1<=c_xy<=1 
+     *  @param cxz  (INPUT) the correlation coefficient   -1<=c_xz<=1 
+     *  @param cyz  (INPUT) the correlation coefficient   -1<=c_yz<=1 
+     *  @return  fma(x,y,z)
+     *  @warning invalid and small covariances are ignored
+     */
+    GAUDI_API
+    ValueWithError fma 
+    ( const ValueWithError& x        ,
+      const ValueWithError& y        , 
+      const ValueWithError& z        , 
+      const double          cxy = 0  ,
+      const double          cxz = 0  ,
+      const double          cyz = 0  ) ;
+    // ========================================================================
     /// check for NaN
     inline bool isnan    ( const ValueWithError& v ) { return v.isnan    () ; }
     /// finite ?

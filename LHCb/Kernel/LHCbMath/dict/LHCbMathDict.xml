@@ -174,10 +174,15 @@
   <function name = "Gaudi::Math::blind"           />
   <function name = "Gaudi::Math::pow"             />
   <function name = "Gaudi::Math::exp"             />
+  <function name = "Gaudi::Math::exp2"            />
+  <function name = "Gaudi::Math::expm1"           />
   <function name = "Gaudi::Math::log"             />
+  <function name = "Gaudi::Math::log2"            />
   <function name = "Gaudi::Math::log10"           />
+  <function name = "Gaudi::Math::log1p"           />
   <function name = "Gaudi::Math::sqrt"            />
   <function name = "Gaudi::Math::signed_sqrt"     />
+  <function name = "Gaudi::Math::cbrt"            />
   <function name = "Gaudi::Math::sin"             />
   <function name = "Gaudi::Math::cos"             />
   <function name = "Gaudi::Math::tan"             />
@@ -196,6 +201,7 @@
   <function name = "Gaudi::Math::tgamma"          />
   <function name = "Gaudi::Math::lgamma"          />
   <function name = "Gaudi::Math::hypot"           />
+  <function name = "Gaudi::Math::fma"             />
   <function name = "Gaudi::Math::chi2"            />
   <function name = "Gaudi::Math::mean"            />
   <function name = "Gaudi::Math::asym"            />

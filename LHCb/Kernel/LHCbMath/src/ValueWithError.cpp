@@ -87,6 +87,15 @@ namespace
   inline bool _is_long ( const double value ) 
   { return LHCb::Math::islong ( value ) ; }
   // ==========================================================================
+  /// precomputed value of ln(2) 
+  const double s_ln2    = std::log( double ( 2 ) ) ;
+  /// precomputed value of ln(2) squared 
+  const double s_ln2_sq = s_ln2 * s_ln2 ;  
+  // precomputed value of 1/ln(10) 
+  const double s_ln10_i =  1 / std::log ( double(10) ) ;
+  // precomputed value of 1/ln(2) 
+  const double s_ln2_i  =  1 / std::log ( double( 2) ) ;
+  // ==========================================================================
 }
 // ============================================================================
 // constructor from the value and covariance
@@ -673,6 +682,11 @@ Gaudi::Math::ValueWithError::__pos__() const { return *this ; }
 Gaudi::Math::ValueWithError
 Gaudi::Math::ValueWithError::__exp__   () const { return exp   ( *this ) ; }
 // ============================================================================
+// exp2(me)
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__exp2__  () const { return exp2  ( *this ) ; }
+// ============================================================================
 // expm1(me)
 // ============================================================================
 Gaudi::Math::ValueWithError
@@ -682,6 +696,11 @@ Gaudi::Math::ValueWithError::__expm1__ () const { return expm1 ( *this ) ; }
 // ============================================================================
 Gaudi::Math::ValueWithError
 Gaudi::Math::ValueWithError::__log__   () const { return log   ( *this ) ; }
+// ============================================================================
+// log2(me)
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__log2__  () const { return log2  ( *this ) ; }
 // ============================================================================
 // log10(me)
 // ============================================================================
@@ -1162,6 +1181,22 @@ Gaudi::Math::ValueWithError Gaudi::Math::exp
   return Gaudi::Math::ValueWithError ( v , v * v * b.cov2 () ) ;
 }
 // ============================================================================
+/*  evaluate exp2(b)
+ *  @param b (INPUT) the exponent
+ *  @return the <c>e</c> raised to power <c>b</b>
+ *  @warning invalid and small covariances are ignored
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::exp2
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return std::exp2 ( b.value() ) ; }
+  //
+  const double v = std::exp2 ( b.value() ) ;
+  return Gaudi::Math::ValueWithError ( v , v * v * b.cov2 () * s_ln2_sq ) ;
+}
+// ============================================================================
 /*  evaluate expm1(b)
  *  @param b (INPUT) the exponent
  *  @return  expm1
@@ -1230,39 +1265,100 @@ Gaudi::Math::ValueWithError Gaudi::Math::lgamma
  *  \f$ \sqrt( x^2 + y^2 ) \f$
  *   @param x (INPUT) the first parameter
  *   @param y (INPUT) the second parameter
+ *   @param c (INPUT) the correlation coefficient  (-1<=c<=1)
  *   @return the valueof <code>hypot</code> function
  */
 // ============================================================================
 Gaudi::Math::ValueWithError  Gaudi::Math::hypot
 ( const Gaudi::Math::ValueWithError& x , 
-  const Gaudi::Math::ValueWithError& y )
+  const Gaudi::Math::ValueWithError& y , 
+  const double                       c ) 
 {
   const bool x0 = 0 >= x.cov2() || _zero ( x.cov2() ) ;
   const bool y0 = 0 >= y.cov2() || _zero ( y.cov2() ) ;
   //
-  if ( x0 && y0 ) { return std::hypot ( x.value()  , y.value()  ) ; }
-  //
   const double r  = std::hypot ( x.value() , y.value() ) ;
+  if ( x0 && y0 ) { return r ; }             // RETURN
   //
   double e2 = 0 ;
   if ( !_zero ( r ) ) 
   {
-    e2 += x.cov2() * x.value() * x.value() ;
-    e2 += y.cov2() * y.value() * y.value() ;
+    e2 += x0 ? 0.0 : x.cov2() * x.value() * x.value() ;
+    e2 += y0 ? 0.0 : y.cov2() * y.value() * y.value() ;
+    e2 += x0 || y0 || _zero ( c ) ? 0.0 :  
+      2 * std::max ( std::min ( c , 1.0 ) , -1.0 ) 
+      * x.value() 
+      * y.value() 
+      * std::max ( 0.0 , x.error() ) 
+      * std::max ( 0.0 , y.error() ) ;
     e2 /= r * r ;
   }
   else 
   {
-    e2 += x.cov2() ; 
-    e2 += y.cov2() ;    
+    e2 += x0 ? 0.0 : x.cov2() ; 
+    e2 += y0 ? 0.0 : y.cov2() ;    
+    e2 += x0 || y0 || _zero ( c ) ? 0.0 :
+      2 * std::max ( std::min ( c , 1.0 ) , -1.0 ) 
+      * std::max ( 0.0 , x.error() ) 
+      * std::max ( 0.0 , y.error() ) ;
   }
   //
   return ValueWithError ( r , e2 ) ;
 }
-
 // ============================================================================
-
-
+/* evaluate fma(x,y,z) = x*y+x 
+ *  @param y    (INPUT) the parameter 
+ *  @param x    (INPUT) the parameter 
+ *  @param z    (INPUT) the parameter 
+ *  @param cxy  (INPUT) the correlation coefficient   -1<=c_xy<=1 
+ *  @param cxz  (INPUT) the correlation coefficient   -1<=c_xz<=1 
+ *  @param cyz  (INPUT) the correlation coefficient   -1<=c_yz<=1 
+ *  @return  fma(x,y,z)
+ *  @warning invalid and small covariances are ignored
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::fma 
+( const Gaudi::Math::ValueWithError& x   ,
+  const Gaudi::Math::ValueWithError& y   , 
+  const Gaudi::Math::ValueWithError& z   , 
+  const double                       cxy ,
+  const double                       cxz ,
+  const double                       cyz ) 
+{
+  //
+  const bool x0 = 0 >= x.cov2() || _zero ( x.cov2() ) ;
+  const bool y0 = 0 >= y.cov2() || _zero ( y.cov2() ) ;
+  const bool z0 = 0 >= z.cov2() || _zero ( z.cov2() ) ;
+  //
+  const double xv = x.value() ;
+  const double yv = y.value() ;
+  const double zv = z.value() ;
+  //
+  const double r = std::fma ( xv , yv , zv ) ;
+  if ( x0 && y0 && z0 ) { return r ; }                              // RETURN 
+  //
+  
+  double e2 = 0.0 ;
+  e2 +=  x0 ? 0.0 : yv * yv * x.cov2 () ;
+  e2 +=  y0 ? 0.0 : xv * xv * y.cov2 () ;
+  e2 +=  z0 ? 0.0 :           z.cov2 () ;
+  // correlations 
+  e2 +=  x0 || y0 || s_zero ( cxy ) ? 0.0 : 
+    2 * std::max ( std::min ( cxy , 1.0 ) , -1.0 ) 
+    * yv * x.error () 
+    * xv * y.error () ;
+  e2 +=  x0 || z0 || s_zero ( cxz ) ? 0.0 : 
+    2 * std::max ( std::min ( cxz , 1.0 ) , -1.0 ) 
+    * yv * x.error () 
+    *      z.error () ;
+  e2 +=  y0 || z0 || s_zero ( cyz ) ? 0.0 : 
+    2 * std::max ( std::min ( cyz , 1.0 ) , -1.0 ) 
+    * xv * y.error () 
+    *      z.error () ;
+  //
+  return Gaudi::Math::ValueWithError ( r , e2 ) ;
+}
 // ============================================================================
 /*  evaluate log(b)
  *  @param b (INPUT) the parameter
@@ -1554,6 +1650,25 @@ Gaudi::Math::ValueWithError Gaudi::Math::asymmetry
   return divide ( d - 1.0 , d + 1.0 , 1.0 ) ;
 }
 // ============================================================================
+/*  evaluate log2(b)
+ *  @param b (INPUT) the parameter
+ *  @return logarithm
+ *  @warning invalid and small covariances are ignored
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::log2
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return std::log2 ( b.value() ) ; }
+  //
+  const double v  = std::log2 ( b.value() ) ;
+  ///
+  const double e1 = s_ln2_i / b.value() ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e1 * e1 * b.cov2 () ) ;
+}
+// ============================================================================
 /*  evaluate log10(b)
  *  @param b (INPUT) the parameter
  *  @return logarithm
@@ -1568,9 +1683,7 @@ Gaudi::Math::ValueWithError Gaudi::Math::log10
   //
   const double v  = std::log10 ( b.value() ) ;
   ///
-  static const double a  = 1.0 / std::log ( 10.0 ) ;
-  //
-  const double e1 = a / b.value() ;
+  const double e1 = s_ln10_i / b.value() ;
   //
   return Gaudi::Math::ValueWithError ( v , e1 * e1 * b.cov2 () ) ;
 }
