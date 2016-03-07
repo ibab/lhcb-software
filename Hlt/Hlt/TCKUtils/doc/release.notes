@@ -5,6 +5,12 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+! 2016-03-07 - Anton Poluektov 
+ - Modify python/TCKUtils/createWebDoc.py
+   Second command line parameter can be passed to specify the web doc output directory: 
+     > python createWebDoc.py [tck] [output]
+   If omitted, current directory is used
+
 !========================= TCKUtils v1r19 2016-02-26 =========================
 
 ! 2016-02-03 - Anton Poluektov 

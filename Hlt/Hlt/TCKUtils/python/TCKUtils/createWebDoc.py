@@ -202,9 +202,9 @@ def list_alg_properties(tree, algname=''):
     return alg_dict
 
 
-def make_html_summary(db, tck, summary):
+def make_html_summary(db, tck, summary, outdir):
 
-    dirname = 'html/%s' % tck
+    dirname = outdir + '/%s' % tck
     filename = dirname + '/index.html'
 
     if not os.path.isdir(dirname):
@@ -326,6 +326,7 @@ def make_members_line(line, summary, streamname, linename, htmlfile, alg, n):
                             'Members', 'Substitutions', "InfoLocations", "Tool", "MaxLevel"
     ]
 
+    # List of properties to be hidden under "Other"
     properties_blacklist = [
         "StatTableHeader", "AuditExecute", "AuditReinitialize", "VetoObjects", "AuditRestart",
         "MonitorService", "Enable", "RootOnTES", "RequireObjects", "RootInTES", "AuditFinalize",
@@ -482,9 +483,9 @@ def make_members_line(line, summary, streamname, linename, htmlfile, alg, n):
     htmlfile.write('</div>\n')
 
 
-def make_html(line, tck, streamname, linename):
+def make_html(line, tck, streamname, linename, outdir):
 
-    dirname = ('html/%s' % tck) + '/' + streamname.lower()
+    dirname = (outdir + '/%s' % tck) + '/' + streamname.lower()
     filename = dirname + '/' + linename.lower() + '.html'
 
     if not os.path.isdir(dirname):
@@ -538,7 +539,7 @@ def make_line_algorithms(root_tree, tck, outdb, stream, line, alg):
             make_line_algorithms(root_tree, tck, outdb, stream, line, alg2)
 
 
-def make_documentation(root_tree, tck, summary):
+def make_documentation(root_tree, tck, summary, outdir):
 
     outdb = {}
 
@@ -555,15 +556,19 @@ def make_documentation(root_tree, tck, summary):
                 make_line_algorithms(root_tree, summary,
                                      outdb, stream, line, alg)
 
-            make_html(outdb[stream][line], tck, stream, line)
+            make_html(outdb[stream][line], tck, stream, line, outdir)
 
-    make_html_summary(outdb, tck, summary)
+    make_html_summary(outdb, tck, summary, outdir)
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
         listConfigurations()
     else:
         stck = sys.argv[1]
+        if len(sys.argv) < 3 : 
+          outdir = "."
+        else : 
+          outdir = sys.argv[2]
         tck = eval(stck)
         label = None
         for i, j in getConfigurations().iteritems():
@@ -572,6 +577,6 @@ if __name__ == '__main__':
         if label:
             print label
             db = getConfigTree(tck)
-            make_documentation(db, stck, label)
+            make_documentation(db, stck, label, outdir)
         else:
             print 'TCK ', stck, ' not found'
