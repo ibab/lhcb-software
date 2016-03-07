@@ -8,11 +8,11 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+!=========================== Ostap v1r14 2016-03-07 ===========================
+
 ! 2016-03-04 - Vanya Belyaev
  - PyRoUts:: fix in 1D-interpolation 
    to allow release of Analysis with OLD LHCbMath 
-
-!=========================== Ostap v1r14 2016-03-04 ===========================
 
 ! 2016-03-02 - Vanya Belyaev
  - improve interpolation (mak euse of updated Gaudi::Math::HistoInterpolation
