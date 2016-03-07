@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-07-03 - Komarov Ilya
+- Fixed a bug in STEfficiency.cpp for TT sectors (Efficiency was filled several times for some sectors)
+
 ! 2016-23-02 - Komarov Ilya
 - Replaced TH2DSummaryHist by TH1DSummaryHist in STEfficiency algorithm. Reomved "DrawProfile" option for this algorithm.
 

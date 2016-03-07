@@ -507,12 +507,11 @@ StatusCode STEfficiency::finalize()
                 histoEff -> fill( theBins.xBin, ybin, eff );
               histoNbHits -> fill( theBins.xBin, ybin, nExpected );
               histoNbFoundHits -> fill( theBins.xBin, ybin, nFound );
-              if (m_SummaryHist){
-                histoEff_1D -> fill( TThistoBin(channelID), eff );
-                histoNbHits_1D -> fill( TThistoBin(channelID), nExpected );
-                histoNbFoundHits_1D -> fill( TThistoBin(channelID), nFound );              }
-
             }
+            if (m_SummaryHist){
+              histoEff_1D -> fill( TThistoBin(channelID), eff );
+              histoNbHits_1D -> fill( TThistoBin(channelID), nExpected );
+              histoNbFoundHits_1D -> fill( TThistoBin(channelID), nFound );}            
           }
         }
 	    } // i
@@ -537,15 +536,15 @@ StatusCode STEfficiency::finalize()
         for(int ybin(theBins.beginBinY);ybin<theBins.endBinY;ybin++){
           if(m_effPlot)
             histoEff -> fill( theBins.xBin, ybin, -1 );
-          if (m_SummaryHist){
-              histoEff_1D -> fill( TThistoBin(channelID), -1 );
-              histoNbHits_1D -> fill( TThistoBin(channelID), 0 );
-              histoNbFoundHits_1D -> fill( TThistoBin(channelID), 0 );
-          }        
           histoSectorStatus -> fill( theBins.xBin, ybin, -1 );
           histoNbHits -> fill( theBins.xBin, ybin, 0 );
           histoNbFoundHits -> fill( theBins.xBin, ybin, 0 );
         }
+        if (m_SummaryHist){
+            histoEff_1D -> fill( TThistoBin(channelID), -1 );
+            histoNbHits_1D -> fill( TThistoBin(channelID), 0 );
+            histoNbFoundHits_1D -> fill( TThistoBin(channelID), 0 );
+        }                
       }
     }
   } // sector
