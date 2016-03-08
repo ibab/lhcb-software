@@ -9,14 +9,14 @@
       name="L0DUDecision"
       author="O. Deschamps">
       <enum
-        name="Type" 
-        desc="L0DU decision type" 
+        name="Type"
+        desc="L0DU decision type"
         value="Disable=0,Physics=1,Beam1=2,Beam2=4,Any=7"
         access='PUBLIC'/>
       <attribute
-        desc="Decision type as string" 
-        name="Name[L0DUDecision::Any+1]" 
-        type="static const std::string" 
+        desc="Decision type as string"
+        name="Name[L0DUDecision::Any+1]"
+        type="static const std::string"
         init='{"Disable","Physics","Beam1","Physics+Beam1","Beam2","Physics+Beam2","Beam1+Beam2","Physics+Beam1+Beam2"}'/>
     </namespace>
 
@@ -26,13 +26,13 @@
       name="L0DUCounter"
       author="O. Deschamps">
       <attribute
-        desc="Scale of the downscaling counter" 
-        name="Scale" 
-        type="static const unsigned int" 
+        desc="Scale of the downscaling counter"
+        name="Scale"
+        type="static const unsigned int"
         init="1000000"/>
     </namespace>
-    
-    <class 
+
+    <class
       author="Olivier Deschamps"
       desc="This class represents individual L0DU Channel"
       name="L0DUChannel">
@@ -51,66 +51,72 @@
       <import name="Event/L0DUDecision"/>
 
       <typedef def    = "count" type   = "unsigned int" desc   = "counter type" access = "PUBLIC" />
-      <typedef def    = "Map" 
+      <typedef def    = "Map"
         desc   = "std::map Container "
-        type   = "std::map&lt;std::string,L0DUChannel* &gt;" 
+        type   = "std::map&lt;std::string,L0DUChannel* &gt;"
         access = "PUBLIC"/>
 
       <copyconstructor/>
-      <constructor 
+      <constructor
         desc = "non-default constructor"
-        argList   = "int id, const std::string name, const count rate, int decisionType=L0DUDecision::Physics" 
+        argList   = "int id, const std::string name, const count rate, int decisionType=L0DUDecision::Physics"
         initList  = "m_id(id),m_name(name),m_rate(rate),m_decisionType(decisionType),m_counter(0),m_emulatedDecision(false),m_emulatedPreDecision(false),m_emulated(false),m_updateCounter(true),m_accept(false)">
       </constructor>
-      <constructor 
+      <constructor
         desc = "default constructor"
         initList  = "m_id(0),m_name(),m_rate(100),m_decisionType(L0DUDecision::Physics),m_counter(0),m_emulatedDecision(false),m_emulatedPreDecision(false),m_emulated(false),m_updateCounter(true),m_accept(false)">
       </constructor>
 
- 
+
       <attribute name = "id" desc = " L0DU Channel index "  type = "unsigned int" />
       <attribute name = "name" desc = " L0DU Channel name "  type = "std::string" />
       <attribute name = "rate" desc = "Accept rate (%)"    type = "unsigned int" init = "100"/>
       <attribute name = "decisionType"    desc = "decision type" type = "int" init = "L0DUDecision::Physics"/>
       <attribute name = "elementaryConditions" desc = " L0DU Elementary condition" type = "LHCb::L0DUElementaryCondition::Map" />
-      <attribute name = "counter"   desc = " counter value" type = "unsigned int" init = "0" />     
-      <attribute name = "emulatedDecision"  desc = "L0DU Channel emulated Decision (incl. downscaling decision)"  
-                 type = "bool" init = "false" setMeth = "FALSE" getMeth="FALSE"/>  
-      <attribute name = "emulatedPreDecision"   desc = "L0DU Channel emulated trigger value (NOT applying downscaling)"   
+      <attribute name = "counter"   desc = " counter value" type = "unsigned int" init = "0" />
+      <attribute name = "emulatedDecision"  desc = "L0DU Channel emulated Decision (incl. downscaling decision)"
+                 type = "bool" init = "false" setMeth = "FALSE" getMeth="FALSE"/>
+      <attribute name = "emulatedPreDecision"   desc = "L0DU Channel emulated trigger value (NOT applying downscaling)"
                  type = "bool" init = "false" setMeth="FALSE" getMeth="FALSE"/>
       <attribute name = "emulated"  desc = "L0DU Channel emulation flag"  type = "bool" init = "false" />
       <attribute name = "updateCounter"  desc = "enable/disable the downscaling counter"  type = "bool" init = "true" />
       <attribute name = "accept"  desc = "downscaling decision"  type = "bool" init = "false" setMeth="FALSE" />
-      
 
 
-      <method name      = "enable" 
-              desc = "does the channel participate to the global OR'ed decision (for a given decision type - default is Any)" 
+
+      <method name      = "enable"
+              desc = "does the channel participate to the global OR'ed decision (for a given decision type - default is Any)"
               argList = "int mask=L0DUDecision::Any"
-              type  = "bool" >
-        <code> 
-          if( L0DUDecision::Disable == mask)return m_decisionType == L0DUDecision::Disable;
-          return (m_decisionType &amp; mask) != 0  ;
+              type  = "bool"
+              const = "TRUE">
+        <code>
+          return mask == L0DUDecision::Disable ? m_decisionType == L0DUDecision::Disable
+                                               : ( m_decisionType &amp; mask )   ;
         </code>
       </method>
 
 
-      <method name      = "emulatedDecision" 
-              desc = "get the channel emulated decision (incl. downscaling decision)" 
-              type  = "bool" >
-        <code> 
-          return emulate()->m_emulatedDecision ;
+      <method name      = "emulatedDecision"
+              desc = "get the channel emulated decision (incl. downscaling decision)"
+              type  = "bool"
+              const = "TRUE">
+        <code>
+          return const_cast&lt;L0DUChannel*&gt;(this)->emulate()->m_emulatedDecision ;
         </code>
       </method>
-      <method name      = "emulatedPreDecision" 
-              desc = "get the channel emulated trigger value (NOT applying downscaling)" 
-              type  = "bool" >
-        <code> 
-          return emulate()->m_emulatedPreDecision;
+      <method name      = "emulatedPreDecision"
+              desc = "get the channel emulated trigger value (NOT applying downscaling)"
+              type  = "bool"
+              const = "TRUE">
+        <code>
+          return const_cast&lt;L0DUChannel*&gt;(this)->emulate()->m_emulatedPreDecision;
         </code>
       </method>
 
-      <method name      = "isDownscaled" desc = "return the downscaling decision as (emulatedDecision == emulatedPreDecision)" type  = "bool" >
+      <method name = "isDownscaled"
+              desc = "return the downscaling decision as (emulatedDecision == emulatedPreDecision)"
+              type = "bool"
+              const = "TRUE">
         <code>
           return emulatedDecision() == emulatedPreDecision();
         </code>
@@ -129,18 +135,17 @@
 
       <method name  = "clone" desc = "clone this channel" type  = "LHCb::L0DUChannel*" virtual = "TRUE">
         <code>
-          L0DUChannel* channel = new L0DUChannel( *this ); 
-          return channel;
+          return new L0DUChannel( *this );
         </code>
       </method>
 
 
-      <method name      = "emulate" desc = "Process Channel emulated Decision" type  = "LHCb::L0DUChannel*" >
+      <method name = "emulate" desc = "Process Channel emulated Decision" type  = "LHCb::L0DUChannel*" >
       </method>
 
-      <method name  = "description" desc = "L0DUChannel short description" type  = "std::string" ></method>
-      <method name  = "summary" desc = "L0DUChannel summary" type  = "std::string" > </method>
-      
+      <method name  = "description" desc = "L0DUChannel short description" type  = "std::string" const = "TRUE" ></method>
+      <method name  = "summary" desc = "L0DUChannel summary" type  = "std::string" const = "TRUE"> </method>
+
     </class>
 
 

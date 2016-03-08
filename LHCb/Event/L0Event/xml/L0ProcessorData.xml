@@ -60,7 +60,7 @@
         name      = "lsb"
         desc      = "get 16 bits lsb of L0 word"
         type      = "unsigned int"
-        const     = "FALSE" >
+        const     = "TRUE" >
         <code>
         return (unsigned int)(m_word &amp; 0xFFFF);
         </code>
@@ -70,7 +70,7 @@
         name      = "msb"
         desc      = "get  16 bits msb of L0 word"
         type      = "unsigned int"
-        const     = "FALSE" >
+        const     = "TRUE" >
         <code>
         return (unsigned int)((m_word >> 16) &amp; 0xFFFF);
         </code>

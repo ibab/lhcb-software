@@ -38,6 +38,7 @@
       <import name="Event/L0DUTrigger"/>
       <import name="Event/L0DUTemplateConfig"/> 
       <import name="string" std="TRUE"/>
+      <import name="algorithm" std="TRUE"/>
 
       <typedef
         def    = "Base"
@@ -49,13 +50,13 @@
 
       <constructor
         desc     = "Default constructor"
-        initList = "Base ( 0x0000   ), m_recipe(), m_definition(),m_data(),m_conditions(),m_channels(),m_triggers(),m_completed(false)"
+        initList = "Base ( 0x0000   ), m_completed(false)"
         > <code/></constructor>
 
       <constructor
         desc     = "non-default constructor"
         argList  = "unsigned int tck "
-        initList = "Base ( tck ), m_recipe(), m_definition(),m_data(),m_conditions(),m_channels(),m_triggers(),m_completed(false)"
+        initList = "Base ( tck ), m_completed(false)"
         > <code/> </constructor>
 
 
@@ -80,24 +81,14 @@
       <method desc   = "return Trigger Configuration Key @alias of key() " name   = "tck" type   = "unsigned int" const = 'TRUE'><code>return key();</code></method>
       <method desc   = "delete MAPs content" name="release" type="void">
         <code>
-          for(LHCb::L0DUTrigger::Map::iterator ic = m_triggers.begin();ic!=m_triggers.end();++ic){
-          if( NULL != (*ic).second)delete (*ic).second;
-          }
+          for(auto &amp; i : m_triggers ) delete i.second;
           m_triggers.clear();
-
-          for(LHCb::L0DUChannel::Map::iterator ic = m_channels.begin();ic!=m_channels.end();++ic){
-           if( NULL != (*ic).second)delete (*ic).second;
-          }
+          for(auto &amp; i : m_channels ) delete i.second;
           m_channels.clear();
-          for(LHCb::L0DUElementaryCondition::Map::iterator ic = m_conditions.begin();ic!=m_conditions.end();++ic){
-           if( NULL != (*ic).second)delete (*ic).second;
-          }
+          for(auto &amp; i : m_conditions) delete i.second;
           m_conditions.clear();
-          for(LHCb::L0DUElementaryData::Map::iterator ic = m_data.begin();ic!=m_data.end();++ic){
-           if( NULL != (*ic).second)delete (*ic).second;
-          }
+          for(auto &amp; i : m_data ) delete i.second;
           m_data.clear();
-
         </code>
       </method>
 
@@ -106,21 +97,19 @@
       <method name  = "summary" desc = "L0DUConfig full summary after processing" type  = "std::string" > </method>
 
 
-
       <method name  = "numberOfChannels" 
 	      desc = "Count the number channels with a given decisionType (default ANY)" 
 	      type  = "int" 
 	      argList="int mask=L0DUDecision::Any"
               const="TRUE">
         <code>
-	  int k = 0; 
-          for(LHCb::L0DUChannel::Map::const_iterator it = m_channels.begin();it!=m_channels.end();it++){
-	  const LHCb::L0DUChannel* channel = (*it).second;
-          if( mask == 0 &amp;&amp; channel->decisionType() == 0)k++;
-	  else if( ( channel->decisionType() &amp; mask ) == 0)continue;
-	  else k++;
-          }
-	  return k;
+          return std::count_if( m_channels.begin(), m_channels.end(),
+                                [&amp;](LHCb::L0DUChannel::Map::const_reference c) {
+              const auto&amp; channel = c.second;
+              if( mask == 0 &amp;&amp; channel->decisionType() == 0) return true; 
+              else if( ( channel->decisionType() &amp; mask ) == 0) return false;
+              else return true;
+          } );
         </code>
       </method>
       <method name  = "numberOfTriggers" 
@@ -129,14 +118,13 @@
 	      argList="int mask=L0DUDecision::Any"
               const="TRUE">
         <code>
-	  int k = 0; 
-          for(LHCb::L0DUTrigger::Map::const_iterator it = m_triggers.begin();it!=m_triggers.end();it++){
-	  const LHCb::L0DUTrigger* trigger = (*it).second;
-          if( mask == 0 &amp;&amp; trigger->decisionType() == 0)k++;          
-	  else if( ( trigger->decisionType() &amp; mask ) == 0 )continue;
-	  else k++;
-          }
-	  return k;
+          return std::count_if(m_triggers.begin(),m_triggers.end(),
+                               [&amp;](LHCb::L0DUTrigger::Map::const_reference i) {
+              const auto&amp; trigger = i.second;
+              if( mask == 0 &amp;&amp; trigger->decisionType() == 0) return true;
+              else if( ( trigger->decisionType() &amp; mask ) == 0 ) return false;
+              else return true;
+          });
         </code>
       </method>
 
@@ -144,72 +132,64 @@
 
       <method name  = "updateCounters" argList="bool update=true" desc = "enable/disable all the channels downscaling counters" type  = "void" >
         <code>
-          for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
-          ((*it).second)->setUpdateCounter(update);
-          }
+          for(auto&amp; i : m_channels) i.second->setUpdateCounter(update);
         </code>
       </method>
 
       <method name  = "resetChannelCounters" desc = "reset all channel counters" type  = "void" >
         <code>
-          for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
-          ((*it).second)->setCounter(0);
-          }
+          for(auto&amp; i : m_channels) i.second->setCounter(0);
         </code>
       </method>
 
       <method name  = "incrementCounters" desc = "increment all channels counter" type  = "void" >
         <code>
-          for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
-          unsigned int count = ((*it).second)->counter() + ((*it).second)->rate();
-          if(count &gt;=  LHCb::L0DUCounter::Scale)count -= LHCb::L0DUCounter::Scale;
-          ((*it).second)->setCounter(count);
+          for(auto&amp; c : m_channels) {
+              unsigned int count = c.second->counter() + c.second->rate();
+              if(count &gt;=  LHCb::L0DUCounter::Scale) count -= LHCb::L0DUCounter::Scale;
+              c.second->setCounter(count);
           }
         </code>
       </method>
       <method name  = "decrementCounters" desc = "decrement all channels counter" type  = "void" >
         <code>
-          for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
-          int count = ((*it).second)->counter() - ((*it).second)->rate();
-          if(count &lt; 0 )count += LHCb::L0DUCounter::Scale;
-          ((*it).second)->setCounter(count);
+          for(auto&amp; i : m_channels ) {
+              int count = i.second->counter() - i.second->rate();
+              if(count &lt; 0 ) count += LHCb::L0DUCounter::Scale;
+              i.second->setCounter(count);
           }
         </code>
       </method>
 
       <method name  = "resetEmulated" desc = "reset all channels emulation flags" type  = "void" argList="bool value=false" >
         <code>
-          for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
-          ((*it).second)->setEmulated(value);
-          }
+          for(auto&amp; i : m_channels) i.second->setEmulated(value);
         </code>
       </method>
 
       <method name  = "emulated" desc = "return true when all channels are emulated" type  = "bool"         const="TRUE">
         <code>
-          for(LHCb::L0DUChannel::Map::const_iterator it = m_channels.begin();it!=m_channels.end();it++){
-          if( !((*it).second)->emulated() )return false;
-          }
-          return true;
+          return std::all_of( m_channels.begin(), m_channels.end(),
+                              [](LHCb::L0DUChannel::Map::const_reference i) {
+              return i.second->emulated();
+          });
         </code>
       </method>
 
       <method name  = "clearDataValue" desc = "clear all ElementaryData operands" type  = "void" >
         <code>
-          for(LHCb::L0DUElementaryData::Map::iterator it = m_data.begin();it!=m_data.end();it++){
-          if( ((*it).second)->type() == L0DUElementaryData::Constant)continue;
-          ((*it).second)->operands().clear();
-          }
+          std::for_each( m_data.begin(), m_data.end(),
+              [](LHCb::L0DUElementaryData::Map::reference i) {
+                    if( i.second->type() != L0DUElementaryData::Constant) i.second->operands().clear();
+          });
           resetEmulated();
         </code>
       </method>
 
       <method name  = "emulate" desc = "emulate all channels" type  = "LHCb::L0DUConfig*" >
         <code>
-          for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
-	    ((*it).second)->emulate();
-          }
-	  return this;
+          for(auto&amp; i : m_channels) i.second->emulate();
+	      return this;
         </code>
       </method>
 
@@ -230,12 +210,12 @@
               type  = "int" 
               const="TRUE">
         <code>
-          int value = 0;
-          for(LHCb::L0DUChannel::Map::const_iterator it = m_channels.begin();it!=m_channels.end();it++){
-           LHCb::L0DUChannel* channel = (*it).second;
-           if( channel->emulatedDecision() )value |= channel->decisionType();
-          }
-	  return value;
+          return std::accumulate( m_channels.begin(), m_channels.end(), 0,
+                                  [&amp;](int value, LHCb::L0DUChannel::Map::const_reference m) {
+                LHCb::L0DUChannel* channel = m.second;
+                if( channel->emulatedDecision() ) value |= channel->decisionType();
+                return value;
+          });
          </code>
       </method>
 
@@ -254,12 +234,12 @@
 
       <method name  = "emulatedPreDecisionValue" desc = "global emulated decision (without downscaling)" type  = "int"               const="TRUE">
         <code>
-          int value = 0;
-          for(LHCb::L0DUChannel::Map::const_iterator it = m_channels.begin();it!=m_channels.end();it++){
-           LHCb::L0DUChannel* channel = (*it).second;
-           if( channel->emulatedPreDecision() ) value |=  channel->decisionType();
-          }
-	  return value;
+          return std::accumulate( m_channels.begin(), m_channels.end(), 0,
+                                  [&amp;](int value, LHCb::L0DUChannel::Map::const_reference m) {
+                LHCb::L0DUChannel* channel = m.second;
+                if( channel->emulatedPreDecision() ) value |=  channel->decisionType();
+                return value;
+          });
         </code>
       </method>
 
@@ -279,15 +259,14 @@
         const="TRUE">
         <code> 
           std::vector&lt;std::string&gt; list;
-          for(LHCb::L0DUTrigger::Map::const_iterator it = m_triggers.begin();it!=m_triggers.end();++it){
-          std::string trigName = (*it).first;
-          const LHCb::L0DUChannel::Map&amp; channels = (*it).second-&gt;channels();
-          for(LHCb::L0DUChannel::Map::const_iterator ic = channels.begin() ; ic != channels.end() ; ++ic){
-          if( (*ic).second->name() == name){
-          list.push_back(trigName);
-          continue;
-          }
-          }
+          for(const auto&amp; i : m_triggers) {
+              const auto&amp; channels = i.second-&gt;channels();
+              if (std::any_of( channels.begin(), channels.end(),
+                               [&amp;](LHCb::L0DUChannel::Map::const_reference m) {
+                                    return m.second->name() == name;
+                               }) ) {
+                  list.push_back(i.first);
+              }
           }
          return list;
         </code>
@@ -300,24 +279,20 @@
         desc="return the  elementaryCondition from channel and data names"
         type="const LHCb::L0DUElementaryCondition*" >
         <code> 
-	  const LHCb::L0DUChannel* channel = channels()[channelName];
-	  if( NULL == channel )return NULL;
-	  const LHCb::L0DUElementaryCondition::Map&amp; conds = channel->elementaryConditions();
-	  for( LHCb::L0DUElementaryCondition::Map::const_iterator ic = conds.begin() ; conds.end() !=ic ; ++ic){
-	  const LHCb::L0DUElementaryCondition* condition = ic->second;
-	  if( NULL == condition )continue;
-	  const LHCb::L0DUElementaryData* data = condition->data();
-	  if( NULL == data)continue;
-	  if( data->name() == dataName )return condition;
-	  }
-         return NULL;
+         const LHCb::L0DUChannel* channel = channels()[channelName];
+         if( !channel ) return nullptr;
+         const LHCb::L0DUElementaryCondition::Map&amp; conds = channel->elementaryConditions();
+         auto ic = std::find_if( conds.begin(), conds.end(),
+                                 [&amp;](LHCb::L0DUElementaryCondition::Map::const_reference c) {
+             const auto&amp; condition = c.second;
+             if( !condition ) return false;
+             const LHCb::L0DUElementaryData* data = condition->data();
+             return data &amp;&amp; data->name() == dataName;
+         });
+         return ic != conds.end() ? ic->second : nullptr;
         </code>
       </method>
-
 
     </class>
   </package>
 </gdd>
-
-
-

@@ -1,6 +1,8 @@
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
+! 2016-03-08 - Gerhard Raven
+ - C++11 modernization
 
 !========================= L0Event v19r9 2014-10-14 =========================
 ! 2014-09-17 - Marco Clemencic
