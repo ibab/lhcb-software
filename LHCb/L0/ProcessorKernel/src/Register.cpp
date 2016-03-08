@@ -101,7 +101,7 @@ std::string L0Muon::Register::toXML(std::string tab){
   return xmlString;
 }
   
-std::ostream& L0Muon::operator<<(std::ostream ost,L0Muon::Register& r) {
+std::ostream& L0Muon::operator<<(std::ostream& ost,L0Muon::Register& r) {
   return (ost << r.getBitset());
 }
 

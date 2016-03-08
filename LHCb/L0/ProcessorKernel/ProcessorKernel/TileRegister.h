@@ -1,5 +1,3 @@
-// $Id: TileRegister.h,v 1.13 2008-11-07 16:19:57 jucogan Exp $
-
 #ifndef PROCESSORKERNEL_TILEREGISTER_H
 #define PROCESSORKERNEL_TILEREGISTER_H     1
 

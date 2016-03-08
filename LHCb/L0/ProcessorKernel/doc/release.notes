@@ -3,6 +3,8 @@
 ! Responsible : Julien Cogan, A. Tsaregorodtsev
 ! Purpose     : Base classes for a generic processor simulation
 !-----------------------------------------------------------------------------
+! 2016-03-08 - Gerhard Raven
+ - do not pass ostream by value (coverity warning)
 
 !========================= ProcessorKernel v7r1 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic

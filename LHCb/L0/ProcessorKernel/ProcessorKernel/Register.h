@@ -136,7 +136,7 @@ namespace L0Muon {
     std::string m_type;
   };
 
-  std::ostream& operator<<(std::ostream, L0Muon::Register& r);
+  std::ostream& operator<<(std::ostream&, L0Muon::Register& r);
 
 }  // namespace L0Muon
 
