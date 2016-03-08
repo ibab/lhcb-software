@@ -93,31 +93,30 @@ except ImportError:
     sys.modules['cppyy'] = cppyy
 
 ## get global C++ namespace
-cpp = cppyy.gbl
+cpp = cppyy.makeNamespace('')
 
 ## C++ namespace Gaudi
-Gaudi = cpp.Gaudi
-std   = cpp.std
+std  = cpp.std
 
 ## ROOT::Math namespace
 _RM = ROOT.ROOT.Math
 
 ## Geomemtry vectors 
-Gaudi.XYZPoint            = _RM.PositionVector3D     ('ROOT::Math::Cartesian3D<double>,ROOT::Math::DefaultCoordinateSystemTag')
-Gaudi.XYZVector           = _RM.DisplacementVector3D ('ROOT::Math::Cartesian3D<double>,ROOT::Math::DefaultCoordinateSystemTag')
-Gaudi.LorentzVector       = _RM.LorentzVector        ('ROOT::Math::PxPyPzE4D<double>')
-Gaudi.Plane3D             = _RM.Plane3D
+cpp.Gaudi.XYZPoint            = _RM.PositionVector3D     ('ROOT::Math::Cartesian3D<double>,ROOT::Math::DefaultCoordinateSystemTag')
+cpp.Gaudi.XYZVector           = _RM.DisplacementVector3D ('ROOT::Math::Cartesian3D<double>,ROOT::Math::DefaultCoordinateSystemTag')
+cpp.Gaudi.LorentzVector       = _RM.LorentzVector        ('ROOT::Math::PxPyPzE4D<double>')
+cpp.Gaudi.Plane3D             = _RM.Plane3D
 
-Gaudi.Math.XYZPoint       = Gaudi.XYZPoint
-Gaudi.Math.XYZVector      = Gaudi.XYZVector
-Gaudi.Math.LorentzVector  = Gaudi.LorentzVector
-Gaudi.Math.Plane3D        = Gaudi.Plane3D
+cpp.Gaudi.Math.XYZPoint       = cpp.Gaudi.XYZPoint
+cpp.Gaudi.Math.XYZVector      = cpp.Gaudi.XYZVector
+cpp.Gaudi.Math.LorentzVector  = cpp.Gaudi.LorentzVector
+cpp.Gaudi.Math.Plane3D        = cpp.Gaudi.Plane3D
 
-Gaudi.Point3D             = Gaudi.XYZPoint
-Gaudi.Math.Point3D        = Gaudi.XYZPoint
+cpp.Gaudi.Point3D             = cpp.Gaudi.XYZPoint
+cpp.Gaudi.Math.Point3D        = cpp.Gaudi.XYZPoint
 
-Gaudi.Vector3D            = Gaudi.XYZVector
-Gaudi.Math.Vector3D       = Gaudi.XYZVector
+cpp.Gaudi.Vector3D            = cpp.Gaudi.XYZVector
+cpp.Gaudi.Math.Vector3D       = cpp.Gaudi.XYZVector
 
 # =============================================================================
 ## try to pickup the vector
@@ -162,42 +161,42 @@ def _sym_matrix_ ( i , typ = 'double' ) :
     m = _RM.SMatrix('%s,%d,%d,ROOT::Math::MatRepSym<%s,%d>' %  ( typ , i , i , typ , i ) )
     return deco_symmatrix  ( m ) 
 
-Gaudi.Vector         =     _vector_
-Gaudi.Math.Vector    =     _vector_
-Gaudi.Matrix         =     _matrix_
-Gaudi.Math.Matrix    =     _matrix_
-Gaudi.SymMatrix      = _sym_matrix_
-Gaudi.Math.SymMatrix = _sym_matrix_
+cpp.Gaudi.Vector         =     _vector_
+cpp.Gaudi.Math.Vector    =     _vector_
+cpp.Gaudi.Matrix         =     _matrix_
+cpp.Gaudi.Math.Matrix    =     _matrix_
+cpp.Gaudi.SymMatrix      = _sym_matrix_
+cpp.Gaudi.Math.SymMatrix = _sym_matrix_
 
 ## Gaudi::Math
-Gaudi.Math.XYZLine           = cpp.Gaudi.Math.Line(Gaudi.XYZPoint,Gaudi.XYZVector)
-Gaudi.Math.SVector2WithError = cpp.Gaudi.Math.SVectorWithError(2,'double')
-Gaudi.Math.SVector3WithError = cpp.Gaudi.Math.SVectorWithError(3,'double')
-Gaudi.Math.SVector4WithError = cpp.Gaudi.Math.SVectorWithError(4,'double')
-Gaudi.Math.SVector5WithError = cpp.Gaudi.Math.SVectorWithError(5,'double')
-Gaudi.Math.SVector6WithError = cpp.Gaudi.Math.SVectorWithError(6,'double')
-Gaudi.Math.SVector8WithError = cpp.Gaudi.Math.SVectorWithError(8,'double')
+cpp.Gaudi.Math.XYZLine           = cpp.Gaudi.Math.Line( cpp.Gaudi.XYZPoint, cpp.Gaudi.XYZVector)
+cpp.Gaudi.Math.SVector2WithError = cpp.Gaudi.Math.SVectorWithError(2,'double')
+cpp.Gaudi.Math.SVector3WithError = cpp.Gaudi.Math.SVectorWithError(3,'double')
+cpp.Gaudi.Math.SVector4WithError = cpp.Gaudi.Math.SVectorWithError(4,'double')
+cpp.Gaudi.Math.SVector5WithError = cpp.Gaudi.Math.SVectorWithError(5,'double')
+cpp.Gaudi.Math.SVector6WithError = cpp.Gaudi.Math.SVectorWithError(6,'double')
+cpp.Gaudi.Math.SVector8WithError = cpp.Gaudi.Math.SVectorWithError(8,'double')
 
-Gaudi.XYZLine                = Gaudi.Math.XYZLine
-Gaudi.Line3D                 = Gaudi.Math.XYZLine
-Gaudi.Math.Line3D            = Gaudi.Math.XYZLine
+cpp.Gaudi.XYZLine                = cpp.Gaudi.Math.XYZLine
+cpp.Gaudi.Line3D                 = cpp.Gaudi.Math.XYZLine
+cpp.Gaudi.Math.Line3D            = cpp.Gaudi.Math.XYZLine
 
 
-Gaudi.Math.frac              = Gaudi.Math.Functions.frac
-Gaudi.Math.asym              = Gaudi.Math.Functions.asym
-Gaudi.Math.binomEff          = Gaudi.Math.Functions.binomEff
+cpp.Gaudi.Math.frac              = cpp.Gaudi.Math.Functions.frac
+cpp.Gaudi.Math.asym              = cpp.Gaudi.Math.Functions.asym
+cpp.Gaudi.Math.binomEff          = cpp.Gaudi.Math.Functions.binomEff
 
 ## vectors of vectors
-Gaudi.Vectors2       = std.vector ( Gaudi.Vector2 )
-Gaudi.Vectors3       = std.vector ( Gaudi.Vector3 )
-Gaudi.Vectors4       = std.vector ( Gaudi.Vector4 )
-Gaudi.Math.Vectors2  = Gaudi.Vectors2
-Gaudi.Math.Vectors3  = Gaudi.Vectors3
-Gaudi.Math.Vectors4  = Gaudi.Vectors4
+cpp.Gaudi.Vectors2       = std.vector ( cpp.Gaudi.Vector2 )
+cpp.Gaudi.Vectors3       = std.vector ( cpp.Gaudi.Vector3 )
+cpp.Gaudi.Vectors4       = std.vector ( cpp.Gaudi.Vector4 )
+cpp.Gaudi.Math.Vectors2  = cpp.Gaudi.Vectors2
+cpp.Gaudi.Math.Vectors3  = cpp.Gaudi.Vectors3
+cpp.Gaudi.Math.Vectors4  = cpp.Gaudi.Vectors4
 
-Gaudi.Math.ValueWithError.Vector = std.vector(Gaudi.Math.ValueWithError)
-Gaudi.Math.ValueWithError.Vector .__str__   = lambda s : str( [ i for i in s ])
-Gaudi.Math.ValueWithError.Vector .__repr__  = lambda s : str( [ i for i in s ])
+cpp.Gaudi.Math.ValueWithError.Vector = cpp.std.vector( cpp.Gaudi.Math.ValueWithError)
+cpp.Gaudi.Math.ValueWithError.Vector .__str__   = lambda s : str( [ i for i in s ])
+cpp.Gaudi.Math.ValueWithError.Vector .__repr__  = lambda s : str( [ i for i in s ])
 
 
 
@@ -224,10 +223,10 @@ def _ve_asum_ ( s ) :
     """
     return Gaudi.Math.abssum ( s )
 
-_ve_sum_  . __doc__ += '\n' + Gaudi.Math.sum    .__doc__
-_ve_asum_ . __doc__ += '\n' + Gaudi.Math.abssum .__doc__
+_ve_sum_  . __doc__ += '\n' + cpp.Gaudi.Math.sum    .__doc__
+_ve_asum_ . __doc__ += '\n' + cpp.Gaudi.Math.abssum .__doc__
 
-_VVE = std.vector( Gaudi.Math.ValueWithError )
+_VVE = std.vector( cpp.Gaudi.Math.ValueWithError )
 
 _VVE  . sum      = _ve_sum_
 _VVE  . abssum   = _ve_asum_
@@ -244,9 +243,9 @@ _VVVE . __len__  = lambda s : s.size ()
 
 
 _VVE.Vector = _VVVE
-Gaudi.Math.ValueWithError.Vector = _VVE
+cpp.Gaudi.Math.ValueWithError.Vector = _VVE
 
-_C2F            = Gaudi.Math.Chi2Fit
+_C2F            = cpp.Gaudi.Math.Chi2Fit
 _C2F . __str__  = lambda s : s.toString ()
 _C2F . __repr__ = lambda s : s.toString ()
 ## chi2-probabilty
@@ -430,34 +429,34 @@ def deco_vector ( t ) :
     return t
 
     
-for t in ( Gaudi.Vector2 ,
-           Gaudi.Vector3 ,
-           Gaudi.Vector4 ,
-           Gaudi.Vector5 ,
-           Gaudi.Vector6 ,
-           Gaudi.Vector8 ) : deco_vector ( t ) 
+for t in ( cpp.Gaudi.Vector2 ,
+           cpp.Gaudi.Vector3 ,
+           cpp.Gaudi.Vector4 ,
+           cpp.Gaudi.Vector5 ,
+           cpp.Gaudi.Vector6 ,
+           cpp.Gaudi.Vector8 ) : deco_vector ( t ) 
     #
            
 
-Gaudi.Vector2             = Gaudi.Vector(2)
-Gaudi.Vector3             = Gaudi.Vector(3)
-Gaudi.Vector4             = Gaudi.Vector(4)
-Gaudi.Vector5             = Gaudi.Vector(5)
-Gaudi.Vector6             = Gaudi.Vector(6)
-Gaudi.Vector8             = Gaudi.Vector(8)
+cpp.Gaudi.Vector2             = cpp.Gaudi.Vector(2)
+cpp.Gaudi.Vector3             = cpp.Gaudi.Vector(3)
+cpp.Gaudi.Vector4             = cpp.Gaudi.Vector(4)
+cpp.Gaudi.Vector5             = cpp.Gaudi.Vector(5)
+cpp.Gaudi.Vector6             = cpp.Gaudi.Vector(6)
+cpp.Gaudi.Vector8             = cpp.Gaudi.Vector(8)
 
-Gaudi.Math.Vector2        = Gaudi.Vector2
-Gaudi.Math.Vector3        = Gaudi.Vector3
-Gaudi.Math.Vector4        = Gaudi.Vector4
-Gaudi.Math.Vector5        = Gaudi.Vector5
-Gaudi.Math.Vector8        = Gaudi.Vector8
+cpp.Gaudi.Math.Vector2        = cpp.Gaudi.Vector2
+cpp.Gaudi.Math.Vector3        = cpp.Gaudi.Vector3
+cpp.Gaudi.Math.Vector4        = cpp.Gaudi.Vector4
+cpp.Gaudi.Math.Vector5        = cpp.Gaudi.Vector5
+cpp.Gaudi.Math.Vector8        = cpp.Gaudi.Vector8
 
 
 ## ============================================================================
 ## some useful decoration:
 ## ============================================================================
 
-_V4D = Gaudi.LorentzVector
+_V4D = cpp.Gaudi.LorentzVector
 
 ## 4-vectors 
 def _v4_iadd_ ( s , other ) :
@@ -545,8 +544,8 @@ _V4D . __radd__ = lambda s,o : s+o
 _V4D . __rmul__ = lambda s,o : s*o 
 
 ## 3-vectors 
-_P3D = Gaudi.XYZPoint
-_V3D = Gaudi.XYZVector
+_P3D = cpp.Gaudi.XYZPoint
+_V3D = cpp.Gaudi.XYZVector
 
 ## 3-vectors & points
 
@@ -803,10 +802,10 @@ def _l_str_ ( self ) :
     """
     return "(%s,%s)" % ( self.beginPoint() , self.direction() )
 
-if not hasattr ( Gaudi.Math.XYZLine , '_new_str_' ) :
-    Gaudi.Math.XYZLine._new_str_ = _l_str_
-    Gaudi.Math.XYZLine.__str__   = _l_str_
-    Gaudi.Math.XYZLine.__repr__  = _l_str_
+if not hasattr ( cpp.Gaudi.Math.XYZLine , '_new_str_' ) :
+    cpp.Gaudi.Math.XYZLine._new_str_ = _l_str_
+    cpp.Gaudi.Math.XYZLine.__str__   = _l_str_
+    cpp.Gaudi.Math.XYZLine.__repr__  = _l_str_
 
 # ============================================================================
 ## self-printout of matrices
@@ -972,64 +971,64 @@ def deco_symmatrix ( m ) :
     return m
 
 
-Gaudi.SymMatrix2x2        = Gaudi.SymMatrix(2)
-Gaudi.SymMatrix3x3        = Gaudi.SymMatrix(3)
-Gaudi.SymMatrix4x4        = Gaudi.SymMatrix(4)
-Gaudi.SymMatrix5x5        = Gaudi.SymMatrix(5)
-Gaudi.SymMatrix6x6        = Gaudi.SymMatrix(6)
+cpp.Gaudi.SymMatrix2x2        = cpp.Gaudi.SymMatrix(2)
+cpp.Gaudi.SymMatrix3x3        = cpp.Gaudi.SymMatrix(3)
+cpp.Gaudi.SymMatrix4x4        = cpp.Gaudi.SymMatrix(4)
+cpp.Gaudi.SymMatrix5x5        = cpp.Gaudi.SymMatrix(5)
+cpp.Gaudi.SymMatrix6x6        = cpp.Gaudi.SymMatrix(6)
 ## LHCb::Particle
-Gaudi.SymMatrix7x7        = Gaudi.SymMatrix(7)
+cpp.Gaudi.SymMatrix7x7        = cpp.Gaudi.SymMatrix(7)
 ## Gaudi::Math::ParticleParams
-Gaudi.SymMatrix8x8        = Gaudi.SymMatrix(8)
+cpp.Gaudi.SymMatrix8x8        = cpp.Gaudi.SymMatrix(8)
 ## LHCb:TwoProngVertex
-Gaudi.SymMatrix9x9        = Gaudi.SymMatrix(9)
+cpp.Gaudi.SymMatrix9x9        = cpp.Gaudi.SymMatrix(9)
 
 
-Gaudi.Math.SymMatrix2x2   = Gaudi.SymMatrix2x2
-Gaudi.Math.SymMatrix3x3   = Gaudi.SymMatrix3x3
-Gaudi.Math.SymMatrix4x4   = Gaudi.SymMatrix4x4
-Gaudi.Math.SymMatrix5x5   = Gaudi.SymMatrix5x5
-Gaudi.Math.SymMatrix6x6   = Gaudi.SymMatrix6x6
-Gaudi.Math.SymMatrix7x7   = Gaudi.SymMatrix7x7
-Gaudi.Math.SymMatrix8x8   = Gaudi.SymMatrix8x8
-Gaudi.Math.SymMatrix9x9   = Gaudi.SymMatrix9x9
+cpp.Gaudi.Math.SymMatrix2x2   = cpp.Gaudi.SymMatrix2x2
+cpp.Gaudi.Math.SymMatrix3x3   = cpp.Gaudi.SymMatrix3x3
+cpp.Gaudi.Math.SymMatrix4x4   = cpp.Gaudi.SymMatrix4x4
+cpp.Gaudi.Math.SymMatrix5x5   = cpp.Gaudi.SymMatrix5x5
+cpp.Gaudi.Math.SymMatrix6x6   = cpp.Gaudi.SymMatrix6x6
+cpp.Gaudi.Math.SymMatrix7x7   = cpp.Gaudi.SymMatrix7x7
+cpp.Gaudi.Math.SymMatrix8x8   = cpp.Gaudi.SymMatrix8x8
+cpp.Gaudi.Math.SymMatrix9x9   = cpp.Gaudi.SymMatrix9x9
 
 #
 # specific matrices for 'tracks'
 #
 
-Gaudi.Matrix5x5             = Gaudi.Matrix(5,5)
-Gaudi.TrackMatrix           = Gaudi.Matrix5x5
-Gaudi.Math.Matrix5x5        = Gaudi.Matrix5x5
-Gaudi.Math.TrackMatrix      = Gaudi.TrackMatrix
+cpp.Gaudi.Matrix5x5             = cpp.Gaudi.Matrix(5,5)
+cpp.Gaudi.TrackMatrix           = cpp.Gaudi.Matrix5x5
+cpp.Gaudi.Math.Matrix5x5        = cpp.Gaudi.Matrix5x5
+cpp.Gaudi.Math.TrackMatrix      = cpp.Gaudi.TrackMatrix
 
-Gaudi.TrackSymMatrix        = Gaudi.SymMatrix5x5
-Gaudi.Math.TrackSymMatrix   = Gaudi.TrackSymMatrix
+cpp.Gaudi.TrackSymMatrix        = cpp.Gaudi.SymMatrix5x5
+cpp.Gaudi.Math.TrackSymMatrix   = cpp.Gaudi.TrackSymMatrix
 
-Gaudi.TrackVector           = Gaudi.Vector5
-Gaudi.Math.TrackVector      = Gaudi.TrackVector
+cpp.Gaudi.TrackVector           = cpp.Gaudi.Vector5
+cpp.Gaudi.Math.TrackVector      = cpp.Gaudi.TrackVector
 
 #
 # matrix from LHCb::Particle
 #
-Gaudi.Matrix4x3             = Gaudi.Matrix(4,3)
-Gaudi.Math.Matrix4x3        = Gaudi.Matrix4x3
+cpp.Gaudi.Matrix4x3             = cpp.Gaudi.Matrix(4,3)
+cpp.Gaudi.Math.Matrix4x3        = cpp.Gaudi.Matrix4x3
 
 
 
-for m in ( Gaudi.Matrix5x5      ,
-           Gaudi.TrackMatrix    ,
-           Gaudi.Matrix4x3      ) : deco_matrix ( m )
+for m in ( cpp.Gaudi.Matrix5x5      ,
+           cpp.Gaudi.TrackMatrix    ,
+           cpp.Gaudi.Matrix4x3      ) : deco_matrix ( m )
 
-for m in ( Gaudi.SymMatrix2x2   ,
-           Gaudi.SymMatrix3x3   ,
-           Gaudi.SymMatrix4x4   ,
-           Gaudi.SymMatrix5x5   ,
-           Gaudi.SymMatrix6x6   ,
-           Gaudi.SymMatrix7x7   ,
-           Gaudi.SymMatrix8x8   ,
-           Gaudi.SymMatrix9x9   ,
-           Gaudi.TrackSymMatrix ) : deco_symmatrix ( m ) 
+for m in ( cpp.Gaudi.SymMatrix2x2   ,
+           cpp.Gaudi.SymMatrix3x3   ,
+           cpp.Gaudi.SymMatrix4x4   ,
+           cpp.Gaudi.SymMatrix5x5   ,
+           cpp.Gaudi.SymMatrix6x6   ,
+           cpp.Gaudi.SymMatrix7x7   ,
+           cpp.Gaudi.SymMatrix8x8   ,
+           cpp.Gaudi.SymMatrix9x9   ,
+           cpp.Gaudi.TrackSymMatrix ) : deco_symmatrix ( m ) 
 
 # =============================================================================
 ## Self-printout of 3D-plane
@@ -1041,12 +1040,12 @@ def _p_str_ ( self ) :
     >>> plane = ...
     >>> print plance 
     """
-    return "(%s,%s)" % ( self.ProjectOntoPlane( Gaudi.XYZPoint()) , self.Normal() )
+    return "(%s,%s)" % ( self.ProjectOntoPlane( cpp.Gaudi.XYZPoint()) , self.Normal() )
 
-if not hasattr ( Gaudi.Plane3D , '_new_str_' ) :
-    Gaudi.Plane3D._new_str_ = _p_str_
-    Gaudi.Plane3D.__str__   = _p_str_
-    Gaudi.Plane3D.__repr__  = _p_str_
+if not hasattr ( cpp.Gaudi.Plane3D , '_new_str_' ) :
+    cpp.Gaudi.Plane3D._new_str_ = _p_str_
+    cpp.Gaudi.Plane3D.__str__   = _p_str_
+    cpp.Gaudi.Plane3D.__repr__  = _p_str_
 
 # =============================================================================
 ## self-printout of S-vectors
@@ -1064,11 +1063,11 @@ def _v_str_ ( self , fmt = ' %g' ) :
         index  += 1
     return "( " + result + ' )'
 
-for t in  ( Gaudi.Vector2 ,
-            Gaudi.Vector3 ,
-            Gaudi.Vector4 ,
-            Gaudi.Vector5 ,
-            Gaudi.Vector6 ) :
+for t in  ( cpp.Gaudi.Vector2 ,
+            cpp.Gaudi.Vector3 ,
+            cpp.Gaudi.Vector4 ,
+            cpp.Gaudi.Vector5 ,
+            cpp.Gaudi.Vector6 ) :
 
     ## add len of vectors 
     t . __len__ = lambda s : s.Dim()
@@ -1078,28 +1077,28 @@ for t in  ( Gaudi.Vector2 ,
         t.__str__   = _v_str_
         t.__repr__  = _v_str_
 
-for t in ( Gaudi.Math.ValueWithError         ,
-           Gaudi.Math.Point3DWithError       ,
-           Gaudi.Math.Vector3DWithError      ,
-           Gaudi.Math.LorentzVectorWithError ,
-           Gaudi.Math.SVector2WithError      ,
-           Gaudi.Math.SVector3WithError      ,
-           Gaudi.Math.SVector4WithError      ,
-           Gaudi.Math.SVector5WithError      ,
-           Gaudi.Math.SVector6WithError      ,
-           Gaudi.Math.SVector8WithError      ) :
+for t in ( cpp.Gaudi.Math.ValueWithError         ,
+           cpp.Gaudi.Math.Point3DWithError       ,
+           cpp.Gaudi.Math.Vector3DWithError      ,
+           cpp.Gaudi.Math.LorentzVectorWithError ,
+           cpp.Gaudi.Math.SVector2WithError      ,
+           cpp.Gaudi.Math.SVector3WithError      ,
+           cpp.Gaudi.Math.SVector4WithError      ,
+           cpp.Gaudi.Math.SVector5WithError      ,
+           cpp.Gaudi.Math.SVector6WithError      ,
+           cpp.Gaudi.Math.SVector8WithError      ) :
     if not hasattr ( t , '_new_str_' ) :
         t._new_str_ = t.toString
         t.__str__   = t.toString
         t.__repr__  = t.toString
 
 
-Gaudi.Math.SVector2WithError  . __len__ = lambda s : 2 
-Gaudi.Math.SVector3WithError  . __len__ = lambda s : 3 
-Gaudi.Math.SVector4WithError  . __len__ = lambda s : 4 
-Gaudi.Math.SVector5WithError  . __len__ = lambda s : 5 
-Gaudi.Math.SVector6WithError  . __len__ = lambda s : 6 
-Gaudi.Math.SVector8WithError  . __len__ = lambda s : 8 
+cpp.Gaudi.Math.SVector2WithError  . __len__ = lambda s : 2 
+cpp.Gaudi.Math.SVector3WithError  . __len__ = lambda s : 3 
+cpp.Gaudi.Math.SVector4WithError  . __len__ = lambda s : 4 
+cpp.Gaudi.Math.SVector5WithError  . __len__ = lambda s : 5 
+cpp.Gaudi.Math.SVector6WithError  . __len__ = lambda s : 6 
+cpp.Gaudi.Math.SVector8WithError  . __len__ = lambda s : 8 
 
 ## get the eigenvalues for symmetric matrices :
 def _eigen_1_ ( self , sorted = True ) :
@@ -1109,7 +1108,7 @@ def _eigen_1_ ( self , sorted = True ) :
     >>> values = mtrx.eigenValues ( sorted = True )
 
     """
-    return Gaudi.Math.EigenSystems.eigenValues ( self , sorted )
+    return cpp.Gaudi.Math.EigenSystems.eigenValues ( self , sorted )
 
 
 ## get the eigevectors for symmetric matrices :
@@ -1121,30 +1120,30 @@ def _eigen_2_ ( self , sorted = True ) :
 
     """
     if   2 == self.kCols :
-        _values  = Gaudi.Vector2  ()
-        _vectors = Gaudi.Vectors2 ()
+        _values  = cpp.Gaudi.Vector2  ()
+        _vectors = cpp.Gaudi.Vectors2 ()
     elif 3 == self.kCols :
-        _values  = Gaudi.Vector3  ()
-        _vectors = Gaudi.Vectors3 ()
+        _values  = cpp.Gaudi.Vector3  ()
+        _vectors = cpp.Gaudi.Vectors3 ()
     elif 4 == self.kCols :
-        _values  = Gaudi.Vector4  ()
-        _vectors = Gaudi.Vectors4 ()
+        _values  = cpp.Gaudi.Vector4  ()
+        _vectors = cpp.Gaudi.Vectors4 ()
     else :
         raise AttributeError, "Not implemented for dimention: %s" % self.kCols
 
-    st = Gaudi.Math.EigenSystems.eigenVectors ( self , _values , _vectors , sorted )
+    st = cpp.Gaudi.Math.EigenSystems.eigenVectors ( self , _values , _vectors , sorted )
     if st.isFailure () :
         print 'EigenVectors: Failure from EigenSystems' , st
 
     return ( _values , _vectors )
 
 
-_eigen_1_ .__doc__ += '\n' +  Gaudi.Math.EigenSystems.eigenValues  . __doc__
-_eigen_2_ .__doc__ += '\n' +  Gaudi.Math.EigenSystems.eigenVectors . __doc__
+_eigen_1_ .__doc__ += '\n' +  cpp.Gaudi.Math.EigenSystems.eigenValues  . __doc__
+_eigen_2_ .__doc__ += '\n' +  cpp.Gaudi.Math.EigenSystems.eigenVectors . __doc__
 
-for m in ( Gaudi.SymMatrix2x2   ,
-           Gaudi.SymMatrix3x3   ,
-           Gaudi.SymMatrix4x4   ) :
+for m in ( cpp.Gaudi.SymMatrix2x2   ,
+           cpp.Gaudi.SymMatrix3x3   ,
+           cpp.Gaudi.SymMatrix4x4   ) :
     if not hasattr ( m , 'eigenValues'  ) : m.eigenValues  = _eigen_1_
     if not hasattr ( m , 'eigenVectors' ) : m.eigenVectors = _eigen_2_
 
@@ -1162,25 +1161,25 @@ def _pp_str_ ( self ) :
     len = self.decayLength ()
     return " ( %s/%s/%s ) " % ( pos, mom , len )
 
-if not hasattr ( Gaudi.Math.ParticleParams , '_new_str_' ) :
-    Gaudi.Math.ParticleParams._new_str_ = _pp_str_
-    Gaudi.Math.ParticleParams.__str__   = _pp_str_
-    Gaudi.Math.ParticleParams.__repr__  = _pp_str_
+if not hasattr ( cpp.Gaudi.Math.ParticleParams , '_new_str_' ) :
+    cpp.Gaudi.Math.ParticleParams._new_str_ = _pp_str_
+    cpp.Gaudi.Math.ParticleParams.__str__   = _pp_str_
+    cpp.Gaudi.Math.ParticleParams.__repr__  = _pp_str_
 
 # =============================================================================
 ## various decorators for GeomFun.h
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2009-10-22
-if not hasattr ( Gaudi.Math , 'XYZGeomFun' ) :
-    Gaudi.Math.XYZGeomFun = cpp.Gaudi.Math.GF(
-        Gaudi.XYZPoint  ,
-        Gaudi.XYZLine   ,
-        Gaudi.Plane3D
+if not hasattr ( cpp.Gaudi.Math , 'XYZGeomFun' ) :
+    cpp.Gaudi.Math.XYZGeomFun = cpp.Gaudi.Math.GF(
+        cpp.Gaudi.XYZPoint  ,
+        cpp.Gaudi.XYZLine   ,
+        cpp.Gaudi.Plane3D
         )
-if not hasattr ( Gaudi , 'XYZGeomFun' ) :
-    Gaudi.XYZGeomFun = Gaudi.Math.XYZGeomFun
+if not hasattr ( cpp.Gaudi , 'XYZGeomFun' ) :
+    cpp.Gaudi.XYZGeomFun = cpp.Gaudi.Math.XYZGeomFun
 
-_GeomFun = Gaudi.Math.XYZGeomFun
+_GeomFun = cpp.Gaudi.Math.XYZGeomFun
 
 # =============================================================================
 ## intersection of line and plane
@@ -1201,7 +1200,7 @@ def _intersect_line_and_plane_ ( line , plane ) :
     - the flag (true if intersection exists)
 
     """
-    _point = Gaudi.XYZPoint(0,0,-1.e+10)
+    _point = cpp.Gaudi.XYZPoint(0,0,-1.e+10)
     _mu    = ROOT.Double(-1.e+10)
     _flag  = _GeomFun.intersection ( line   ,
                                      plane  ,
@@ -1213,8 +1212,8 @@ def _intersect_line_and_plane_ ( line , plane ) :
 
 _intersect_line_and_plane_ . __doc__ += '\n' + _GeomFun.intersection . __doc__
 
-if not hasattr ( Gaudi.XYZLine , 'intersect' ) :
-    Gaudi.XYZLine.intersect = _intersect_line_and_plane_
+if not hasattr ( cpp.Gaudi.XYZLine , 'intersect' ) :
+    cpp.Gaudi.XYZLine.intersect = _intersect_line_and_plane_
 
 # =============================================================================
 ## intersect two planes
@@ -1234,7 +1233,7 @@ def _intersect_two_planes_ ( plane , plane1 ) :
     - the flag (true if intersection exists)
 
     """
-    _line = Gaudi.XYZLine()
+    _line = cpp.Gaudi.XYZLine()
     _flag = _GeomFun.intersection ( plane , plane1 , _line )
     if _flag : _flag = True
     else     : _flag = False
@@ -1242,8 +1241,8 @@ def _intersect_two_planes_ ( plane , plane1 ) :
 
 _intersect_two_planes_ . __doc__ += '\n' + _GeomFun.intersection . __doc__
 
-if not hasattr ( Gaudi.Plane3D , 'line' ) :
-    Gaudi.Plane3D.line = _intersect_two_planes_
+if not hasattr ( cpp.Gaudi.Plane3D , 'line' ) :
+    cpp.Gaudi.Plane3D.line = _intersect_two_planes_
 
 
 # =============================================================================
@@ -1265,7 +1264,7 @@ def _intersect_three_planes_ ( plane , plane1 , plane2 ) :
     - the flag (true if intersection exists)
 
     """
-    _point = Gaudi.XYZPoint(0,0,-1.e+10)
+    _point = cpp.Gaudi.XYZPoint(0,0,-1.e+10)
     _flag = _GeomFun.intersection ( plane , plane1 , plane2 , _point )
     if _flag : _flag = True
     else     : _flag = False
@@ -1274,8 +1273,8 @@ def _intersect_three_planes_ ( plane , plane1 , plane2 ) :
 
 _intersect_three_planes_ . __doc__ += '\n' + _GeomFun.intersection . __doc__
 
-if not hasattr ( Gaudi.Plane3D , 'point' ) :
-    Gaudi.Plane3D.point = _intersect_three_planes_
+if not hasattr ( cpp.Gaudi.Plane3D , 'point' ) :
+    cpp.Gaudi.Plane3D.point = _intersect_three_planes_
 
 
 # =============================================================================
@@ -1306,8 +1305,8 @@ def _intersect_the_planes_ ( plane , plane1 , plane2 = None ) :
 
 _intersect_the_planes_ . __doc__ += '\n' + _GeomFun.intersection . __doc__
 
-if not hasattr ( Gaudi.Plane3D , 'intersect' ) :
-    Gaudi.Plane3D.intersect = _intersect_the_planes_
+if not hasattr ( cpp.Gaudi.Plane3D , 'intersect' ) :
+    cpp.Gaudi.Plane3D.intersect = _intersect_the_planes_
 
 
 # =============================================================================
@@ -1327,10 +1326,10 @@ def _imp_par_1_ ( line , point ) :
 
 _imp_par_1_ . __doc__ += '\n' + _GeomFun.impactParameter . __doc__
 
-if not hasattr ( Gaudi.XYZLine , 'impactParameter' ) :
-    Gaudi.XYZLine.impactParameter = _imp_par_1_
-if not hasattr ( Gaudi.XYZLine , 'ip'              ) :
-    Gaudi.XYZLine.ip              = _imp_par_1_
+if not hasattr ( cpp.Gaudi.XYZLine , 'impactParameter' ) :
+    cpp.Gaudi.XYZLine.impactParameter = _imp_par_1_
+if not hasattr ( cpp.Gaudi.XYZLine , 'ip'              ) :
+    cpp.Gaudi.XYZLine.ip              = _imp_par_1_
 
 # =============================================================================
 ## calculate the impact parameter of the line & point
@@ -1350,10 +1349,10 @@ def _imp_par_2_ ( point , line ) :
 
 _imp_par_2_ . __doc__ += '\n' + _GeomFun.impactParameter . __doc__
 
-if not hasattr ( Gaudi.XYZPoint , 'impactParameter' ) :
-    Gaudi.XYZPoint.impactParameter = _imp_par_2_
-if not hasattr ( Gaudi.XYZPoint , 'ip'              ) :
-    Gaudi.XYZPoint.ip              = _imp_par_2_
+if not hasattr ( cpp.Gaudi.XYZPoint , 'impactParameter' ) :
+    cpp.Gaudi.XYZPoint.impactParameter = _imp_par_2_
+if not hasattr ( cpp.Gaudi.XYZPoint , 'ip'              ) :
+    cpp.Gaudi.XYZPoint.ip              = _imp_par_2_
 
 # =============================================================================
 ## distance between two lines
@@ -1372,8 +1371,8 @@ def _distance_between_two_lines_ ( line , line1 ) :
 
 _distance_between_two_lines_ . __doc__ += '\n' + _GeomFun.distance. __doc__
 
-if not hasattr ( Gaudi.XYZLine , 'distance' ) :
-    Gaudi.XYZLine.distance = _distance_between_two_lines_
+if not hasattr ( cpp.Gaudi.XYZLine , 'distance' ) :
+    cpp.Gaudi.XYZLine.distance = _distance_between_two_lines_
 
 
 # =============================================================================
@@ -1394,8 +1393,8 @@ def _closest_points_ ( line , line1 ) :
     - the flag (true is everything OK)
 
     """
-    _point1 = Gaudi.XYZPoint(0,0,-1.e+10)
-    _point2 = Gaudi.XYZPoint(0,0,-1.e+11)
+    _point1 = cpp.Gaudi.XYZPoint(0,0,-1.e+10)
+    _point2 = cpp.Gaudi.XYZPoint(0,0,-1.e+11)
     _flag   = _GeomFun.closestPoints ( line , line1 , _point1 , _point2 )
     if    _flag : _flag = True
     else        : _flag = False
@@ -1404,8 +1403,8 @@ def _closest_points_ ( line , line1 ) :
 
 _closest_points_ . __doc__ += '\n' + _GeomFun.closestPoints . __doc__
 
-if not hasattr ( Gaudi.XYZLine , 'closestPoints' ) :
-    Gaudi.XYZLine.closestPoints = _closest_points_
+if not hasattr ( cpp.Gaudi.XYZLine , 'closestPoints' ) :
+   cpp.Gaudi.XYZLine.closestPoints = _closest_points_
 
 
 # =============================================================================
@@ -1436,8 +1435,8 @@ def _closest_point_params_ ( line , line1 ) :
 
 _closest_point_params_ . __doc__ += '\n' + _GeomFun.closestPointParams . __doc__
 
-if not hasattr ( Gaudi.XYZLine , 'closestPointParams' ) :
-    Gaudi.XYZLine.closestPointParams = _closest_point_params_
+if not hasattr ( cpp.Gaudi.XYZLine , 'closestPointParams' ) :
+    cpp.Gaudi.XYZLine.closestPointParams = _closest_point_params_
 
 # =============================================================================
 ## find the point on ilne closest to the given point
@@ -1456,8 +1455,8 @@ def _closest_point_1_ ( line , point ) :
 
 _closest_point_1_ . __doc__ += '\n' + _GeomFun.closestPoint . __doc__
 
-if not hasattr ( Gaudi.XYZLine , 'closestPoint' ) :
-    Gaudi.XYZLine.closestPoint = _closest_point_1_
+if not hasattr ( cpp.Gaudi.XYZLine , 'closestPoint' ) :
+    cpp.Gaudi.XYZLine.closestPoint = _closest_point_1_
 
 # =============================================================================
 ## find the point on ilne closest to the given point
@@ -1476,8 +1475,8 @@ def _closest_point_2_ ( point , line ) :
 
 _closest_point_2_ . __doc__ += '\n' + _GeomFun.closestPoint . __doc__
 
-if not hasattr ( Gaudi.XYZPoint , 'closestPoint' ) :
-    Gaudi.XYZPoint.closestPoint = _closest_point_2_
+if not hasattr ( cpp.Gaudi.XYZPoint , 'closestPoint' ) :
+    cpp.Gaudi.XYZPoint.closestPoint = _closest_point_2_
 
 
 # =============================================================================
@@ -1498,8 +1497,8 @@ def __closest_point_param_1__ ( line , point ) :
 
 __closest_point_param_1__ . __doc__ += '\n' + _GeomFun.closestPointParam .__doc__
 
-if not hasattr ( Gaudi.XYZLine , 'closestPointParam' ) :
-    Gaudi.XYZLine.closestPointParam = __closest_point_param_1__
+if not hasattr ( cpp.Gaudi.XYZLine , 'closestPointParam' ) :
+    cpp.Gaudi.XYZLine.closestPointParam = __closest_point_param_1__
 
 
 # =============================================================================
@@ -1519,8 +1518,8 @@ def _closest_point_param_2_ ( point , line ) :
 
 _closest_point_param_2_ . __doc__ += '\n' + _GeomFun.closestPointParam .__doc__
 
-if not hasattr ( Gaudi.XYZPoint , 'closestPointParam' ) :
-    Gaudi.XYZPoint.closestPointParam = _closest_point_param_2_
+if not hasattr ( cpp.Gaudi.XYZPoint , 'closestPointParam' ) :
+    cpp.Gaudi.XYZPoint.closestPointParam = _closest_point_param_2_
 
 
 # =============================================================================
@@ -1541,8 +1540,8 @@ def _parallel_lines_ ( line , line1 ) :
 
 _parallel_lines_ . __doc__ += '\n' + _GeomFun.parallel . __doc__
 
-if not hasattr ( Gaudi.XYZLine , 'parallel' ) :
-    Gaudi.XYZLine.parallel = _parallel_lines_
+if not hasattr ( cpp.Gaudi.XYZLine , 'parallel' ) :
+    cpp.Gaudi.XYZLine.parallel = _parallel_lines_
 
 # =============================================================================
 ## helper function/wrapper for Gaudi::Math:FitMass
@@ -1564,13 +1563,13 @@ def _fit_mass_ ( particle , mass )  :
     >>> print 'result/chi2:', result, chi2
 
     """
-    _fitted = Gaudi.Math.ParticleParams()
-    _chi2   = Gaudi.Math.FitMass.fit ( particle  ,
-                                       mass      ,
+    _fitted = cpp.Gaudi.Math.ParticleParams()
+    _chi2   = cpp.Gaudi.Math.FitMass.fit ( particle  ,
+                                           mass      ,
                                        _fitted   )
     return (_fitted,_chi2)
 
-Gaudi.Math.ParticleParams.fitMass = _fit_mass_
+cpp.Gaudi.Math.ParticleParams.fitMass = _fit_mass_
 
 
 # =============================================================================
@@ -1592,26 +1591,26 @@ for t in ( 'int'                ,
 # =============================================================================
 LHCb  = cpp.LHCb
 # =============================================================================
-LHCb.Math.lomont_compare_double  = Gaudi.Math.lomont_compare_double
-LHCb.Math.lomont_compare_float   = Gaudi.Math.lomont_compare_float 
-Gaudi.Math.round                 = LHCb.Math.round
-Gaudi.Math.equal_to_int          = LHCb.Math.equal_to_int
-Gaudi.Math.equal_to_uint         = LHCb.Math.equal_to_uint
-Gaudi.Math.isint                 = LHCb.Math.isint
-Gaudi.Math.islong                = LHCb.Math.islong
-Gaudi.Math.knuth_equal_to_double = LHCb.Math.knuth_equal_to_double
-Gaudi.Math.round_N               = LHCb.Math.round_N
-Gaudi.Math.frexp10               = LHCb.Math.frexp10
+cpp.LHCb.Math.lomont_compare_double  = cpp.Gaudi.Math.lomont_compare_double
+cpp.LHCb.Math.lomont_compare_float   = cpp.Gaudi.Math.lomont_compare_float 
+cpp.Gaudi.Math.round                 = cpp.LHCb.Math.round
+cpp.Gaudi.Math.equal_to_int          = cpp.LHCb.Math.equal_to_int
+cpp.Gaudi.Math.equal_to_uint         = cpp.LHCb.Math.equal_to_uint
+cpp.Gaudi.Math.isint                 = cpp.LHCb.Math.isint
+cpp.Gaudi.Math.islong                = cpp.LHCb.Math.islong
+cpp.Gaudi.Math.knuth_equal_to_double = cpp.LHCb.Math.knuth_equal_to_double
+cpp.Gaudi.Math.round_N               = cpp.LHCb.Math.round_N
+cpp.Gaudi.Math.frexp10               = cpp.LHCb.Math.frexp10
 
 
-if not hasattr ( Gaudi.Math.Splines , 'DATA'    ) or \
-   not hasattr ( Gaudi.Math.Splines , 'PAIR'    ) or \
-   not hasattr ( Gaudi.Math.Splines , 'DATAERR' ) :
+if not hasattr ( cpp.Gaudi.Math.Splines , 'DATA'    ) or \
+   not hasattr ( cpp.Gaudi.Math.Splines , 'PAIR'    ) or \
+   not hasattr ( cpp.Gaudi.Math.Splines , 'DATAERR' ) :
 
     _pair_ = std.pair('double','double')
-    Gaudi.Math.Splines.DATA    = std.vector ( _pair_ )
-    Gaudi.Math.Splines.PAIR    = std.pair   ( 'double',Gaudi.Math.ValueWithError )
-    Gaudi.Math.Splines.DATAERR = std.vector ( Gaudi.Math.Splines.PAIR )
+    cpp.Gaudi.Math.Splines.DATA    = std.vector ( _pair_ )
+    cpp.Gaudi.Math.Splines.PAIR    = std.pair   ( 'double',cpp.Gaudi.Math.ValueWithError )
+    cpp.Gaudi.Math.Splines.DATAERR = std.vector ( cpp.Gaudi.Math.Splines.PAIR )
 
 # =============================================================================
 ## make some simple interpolation for set of data points
@@ -1632,12 +1631,12 @@ def _v_interp_ ( self , x ) :
     #
     ## make the interpolation
     #
-    return Gaudi.Math.Splines.interpolate ( self , x )
+    return cpp.Gaudi.Math.Splines.interpolate ( self , x )
 
-_v_interp_ . __doc__  += '\n' + Gaudi.Math.Splines.interpolate. __doc__
+_v_interp_ . __doc__  += '\n' + cpp.Gaudi.Math.Splines.interpolate. __doc__
 
-Gaudi.Math.Splines.DATA    .interpolate = _v_interp_
-Gaudi.Math.Splines.DATAERR .interpolate = _v_interp_
+cpp.Gaudi.Math.Splines.DATA    .interpolate = _v_interp_
+cpp.Gaudi.Math.Splines.DATAERR .interpolate = _v_interp_
 
 # =============================================================================
 ## build a spline to approximate the data poinst
@@ -1688,9 +1687,9 @@ def _v_spline_err_ ( self                                      ,
 _v_spline_     . __doc__ += '\n' + cpp.Gaudi.Math.Spline       .__init__ .__doc__
 _v_spline_err_ . __doc__ += '\n' + cpp.Gaudi.Math.SplineErrors .__init__ .__doc__
 
-Gaudi.Math.Splines.DATA    .spline     = _v_spline_
-Gaudi.Math.Splines.DATAERR .spline     = _v_spline_
-Gaudi.Math.Splines.DATAERR .splineErr  = _v_spline_err_
+cpp.Gaudi.Math.Splines.DATA    .spline     = _v_spline_
+cpp.Gaudi.Math.Splines.DATAERR .spline     = _v_spline_
+cpp.Gaudi.Math.Splines.DATAERR .splineErr  = _v_spline_err_
 
 # =============================================================================
 ## get values from the DATAERR
@@ -1702,7 +1701,7 @@ def _v_get_values_ ( self ) :
     >>> vvalues   = vdataerr.getValues()
 
     """
-    return Gaudi.Math.Spline.getValues ( self )
+    return cpp.Gaudi.Math.Spline.getValues ( self )
 
 
 ## get values from the DATAERR
@@ -1714,25 +1713,25 @@ def _v_get_errors_ ( self ) :
     >>> verrors   = vdataerr.getErrors()
 
     """
-    return Gaudi.Math.Spline.getErrors ( self )
+    return cpp.Gaudi.Math.Spline.getErrors ( self )
 
-_v_get_values_ . __doc__  += '\n' + Gaudi.Math.Splines.getValues. __doc__
-_v_get_errors_ . __doc__  += '\n' + Gaudi.Math.Splines.getErrors. __doc__
+_v_get_values_ . __doc__  += '\n' + cpp.Gaudi.Math.Splines.getValues. __doc__
+_v_get_errors_ . __doc__  += '\n' + cpp.Gaudi.Math.Splines.getErrors. __doc__
 
-Gaudi.Math.Splines.DATAERR .getValues = _v_get_values_
-Gaudi.Math.Splines.DATAERR .getErrors = _v_get_errors_
+cpp.Gaudi.Math.Splines.DATAERR .getValues = _v_get_values_
+cpp.Gaudi.Math.Splines.DATAERR .getErrors = _v_get_errors_
 
-Gaudi.Math.Splines.DATA    . __repr__ = lambda s : str ( [ ( i.first , i.second ) for i in s ] )
-Gaudi.Math.Splines.DATAERR . __repr__ = lambda s : str ( [ ( i.first , i.second ) for i in s ] )
-Gaudi.Math.Splines.DATA    . __str__  = lambda s : str ( [ ( i.first , i.second ) for i in s ] )
-Gaudi.Math.Splines.DATAERR . __str__  = lambda s : str ( [ ( i.first , i.second ) for i in s ] )
+cpp.Gaudi.Math.Splines.DATA    . __repr__ = lambda s : str ( [ ( i.first , i.second ) for i in s ] )
+cpp.Gaudi.Math.Splines.DATAERR . __repr__ = lambda s : str ( [ ( i.first , i.second ) for i in s ] )
+cpp.Gaudi.Math.Splines.DATA    . __str__  = lambda s : str ( [ ( i.first , i.second ) for i in s ] )
+cpp.Gaudi.Math.Splines.DATAERR . __str__  = lambda s : str ( [ ( i.first , i.second ) for i in s ] )
 
-if not hasattr ( Gaudi.Math.Spline       , 'DATA'    ) :
-    Gaudi.Math.Spline.DATA          = Gaudi.Math.Splines.DATA
-if not hasattr ( Gaudi.Math.Spline       , 'DATAERR' ) :
-    Gaudi.Math.Spline.DATAERR       = Gaudi.Math.Splines.DATAERR
-if not hasattr ( Gaudi.Math.SplineErrors , 'DATAERR' ) :
-    Gaudi.Math.SplineErrors.DATAERR = Gaudi.Math.Splines.DATAERR
+if not hasattr ( cpp.Gaudi.Math.Spline       , 'DATA'    ) :
+    cpp.Gaudi.Math.Spline.DATA          = Gaudi.Math.Splines.DATA
+if not hasattr ( cpp.Gaudi.Math.Spline       , 'DATAERR' ) :
+    cpp.Gaudi.Math.Spline.DATAERR       = Gaudi.Math.Splines.DATAERR
+if not hasattr ( cpp.Gaudi.Math.SplineErrors , 'DATAERR' ) :
+    cpp.Gaudi.Math.SplineErrors.DATAERR = Gaudi.Math.Splines.DATAERR
 
 
 ## self-printout of TMaxtrix 
@@ -1756,9 +1755,9 @@ ROOT.TMatrix.__repr__  = _tmg_str_
 ROOT.TMatrix.__str__   = _tmg_str_
 
 # =============================================================================
-VE            = Gaudi.Math.ValueWithError
+VE            = cpp.Gaudi.Math.ValueWithError
 SE            = cpp.StatEntity 
-WSE           = Gaudi.Math.WStatEntity 
+WSE           = cpp.Gaudi.Math.WStatEntity 
 # =============================================================================
 # temporary trick, to be removed 
 # =============================================================================
@@ -1958,7 +1957,7 @@ SPD.asTuple  = lambda s : (s.first,s.second)
 SPD.__str__  = lambda s : str( (s.first,s.second) )
 SPD.__repr__ = SPD.__str__
 
-VE = Gaudi.Math.ValueWithError
+VE = cpp.Gaudi.Math.ValueWithError
 
 _is_equal_ = cpp.LHCb.Math.Equal_To    ( 'double' )()
 _is_zero_  = cpp.LHCb.Math.Zero        ( 'double' )()
