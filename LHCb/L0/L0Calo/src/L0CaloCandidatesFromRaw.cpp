@@ -157,16 +157,14 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
     LHCb::RawBankReadoutStatus * status = 
       statuss -> object( readoutStatus.key() ) ;
     
-    if ( 0 == status ) {
+    if ( !status ) {
       status = new LHCb::RawBankReadoutStatus( readoutStatus ) ;
       statuss -> insert( status ) ;
     } else {
       // merge both status if already exists
       if ( status -> status() != readoutStatus.status() ) {
-        std::map< int const, long >::iterator it ;
-        for ( it = readoutStatus.statusMap().begin() ; 
-              it != readoutStatus.statusMap().end() ; ++it ) {
-          status -> addStatus( (*it).first , (*it).second ) ;
+        for ( const auto& i : readoutStatus.statusMap() ) {
+          status -> addStatus( i.first , i.second ) ;
         }
       }
     }    
@@ -178,8 +176,7 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
     LHCb::L0ProcessorDatas* L0Calo = new LHCb::L0ProcessorDatas() ;
     put( L0Calo, LHCb::L0ProcessorDataLocation::L0Calo ) ;
 
-    LHCb::L0CaloCandidates::iterator it ;
-    for ( it = out -> begin() ; it != out -> end() ; ++it ) {
+    for (auto it = out -> begin() ; it != out -> end() ; ++it ) {
       L0Candidate cand( (*it) ) ;
       cand.saveCandidate( fiberType( (*it) -> type() ) , L0Calo ) ;
     }    

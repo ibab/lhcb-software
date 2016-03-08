@@ -2,6 +2,8 @@
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !----------------------------------------------------------------------------
+! 2016-03-08 - Gerhard Raven
+ - C++11 modernization
 
 !========================= L0Calo v11r15 2016-01-27 =========================
 ! 2015-11-26 - Marco Clemencic
