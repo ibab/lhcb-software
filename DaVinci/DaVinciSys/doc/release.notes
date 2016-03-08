@@ -14,7 +14,8 @@ Uses LCG_83 with ROOT 6.06.00.
   DaVinciTests v3r3, Phys/DaVinci v39r1, Phys/StrippingCache v1r5.
 
 - Packages patched :
-  It still contains Event/EventPacker v5r9p1 given that it builds atop the same Gaudi and LHCb as v39r0p1.
+  . It still contains Event/EventPacker v5r9p1 given that it builds atop the same Gaudi and LHCb as v39r0p1.
+  . Added Phys/LoKiCore v11r30 to try and solve segfaults and test failures.
 
 - In DaVinciTests v3r3 :
   . Updated reference file for davinci-merge-small-files test.

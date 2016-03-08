@@ -5,7 +5,7 @@ branches doc cmt
 
 # Patch just for this release!
 use EventPacker   v5r9p1   Event
-
+use LoKiCore      v11r30   Phys
 ##############################
 # Temporarily moved in from Stripping, for S23 release
 # To be decided if longer term this stays in the DaVinci 
