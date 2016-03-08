@@ -15,6 +15,7 @@ use  DigiEvent     v*  Event
 use  GaudiAlg      v*
 use  LinkerEvent   v*  Event
 use  VPDet         v*  Det
+use  TrackEvent    v*  Event
 
 # Component library building rule
 #=====================================================================
