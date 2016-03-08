@@ -13,20 +13,24 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2016-03-08 - Marco Clemencic
+ - Restored workaround for ROOT-5721.
+   Its removal was causing problems when importing LoKiGenMC.
+
 ! 2016-03-07 - Vanya Belyaev
- - add methods to get TES location in python 
+ - add methods to get TES location in python
 
 ! 2016-02-21 - Vanya Belyaev
- - add a function into namespace LoKi::Print 
+ - add a function into namespace LoKi::Print
 
 ! 2016-02-17 - Vanya Belyaev
- - minor fix 
+ - minor fix
 
 ! 2016-02-17 - Vanya Belyaev
- - remove PyCintex 
- - add print-functions for smart-refs 
- - improve a bit AlgFunctors.cpp (at least fix he issue with 
-   the misinterpretation of  Algorithm::isInitialized 
+ - remove PyCintex
+ - add print-functions for smart-refs
+ - improve a bit AlgFunctors.cpp (at least fix he issue with
+   the misinterpretation of  Algorithm::isInitialized
 
 ! 2016-02-10 - Roel Aaij
  - Do not insert "dir()" function in case of debug; this causes cache misses
