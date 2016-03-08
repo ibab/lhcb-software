@@ -13,6 +13,8 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r30 2016-03-08 =========================
+
 ! 2016-03-08 - Marco Clemencic
  - Restored workaround for ROOT-5721.
    Its removal was causing problems when importing LoKiGenMC.
