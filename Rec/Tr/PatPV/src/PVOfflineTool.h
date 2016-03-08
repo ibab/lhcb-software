@@ -73,7 +73,9 @@ private:
   double m_pvsChi2SeparationLowMult = 0;
 
   bool m_useBeamSpotRCut = false;
-  double m_beamSpotRCut = 0.3;
+  double m_beamSpotRCut = 0.2;
+  double m_beamSpotRCutHMC = 0.4;
+  unsigned int m_beamSpotRMT = 10; 
   double m_beamSpotX = 0;
   double m_beamSpotY = 0;
   std::string m_beamSpotCond;

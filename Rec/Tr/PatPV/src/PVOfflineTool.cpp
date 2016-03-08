@@ -122,8 +122,10 @@ PVOfflineTool::PVOfflineTool(const std::string& type,
   declareProperty("LookForDisplaced" , m_lookForDisplaced = false);
   declareProperty("PVsChi2Separation", m_pvsChi2Separation = 25.);
   declareProperty("PVsChi2SeparationLowMult", m_pvsChi2SeparationLowMult = 91.);
-  declareProperty("UseBeamSpotRCut",   m_useBeamSpotRCut  = false );
-  declareProperty("BeamSpotRCut",      m_beamSpotRCut = 0.3 );
+  declareProperty("UseBeamSpotRCut",                   m_useBeamSpotRCut  = false );
+  declareProperty("BeamSpotRCut",                      m_beamSpotRCut = 0.2 );
+  declareProperty("BeamSpotRHighMultiplicityCut",      m_beamSpotRCutHMC  = 0.4 );
+  declareProperty("BeamSpotRMultiplicityTreshold",     m_beamSpotRMT = 10 );
   declareProperty("ResolverBound",     m_resolverBound = 5 * Gaudi::Units::mm );
   declareProperty("TimingMeasurement", m_doTiming       = false     );
 }
@@ -326,7 +328,9 @@ StatusCode PVOfflineTool::reconstructMultiPVFromTracks(std::vector<const LHCb::T
         if ( m_useBeamSpotRCut && m_veloClosed ) {
           const auto& pos = recvtx.position();
           if ( (std::pow(pos.x()-m_beamSpotX,2) + std::pow( pos.y()-m_beamSpotY,2) )
-              > std::pow(m_beamSpotRCut,2) ) inR = false;
+	       > std::pow(m_beamSpotRCut,2)  && recvtx.tracks().size() < m_beamSpotRMT) { inR = false; }
+	  if ( (std::pow(pos.x()-m_beamSpotX,2) + std::pow( pos.y()-m_beamSpotY,2) )
+               > std::pow(m_beamSpotRCutHMC,2)  && recvtx.tracks().size() >= m_beamSpotRMT) { inR = false; }
         }
         if ( isSepar && inR ) {
           outvtxvec.push_back(recvtx);
