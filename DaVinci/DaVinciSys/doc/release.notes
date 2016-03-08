@@ -3,6 +3,32 @@ Package             : DaVinciSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v39r1>2016-03-08 DaVinci v39r1</A></H1><PRE>
+
+Development release for 2016 data taking.
+Also needed for the stack for the run-I restripping.
+It is based on Gaudi v27r0, LHCb v40r0, Rec v19r0, Phys v21r1, Analysis v15r1 and Stripping v10r1.
+Uses LCG_83 with ROOT 6.06.00.
+
+- Packages updated :
+  DaVinciTests v3r3, Phys/DaVinci v39r1, Phys/StrippingCache v1r5.
+
+- Packages patched :
+  It still contains Event/EventPacker v5r9p1 given that it builds atop the same Gaudi and LHCb as v39r0p1.
+
+- In DaVinciTests v3r3 :
+  . Updated reference file for davinci-merge-small-files test.
+  . Updated tagging test ref. file. test/qmtest/tagging.qms/test_tag_mc12.qmt.
+
+- In Phys/DaVinci v39r1 :
+  . Development release in preparation for 2016 data-taking and simulation.
+
+- In Phys/StrippingCache v1r5 :
+  . Added StrippingCache for S25.
+  . Added StrippingCache for S21r0p1 and S21r1p1.
+  . Fix in Cache for S21r0,1p1.
+  . Removed all the DV dependencies in cache for S21r0,1p1.
+
 </PRE><H1><A NAME=v39r0p1>2016-02-12 DaVinci v39r0p1</A></H1><PRE>
 
 Patched development release identical to v39r0 apart from picking up the patched package Event/EventPacker v5r9p1.

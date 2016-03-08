@@ -1,5 +1,5 @@
 package DaVinciSys
-version v39r0p1
+version v39r1
 
 branches doc cmt
 
@@ -10,12 +10,12 @@ use EventPacker   v5r9p1   Event
 # Temporarily moved in from Stripping, for S23 release
 # To be decided if longer term this stays in the DaVinci 
 # project, or moves elsewhere.
-use StrippingCache   v1r4     Phys
+use StrippingCache   v1r5     Phys
 ##############################
 
 # Packages
-use  DaVinci         v39r0p1  Phys   # DaVinci coordinator
-use  DaVinciTests    v3r2
+use  DaVinci         v39r1    Phys   # DaVinci coordinator
+use  DaVinciTests    v3r3
 use  KaliCalo        v4r18    Phys   # Olivier Deschamps
 use  Tesla           v1r14    Phys   # Sean Benson
 
