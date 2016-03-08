@@ -143,16 +143,12 @@ void L0DUConfigProvider::reset() {
     debug() << "reset L0DUConfigProvider" << endmsg;
     debug() << "Deleting " <<  m_triggersMap.size() << " L0DUTrigger* " << endmsg;
   }
-  for(LHCb::L0DUTrigger::Map::iterator id=m_triggersMap.begin();id!=m_triggersMap.end();id++){
-   delete id->second;
-  }
+  for(auto &i : m_triggersMap) delete i.second;
   m_triggersMap.clear();
   
   if ( msgLevel(MSG::DEBUG) ) 
     debug() << "Deleting " <<  m_dataMap.size() << " L0DUElementaryData* " << endmsg;
-  for(LHCb::L0DUElementaryData::Map::iterator id=m_dataMap.begin();id!=m_dataMap.end();id++){
-    delete id->second;
-  }  
+  for(auto& i : m_dataMap) delete i.second;
   m_dataMap.clear();
   m_pData = 0;
   m_cData = 0;
@@ -160,27 +156,23 @@ void L0DUConfigProvider::reset() {
 
   if ( msgLevel(MSG::DEBUG) ) 
     debug() << "Deleting " <<  m_conditionsMap.size() << " L0DUElementaryConditions* " << endmsg;
-  for(LHCb::L0DUElementaryCondition::Map::iterator id=m_conditionsMap.begin();id!=m_conditionsMap.end();id++){
-    delete id->second;
-  }
+  for(auto& i : m_conditionsMap) delete i.second;
   m_conditionsMap.clear();
   
   if ( msgLevel(MSG::DEBUG) ) 
     debug() << "Deleting " <<  m_channelsMap.size() << " L0DUElementaryChannels* " << endmsg;
-  for(LHCb::L0DUChannel::Map::iterator id=m_channelsMap.begin();id!=m_channelsMap.end();id++){
-   delete id->second;
-  }
+  for(auto& i : m_channelsMap) delete i.second;
   m_channelsMap.clear();
 
 
   //delete m_config;
-  for(std::map<std::string,LHCb::L0DUConfigs*>::iterator it = m_configs.begin();it!=m_configs.end();++it){
+  for(auto it = m_configs.begin();it!=m_configs.end();++it){
     LHCb::L0DUConfigs* configs = it->second;
-    if( configs == 0 )continue;
+    if( !configs ) continue;
     configs->release();
     delete configs;
   }
-  m_config = 0;
+  m_config = nullptr;
   m_configs.clear();
 }
 
@@ -256,7 +248,7 @@ void L0DUConfigProvider::createConfig(std::string slot){
   m_config->setConditions( m_conditionsMap );
   m_config->setChannels( m_channelsMap );
   if(m_triggersMap.size() !=0)m_config->setTriggers( m_triggersMap);
-  std::map<std::string,LHCb::L0DUConfigs*>::iterator it = m_configs.find( slot );
+  auto it = m_configs.find( slot );
   if(it == m_configs.end()){
     m_configs[slot] = new LHCb::L0DUConfigs();
   }
@@ -870,7 +862,7 @@ StatusCode L0DUConfigProvider::createChannels(){
 
 
     // create channel
-    LHCb::L0DUChannel* channel = new LHCb::L0DUChannel(index,  channelName , irate , type ) ;
+    auto channel = std::unique_ptr<LHCb::L0DUChannel>(new LHCb::L0DUChannel(index,  channelName , irate , type ) );
 
     // The conditions
     // --------------
@@ -915,7 +907,7 @@ StatusCode L0DUConfigProvider::createChannels(){
       debug() << "Created Channel : " << channel->description() << endmsg;
     
     
-    m_channelsMap[channelName]=channel;
+    m_channelsMap[channelName]=channel.release();
     id++;
   }
   return StatusCode::SUCCESS;
@@ -1029,7 +1021,7 @@ StatusCode L0DUConfigProvider::createTriggers(){
     }
 
     // create trigger
-    LHCb::L0DUTrigger* trigger = new LHCb::L0DUTrigger(index,  triggerName , mask) ;
+    auto trigger = std::unique_ptr<LHCb::L0DUTrigger>(new LHCb::L0DUTrigger(index,  triggerName , mask) );
 
 
      // The channels 
@@ -1086,7 +1078,7 @@ StatusCode L0DUConfigProvider::createTriggers(){
     }
     if ( msgLevel(MSG::DEBUG) ) 
       debug() << "Created Trigger  : " << trigger->description() << endmsg; 
-    m_triggersMap[triggerName] = trigger;
+    m_triggersMap[triggerName] = trigger.release();
 
     id++;
   }   // end loop over subtrigger 
@@ -1099,9 +1091,8 @@ StatusCode L0DUConfigProvider::createTriggers(){
 void L0DUConfigProvider::predefinedTriggers(){
 
   // create predefined triggers (decisionType = physics)
-  for(std::map<std::string,int>::const_iterator imap = s_tIndices.begin() ; s_tIndices.end() != imap ; imap++){
-    LHCb::L0DUTrigger* trigger = new LHCb::L0DUTrigger(imap->second,  imap->first ) ;
-    m_triggersMap[ imap->first ] = trigger;
+  for(auto imap = s_tIndices.begin() ; s_tIndices.end() != imap ; imap++){
+    m_triggersMap[ imap->first ] = new LHCb::L0DUTrigger(imap->second,  imap->first ) ;
   }    
 
   // Associate one channel to one (or several) trigger(s) according to elementary data (physics decisionType only)

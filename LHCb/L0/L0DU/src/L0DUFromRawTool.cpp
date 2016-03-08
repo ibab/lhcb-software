@@ -21,24 +21,9 @@ DECLARE_TOOL_FACTORY( L0DUFromRawTool )
 L0DUFromRawTool::L0DUFromRawTool( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-: Decoder::ToolBase ( type, name , parent ),
-  m_confTool(NULL),
-  m_emuTool(NULL),
-  m_condDB(NULL),
-  m_banks(),
-  m_vsn(0),
-  m_report(),
-  m_processorDatas(),
+: base_class( type, name , parent ),
 // DO NOT TOUCH !! IF YOU MODIFY THIS VALUE THIS WILL BREAK THE DC06 BACKWARD COMPATIBILITY
-  m_tck(0xDC06), // default value for DC06 production (TCK was not implemented in Bank) 
-  m_warning(true),
-  m_size(0),
-  m_roStatus(),
-  m_data(NULL),
-  m_source(0),
-  m_slot("T0"),
-  m_dumping(-1),
-  m_count(0)
+  m_tck(0xDC06) // default value for DC06 production (TCK was not implemented in Bank) 
 {
   declareInterface<IL0DUFromRawTool>(this);
   
@@ -59,12 +44,6 @@ L0DUFromRawTool::L0DUFromRawTool( const std::string& type,
   initRawEventSearch();
   
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-L0DUFromRawTool::~L0DUFromRawTool() {
-  if(m_processorDatas)delete m_processorDatas;
-} 
 
 
 
@@ -104,7 +83,7 @@ StatusCode L0DUFromRawTool::initialize(){
 
   // create Empty ProcessorData
   // Built L0ProcessorData
-  m_processorDatas = new LHCb::L0ProcessorDatas();
+  m_processorDatas.reset( new LHCb::L0ProcessorDatas() );
   for( int fiber = 0 ; fiber != (int) L0DUBase::Fiber::Empty ; fiber++){
     LHCb::L0ProcessorData* temp = new LHCb::L0ProcessorData ( (L0DUBase::Fiber::Type) fiber , L0DUBase::EmptyData );
     m_processorDatas->insert( temp );
@@ -141,14 +120,14 @@ bool L0DUFromRawTool::decodeBank(int ibank){
 // ---------------------------------------------
 bool L0DUFromRawTool::getL0DUBanksFromRaw( ){
 
-  m_banks = NULL;
+  m_banks = nullptr;
 
   m_roStatus = LHCb::RawBankReadoutStatus( LHCb::RawBank::L0DU );
   m_roStatus.addStatus( 0, LHCb::RawBankReadoutStatus::OK);
 
   LHCb::RawEvent* rawEvt = findFirstRawEvent() ;
   // if not existing complain
-  if( NULL == rawEvt ){
+  if( !rawEvt ){
     Warning("rawEvent not found in  '" + Gaudi::Utils::toString(m_rawEventLocations) +"' locations", StatusCode::SUCCESS).ignore();
     m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Missing);
     return false;
@@ -187,22 +166,20 @@ bool L0DUFromRawTool::decoding(int ibank){
   // ------------------------
   // clear -------------------
   // ------------------------
-  LHCb::L0DUConfig* config = NULL;
+  LHCb::L0DUConfig* config = nullptr;
   m_dump.clear();
   m_dataMap.clear();
   m_report.clear();
   // reset
-  for( LHCb::L0ProcessorDatas::iterator it = m_processorDatas->begin(); it != m_processorDatas->end() ; it++){
-    (*it)->setWord (L0DUBase::EmptyData);
-  }
+  for( auto& i : *m_processorDatas ) i->setWord (L0DUBase::EmptyData);
 
   //-----------------------------
   // get bank -------------------
   //-----------------------------
   if( !getL0DUBanksFromRaw() )return false;
-  std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); 
+  auto itB = m_banks->begin(); 
   LHCb::RawBank* bank = *itB+ibank;  
-  if(NULL == bank){
+  if(!bank){
     Error("Bank point to NULL ",StatusCode::SUCCESS).ignore();
     m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Missing);
     return false;
@@ -245,7 +222,7 @@ bool L0DUFromRawTool::decoding(int ibank){
 
     
     if( m_force >= 0 ){
-      std::stringstream msg("");
+      std::stringstream msg;
       msg << " TCK IS FORCED TO BE " << format("0x%04X", m_force);
       if( m_force != (int) m_tck){
         msg << " INCONSISTENT with assumed TCK for bank version 0 : " << format("0x%04X", m_tck) ;
@@ -287,7 +264,7 @@ bool L0DUFromRawTool::decoding(int ibank){
     // No TCK mechanism at time of version 1 :  TCK = FFFE assumed
     if(m_warning){
       m_warning = false;
-      std::stringstream tck("");
+      std::stringstream tck;
       tck << format("0x%04X", m_tck);
       if(m_warning)Warning("L0DU bank version = 0 --> the TCK value is forced to " + tck.str(),StatusCode::SUCCESS).ignore();
     } 
@@ -295,7 +272,7 @@ bool L0DUFromRawTool::decoding(int ibank){
 
     config = m_confTool->config( m_tck , m_slot);
 
-    if( NULL == config){
+    if( !config){
       std::stringstream tck("");
       tck << "Unable to load the configuration for tck = " <<  format("0x%04X", m_tck) << " --> Incomplete L0DUReport" ;
       Warning(tck.str(), StatusCode::SUCCESS).ignore();
@@ -328,7 +305,7 @@ bool L0DUFromRawTool::decoding(int ibank){
     }
 
     if( m_force >= 0 ){
-      std::stringstream msg("");
+      std::stringstream msg;
       msg << " TCK IS FORCED TO BE " << format("0x%04X", m_force);
       if( m_force != (int) m_tck){
         msg << " INCONSISTENT with TCK in data : " << format("0x%04X", m_tck) ;
@@ -356,8 +333,8 @@ bool L0DUFromRawTool::decoding(int ibank){
     // get corresponding configuration
     //---------------------------------
     config = m_confTool->config( m_tck , m_slot );
-    if( NULL == config){
-      std::stringstream tck("");
+    if( !config){
+      std::stringstream tck;
       m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Unknown);      
       tck << " Unable to load the configuration for tck = " <<  format("0x%04X", m_tck) << " --> Incomplete L0DUReport" ;
       Warning(tck.str(), StatusCode::SUCCESS).ignore();
@@ -434,11 +411,11 @@ bool L0DUFromRawTool::decoding(int ibank){
     for(unsigned int imu =0 ; imu < nmu ; imu++){
       int odd = imu-int(imu/2)*2;
       if(odd == 0 && !nextData())return false;
-      std::stringstream num("");
+      std::stringstream num;
       n[imu] = ((*m_data  >> 16*odd) & 0x0000E000 ) >> 13;
       num << n[imu];
       unsigned int val = (*m_data  >> 16*odd) & 0x0000FFFF;
-      if( n[imu] == 0)encode("M"+num.str()+"(Add)", val , L0DUBase::Muon1::Address);
+      if( n[imu] == 0)     encode("M"+num.str()+"(Add)", val , L0DUBase::Muon1::Address);
       else if( n[imu] == 1)encode("M"+num.str()+"(Add)", val , L0DUBase::Muon2::Address);
       else if( n[imu] == 2)encode("M"+num.str()+"(Add)", val , L0DUBase::Muon3::Address);
       else if( n[imu] == 3)encode("M"+num.str()+"(Add)", val , L0DUBase::Muon4::Address);
@@ -451,7 +428,7 @@ bool L0DUFromRawTool::decoding(int ibank){
     for(unsigned int imu =0 ; imu < nmu ; imu++){
       int biodd = imu-int(imu/4)*4;
       if(biodd == 0 && !nextData())return false;
-      std::stringstream num("");
+      std::stringstream num;
       num << n[imu];
       unsigned int pt = (*m_data >> 8*biodd) & 0x0000007F ;
       unsigned int sgn=((*m_data >> 8*biodd) & 0x00000080) >> 7;
@@ -722,18 +699,17 @@ bool L0DUFromRawTool::decoding(int ibank){
     if(m_encode)fillBCIDData();
     //  emulate the config for later usage (monitoring) 
     if(m_emu){
-      if(NULL != config)m_emuTool->process(config , m_processorDatas).ignore();
+      if(config)m_emuTool->process(config , m_processorDatas.get()).ignore();
       // template config :
       LHCb::L0DUConfig* temp =  m_confTool->config( LHCb::L0DUTemplateConfig::TCKValue , m_slot);
-      if( NULL != temp &&  0 != temp->channels().size() ){
-        m_emuTool->process(temp, m_processorDatas).ignore();
+      if( temp &&  !temp->channels().empty() ){
+        m_emuTool->process(temp, m_processorDatas.get()).ignore();
       }
     }
     // add data value to L0DUReport embeded map if not available via L0DUConfig (i.e. status bit or no emulation or unknown TCK)
-    for( std::map<std::string, std::pair<unsigned int,double> >::iterator it = m_dataMap.begin();
-         m_dataMap.end() != it ; ++it){ 
-      std::string name = it->first;
-      if( "" == name)continue;
+    for( auto it = m_dataMap.begin(); m_dataMap.end() != it ; ++it){ 
+      const std::string& name = it->first;
+      if(name.empty()) continue;
       unsigned int    di = (it->second).first;
       double sc = (it->second).second;
       if( m_report.dataDigit(name) != di )m_report.addToData(name,di, sc);
@@ -769,25 +745,25 @@ bool L0DUFromRawTool::decoding(int ibank){
 }
 
 
-unsigned int L0DUFromRawTool::data(std::string name){
+unsigned int L0DUFromRawTool::data(const std::string& name) const {
   // look for data in dataMap :
-  std::map<std::string, std::pair<unsigned int,double> >::iterator it = m_dataMap.find(name);
-  if( m_dataMap.end() != it) return ((*it).second).first;
-  // not found : look for in config->data() (e.g. compound)
-  return m_report.dataDigit( name );
+  // if not found : look for in config->data() (e.g. compound)
+  auto it = m_dataMap.find(name);
+  return it != m_dataMap.end() ? it->second.first
+                               : m_report.dataDigit( name );
 }
 
-double L0DUFromRawTool::dataScaled(std::string name){
+double L0DUFromRawTool::dataScaled(const std::string& name) const {
   // look for data in dataMap :
-  std::map<std::string, std::pair<unsigned int,double> >::iterator it = m_dataMap.find(name);
-  if( m_dataMap.end() != it) return double(((*it).second).first)*((*it).second).second;
-  // not found : look for in config->data() (e.g. compound)
-  return m_report.dataValue( name );
+  // if not found : look for in config->data() (e.g. compound)
+  auto it = m_dataMap.find(name);
+  return it != m_dataMap.end() ? it->second.first*it->second.second
+                               : m_report.dataValue( name );
 }
 
 
 
-double L0DUFromRawTool::scale(const unsigned int base[L0DUBase::Index::Size]){
+double L0DUFromRawTool::scale(const unsigned int base[L0DUBase::Index::Size]) const {
   return m_condDB->scale( base[L0DUBase::Index::Scale] );
 }
 
@@ -818,13 +794,9 @@ void L0DUFromRawTool::fillBCIDData(){
   encode("",m_bcid3                        , L0DUBase::Muon7::BCID2);
   encode("",m_bcid3                        , L0DUBase::Muon8::BCID1);
   encode("",m_bcid3                        , L0DUBase::Muon8::BCID2);
-  encode("",m_bcid2                        , L0DUBase::PileUp::BCID1    );
-  encode("",m_bcid2                        , L0DUBase::PileUp::BCID2    );
+  encode("",m_bcid2                        , L0DUBase::PileUp::BCID1);
+  encode("",m_bcid2                        , L0DUBase::PileUp::BCID2);
 }
-
-
-
-
 
 
 void L0DUFromRawTool::putStatusOnTES(){
@@ -833,24 +805,31 @@ void L0DUFromRawTool::putStatusOnTES(){
   typedef LHCb::RawBankReadoutStatuss Statuss;  
   Statuss* statuss = getOrCreate<Statuss,Statuss>( LHCb::RawBankReadoutStatusLocation::Default );
   Status* status = statuss->object ( m_roStatus.key() );
-  if( NULL == status ){
+  if( !status ){
     status = new Status( m_roStatus  );
     statuss->insert( status );
   } else {
-    std::stringstream type("");
+    std::stringstream type;
     type << LHCb::RawBank::typeName(m_roStatus.key()) ;
     
     if ( msgLevel( MSG::DEBUG) )debug() << "Status for bankType " <<  type.str()  << " already exists" << endmsg;
     if( status->status() != m_roStatus.status() ){
       Warning("Status for bankType " +  type.str() + " already exists  with different status value -> merge both"
               , StatusCode::SUCCESS).ignore();
-      for( std::map< int, long >::iterator it = m_roStatus.statusMap().begin() ; it != m_roStatus.statusMap().end() ; ++it){
-        status->addStatus((*it).first , (*it).second);
-      }
+      for(const auto& i : m_roStatus.statusMap()) status->addStatus(i.first , i.second);
     } 
   }
 }
 
-
-
-
+std::string L0DUFromRawTool::dump() const {
+  std::ostringstream s;
+  int i = 0;
+  for(unsigned int word : m_dump ) {
+    s << format( "%8i",i) << "   :   " << format("0x%08X", word)<< std::endl;
+    i++;
+  }
+  info() << " ------------ bank body event " << m_count << "-------------" << std::endl
+         << s.str()
+         << endmsg;
+  return s.str();
+}

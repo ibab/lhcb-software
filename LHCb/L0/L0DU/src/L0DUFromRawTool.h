@@ -22,48 +22,43 @@
  *  @author Olivier Deschamps
  *  @date   2007-10-19
  */
-class L0DUFromRawTool : public Decoder::ToolBase, virtual public IL0DUFromRawTool {
+class L0DUFromRawTool : public extends<Decoder::ToolBase, IL0DUFromRawTool> {
 public: 
   /// Standard constructor
   L0DUFromRawTool( const std::string& type, 
                    const std::string& name,
                    const IInterface* parent);
 
-  virtual ~L0DUFromRawTool( ); ///< Destructor
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
   bool decodeBank(int ibank=0 );
 
-  unsigned int data(std::string name);
-  double dataScaled(std::string name);
-  unsigned int version(){return m_vsn;};
-  unsigned int tck(){  return m_tck; }
-  unsigned int firmware(){  return m_pgaVsn; }
-  const std::pair<unsigned int,unsigned int> bcid(){  return std::make_pair(m_bcid2,m_bcid3); }
-  unsigned int rsda(){  return m_rsda; }
-  unsigned int muonCleaningPattern(){  return m_muCleanPattern; }
-  unsigned int status(){  return m_status; }
-  unsigned int size(){return m_size;  }
-  unsigned long roStatus(){return m_roStatus.status();  }
+  unsigned int data(const std::string& name) const;
+  double dataScaled(const std::string& name) const;
+  unsigned int version() const {return m_vsn;};
+  unsigned int tck() const {  return m_tck; }
+  unsigned int firmware() const {  return m_pgaVsn; }
+  const std::pair<unsigned int,unsigned int> bcid() const {  return {m_bcid2,m_bcid3}; }
+  unsigned int rsda() const {  return m_rsda; }
+  unsigned int muonCleaningPattern() const {  return m_muCleanPattern; }
+  unsigned int status() const {  return m_status; }
+  unsigned int size() const {return m_size;  }
+  unsigned long roStatus() const {return m_roStatus.status();  }
   void fillDataMap(bool fill = true){m_fill = fill;}
-  std::string dump();
-  
-    
+  std::string dump() const ;
 
-  LHCb::L0DUReport report(){return m_report;}
-  LHCb::L0ProcessorDatas* L0ProcessorDatas(){return m_processorDatas;}
-  const std::map<std::string, std::pair<unsigned int,double> >& datas(){return m_dataMap;}
+  LHCb::L0DUReport report() const {return m_report;}
+  LHCb::L0ProcessorDatas* L0ProcessorDatas(){return m_processorDatas.get();}
+  const std::map<std::string, std::pair<unsigned int,double> >& datas() const {return m_dataMap;}
   
   virtual StatusCode  _setProperty(const std::string& p,const std::string& v){return  setProperty(p,v);};
   
-protected:
-
 private:
   bool decoding(int ibank);
   bool getL0DUBanksFromRaw();
-  inline void encode(std::string name, unsigned int data ,  const unsigned int base[L0DUBase::Index::Size]);
-  inline void dataMap(std::string name, unsigned int data , double scale = 1.);
+  inline void encode(const std::string& name, unsigned int data ,  const unsigned int base[L0DUBase::Index::Size]);
+  inline void dataMap(const std::string& name, unsigned int data , double scale = 1.);
   void fillBCIDData();
-  double scale(const unsigned int base[L0DUBase::Index::Size]);
+  double scale(const unsigned int base[L0DUBase::Index::Size]) const;
   inline bool nextData();
   void putStatusOnTES();
   //
@@ -75,13 +70,13 @@ private:
   int m_sumSize;
   
 
-  IL0DUConfigProvider*   m_confTool;
-  IL0DUEmulatorTool*     m_emuTool;
-  IL0CondDBProvider*     m_condDB;  
+  IL0DUConfigProvider*   m_confTool = nullptr;
+  IL0DUEmulatorTool*     m_emuTool = nullptr;
+  IL0CondDBProvider*     m_condDB = nullptr;
   //
   const std::vector<LHCb::RawBank*>* m_banks;  
   std::map<std::string, std::pair<unsigned int,double> > m_dataMap;
-  unsigned int m_vsn;
+  unsigned int m_vsn = 0;
   unsigned int m_status;
   unsigned int m_pgaVsn;
   unsigned int m_bcid2;
@@ -94,23 +89,23 @@ private:
   std::map<int , unsigned int> m_sumEt;
   
   LHCb::L0DUReport m_report;
-  LHCb::L0ProcessorDatas* m_processorDatas;
+  std::unique_ptr<LHCb::L0ProcessorDatas> m_processorDatas;
   unsigned int m_tck;  
-  bool m_warning;
-  unsigned int m_size;
+  bool m_warning = true;
+  unsigned int m_size = 0;
   LHCb::RawBankReadoutStatus m_roStatus;
   //
-  unsigned int* m_data;
-  unsigned int  m_source;
+  unsigned int* m_data = nullptr;
+  unsigned int  m_source = 0;
   bool m_warn;
   bool m_fill;
   bool m_emu;
   bool m_encode;
   bool m_stat;
-  std::string m_slot;
+  std::string m_slot = "T0";
   std::vector<unsigned int> m_dump;
-  int m_dumping;
-  int m_count;
+  int m_dumping = -1;
+  int m_count = 0;
   
 };
 #endif // L0DUFROMRAWTOOL_H
@@ -118,9 +113,9 @@ private:
 
 
 
-inline void L0DUFromRawTool::encode(std::string name, unsigned int data ,  const unsigned int base[L0DUBase::Index::Size]){
-  if(name != "")dataMap(name,data,scale(base));
-  if(!m_encode)return;
+inline void L0DUFromRawTool::encode(const std::string& name, unsigned int data ,  const unsigned int base[L0DUBase::Index::Size]){
+  if (!name.empty()) dataMap(name,data,scale(base));
+  if (!m_encode) return;
   LHCb::L0ProcessorData* fiber = m_processorDatas->object( base[ L0DUBase::Index::Fiber ]  )  ;
   unsigned int word = fiber->word();  
   //  word |= ( (data << base[L0DUBase::Index::Shift]) & base[L0DUBase::Index::Mask] );
@@ -132,11 +127,11 @@ inline void L0DUFromRawTool::encode(std::string name, unsigned int data ,  const
     unsigned int val = data >> base[L0DUBase::Index::Offset];
     word |= ( ( val << base[L0DUBase::Index::Shift2]) & base[L0DUBase::Index::Mask2] );
     fiber->setWord( word);
-  }  
+  }
 }
 
-inline void L0DUFromRawTool::dataMap(std::string name, unsigned int data,double scale){
-  if(m_fill)m_dataMap[name]=std::make_pair(data,scale);
+inline void L0DUFromRawTool::dataMap(const std::string& name, unsigned int data,double scale){
+  if(m_fill) m_dataMap[name]=std::make_pair(data,scale);
 }
 
 inline bool L0DUFromRawTool::nextData(){
@@ -145,23 +140,8 @@ inline bool L0DUFromRawTool::nextData(){
     m_roStatus.addStatus( m_source , LHCb::RawBankReadoutStatus::Corrupted );
     m_roStatus.addStatus( m_source , LHCb::RawBankReadoutStatus::Incomplete);
     return false;
-  }else{
-    if ( msgLevel( MSG::VERBOSE) )verbose() << "data = " <<  format("0x%04X", *m_data) << endmsg;
-    m_dump.push_back(*m_data);
   }
+  if ( msgLevel( MSG::VERBOSE) )verbose() << "data = " <<  format("0x%04X", *m_data) << endmsg;
+  m_dump.push_back(*m_data);
   return true;
-}
-
-inline std::string L0DUFromRawTool::dump(){
-  std::ostringstream s("");
-  int i = 0;
-  for(std::vector<unsigned int>::iterator it=m_dump.begin();m_dump.end()!=it;++it){
-    unsigned int word = *it;
-    s << format( "%8i",i) << "   :   " << format("0x%08X", word)<< std::endl;
-    i++;
-  }
-  info() << " ------------ bank body event " << m_count << "-------------" << std::endl
-         << s.str()
-         << endmsg;
-  return s.str();
 }

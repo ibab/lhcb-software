@@ -25,28 +25,28 @@ public:
                        const std::string& name,
                        const IInterface* parent);
 
-  virtual ~L0DUFromRawHlt1Tool( ); ///< Destructor
+  ~L0DUFromRawHlt1Tool( ) override; ///< Destructor
 
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
 
-  virtual bool decodeBank( int iBank );
-  virtual std::string dump() { return "== not implemented =="; }
+  bool decodeBank( int iBank ) override;
+  std::string dump() const override { return "== not implemented =="; }
   
 
-  virtual unsigned int data(std::string name) { return m_dataMap[name].first; } 
-  virtual unsigned int version()              { return m_vsn;};
-  virtual unsigned int tck()                  { return m_tck; }
-  virtual unsigned int firmware()             { return m_pgaVsn; }
-  virtual unsigned int rsda()                 { return m_rsda; }
-  virtual unsigned int muonCleaningPattern()  { return m_muCleanPattern; }
-  virtual unsigned int status()               { return m_status; }
-  virtual unsigned int size()                 { return m_size;  }
-  virtual unsigned long roStatus()            { return m_roStatus.status();  }
+  virtual unsigned int data(const std::string& name) const { return m_dataMap.at(name).first; } 
+  virtual unsigned int version() const              { return m_vsn;};
+  virtual unsigned int tck() const                  { return m_tck; }
+  virtual unsigned int firmware() const             { return m_pgaVsn; }
+  virtual unsigned int rsda() const                 { return m_rsda; }
+  virtual unsigned int muonCleaningPattern() const  { return m_muCleanPattern; }
+  virtual unsigned int status() const               { return m_status; }
+  virtual unsigned int size() const                 { return m_size;  }
+  virtual unsigned long roStatus() const            { return m_roStatus.status();  }
   virtual void fillDataMap(bool fill = true)  { m_fill = fill;}
-  virtual LHCb::L0DUReport report( )          { return m_report;}
+  virtual LHCb::L0DUReport report( ) const          { return m_report;}
   virtual LHCb::L0ProcessorDatas* L0ProcessorDatas()         { return m_processorDatas;}
-  virtual const std::pair<unsigned int,unsigned int> bcid()  { return std::make_pair(m_bcid2,m_bcid3); }
-  virtual const std::map<std::string, std::pair<unsigned int,double> >& datas() { return m_dataMap;}
+  virtual const std::pair<unsigned int,unsigned int> bcid()  const { return {m_bcid2,m_bcid3}; }
+  virtual const std::map<std::string, std::pair<unsigned int,double> >& datas() const { return m_dataMap;}
   virtual StatusCode  _setProperty(const std::string& p,const std::string& v)   { return  setProperty(p,v);};
 
 protected:

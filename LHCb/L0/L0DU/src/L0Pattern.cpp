@@ -2,8 +2,10 @@
 
 // L0Event
 #include "Event/L0DUReport.h"
+#include <algorithm>
 // local
 #include "L0Pattern.h"
+
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : L0Pattern
@@ -97,8 +99,6 @@ StatusCode L0Pattern::execute() {
 
   m_datas =  m_fromRaw->L0ProcessorDatas();
   
-
-  
   // built 12 bits BCID 
   unsigned long sature = 0xDEB;
   if( m_bcid > sature )m_bcid=0 ;
@@ -134,10 +134,10 @@ StatusCode L0Pattern::execute() {
       continue;
     }
     int itck;
-    std::istringstream is( (*it).c_str() );
+    std::istringstream is( *it );
     is >> std::hex >> itck;
-    LHCb::L0DUConfig* config   = m_config->config( itck );
-    if(NULL == config)return Error("Unknown TCK",StatusCode::SUCCESS);
+    LHCb::L0DUConfig* config = m_config->config( itck );
+    if (!config) return Error("Unknown TCK",StatusCode::SUCCESS);
     m_emulator->process(config , m_datas); 
 
     unsigned int rs = 0;
@@ -155,12 +155,12 @@ StatusCode L0Pattern::execute() {
     rsda.push_back( rs );
     tcks.push_back( itck );
     // channel pattern
-    long pattern = 0;
     LHCb::L0DUChannel::Map channels = config->channels();    
-    for(LHCb::L0DUChannel::Map::iterator ic = channels.begin() ; ic != channels.end() ; ++ic ){
-      LHCb::L0DUChannel* channel = (*ic).second;
-      pattern |= channel->emulatedDecision()  << channel->id();
-    }
+    long pattern = std::accumulate( channels.begin(), channels.end(),
+                                    0L, [](long p, const std::pair<std::string,LHCb::L0DUChannel*> c) {
+                                       const LHCb::L0DUChannel* channel = c.second;
+                                       return p | ( channel->emulatedDecision()  << channel->id() );
+                              });
     report.push_back(pattern);
   }
   StatusCode sc;
@@ -169,17 +169,11 @@ StatusCode L0Pattern::execute() {
   sc=ntp->farray("report"  , report ,"nConfig", m_list.size() );
   
   // DATA
-  std::vector<int> word,lsb,msb,typ;
-  for(L0ProcessorDatas::const_iterator idata = m_datas->begin(); idata != m_datas->end(); idata++ ) {
-    word.push_back ( (*idata)->word() ) ;
-    lsb.push_back( (*idata)->lsb() ) ;
-    msb.push_back( (*idata)->msb() ) ;
-    typ.push_back( (*idata)->key() ) ;
-  }
-  sc=ntp->farray("word" , word ,"nData", 24 );
-  sc=ntp->farray("lsb"  , lsb  ,"nData", 24 );
-  sc=ntp->farray("msb"  , msb  ,"nData", 24 );
-  sc=ntp->farray("fiber", typ  ,"nData", 24 );
+  sc=ntp->farray({ { "word" , [](const LHCb::L0ProcessorData* d) { return d->word();} },
+                   { "lsb" ,  [](const LHCb::L0ProcessorData* d) { return d->lsb(); } },
+                   { "msb" ,  [](const LHCb::L0ProcessorData* d) { return d->msb(); } },
+                   { "fiber", [](const LHCb::L0ProcessorData* d) { return d->key(); } } },
+                 m_datas->begin(), m_datas->end(),"nData", 24 );
   sc=ntp->column("bcid" , m_bcid      );
 
   m_bcid++;
@@ -187,7 +181,7 @@ StatusCode L0Pattern::execute() {
   return sc ;
 }
 
-void L0Pattern::encode(unsigned int data ,  const unsigned int base[L0DUBase::Index::Size]){
+void L0Pattern::encode(unsigned int data, const unsigned int base[L0DUBase::Index::Size]){
   LHCb::L0ProcessorData* fiber = m_datas->object( base[ L0DUBase::Index::Fiber ]  )  ;
   unsigned int word = fiber->word();  
   word |= ( (data << base[L0DUBase::Index::Shift]) & base[L0DUBase::Index::Mask] );
@@ -200,5 +194,3 @@ void L0Pattern::encode(unsigned int data ,  const unsigned int base[L0DUBase::In
     fiber->setWord( word);
   }
 }
-
-

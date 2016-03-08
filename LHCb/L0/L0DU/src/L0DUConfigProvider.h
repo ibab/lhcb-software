@@ -118,9 +118,9 @@ private:
 
   std::map<std::string,LHCb::L0DUConfigs*> m_configs;
 
-  LHCb::L0DUConfig* m_config;
+  LHCb::L0DUConfig*  m_config;
 
-  IL0CondDBProvider*        m_condDB;  
+  IL0CondDBProvider* m_condDB;  
 
   unsigned long m_cData;
   int m_pData;
