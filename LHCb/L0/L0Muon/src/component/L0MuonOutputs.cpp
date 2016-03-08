@@ -329,57 +329,48 @@ StatusCode L0MuonOutputs::decodeRawBanks(LHCb::RawEvent* rawEvt, bool statusOnTE
       getOrCreate<LHCb::RawBankReadoutStatuss,LHCb::RawBankReadoutStatuss>( LHCb::RawBankReadoutStatusLocation::Default );
 
     LHCb::RawBankReadoutStatus * status = L0MuonBanksStatuss-> object( ctrlCandStatus.key() ) ;
-    if ( 0 == status ) {
+    if ( !status ) {
       status = new LHCb::RawBankReadoutStatus( ctrlCandStatus ) ;
       L0MuonBanksStatuss-> insert( status ) ;
     } else {
       if ( status -> status() != ctrlCandStatus.status() ) {
-        std::map< int , long >::iterator it ;
-        for ( it = ctrlCandStatus.statusMap().begin() ; 
-              it != ctrlCandStatus.statusMap().end() ; ++it ) {
-          status -> addStatus( (*it).first , (*it).second ) ;
+        for (const auto& s : ctrlCandStatus.statusMap()) {
+          status -> addStatus( s.first , s.second ) ;
         }
       }
     }
     
     if (m_mode > 0) {
       status = L0MuonBanksStatuss-> object( procCandStatus.key() ) ;
-      if ( 0 == status ) {
+      if ( !status ) {
         status = new LHCb::RawBankReadoutStatus( procCandStatus ) ;
         L0MuonBanksStatuss-> insert( status ) ;
       } else {
         if ( status -> status() != procCandStatus.status() ) {
-          std::map< int , long >::iterator it ;
-          for ( it = procCandStatus.statusMap().begin() ; 
-                it != procCandStatus.statusMap().end() ; ++it ) {
-            status -> addStatus( (*it).first , (*it).second ) ;
+          for ( const auto& s : procCandStatus.statusMap()) {
+            status -> addStatus( s.first , s.second ) ;
           }
         }
       }
 
       status = L0MuonBanksStatuss-> object( procDataStatus.key() ) ;
-      if ( 0 == status ) {
+      if ( !status ) {
         status = new LHCb::RawBankReadoutStatus( procDataStatus ) ;
         L0MuonBanksStatuss-> insert( status ) ;
       } else {
         if ( status -> status() != procDataStatus.status() ) {
-          std::map< int const, long >::iterator it ;
-          for ( it = procDataStatus.statusMap().begin() ; 
-                it != procDataStatus.statusMap().end() ; ++it ) {
-            status -> addStatus( (*it).first , (*it).second ) ;
+          for (const auto& s : procDataStatus.statusMap()) {
+            status -> addStatus( s.first , s.second ) ;
           }
         }
       }
     }
   }
-  
 
   ++m_rawBankNorm;
   m_rawBankSizeTot += rawBankSize;
-
   
   return StatusCode::SUCCESS;
-
 }
 
 
@@ -390,7 +381,7 @@ StatusCode L0MuonOutputs::writeRawBanks(){
   int ievt;
   
   LHCb::RecHeader* evt = getIfExists<LHCb::RecHeader> (LHCb::RecHeaderLocation::Default);
-  if ( NULL != evt ) {
+  if ( evt ) {
     ievt = int(evt->evtNumber());
   } else {
     ievt = m_bankEventCounter;
@@ -676,11 +667,11 @@ StatusCode L0MuonOutputs::writeOnTES(std::string l0context , std::string taeInTe
     put(pdata , location );
     for (int i= 0; i<4; ++i) {
       std::vector<LHCb::MuonTileID>  pus = m_procData[i]->pus();
-      for (std::vector<LHCb::MuonTileID>::iterator itpu=pus.begin(); itpu!=pus.end(); ++itpu){
-        std::vector<LHCb::MuonTileID> ols = m_procData[i]->ols(*itpu);
+      for (const auto& pu : pus ) {
+        std::vector<LHCb::MuonTileID> ols = m_procData[i]->ols(pu);
         std::vector<LHCb::MuonTileID> neighs;
-        if (m_mode>1) neighs = m_procData[i]->neighs(*itpu);
-        LHCb::L0MuonData *l0muondata = new LHCb::L0MuonData(*itpu, ols, neighs);
+        if (m_mode>1) neighs = m_procData[i]->neighs(pu);
+        LHCb::L0MuonData *l0muondata = new LHCb::L0MuonData(pu, ols, neighs);
         pdata->insert(l0muondata);
       }
     }

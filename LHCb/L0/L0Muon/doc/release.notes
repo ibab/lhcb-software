@@ -2,6 +2,8 @@
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
+! 2016-03-08 - Gerhard Raven
+ - C++11 modernization
 
 !========================= L0Muon v9r14p1 2015-10-12 =========================
 ! 2015-08-03 - Gerhard Raven
