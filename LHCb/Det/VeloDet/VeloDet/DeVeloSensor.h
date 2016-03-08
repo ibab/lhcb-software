@@ -1,4 +1,3 @@
-// $Id: DeVeloSensor.h,v 1.45 2010-02-07 15:10:19 krinnert Exp $
 #ifndef VELODET_DEVELOSENSOR_H
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -43,9 +42,6 @@ class DeVeloSensor : public DetectorElement {
 public:
   /// Standard constructor
   DeVeloSensor( const std::string& name = "" );
-
-  /// Destructor
-  virtual ~DeVeloSensor( );
 
   /// object identifier (static method)
   static  const CLID& classID() { return CLID_DeVeloSensor; };
@@ -527,7 +523,7 @@ private:
   /// On demand access to MsgStream object
   inline MsgStream & msg() const
   {
-    if ( !m_msgStream ) m_msgStream = new MsgStream( msgSvc(), "DeVeloSensor" );
+    if ( !m_msgStream ) m_msgStream.reset(new MsgStream( msgSvc(), "DeVeloSensor" ));
     return *m_msgStream;
   }
 
@@ -587,7 +583,7 @@ private:
   bool m_verbose;
 
   /// cached Message Stream object
-  mutable MsgStream * m_msgStream;
+  mutable std::unique_ptr<MsgStream> m_msgStream;
 
   /// event-specific TELL1 info
   Tell1EventInfo m_tell1EventInfo;

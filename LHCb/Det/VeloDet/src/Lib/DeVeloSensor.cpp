@@ -34,15 +34,9 @@ DeVeloSensor::DeVeloSensor(const std::string& name) :
   m_stripInfoConditionName("StripInfo"),
   m_readoutConditionName("Readout"),
   m_isReadOut(true),
-  m_tell1WithoutSensor(false),
-  m_msgStream(NULL)
+  m_tell1WithoutSensor(false)
 {
-  ;
 }
-//==============================================================================
-/// Destructor
-//==============================================================================
-DeVeloSensor::~DeVeloSensor() { delete m_msgStream; }
 //==============================================================================
 /// Object identification
 //==============================================================================
@@ -54,20 +48,20 @@ const CLID& DeVeloSensor::clID()
 StatusCode DeVeloSensor::initialize()
 {
   // Trick from old DeVelo to set the output level
-  PropertyMgr* pmgr = new PropertyMgr();
-  int outputLevel=0;
-  pmgr->declareProperty("OutputLevel", outputLevel);
-  IJobOptionsSvc* jobSvc;
-  ISvcLocator* svcLoc = Gaudi::svcLocator();
-  StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
-  if( sc.isSuccess() ) sc = jobSvc->setMyProperties("DeVeloSensor", pmgr);
-  if ( 0 < outputLevel ) {
-    msgSvc()->setOutputLevel("DeVeloSensor", outputLevel);
+  {
+      PropertyMgr pmgr;
+      int outputLevel=0;
+      pmgr.declareProperty("OutputLevel", outputLevel);
+      auto jobSvc = Gaudi::svcLocator()->service<IJobOptionsSvc>("JobOptionsSvc");
+      if (!jobSvc) return StatusCode::FAILURE;
+      auto sc = jobSvc->setMyProperties("DeVeloSensor", &pmgr);
+      if( !sc ) return sc;
+      if ( 0 < outputLevel ) {
+        msgSvc()->setOutputLevel("DeVeloSensor", outputLevel);
+      }
   }
-  delete pmgr;
-  if( !sc ) return sc;
 
-  sc = DetectorElement::initialize();
+  auto sc = DetectorElement::initialize();
   if(!sc.isSuccess()) {
     msg() << MSG::ERROR << "Failed to initialise DetectorElement" << endmsg;
     return sc;

@@ -1,4 +1,3 @@
-// $Id: DeVelo.h,v 1.57 2009-07-27 10:36:15 jonrob Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -48,9 +47,6 @@ public:
   /// Constructors
   DeVelo( const std::string& name    = "" );
   
-  /// (virtual) Destructor
-  virtual ~DeVelo() ;
-
   /// object identification
   static  const CLID& classID ()       { return CLID_DeVelo ; } 
   /// object identification
@@ -559,7 +555,7 @@ private:
   /// On demand access to MsgStream object
   inline MsgStream & msg() const
   {
-    if ( !m_msgStream ) m_msgStream = new MsgStream( msgSvc(), "DeVelo" );
+    if ( !m_msgStream ) m_msgStream.reset( new MsgStream( msgSvc(), "DeVelo" ) );
     return *m_msgStream; 
   }
 
@@ -692,7 +688,7 @@ private:
   bool m_verbose;
 
   /// cached Message Stream object
-  mutable MsgStream * m_msgStream;
+  mutable std::unique_ptr<MsgStream> m_msgStream;
 
   double m_sensVolCut;
 };

@@ -171,16 +171,8 @@ DeVeloRType::DeVeloRType(const std::string& name) :
   m_phiMax(VeloDet::deVeloRTypeStaticPhiMax()),
   m_stripPhiLimits(VeloDet::deVeloRTypeStaticStripPhiLimits()),
   m_M2RoutingLines(VeloDet::deVeloRTypeStaticM2RoutingLines()),
-  m_M2RLMinPhi(VeloDet::deVeloRTypeStaticM2RLMinPhi()),
-  m_msgStream(NULL)
+  m_M2RLMinPhi(VeloDet::deVeloRTypeStaticM2RLMinPhi())
 {
-}
-//==============================================================================
-/// Destructor
-//==============================================================================
-DeVeloRType::~DeVeloRType()
-{
-  delete m_msgStream;
 }
 //==============================================================================
 /// Object identification
@@ -193,11 +185,13 @@ const CLID& DeVeloRType::clID()
 StatusCode DeVeloRType::initialize()
 {
   { // Trick from old DeVelo to set the output level
-    std::unique_ptr<PropertyMgr> pmgr{  new PropertyMgr() };
+    PropertyMgr pmgr;
     int outputLevel=0;
-    pmgr->declareProperty("OutputLevel", outputLevel);
+    pmgr.declareProperty("OutputLevel", outputLevel);
     auto jobSvc = Gaudi::svcLocator()->service<IJobOptionsSvc>("JobOptionsSvc");
-    if( jobSvc ) jobSvc->setMyProperties("DeVeloRType", pmgr.get()).ignore();
+    if (!jobSvc) return StatusCode::FAILURE;
+    auto sc = jobSvc->setMyProperties("DeVeloRType", &pmgr);
+    if (!sc.isSuccess()) return sc;
     if ( 0 < outputLevel ) {
       msgSvc()->setOutputLevel("DeVeloRType", outputLevel);
     }

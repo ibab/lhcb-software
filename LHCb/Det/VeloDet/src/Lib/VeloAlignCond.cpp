@@ -46,16 +46,6 @@ VeloAlignCond::PositionPaths::PositionPaths(const std::string &_x,const std::str
   }
 }
 
-//-----------------------------------------------------------------------------
-// Default constructor
-//-----------------------------------------------------------------------------
-VeloAlignCond::VeloAlignCond():
-  AlignmentCondition(),
-  m_paths(),
-  m_xOffCond(0),m_yOffCond(0),
-  m_inUpdMgrSvc(false),
-  m_msgStream(NULL)
-{}
 
 //-----------------------------------------------------------------------------
 // Main constructor
@@ -65,11 +55,7 @@ VeloAlignCond::VeloAlignCond(const std::vector<double>& translation,
                              const std::vector<double>& pivot,
                              const std::string &xOffsetLoc,
                              const std::string &yOffsetLoc):
-  AlignmentCondition(translation,rotation,pivot),
-  m_paths(),
-  m_xOffCond(0),m_yOffCond(0),
-  m_inUpdMgrSvc(false),
-  m_msgStream(NULL)
+  AlignmentCondition(translation,rotation,pivot)
 {
   if ( !xOffsetLoc.empty() ) this->addParam("XOffset",xOffsetLoc);
   if ( !yOffsetLoc.empty() ) this->addParam("YOffset",yOffsetLoc);
@@ -82,7 +68,6 @@ VeloAlignCond::~VeloAlignCond(){
   if ( m_inUpdMgrSvc ) {
     m_services->updMgrSvc()->unregister(this);
   }
-  delete m_msgStream;
 }
 
 //=============================================================================
@@ -138,24 +123,14 @@ StatusCode VeloAlignCond::initialize() {
 
 #include <numeric>
 namespace {
-  /// helper class used by correctOffset to calculate a polynomial function as
-  /// $(\ldots{}((c_n x + c_{n-1}) x + c_{n-2})\ldots{}) x + c_0$
-  struct poly: public std::binary_function<double,double,double>{
-    poly(double _x):x(_x){}
-    inline double operator()(first_argument_type a, second_argument_type b){
-      return a*x+b;
-    }
-    double x;
-  };
   /// Correct the offset using a polinomial function that has the element of the
   /// vector coeffs as coefficients.
   /// The result is equivalent to:
   ///    $\sum_{i=0}^{n} c_i x^i$
-  inline
   double correctOffset(double offset, const std::vector<double> &coeffs) {
-    return (coeffs.empty()) ? offset
-      : std::accumulate(coeffs.rbegin()+1,coeffs.rend(),
-                        *(coeffs.rbegin()),poly(offset));
+    return coeffs.empty() ? offset
+      : std::accumulate(std::next(coeffs.rbegin()),coeffs.rend(), coeffs.back(),
+                        [&](double a, double b) { return a*offset+b; } );
   }
 }
 

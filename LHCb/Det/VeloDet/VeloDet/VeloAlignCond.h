@@ -39,7 +39,7 @@ public:
   };
 
   /// Standard constructor
-  VeloAlignCond( );
+  VeloAlignCond( ) = default;
   /// Constructor
   VeloAlignCond(const std::vector<double>& translation,
                 const std::vector<double>& rotation,
@@ -80,22 +80,22 @@ protected:
   PositionPaths m_paths;
 
   /// Pointer to the condition used for the offset along x (MotionSystem).
-  Condition *m_xOffCond;
+  Condition *m_xOffCond = nullptr;
   /// Pointer to the condition used for the offset along y (MotionSystem).
-  Condition *m_yOffCond;
+  Condition *m_yOffCond = nullptr;
 
   /// Flag to remember if the condition registered itself to the UpdateManagerSvc.
-  bool m_inUpdMgrSvc;
+  bool m_inUpdMgrSvc = false;
 
 private:
 
   /// cached Message Stream object
-  mutable MsgStream * m_msgStream;
+  mutable std::unique_ptr<MsgStream> m_msgStream;
 
   /// On demand access to MsgStream object
   inline MsgStream & msg() const
   {
-    if ( !m_msgStream ) m_msgStream = new MsgStream( this->msgSvc(), "VeloAlignCond" );
+    if ( !m_msgStream ) m_msgStream.reset(new MsgStream( this->msgSvc(), "VeloAlignCond" ));
     return *m_msgStream;
   }
 

@@ -26,21 +26,17 @@
  *  @author Kurt Rinnert kurt.rinnert@cern.ch
  */
 
+namespace {
+  static const Gaudi::XYZPoint localZero(0.,0.,0.);
+}
+
 
 // **  Standard Constructors
 
 DeVelo::DeVelo( const std::string& name ) :
   DetectorElement(name),
-  m_tell1ToSensorsConditionName("TELL1ToSensors"),
-  m_msgStream(NULL)
+  m_tell1ToSensorsConditionName("TELL1ToSensors")
 {
-  ;
-}
-
-//
-// Standard Destructor
-DeVelo::~DeVelo() {
-  delete m_msgStream;
 }
 
 // ============================================================================
@@ -55,25 +51,25 @@ const CLID& DeVelo::clID () const { return DeVelo::classID() ; }
 StatusCode DeVelo::initialize() {
 
   // Trick from old DeVelo to set the output level
-  PropertyMgr* pmgr = new PropertyMgr();
-  int outputLevel=0;
-  pmgr->declareProperty("OutputLevel", outputLevel);
-  IJobOptionsSvc* jobSvc;
-  ISvcLocator* svcLoc = Gaudi::svcLocator();
-  StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
-  if( sc.isSuccess() ) sc = jobSvc->setMyProperties("DeVelo", pmgr);
-  if ( 0 < outputLevel ) {
-    msgSvc()->setOutputLevel("DeVelo", outputLevel);
+  {
+      PropertyMgr pmgr;
+      int outputLevel=0;
+      pmgr.declareProperty("OutputLevel", outputLevel);
+      auto jobSvc = Gaudi::svcLocator()->service<IJobOptionsSvc>("JobOptionsSvc");
+      if (!jobSvc) return StatusCode::FAILURE;
+      auto sc = jobSvc->setMyProperties("DeVelo", &pmgr);
+      if (!sc) return StatusCode::FAILURE;
+      if ( outputLevel > 0 ) {
+        msgSvc()->setOutputLevel("DeVelo", outputLevel);
+      }
   }
-  delete pmgr;
-  if( !sc ) return sc;
   m_debug   = (msgSvc()->outputLevel("DeVelo") == MSG::DEBUG  ) ;
   m_verbose = (msgSvc()->outputLevel("DeVelo") == MSG::VERBOSE) ;
   if( m_verbose ) m_debug = true;
 
   if( m_debug ) msg() << MSG::DEBUG << "Initialising DeVelo " << endmsg;
   // Initialise the detector element
-  sc = DetectorElement::initialize();
+  auto sc = DetectorElement::initialize();
   if( sc.isFailure() ) {
     msg() << MSG::ERROR << "Failure to initialize DetectorElement" << endmsg;
     return sc ;
@@ -84,7 +80,6 @@ StatusCode DeVelo::initialize() {
   if( m_debug ) msg() << MSG::DEBUG << "Found " << veloSensors.size()
 		      << " sensors in the XML" << endmsg;
 
-  std::vector<DeVeloSensor*>::iterator iDESensor;
   m_nSensors=m_nRSensors=m_nPhiSensors=m_nPileUpSensors=0;
   m_nLeftSensors=m_nRightSensors=0;
   m_nLeftRSensors=m_nRightRSensors=0;
@@ -97,7 +92,7 @@ StatusCode DeVelo::initialize() {
 
   // this determines the size of our pseudo map
   unsigned int maxSensorNumber=0;
-  for(iDESensor = veloSensors.begin() ; iDESensor != veloSensors.end() ;
+  for(auto iDESensor = veloSensors.begin() ; iDESensor != veloSensors.end() ;
       ++iDESensor){
     if (maxSensorNumber < (*iDESensor)->sensorNumber())
       maxSensorNumber = (*iDESensor)->sensorNumber();
@@ -106,7 +101,7 @@ StatusCode DeVelo::initialize() {
   // ok, now we now the size of our pseudo map
   m_sensors.resize(maxSensorNumber+1,0);
 
-  for(iDESensor = veloSensors.begin() ; iDESensor != veloSensors.end() ;
+  for(auto iDESensor = veloSensors.begin() ; iDESensor != veloSensors.end() ;
       ++iDESensor,++m_nSensors){
     // Sensors are pre-sorted in XML such that they increase with z position
     m_vpSensors.push_back(*iDESensor);
@@ -165,7 +160,7 @@ StatusCode DeVelo::initialize() {
       msg() << MSG::ERROR << "Sensor type is unknown" << endmsg;
     }
     m_sensors[m_vpSensors[index]->sensorNumber()]= m_vpSensors[index];
-    if(m_debug) msg() << MSG::DEBUG << "Module " 
+    if(m_debug) msg() << MSG::DEBUG << "Module "
 		      << m_vpSensors[index]->module()
 		      << " sensor " << m_vpSensors[index]->sensorNumber()
 		      << " type " << m_vpSensors[index]->fullType()
@@ -178,9 +173,7 @@ StatusCode DeVelo::initialize() {
   // Set the associated and other side sensor links.  This makes assumptions about the
   // semantics of sensor number.  While this is a bad idea in general it is
   // defendable inside the detector element itself.
-  for (std::vector<DeVeloRType*>::const_iterator iRS=leftRSensorsBegin();
-       iRS != leftRSensorsEnd();
-       ++iRS) {
+  for (auto iRS=leftRSensorsBegin(); iRS != leftRSensorsEnd(); ++iRS) {
 
     // associated sensors on the left side
     DeVeloRType*   lRS = *iRS;
@@ -235,14 +228,12 @@ const DeVeloSensor* DeVelo::sensor(const Gaudi::XYZPoint& point) const {
 
 // return the sensitive volume if for a point in the global frame
 int DeVelo::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
-  std::vector<DeVeloSensor*>::const_iterator iDeVeloSensor;
-  for(iDeVeloSensor=m_vpSensors.begin(); iDeVeloSensor!=m_vpSensors.end(); ++iDeVeloSensor){
-    Gaudi::XYZPoint localPoint=(*iDeVeloSensor)->globalToLocal(point);
-    double z = localPoint.z();
-    if(m_sensVolCut > fabs(z)) {
-      return ((*iDeVeloSensor)->sensorNumber());
-    }
-  }
+
+  auto i = std::find_if( m_vpSensors.begin(), m_vpSensors.end(),
+                        [&](const DeVeloSensor* s) {
+                return m_sensVolCut > std::abs(s->globalToLocal(point).z());
+  } );
+  if (i!=m_vpSensors.end()) return (*i)->sensorNumber();
   msg() << MSG::ERROR << "sensitiveVolumeID: no sensitive volume at z = "
         << point.z() << endmsg;
   return -999;
@@ -253,7 +244,6 @@ std::vector<DeVeloSensor*> DeVelo::findVeloSensors()
 {
 
   std::vector<DeVeloSensor*> mySensors;
-
   scanDetectorElement(this, mySensors);
   return mySensors;
 
@@ -262,27 +252,19 @@ std::vector<DeVeloSensor*> DeVelo::findVeloSensors()
 void DeVelo::scanDetectorElement(IDetectorElement* detElem,
                                  std::vector<DeVeloSensor*>& sensors)
 {
-  std::vector<IDetectorElement*> veloSensors =
-    detElem->childIDetectorElements();
-
   if(m_debug) msg() << MSG::DEBUG << "scanDetectorElement" << endmsg;
 
-  std::vector<IDetectorElement*>::iterator iVeloSensors=veloSensors.begin();
-
-  for (;iVeloSensors!=veloSensors.end(); ++iVeloSensors ) {
-    if(m_debug) msg() << MSG::DEBUG << std::setw(12) 
-		      << std::setiosflags(std::ios::left)
-		      << (*iVeloSensors)->name() << endmsg;
-    DeVeloSensor* pSensor = dynamic_cast<DeVeloSensor*>((*iVeloSensors));
+  for (auto& sensor : detElem->childIDetectorElements()) {
+    if(m_debug) msg() << MSG::DEBUG << std::setw(12)
+		              << std::setiosflags(std::ios::left)
+		              << sensor->name() << endmsg;
+    DeVeloSensor* pSensor = dynamic_cast<DeVeloSensor*>(sensor);
     if (pSensor) {
       sensors.push_back(pSensor);
-      if(m_debug) msg() << MSG::DEBUG << "Storing detector " 
-			<<   (*iVeloSensors)->name()
-			<< endmsg;
-
+      if(m_debug) msg() << MSG::DEBUG << "Storing detector "
+			            << sensor->name() << endmsg;
     }
-
-    scanDetectorElement(*iVeloSensors, sensors);
+    scanDetectorElement(sensor, sensors);
   }
 }
 //=========================================================================
@@ -291,25 +273,15 @@ void DeVelo::scanDetectorElement(IDetectorElement* detElem,
 
 const DeVeloSensor* DeVelo::sensorByTell1Id(unsigned int tell1Id) const
 {
-  std::map<unsigned int, const DeVeloSensor*>::const_iterator mi;
-
-  mi =  m_sensorByTell1Id.find(tell1Id);
-
-  if (m_sensorByTell1Id.end() == mi) return 0;
-
-  return (*mi).second;
+  auto mi = m_sensorByTell1Id.find(tell1Id);
+  return mi!=m_sensorByTell1Id.end() ? mi->second : nullptr;
 }
 
 bool DeVelo::tell1IdBySensorNumber(unsigned int sensorNumber, unsigned int& tell1Id) const
 {
-  std::map<unsigned int, unsigned int>::const_iterator mi;
-
-  mi =  m_tell1IdBySensorNumber.find(sensorNumber);
-
+  auto mi =  m_tell1IdBySensorNumber.find(sensorNumber);
   if (m_tell1IdBySensorNumber.end() == mi) return false;
-
-  tell1Id = (*mi).second;
-
+  tell1Id = mi->second;
   return true;
 }
 
@@ -363,9 +335,9 @@ StatusCode DeVelo::updateTell1ToSensorsCondition()
 
   m_sensorByTell1Id.clear();
 
-  std::vector<int>::const_iterator i = tell1Ids.begin();
-  std::vector<int>::const_iterator j = sensorNumbers.begin();
-  std::vector<int>::const_iterator k = moduleIds.begin();
+  auto i = tell1Ids.begin();
+  auto j = sensorNumbers.begin();
+  auto k = moduleIds.begin();
 
   for (; i != tell1Ids.end() && j != sensorNumbers.end() && k != moduleIds.end(); ++i, ++j, ++k) {
     unsigned int tell1Id      = static_cast<unsigned int>(*i);
@@ -384,9 +356,7 @@ StatusCode DeVelo::updateTell1ToSensorsCondition()
 
   // check consistency with sensor readout flags. this assumes the latter are updated first.
   unsigned int tell1Id;
-  for (std::vector<DeVeloSensor*>::const_iterator si = m_vpSensors.begin();
-       si != m_vpSensors.end();
-       ++si) {
+  for (auto si = m_vpSensors.begin(); si != m_vpSensors.end(); ++si) {
     const DeVeloSensor* sensor = *si;
     if (sensor->isReadOut() && !tell1IdBySensorNumber(sensor->sensorNumber(),tell1Id)) {
       msg() << MSG::ERROR
@@ -402,20 +372,14 @@ StatusCode DeVelo::updateTell1ToSensorsCondition()
 
 StatusCode DeVelo::updateLeftHalfBoxOffset() {
 
-  Gaudi::XYZPoint localZero(0.,0.,0.);
-
   Gaudi::XYZPoint global = (*leftSensorsBegin())->veloHalfBoxToGlobal(localZero);
   m_halfBoxOffsets[LeftHalf] = global-localZero;
-
   return StatusCode::SUCCESS;
 }
 
 StatusCode DeVelo::updateRightHalfBoxOffset() {
 
-  Gaudi::XYZPoint localZero(0.,0.,0.);
-
   Gaudi::XYZPoint global = (*rightSensorsBegin())->veloHalfBoxToGlobal(localZero);
   m_halfBoxOffsets[RightHalf] = global-localZero;
-
   return StatusCode::SUCCESS;
 }

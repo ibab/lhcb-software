@@ -41,8 +41,6 @@ public:
   /// Standard constructor
   DeVeloRType( const std::string& name = "" ); 
 
-  virtual ~DeVeloRType( ); ///< Destructor
-
   /// object identifier (static method)
   static  const CLID& classID() { return CLID_DeVeloRType; }
   /// object identification
@@ -402,12 +400,12 @@ private:
   bool m_verbose;
 
   /// cached Message Stream object
-  mutable MsgStream * m_msgStream;
+  mutable std::unique_ptr<MsgStream> m_msgStream;
 
   /// On demand access to MsgStream object
   inline MsgStream & msg() const
   {
-    if ( !m_msgStream ) m_msgStream = new MsgStream( msgSvc(), "DeVeloRType" );
+    if ( !m_msgStream ) m_msgStream.reset(new MsgStream( msgSvc(), "DeVeloRType" ));
     return *m_msgStream; 
   }
 

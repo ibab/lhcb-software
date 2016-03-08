@@ -1,6 +1,9 @@
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+! 2016-03-08 - Gerhard Raven
+ - C++11 modernization
+
 ! 2016-02-01 - Gerhard Raven
  - DeVeloRType:
     o use std::minmax_element instead of std::min_element and std::max_element
