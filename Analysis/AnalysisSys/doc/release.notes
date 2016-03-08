@@ -3,7 +3,7 @@ Package             : AnalysisSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb analysis packages
 
-</PRE><H1><A NAME=v15r1>2016-03-07 Analysis v15r1</A></H1><PRE>
+</PRE><H1><A NAME=v15r1>2016-03-08 Analysis v15r1</A></H1><PRE>
 
 Development release for 2016 data taking.
 Also needed for the stack for the run-I restripping.
@@ -11,7 +11,7 @@ It is based on Gaudi v27r0, LHCb v40r0, Rec v19r0 and Phys v21r1, and uses LCG_8
 
 - Packages updated :
   Analysis/Ostap v1r14, Phys/AnalysisPython v2r41, Phys/DaVinciTrackRefitting v2r5, Phys/DecayTreeTupleMC v1r7,
-  Phys/DecayTreeTupleTracking v1r5, Phys/LoKiAlgoMC v9r8, Phys/TeslaTools v1r19, Rich/RichPIDQC v1r10.
+  Phys/DecayTreeTupleTracking v1r5, Phys/LoKiAlgoMC v9r8, Rich/RichPIDQC v1r10.
 
 - In Analysis/Ostap v1r14 :
   . PyRoUts:: fix in 1D-interpolation to allow release of Analysis with OLD LHCbMath.
@@ -47,13 +47,6 @@ It is based on Gaudi v27r0, LHCb v40r0, Rec v19r0 and Phys v21r1, and uses LCG_8
   . Add new property 'CollectP2MCPLinks'  (default is False) to activate autocollections of Particle -> MCParticle
     links for MC-micro-DST one needs to set it to 'True'.
   . Reshuffling of lines.
-
-- In Phys/TeslaTools v1r19 :
-  . Make sure shared PVs are created even if line wants refitted ones.
-  . Allow backwards compatibility pre-deuteron.
-  . Ensure for neutral candidates, tracks/muons/rich IDs are not included.
-
-
 
 - In Rich/RichPIDQC v1r10 :
   . Expose the candidates TES locations to use as a dictionary in RichPIDQCConf.
