@@ -44,8 +44,8 @@ __all__     = (
     )
 # =============================================================================
 import ROOT, math
-from   Ostap.PyRoUts             import cpp,iszero  
-from   Ostap.FitBasic            import makeVar, PDF 
+from   Ostap.Core       import cpp,iszero  
+from   Ostap.FitBasic   import makeVar, PDF 
 # =============================================================================
 from   Ostap.Logger     import getLogger
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.FitBkgModels' )

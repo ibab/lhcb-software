@@ -21,8 +21,9 @@ __date__    = "2011-06-07"
 __all__     = () 
 # =============================================================================
 import ROOT             ## attention here!!
+from   Ostap.Core        import hID,VE 
+import Ostap.HistoDeco 
 import Ostap.HParamDeco 
-from   Ostap.PyRoUts     import hID,VE 
 # 
 # =============================================================================
 # logging 

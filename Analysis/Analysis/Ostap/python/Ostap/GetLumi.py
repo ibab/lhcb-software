@@ -43,6 +43,8 @@ __all__     = (
     'getLumi'  ,  ## get the lumi
     )
 # =============================================================================
+import ROOT 
+# =============================================================================
 # logging 
 # =============================================================================
 from Ostap.Logger import getLogger 
@@ -80,8 +82,9 @@ def getLumi ( data , *args ) :
     """
     tree_name = 'GetIntegratedLuminosity/LumiTuple'
     #
-    import ROOT 
-    from   Ostap.PyRoUts import VE, hID  
+    from   Ostap.Core      import VE, hID
+    import Ostap.TreeDeco
+    import Ostap.TFileDeco
     #
     if args :
         data = [ data ]

@@ -192,11 +192,11 @@ __all__ = (
     )
 # =============================================================================
 import ROOT, math
-from   Ostap.Logger     import getLogger
-from   Ostap.PyRoUts             import VE, hID, allInts, cpp, rootID
+from   Ostap.Core                import VE, hID , cpp, rootID
 from   Ostap.Utils               import RooSilent, NoContext 
 from   GaudiKernel.SystemOfUnits import GeV 
 # =============================================================================
+from   Ostap.Logger          import getLogger
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.FitModels' )
 else                       : logger = getLogger ( __name__          )
 # =============================================================================

@@ -25,10 +25,7 @@ __all__     = (
     'cosine_sum'    ,
     ) 
 # =============================================================================
-import ROOT, cppyy                     ## attention here!!
-cpp = cppyy.makeNamespace('')
-VE  = cpp.Gaudi.Math.ValueWithError 
-# 
+import ROOT
 # =============================================================================
 # logging 
 # =============================================================================
@@ -37,6 +34,8 @@ if '__main__' ==  __name__ : logger = getLogger( 'Ostap.HParamDeco' )
 else                       : logger = getLogger( __name__ )
 # =============================================================================
 logger.debug ( 'Some parameterization utilities for Histo objects')
+# =============================================================================
+from Ostap.Core import cpp, VE, funID  
 # =============================================================================
 ## helper function to catch xmin/xmax from histogram/function 
 def _get_xminmax_ ( func , xmin , xmax , name = 'get_xminmax') :
@@ -291,7 +290,6 @@ class H_fit(object) :
     """
     def __init__ ( self ,  hfit ) :
         self._hfit = hfit
-        from Ostap.PyRoUts import funID
         self.fun = ROOT.TF1 ( funID() , self , hfit.xmin() , hfit.xmax() , hfit.npars() )
     #
     def norm     ( self ) : return False 
@@ -331,7 +329,6 @@ class H_Nfit (object) :
     """
     def __init__ ( self , hfit ) :
         self._hfit = hfit
-        from Ostap.PyRoUts import funID
         self.fun   = ROOT.TF1 ( funID() , self , hfit.xmin() , hfit.xmax() , hfit.npars() + 1 )
         self.fun.SetParameter ( 0 , 1 ) 
         
@@ -622,7 +619,6 @@ def _h1_bspline_ ( h1 , degree = 3 , knots = 3 , opts = 'SQ0' ) :
     """
     mn,mx = h1.xminmax ()
     #
-    from Ostap.PyRoUts import funID
     if isinstance ( knots , ( int , long ) ) :
         func = cpp.Gaudi.Math.BSpline ( mn , mx , knots , degree )
     else :
@@ -716,7 +712,6 @@ def _h1_pspline_ ( h1 , degree = 3 , knots = 3 , opts = 'SQ0I' ) :
     """
     mn,mx = h1.xminmax ()
     #
-    from Ostap.PyRoUts import funID
     if isinstance ( knots , ( int , long ) ) :
         func = cpp.Gaudi.Math.PositiveSpline ( mn , mx , knots , degree  )
     else :
@@ -740,7 +735,6 @@ def _h1_mspline_ ( h1 , degree = 3 , knots = 3 , increasing = True , opts = 'SQ0
     """
     mn,mx = h1.xminmax ()
     #
-    from Ostap.PyRoUts import funID
     if isinstance ( knots , ( int , long ) ) :
         func = cpp.Gaudi.Math.MonothonicSpline ( mn , mx , knots , degree , increasing )
     else :
@@ -766,7 +760,6 @@ def _h1_cspline_ ( h1 , degree = 3   , knots = 3 ,
     """
     mn,mx = h1.xminmax ()
     #
-    from Ostap.PyRoUts import funID
     if isinstance ( knots , ( int , long ) ) :
         func = cpp.Gaudi.Math.ConvexSpline ( mn , mx , knots , degree , increasing , convex  )
     else :
@@ -791,7 +784,6 @@ def _h1_convexspline_ ( h1 , degree = 3   , knots = 3 ,
     """
     mn,mx = h1.xminmax ()
     #
-    from Ostap.PyRoUts import funID
     if isinstance ( knots , ( int , long ) ) :
         func = cpp.Gaudi.Math.ConvexOnlySpline ( mn , mx , knots , degree , True )
     else :
@@ -815,7 +807,6 @@ def _h1_concavespline_ ( h1 , degree = 3   , knots = 3 ,
     """
     mn,mx = h1.xminmax ()
     #
-    from Ostap.PyRoUts import funID
     if isinstance ( knots , ( int , long ) ) :
         func = cpp.Gaudi.Math.ConvexOnlySpline ( mn , mx , knots , degree , False )
     else :
@@ -943,7 +934,6 @@ class H1Func(object) :
         """
         if not hasattr ( self , '_tf1' ) : 
             
-            from Ostap.PyRoUts import funID
             mn = self._histo.xmin ()
             mx = self._histo.xmax ()
             self._tf1 =  ROOT.TF1 ( funID() , self , mn , mx , 3 )
@@ -1015,7 +1005,6 @@ class H1Spline(object) :
         """
         if not hasattr ( self , '_tf1' ) : 
             
-            from Ostap.PyRoUts import funID
             #mn = self._spline.spline().xmin ()
             #mx = self._spline.spline().xmax ()
             mn = self._spline.xmin ()
@@ -1140,8 +1129,6 @@ def _h2_as_tf2_ ( self , func = lambda s : s.value () ) :
     ay  = self.GetYaxis()
     #
     fun = _h2_as_fun_ ( self , func )
-    #
-    from Ostap.PyRoUts import funID
     #
     f2  = ROOT.TF2  ( funID()       ,
                       fun           ,

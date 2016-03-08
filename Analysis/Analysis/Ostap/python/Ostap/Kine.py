@@ -126,7 +126,7 @@ class _WF1(object) :
 def _as_TF1_ ( obj , xmin , xmax ) :
 
     import ROOT 
-    from   Ostap.PyRoUts import funID
+    from   Ostap.Core import funID
     
     fobj     = _WF1( obj ) 
     fun      = ROOT.TF1( funID() , fobj , xmin , xmax ) 
@@ -160,7 +160,7 @@ class _WF2(object) :
 def _as_TF2_ ( obj , xmin , xmax , ymin , ymax ) :
 
     import ROOT 
-    from   Ostap.PyRoUts import funID
+    from   Ostap.Core import funID
 
     fobj       = _WF2(obj) 
     fun        = ROOT.TF2( funID() , fobj , xmin , xmax , ymin , ymax ) 

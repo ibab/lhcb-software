@@ -57,7 +57,7 @@ try:
 except:
     
     ## 
-    ## from GaudiMP.Parallel     import Task, WorkManager
+    from GaudiMP.Parallel     import Task, WorkManager
     logger.info ('Use Task and TaskManager from GaudiMP.Parallel')
 
     

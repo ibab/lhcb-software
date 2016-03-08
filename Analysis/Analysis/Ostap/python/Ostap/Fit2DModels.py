@@ -35,7 +35,7 @@ __all__     = (
     )
 # =============================================================================
 import ROOT, math
-from   Ostap.PyRoUts             import cpp, iszero  
+from   Ostap.Core                import cpp, iszero  
 from   Ostap.FitBasic            import makeVar, PDF2 
 # =============================================================================
 from   Ostap.Logger     import getLogger

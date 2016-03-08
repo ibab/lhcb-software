@@ -40,8 +40,7 @@ logger.info ( 'Set of utitilities for re-weigthing')
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-05-10
 class Weight(object) :
-    """
-    Helper class for semi-automatic reweighting of data
+    """Helper class for semi-automatic reweighting of data
 
     It reads various ``weigth components'' from DBASE and calculates
     the ``global'' event weight via smiple accumulation of weights

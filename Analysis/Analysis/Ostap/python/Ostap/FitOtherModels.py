@@ -33,7 +33,7 @@ __all__     = (
     )
 # =============================================================================
 import ROOT, math
-from   Ostap.PyRoUts             import VE,cpp
+from   Ostap.Core                import VE,cpp
 from   GaudiKernel.SystemOfUnits import GeV 
 # =============================================================================
 from   Ostap.Logger     import getLogger

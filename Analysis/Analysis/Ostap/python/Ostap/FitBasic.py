@@ -39,11 +39,11 @@ __all__     = (
     )
 # =============================================================================
 import ROOT, math
-from   Ostap.Logger     import getLogger
-from   Ostap.PyRoUts             import VE, hID, allInts, cpp, rootID
-from   Ostap.PyRoUts             import h1_axis , h2_axes 
-from   Ostap.Utils               import roo_silent 
+from   Ostap.Core       import cpp , VE, hID, cpp, rootID
+from   Ostap.HistoDeco  import h1_axis , h2_axes
+from   Ostap.Utils      import roo_silent 
 # =============================================================================
+from   Ostap.Logger     import getLogger
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.FitBasic' )
 else                       : logger = getLogger ( __name__         )
 # =============================================================================

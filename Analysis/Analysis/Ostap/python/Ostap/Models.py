@@ -22,7 +22,7 @@ __date__    = "2011-12-01"
 __all__     = ()
 # =============================================================================
 import  ROOT 
-from    Ostap.PyRoUts import funID, cpp 
+from    Ostap.Core import funID, cpp 
 # =============================================================================
 # logging 
 # =============================================================================
@@ -44,8 +44,7 @@ class _WO2_ (object)  :
 # =============================================================================
 ## convert the model into TF1
 def _tf1_ ( self , *args ) :
-    """
-    Convert the function to TF1
+    """Convert the function to TF1
     
     >>> obj = ...
     
@@ -66,8 +65,7 @@ def _tf1_ ( self , *args ) :
 # =============================================================================
 ## convert the model into TF2
 def _tf2_ ( self , *args ) :
-    """
-    Convert the function to TF2
+    """Convert the function to TF2
     
     >>> obj = ...
     
@@ -89,8 +87,7 @@ def _tf2_ ( self , *args ) :
 # =============================================================================
 ## draw the function 
 def _f1_draw_ ( self , *opts ) :
-    """
-    Drawing the function object through conversion to ROOT.TF1
+    """Drawing the function object through conversion to ROOT.TF1
     
     >>> fun = ...
     >>> fun.draw()
@@ -153,8 +150,7 @@ Gaudi.Math.BreitWigner . amp = _amp_
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2014-12-01
 def sp_integrate_1D ( func , xmin , xmax , *args , **kwargs ) :
-    """
-    Make 1D-integration using SciPy
+    """Make 1D-integration using SciPy
     
     >>> func = ...
     >>> print func.sp_integrate ( -10 , 10 )
@@ -173,8 +169,7 @@ def sp_integrate_1D ( func , xmin , xmax , *args , **kwargs ) :
 def sp_integrate_2D ( func  ,
                       xmin  , xmax ,
                       ymin  , ymax , *args , **kwargs ) :
-    """
-    Make 2D-integration using SciPy
+    """Make 2D-integration using SciPy
 
     >>> func = ...  ## func ( x , y )
     ##                            xmin , xmax , ymin , ymax 
@@ -199,8 +194,7 @@ def sp_integrate_2D ( func  ,
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2014-12-01
 def sp_integrate_1D_ ( pdf , xmin , xmax , *args , **kwargs ) :
-    """
-    Make 1D integration over the PDF using SciPy
+    """Make 1D integration over the PDF using SciPy
     """
     if hasattr ( pdf , 'setPars' ) : pdf.setPars() 
     func = pdf.function()
@@ -214,8 +208,7 @@ def sp_integrate_1D_ ( pdf , xmin , xmax , *args , **kwargs ) :
 def sp_integrate_2D_ ( pdf   ,
                       xmin  , xmax ,
                       ymin  , ymax , *args , **kwargs ) :
-    """    
-    Make 3D integration over the PDF using SciPy
+    """ Make 3D integration over the PDF using SciPy
     """
     if hasattr ( pdf , 'setPars' ) : pdf.setPars() 
     func = pdf.function()

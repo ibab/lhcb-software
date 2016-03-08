@@ -47,7 +47,16 @@ __author__  = "Vanya BELYAEV  Ivan.Belyaev@itep.ru"
 __date__    = "2014-03-10"
 __version__ = "$Revision$"
 # =============================================================================
-import ROOT,cppyy,os 
+## import ROOT,cppyy,os 
+import os
+
+## import readline, math, sys  
+
+## _tmp_readline = readlne 
+## sys.modules['readline'] = math 
+## import ROOT
+## sys.modules['readline'] = readline 
+
 
 # =============================================================================
 workdir = os.environ.get('OSTAP_DIR') or '$HOME/.ostap'

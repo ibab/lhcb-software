@@ -38,7 +38,7 @@ __all__     = (
     )
 # =============================================================================
 import ROOT, math
-from   Ostap.PyRoUts             import VE,cpp, funID 
+from   Ostap.Core       import VE,cpp, funID 
 # =============================================================================
 from   Ostap.Logger     import getLogger
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.FitSpectra' )

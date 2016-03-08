@@ -85,41 +85,8 @@ else                       : logger = getLogger( __name__ )
 # =============================================================================
 logger.debug ( 'Some useful decorations for TFile objects')
 # ==============================================================================
-## @class ROOTCWD
-#  context manager to preserve current directory (rather confusing stuff in ROOT)
-#  @code
-#  print ROOT.gROOT.CurrentDirectory() 
-#  with ROOTCWD() :
-#     print ROOT.gROOT.CurrentDirectory() 
-#     rfile = ROOT.TFile( 'test.root' , 'recreate' )
-#     print ROOT.gROOT.CurrentDirectory() 
-#  print ROOT.gROOT.CurrentDirectory() 
-#  @endcode 
-#  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
-#  @date 2015-07-30
-class ROOTCWD(object) :
-    """Context manager to preserve current directory
-    (rather confusing stuff in ROOT) 
-    >>> print ROOT.gROOT.CurrentDirectory() 
-    >>> with ROOTCWD() :
-    ...     print ROOT.gROOT.CurrentDirectory() 
-    ...     rfile = ROOT.TFile( 'test.root' , 'recreate' )
-    ...     print ROOT.gROOT.CurrentDirectory() 
-    ... print ROOT.gROOT.CurrentDirectory() 
-    """
-    ## context manager ENTER 
-    def __enter__ ( self ) :
-        "Save current working directory"
-        self._dir = ROOT.gROOT.CurrentDirectory() 
-        
-    ## context manager EXIT 
-    def __exit__  ( self , *_ ) :
-        "Make the previous directory current again"
-        if self._dir :
-            ## self._dir.cd()
-            if   not hasattr ( self._dir , 'IsOpen' ) : self._dir.cd() 
-            elif     self._dir.IsOpen()               : self._dir.cd()
-            
+## context manager to preserve current directory (rather confusing stuff in ROOT)
+from Ostap.Core import ROOTCWD
 # ===============================================================================
 ## write the (T)object to ROOT-file/directory
 #  @code

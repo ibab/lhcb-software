@@ -50,30 +50,21 @@ else                      : logger = getLogger ( __name__                )
 import sys, os, time, copy
 excluded_varnames =  ( 'HOSTNAME', 'SSH_CLIENT', 'SSH_CONNECTION', 'DISPLAY' ) 
 # =============================================================================
-try:
     
-    ## try to use bare import 
-    import pathos.multiprocessing as MP
-    import pathos.core            as PC 
-    import pp                     as PP
+## try to use bare import 
+import pathos.multiprocessing as MP
+import pathos.core            as PC 
     
-except ImportError :
-    
-    ## try to import with virtual env
-    venv_file = '/afs/cern.ch/user/i/ibelyaev/cmtuser/venv/bin/activate_this.py'
-    execfile( venv_file , dict( __file__ = venv_file ) )
-    
-    ## try import again 
-    import pathos.multiprocessing as MP
-    import pathos.core            as PC 
-    import pp                     as PP
-
 
 
 def _prefunction( f, task, item) :
+    print 'I AM PREFUNCTION'
+    ##import ROOT 
     return f((task,item))
 
 def _ppfunction( args ) :
+    print 'I AM PPFUNCTION'
+    import ROOT 
     #--- Unpack arguments
     task, item = args
     stat = Statistics()
@@ -138,7 +129,7 @@ class Task(object) :
     def _mergeResults(self, result) :
         
         if type(result) is not type(self.output) :
-            raise TypeError("output type is not same as obtained result")
+            raise TypeError("output type is not same as obtained result %s %s " % (type(result), type(self.output)))
         
         #--No iteratable---
         if not   hasattr (      result , '__iter__' ) :
@@ -182,6 +173,31 @@ class Task(object) :
 ##     print 'Killed #%d'%(i)    
 ##     job_server.destroy()
 
+def isprime(n):
+    """Returns True if n is prime and False otherwise"""
+    if not isinstance(n, int):
+        raise TypeError("argument passed to is_prime is not of 'int' type")
+    if n < 2:
+        return False
+    if n == 2:
+        return True
+    import math 
+    max = int(math.ceil(math.sqrt(n)))
+    i = 2
+    while i <= max:
+        if n % i == 0:
+            return False
+        i += 1
+    return True
+
+def sum_primes(n):
+    """Calculates sum of all primes below given integer n"""
+    return sum([x for x in xrange(2, n) if isprime(x)])
+
+def test_func( *args ) :
+    return 1
+def my_test_func( *args ) :
+    return 1
 
 # =============================================================================
 ## @class WorkManager
@@ -198,14 +214,20 @@ class WorkManager(object) :
         else :                     self.ncpus = ncpus
         if ppservers :
             self._ppservers = ppservers
-            self.sessions   = [ ppServer(srv) for srv in ppservers ]
+            self.sessions   =  [ ppServer(srv) for srv in ppservers ]
             self.ppservers  = tuple ( [ i.local_server for i in self.sessions ] )
             ##self.ppservers  = tuple ( [ i.remote_server for i in self.sessions ] )
-            self.server     = PP.Server(ppservers=self.ppservers)
+            from pathos.parallel import ParallelPool as PPPool            
+            self.pool       = PPPool( ncpus = self.ncpus , ppservers=self.ppservers)
             self.mode       = 'cluster'
+            from pathos.parallel import stats as pp_stats
+            self.pp_stats   = pp_stats
+            print 'I AM INIT MANAGER PARALLEL!!!'
         else :
-            self.pool = MP.Pool(self.ncpus)
+            from pathos.multiprocessing import ProcessPool as MPPool
+            self.pool = MPPool(self.ncpus)
             self.mode = 'multicore'
+            print 'I AM INIT MANAGER MULTICORE !!!'
         self.stats = {}
 
     def __del__(self):
@@ -218,18 +240,55 @@ class WorkManager(object) :
         task.initializeLocal()
         # --- Schedule all the jobs ....
         if self.mode == 'cluster' :
-            jobs = [self.server.submit(_prefunction, (_ppfunction, task, item), (), ('Ostap.Parallel','time')) for item in items]
+            
+            
+            ## job_server = self.server
+            
+            ## inputs = [ 10*(i+1) for i in range(20) ]
+            
+            ## print 'HERE1'
+            ## from random import shuffle
+            ## shuffle ( inputs ) 
+            ## jobs   = [(input, job_server.submit(sum_primes, (input, ), (isprime,),
+            ##                                     ('math',))) for input in inputs]
+            
+            ## for input, job in jobs:
+            ##     print "Sum of primes below", input
+            ##     print "is", job()
+
+            ## return
+        
+            #jobs   = []
+            #for item in items :
+            #    print 'SUBMIT' , item 
+            #    jobs += [ self.server.submit ( my_test_func, (item, ) ) ] 
+            
+            ## jobs = [self.server.submit(_prefunction, (_ppfunction, task, item), (), ('ROOT','Ostap.ParallelPathos')) for item in items]
+
+            print 'I AM UIMAP-1'
+            ##jobs = self.pool.uimap(_prefunction, [ (_ppfunction, task, item) for item in items]  ) 
+            jobs = self.pool.uimap(_ppfunction, zip([task for i in items] , items ))
+            print 'I AM UIMAP-2'
+                    
+            
+            ##jobs = [self.server.submit(_prefunction, (_ppfunction, task, item), (), ('ROOT','Ostap.ParallelPathos')) for item in items]
+            ##jobs = [self.server.submit(_prefunction, (_ppfunction, task, item), (), ('Ostap.Parallel','time')) for item in items]
             ##jobs = [self.server.submit(_prefunction, (_ppfunction, task, item), (_ppfunction,), ('Ostap','time')) for item in items]
             for job in jobs :
+                print 'in loop'
                 result, stat = job()
+                print 'AFTER JOB', result 
+            
                 task._mergeResults    ( result )
                 self._mergeStatistics ( stat   )
             self._printStatistics()
-            self.server.print_stats()
+            self.pp_stats() 
         elif self.mode == 'multicore' :
             start = time.time()
-            jobs = self.pool.map_async(_ppfunction, zip([task for i in items] , items ))
-            for result, stat in  jobs.get(timeout) :
+            ##jobs = self.pool.map_async(_ppfunction, zip([task for i in items] , items ))
+            ## for result, stat in  jobs.get(timeout) :
+            jobs = self.pool.uimap(_ppfunction, zip([task for i in items] , items ))
+            for result, stat in  jobs : 
                 task._mergeResults(result)
                 self._mergeStatistics(stat)
             end = time.time()
@@ -274,37 +333,63 @@ class ppServer(object) :
     
     def __init__(self, hostname , **kwargs ) :
 
-        # establish ssh tunnel 
-
         import sys
         sys.stdout.flush()
         sys.stdin .flush()
-
+        
         self.tunnel  = PC.connect ( hostname )        
+        print 'OPEN TUNNEL', self.tunnel
         remport = self.tunnel._rport
-
-        ## needed ???
+        
+        import sys
+        sys.stdout.flush()
+        sys.stdin .flush()
+        
         self.input = open('/dev/null','r')
         
-        command    = 'ppserver.py -p%d ' % remport
-        secret     = kwargs.pop( 'secret' , '' )
+        python_path = os.environ['PYTHONPATH']
+        
+        import pp 
+        the_file = pp.__file__
+        the_dir  = os.path.dirname(the_file)
+        
+        print 'FILE',the_file
+        print 'DIR ',the_dir + '/scripts/ppserver.py'
+        the_server = the_dir + '/scripts/ppserver.py'
+        
+        command = """
+        export PYTHONPATH=%s
+        export PATH=%s
+        export LD_LIBRARY_PATH=%s        
+        export LD_PRELOAD=%s        
+        %s -p%d
+        """ % ( os.environ['PYTHONPATH'        ] ,
+                os.environ['PATH'              ] ,
+                os.environ['LD_LIBRARY_PATH'   ] ,
+                os.environ.get( 'LD_PRELOAD','')  ,
+                the_server                , 
+                remport                   )
+        
+        ## command = 'ppserver.py -p%d ' % remport
+        secret  = kwargs.pop( 'secret' , '' )
         if secret : command += " -s%" % secret
         self.session = PC.execute (
             command              ,
             hostname             ,
-            bg = True            , 
-            options = '-q -T'    , 
-            stdin   = self.input
-            )
+            options = '-q -T'    ,
+            stdin   = self.input , 
+            bg      = True       )
+        print 'HERE(3)'
         
         r = self.session.response()
         if self.session._stdout :
             self.session._stdout.flush() 
-
+            
+        print 'HERE(4)', r 
             
         import time
         time.sleep(0.2) ## sleep... 
-
+            
         self.hostname      = hostname 
         self.local_server  = 'localhost:%d' %              self.tunnel._lport 
         self.remote_server = '%s:%d'        % ( hostname , self.tunnel._rport  )
@@ -312,11 +397,12 @@ class ppServer(object) :
         target     = '[P,p]ython[^#]*'+'ppserver'
         self.pid   = PC.getpid( target , hostname )
 
+        print self.local_server,  self.remote_server, self.pid
+        
         import sys
         sys.stdout.flush()
         sys.stdin .flush()        
-        
-        logger.info ('Make a tunnel %s <--> %s PID=#%d' % ( self.local_server  , self.remote_server , self.pid ) )   
+ 
         
     # Context manager:  ENTER
     def __enter__ ( self ) : return self

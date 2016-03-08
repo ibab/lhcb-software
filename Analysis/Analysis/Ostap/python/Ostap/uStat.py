@@ -63,7 +63,7 @@ __all__     = (
     )
 # ============================================================================
 import ROOT, math
-import Ostap.PyRoUts 
+from   Ostap.Core import cpp, hID 
 # =============================================================================
 # logging 
 # =============================================================================
@@ -119,7 +119,6 @@ def uCalc ( pdf            ,
     """
     import sys
     
-    from Ostap.PyRoUts import cpp 
     tStat = ROOT.Double(-1)
     sc    = cpp.Analysis.UStat.calculate ( pdf   ,
                                            data  ,
@@ -233,8 +232,6 @@ def uPlot ( pdf            ,
             break
         print '#bins %s' % bins 
         
-    hID = Ostap.PyRoUts.hID
-
     histo = ROOT.TH1F ( hID () ,'U-statistics', bins , 0 , 1 )
     histo.Sumw2      (   )
     histo.SetMinimum ( 0 )

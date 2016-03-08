@@ -30,10 +30,8 @@ __all__     = (
     'SETVAR'     , ## context manager to preserev the current value for RooRealVar
     ) 
 # =============================================================================
-import ROOT, cppyy              ## attention here!!
-cpp = cppyy.makeNamespace('')
-VE  = cpp.Gaudi.Math.ValueWithError 
-# 
+import ROOT
+from   Ostap.Core import cpp, VE, hID, dsID   
 # =============================================================================
 # logging 
 # =============================================================================
@@ -620,8 +618,6 @@ def _rrv_as_H1_ ( v , bins = 100 , double = True ) :
     >>> histo = variable.histo ( 100 )
     
     """
-    from Ostap.PyRoUts import hID
-    
     _hT = ROOT.TH1D if double else ROOT.TH1F
     _h  = _hT ( hID() , v.GetTitle() , bins , v.getMin()  , v.getMax() )
     _h.Sumw2()
@@ -1129,7 +1125,6 @@ def _ds_draw_ ( dataset , what , cuts = '' , opts = '' , *args ) :
     if 1 == len ( what )  :
         w1        = what[0] 
         mn1 , mx1 = _ds_var_minmax_  ( dataset , w1 , cuts )
-        from Ostap.PyRoUts import hID
         histo = ROOT.TH1F ( hID() , w1 , 200 , mn1 , mx1 )  ; histo.Sumw2()
         _ds_project_ ( dataset , histo , what , cuts , *args  )
         histo.Draw( opts )
@@ -1140,7 +1135,6 @@ def _ds_draw_ ( dataset , what , cuts = '' , opts = '' , *args ) :
         mn1 , mx1 = _ds_var_minmax_  ( dataset , w1 , cuts )
         w2        = what[1] 
         mn2 , mx2 = _ds_var_minmax_  ( dataset , w2 , cuts )
-        from Ostap.PyRoUts import hID
         histo = ROOT.TH2F ( hID() , "%s:%s" % ( w1 , w2 ) ,
                             50 , mn1 , mx1 ,
                             50 , mn2 , mx2 )  ; histo.Sumw2()
@@ -1155,7 +1149,6 @@ def _ds_draw_ ( dataset , what , cuts = '' , opts = '' , *args ) :
         mn2 , mx2 = _ds_var_minmax_  ( dataset , w2 , cuts )
         w3        = what[2] 
         mn3 , mx3 = _ds_var_minmax_  ( dataset , w3 , cuts )
-        from Ostap.PyRoUts import hID
         histo = ROOT.TH3F ( hID() , "%s:%s:%s" % ( w1 , w2 , w3 ) ,
                             20 , mn1 , mx1 ,
                             20 , mn2 , mx2 ,
@@ -1336,7 +1329,6 @@ def _rds_makeWeighted_ ( dataset , wvarname , varset = None , cuts = '' , vname 
     if not varset :
         varset = dataset.get()  
    
-    from Ostap.PyRoUts import dsID
     ## make weighted dataset 
     return ROOT.RooDataSet ( dsID()             ,
                              dataset.GetTitle() ,

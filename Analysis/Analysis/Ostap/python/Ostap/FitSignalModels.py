@@ -99,9 +99,9 @@ __all__ = (
     )
 # =============================================================================
 import ROOT, math
-from   Ostap.PyRoUts             import cpp
-from   GaudiKernel.SystemOfUnits import GeV 
+from   Ostap.Core                import cpp
 from   Ostap.FitBasic            import makeVar, MASS 
+from   GaudiKernel.SystemOfUnits import GeV 
 # =============================================================================
 from   Ostap.Logger     import getLogger
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.FitSignalModels' )
