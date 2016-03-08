@@ -12,7 +12,6 @@
 #include "Event/L0DUReport.h"
 #include "Event/L0ProcessorData.h"
 
-static const InterfaceID IID_IL0DUFromRawTool ( "IL0DUFromRawTool", 1, 4 );
 
 /** @class IL0DUFromRawTool IL0DUFromRawTool.h
  *  
@@ -20,34 +19,27 @@ static const InterfaceID IID_IL0DUFromRawTool ( "IL0DUFromRawTool", 1, 4 );
  *  @author Olivier Deschamps
  *  @date   2007-10-19
  */
-class IL0DUFromRawTool : virtual public IAlgTool {
+class IL0DUFromRawTool : public extend_interfaces<IAlgTool> {
 public: 
-
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IL0DUFromRawTool; }
-
-
+  DeclareInterfaceID( IL0DUFromRawTool, 2, 0 );
 
   virtual bool decodeBank(int iBank=0 )=0;
-  virtual unsigned int data(std::string name)=0;
-  virtual unsigned int tck()=0;
-  virtual unsigned int version()=0;
-  virtual unsigned int firmware()=0;
-  virtual const std::pair<unsigned int,unsigned int> bcid()=0;
-  virtual unsigned int rsda()=0;
-  virtual unsigned int muonCleaningPattern()=0;
-  virtual unsigned int status()=0;
-  virtual LHCb::L0DUReport report()=0;
-  virtual LHCb::L0ProcessorDatas* L0ProcessorDatas()=0;
-  virtual unsigned int size()=0;
-  virtual unsigned long roStatus()=0;
+  virtual unsigned int data(const std::string& name) const =0;
+  virtual unsigned int tck() const =0;
+  virtual unsigned int version() const =0;
+  virtual unsigned int firmware() const =0;
+  virtual const std::pair<unsigned int,unsigned int> bcid() const =0;
+  virtual unsigned int rsda() const =0;
+  virtual unsigned int muonCleaningPattern() const =0;
+  virtual unsigned int status() const =0;
+  virtual LHCb::L0DUReport report() const =0;
+  virtual LHCb::L0ProcessorDatas* L0ProcessorDatas() =0;
+  virtual unsigned int size() const =0;
+  virtual unsigned long roStatus() const =0;
   virtual void fillDataMap(bool fill = true)=0;
-  virtual std::string dump()=0;
-  virtual const std::map<std::string, std::pair<unsigned int,double> >& datas()=0;
+  virtual std::string dump() const =0;
+  virtual const std::map<std::string, std::pair<unsigned int,double> >& datas() const =0;
   virtual StatusCode  _setProperty(const std::string& p,const std::string& v)=0;
-protected:
-
-private:
 
 };
 #endif // IL0DUFROMRAWTOOL_H

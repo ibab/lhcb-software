@@ -2,6 +2,8 @@
 ! Package     : L0Interfaces
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !======================================================================
+! 2016-03-08 - Gerhard Raven
+ - add const to IL0DUFromRawTool methods where possible
 
 !========================= L0Interfaces v2r3 2013-02-04 =========================
 ! 2013-01-22 - Julien Cogan
