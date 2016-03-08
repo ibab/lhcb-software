@@ -66,7 +66,7 @@ def _h_new_init_ ( self , *args ) :
         self._old_init_   ( *args      )
         self.SetDirectory ( ROOT.gROOT )
         ## optionally:
-        self.Sumw2()
+        if not self.GetSumw2() : self.Sumw2()
 
 # =============================================================================
 ## a bit modified 'Clone' function for histograms
@@ -471,40 +471,6 @@ except TypeError :
     ##
     logger.warning ('1D-interpolation: "edges" will be ignored ') 
     
-# =============================================================================
-## C++ function for 2D-histogram interpolation
-#  @see Gaudi::Math::HistoInterpolation
-#  @see Gaudi::Math::HistoInterpolation::interpolate_2D
-_interpolate_2D_ = cpp.Gaudi.Math.HistoInterpolation.interpolate_2D
-# =============================================================================
-## C++ function for 3D-histogram interpolation
-#  @see Gaudi::Math::HistoInterpolation
-#  @see Gaudi::Math::HistoInterpolation::interpolate_3D
-_interpolate_3D_ = cpp.Gaudi.Math.HistoInterpolation.interpolate_3D
-# =============================================================================
-
-# =============================================================================
-## C++ function for 1D-histogram interpolation
-#  @see Gaudi::Math::HistoInterpolation
-#  @see Gaudi::Math::HistoInterpolation::interpolate_1D
-_interpolate_1D_ = cpp.Gaudi.Math.HistoInterpolation.interpolate_1D
-
-try :
-    
-    h1 = ROOT.TH1D(hID(),'test',10,0,1)
-    v   = _interpolate_1D_ ( h1 , 0.5 , 2 , False )
-    logger.info ('1D-interpolation: everything is fine') 
-
-except TypeError :
-
-    _tmp_interp_tmp_ = cpp.Gaudi.Math.HistoInterpolation.interpolate_1D
-    
-    def _interpolate_1D_ ( histo , x , order = 1 , edges = True ) :
-        return  _tmp_interp_tmp_ ( h1 , x , order )
-    
-    logger.warning ('1D-interpolation: "edges" will be ignored ') 
-
-
 # =============================================================================
 ## C++ function for 2D-histogram interpolation
 #  @see Gaudi::Math::HistoInterpolation

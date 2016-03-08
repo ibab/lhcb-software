@@ -37,10 +37,9 @@ __all__     = (
     'dsID'            , ## construct the (global) unique ROOT identifier
     #
     'VE'              , ## Gaudi::Math::ValueWithError
-    'ValueWithError'  , ## Gaudi::Math::ValueWithError
     'histoGuess'      , ## guess the simple histo parameters
-    'useLL'           , ## use LL for histogram fit?
-    'allInts'         , ## natural histogram with natural entries?
+    #'useLL'           , ## use LL for histogram fit?
+    #'allInts'         , ## natural histogram with natural entries?
     'SE'              , ## StatEntity
     'WSE'             , ## StatEntity with weights
     'iszero'          , ## is almost zero  ?
@@ -96,9 +95,9 @@ ROOT.gROOT.ProcessLine("gErrorIgnoreLevel = 2001; " )
 # =============================================================================
 ## decorate histograms 
 # =============================================================================    
-from   Ostap.HistoDeco import ( binomEff_h1 , binomEff_h2 , binomEff_h2 ,
+from   Ostap.HistoDeco import ( binomEff_h1 , binomEff_h2 , binomEff_h3 ,
                                 h1_axis     , h2_axes     , h3_axes     ,
-                                axis_bins   , ve_adjust                 )
+                                axis_bins   , ve_adjust   , histoGuess  )
 
 # =============================================================================
 # Other decorations 
