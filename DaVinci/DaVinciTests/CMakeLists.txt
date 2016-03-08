@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciTests
 ################################################################################
-gaudi_subdir(DaVinciTests v3r2)
+gaudi_subdir(DaVinciTests v3r3)
 
 gaudi_depends_on_subdirs(GaudiConf)
 
