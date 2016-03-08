@@ -3,6 +3,9 @@
 ! Responsible : Mark Williams
 !--------------------------------------------------------------------------
 
+! 2016-03-08 - Mark Williams
+ - Add VPOccupancyChecker and VPTrackEff algorithms
+
 !========================= VPCheckers v1r1 2015-11-23 =========================
 ! 2015-11-08 - Heinrich Schindler
  - Add check whether the detector element is found.
