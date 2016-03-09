@@ -8,9 +8,6 @@
 #include "Event/MCParticle.h"
 #include "VPDet/DeVP.h"
 
-// Rec
-#include "TrackInterfaces/IVPExpectation.h"
-
 /** @class VPTrackEff
  *
  * Class for Velo track monitoring Ntuple
@@ -41,8 +38,7 @@ private:
 
   std::string m_trackLocation;    ///< Input track container location
   std::string m_mchitLocation;    ///< Input hit container location
-
-  IVPExpectation* m_expectTool;
+ 
   const DeVP* m_det;
 
 };

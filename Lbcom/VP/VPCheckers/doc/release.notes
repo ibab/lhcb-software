@@ -4,6 +4,9 @@
 !--------------------------------------------------------------------------
 
 ! 2016-03-08 - Mark Williams
+ - Remove (unused) Rec dependencies from VPTrackEff algorithm
+
+! 2016-03-08 - Mark Williams
  - Add VPOccupancyChecker and VPTrackEff algorithms
 
 !========================= VPCheckers v1r1 2015-11-23 =========================

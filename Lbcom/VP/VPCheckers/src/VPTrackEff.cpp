@@ -18,7 +18,6 @@ DECLARE_ALGORITHM_FACTORY(VPTrackEff)
 VPTrackEff::VPTrackEff(const std::string& name,
                        ISvcLocator* pSvcLocator ) :
   GaudiTupleAlg(name, pSvcLocator),
-  m_expectTool(NULL), 
   m_det(NULL) {
 
   declareProperty("TrackLocation", m_trackLocation = LHCb::TrackLocation::Velo);
@@ -38,7 +37,6 @@ StatusCode VPTrackEff::initialize() {
   StatusCode sc = GaudiTupleAlg::initialize();
   if (sc.isFailure()) return sc;
 
-  m_expectTool = tool<IVPExpectation>("VPExpectation");
   m_det = getDet<DeVP>(DeVPLocation::Default);
 
   setHistoTopDir("VP/");
@@ -126,7 +124,6 @@ StatusCode VPTrackEff::execute() {
 
     Gaudi::XYZPoint firsthit(99999., 99999., 99999.);
     if (!forward) firsthit = Gaudi::XYZPoint(99999.,99999.,-99999.);
-    // int nexpected(m_expectTool->nExpected(*particle));
     int nmcparts(-999);
     int nhits(0);
     int nhitsleft(0);
@@ -183,7 +180,6 @@ StatusCode VPTrackEff::execute() {
     tuple->column("nhits", nhits);
     tuple->column("nhitsleft", nhitsleft);
     tuple->column("nhitsright", nhitsright);
-    // tuple->column("nexpectedhits", nexpected);
     tuple->column("nmchits", int(mchitmap.find(particle)->second.size()));
     tuple->column("nmcparts", nmcparts);
     tuple->column("mcmothertype", mcMotherType(*particle));
@@ -222,7 +218,6 @@ const LHCb::MCVertex* VPTrackEff::findMCOriginVertex(const LHCb::MCParticle& par
 int VPTrackEff::mcMotherType(const LHCb::MCParticle& particle) {
 
   const LHCb::MCVertex& vertex = findMCOriginVertex(particle);
-  // return vertex.type();
 
   int rc(-1);
   if (vertex.isPrimary()) rc = 0;
