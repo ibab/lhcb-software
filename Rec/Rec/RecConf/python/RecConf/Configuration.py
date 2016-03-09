@@ -136,6 +136,8 @@ class RecSysConf(LHCbConfigurableUser):
             pvAlg.PVOfflineTool.LSAdaptPV3DFitter.trackMaxChi2 = 12.0
             pvAlg.PVOfflineTool.UseBeamSpotRCut = True
             pvAlg.PVOfflineTool.BeamSpotRCut = 0.2
+            pvAlg.PVOfflineTool.BeamSpotRHighMultiplicityCut = 0.4
+            pvAlg.PVOfflineTool.BeamSpotRMultiplicityTreshold = 10
             pvAlg.PVOfflineTool.InputTracks = [ "Rec/Track/FittedHLT1VeloTracks" ]
             pvAlg.OutputVerticesName = "Rec/Vertex/Primary"
             pvAlg.PrimaryVertexLocation = "Rec/Vertex/PrimaryVertices"

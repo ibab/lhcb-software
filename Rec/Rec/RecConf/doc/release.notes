@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2016-03-09 - Agnieszka Dziurda
+ - add double threshold for radial cut in PV reconstruction
+
 ! 2016-03-04 - Michel De Cian
  - Remove Velo tracks in FittedHLT1VeloTracks container that don't belong to a PV (in RecSysConf). This is done for all Run2, also for 2015 (which was originally not the case).
 
