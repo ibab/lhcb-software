@@ -57,7 +57,7 @@ default_config = {
      'K0s2mmSBCut'  : 465,
      'IP'         :   0.5 ,
      'IPChi2Min'  :   1.5,
-     'IPChi2Max'  :   1500,
+     'IPChi2Max'  :   1000000,
      'TTHits'     :      -1,
      'TRACK_TRGHOSTPROB_MAX': 0.3,
      'MaxMass'    :   450 ,
@@ -95,7 +95,7 @@ class RnSConf(LineBuilder) :
        
         LineBuilder.__init__(self, name, config)
         
-        from StandardParticles import StdLooseMuons as Muons
+        from StandardParticles import StdAllLooseMuons as Muons
         from StandardParticles import StdLooseElectrons as Electrons
         
         from StandardParticles import StdLooseProtons as Protons
