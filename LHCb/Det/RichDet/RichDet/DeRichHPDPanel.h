@@ -196,7 +196,8 @@ private: // data
 //=========================================================================
 //  convert a SmartID to a point on the anode (global coord system)
 //=========================================================================
-inline Gaudi::XYZPoint DeRichHPDPanel::detPointOnAnode( const LHCb::RichSmartID& smartID ) const
+inline Gaudi::XYZPoint 
+DeRichHPDPanel::detPointOnAnode( const LHCb::RichSmartID& smartID ) const
 {
   return deHPD(smartID)->detPointOnAnode(smartID);
 }

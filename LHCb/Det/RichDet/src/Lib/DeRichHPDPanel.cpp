@@ -590,7 +590,7 @@ StatusCode DeRichHPDPanel::geometryUpdate()
   m_panelStartColPosEven = HPD00v - 0.5*m_HPDPitch;
   m_panelStartColPosOdd  = HPD10v - 0.5*m_HPDPitch;
 
-  // use the abs(largest) value as an ovearll panel edge
+  // use the abs(largest) value as an overall panel edge
   m_panelStartColPos = fabs( m_panelStartColPosEven );
   if ( fabs( m_panelStartColPosOdd ) > m_panelStartColPos )
     m_panelStartColPos = fabs( m_panelStartColPosOdd );
@@ -602,7 +602,7 @@ StatusCode DeRichHPDPanel::geometryUpdate()
         << endmsg;
 
   // get the first HPD and follow down to the silicon block
-  const auto* pvHPDMaster0  = geometry()->lvolume()->pvolume(0);
+  const auto* pvHPDMaster0 = geometry()->lvolume()->pvolume(0);
 
   // get subMaster volume
   const auto* pvHPDSMaster0 = pvHPDMaster0->lvolume()->pvolume(0);
