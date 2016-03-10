@@ -1,6 +1,6 @@
 
-#ifndef RICHKERNEL_RICHRAYTRACING_H
-#define RICHKERNEL_RICHRAYTRACING_H 1
+#ifndef RICHKERNEL_RICHRAYTRACINGUTILS_H
+#define RICHKERNEL_RICHRAYTRACINGUTILS_H 1
 
 // MathCore
 #include "GaudiKernel/Point3DTypes.h"
@@ -158,7 +158,7 @@ namespace Rich
     {
       bool OK = true;
       // Plane normal
-      const auto normal = plane.Normal();
+      const auto& normal = plane.Normal();
       // compute distance to the plane
       const auto scalar = direction.Dot(normal);
       if ( UNLIKELY( fabs(scalar) < 1e-99 ) ) { OK = false; }
@@ -167,7 +167,7 @@ namespace Rich
         const auto distance = -(plane.Distance(position)) / scalar;
         // change position to reflection point and direction
         position  += distance * direction;
-        direction -= 2.0 * (normal.Dot(direction)) * normal;
+        direction -= 2.0 * scalar * normal;
       }
       return OK;
     }
@@ -176,4 +176,4 @@ namespace Rich
 
 }
 
-#endif // RICHKERNEL_RICHRAYTRACING_H
+#endif // RICHKERNEL_RICHRAYTRACINGUTILS_H

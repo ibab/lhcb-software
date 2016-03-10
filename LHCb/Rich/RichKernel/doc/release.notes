@@ -4,6 +4,10 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2016-03-10 - Chris Jones
+ - Small improvement to the flat mirror reflection method, to avoid an
+   unneccesary dot product.
+
 ! 2016-03-02 - Chris Jones
  - Add a new header file, RichRayTracingUtils.h, that contains some basic
    ray tracing methods, previous part of the ray tracing tools in RichTools.
