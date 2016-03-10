@@ -197,7 +197,7 @@ void LikelihoodTool::pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) con
           ++counter( mess.str() );
 
           // debug printout
-          _ri_debug << mess.str() << endmsg; 
+          _ri_debug << mess.str() << endmsg;
 
           // Rerun iterations again
           eventIteration += doIterations();
@@ -223,7 +223,7 @@ void LikelihoodTool::pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) con
   _ri_debug << "Performed " << eventIteration
             << " event minimisation iteration(s). Final LogL = "
             << m_currentBestLL << endmsg;
-  
+
 }
 
 //=============================================================================
@@ -268,7 +268,7 @@ unsigned int LikelihoodTool::doIterations() const
     // only quit if last iteration was with both riches
     else if ( m_inR1 && m_inR2 )
     {
-      _ri_debug << " -> ALL DONE. Quitting event iterations" << endmsg; 
+      _ri_debug << " -> ALL DONE. Quitting event iterations" << endmsg;
       tryAgain = false;
     }
     else // have one last try in both riches
@@ -305,7 +305,7 @@ unsigned int LikelihoodTool::initBestLogLikelihood() const
   for ( auto * track : *m_gpidTracksToPID )
   {
     auto * rRTrack = track->richRecTrack();
-    _ri_verbo << " -> Track " << rRTrack->key() << endmsg; 
+    _ri_verbo << " -> Track " << rRTrack->key() << endmsg;
 
     // skip frozen tracks
     if ( track->frozenHypo() )
@@ -319,7 +319,7 @@ unsigned int LikelihoodTool::initBestLogLikelihood() const
     Rich::ParticleIDType minHypo = rRTrack->currentHypothesis();
 
     // Loop over all particle codes
-    
+
     for ( auto hypo = pidTypes().begin(); hypo != pidTypes().end(); ++hypo )
     {
 
@@ -440,7 +440,7 @@ void LikelihoodTool::findBestLogLikelihood( MinTrList & minTracks ) const
     // skip globally frozen tracks
     if ( gTrack->frozenHypo() )
     {
-      _ri_debug << "  -> Skipping globally frozen track" << gTrack->key() << endmsg; 
+      _ri_debug << "  -> Skipping globally frozen track" << gTrack->key() << endmsg;
       continue;
     }
 
@@ -607,33 +607,33 @@ LikelihoodTool::deltaLogLikelihood( LHCb::RichRecTrack * track,
 {
 
   // Change due to track expectation
-  double deltaLL =
+  auto deltaLL =
     ( m_tkSignal->nTotalObservablePhotons( track, newHypo ) -
       m_tkSignal->nTotalObservablePhotons( track, track->currentHypothesis() ) );
 
   // Photon part
-  for ( LHCb::RichRecPixel * pix : track->richRecPixels() )
+  for ( auto * pix : track->richRecPixels() )
   {
 
     // photons for this pixel
-    LHCb::RichRecPixel::Photons & photons = pix->richRecPhotons();
+    auto & photons = pix->richRecPhotons();
     if ( !photons.empty() )
     {
 
-      double oldSig = pix->currentBackground();
-      double newSig = oldSig;
+      auto oldSig = pix->currentBackground();
+      auto newSig = oldSig;
 
       // Loop over photons for this pixel
-      for ( const LHCb::RichRecPhoton * phot : photons )
+      for ( const auto * phot : photons )
       {
         // Skip tracks not in use
-        if ( !phot->richRecTrack()->inUse() ) continue;
-
-        // update signal numbers
-        const double tmpOldSig = phot->expPixelSignalPhots(phot->richRecTrack()->currentHypothesis()); 
-        oldSig += tmpOldSig;
-        newSig += ( phot->richRecTrack() != track ? tmpOldSig : phot->expPixelSignalPhots(newHypo) );
-
+        if ( phot->richRecTrack()->inUse() )
+        {
+          // update signal numbers
+          const auto tmpOldSig = phot->expPixelSignalPhots(phot->richRecTrack()->currentHypothesis());
+          oldSig += tmpOldSig;
+          newSig += ( phot->richRecTrack() != track ? tmpOldSig : phot->expPixelSignalPhots(newHypo) );
+        }
       } // end photon loop
 
       // increment change to likelihood for this pixel
@@ -646,16 +646,6 @@ LikelihoodTool::deltaLogLikelihood( LHCb::RichRecTrack * track,
 
   } // end pixel loop
 
-  //   if ( msgLevel(MSG::VERBOSE) )
-  //   {
-  //     verbose() << "deltaLogLikelihood : Track " << track->key()
-  //               << " " << track->currentHypothesis()
-  //               << " " << newHypo
-  //               << " tkDLL=" << tkDeltaLL
-  //               << " pixDLL=" << pixDeltaLL
-  //               << endmsg;
-  //   }
-
   return deltaLL;
 }
 
@@ -663,11 +653,8 @@ LikelihoodTool::deltaLogLikelihood( LHCb::RichRecTrack * track,
 
 double LikelihoodTool::logLikelihood() const
 {
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "Computing event log likelihood using " << m_gpidTracksToPID->size()
+  _ri_debug << "Computing event log likelihood using " << m_gpidTracksToPID->size()
             << " tracks and " <<  richPixels()->size() << " pixels" << endmsg;
-  }
 
   // Loop over tracks to form total expected hits part of LL
   double trackLL = 0.0;
@@ -675,16 +662,18 @@ double LikelihoodTool::logLikelihood() const
   {
     // Sum expected photons from each track with current assumed hypotheses
     auto * rRTrack = track->richRecTrack();
-    if ( !rRTrack->inUse() ) continue;
-    const double obsPhots = m_tkSignal->nTotalObservablePhotons( rRTrack,
+    if ( rRTrack->inUse() )
+    {
+      const auto obsPhots = m_tkSignal->nTotalObservablePhotons( rRTrack,
                                                                  rRTrack->currentHypothesis() );
-    trackLL += obsPhots;
-    _ri_verbo << " -> Track " << rRTrack->key() << " obsPhots=" << obsPhots << endmsg;
+      trackLL += obsPhots;
+      //_ri_verbo << " -> Track " << rRTrack->key() << " obsPhots=" << obsPhots << endmsg;
+    }
   } // end track loop
 
   // Pixel loop
   double pixelLL = 0.0;
-  for ( const LHCb::RichRecPixel * pixel : *richPixels() )
+  for ( const auto * pixel : *richPixels() )
   {
 
     // loop over all the photons for this pixel
@@ -692,15 +681,15 @@ double LikelihoodTool::logLikelihood() const
     bool foundSelectedTrack = false;
     for ( auto * phot : pixel->richRecPhotons() )
     {
-      const LHCb::RichRecTrack * rRTrack = phot->richRecTrack();
+      const auto * rRTrack = phot->richRecTrack();
       if ( rRTrack->inUse() )
       {
-        _ri_verbo << "  -> Using photon : track=" << rRTrack->key()
-                  << " pixel=" << pixel->key()
-                  << " bkg=" << pixel->currentBackground()
-                  << " sig=" << m_photonSig->predictedPixelSignal( phot,
-                                                                   rRTrack->currentHypothesis() )
-                  << endmsg;
+        // _ri_verbo << "  -> Using photon : track=" << rRTrack->key()
+        //           << " pixel=" << pixel->key()
+        //           << " bkg=" << pixel->currentBackground()
+        //           << " sig=" << m_photonSig->predictedPixelSignal( phot,
+        //                                                            rRTrack->currentHypothesis() )
+        //           << endmsg;
         foundSelectedTrack = true;
         //photonSig += m_photonSig->predictedPixelSignal( *iPhoton, rRTrack->currentHypothesis() );
         photonSig += phot->expPixelSignalPhots(rRTrack->currentHypothesis());
@@ -709,9 +698,9 @@ double LikelihoodTool::logLikelihood() const
 
     if ( foundSelectedTrack )
     {
-      const double pixSig = sigFunc( photonSig + pixel->currentBackground() );
+      const auto pixSig = sigFunc( photonSig + pixel->currentBackground() );
       pixelLL -= pixSig;
-      _ri_verbo << " -> Pixel " << pixel->key() << " " << pixSig << endmsg;
+      //_ri_verbo << " -> Pixel " << pixel->key() << " " << pixSig << endmsg;
     }
 
   } // loop over all pixels
@@ -741,7 +730,7 @@ double LikelihoodTool::logLikelihood() const
 //   const auto limitB ( 0.01f  );
 //   const auto limitC ( 0.1f   );
 //   const auto limitD ( 1.0f   );
-  
+
 //   // Initialise return value
 //   auto res ( 0.0f );
 
@@ -750,14 +739,14 @@ double LikelihoodTool::logLikelihood() const
 //   {
 //     // A collection of rational power series covering the important range
 //     // note by construction this function should never be called for x < limitA
-    
+
 //     // vector with powers of x
 //     const Vec4f x1( x,    x,    x,    x );
 //     const Vec4f x2( 1.0f, x,    x,    x );
 //     const Vec4f x3( 1.0f, 1.0f, x,    x );
 //     const Vec4f x4( 1.0f, 1.0f, 1.0f, x );
 //     const auto xxxx = x1 * x2 * x3 * x4;
-    
+
 //     if      ( x > limitC ) // 0.1 -> 1
 //     {
 //       const Vec4f topP( -101.76227310588246f, -127.31825068394369f,
@@ -798,7 +787,7 @@ double LikelihoodTool::logLikelihood() const
 //     //res = std::log( std::exp(x) - 1.0 );
 //     res = vdt::fast_logf( vdt::fast_expf(x) - 1.0f );
 //   }
-  
+
 //   return res;
 // }
 
@@ -812,7 +801,7 @@ double LikelihoodTool::logLikelihood() const
 //   const auto limitC ( 0.1f   );
 //   const auto limitD ( 1.0f   );
 
-//   const Vec8f x1( x,    x,    x,    x, y,    y,    y,    y ); 
+//   const Vec8f x1( x,    x,    x,    x, y,    y,    y,    y );
 //   const Vec8f x2( 1.0f, x,    x,    x, 1.0f, y,    y,    y );
 //   const Vec8f x3( 1.0f, 1.0f, x,    x, 1.0f, 1.0f, y,    y );
 //   const Vec8f x4( 1.0f, 1.0f, 1.0f, x, 1.0f, 1.0f, 1.0f, y );
@@ -932,7 +921,7 @@ double LikelihoodTool::logLikelihood() const
 //   const auto limitB ( 0.01f  );
 //   const auto limitC ( 0.1f   );
 //   const auto limitD ( 1.0f   );
-  
+
 //   // Initialise return value
 //   auto res ( 0.0f );
 
@@ -941,14 +930,14 @@ double LikelihoodTool::logLikelihood() const
 //   {
 //     // A collection of rational power series covering the important range
 //     // note by construction this function should never be called for x < limitA
-    
+
 //     // vector with powers of x
 //     const V4f x1( x,    x,    x,    x );
 //     const V4f x2( 1.0f, x,    x,    x );
 //     const V4f x3( 1.0f, 1.0f, x,    x );
 //     const V4f x4( 1.0f, 1.0f, 1.0f, x );
 //     const auto xxxx = x1 * x2 * x3 * x4;
-    
+
 //     if      ( x > limitC ) // 0.1 -> 1
 //     {
 //       const V4f topP( -101.76227310588246f, -127.31825068394369f,
@@ -989,7 +978,7 @@ double LikelihoodTool::logLikelihood() const
 //     //res = std::log( std::exp(x) - 1.0 );
 //     res = vdt::fast_logf( vdt::fast_expf(x) - 1.0f );
 //   }
-  
+
 //   return res;
 // }
 
@@ -997,16 +986,16 @@ double LikelihoodTool::logLikelihood() const
 
 // float LikelihoodTool::logExpOriginal( const float x ) const
 // {
-  
+
 //   // Parameters
 //   const float limitA ( 0.001 );
 //   const float limitB ( 0.01  );
 //   const float limitC ( 0.1   );
 //   const float limitD ( 1.0   );
-  
-//   // Initialise 
+
+//   // Initialise
 //   float res ( 0.0 );
-  
+
 //   // pick the interpolation to use
 //   if ( x <= limitD )
 //   {
@@ -1017,7 +1006,7 @@ double LikelihoodTool::logLikelihood() const
 //     const float xxx   = xx*x;
 //     const float xxxx  = xx*xx;
 //     const float xxxxx = xx*xxx;
-    
+
 //     if      ( x > limitC )
 //     {
 //       res = (-5.751779337152293 - 261.58791552313113*x -
@@ -1058,7 +1047,7 @@ double LikelihoodTool::logLikelihood() const
 //     //res = std::log( std::exp(x) - 1.0 );
 //     res = vdt::fast_logf( vdt::fast_expf(x) - 1.0 );
 //   }
-  
+
 //   // return
 //   return res;
 // }

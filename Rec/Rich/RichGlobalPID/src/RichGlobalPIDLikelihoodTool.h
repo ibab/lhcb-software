@@ -162,13 +162,13 @@ namespace Rich
             // refill the data vector
             m_data.reserve( nBins );
             for ( unsigned int i = 0; i < nBins; ++i )
-            { m_data.emplace_back( LogExpLookUp::Data(binLowX(i),binHighX(i)) ); } 
+            { m_data.emplace_back( LogExpLookUp::Data(binLowX(i),binHighX(i)) ); }
           }
           /** get the log(exp(x)-1) value for a given x from the look up table
            *  @attention No min value range check, as this is done elsewhere */
           inline TYPE lookup( const TYPE& x ) const
           {
-            return ( x < m_maxX ? m_data[xIndex(x)].getY(x) : 
+            return ( x < m_maxX ? m_data[xIndex(x)].getY(x) :
                      vdt::fast_logf( vdt::fast_expf(x) - 1.0f ) );
           }
         private:
@@ -177,15 +177,15 @@ namespace Rich
           {
           public:
             /// Constructor from bin low/high edges
-            Data( const TYPE& lowX, const TYPE& highX) 
-              : m_xLow(lowX),         m_xHigh(highX), 
-                m_yLow(logexp(lowX)), m_yHigh(logexp(highX)) 
+            Data( const TYPE& lowX, const TYPE& highX)
+              : m_xLow(lowX),         m_xHigh(highX),
+                m_yLow(logexp(lowX)), m_yHigh(logexp(highX))
             {
               m_slope = ( m_yLow - m_yHigh ) / ( m_xLow - m_xHigh );
               m_const = m_yLow - ( m_xLow * m_slope );
             }
             /// Get the y value for a given x for this Data point
-            inline TYPE getY( const TYPE& x ) const 
+            inline TYPE getY( const TYPE& x ) const
             {
               return ( x * m_slope ) + m_const;
             }
@@ -195,20 +195,20 @@ namespace Rich
             { return vdt::fast_logf( vdt::fast_expf(x) - 1.0f ); }
           private:
             // The (x,y) values for the low and high edge of this bin
-            TYPE m_xLow{0}, m_xHigh{1}, m_yLow{0}, m_yHigh{1};
+            TYPE m_xLow, m_xHigh, m_yLow, m_yHigh;
             /// The slope parameter
-            TYPE m_slope{0};
+            TYPE m_slope;
             /// The constant parameter
-            TYPE m_const{0};
+            TYPE m_const;
           public:
             /// type for a list of data points
             typedef std::vector<Data> Vector;
           };
         private:
           /// Clear this object
-          void clear() 
-          { 
-            m_data.clear(); 
+          void clear()
+          {
+            m_data.clear();
             m_minX = m_maxX = m_incX = 0;
           }
           /// Get the low x value for a given bin index
@@ -231,11 +231,11 @@ namespace Rich
           /// The look up vector of data points
           typename Data::Vector m_data;
           /// The minimum valid x
-          TYPE m_minX{0};
+          TYPE m_minX;
           /// The maximum valid x
-          TYPE m_maxX{1};
+          TYPE m_maxX;
           /// 1 / the bin increment
-          TYPE m_incX{0};
+          TYPE m_incX;
         };
 
       private: // Private methods
