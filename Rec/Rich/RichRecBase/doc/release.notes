@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2016-03-10 - Chris Jones
+ - Small cleanup to track creator base class.
+
 ! 2016-02-11 - Chris Jones
  - Adapt to change in pixel class due to using smart points for internal
    memory management.

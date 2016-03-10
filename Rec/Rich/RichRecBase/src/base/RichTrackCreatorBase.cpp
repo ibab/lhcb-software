@@ -28,23 +28,23 @@ namespace Rich
     TrackCreatorBase::TrackCreatorBase( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
-      : Rich::Rec::ToolBase    ( type, name, parent ),
-        m_bookKeep             ( true               ),
-        m_traceModeRad         ( Rich::NRadiatorTypes,
-                                 LHCb::RichTraceMode(LHCb::RichTraceMode::IgnoreHPDAcceptance) )
+      : Rich::Rec::ToolBase ( type, name, parent ),
+        m_traceModeRad      ( Rich::NRadiatorTypes,
+                              LHCb::RichTraceMode(LHCb::RichTraceMode::IgnoreHPDAcceptance) )
+        //LHCb::RichTraceMode(LHCb::RichTraceMode::RespectHPDPanel) )
     {
       // Define the interface
       declareInterface<ITrackCreator>(this);
-
+      
       // job options
-      declareProperty( "DoBookKeeping", m_bookKeep );
+      declareProperty( "DoBookKeeping", m_bookKeep = true );
       declareProperty( "RichRecTrackLocation", 
                        m_richRecTrackLocation = contextSpecificTES(LHCb::RichRecTrackLocation::Default),
                        "The TES location for the transient RichRecTrack objects" );
       declareProperty( "MaxInputTracks",  m_maxInputTracks = 99999 );
       declareProperty( "MaxUsedTracks",   m_maxSelTracks   = 99999 );
     }
-
+    
     StatusCode TrackCreatorBase::initialize()
     {
       // base class initilize
@@ -229,7 +229,6 @@ namespace Rich
 
       // Get primary PD panel impact point
       LHCb::RichGeomPhoton photon;
-      auto & hitPoint = photon.detectionPoint();
       auto result = rayTraceTool()->traceToDetector( trSeg.rich(),
                                                      trackPtn,
                                                      trackDir,
@@ -238,22 +237,27 @@ namespace Rich
                                                      m_traceModeRad[rad],
                                                      Rich::top );
       const bool OK = m_traceModeRad[rad].traceWasOK(result);
+      //info() << m_traceModeRad[rad] << " " << result << " " << OK << endmsg;
       if ( OK )
       {
-        _ri_verbo << "   -> Segment traces to PD panel at " << hitPoint << endmsg;
+        _ri_verbo << "   -> Segment traces to PD panel at " 
+                  << photon.detectionPoint() << endmsg;
 
         // Set global hit point
-        newSegment->setPdPanelHitPoint( hitPoint );
+        newSegment->setPdPanelHitPoint( photon.detectionPoint() );
 
         // Set closest PD
         newSegment->setClosestPD(photon.smartID().pdID());
 
         // Set PD panel hit point in local coordinates
-        newSegment->setPdPanelHitPointLocal( smartIDTool()->globalToPDPanel(hitPoint) );
+        newSegment->setPdPanelHitPointLocal( smartIDTool()->globalToPDPanel(photon.detectionPoint()) );
 
         // Set the forced side ray traced points
-        LHCb::RichTraceMode tmpTraceMode(m_traceModeRad[rad]);
-        tmpTraceMode.setForcedSide(true);
+        auto tmpTraceMode = m_traceModeRad[rad];
+        // force the side for these tracings
+        tmpTraceMode.setForcedSide   ( true );
+        // completely ignore the PD panel acceptance now
+        tmpTraceMode.setDetPlaneBound( LHCb::RichTraceMode::IgnoreHPDAcceptance );
 
         // left/top
         result = rayTraceTool()->traceToDetector( trSeg.rich(),
@@ -265,12 +269,15 @@ namespace Rich
                                                   Rich::left );
         if ( tmpTraceMode.traceWasOK(result) )
         {
-          newSegment->setPdPanelHitPoint( hitPoint, Rich::left );
-          const auto hitPtnLoc = smartIDTool()->globalToPDPanel(hitPoint);
+          newSegment->setPdPanelHitPoint( photon.detectionPoint(), Rich::left );
+          const auto hitPtnLoc = smartIDTool()->globalToPDPanel(photon.detectionPoint());
           newSegment->setPdPanelHitPointLocal( hitPtnLoc, Rich::left );
-          newSegment->setPdPanelHitPointCorrectedLocal( m_geomTool->radCorrLocalPos(hitPtnLoc,rad), Rich::left );
-          _ri_verbo << "    -> Segment force traces to left/top PD panel at " << hitPoint << endmsg;
+          newSegment->setPdPanelHitPointCorrectedLocal( m_geomTool->radCorrLocalPos(hitPtnLoc,rad), 
+                                                        Rich::left );
+          _ri_verbo << "    -> Segment force traces to left/top PD panel at " 
+                    << photon.detectionPoint() << endmsg;
         }
+        //else { info() << "Problem force ray tracing track" << endmsg; }
 
         // right/bottom
         result = rayTraceTool()->traceToDetector( trSeg.rich(),
@@ -282,12 +289,15 @@ namespace Rich
                                                   Rich::right );
         if ( tmpTraceMode.traceWasOK(result) )
         {
-          newSegment->setPdPanelHitPoint( hitPoint, Rich::right );
-          const auto hitPtnLoc = smartIDTool()->globalToPDPanel(hitPoint);
+          newSegment->setPdPanelHitPoint( photon.detectionPoint(), Rich::right );
+          const auto hitPtnLoc = smartIDTool()->globalToPDPanel(photon.detectionPoint());
           newSegment->setPdPanelHitPointLocal( hitPtnLoc, Rich::right );
-          newSegment->setPdPanelHitPointCorrectedLocal( m_geomTool->radCorrLocalPos(hitPtnLoc,rad), Rich::right );
-          _ri_verbo << "    -> Segment force traces to right/bottom HPD panel at " << hitPoint << endmsg;
+          newSegment->setPdPanelHitPointCorrectedLocal( m_geomTool->radCorrLocalPos(hitPtnLoc,rad), 
+                                                        Rich::right );
+          _ri_verbo << "    -> Segment force traces to right/bottom HPD panel at " 
+                    << photon.detectionPoint() << endmsg;
         }
+        //else { info() << "Problem force ray tracing track" << endmsg; }
 
       }
 
