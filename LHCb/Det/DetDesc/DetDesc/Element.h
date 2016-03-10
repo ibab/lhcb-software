@@ -1,8 +1,8 @@
 #ifndef DETDESC_ELEMENT_H
-#define DETDESC_ELEMENT_H 1 
+#define DETDESC_ELEMENT_H 1
 /// STL
 #include <vector>
-/// DetDesc 
+/// DetDesc
 #include "DetDesc/Material.h"
 #include "DetDesc/CLIDElement.h"
 
@@ -16,37 +16,37 @@ class Isotope;
     The composition is done only by fraction of the mass.
 
     @author Radovan Chytracek
-    @author Vanya Belyaev 
+    @author Vanya Belyaev
 */
 class Element : public Material
 {
 public:
   ///
   typedef  std::pair<double,SmartRef<Isotope> >  Entry    ;
-  typedef  std::vector<Entry>                    Isotopes ;  
+  typedef  std::vector<Entry>                    Isotopes ;
   ///
 public:
   ///
-  Element( const std::string&  name     = ""   , 
+  Element( const std::string&  name     = ""   ,
            const std::string&  symb     = "??" ,
-           const double        a        =  0   , 
-           const double        z        =  0   , 
+           const double        a        =  0   ,
+           const double        z        =  0   ,
 	   const double        i        =  0   ,
            const double        density  =  0   ,
-           const double        rl       =  0   , 
-           const double        al       =  0   ,  
+           const double        rl       =  0   ,
+           const double        al       =  0   ,
            const double        temp     =  Gaudi::Units::STP_Temperature,
            const double        press    =  Gaudi::Units::STP_Pressure,
            const eState        s        =  stateUndefined );
   // Destructor
   ~Element() override = default;
   ///
-  virtual inline const CLID& clID    () const { return Element::classID() ; };
-  static         const CLID& classID ()       { return CLID_Element       ; }; 
+  const CLID& clID() const override { return Element::classID() ; };
+  static const CLID& classID ()     { return CLID_Element       ; };
   ///
-  /// return symbol of element 
+  /// return symbol of element
   inline const std::string &      symbol  () const { return m_symb ; }
-  inline void                  setSymbol (const std::string& S ) { m_symb = S; } 
+  inline void                  setSymbol (const std::string& S ) { m_symb = S; }
   /// Number of isotopes in the material
   int                      nOfIsotopes() const;
   /// Return an isotope by index
@@ -57,17 +57,17 @@ public:
         Isotopes&          isotopes       ()       ;
   /// Return a fraction of an isotope by index
   double                   isotopeFraction( unsigned int i ) const;
-  
+
   /** Add an isotope into this material
       After addition of the last isotope user can call this method
       with "comp" argument set to"true" and compute() method will
       do its job automatically, otherwise the user must call compute()
       method explicitly
   */
-  void addIsotope ( const SmartRef<Isotope>& iPtr  , 
+  void addIsotope ( const SmartRef<Isotope>& iPtr  ,
                     const double             Fract , const bool comp = false );
   void addIsotope ( const Entry&             iPtr  , const bool comp = false );
-  
+
   /** Remove an isotope from the vector of isotopes
       compute() method invocation is done as described above
   */
@@ -95,9 +95,9 @@ public:
   void   setX1( const double value) override;
   ///        Number of nucleons
   double    N() const override;
-  ///  Coulomb factor 
+  ///  Coulomb factor
   inline double  coulombFactor() const ;
-  ///  Tsai    factor 
+  ///  Tsai    factor
   inline double  tsaiFactor   () const ;
   ///
 
@@ -126,7 +126,7 @@ public:
   /// Fill the output stream (ASCII)
   MsgStream&    fillStream ( MsgStream&    s ) const override;
   ///
-private:  
+private:
   /// Effective atomic mass
   double                  m_Aeff;
   /// Effective atomic number
@@ -140,7 +140,7 @@ private:
   double                  m_X0;
   double                  m_X1;
   /// Vector of isotopes this material is composed of
-  Isotopes                m_isotopes;  
+  Isotopes                m_isotopes;
   /// Coulomb factor
   double                  m_coulomb;
   /// Tsai's factor
