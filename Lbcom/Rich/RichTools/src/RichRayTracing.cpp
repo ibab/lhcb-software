@@ -28,15 +28,9 @@ namespace
 Rich::RayTracing::RayTracing( const std::string& type,
                               const std::string& name,
                               const IInterface* parent)
-  : Rich::HistoToolBase       ( type, name, parent  ),
-    m_rich                    ( Rich::NRiches, nullptr ),
-    m_photoDetPanels          ( Rich::NRiches,
-                                PDPanelsPerRich(Rich::NPDPanelsPerRICH,nullptr) ),
-    m_sphMirrorSegRows        ( Rich::NRiches, 0    ),
-    m_sphMirrorSegCols        ( Rich::NRiches, 0    ),
-    m_secMirrorSegRows        ( Rich::NRiches, 0    ),
-    m_secMirrorSegCols        ( Rich::NRiches, 0    ),
-    m_deBeam                  ( Rich::NRiches, nullptr )
+  : Rich::HistoToolBase ( type, name, parent  ),
+    m_photoDetPanels    ( Rich::NRiches,
+                          PDPanelsPerRich(Rich::NPDPanelsPerRICH,nullptr) )
 {
   // interface
   declareInterface<IRayTracing>(this);
@@ -46,10 +40,12 @@ Rich::RayTracing::RayTracing( const std::string& type,
 
   // job options
   declareProperty( "IgnoreSecondaryMirrors", m_ignoreSecMirrs = false );
+  declareProperty( "AssumeFlatSecondaryMirrors", 
+                   //                       RICH1   RICH2
+                   m_treatSecMirrsFlat  = { true,   false } );
 
   // Debug messages
   //setProperty( "OutputLevel", 1 );
-
 }
 
 //=============================================================================
@@ -131,8 +127,6 @@ StatusCode Rich::RayTracing::initialize()
   {
     Warning( "Will ignore secondary mirrors", StatusCode::SUCCESS );
   }
-
-  _ri_debug << "Using ROOT based Ray Tracing" << endmsg;
 
   return sc;
 }
@@ -493,9 +487,13 @@ bool Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
     }
 
     // Secondary mirror reflection with actual parameters
-    if ( !reflectSpherical( tmpPos, tmpDir,
-                            secSegment->centreOfCurvature(),
-                            secSegment->radius() ) ) { return false; }
+    const bool sc = ( m_treatSecMirrsFlat[rich] ?
+                      reflectPlane( tmpPos, tmpDir,
+                                    secSegment->centreNormalPlane() ) :
+                      reflectSpherical( tmpPos, tmpDir,
+                                        secSegment->centreOfCurvature(),
+                                        secSegment->radius() ) );
+    if ( !sc ) { return false; }
 
     // set secondary ("flat") mirror data
     photon.setFlatMirReflectionPoint( tmpPos );
@@ -548,10 +546,14 @@ Rich::RayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
     // find secondary mirror segment
     const auto * secSegment = m_mirrorSegFinder->findSecMirror(rich,side,planeIntersection);
 
-    if ( !reflectSpherical( tmpStartPoint, tmpStartDir,
-                            secSegment->centreOfCurvature(),
-                            secSegment->radius() ) )
-    { return false; }
+    // secondary mirror reflection
+    const bool sc = ( m_treatSecMirrsFlat[rich] ?
+                      reflectPlane( tmpStartPoint, tmpStartDir,
+                                    secSegment->centreNormalPlane() ) :
+                      reflectSpherical( tmpStartPoint, tmpStartDir,
+                                        secSegment->centreOfCurvature(),
+                                        secSegment->radius() ) );
+    if ( !sc ) { return false; }
 
   }
 
@@ -559,7 +561,7 @@ Rich::RayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
   Gaudi::XYZPoint storePoint( tmpStartPoint );
   Gaudi::XYZVector storeDir( tmpStartDir );
 
-  // Spherical mirror reflection with nominal parameters
+  // Primary mirror reflection with nominal parameters
   if ( !reflectSpherical( tmpStartPoint, tmpStartDir,
                           m_rich[rich]->nominalCentreOfCurvature(side),
                           m_rich[rich]->sphMirrorRadius() ) )
@@ -568,7 +570,7 @@ Rich::RayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
   // find primary mirror segment
   const auto * sphSegment = m_mirrorSegFinder->findSphMirror( rich, side,tmpStartPoint );
 
-  // Spherical mirror reflection with exact parameters
+  // Primary mirror reflection with exact parameters
   if ( !reflectSpherical( storePoint, storeDir,
                           sphSegment->centreOfCurvature(),
                           sphSegment->radius() ) )

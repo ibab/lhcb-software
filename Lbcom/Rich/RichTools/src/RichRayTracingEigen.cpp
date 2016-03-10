@@ -45,6 +45,9 @@ Rich::RayTracingEigen::RayTracingEigen( const std::string& type,
 
   // job options
   declareProperty( "IgnoreSecondaryMirrors", m_ignoreSecMirrs = false );
+  declareProperty( "AssumeFlatSecondaryMirrors", 
+                   //                       RICH1   RICH2
+                   m_treatSecMirrsFlat  = { true,   false } );
 
   // Debug messages
   // setProperty( "OutputLevel", 1 );
@@ -129,8 +132,6 @@ StatusCode Rich::RayTracingEigen::initialize()
   {
     Warning( "Will ignore secondary mirrors", StatusCode::SUCCESS );
   }
-
-  _ri_debug << "Using Eigen based Ray Tracing" << endmsg;
 
   return sc;
 }
@@ -492,9 +493,13 @@ bool Rich::RayTracingEigen::reflectBothMirrors( const Rich::DetectorType rich,
     }
 
     // Secondary mirror reflection with actual parameters
-    if ( !reflectSpherical( tmpPos, tmpDir,
-                            secSegment->centreOfCurvature(),
-                            secSegment->radius() ) ) { return false; }
+    const bool sc = ( m_treatSecMirrsFlat[rich] ?
+                      reflectPlane( tmpPos, tmpDir,
+                                    secSegment->centreNormalPlane() ) :
+                      reflectSpherical( tmpPos, tmpDir,
+                                        secSegment->centreOfCurvature(),
+                                        secSegment->radius() ) );
+    if ( !sc ) { return false; }
 
     // set secondary ("flat") mirror data
     photon.setFlatMirReflectionPoint ( tmpPos     );
@@ -546,10 +551,14 @@ Rich::RayTracingEigen::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint
     const auto * secSegment =
       m_mirrorSegFinder->findSecMirror( rich, side, planeIntersection );
 
-    if ( !Rich::RayTracingUtils::reflectSpherical( tmpStartPoint, tmpStartDir,
-                                                   secSegment->centreOfCurvature(),
-                                                   secSegment->radius() ) )
-    { return false; }
+    // secondary mirror reflection
+    const bool sc = ( m_treatSecMirrsFlat[rich] ?
+                      Rich::RayTracingUtils::reflectPlane( tmpStartPoint, tmpStartDir,
+                                                           secSegment->centreNormalPlane() ) :
+                      Rich::RayTracingUtils::reflectSpherical( tmpStartPoint, tmpStartDir,
+                                                               secSegment->centreOfCurvature(),
+                                                               secSegment->radius() ) );
+    if ( !sc ) { return false; }
 
   }
 

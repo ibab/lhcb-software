@@ -256,26 +256,24 @@ namespace Rich
     }
 
     /// Ray trace from given position in given direction off flat mirrors
-    inline bool reflectFlatPlane ( EigenXYZPoint& position,
-                                   EigenXYZVector& direction,
-                                   const Gaudi::Plane3D& plane ) const
+    inline bool reflectPlane ( EigenXYZPoint& position,
+                               EigenXYZVector& direction,
+                               const Gaudi::Plane3D& plane ) const
     {
-      // temp intersection point
-      EigenXYZPoint intersection;
-      // refect of the plane
-      const bool sc = intersectPlane( position, direction, plane, intersection );
-      if ( sc )
+      bool OK = true;
+      // Plane normal
+      const auto normal = EigenXYZVector(plane.Normal());
+      // compute distance to the plane
+      const auto scalar = direction.dot(normal);
+      if ( UNLIKELY( fabs(scalar) < 1e-99 ) ) { OK = false; }
+      else
       {
-        // plane normal
-        const EigenXYZVector normal = plane.Normal();
-        // update position to intersection point
-        position = intersection;
-        // reflect the vector and update direction
-        // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
-        direction -= 2.0 * ( normal.dot(direction) ) * normal;
+        const auto distance = -(plane.Distance(position)) / scalar;
+        // change position to reflection point and direction
+        position  += distance * direction;
+        direction -= 2.0 * scalar * normal;
       }
-      // return status code
-      return sc;
+      return OK;
     }
 
     /// Access the DeRich beam pipe objects, creating as needed on demand
@@ -326,6 +324,9 @@ namespace Rich
 
     /// RICH beampipe object for each RICH detector
     mutable std::vector<const DeRichBeamPipe*> m_deBeam;
+
+    /// Flag to control if the secondary mirrors are treated as if they are completely flat
+    std::vector<bool> m_treatSecMirrsFlat; 
 
   };
 

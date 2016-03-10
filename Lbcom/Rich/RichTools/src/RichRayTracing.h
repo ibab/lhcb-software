@@ -14,6 +14,7 @@
 
 // STL
 #include <vector>
+#include <array>
 
 // Base class and interface
 #include "RichKernel/RichHistoToolBase.h"
@@ -180,26 +181,34 @@ namespace Rich
     const IMirrorSegFinder* m_mirrorSegFinder = nullptr;
 
     /// Rich1 and Rich2 pointers
-    std::vector< const DeRich* > m_rich;
+    std::array<const DeRich*,Rich::NRiches> m_rich{{nullptr,nullptr}};
 
     /// photodetector panels per rich
     typedef std::vector<const DeRichPDPanel*> PDPanelsPerRich;
+
     /// typedef for photodetector for each rich
     typedef std::vector<PDPanelsPerRich> RichPDPanels;
 
     /// photodetector for each rich
     RichPDPanels m_photoDetPanels;
 
-    std::vector<int> m_sphMirrorSegRows; ///< Number of primary mirror rows in each RICH
-    std::vector<int> m_sphMirrorSegCols; ///< Number of primary mirror columns in each RICH
-    std::vector<int> m_secMirrorSegRows; ///< Number of secondary mirror rows in each RICH
-    std::vector<int> m_secMirrorSegCols; ///< Number of secondary mirror columns in each RICH
+    /// Number of primary mirror rows in each RICH
+    std::array<int,Rich::NRiches> m_sphMirrorSegRows{{0,0}};
+    /// Number of primary mirror columns in each RICH
+    std::array<int,Rich::NRiches> m_sphMirrorSegCols{{0,0}};
+    /// Number of secondary mirror rows in each RICH
+    std::array<int,Rich::NRiches> m_secMirrorSegRows{{0,0}}; 
+    /// Number of secondary mirror columns in each RICH
+    std::array<int,Rich::NRiches> m_secMirrorSegCols{{0,0}}; 
 
     /// Flag to to ignore secondary mirrors (useful for test beam work)
     bool m_ignoreSecMirrs;
 
     /// RICH beampipe object for each RICH detector
-    mutable std::vector<const DeRichBeamPipe*> m_deBeam;
+    mutable std::array<const DeRichBeamPipe*,Rich::NRiches> m_deBeam{{nullptr,nullptr}};
+
+    /// Flag to control if the secondary mirrors are treated as if they are completely flat
+    std::vector<bool> m_treatSecMirrsFlat; 
 
   };
 

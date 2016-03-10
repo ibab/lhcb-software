@@ -4,6 +4,12 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2016-03-10 - Chris Jones
+ - Update ray tracing methods with a new option on how to treat the secondary
+   mirrors, as either spherical or to assume they are completely flat.
+   Default is to assume flat for RICH1, but spherical in RICH2 (where the
+   R.O.C. is much smaller).
+
 ! 2016-03-04 - Chris Jones
  - Adapt to changes in DeRichBeamPipe.
 
