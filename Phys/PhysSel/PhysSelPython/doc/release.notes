@@ -5,6 +5,50 @@
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
 
+! 2016-03-10 - Vanya Belyaev
+ - add few more helper objects:
+   - CombineSelection
+   - Combine3BodySelection 
+   - Combine4BodySelection
+
+#  from StandardParticles import StdAllLoosePions   as pions
+#  from StandardParticles import StdAllLooseKaons   as kaons
+#  charm = CombineSelection (
+#     'charm'            , ## unique name 
+#      [ pions , kaons ] , ## required selections
+#      DecayDescriptor  = '[ D0 -> K- pi+]cc'    , 
+#      CombinationCut   = 'in_range  (1.6 * GeV , AM , 2.0 * GeV) ' ,
+#      MotherCut        = 'in_range  (1.6 * GeV ,  M , 2.0 * GeV) & ( CHI2VX < 10 ) ' ,
+#      )
+
+#  charm = Combine3BodySelection (
+#     'charm'            , ## unique name 
+#      [ pions , kaons ] , ## required selections
+#      DecayDescriptor  = '[ D+ -> K- pi+ pi+]cc'    , 
+#      Combination12Cut = ' ( AM < 1.8 * GMeV ) & ( ACHI2DOCA(1,2)<10 ) ' ,
+#      CombinationCut   = ''' in_range  (1.6 * GeV , AM , 2.0 * GeV)
+#                         & ( ACHI2DOCA(1,3) < 10 )  
+#                         & ( ACHI2DOCA(2,3) < 10 )  
+#                         ''',
+#      MotherCut        = 'in_range  (1.6 * GeV ,  M , 2.0 * GeV) & ( CHI2VX < 10 ) ' ,
+#      )
+
+#  charm = Combine4BodySelection (
+#     'charm'            , ## unique name 
+#      [ pions , kaons ] , ## required selections
+#      DecayDescriptor   = '[ D+ -> K- pi+ pi+ pi-]cc'    , 
+#      Combination12Cut  = ' ( AM < 1.8 * GeV )  & ( ACHI2DOCA(1,2)<10 ) ' ,
+#      Combination123Cut = '''( AM < 1.8 * GeV )
+#                              & ( ACHI2DOCA(1,3)<10 )
+#                              & ( ACHI2DOCA(2,4)<10 )
+#                          ''', 
+#      CombinationCut    = ''' in_range  (1.6 * GeV , AM , 2.0 * GeV)
+#                         & ( ACHI2DOCA(1,4) < 10 )  
+#                         & ( ACHI2DOCA(2,4) < 10 )  
+#                         & ( ACHI2DOCA(3,4) < 10 )  
+#                         ''',
+#      MotherCut        = 'in_range  (1.6 * GeV ,  M , 2.0 * GeV) & ( CHI2VX < 10 ) ' ,
+
 !======================= PhysSelPython v9r9 2016-03-04 =======================
 
 ! 2016-02-25 - Vanya Belyaev

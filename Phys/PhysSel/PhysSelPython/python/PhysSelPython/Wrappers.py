@@ -17,7 +17,10 @@ are available:
    - LimitSelection     Specialization of PassThroughSelection to limit the selection 
    - MomentumScaling    ``pseudo-selection'' that applyes (globally) Momentum calibration
    - SimpleSelection    simple compact 1-step way to create the selection 
-   - FilterSelection    Specialization of SimpleSelection for filtiiering using FilterDesktop 
+   - FilterSelection    Specialization of SimpleSelection for filtering using FilterDesktop 
+   - CombineSelection      Specialization of SimpleSelection for CombineParticles algorithm
+   - Combine3BodySelection Specialization of SimpleSelection for DaVinci::N3BodyDecays algorithm
+   - Combine4BodySelection Specialization of SimpleSelection for DaVinci::N4BodyDecays algorithm
    """
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
@@ -35,10 +38,13 @@ __all__ = ('DataOnDemand',
            'NonEmptyInputLocations',
            'IncompatibleInputLocations',
            ##
-           'SimpleSelection'   , 
-           'FilterSelection'   , 
-           'PrintSelection'    , 
-           'LimitSelection'    ,  
+           'SimpleSelection'       , 
+           'FilterSelection'       , 
+           'PrintSelection'        , 
+           'LimitSelection'        ,
+           'CombineSelection'      ,
+           'Combine3BodySelection' ,
+           'Combine4BodySelection' ,
            ## 
            'MomentumScaling'   ## ``pseudo-selection'' to aplly (globally) momentum sclaing         
            )
@@ -538,45 +544,6 @@ def SimpleSelection (
         Extension          = extension             
         )
 
-# =============================================================================
-## Useful shortcut for selection with FilterDesktop algorithm
-#  @code
-#  from StandardParticles import StdAllLoosePions   as pions
-#  good_poins = FilterSelection (
-#     'good_pions'       , ## unique name 
-#      [ pions ]         , ## required selections  
-#      Code = "PT>1*GeV" , ## properties of FilterDesktop algorithm
-#      )
-#  @endcode 
-#  @see SimpleSelection
-#  @see Selection
-#  @see SelPy.Selection
-#  @see FilterDesktop
-#
-#  @param name          unique selection name 
-#  @param inputs        list of input/required selection
-#  @param Code          "Code"-property of FilterDesktop 
-#  @param args          additional arguments to be used for algorithm
-#  @param kwargs        additional arguments to be used for algorithm
-#  @return the selection object
-#
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2014-02-12
-# 
-def FilterSelection ( name, inputs , Code , **kwargs ) :
-    """ Useful shortcut for selection with FilterDesktop algorithm
-    >>> from StandardParticles import StdAllLoosePions   as pions
-    >>> good_poins = FilterSelection (
-    ...    'good_pions'       , ## unique name 
-    ...    [ pions ]          , ## ``inputs'': required selections  
-    ...    Code = 'PT>1*GeV'  , ## properties of FilterDesktop algorithm
-    ...    )
-    """
-    #
-    from GaudiConfUtils.ConfigurableGenerators import FilterDesktop as _FILTER_ 
-    ## create selection
-    return SimpleSelection ( name , _FILTER_ , inputs , Code = Code , **kwargs )
-
 
 # =========================================================================
 ## helper utility to create 'Print'-selection, useful for debugging
@@ -679,6 +646,247 @@ def LimitSelection ( input               ,
         Code = code , Preambulo = ['from LoKiCore.functions import in_range'] ,
         ) ,
         RequiredSelection = input                    )
+
+# =============================================================================
+## Useful shortcut for selection with FilterDesktop algorithm
+#  @code
+#  from StandardParticles import StdAllLoosePions   as pions
+#  good_poins = FilterSelection (
+#     'good_pions'       , ## unique name 
+#      [ pions ]         , ## required selections  
+#      Code = "PT>1*GeV" , ## properties of FilterDesktop algorithm
+#      )
+#  @endcode 
+#  @see SimpleSelection
+#  @see Selection
+#  @see SelPy.Selection
+#  @see FilterDesktop
+#
+#  @param name          unique selection name 
+#  @param inputs        list of input/required selection
+#  @param Code          "Code"-property of FilterDesktop 
+#  @param args          additional arguments to be used for algorithm
+#  @param kwargs        additional arguments to be used for algorithm
+#  @return the selection object
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-02-12
+# 
+def FilterSelection ( name, inputs , Code , **kwargs ) :
+    """ Useful shortcut for selection with FilterDesktop algorithm
+    >>> from StandardParticles import StdAllLoosePions   as pions
+    >>> good_poins = FilterSelection (
+    ...    'good_pions'       , ## unique name 
+    ...    [ pions ]          , ## ``inputs'': required selections  
+    ...    Code = 'PT>1*GeV'  , ## properties of FilterDesktop algorithm
+    ...    )
+    """
+    #
+    from GaudiConfUtils.ConfigurableGenerators import FilterDesktop as _FILTER_ 
+    ## create selection
+    return SimpleSelection ( name , _FILTER_ , inputs , Code = Code , **kwargs )
+
+# =============================================================================
+## Useful shortcut for selection CombineParticles  algorithm
+#  @code
+#  from StandardParticles import StdAllLoosePions   as pions
+#  from StandardParticles import StdAllLooseKaons   as kaons
+#  charm = CombineSelection (
+#     'charm'            , ## unique name 
+#      [ pions , kaons ] , ## required selections
+#      DecayDescriptor  = '[ D0 -> K- pi+]cc'    , 
+#      CombinationCut   = 'in_range  (1.6 * GeV , AM , 2.0 * GeV) ' ,
+#      MotherCut        = 'in_range  (1.6 * GeV ,  M , 2.0 * GeV) & ( CHI2VX < 10 ) ' ,
+#      )
+#  @endcode 
+#  @see SimpleSelection
+#  @see Selection
+#  @see SelPy.Selection
+#  @see CombineParticles 
+#
+#  @param name           unique selection name 
+#  @param inputs         list of input/required selection
+#  @param CombinationCut 'CombinationCut'-property of CombineParticles 
+#  @param MotherCut           'MotherCut'-property of CombineParticles 
+#  @param kwargs          additional arguments to be used for algorithm
+#  @return the selection object
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2016-03-10 
+def CombineSelection ( name  , inputs ,
+                       CombinationCut ,
+                       MotherCut      , 
+                       **kwargs       ) :
+    """ Useful shortcut for selection with FilterDesktop algorithm
+    >>> from StandardParticles import StdAllLoosePions   as pions
+    >>> from StandardParticles import StdAllLooseKaons   as kaons
+    >>> charm = CombineSelection (
+    ... 'charm'            , ## unique name 
+    ... [ pions , kaons ] , ## required selections
+    ... DecayDescriptor  = '[ D0 -> K- pi+]cc'    , 
+    ... CombinationCut   = 'in_range  (1.6 * GeV , AM , 2.0 * GeV) ' ,
+    ... MotherCut        = 'in_range  (1.6 * GeV ,  M , 2.0 * GeV) & ( CHI2VX < 10 ) ' ,
+    ... )
+    """
+    #
+    from GaudiConfUtils.ConfigurableGenerators import CombineParticles as _COMBINER_
+    ## check decay descriptor(s)
+    if not kwargs.has_key ('DecayDescriptor' ) : 
+        if not not kwargs.has_key ('DecayDescriptors' ) :
+            raise TypeError, 'DecayDescriptor(s) must be specified!'
+    
+    ## create selection    
+    return SimpleSelection ( name   , _COMBINER_ ,
+                             inputs ,
+                             CombinationCut = CombinationCut ,
+                             MotherCut      = MotherCut      , **kwargs )
+
+# =============================================================================
+## Useful shortcut for selection with creation of 3-body decays
+#  @code
+#  from StandardParticles import StdAllLoosePions   as pions
+#  from StandardParticles import StdAllLooseKaons   as kaons
+#  charm = Combine3BodySelection (
+#     'charm'            , ## unique name 
+#      [ pions , kaons ] , ## required selections
+#      DecayDescriptor  = '[ D+ -> K- pi+ pi+]cc'    , 
+#      Combination12Cut = ' ( AM < 1.8 * GMeV ) & ( ACHI2DOCA(1,2)<10 ) ' ,
+#      CombinationCut   = ''' in_range  (1.6 * GeV , AM , 2.0 * GeV)
+#                         & ( ACHI2DOCA(1,3) < 10 )  
+#                         & ( ACHI2DOCA(2,3) < 10 )  
+#                         ''',
+#      MotherCut        = 'in_range  (1.6 * GeV ,  M , 2.0 * GeV) & ( CHI2VX < 10 ) ' ,
+#      )
+#  @endcode 
+#  @see SimpleSelection
+#  @see Selection
+#  @see SelPy.Selection
+#  @see DaVinci::N3BodyDecays
+#
+#  @param name              unique selection name 
+#  @param inputs           list of input/required selection
+#  @param Combination12Cut 'Combination12Cut'-property of DaVinci::N3BodyDecays 
+#  @param CombinationCut     'CombinationCut'-property of DaVinci::N3BodyDecays
+#  @param MotherCut               'MotherCut'-property of DaVinci::N3BodyDecays
+#  @param kwargs          additional arguments to be used for algorithm
+#  @return the selection object
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2016-03-10 
+def Combine3BodySelection ( name  , inputs   ,
+                            Combination12Cut ,
+                            CombinationCut   ,
+                            MotherCut        , 
+                            **kwargs         ) :
+    """ Useful shortcut for selection with  DaVinci::N3BodyDecays algorithm
+    >>> from StandardParticles import StdAllLoosePions   as pions
+    >>> from StandardParticles import StdAllLooseKaons   as kaons
+    >>> charm = Combine3BodySelection (
+    ... 'charm'            , ## unique name 
+    ... [ pions , kaons ] , ## required selections
+    ... DecayDescriptor  = '[ D+ -> K- pi+ pi+]cc'    , 
+    ... Combination12Cut = ' ( AM < 500 * MeV ) & ( ACHI2DOCA(1,2)<10 ) ' ,
+    ... CombinationCut   = '''in_range  (1.6 * GeV , AM , 2.0 * GeV)
+    ...                       & ( ACHI2DOCA(1,3)<10 ) 
+    ...                       & ( ACHI2DOCA(2,3)<10 ) 
+    ...                    ''' ,
+    ... MotherCut        = 'in_range  (1.6 * GeV ,  M , 2.0 * GeV) & ( CHI2VX < 10 ) ' ,
+    ... )
+    """
+    #
+    from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays as _COMBINER_
+    ## check decay descriptor(s)
+    if not kwargs.has_key ('DecayDescriptor' ) : 
+        if not not kwargs.has_key ('DecayDescriptors' ) :
+            raise TypeError, 'DecayDescriptor(s) must be specified!'
+    
+    ## create selection    
+    return SimpleSelection ( name   , _COMBINER_ ,
+                             inputs ,
+                             Combination12Cut = Combination12Cut ,
+                             CombinationCut   = CombinationCut   ,
+                             MotherCut        = MotherCut        , **kwargs )
+
+
+# =============================================================================
+## Useful shortcut for selection with creation of 4-body decays
+#  @code
+#  from StandardParticles import StdAllLoosePions   as pions
+#  from StandardParticles import StdAllLooseKaons   as kaons
+#  charm = Combine4BodySelection (
+#     'charm'            , ## unique name 
+#      [ pions , kaons ] , ## required selections
+#      DecayDescriptor   = '[ D+ -> K- pi+ pi+ pi-]cc'    , 
+#      Combination12Cut  = ' ( AM < 1.8 * GeV )  & ( ACHI2DOCA(1,2)<10 ) ' ,
+#      Combination123Cut = '''( AM < 1.8 * GeV )
+#                              & ( ACHI2DOCA(1,3)<10 )
+#                              & ( ACHI2DOCA(2,4)<10 )
+#                          ''', 
+#      CombinationCut    = ''' in_range  (1.6 * GeV , AM , 2.0 * GeV)
+#                         & ( ACHI2DOCA(1,4) < 10 )  
+#                         & ( ACHI2DOCA(2,4) < 10 )  
+#                         & ( ACHI2DOCA(3,4) < 10 )  
+#                         ''',
+#      MotherCut        = 'in_range  (1.6 * GeV ,  M , 2.0 * GeV) & ( CHI2VX < 10 ) ' ,
+#      )
+#  @endcode 
+#  @see SimpleSelection
+#  @see Selection
+#  @see SelPy.Selection
+#  @see DaVinci::N4BodyDecays
+#
+#  @param name              unique selection name 
+#  @param inputs            list of input/required selection
+#  @param Combination123Cut 'Combination123Cut'-property of DaVinci::N4BodyDecays 
+#  @param Combination12Cut   'Combination12Cut'-property of DaVinci::N4BodyDecays 
+#  @param CombinationCut       'CombinationCut'-property of DaVinci::N4BodyDecays
+#  @param MotherCut                 'MotherCut'-property of DaVinci::N4BodyDecays
+#  @param kwargs          additional arguments to be used for algorithm
+#  @return the selection object
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2016-03-10 
+def Combine4BodySelection ( name  , inputs    ,
+                            Combination12Cut  ,
+                            Combination123Cut ,
+                            CombinationCut    ,
+                            MotherCut         , 
+                            **kwargs          ) :
+    """ Useful shortcut for selection with  DaVinci::N3BodyDecays algorithm
+    >>> from StandardParticles import StdAllLoosePions   as pions
+    >>> from StandardParticles import StdAllLooseKaons   as kaons
+    >>> charm = Combine4BodySelection (
+    ... 'charm'            , ## unique name 
+    ... [ pions , kaons ] , ## required selections
+    ... DecayDescriptor   = '[ D+ -> K- pi+ pi+ pi-]cc'    , 
+    ... Combination12Cut  = '  ( AM < 1.8 * GeV ) & ( ACHI2DOCA(1,2)<10 ) ' ,
+    ... Combination123Cut = '''( AM < 1.8 * GeV )
+    ...                        & ( ACHI2DOCA(1,3)<10 )
+    ...                        & ( ACHI2DOCA(2,4)<10 )
+    ...                     ''', 
+    ... CombinationCut    = ''' in_range  (1.6 * GeV , AM , 2.0 * GeV)
+    ...                        & ( ACHI2DOCA(1,4) < 10 )  
+    ...                        & ( ACHI2DOCA(2,4) < 10 )
+    ...                        & ( ACHI2DOCA(3,4) < 10 )  
+    ...                     ''',
+    ... MotherCut        = 'in_range  (1.6 * GeV ,  M , 2.0 * GeV) & ( CHI2VX < 10 ) ' ,
+    ... )
+    """
+    #
+    from GaudiConfUtils.ConfigurableGenerators import DaVinci__N4BodyDecays as _COMBINER_
+    ## check decay descriptor(s)
+    if not kwargs.has_key ('DecayDescriptor' ) : 
+        if not not kwargs.has_key ('DecayDescriptors' ) :
+            raise TypeError, 'DecayDescriptor(s) must be specified!'
+    
+    ## create selection    
+    return SimpleSelection ( name   , _COMBINER_ ,
+                             inputs ,
+                             Combination12Cut  = Combination12Cut  ,
+                             Combination123Cut = Combination123Cut ,
+                             CombinationCut    = CombinationCut    ,
+                             MotherCut         = MotherCut         , **kwargs )
+
 
 
 # =============================================================================
