@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2016-03-10 - Vanya Belyaev
+ - fix test 
+
 ! 2016-03-08 - 
  - LHcbMath.Types soem fixes  
 

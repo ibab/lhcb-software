@@ -96,8 +96,9 @@ except ImportError:
 cpp = cppyy.makeNamespace('')
 
 ## C++ namespace Gaudi
-std  = cpp.std
+std   = cpp.std
 
+Gaudi = cpp.Gaudi 
 ## ROOT::Math namespace
 _RM = ROOT.ROOT.Math
 
