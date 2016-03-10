@@ -844,7 +844,7 @@ if not hasattr ( _AppMgr , '_old_run_' ) :
         with BU.Action ( BU. preRun_actions() , BU.postRun_actions() ) :
             sc = self._old_run_ ( nevt )
             if sc.isFailure() :
-                logger.error('Error from AppMgr.run %s' % s )
+                logger.error('Error from AppMgr.run %s' % sc )
                 return sc
             
         return sc
