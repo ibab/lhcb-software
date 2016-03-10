@@ -398,13 +398,12 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 
         // Get secondary mirror reflection point,
         // using the best actual secondary mirror segment at this point
+        const auto dir = virtDetPoint - sphReflPoint;
         const bool sc = ( m_treatSecMirrsFlat[rich] ? 
-                          intersectPlane( sphReflPoint,
-                                          virtDetPoint - sphReflPoint,
+                          intersectPlane( sphReflPoint, dir,
                                           secSegment->centreNormalPlane(),
                                           secReflPoint ) :
-                          intersectSpherical( sphReflPoint,
-                                              virtDetPoint - sphReflPoint,
+                          intersectSpherical( sphReflPoint, dir,
                                               secSegment->centreOfCurvature(),
                                               secSegment->radius(),
                                               secReflPoint ) );

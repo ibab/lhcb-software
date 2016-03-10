@@ -228,7 +228,7 @@ namespace Rich
       std::vector<bool> m_checkBeamPipe;
 
       /** Turn on/off the checking of photon trajectories against the mirror segments
-       *  to verify if the photon hit the real actiave area (and not, for instance, the gaps */
+       *  to verify if the photon hit the real actiave area (and not, for instance, the gaps). */
       std::vector<bool> m_checkPrimMirrSegs;
 
       /// Minimum active segment fraction in each radiator
