@@ -552,6 +552,8 @@ class RichRecSysConf(RichRecSysBaseConf) :
                           groupConfig.richTools().massHypoRingCreator() )
         self.copyOptions( self.richTools().expectedTrackSignal(),
                           groupConfig.richTools().expectedTrackSignal() )
+        self.copyOptions( self.richTools().rayTracing(),
+                          groupConfig.richTools().rayTracing() )
 
     ## Get the configurable for a given track type
     def getTrackGroupConf(self,tktype):

@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2016-03-10 - Chris Jones
+ - Propagate properly custom options for the ray tracing tool.
+
 ! 2016-02-29 - Chris Jones
  - Propagate properly custom options for the mass hypothesis and expected
    track signal tools.
