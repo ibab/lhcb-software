@@ -443,6 +443,9 @@ class DstConf(LHCbConfigurableUser):
             clusters1=UnpackCaloClusters( name = "UnpackCaloClusters",
                     InputName          = "/Event/Hlt2/pRec/neutral/CaloClusters", 
                     OutputName         = "Hlt/Calo/EcalClusters" )
+            clustersRep=UnpackCaloClusters( name = "UnpackCaloClustersRep",
+                    InputName          = "/Event/Turbo/pRec/neutral/Clusters", 
+                    OutputName         = "Turbo/CaloClusters" )
             from Configurables import UnpackCaloHypo as UnpackCaloHypos
             hypos1=UnpackCaloHypos( name = "UnpackCaloElectronHypos",
                     InputName          = "/Event/Hlt2/pRec/neutral/Electrons",
@@ -456,7 +459,10 @@ class DstConf(LHCbConfigurableUser):
             hypos4=UnpackCaloHypos( name = "UnpackCaloSplitPhotonHypos",
                     InputName          = "/Event/Hlt2/pRec/neutral/SplitPhotons",
                     OutputName         = "/Event/Hlt2/PID/CALO/Calo/SplitPhotons" )
-            unpackers+=[proto1,proto2,proto3,rich1,muon1,track1,track2,clusters1,hypos1,hypos2,hypos3,hypos4]
+            hyposRep=UnpackCaloHypos( name = "UnpackCaloHyposRep",
+                    InputName          = "/Event/Turbo/pRec/neutral/Hypos", 
+                    OutputName         = "Turbo/CaloHypos" )
+            unpackers+=[proto1,proto2,proto3,rich1,muon1,track1,track2,clusters1,hypos1,hypos2,hypos3,hypos4,clustersRep,hyposRep]
             
             recProtos = GaudiSequencer("TurboProtosAsRec")
             recNeutralProtos = GaudiSequencer("TurboNeutralProtosAsRec")

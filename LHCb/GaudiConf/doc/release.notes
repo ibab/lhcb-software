@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2016-03-10 - Sean Benson
+ - Add shared clusters and hypos to DstConf (not from persist reco).
+
 ! 2016-03-02 - Marco Cattaneo
  - DstConf: extend Run 2 support to all Run2 data types (2015,2016,2017,2018)
    Currently all years treated like 2015.
