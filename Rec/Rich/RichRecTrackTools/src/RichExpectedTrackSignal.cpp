@@ -21,8 +21,7 @@ using namespace Rich::Rec;
 ExpectedTrackSignal::ExpectedTrackSignal ( const std::string& type,
                                            const std::string& name,
                                            const IInterface* parent )
-  : ToolBase           ( type, name, parent ),
-    m_minPhotonsPerRad ( Rich::NRadiatorTypes, 0 )
+  : ToolBase ( type, name, parent )
 {
   // interface
   declareInterface<IExpectedTrackSignal>(this);
@@ -30,11 +29,11 @@ ExpectedTrackSignal::ExpectedTrackSignal ( const std::string& type,
   // JOS
   declareProperty( "ThresholdMomentumScaleFactor", m_pThresScale = 1.0 );
   declareProperty( "MinNumPhotonsPerRad",
-                   m_minPhotonsPerRad,
+                   m_minPhotonsPerRad = { 0, 0, 0 },
                    "Minimum number of photons in each radiator for a radiator "
                    "segment to be considered as having RICH information" );
-  declareProperty( "MinRadiatorMomentum", m_minPbyRad = {0,0,0} );
-  const auto bigN = boost::numeric::bounds<double>::highest();
+  declareProperty( "MinRadiatorMomentum", m_minPbyRad = { 0, 0, 0 } );
+  const auto bigN = std::sqrt(boost::numeric::bounds<double>::highest());
   declareProperty( "MaxRadiatorMomentum", 
                    m_maxPbyRad = { 15*Gaudi::Units::GeV, bigN, bigN } );
 }
@@ -54,6 +53,13 @@ StatusCode ExpectedTrackSignal::initialize()
   acquireTool( "RichRayleighScatter",    m_rayScat      );
   acquireTool( "RichGasQuartzWindow",    m_gasQuartzWin );
 
+  // cache min/max P^2 cuts for speed
+  for ( const auto rad : Rich::radiators() )
+  {
+    m_minP2byRad[rad] = std::pow( m_minPbyRad[rad], 2 );
+    m_maxP2byRad[rad] = std::pow( m_maxPbyRad[rad], 2 );
+  }
+
   m_pidTypes = m_richPartProp->particleTypes();
   _ri_debug << "Particle types considered = " << m_pidTypes << endmsg;
 
@@ -64,8 +70,8 @@ StatusCode ExpectedTrackSignal::initialize()
   return sc;
 }
 
-double ExpectedTrackSignal::nEmittedPhotons ( LHCb::RichRecSegment * segment,
-                                              const Rich::ParticleIDType id ) const
+double ExpectedTrackSignal::nEmittedPhotons( LHCb::RichRecSegment * segment,
+                                             const Rich::ParticleIDType id ) const
 {
   // protect against the below threshold case
   if ( id == Rich::BelowThreshold ) return 0;
@@ -99,8 +105,8 @@ double ExpectedTrackSignal::nEmittedPhotons ( LHCb::RichRecSegment * segment,
   return segment->nEmittedPhotons( id );
 }
 
-double ExpectedTrackSignal::nDetectablePhotons (  LHCb::RichRecSegment * segment,
-                                                  const Rich::ParticleIDType id ) const
+double ExpectedTrackSignal::nDetectablePhotons( LHCb::RichRecSegment * segment,
+                                                const Rich::ParticleIDType id ) const
 {
   // protect against the below threshold case
   if ( id == Rich::BelowThreshold ) return 0;
@@ -136,8 +142,8 @@ double ExpectedTrackSignal::nDetectablePhotons (  LHCb::RichRecSegment * segment
 }
 
 double
-ExpectedTrackSignal::nSignalPhotons (  LHCb::RichRecSegment * segment,
-                                       const Rich::ParticleIDType id ) const
+ExpectedTrackSignal::nSignalPhotons( LHCb::RichRecSegment * segment,
+                                     const Rich::ParticleIDType id ) const
 {
   // protect against the below threshold case
   if ( id == Rich::BelowThreshold ) return 0;
@@ -147,7 +153,7 @@ ExpectedTrackSignal::nSignalPhotons (  LHCb::RichRecSegment * segment,
     double signal(0), scatter(0);
 
     // compute detectable emitted photons
-    double detectablePhots = nDetectablePhotons( segment, id );
+    const double detectablePhots = nDetectablePhotons( segment, id );
     if ( detectablePhots > 0 )
     {
 
@@ -454,10 +460,12 @@ ExpectedTrackSignal::hasRichInfo( LHCb::RichRecSegment * segment ) const
   // default to no info
   bool hasInfo = false;
 
+  // radiator
+  const auto rad = segment->trackSegment().radiator();
+
   // Check max radiator momentum
-  const double P = std::sqrt(segment->trackSegment().bestMomentum().mag2());
-  if ( P > m_minPbyRad[segment->trackSegment().radiator()] &&
-       P < m_maxPbyRad[segment->trackSegment().radiator()] )
+  const double P2 = segment->trackSegment().bestMomentum().mag2();
+  if ( P2 > m_minP2byRad[rad] && P2 < m_maxP2byRad[rad] )
   {
 
     // above lowest mass hypothesis threshold ?
@@ -466,27 +474,32 @@ ExpectedTrackSignal::hasRichInfo( LHCb::RichRecSegment * segment ) const
       _ri_verbo << "RichRecSegment is above " << m_pidTypes.front()
                 << " threshold -> hasRichInfo" << endmsg;
 
-      // see if any mass hypothesis is detectable
-      for ( const auto& hypo : m_pidTypes )
-      {
-        if ( m_geomEff->geomEfficiency(segment,hypo) > 0 )
-        {
-          hasInfo = true; break;
-        }
-      }
+      // // see if any mass hypothesis is detectable
+      // for ( const auto& hypo : m_pidTypes )
+      // {
+      //   if ( m_geomEff->geomEfficiency(segment,hypo) > 0 )
+      //   {
+      //     hasInfo = true; break;
+      //   }
+      // }
+      // See if lowest mass hypo is detectable
+      hasInfo = ( m_geomEff->geomEfficiency(segment,m_pidTypes.front()) > 0 );
 
       // Check segment has minimum number of required photons expected
       if ( hasInfo )
       {
-        hasInfo = false;
-        for ( const auto& hypo : m_pidTypes )
-        {
-          if ( m_minPhotonsPerRad[segment->trackSegment().radiator()] <
-               nObservableSignalPhotons(segment,hypo) )
-          {
-            hasInfo = true; break;
-          }
-        }
+        // // check all hypos
+        // hasInfo = false;
+        // for ( const auto& hypo : m_pidTypes )
+        // {
+        //   if ( m_minPhotonsPerRad[rad] < nObservableSignalPhotons(segment,hypo) )
+        //   {
+        //     hasInfo = true; break;
+        //   }
+        // }
+        // only check lightest hypo
+        hasInfo = ( m_minPhotonsPerRad[rad] < 
+                    nObservableSignalPhotons(segment,m_pidTypes.front()) );
       }
       _ri_verbo << "RichRecSegment has richInfo = " << hasInfo << endmsg;
 

@@ -61,7 +61,7 @@ namespace Rich
                       const IInterface* parent );
 
       /// Destructor
-      virtual ~SegmentCreator() {};
+      virtual ~SegmentCreator() {}
 
       /// Initialize method
       StatusCode initialize();
@@ -97,13 +97,13 @@ namespace Rich
     private:  // Private data
 
       /// Pointer to RichExpectedTrackSignal interface
-      const IExpectedTrackSignal * m_signal;
+      const IExpectedTrackSignal * m_signal = nullptr;
 
       /// Pointer to detector parameters tool
-      const IDetParameters * m_detParams;
+      const IDetParameters * m_detParams = nullptr;
 
       /// Pointer to RichRecTracks
-      mutable LHCb::RichRecSegments * m_segments;
+      mutable LHCb::RichRecSegments * m_segments = nullptr;
 
       /// Location of RichRecSegments in TES
       std::string m_richRecSegmentLocation;
@@ -116,16 +116,16 @@ namespace Rich
       mutable std::vector<unsigned long long> m_segCountLast;
 
       /// Number of events processed tally
-      unsigned long long m_Nevts;
+      unsigned long long m_Nevts{0};
 
       /// Flag to indicate if the tool has been used in a given event
-      mutable bool m_hasBeenCalled;
+      mutable bool m_hasBeenCalled{false};
 
     };
 
     inline void SegmentCreator::InitEvent()
     {
-      m_segments = 0;
+      m_segments = nullptr;
       if (msgLevel(MSG::DEBUG))
       {
         m_segCountLast = m_segCount;

@@ -4,6 +4,14 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-03-10 - Chris Jones
+ - Some more C++11 modernisations.
+ - Speed up the ExpectedTrackSignal::hasRichInfo by limiting it on only
+   checking the lightest hypothesis (largest CK ring). In practise if
+   this ring is not in the HPD acceptance, checking the heavier smaller
+   rings is highly unlikely to change that decision, and not doing so
+   allows a number of ring ray tracings to thus be avoided.
+
 ! 2016-03-04 - Chris Jones
  - Adapt to changes in DeRichBeamPipe.
 

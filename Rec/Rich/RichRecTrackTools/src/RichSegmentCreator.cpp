@@ -23,15 +23,10 @@ SegmentCreator::SegmentCreator ( const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent )
   : ToolBase        ( type, name, parent      ),
-    m_signal        ( NULL                    ),
-    m_detParams     ( NULL                    ),
-    m_segments      ( 0                       ),
     m_richRecSegmentLocation ( LHCb::RichRecSegmentLocation::Default ),
     m_binsEn        ( Rich::NRadiatorTypes, 5 ),
     m_segCount      ( Rich::NRadiatorTypes, 0 ),
-    m_segCountLast  ( Rich::NRadiatorTypes, 0 ),
-    m_Nevts         ( 0                       ),
-    m_hasBeenCalled ( false                   )
+    m_segCountLast  ( Rich::NRadiatorTypes, 0 )
 {
 
   // tool interface
@@ -39,8 +34,8 @@ SegmentCreator::SegmentCreator ( const std::string& type,
 
   // Define job option parameters
   declareProperty( "EnergyBins", m_binsEn );
-  declareProperty( "RichRecSegmentLocation", 
-                   m_richRecSegmentLocation = contextSpecificTES(LHCb::RichRecSegmentLocation::Default) );
+  declareProperty( "RichRecSegmentLocation", m_richRecSegmentLocation = 
+                   contextSpecificTES(LHCb::RichRecSegmentLocation::Default) );
 
 }
 
@@ -114,7 +109,7 @@ LHCb::RichRecSegment *
 SegmentCreator::newSegment( LHCb::RichTrackSegment* segment,
                             LHCb::RichRecTrack* pTrk ) const
 {
-  LHCb::RichRecSegment * seg(NULL);
+  LHCb::RichRecSegment * seg(nullptr);
   if ( segment )
   {
     seg = new LHCb::RichRecSegment 

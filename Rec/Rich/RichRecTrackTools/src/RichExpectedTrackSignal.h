@@ -199,6 +199,12 @@ namespace Rich
       // Maximum momentum by radiator for track segments.
       std::vector<double> m_maxPbyRad;
 
+      // Minimum momentum^2 by radiator for track segments.
+      std::vector<double> m_minP2byRad{{0,0,0}};
+
+      // Maximum momentum^2 by radiator for track segments.
+      std::vector<double> m_maxP2byRad{{0,0,0}};
+
     };
 
   }

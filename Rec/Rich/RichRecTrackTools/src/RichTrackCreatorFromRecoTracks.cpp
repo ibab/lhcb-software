@@ -303,7 +303,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
           _ri_verbo << "  -> Testing " << S->radiator() << " segment" << endmsg;
 
           // make a new RichRecSegment from this RichTrackSegment
-          // takes ownership of RichTrackSegment* *iSeg - responsible for deletion
+          // takes ownership of RichTrackSegment S - responsible for deletion
           auto * newSegment = segmentCreator()->newSegment( S, newTrack );
 
           // Get PD panel impact point

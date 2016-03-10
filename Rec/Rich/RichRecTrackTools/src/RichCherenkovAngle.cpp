@@ -42,7 +42,7 @@ StatusCode CherenkovAngle::initialize()
   acquireTool( "RichRefractiveIndex",     m_refIndex     );
   acquireTool( "RichParticleProperties",  m_richPartProp );
   acquireTool( "RichTrackEffectiveRefIndex", m_tkIndex   );
-  acquireTool( "RichPhotonEmissionPoint", m_emissPoint );
+  acquireTool( "RichPhotonEmissionPoint", m_emissPoint   );
 
   m_pidTypes = m_richPartProp->particleTypes();
   _ri_debug << "Particle types considered = " << m_pidTypes << endmsg;
@@ -71,11 +71,11 @@ CherenkovAngle::avgCherenkovTheta( LHCb::RichRecSegment * segment,
 
       // Beta for this segment
       const double beta = 
-        m_richPartProp->beta( std::sqrt(segment->trackSegment().bestMomentum().mag2()), id);
+        m_richPartProp->beta( std::sqrt(segment->trackSegment().bestMomentum().mag2()), id );
       if ( beta > 0 )
       {
         // loop over energy bins
-        const Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & sigSpectra 
+        const auto & sigSpectra 
           = ( !useEmittedSpectrum ? segment->signalPhotonSpectra() : segment->emittedPhotonSpectra() );
         for ( unsigned int iEnBin = 0; iEnBin < sigSpectra.energyBins(); ++iEnBin )
         {
@@ -179,10 +179,10 @@ double CherenkovAngle::avCKRingRadiusLocal( LHCb::RichRecSegment * segment,
   const double incPhi = Gaudi::Units::twopi / static_cast<double>(nSamples) ;
 
   // Track impact point on HPD panel
-  const Gaudi::XYZPoint & tkPoint = segment->pdPanelHitPointLocal();
+  const auto & tkPoint = segment->pdPanelHitPointLocal();
 
   // radiator
-  const Rich::RadiatorType iRad = segment->trackSegment().radiator();
+  const auto iRad = segment->trackSegment().radiator();
 
   // ray tracing mode
   LHCb::RichTraceMode mode( LHCb::RichTraceMode::IgnoreHPDAcceptance );
@@ -201,10 +201,10 @@ double CherenkovAngle::avCKRingRadiusLocal( LHCb::RichRecSegment * segment,
     m_emissPoint->emissionPoint( segment, emissionPt );
 
     // Photon direction around loop
-    const Gaudi::XYZVector photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, ckPhi );
+    const auto photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, ckPhi );
 
     Gaudi::XYZPoint hitPointGlobal;
-    const LHCb::RichTraceMode::RayTraceResult result =
+    const auto result =
       m_rayTrace->traceToDetector( segment->trackSegment().rich(),
                                    emissionPt,
                                    photDir,
