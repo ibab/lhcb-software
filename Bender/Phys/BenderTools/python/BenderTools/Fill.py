@@ -81,6 +81,24 @@ else                      : logger = getLogger ( __name__ )
 # ==============================================================================
 SUCCESS                 = cpp.StatusCode( cpp.StatusCode.SUCCESS , True )
 FAILURE                 = cpp.StatusCode( cpp.StatusCode.FAILURE , True )
+v_doubles               = cpp.std.vector('double')
+# ==============================================================================
+## constants: jets? 
+#max_muons               =  30 ## maximal number of     muons in the decay tree 
+#max_gamma               =  60 ## maximal number of    gammas in the decay tree 
+#max_digamma             =  30 ## maximal number of di-gammas in the decay tree
+#max_tracks              = 250 ## maximal number of    tracks in the decay tree
+#max_protons             = 120 ## maximal number of   protons in the decay tree 
+#max_kaons               = 120 ## maximal number of     kaons in the decay tree 
+#max_pions               = 250 ## maximal number of     pions in the decay tree 
+# ==============================================================================
+max_muons               =  10 ## maximal number of     muons in the decay tree 
+max_gamma               =  10 ## maximal number of    gammas in the decay tree 
+max_digamma             =  10 ## maximal number of di-gammas in the decay tree
+max_tracks              =  10 ## maximal number of    tracks in the decay tree
+max_protons             =  10 ## maximal number of   protons in the decay tree 
+max_kaons               =  10 ## maximal number of     kaons in the decay tree 
+max_pions               =  10 ## maximal number of     pions in the decay tree 
 # ==============================================================================
 ## initialize te internal machinery
 def fill_initialize ( self ) :
@@ -93,6 +111,7 @@ def fill_initialize ( self ) :
     self._muons           = LoKi.Child.Selector ( 'mu+'   == ABSID )
     self._gamma           = LoKi.Child.Selector ( 'gamma' == ID    )
     self._digamma         = LoKi.Child.Selector ( DECTREE ( ' ( pi0 | eta ) -> <gamma> <gamma>' ) ) 
+    ##self._digamma         = LoKi.Child.Selector ( '( pi0 | eta ) -> <gamma> <gamma>' ) 
     self._pi0             = LoKi.Child.Selector ( 'pi0'   == ID    )
     self._tracks          = LoKi.Child.Selector (       HASTRACK   )
     self._basic           = LoKi.Child.Selector (        ISBASIC   )
@@ -146,6 +165,25 @@ def fill_initialize ( self ) :
     self._HcalE           = PPINFO  ( LHCb.ProtoParticle.CaloHcalE , -100 * GeV )  
     self._maxEcalE        = MAXTREE ( 'mu+' == ABSID , self._EcalE )
     self._maxHcalE        = MAXTREE ( 'mu+' == ABSID , self._HcalE )
+    #
+    ## gamma-ID
+    #
+    # ProtoParticle.h: 
+    # PhotonID = 380, // Combined PDF for photonID - OBSOLETE DLL-based neutralID (neutral)
+    # IsPhoton = 381, // Gamma/Pi0 separation variable (neutral)
+    # IsNotE = 382,   // MLP-based neutralID - anti-electron ID (neutral)
+    # IsNotH = 383,   // MLP-based neutralID - anti-hadron ID   (neutral)
+    self._IsNotE          = PPINFO  ( LHCb.ProtoParticle.IsNotE    , -1.e+6 ) 
+    self._IsNotH          = PPINFO  ( LHCb.ProtoParticle.IsNotH    , -1.e+6 ) 
+    self._IsPhoton        = PPINFO  ( LHCb.ProtoParticle.IsPhoton  , -1.e+6 ) 
+    self._PhotonID        = PPINFO  ( LHCb.ProtoParticle.PhotonID  , -1.e+6 )
+    # 
+    self._min_IsNotE_gamma   = MINTREE ( 'gamma' == ID , self._IsNotE   ) 
+    self._min_IsNotH_gamma   = MINTREE ( 'gamma' == ID , self._IsNotH   ) 
+    self._min_IsPhoton_gamma = MINTREE ( 'gamma' == ID , self._IsPhoton ) 
+    self._min_PhotonID_gamma = MINTREE ( 'gamma' == ID , self._PhotonID ) 
+    #
+    self._cellID          = LoKi.Photons.cellID  ## get the seed for the given photon
     #
     self._delta_m2        = LoKi.PhysKinematics.deltaM2
     self._masses          = {} 
@@ -220,13 +258,24 @@ def fill_finalize   ( self ) :
     del self._maxEcalE        # = None 
     del self._maxHcalE        # = None 
     #
+    del self._IsNotE          
+    del self._IsNotH          
+    del self._IsPhoton        
+    del self._PhotonID        
+    #
+    del self._min_IsNotE_gamma   
+    del self._min_IsNotH_gamma   
+    del self._min_IsPhoton_gamma 
+    del self._min_PhotonID_gamma 
+    #
+    del self._cellID
+    # 
     del self._delta_m2        # = None
     del self._masses          # = None 
     #
     self.fill_finalized = True
     #
     return SUCCESS 
-
 
 # =============================================================================
 ## add pion information into n-tuple
@@ -260,14 +309,14 @@ def treatPions ( self         ,
         'eta_pion'     + suffix , ETA            , 
         'hasRich_pion' + suffix , self._has_rich ,  
         LHCb.Particle.Range ( good )             ,
-        'n_pion'       + suffix , 10             )
+        'n_pion'       + suffix , max_pions      )
     return tup.fArrayP (
         'pid_pion'     + suffix , PIDpi - PIDK   ,  
         'ann_pion'     + suffix , PROBNNpi       ,  
         'ann_pion_P'   + suffix , PROBNNK        ,  
         'ann_pion_K'   + suffix , PROBNNp        ,  
         LHCb.Particle.Range ( good )             , 
-        'n_pion'       + suffix , 10             )
+        'n_pion'       + suffix , max_pions      )
 
 # ==============================================================================
 ## add kaon information into n-tuple
@@ -302,14 +351,14 @@ def treatKaons ( self         ,
         'eta_kaon'     + suffix , ETA            ,  
         'hasRich_kaon' + suffix , self._has_rich ,  
         LHCb.Particle.Range ( good )             ,
-        'n_kaon'       + suffix , 10             )
+        'n_kaon'       + suffix , max_kaons      )
     return tup.fArrayP (
         'pid_kaon'     + suffix , PIDK - PIDpi   ,  
         'ann_kaon'     + suffix , PROBNNk        ,
         'ann_kaon_PI'  + suffix , PROBNNpi       ,  
         'ann_kaon_P'   + suffix , PROBNNp        ,  
         LHCb.Particle. Range ( good )            ,
-        'n_kaon'       + suffix , 10             )
+        'n_kaon'       + suffix , max_kaons      )
 
 # ==============================================================================
 ## add proton information into n-tuple
@@ -345,7 +394,7 @@ def treatProtons ( self         ,
         'eta_proton'     + suffix , ETA            , 
         'ann_proton'     + suffix , PROBNNp        ,
         LHCb.Particle.Range ( good )               ,
-        'n_proton'       + suffix , 10             )
+        'n_proton'       + suffix , max_protons    )
     tup.fArrayP (
         'hasRich_proton' + suffix , self._has_rich ,  
         LHCb.Particle.Range ( good )               ,
@@ -356,7 +405,7 @@ def treatProtons ( self         ,
         'ann_proton_PI'  + suffix , PROBNNpi       ,
         'ann_proton_K'   + suffix , PROBNNk        ,
         LHCb.Particle.Range ( good )               ,
-        'n_proton'       + suffix , 10             )
+        'n_proton'       + suffix , max_protons    )
 
 # ==============================================================================
 ## add photon information into n-tuple
@@ -379,26 +428,55 @@ def treatPhotons ( self         ,
     good   = LHCb.Particle.ConstVector()
     p.children ( self._gamma , good ) 
     #
-    _cnt  = self.counter ( '#gamma' + suffix )
+    _cnt  = self.counter  ( '#gamma' + suffix )
     _cnt += good.size()
     #
-    sc = tup.column_float ( 'minEt_gamma'  + suffix , self._min_Et_gamma ( p ) ) 
-    sc = tup.column_float ( 'minE_gamma'   + suffix , self._min_E_gamma  ( p ) ) 
-    sc = tup.column_float ( 'minCl_gamma'  + suffix , self._min_CL_gamma ( p ) ) 
+    sc = tup.column_float ( 'minE_gamma'        + suffix , self._min_E_gamma         ( p ) ) 
+    sc = tup.column_float ( 'minEt_gamma'       + suffix , self._min_Et_gamma        ( p ) ) 
+    sc = tup.column_float ( 'minIsNotE_gamma'   + suffix , self._min_IsNotE_gamma    ( p ) ) 
+    sc = tup.column_float ( 'minIsNotH_gamma'   + suffix , self._min_IsNotH_gamma    ( p ) )
+    sc = tup.column_float ( 'minPhotonID_gamma' + suffix , self._min_PhotonID_gamma  ( p ) )
+    sc = tup.column_float ( 'minIsPhoton_gamma' + suffix , self._min_IsPhoton_gamma  ( p ) )
     #
     tup.fArrayP (
-        'e_photon'    + suffix       , P   / GeV , 
-        'et_photon'   + suffix       , PT  / GeV , 
-        'CL_photon'   + suffix       , CL        , 
-        LHCb.Particle.Range ( good ) ,
-        'n_photon'    + suffix       , 10        )
-    return tup.fArrayP (
-        'eta_photon'  + suffix       , ETA       , 
-        'tx_photon'   + suffix       , PX / PZ   , 
-        'ty_photon'   + suffix       , PY / PZ   , 
-        LHCb.Particle.Range ( good ) ,
-        'n_photon'    + suffix       , 10        )
+        'e_photon'        + suffix       , P   / GeV , 
+        'et_photon'       + suffix       , PT  / GeV , 
+        'CL_photon'       + suffix       , CL        , 
+        LHCb.Particle.Range ( good )     ,
+        'n_photon'        + suffix       , max_gamma )
     
+    tup.fArrayP (
+        'IsNotE_photon'   + suffix       , self._IsNotE   , 
+        'IsNotH_photon'   + suffix       , self._IsNotH   , 
+        'IsPhoton_photon' + suffix       , self._IsPhoton , 
+        'PhotonID_photon' + suffix       , self._PhotonID , 
+        LHCb.Particle.Range ( good ) ,
+        'n_photon'        + suffix       , max_gamma      )
+
+    ## put into n-tuple the full cell seed and the calo area index 
+    v_seed = v_doubles()
+    v_area = v_doubles()
+    for g in good :
+        seed = self._cellID ( g ) 
+        v_seed.push_back ( seed.all  () ) ## get all bits 
+        v_area.push_back ( seed.area () ) ## get only thr area
+
+    tup.farray ( 'seed_gamma' + suffix ,
+                 v_seed                , 
+                 'n_gamma'    + suffix , max_gamma )
+    
+    tup.farray ( 'area_gamma' + suffix ,
+                 v_area                , 
+                 'n_gamma'    + suffix , max_gamma )
+        
+    return tup.fArrayP (
+        'eta_photon'      + suffix       , ETA       , 
+        'tx_photon'       + suffix       , PX / PZ   , 
+        'ty_photon'       + suffix       , PY / PZ   , 
+        LHCb.Particle.Range ( good ) ,
+        'n_photon'        + suffix       , max_gamma )
+
+
 # ==============================================================================
 ## add di-gamma information into n-tuple
 #  @param tup   n-tuple
@@ -424,16 +502,17 @@ def treatDiGamma ( self         ,
     _cnt += good.size()
     #
     tup.fArrayP (
-        'e_digamma'    + suffix       , P   / GeV , 
-        'et_digamma'   + suffix       , PT  / GeV , 
-        'ID_digamma'   + suffix       , ID        ,
+        'e_digamma'          + suffix       , P   / GeV   , 
+        'et_digamma'         + suffix       , PT  / GeV   , 
+        'ID_digamma'         + suffix       , ID          ,
         LHCb.Particle.Range ( good ) ,
-        'n_digamma'    + suffix       , 10        )
+        'n_digamma'          + suffix       , max_digamma )
+
     return tup.fArrayP (
-        'm_digamma'    + suffix       , M   / GeV , 
-        'lv01_digamma' + suffix       , LV01      ,
+        'm_digamma'          + suffix       , M   / GeV   , 
+        'lv01_digamma'       + suffix       , LV01        ,
         LHCb.Particle.Range ( good ) ,
-        'n_digamma'    + suffix       , 10        )
+        'n_digamma'          + suffix       , max_digamma )
 
 # ==============================================================================
 ## add muon information into n-tuple
@@ -467,14 +546,14 @@ def treatMuons ( self         ,
         'pt_mu'      + suffix , PT  / GeV     , 
         'eta_mu'     + suffix , ETA           , 
         LHCb.Particle.Range ( good )          ,
-        'n_muon'     + suffix ,  10           )
+        'n_muon'     + suffix ,  max_muons    )
     return tup.fArrayP (
         'eEcal_mu'   + suffix , self._EcalE   ,
         'eHcal_mu'   + suffix , self._HcalE   ,
         'pid_mu'     + suffix , PIDmu - PIDpi ,  
         'ann_mu'     + suffix , PROBNNmu      ,  
         LHCb.Particle.Range ( good )          ,
-        'n_muon'     + suffix , 10            )
+        'n_muon'     + suffix , max_muons     )
 
 # ==============================================================================
 ## add tracks information into n-tuple
@@ -533,7 +612,7 @@ def treatTracks ( self         ,
         'eta_track'   + suffix , ETA         , 
         'phi_track'   + suffix , PHI         ,                        
         LHCb.Particle.Range ( good )         , 
-        'n_track'     + suffix , 20          )
+        'n_track'     + suffix , max_tracks  )
     
     return tup.fArrayP (
         'chi2_track'  + suffix , TRCHI2DOF   ,
@@ -541,7 +620,7 @@ def treatTracks ( self         ,
         'ann_track'   + suffix , PROBNNghost ,                        
         'trgh_track'  + suffix , TRGHOSTPROB ,                        
         LHCb.Particle.Range ( good )         , 
-        'n_track'     + suffix , 20          )
+        'n_track'     + suffix , max_tracks  )
 
 # =============================================================================
 ## add basic kinematical information into N-tuple
@@ -809,10 +888,14 @@ LoKi.Algo.treatPions       =  treatPions
 LoKi.Algo.treatKaons       =  treatKaons
 LoKi.Algo.treatProtons     =  treatProtons
 LoKi.Algo.treatPhotons     =  treatPhotons
+LoKi.Algo.treatGammas      =  treatPhotons ## ditto 
 LoKi.Algo.treatMuons       =  treatMuons
 LoKi.Algo.treatTracks      =  treatTracks
 LoKi.Algo.treatKine        =  treatKine
+
 LoKi.Algo.treatDiGamma     =  treatDiGamma
+LoKi.Algo.treatDiGammas    =  treatDiGamma ## ditto 
+LoKi.Algo.treatDiPhotons   =  treatDiGamma ## ditto 
 
 LoKi.Algo.fillMasses       =  fillMasses
 

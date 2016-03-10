@@ -5,6 +5,15 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2016-03-10 - Vanya Belyaev
+ - add more variables for photons:
+    - IsNotE
+    - IsNotH 
+    - IsPhoton
+    - PhotonID 
+    - seed
+    - area
+
 ! 2016-03-01 - Vanya Belyaev
  - fix behaviour of dst-dump for default (-1) argument
    (thanks to Adam Davis)
