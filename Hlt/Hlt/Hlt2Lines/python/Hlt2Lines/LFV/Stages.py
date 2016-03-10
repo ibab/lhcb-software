@@ -18,18 +18,17 @@ class JpsiMuECombiner(Hlt2Combiner):
         def daughter_cut(particle_short, particle_long):
             return """(TRCHI2DOF < %({l}TrChi2DoF)s)
                     & (TRGHOSTPROB < %({l}TrGhostProb)s)
-                    & (CHI2VXNDOF < %({l}VertexChi2DoF)s)
                     & (PROBNN{s} > %({l}ProbNn)s)""".format(s=particle_short,
                                                             l=particle_long)
 
         def asymmetric_mass_cut(functor, varname):
-            return "({f} > %({v}Low)s) & ({f} < %({v}High)s)".format(f=functor,
+            return "in_range(%({v}Low)s, {f}, %({v}High)s)".format(f=functor,
                                                                      v=varname)
 
         dc = {'mu+': daughter_cut('mu', 'Muon'),
               'e-': daughter_cut('e', 'Electron')}
         cc = asymmetric_mass_cut('AM', 'CombMass')
-        mc = asymmetric_mass_cut('M', 'Mass')
+        mc = ' & '.join((asymmetric_mass_cut('M', 'Mass'), '(CHI2VXNDOF < %(VertexChi2DoF)s)'))
 
         Hlt2Combiner.__init__(self,
                               'JpsiMuE',

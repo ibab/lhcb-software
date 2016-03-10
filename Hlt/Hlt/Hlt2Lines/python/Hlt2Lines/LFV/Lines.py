@@ -24,7 +24,7 @@ class LFVLines(Hlt2LinesConfigurableUser):
                              'MuonProbNn': 0.9,
                              'MuonTrChi2DoF': 3,
                              'MuonTrGhostProb': 0.1,
-                             'MuonVertexChi2DoF': 3},
+                             'VertexChi2DoF': 3},
                  'SpdCut': {'NSPD': 350}}
 
     def __apply_configuration__(self):
