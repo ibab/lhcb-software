@@ -128,8 +128,8 @@ namespace Rich
             : pidTrack(track), hypo(h), minDLL(mindll) { }
         public:
           LHCb::RichGlobalPIDTrack * pidTrack{nullptr}; ///< Pointer to the track
-          Rich::ParticleIDType hypo{Rich::Pion};     ///< Track hypothesis
-          double minDLL{0};                 ///< The DLL value
+          Rich::ParticleIDType hypo{Rich::Pion};        ///< Track hypothesis
+          double minDLL{0};                             ///< The DLL value
         };
 
         /// Sort a TrackList
@@ -162,7 +162,7 @@ namespace Rich
             // refill the data vector
             m_data.reserve( nBins );
             for ( unsigned int i = 0; i < nBins; ++i )
-            { m_data.push_back( LogExpLookUp::Data(binLowX(i),binHighX(i)) ); } 
+            { m_data.emplace_back( LogExpLookUp::Data(binLowX(i),binHighX(i)) ); } 
           }
           /** get the log(exp(x)-1) value for a given x from the look up table
            *  @attention No min value range check, as this is done elsewhere */
@@ -195,11 +195,11 @@ namespace Rich
             { return vdt::fast_logf( vdt::fast_expf(x) - 1.0f ); }
           private:
             // The (x,y) values for the low and high edge of this bin
-            TYPE m_xLow, m_xHigh, m_yLow, m_yHigh;
+            TYPE m_xLow{0}, m_xHigh{1}, m_yLow{0}, m_yHigh{1};
             /// The slope parameter
-            TYPE m_slope;
+            TYPE m_slope{0};
             /// The constant parameter
-            TYPE m_const;
+            TYPE m_const{0};
           public:
             /// type for a list of data points
             typedef std::vector<Data> Vector;
@@ -231,11 +231,11 @@ namespace Rich
           /// The look up vector of data points
           typename Data::Vector m_data;
           /// The minimum valid x
-          TYPE m_minX;
+          TYPE m_minX{0};
           /// The maximum valid x
-          TYPE m_maxX;
+          TYPE m_maxX{1};
           /// 1 / the bin increment
-          TYPE m_incX;
+          TYPE m_incX{0};
         };
 
       private: // Private methods
