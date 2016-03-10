@@ -104,7 +104,6 @@ from   Ostap.HistoDeco import ( binomEff_h1 , binomEff_h2 , binomEff_h3 ,
 # =============================================================================
 import Ostap.TreeDeco
 import Ostap.MinuitDeco
-import Ostap.RooFitDeco
 import Ostap.HTextDeco
 import Ostap.HParamDeco
 import Ostap.HCmpDeco
@@ -113,10 +112,11 @@ import Ostap.MiscDeco
 import Ostap.Models 
 import Ostap.HepDATA 
 import Ostap.Canvas 
+import Ostap.RooFitDeco
 
 # =============================================================================
 ## graphs 
-# =============================================================================    
+# =============================================================================
 from Ostap.GraphDeco import makeGraph, hToGraph, hToGraph2, hToGraph3, lw_graph  
 
 ## restore the warnings level 

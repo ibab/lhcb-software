@@ -62,28 +62,32 @@ logger.debug ( 'Core objects/classes/functions for Ostap')
 # =============================================================================
 cpp = cppyy.makeNamespace('')
 # 
-import LHCbMath.Types
-Gaudi           = cpp.Gaudi
-VE              = Gaudi.Math.ValueWithError
+VE              = cpp.Gaudi.Math.ValueWithError
 SE              = cpp.StatEntity 
-WSE             = Gaudi.Math.WStatEntity 
-ValueWithError  = Gaudi.Math.ValueWithError
+WSE             = cpp.Gaudi.Math.WStatEntity 
+ValueWithError  = cpp.Gaudi.Math.ValueWithError
 #
-binomEff        = Gaudi.Math.binomEff
-binomEff2       = Gaudi.Math.binomEff2
-zechEff         = Gaudi.Math.zechEff
-wilsonEff       = Gaudi.Math.wilsonEff
-agrestiCoullEff = Gaudi.Math.agrestiCoullEff
+binomEff        = cpp.Gaudi.Math.binomEff
+binomEff2       = cpp.Gaudi.Math.binomEff2
+zechEff         = cpp.Gaudi.Math.zechEff
+wilsonEff       = cpp.Gaudi.Math.wilsonEff
+agrestiCoullEff = cpp.Gaudi.Math.agrestiCoullEff
 iszero          = cpp.LHCb.Math.Zero     ('double')()
 isequal         = cpp.LHCb.Math.Equal_To ('double')()
-isint           = Gaudi.Math.isint 
-islong          = Gaudi.Math.islong
+isint           = cpp.LHCb.Math.isint 
+islong          = cpp.LHCb.Math.islong
+#Gaudi           = cpp.Gaudi
+#3 
+import LHCbMath.Types
 ## natural number ?
 #  @see Gaudi::Math::natural_number 
-natural_number = Gaudi.Math.natural_number
+natural_number = cpp.Gaudi.Math.natural_number
 ## natural etry in histo-bin ? 
 #  @see Gaudi::Math::natural_entry
-natural_entry  = Gaudi.Math.natural_entry
+natural_entry  = cpp.Gaudi.Math.natural_entry
+# =============================================================================
+cppyy.Gaudi = cpp.Gaudi
+cppyy.LHcb  = cpp.LHCb
 # =============================================================================
 ## @class ROOTCWD
 #  context manager to preserve current directory (rather confusing stuff in ROOT)

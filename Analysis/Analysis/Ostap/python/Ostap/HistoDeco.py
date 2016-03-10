@@ -41,7 +41,7 @@ else                       : logger = getLogger( __name__          )
 # =============================================================================
 logger.debug ( 'Decoration of historams')
 # =============================================================================
-from Ostap.Core import ( cpp      , Gaudi     , 
+from Ostap.Core import ( cpp      ,
                          ROOTCWD  , rootID    , 
                          funcID   , funID     , fID             ,
                          histoID  , hID       , dsID            ,
@@ -202,8 +202,8 @@ def _h1_set_item_ ( h1 , ibin , v ) :
 
     elif isinstance ( v , float ) :
         
-        if Gaudi.Math.islong ( v ) : return _h1_set_item_ ( h1 , ibin , long ( v ) )
-        else          : vv = VE ( v , 0 ) 
+        if   islong ( v ) : return _h1_set_item_ ( h1 , ibin , long ( v ) )
+        else              : vv = VE ( v , 0 ) 
 
     #
     h1.SetBinContent ( ibin , vv.value () )
