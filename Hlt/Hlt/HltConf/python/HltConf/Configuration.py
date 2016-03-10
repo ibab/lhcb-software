@@ -183,11 +183,12 @@ class HltConf(LHCbConfigurableUser):
                                  HybridFactory("Hlt1HybridFactory"),
                                  HybridFactory("Hlt2HybridFactory")) :
                                 modules + extra_modules}.iteritems():
-             for factory, module in product(factories, mods):
-                 if not module in factory.Modules:
-                     factory.Modules.append(module)
-                     factory.Lines += ["from GaudiKernel.SystemOfUnits import GeV, MeV, mm",
-                                       "import HltTracking.Hlt1StreamerConf"]
+            for factory in factories:
+                factory.Lines += ["from GaudiKernel.SystemOfUnits import GeV, MeV, mm",
+                                  "import HltTracking.Hlt1StreamerConf"]
+            for factory, module in product(factories, mods):
+                if not module in factory.Modules:
+                    factory.Modules.append(module)
 
     def confType(self) :
         """

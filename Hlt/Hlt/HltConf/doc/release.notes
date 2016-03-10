@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2016-03-10 - Roel Aaij
+ - Don't add unneeded imports to factories.
+
 ! 2016-03-03 - Sascha Stahl
  - HltAfterBurner: Removed calculation of TrackLikelihood.
 
