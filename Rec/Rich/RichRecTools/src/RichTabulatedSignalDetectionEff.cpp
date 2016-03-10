@@ -20,24 +20,17 @@ using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( TabulatedSignalDetectionEff )
-
 // Standard constructor
 TabulatedSignalDetectionEff::
 TabulatedSignalDetectionEff ( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-: ToolBase         ( type, name, parent ),
-  m_riches         ( Rich::NRiches ),
-  m_qEffPedLoss    ( 0 ),
-  m_traceModeRad   ( Rich::NRadiatorTypes ),
-  m_nPoints        ( Rich::NRadiatorTypes, 50 )
+  : ToolBase ( type, name, parent ),
+    m_riches ( Rich::NRiches, nullptr )
 {
   // interface
   declareInterface<ISignalDetectionEff>(this);
-  // JOs
-  declareProperty( "UseDetailedHPDsInRayTracing", m_useDetailedHPDsForRayT = false );
-  declareProperty( "RadiatorRingPoints", m_nPoints );
+  //setProperty( "OutputLevel", 1 );
 }
 
 StatusCode TabulatedSignalDetectionEff::initialize()
@@ -47,8 +40,7 @@ StatusCode TabulatedSignalDetectionEff::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // get tools
-  acquireTool( "RichRayTraceCKCone", m_coneTrace );
-  acquireTool( "RichCherenkovAngle", m_ckAngle   );
+  acquireTool( "RichMassHypoRings", m_massHypoRings );
 
   // Rich1 and Rich2
   m_riches[Rich::Rich1] = getDet<DeRich1>( DeRichLocations::Rich1 );
@@ -63,21 +55,11 @@ StatusCode TabulatedSignalDetectionEff::initialize()
   m_pdPanels[Rich::Rich2][Rich::left]   = m_riches[Rich::Rich2]->pdPanel(Rich::left);
   m_pdPanels[Rich::Rich2][Rich::right]  = m_riches[Rich::Rich2]->pdPanel(Rich::right);
 
-  // the ray-tracing mode
-  LHCb::RichTraceMode tmpMode ( LHCb::RichTraceMode::RespectHPDTubes,
-                                ( m_useDetailedHPDsForRayT ?
-                                  LHCb::RichTraceMode::FullHPDs :
-                                  LHCb::RichTraceMode::FlatHPDs ) );
-  m_traceModeRad[Rich::Aerogel]  = tmpMode;
-  m_traceModeRad[Rich::Aerogel].setAeroRefraction(true);
-  m_traceModeRad[Rich::Rich1Gas] = tmpMode;
-  m_traceModeRad[Rich::Rich2Gas] = tmpMode;
-
   // Quartz window eff
   const double qEff = m_riches[Rich::Rich1]->param<double>( "HPDQuartzWindowEff" );
 
   // Digitisation pedestal loss
-  const double pLos = 
+  const double pLos =
     ( PmtActivate && m_riches[Rich::Rich1]->exists("PMTPedestalDigiEff") ?
       m_riches[Rich::Rich1]->param<double>("PMTPedestalDigiEff") :
       m_riches[Rich::Rich1]->param<double>("HPDPedestalDigiEff") );
@@ -85,12 +67,12 @@ StatusCode TabulatedSignalDetectionEff::initialize()
   // store cached value
   m_qEffPedLoss = qEff * pLos;
 
+  // Setup incident services
+  incSvc()->addListener( this, IncidentType::BeginEvent );
+
   // Informational Printout
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Aerogel  Track " << m_traceModeRad[Rich::Aerogel]  << endmsg;
-    debug() << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endmsg;
-    debug() << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endmsg;
     debug() << "PD quartz window eff.      = " << qEff << endmsg;
     debug() << "Digitisation pedestal eff. = " << pLos << endmsg;
   }
@@ -99,47 +81,12 @@ StatusCode TabulatedSignalDetectionEff::initialize()
   return sc;
 }
 
-const LHCb::RichRecRing *
-TabulatedSignalDetectionEff::ckRing( LHCb::RichRecSegment * segment,
-                                     const Rich::ParticleIDType hypo ) const
+// Method that handles various Gaudi "software events"
+void TabulatedSignalDetectionEff::handle ( const Incident& /* incident */ )
 {
-  // Make a CK ring for this segment and hypo. Used to work out which mirrors
-  // and PDs we need to sample the reflectivities and Q.E. values from
-
-  LHCb::RichRecRing * newRing = nullptr;
-
-  // protect against below threshold case
-  if ( Rich::BelowThreshold == hypo ) return newRing;
-
-  // Cherenkov theta for this segment/hypothesis combination
-  // using emitted photon spectra (to avoid a circular information dependency)
-  const double ckTheta = m_ckAngle->avgCherenkovTheta( segment, hypo, true );
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << " -> Making new CK ring : theta = " << ckTheta << endmsg;
-  if ( ckTheta > 0 )
-  {
-    // make a ring object
-    newRing = new LHCb::RichRecRing( segment,
-                                     (LHCb::RichRecRing::FloatType)(ckTheta),
-                                     hypo );
-
-    // set ring type info
-    newRing->setType ( LHCb::RichRecRing::RayTracedCK );
-
-    // ray tracing
-    const Rich::RadiatorType rad = segment->trackSegment().radiator();
-    const StatusCode sc = m_coneTrace->rayTrace( newRing, m_nPoints[rad], m_traceModeRad[rad] );
-    if ( sc.isFailure() )
-    {
-      Warning( "Some problem occured during CK cone ray-tracing" ).ignore();
-      delete newRing;
-      newRing = nullptr;
-    }
-
-  }
-
-  // return the ring
-  return newRing;
+  // We only subscribe to one sort of incident, so no need to check type
+  //if ( IncidentType::BeginEvent == incident.type() )
+  m_lastRing = nullptr;
 }
 
 double
@@ -150,54 +97,50 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
   // protect against below threshold case
   if ( Rich::BelowThreshold == hypo ) return 0;
 
-  _ri_debug << "Computing detection efficiency for " << segment << " " << hypo
-            << " photon energy=" << energy << endmsg;
+  _ri_debug << "Computing detection efficiency for " << segment 
+            << " " << segment->key() 
+            << " " << hypo << " photon energy=" << energy 
+            << endmsg;
 
-  // Get a (local) ring for this segment/hypo
-  if ( segment != m_last_segment || m_last_hypo != hypo )
-  {
-    delete m_last_ring;
-    m_last_segment = segment;
-    m_last_hypo    = hypo;
-    m_last_ring    = ckRing( segment, hypo );
-  }
-  if ( !m_last_ring )
-  {
-    if ( msgLevel(MSG::DEBUG) ) debug() << " -> No Ring" << endmsg;
-    return 0;
-  }
+  // Load the CK ring
+  const auto * ring = m_massHypoRings->massHypoRing( segment, hypo );
+  if ( !ring ) { _ri_debug << " -> No Ring" << endmsg; return 0; }
 
-  typedef Rich::Map<const LHCb::RichSmartID,unsigned int> PDCount;
-  typedef Rich::Map<const DeRichSphMirror *,unsigned int> MirrorCount;
-
-  PDCount pdCount;
-  MirrorCount primMirrCount, secMirrCount;
-  unsigned int totalInPD(0);
-  for ( const auto& P : m_last_ring->ringPoints() )
+  // If the ring is different to the cached one, update the count maps etc.
+  if ( ring != m_lastRing )
   {
-    if ( P.acceptance() == LHCb::RichRecPointOnRing::InHPDTube )
+    _ri_debug << " -> Update caches" << endmsg;
+    m_pdCount.clear();
+    m_primMirrCount.clear();
+    m_secMirrCount.clear();
+    m_lastRing = ring;
+    m_totalInPD = 0;
+    for ( const auto& P : ring->ringPoints() )
     {
-      // Count accepted points
-      ++totalInPD;
-      // Count PDs hit by this ring
-      ++pdCount [ P.smartID() ];
-      // Count primary mirrors
-      if ( P.primaryMirror()   ) { ++primMirrCount [ P.primaryMirror()   ]; }
-      // Count secondary mirrors
-      if ( P.secondaryMirror() ) { ++secMirrCount  [ P.secondaryMirror() ]; }
+      if ( LHCb::RichRecPointOnRing::InHPDTube == P.acceptance() )
+      {
+        // Count accepted points
+        ++m_totalInPD;
+        // Count PDs hit by this ring
+        ++m_pdCount [ P.smartID() ];
+        // Count primary mirrors
+        if ( P.primaryMirror()   ) { ++m_primMirrCount [ P.primaryMirror()   ]; }
+        // Count secondary mirrors
+        if ( P.secondaryMirror() ) { ++m_secMirrCount  [ P.secondaryMirror() ]; }
+      }
     }
-  }
+  }  
 
-  _ri_debug << " -> Found " << totalInPD << " usable ring points out of "
-            << m_last_ring->ringPoints().size() << endmsg;
-  if ( 0 == totalInPD ) { return 0; }
+  _ri_debug << " -> Found " << m_totalInPD << " usable ring points out of "
+            << ring->ringPoints().size() << endmsg;
+  if ( 0 == m_totalInPD ) { return 0; }
 
   // Get weighted average PD Q.E.
   double pdQEEff(0);
-  if ( !pdCount.empty() )
+  if ( !m_pdCount.empty() )
   {
-    totalInPD = 0;
-    for ( const auto& PD : pdCount ) 
+    unsigned int totalInPD = 0;
+    for ( const auto& PD : m_pdCount )
     {
       // Count HPDs
       totalInPD += PD.second;
@@ -217,10 +160,10 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
 
   // Weighted primary mirror reflectivity
   double primMirrRefl(0);
-  if ( !primMirrCount.empty() )
+  if ( !m_primMirrCount.empty() )
   {
-    totalInPD = 0;
-    for ( const auto& PM : primMirrCount )
+    unsigned int totalInPD = 0;
+    for ( const auto& PM : m_primMirrCount )
     {
       // count mirrors
       totalInPD += PM.second;
@@ -234,15 +177,16 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
   else
   {
     primMirrRefl = 1;
-    Warning( "No primary mirrors found -> Assuming Av. reflectivity of 1", StatusCode::SUCCESS ).ignore();
+    Warning( "No primary mirrors found -> Assuming Av. reflectivity of 1", 
+             StatusCode::SUCCESS ).ignore();
   }
 
   // Weighted secondary mirror reflectivity
   double secMirrRefl(0);
-  if ( !secMirrCount.empty() )
+  if ( !m_secMirrCount.empty() )
   {
-    totalInPD = 0;
-    for ( const auto& SM : secMirrCount )
+    unsigned int totalInPD = 0;
+    for ( const auto& SM : m_secMirrCount )
     {
       // count mirrors
       totalInPD += SM.second;
@@ -256,12 +200,20 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
   else
   {
     secMirrRefl = 1;
-    Warning( "No secondary mirrors found -> Assuming Av. reflectivity of 1", StatusCode::SUCCESS );
+    Warning( "No secondary mirrors found -> Assuming Av. reflectivity of 1", 
+             StatusCode::SUCCESS );
   }
 
-  _ri_debug << " -> Av. PD Q.E. = " << pdQEEff << " Prim. Mirr Refl. = " << primMirrRefl
+  _ri_debug << " -> Av. PD Q.E. = " << pdQEEff 
+            << " Prim. Mirr Refl. = " << primMirrRefl
             << " Sec. Mirr. Refl. " << secMirrRefl << endmsg;
 
   // return overall efficiency
   return m_qEffPedLoss * pdQEEff * primMirrRefl * secMirrRefl;
 }
+
+//-----------------------------------------------------------------------------
+
+DECLARE_TOOL_FACTORY( TabulatedSignalDetectionEff )
+
+//-----------------------------------------------------------------------------

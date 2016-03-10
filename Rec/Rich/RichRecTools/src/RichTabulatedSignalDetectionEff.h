@@ -21,8 +21,7 @@
 
 // interfaces
 #include "RichRecBase/IRichSignalDetectionEff.h"
-#include "RichRecBase/IRichRayTraceCherenkovCone.h"
-#include "RichRecBase/IRichCherenkovAngle.h"
+#include "RichRecBase/IRichMassHypothesisRingCreator.h"
 
 // Kernel
 #include "Kernel/RichDetectorType.h"
@@ -57,7 +56,8 @@ namespace Rich
     //-----------------------------------------------------------------------------
 
     class TabulatedSignalDetectionEff : public Rich::Rec::ToolBase,
-                                        virtual public ISignalDetectionEff
+                                        virtual public ISignalDetectionEff,
+                                        virtual public IIncidentListener
     {
 
     public: // Methods for Gaudi Framework
@@ -94,10 +94,6 @@ namespace Rich
       {
         return (m_pdPanels[pdID.rich()][pdID.panel()])->dePD(pdID);
       }
-      
-      /// Get the local ring for the given segment and hypo
-      const LHCb::RichRecRing * ckRing( LHCb::RichRecSegment * segment,
-                                        const Rich::ParticleIDType hypo ) const;
 
     private: // definitions
 
@@ -107,40 +103,33 @@ namespace Rich
       /// photodetector for each rich
       typedef boost::array<PDPanelsPerRich, Rich::NRiches> RichPDPanels;
 
+      /// Map for count by photon detector
+      typedef Rich::Map<const LHCb::RichSmartID,unsigned int> PDCount;
+
+      // Map for count by mirror segment
+      typedef Rich::Map<const DeRichSphMirror *,unsigned int> MirrorCount;
+
     private: // Private data
 
-      /// Cherenkov cone ray tracing tool
-      const IRayTraceCherenkovCone * m_coneTrace = nullptr;
-
-      // Pointers to tool instances
-      const ICherenkovAngle * m_ckAngle = nullptr;
+      /// Pointer to ring creator
+      const IMassHypothesisRingCreator * m_massHypoRings = nullptr;
 
       /// Pointers to RICHes
       std::vector<const DeRich*> m_riches;
 
       /// Cached value storing product of quartz window eff. and digitisation pedestal loss
-      double m_qEffPedLoss;
+      double m_qEffPedLoss{0};
 
       /// HPD panels
       RichPDPanels m_pdPanels;
 
-      /// JO flag to switch between simple or detail HPD description in ray tracing
-      bool m_useDetailedHPDsForRayT;
+      // PD count
+      mutable unsigned int m_totalInPD{0};
+      mutable PDCount m_pdCount;
+      mutable MirrorCount m_primMirrCount, m_secMirrCount;
 
-      /// Cached trace modes for each radiator
-      std::vector<LHCb::RichTraceMode> m_traceModeRad;
-
-      /// Number of ring points per radiator
-      std::vector<unsigned int> m_nPoints;
-
-      // cached variables for speed
-
-      /// Last segment looked at
-      mutable const LHCb::RichRecSegment * m_last_segment = nullptr; 
-      /// Last ring looked at
-      mutable const LHCb::RichRecRing    * m_last_ring    = nullptr; 
-      /// last mass hypothesis looked at
-      mutable Rich::ParticleIDType         m_last_hypo    = Rich::Unknown; 
+      // Cache pointer to last ring ring, which the cached PD count data refers to
+      mutable const LHCb::RichRecRing * m_lastRing = nullptr;
 
     };
 

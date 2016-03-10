@@ -12,7 +12,7 @@
 #ifndef RICHRECTOOLS_RICHMASSHYPOTHESISRINGCREATOR_H
 #define RICHRECTOOLS_RICHMASSHYPOTHESISRINGCREATOR_H 1
 
-// from Gaudi
+// Gaudi
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
 
@@ -28,6 +28,9 @@
 // Event
 #include "Event/RichRecRing.h"
 #include "Event/RichRecSegment.h"
+
+// Kernel
+#include "RichKernel/RichMap.h"
 
 namespace Rich
 {
@@ -61,10 +64,10 @@ namespace Rich
                                  const IInterface* parent );
 
       /// Destructor
-      virtual ~MassHypothesisRingCreator(){}
+      virtual ~MassHypothesisRingCreator() {}
 
-      // Initialize method
-      StatusCode initialize();
+      /// Initialize method
+      StatusCode initialize() override;
 
     public: // methods (and doxygen comments) inherited from public interface
 
@@ -152,7 +155,7 @@ namespace Rich
     inline void MassHypothesisRingCreator::InitNewEvent()
     {
       // Initialise navigation data
-      m_rings = NULL;
+      m_rings = nullptr;
     }
 
   }

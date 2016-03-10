@@ -22,16 +22,16 @@ MassHypothesisRingCreator::
 MassHypothesisRingCreator( const std::string& type,
                            const std::string& name,
                            const IInterface* parent )
-  : ToolBase        ( type, name, parent       ),
-    m_traceModeRad  ( Rich::NRadiatorTypes     ),
-    m_nPointScale   ( Rich::NRadiatorTypes, -1 )
+  : ToolBase       ( type, name, parent       ),
+    m_traceModeRad ( Rich::NRadiatorTypes     ),
+    m_nPointScale  ( Rich::NRadiatorTypes, -1 )
 {
   // tool interface
   declareInterface<IMassHypothesisRingCreator>(this);
 
   // Job Options                                   Aero R1Gas R2Gas
   declareProperty( "MaxRingPoints", m_maxPoint = { 100,  100,  100 } );
-  declareProperty( "MinRingPoints", m_minPoint = { 100,  100,  100 } );
+  declareProperty( "MinRingPoints", m_minPoint = {  50,   50,   50 } );
   declareProperty( "CheckBeamPipe", m_checkBeamPipe = true );
   declareProperty( "UseDetailedHPDsInRayTracing", m_useDetailedHPDsForRayT = false );
   declareProperty( "RingsLocation", m_ringLocation =
@@ -111,7 +111,9 @@ MassHypothesisRingCreator::buildRing( LHCb::RichRecSegment * segment,
   LHCb::RichRecRing * newRing = nullptr;
 
   // Cherenkov theta for this segment/hypothesis combination
-  const double ckTheta = m_ckAngle->avgCherenkovTheta( segment, id );
+  // using emitted photon spectra (to avoid a circular information dependency)
+  const double ckTheta = m_ckAngle->avgCherenkovTheta( segment, id, true );
+  //const double ckTheta = m_ckAngle->avgCherenkovTheta( segment, id );
   if ( ckTheta > 0 )
   {
     _ri_verbo << "Creating " << id
@@ -129,9 +131,7 @@ MassHypothesisRingCreator::buildRing( LHCb::RichRecSegment * segment,
     // ray tracing
     const auto rad = segment->trackSegment().radiator();
     const auto nPoints = m_minPoint[rad] + (unsigned int)( nPointScale(rad) * ckTheta );
-    //if      ( nPoints < m_minPoint[rad] ) { nPoints = m_minPoint[rad]; }
-    //else if ( nPoints > m_maxPoint[rad] ) { nPoints = m_maxPoint[rad]; }
-    const StatusCode sc = m_coneTrace->rayTrace( newRing, nPoints, m_traceModeRad[rad] );
+    const auto sc = m_coneTrace->rayTrace( newRing, nPoints, m_traceModeRad[rad] );
     if ( sc.isSuccess() )
     {
       // save to container

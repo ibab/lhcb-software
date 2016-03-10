@@ -73,8 +73,7 @@ namespace Rich
       virtual ~RayTraceCherenkovCone();
 
       // Initialize method
-      StatusCode initialize();
-
+      StatusCode initialize() override;
 
     public: // methods (and doxygen comments) inherited from public interface
 
