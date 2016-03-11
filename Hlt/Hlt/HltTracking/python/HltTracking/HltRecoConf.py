@@ -63,7 +63,9 @@ class HltRecoConf(LHCbConfigurableUser):
                                                    "TrackErrorScaleFactor" : 1.,
                                                    "ResolverBound"         : 5 * mm,
                                                    "MinTracks"             : 4.,
-                                                   "trackMaxChi2"          : 12.}
+                                                   "trackMaxChi2"          : 12.,
+                                                   "BeamSpotRHighMultiplicityCut": 0.4*mm,
+                                                   "BeamSpotRMultiplicityTreshold": 10}
                }
 
    def getConfiguredForward(Name) :

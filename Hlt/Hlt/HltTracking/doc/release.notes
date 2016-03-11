@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2016-03-10 - Agnieszka Dziurda
+ - new tuning for PVs, double threshold for radial cut 
+
 ! 2016-03-05 - Sascha Stahl
  - Fixed bug when switching off fitting of TTracks.
 
