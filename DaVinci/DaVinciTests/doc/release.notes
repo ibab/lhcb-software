@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2016-03-11 - Eduardo Rodrigues
+ - Tests davinci/test_davinci_initialise.qmt and
+   commonparticles.qms/test_standardintermediate_reco14_run.qmt updated.
+
 !======================= DaVinciTests v3r3 2016-03-08 ========================
 
 ! 2016-02-17 - Rosen Matev
