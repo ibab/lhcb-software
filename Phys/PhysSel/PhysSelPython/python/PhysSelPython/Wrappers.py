@@ -717,7 +717,7 @@ def CombineSelection ( name  , inputs ,
                        CombinationCut ,
                        MotherCut      , 
                        **kwargs       ) :
-    """ Useful shortcut for selection with FilterDesktop algorithm
+    """ Useful shortcut for selection with CombineParticles algorithm
     >>> from StandardParticles import StdAllLoosePions   as pions
     >>> from StandardParticles import StdAllLooseKaons   as kaons
     >>> charm = CombineSelection (
@@ -732,8 +732,8 @@ def CombineSelection ( name  , inputs ,
     from GaudiConfUtils.ConfigurableGenerators import CombineParticles as _COMBINER_
     ## check decay descriptor(s)
     if not kwargs.has_key ('DecayDescriptor' ) : 
-        if not not kwargs.has_key ('DecayDescriptors' ) :
-            raise TypeError, 'DecayDescriptor(s) must be specified!'
+        if not kwargs.has_key ('DecayDescriptors' ) :
+            raise TypeError, 'CombineSelection: DecayDescriptor(s) must be specified!'
     
     ## create selection    
     return SimpleSelection ( name   , _COMBINER_ ,
@@ -797,9 +797,9 @@ def Combine3BodySelection ( name  , inputs   ,
     from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays as _COMBINER_
     ## check decay descriptor(s)
     if not kwargs.has_key ('DecayDescriptor' ) : 
-        if not not kwargs.has_key ('DecayDescriptors' ) :
-            raise TypeError, 'DecayDescriptor(s) must be specified!'
-    
+        if not kwargs.has_key ('DecayDescriptors' ) :
+            raise TypeError, 'Combine3BodySelection: DecayDescriptor(s) must be specified!'
+        
     ## create selection    
     return SimpleSelection ( name   , _COMBINER_ ,
                              inputs ,
@@ -876,8 +876,8 @@ def Combine4BodySelection ( name  , inputs    ,
     from GaudiConfUtils.ConfigurableGenerators import DaVinci__N4BodyDecays as _COMBINER_
     ## check decay descriptor(s)
     if not kwargs.has_key ('DecayDescriptor' ) : 
-        if not not kwargs.has_key ('DecayDescriptors' ) :
-            raise TypeError, 'DecayDescriptor(s) must be specified!'
+        if not kwargs.has_key ('DecayDescriptors' ) :
+            raise TypeError, 'Combine4BodySelection: DecayDescriptor(s) must be specified!'
     
     ## create selection    
     return SimpleSelection ( name   , _COMBINER_ ,
