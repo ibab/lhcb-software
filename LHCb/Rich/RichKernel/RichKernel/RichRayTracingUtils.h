@@ -100,9 +100,11 @@ namespace Rich
      *             give the correct results if used in the other direction...
      *
      *  @param[in,out] position   The start point to use for the ray tracing.
-     *                            Afterwards gives the reflection point on the spherical mirror.
+     *                            Afterwards gives the reflection point on the 
+     *                            spherical mirror.
      *  @param[in,out] direction  The direction to ray trace from the start point.
-     *                            Afterwards represents the reflection direction from the spherical mirror.
+     *                            Afterwards represents the reflection direction
+     *                            from the spherical mirror.
      *  @param[in] CoC        The centre of curvature of the spherical mirror
      *  @param[in] radius     The radius of curvature of the spherical mirror
      *
@@ -143,8 +145,10 @@ namespace Rich
 
     /** Ray trace from given position in given direction off flat mirrors
      *
-     *  @param[in,out] position  On input the start point. On output the reflection point
-     *  @param[in,out] direction On input the starting direction. On output the reflected direction.
+     *  @param[in,out] position  On input the start point. 
+     *                           On output the reflection point
+     *  @param[in,out] direction On input the starting direction. 
+     *                           On output the reflected direction.
      *  @param[in]     plane     The plane to refect off
      *
      *  @return Boolean indicating if the ray tracing was succesful
@@ -165,7 +169,7 @@ namespace Rich
       else
       {
         const auto distance = -(plane.Distance(position)) / scalar;
-        // change position to reflection point and direction
+        // change position to reflection point and update direction
         position  += distance * direction;
         direction -= 2.0 * scalar * normal;
       }
