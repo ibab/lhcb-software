@@ -88,17 +88,17 @@ class Tesla(LHCbConfigurableUser):
         if ( self.getProp("Histogram") != "" ):
             HistogramPersistencySvc().OutputFile = self.getProp("Histogram")
     
-    def _configureTruth(self,line,assocpp) :
+    def _configureTruth(self,assocpp) :
         tesROOT="/Event/"+self.base
-        protocont = self.base + line + "/Protos"
-        trackcont = self.base + line + "/Tracks"
-        assoctr = TrackAssociator(line+"TurboAssocTr")
+        protocont = self.base + "Protos"
+        trackcont = self.base + "Tracks"
+        assoctr = TrackAssociator("TurboAssocTr")
         assoctr.OutputLevel = self.getProp('OutputLevel')
         assoctr.TracksInContainer = trackcont
         assocpp.TrackLocations += [ trackcont ]
         assocpp.InputData += [ protocont ]
         # Add it to a sequence
-        seq = GaudiSequencer(line+'TurboSeqT2MC')
+        seq = GaudiSequencer('TurboSeqT2MC')
         seq.Members += [assoctr]
         return seq
     
@@ -107,23 +107,23 @@ class Tesla(LHCbConfigurableUser):
         assocdigits = CaloDigit2MCLinks2Table("TurboDigitAssoc")
         return 
 
-    def _configureClustersAndProtosTruth(self,line,digits) :
-        retSeq = GaudiSequencer(line + "NeutralTruth")
+    def _configureClustersAndProtosTruth(self,digits) :
+        retSeq = GaudiSequencer("NeutralTruth")
         tesROOT="/Event/"+self.base
-        clusterTabLoc = tesROOT + self.base + line + "/Relations/CaloClusters"
-        clustLoc = tesROOT + line + "/CaloClusters"
-        inputLoc = tesROOT + line + "/Protos"
+        clusterTabLoc = tesROOT + self.base + "Relations/CaloClusters"
+        clustLoc = tesROOT + "CaloClusters"
+        inputLoc = tesROOT + "Protos"
 
         from Configurables import CaloClusterMCTruth
-        assoccluster = CaloClusterMCTruth(line+"TurboClusterAssoc")
+        assoccluster = CaloClusterMCTruth("TurboClusterAssoc")
         assoccluster.OutputLevel = self.getProp('OutputLevel')
         assoccluster.Input = digits
         assoccluster.Output = clusterTabLoc
         assoccluster.Clusters+=[clustLoc]
         
         from Configurables import NeutralPP2MC
-        protoTabLoc=tesROOT + line + "/Relations/Turbo/NeutralPP2MC"
-        assocneutral = NeutralPP2MC(line+"TurboNeutralPP2MC")
+        protoTabLoc=tesROOT + "Relations/Turbo/NeutralPP2MC"
+        assocneutral = NeutralPP2MC("TurboNeutralPP2MC")
         assocneutral.InputData += [ inputLoc ]
         assocneutral.OutputLevel = self.getProp('OutputLevel')
         assocneutral.OutputTable = protoTabLoc
@@ -223,23 +223,26 @@ class Tesla(LHCbConfigurableUser):
             seq.Members += [ Hlt1VertexReportsDecoder, Hlt2VertexReportsDecoder, Hlt2SelReportsDecoder ]
         #
         lines = self.getProp('TriggerLines')
+        trig1 = self._configureReportAlg(lines)
+        seq.Members+=[trig1]
         for l in lines:
-            trig1 = self._configureReportAlg(l)
-            seq.Members+=[trig1]
             # IF NOT PACKING NEED TO SET THE LOCATIONS IN THE REPORT ALGORITHM
             if not self.getProp('Pack'):
                 writer.OptItemList+=[ self.base + l + "/Particles#99" 
                         , self.base + l + "/Vertices#99"
                         , self.base + l + "/_ReFitPVs#99"
                         , self.base + l + "/Particle2VertexRelations#99"
-                        , self.base + l + "/Protos#99"
-                        , self.base + l + "/Tracks#99"
-                        , self.base + l + "/RichPIDs#99"
-                        , self.base + l + "/MuonPIDs#99"
-                        , self.base + "CaloHypos#99"
-                        , self.base + "CaloClusters#99"
                         ]
             dplic.Inputs+=[self.base + l + "/Particles"]
+        if not self.getProp('Pack'):
+            writer.OptItemList+=[
+                self.base + "Protos#99"
+                ,self.base + "Tracks#99"
+                ,self.base + "RichPIDs#99"
+                ,self.base + "MuonPIDs#99"
+                ,self.base + "CaloHypos#99"
+                ,self.base + "CaloClusters#99"
+                ]
         
         inputType = self.getProp('InputType')
         if (inputType=='XDST') or (inputType=='LDST'):
@@ -251,13 +254,13 @@ class Tesla(LHCbConfigurableUser):
             tesROOT="/Event/"+self.base
             outputPPLoc = tesROOT+'Relations/Turbo/'
             assocpp.RootInTES=tesROOT
-            for l in lines:
-                truthSeq = self._configureTruth(l,assocpp)
-                seq.Members += [ truthSeq ]
-                if not self.getProp('Pack'):
-                    writer.OptItemList+=[
-                            outputPPLoc + l + '/Protos' + '#99'
-                            ]
+            
+            truthSeq = self._configureTruth(assocpp)
+            seq.Members += [ truthSeq ]
+            if not self.getProp('Pack'):
+                writer.OptItemList+=[
+                        outputPPLoc + 'Protos' + '#99'
+                        ]
             seq.Members+=[assocpp]
             
             NeutralProtoSeq = GaudiSequencer("NeutralTruthSequencer")
@@ -273,17 +276,15 @@ class Tesla(LHCbConfigurableUser):
             ## Add the cluster associator
             ## Finally configure the neutral PP2MC associator
             NeutralProtoSeq.Members+=[assocdigits]
-            for l in lines:
-                if "gamma" in l.lower() or "pi0" in l.lower():
-                    clustLoc = self.base + "CaloClusters"
-                    protoLoc = self.base + l + "/Protos"
-                    self._configureDigitsTruth()
-                    protoneutral, retSeq = self._configureClustersAndProtosTruth(l,outputDigiLoc)
-                    NeutralProtoSeq.Members+=[retSeq]
-                    if not self.getProp('Pack'):
-                        writer.OptItemList+=[
-                                protoneutral + '#99'
-                                ]
+            clustLoc = self.base + "CaloClusters"
+            protoLoc = self.base + "Protos"
+            self._configureDigitsTruth()
+            protoneutral, retSeq = self._configureClustersAndProtosTruth(outputDigiLoc)
+            NeutralProtoSeq.Members+=[retSeq]
+            if not self.getProp('Pack'):
+                writer.OptItemList+=[
+                        protoneutral + '#99'
+                        ]
             seq.Members+=[NeutralProtoSeq]
         
         # Add shared places to writer
@@ -340,9 +341,9 @@ class Tesla(LHCbConfigurableUser):
             self.teslaSeq.Members += [dplic]
         IOHelper(persistency,persistency).outStream(fname,writer,writeFSR=self.getProp('WriteFSR'))
     
-    def _configureReportAlg(self,line):
+    def _configureReportAlg(self,lines):
         from Configurables import TeslaReportAlgo
-        trig1 = TeslaReportAlgo("TeslaReportAlgo"+line)
+        trig1 = TeslaReportAlgo("TeslaReportAlgo")
         trig1.OutputPrefix=self.base
         trig1.PV=self.getProp('PV')
         if self.getProp('VertRepLoc')=="Hlt1":
@@ -350,7 +351,7 @@ class Tesla(LHCbConfigurableUser):
         else:
             trig1.VertRepLoc="Hlt2/VertexReports"
         trig1.PVLoc=self.base+"Primary"
-        trig1.TriggerLine=line
+        trig1.TriggerLines=lines
         trig1.OutputLevel=self.getProp('OutputLevel')
         return trig1
     
