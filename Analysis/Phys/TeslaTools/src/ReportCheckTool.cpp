@@ -139,7 +139,9 @@ unsigned int ReportCheckTool::getTCK() {
     return 0u;
   }
   const auto& rawbanks = raw->banks( LHCb::RawBank::HltDecReports );
+  if(rawbanks.size()==0) return 0u;
   auto rb = rawbanks.front();
+  
   if ( rb && rb->magic() == LHCb::RawBank::MagicPattern && rb->version() > 0 && rb->size()>0 )  {
     auto content = rb->begin<unsigned int>();
     return *content;

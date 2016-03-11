@@ -3,6 +3,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-03-11 - Sean Benson
+ - Major change: Adapt to a single TeslaReportAlgo instance for complete sharing.
+
 !========================= TeslaTools v1r19 2016-03-07 =======================
 
 ! 2016-03-03 - Sean Benson

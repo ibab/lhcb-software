@@ -11,19 +11,19 @@
 #    when Tesla was ran
 
 def getRelLoc(prefix):
-    protos = prefix + "/Protos"
+    protos = prefix + "Protos"
     relloc = "/Event/Turbo/Relations/Turbo/" + protos
     return relloc
 
-def getNeutralRelLoc(line):
-    return "/Event/Turbo/" + line + "/Relations/Turbo/NeutralPP2MC"
+def getNeutralRelLoc():
+    return "/Event/Turbo/Relations/Turbo/NeutralPP2MC"
 
 def associateSequence(prefix,debug):
     from Gaudi.Configuration import GaudiSequencer 
     from Configurables import TrackAssociator, ChargedPP2MC
     base = "/Event/Turbo/"
-    protos = prefix + "/Protos"
-    tracks = prefix + "/Tracks"
+    protos = prefix + "Protos"
+    tracks = prefix + "Tracks"
     protocont = base + protos
     trackcont = base + tracks
     relloc = "Relations/Turbo/" + protos

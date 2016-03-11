@@ -28,6 +28,7 @@
 #include "Kernel/Particle2Vertex.h"
 #include "Kernel/IANNSvc.h"
 #include "Kernel/IIndexedANNSvc.h"
+#include "Kernel/HashIDs.h"
 //
 #include "ReportCheckTool.h"
 //
@@ -81,10 +82,12 @@ public:
         LHCb::CaloCluster* processCluster(const LHCb::HltObjectSummary*, std::vector<ContainedObject*>*, LHCb::CaloClusters*);
         LHCb::CaloCluster* compareClusterPosition(LHCb::CaloCluster*, LHCb::CaloClusters*);
         LHCb::CaloHypo* compareHypoPosition(LHCb::CaloHypo*, LHCb::CaloHypos*);
+        LHCb::CaloHypo* compareHypoPosition(LHCb::CaloHypo*, SmartRefVector<LHCb::CaloHypo>);
 protected:
 
 private:
-	std::string m_inputName;
+        std::vector<std::string> m_inputNames;
+        std::string m_inputName;
 	std::string m_PV;
 	std::string m_PVLoc;
 	std::string m_VertRepLoc;

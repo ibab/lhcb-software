@@ -28,7 +28,7 @@ TeslaReportAlgo::TeslaReportAlgo( const std::string& name,
 : GaudiAlgorithm ( name , pSvcLocator ), m_PV3D(true), m_refitted(false), m_dist(NULL), m_check(NULL), m_conv(NULL)
 , m_hltANNSvc {NULL}
 {
-  declareProperty( "TriggerLine" ,          m_inputName    = "Hlt2CharmHadD02HH_D02KK" );
+  declareProperty( "TriggerLines" ,         m_inputNames    = {"Hlt2CharmHadD02HH_D02KK"} );
   declareProperty( "OutputPrefix" ,         m_OutputPref   = "Tesla" );
   declareProperty( "PV" ,                   m_PV = "Offline" );
   declareProperty( "VertRepLoc" ,           m_VertRepLoc = "Hlt2/VertexReports" );
@@ -49,7 +49,10 @@ StatusCode TeslaReportAlgo::initialize()
   StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-  if ( msgLevel(MSG::DEBUG) ) debug() << "Requested processing of line: " << m_inputName << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) {
+    debug() << "Requested processing of lines: \n" << endmsg;
+    for(auto line : m_inputNames) debug() << line << endmsg;
+  }
   m_dist = tool<IDistanceCalculator>("LoKi::DistanceCalculator", this );
   if ( !m_dist )
   {
@@ -95,9 +98,6 @@ StatusCode TeslaReportAlgo::execute()
     }
   }
   
-  std::stringstream HltLoc;
-  HltLoc << m_inputName << "Decision";
-  //
   std::string RepLoc = "Hlt2/SelReports";
 
   // For jobs with multiple versions, need to check bank header
@@ -169,126 +169,142 @@ StatusCode TeslaReportAlgo::execute()
     info() << "RecSummary unavailable, global dectector information will not be resurrected" << endmsg;
   }
 
-
-  // Go and get the information from the Hlt
-  const LHCb::HltObjectSummary * MotherRep = selReports->selReport(HltLoc.str().c_str());
-
-  if(MotherRep!=0) {if ( msgLevel(MSG::DEBUG) ) debug() << "Required line has been fired" << endmsg;}
-  else return StatusCode::SUCCESS;
-
-  // Check validity
-  LHCb::HltObjectSummary firstCand = *(MotherRep->substructure()[0]->substructure()[0].target());
-  if( (firstCand.numericalInfo().size()==0) && (firstCand.summarizedObjectCLID()==LHCb::Particle::classID()) ){
-          warning() << "Candidate has invalid particle information" << endmsg;
-          return StatusCode::SUCCESS;
-  };
-  // Set our output locations
-  std::stringstream ss_PartLoc;
-  ss_PartLoc << m_OutputPref << m_inputName << "/Particles";
-  //
+  // first create the shared containers
   std::stringstream ss_ProtoLoc;
-  ss_ProtoLoc << m_OutputPref << m_inputName << "/Protos"; // NOT STORED BY ORIGINAL SELREPORTS
-  //
-  std::stringstream ss_VertLoc;
-  ss_VertLoc << m_OutputPref << m_inputName << "/Vertices"; // NOT STORED BY ORIGINAL SELREPORTS
-  //
+  ss_ProtoLoc << m_OutputPref << "Protos"; 
   std::stringstream ss_TrackLoc;
-  ss_TrackLoc << m_OutputPref << m_inputName << "/Tracks";
-  //
+  ss_TrackLoc << m_OutputPref << "Tracks";
   std::stringstream ss_RPIDLoc;
-  ss_RPIDLoc << m_OutputPref << m_inputName << "/RichPIDs"; // NOT STORED BY ORIGINAL SELREPORTS
-  //
+  ss_RPIDLoc << m_OutputPref << "RichPIDs"; 
   std::stringstream ss_MPIDLoc;
-  ss_MPIDLoc << m_OutputPref << m_inputName << "/MuonPIDs"; // NOT STORED BY ORIGINAL SELREPORTS
-  //
+  ss_MPIDLoc << m_OutputPref << "MuonPIDs"; 
   std::stringstream ss_CaloHyposLoc;
-  //ss_CaloHyposLoc << m_OutputPref << m_inputName << "/CaloHypos";
   ss_CaloHyposLoc << m_OutputPref << "CaloHypos";
-  //
   std::stringstream ss_CaloClustLoc;
-  //ss_CaloClustLoc << m_OutputPref << m_inputName << "/CaloClusters";
   ss_CaloClustLoc << m_OutputPref << "CaloClusters";
   //
-  std::stringstream ss_P2PVLoc;
-  ss_P2PVLoc << m_OutputPref << m_inputName << "/Particle2VertexRelations";
-  //
-  LHCb::Particle::Container* cont_Part = new LHCb::Particle::Container() ;
-  put( cont_Part , ss_PartLoc.str().c_str() );
-  //
-  LHCb::ProtoParticle::Container* cont_Proto = new LHCb::ProtoParticle::Container() ;
-  put( cont_Proto , ss_ProtoLoc.str().c_str() );
-  //
-  LHCb::Vertex::Container* cont_Vert = new LHCb::Vertex::Container() ;
-  put( cont_Vert , ss_VertLoc.str().c_str() );
-  //
-  LHCb::Track::Container* cont_Track = new LHCb::Track::Container() ;
-  put( cont_Track , ss_TrackLoc.str().c_str() );
-  //
-  LHCb::RichPID::Container* cont_RPID = new LHCb::RichPID::Container() ;
-  put( cont_RPID , ss_RPIDLoc.str().c_str() );
-  //
-  LHCb::MuonPID::Container* cont_MPID = new LHCb::MuonPID::Container() ;
-  put( cont_MPID , ss_MPIDLoc.str().c_str() );
-  //
-  //LHCb::CaloHypo::Container* cont_CaloHypo = new LHCb::CaloHypo::Container() ;
-  //put( cont_CaloHypo , ss_CaloHyposLoc.str().c_str() );
+  LHCb::ProtoParticle::Container* cont_Proto = getOrCreate<LHCb::ProtoParticle::Container,LHCb::ProtoParticle::Container>(ss_ProtoLoc.str().c_str()) ;
+  LHCb::Track::Container* cont_Track = getOrCreate<LHCb::Track::Container,LHCb::Track::Container>(ss_TrackLoc.str().c_str()) ;
+  LHCb::RichPID::Container* cont_RPID = getOrCreate<LHCb::RichPID::Container,LHCb::RichPID::Container>(ss_RPIDLoc.str().c_str()) ;
+  LHCb::MuonPID::Container* cont_MPID = getOrCreate<LHCb::MuonPID::Container,LHCb::MuonPID::Container>(ss_MPIDLoc.str().c_str()) ;
   LHCb::CaloHypos* cont_CaloHypo = getOrCreate<LHCb::CaloHypos,LHCb::CaloHypos>(ss_CaloHyposLoc.str().c_str());
-  //
-  //LHCb::CaloCluster::Container* cont_CaloClust = new LHCb::CaloCluster::Container() ;
-  //put( cont_CaloClust , ss_CaloClustLoc.str().c_str() );
   LHCb::CaloClusters* cont_CaloClust = getOrCreate<LHCb::CaloClusters,LHCb::CaloClusters>(ss_CaloClustLoc.str().c_str());
-  //
-  // PV situation:
-  // Need to detect if a refitted PV has been stored.
-  // Logic flow:
-  // - If a refitted PVs are stored, put them in lines private container
-  // - If no refitted PVs => First algorithm creates shared PV container
-  // - else algorithm uses the already created shared PV container
 
-  // Detect refitted PV
-  m_refitted=false;
-  std::vector<LHCb::RecVertex*> refit_PVs;
-  SmartRefVector <LHCb::HltObjectSummary> substructure_PVdet = MotherRep->substructure()[0]->substructure();
-  if ( msgLevel(MSG::DEBUG) ) debug() << "Checking for refitted PV" << endmsg;
-  for( auto child : substructure_PVdet ){
-    const LHCb::HltObjectSummary * Obj = child.target();
-    if ( msgLevel(MSG::DEBUG) ) debug() << " - Object has ID: " << Obj->summarizedObjectCLID() << endmsg;
-    if(Obj->summarizedObjectCLID()==LHCb::RecVertex::classID()) {
-      if ( msgLevel(MSG::DEBUG) ) debug() << "Refitted PV detected, resurrecting these" << endmsg;
-      m_refitted=true;
-      LHCb::RecVertex* refit_PV = new LHCb::RecVertex();
-      const LHCb::HltObjectSummary::Info PV_info = Obj->numericalInfo();
-      std::vector<std::string> vec_keys = Obj->numericalInfoKeys();
-      if ( msgLevel(MSG::DEBUG) ) {
-        debug() << "Saved Rec::Vertex information: " << endmsg;
-        for(std::vector<std::string>::iterator it = vec_keys.begin(); it!=vec_keys.end(); it++) {
-           debug() << *it << " = " << PV_info[(*it)] << endmsg;
+  for(auto line : m_inputNames){
+    // Go and get the information from the Hlt
+    std::stringstream HltLoc;
+    m_inputName = line;
+    HltLoc << m_inputName << "Decision";
+    //
+    const LHCb::HltObjectSummary * MotherRep = selReports->selReport(HltLoc.str().c_str());
+
+    if(MotherRep!=0) {if ( msgLevel(MSG::DEBUG) ) debug() << "Required line has been fired" << endmsg;}
+    else return StatusCode::SUCCESS;
+
+    // Check validity
+    LHCb::HltObjectSummary firstCand = *(MotherRep->substructure()[0]->substructure()[0].target());
+    if( (firstCand.numericalInfo().size()==0) && (firstCand.summarizedObjectCLID()==LHCb::Particle::classID()) ){
+      warning() << "Candidate has invalid particle information" << endmsg;
+      return StatusCode::SUCCESS;
+    };
+    // Set our output locations
+    std::stringstream ss_PartLoc;
+    ss_PartLoc << m_OutputPref << m_inputName << "/Particles";
+    //
+    std::stringstream ss_VertLoc;
+    ss_VertLoc << m_OutputPref << m_inputName << "/Vertices"; 
+    //
+    std::stringstream ss_P2PVLoc;
+    ss_P2PVLoc << m_OutputPref << m_inputName << "/Particle2VertexRelations";
+    //
+    LHCb::Particle::Container* cont_Part = new LHCb::Particle::Container() ;
+    put( cont_Part , ss_PartLoc.str().c_str() );
+    //
+    LHCb::Vertex::Container* cont_Vert = new LHCb::Vertex::Container() ;
+    put( cont_Vert , ss_VertLoc.str().c_str() );
+    
+    //
+    // PV situation:
+    // Need to detect if a refitted PV has been stored.
+    // Logic flow:
+    // - If a refitted PVs are stored, put them in lines private container
+    // - If no refitted PVs => First algorithm creates shared PV container
+    // - else algorithm uses the already created shared PV container
+
+    // Detect refitted PV
+    m_refitted=false;
+    std::vector<LHCb::RecVertex*> refit_PVs;
+    SmartRefVector <LHCb::HltObjectSummary> substructure_PVdet = MotherRep->substructure()[0]->substructure();
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Checking for refitted PV" << endmsg;
+    for( auto child : substructure_PVdet ){
+      const LHCb::HltObjectSummary * Obj = child.target();
+      if ( msgLevel(MSG::DEBUG) ) debug() << " - Object has ID: " << Obj->summarizedObjectCLID() << endmsg;
+      if(Obj->summarizedObjectCLID()==LHCb::RecVertex::classID()) {
+        if ( msgLevel(MSG::DEBUG) ) debug() << "Refitted PV detected, resurrecting these" << endmsg;
+        m_refitted=true;
+        LHCb::RecVertex* refit_PV = new LHCb::RecVertex();
+        const LHCb::HltObjectSummary::Info PV_info = Obj->numericalInfo();
+        std::vector<std::string> vec_keys = Obj->numericalInfoKeys();
+        if ( msgLevel(MSG::DEBUG) ) {
+          debug() << "Saved Rec::Vertex information: " << endmsg;
+          for(std::vector<std::string>::iterator it = vec_keys.begin(); it!=vec_keys.end(); it++) {
+            debug() << *it << " = " << PV_info[(*it)] << endmsg;
+          }
+        }
+        m_conv->RecVertexObjectFromSummary(&PV_info,refit_PV,true);
+        // Make sure technique is known as Primary
+        refit_PV->setTechnique(LHCb::RecVertex::Primary);
+        refit_PVs.push_back(refit_PV);
+      }
+    }
+    //
+
+    if(m_refitted){
+      std::stringstream ss_PVrefit;
+      ss_PVrefit << m_OutputPref << m_inputName << "/_ReFitPVs";
+      string sharedPVLoc = m_PVLoc;
+      m_PVLoc=ss_PVrefit.str().c_str();
+
+      // Need to deal with special case of a line refitting but asking for persist reco
+      // (standard particles will expect shared PV container)
+      LHCb::RecVertex::Container* cont_sharedPV = getIfExists<LHCb::RecVertex::Container>( sharedPVLoc.c_str() );
+      if( !cont_sharedPV ) {
+        if ( msgLevel(MSG::DEBUG) ) debug() << "Making PVs even though refitted ones will be used" << endmsg;
+        cont_sharedPV = new LHCb::RecVertex::Container() ;
+        put( cont_sharedPV , sharedPVLoc.c_str() );
+        for( auto iv = vtxRep->begin(); iv!=vtxRep->end(); iv++){
+          const LHCb::VertexBase* v = *iv;
+          LHCb::RecVertex* vnew = new LHCb::RecVertex();
+          // Turn the VertexBase from the vertex reports in to a RecVertex for packing
+          vnew->setChi2( v->chi2() );
+          vnew->setNDoF( v->nDoF() );
+          vnew->setPosition( v->position() );
+          vnew->setCovMatrix( v->covMatrix() );
+          vnew->setExtraInfo( v->extraInfo() );
+          vnew->setTechnique(LHCb::RecVertex::Primary);
+
+          // Fill PV container
+          cont_sharedPV->insert( vnew );
         }
       }
-      m_conv->RecVertexObjectFromSummary(&PV_info,refit_PV,true);
-      // Make sure technique is known as Primary
-      refit_PV->setTechnique(LHCb::RecVertex::Primary);
-      refit_PVs.push_back(refit_PV);
     }
-  }
-  //
-  
-  if(m_refitted){
-    std::stringstream ss_PVrefit;
-    ss_PVrefit << m_OutputPref << m_inputName << "/_ReFitPVs";
-    string sharedPVLoc = m_PVLoc;
-    m_PVLoc=ss_PVrefit.str().c_str();
-    
-    // Need to deal with special case of a line refitting but asking for persist reco
-    // (standard particles will expect shared PV container)
-    LHCb::RecVertex::Container* cont_sharedPV = getIfExists<LHCb::RecVertex::Container>( sharedPVLoc.c_str() );
-    if( !cont_sharedPV ) {
-      if ( msgLevel(MSG::DEBUG) ) debug() << "Making PVs even though refitted ones will be used" << endmsg;
-      cont_sharedPV = new LHCb::RecVertex::Container() ;
-      put( cont_sharedPV , sharedPVLoc.c_str() );
+
+    LHCb::RecVertex::Container* cont_PV = getIfExists<LHCb::RecVertex::Container>( m_PVLoc.c_str() );
+    bool reusePV = true;
+    if( !cont_PV ) {
+      if ( msgLevel(MSG::DEBUG) ) debug() << "Making PVs" << endmsg;
+      cont_PV = new LHCb::RecVertex::Container() ;
+      put( cont_PV , m_PVLoc.c_str() );
+      reusePV = false;
+    }
+    if( !reusePV && !m_refitted && m_PV3D ){
       for( auto iv = vtxRep->begin(); iv!=vtxRep->end(); iv++){
         const LHCb::VertexBase* v = *iv;
         LHCb::RecVertex* vnew = new LHCb::RecVertex();
+        if ( msgLevel(MSG::DEBUG) ) {
+          debug() << "Vertex chi2= " << v->chi2()<< ", ndf =" << v->nDoF()<< endmsg;
+          debug() << "Vertex key= " << v->key() << endmsg;
+        }
         // Turn the VertexBase from the vertex reports in to a RecVertex for packing
         vnew->setChi2( v->chi2() );
         vnew->setNDoF( v->nDoF() );
@@ -298,150 +314,170 @@ StatusCode TeslaReportAlgo::execute()
         vnew->setTechnique(LHCb::RecVertex::Primary);
 
         // Fill PV container
-        cont_sharedPV->insert( vnew );
+        cont_PV->insert( vnew );
       }
     }
-  }
-
-  LHCb::RecVertex::Container* cont_PV = getIfExists<LHCb::RecVertex::Container>( m_PVLoc.c_str() );
-  bool reusePV = true;
-  if( !cont_PV ) {
-    if ( msgLevel(MSG::DEBUG) ) debug() << "Making PVs" << endmsg;
-    cont_PV = new LHCb::RecVertex::Container() ;
-    put( cont_PV , m_PVLoc.c_str() );
-    reusePV = false;
-  }
-  if( !reusePV && !m_refitted && m_PV3D ){
-    for( auto iv = vtxRep->begin(); iv!=vtxRep->end(); iv++){
-      const LHCb::VertexBase* v = *iv;
-      LHCb::RecVertex* vnew = new LHCb::RecVertex();
-      if ( msgLevel(MSG::DEBUG) ) {
-        debug() << "Vertex chi2= " << v->chi2()<< ", ndf =" << v->nDoF()<< endmsg;
-        debug() << "Vertex key= " << v->key() << endmsg;
-      }
-      // Turn the VertexBase from the vertex reports in to a RecVertex for packing
-      vnew->setChi2( v->chi2() );
-      vnew->setNDoF( v->nDoF() );
-      vnew->setPosition( v->position() );
-      vnew->setCovMatrix( v->covMatrix() );
-      vnew->setExtraInfo( v->extraInfo() );
-      vnew->setTechnique(LHCb::RecVertex::Primary);
-
-      // Fill PV container
-      cont_PV->insert( vnew );
+    else if(m_refitted) {
+      if ( msgLevel(MSG::DEBUG) ) debug() << "Inserting refitted PVs to container" << endmsg;
+      for( auto pv : refit_PVs ) cont_PV->insert(pv);
     }
-  }
-  else if(m_refitted) {
-    if ( msgLevel(MSG::DEBUG) ) debug() << "Inserting refitted PVs to container" << endmsg;
-    for( auto pv : refit_PVs ) cont_PV->insert(pv);
-  }
 
-  //
-  Particle2Vertex::Table* cont_P2PV = new Particle2Vertex::Table() ;
-  put( cont_P2PV , ss_P2PVLoc.str().c_str() );
-
-  if(MotherRep){
-    if ( msgLevel(MSG::DEBUG) ){
-      debug() << "Reference: " << endmsg;
-      debug() << "Particle class ID = " << LHCb::Particle::classID() << endmsg;
-      debug() << "Track class ID = " << LHCb::Track::classID() << endmsg;
-      debug() << "RecVertex class ID = " << LHCb::RecVertex::classID() << endmsg;
-      debug() << "Vertex class ID = " << LHCb::Vertex::classID() << endmsg;
-      debug() << "ProtoParticle class ID = " << LHCb::ProtoParticle::classID() << endmsg;
-    }
     //
-    if ( msgLevel(MSG::DEBUG) ) debug() << *MotherRep << endmsg;
-    std::vector<LHCb::LHCbID> LHCbIDs = MotherRep->lhcbIDs();
-    if ( msgLevel(MSG::DEBUG) ) {
-      debug() << "MOTHER CLASS ID = " << MotherRep->summarizedObjectCLID() << endmsg;
-      debug() << "LHCbIDs.size() = " << LHCbIDs.size() << endmsg;
-    }
-    SmartRefVector <LHCb::HltObjectSummary> substructure = MotherRep->substructure();
-    if ( msgLevel(MSG::DEBUG) ) debug() << "Number of triggered candidates = " << substructure.size() << endmsg;
-    //
+    Particle2Vertex::Table* cont_P2PV = new Particle2Vertex::Table() ;
+    put( cont_P2PV , ss_P2PVLoc.str().c_str() );
 
-
-    int nCandidate = -1;
-
-    // loop over the trigger candidates
-    for( auto child : substructure ){
-      nCandidate++;
-      if ( msgLevel(MSG::DEBUG) ) {
-        debug() << "Starting loop over triggered candidates" << endmsg;
-        debug() << "Mother object CLASS ID = " << child.target()->summarizedObjectCLID() << endmsg;
+    if(MotherRep){
+      if ( msgLevel(MSG::DEBUG) ){
+        debug() << "Reference: " << endmsg;
+        debug() << "Particle class ID = " << LHCb::Particle::classID() << endmsg;
+        debug() << "Track class ID = " << LHCb::Track::classID() << endmsg;
+        debug() << "RecVertex class ID = " << LHCb::RecVertex::classID() << endmsg;
+        debug() << "Vertex class ID = " << LHCb::Vertex::classID() << endmsg;
+        debug() << "ProtoParticle class ID = " << LHCb::ProtoParticle::classID() << endmsg;
       }
-      LHCb::HltObjectSummary* Obj = child.target();
-
-      // Check we have turbo level information
-      if(m_conv->getSizeSelRepParticleLatest()<(int)Obj->numericalInfo().size()) turbo=true;
-
-      // do we have a basic particle?
-      // Assess basic by seeing if daughter particles present
-      double motherID = (int)Obj->numericalInfo()["0#Particle.particleID.pid"];
-      if ( msgLevel(MSG::DEBUG) ) debug() << "Found mother with ID: " << motherID << endmsg;
-      bool motherBasic = true;
-      if ( msgLevel(MSG::DEBUG) ) debug() << "Mother has substructure consisting of:" << endmsg;
-      for( auto it : Obj->substructure() ){
-        if ( msgLevel(MSG::DEBUG) ) debug() << (it).target()->summarizedObjectCLID() << endmsg;
-        if((it).target()->summarizedObjectCLID()==LHCb::Particle::classID()) motherBasic=false;
-      }
-
-      // make the objects to be stored
-      std::vector<ContainedObject*> newObjects_mother;
-      LHCb::Particle* Part = new LHCb::Particle();
-      newObjects_mother.push_back(Part);
-      cont_Part->insert( Part );
-      std::vector<ContainedObject*> calo_mother;
       //
-      if( motherBasic == true ){
-        //
-        LHCb::Track* track = new LHCb::Track();
-        newObjects_mother.push_back(track);
-        //
-        LHCb::ProtoParticle* proto = new LHCb::ProtoParticle();
-        newObjects_mother.push_back(proto);
-        cont_Proto->insert( proto );
-        //
-        LHCb::RichPID* rich = new LHCb::RichPID();
-        newObjects_mother.push_back(rich);
-        //
-        LHCb::MuonPID* muon = new LHCb::MuonPID();
-        newObjects_mother.push_back(muon);
-        //
+      if ( msgLevel(MSG::DEBUG) ) debug() << *MotherRep << endmsg;
+      std::vector<LHCb::LHCbID> LHCbIDs = MotherRep->lhcbIDs();
+      if ( msgLevel(MSG::DEBUG) ) {
+        debug() << "MOTHER CLASS ID = " << MotherRep->summarizedObjectCLID() << endmsg;
+        debug() << "LHCbIDs.size() = " << LHCbIDs.size() << endmsg;
+      }
+      SmartRefVector <LHCb::HltObjectSummary> substructure = MotherRep->substructure();
+      if ( msgLevel(MSG::DEBUG) ) debug() << "Number of triggered candidates = " << substructure.size() << endmsg;
+      //
 
-        fillParticleInfo( newObjects_mother , Obj , motherBasic, cont_Track, &calo_mother, cont_CaloHypo, cont_CaloClust );
 
-        // Make sure we don't insert zombie objects
-        if(track) cont_Track->insert( track );
-        if(muon) cont_MPID->insert( muon );
-        if(rich) cont_RPID->insert( rich );
+      int nCandidate = -1;
 
-        for( auto calo : calo_mother ){
-          if( calo->clID() == LHCb::CLID_CaloHypo && !calo->parent() ) cont_CaloHypo->insert( dynamic_cast<LHCb::CaloHypo*>( calo ) );
-          if( calo->clID() == LHCb::CLID_CaloCluster && !calo->parent() ) cont_CaloClust->insert( dynamic_cast<LHCb::CaloCluster*>( calo ) );
+      // loop over the trigger candidates
+      for( auto child : substructure ){
+        nCandidate++;
+        if ( msgLevel(MSG::DEBUG) ) {
+          debug() << "Starting loop over triggered candidates" << endmsg;
+          debug() << "Mother object CLASS ID = " << child.target()->summarizedObjectCLID() << endmsg;
+        }
+        LHCb::HltObjectSummary* Obj = child.target();
+
+        // Check we have turbo level information
+        if(m_conv->getSizeSelRepParticleLatest()<(int)Obj->numericalInfo().size()) turbo=true;
+
+        // do we have a basic particle?
+        // Assess basic by seeing if daughter particles present
+        double motherID = (int)Obj->numericalInfo()["0#Particle.particleID.pid"];
+        if ( msgLevel(MSG::DEBUG) ) debug() << "Found mother with ID: " << motherID << endmsg;
+        bool motherBasic = true;
+        if ( msgLevel(MSG::DEBUG) ) debug() << "Mother has substructure consisting of:" << endmsg;
+        for( auto it : Obj->substructure() ){
+          if ( msgLevel(MSG::DEBUG) ) debug() << (it).target()->summarizedObjectCLID() << endmsg;
+          if((it).target()->summarizedObjectCLID()==LHCb::Particle::classID()) motherBasic=false;
         }
 
-      }
-      else{
+        // make the objects to be stored
+        std::vector<ContainedObject*> newObjects_mother;
+        LHCb::Particle* Part = new LHCb::Particle();
+        newObjects_mother.push_back(Part);
+        cont_Part->insert( Part );
+        std::vector<ContainedObject*> calo_mother;
+        //
+        if( motherBasic == true ){
+          //
+          LHCb::Track* track = new LHCb::Track();
+          newObjects_mother.push_back(track);
+          //
+          LHCb::ProtoParticle* proto = new LHCb::ProtoParticle();
+          newObjects_mother.push_back(proto);
+          //
+          LHCb::RichPID* rich = new LHCb::RichPID();
+          newObjects_mother.push_back(rich);
+          //
+          LHCb::MuonPID* muon = new LHCb::MuonPID();
+          newObjects_mother.push_back(muon);
+          //
 
-        fillParticleInfo( newObjects_mother , Obj , motherBasic, cont_Track, &calo_mother, cont_CaloHypo, cont_CaloClust );
-        ProcessObject( 0, Part, Obj, cont_PV, cont_Vert, cont_Part,
-            cont_Proto, cont_RPID, cont_MPID, cont_Track, cont_CaloHypo, cont_CaloClust, cont_P2PV);
+          fillParticleInfo( newObjects_mother , Obj , motherBasic, cont_Track, &calo_mother, cont_CaloHypo, cont_CaloClust );
+          
+          // check if we already have the protoparticle in the shared container,
+          // if so use that one
+          bool protoClone=false;
+          for(auto iproto : *cont_Proto){
+            if(proto->track()){
+              // charged case
+              if(iproto->track()){
+                if( LHCb::HashIDs::overlap(proto->track(),iproto->track()).first>0.99 ) {
+                  // found the protoparticle already in the container
+                  delete proto; delete track; delete rich; delete muon;
+                  for( auto calo : calo_mother ){
+                    if( calo->clID() == LHCb::CLID_CaloHypo && !calo->parent() ) delete dynamic_cast<LHCb::CaloHypo*>( calo );
+                    if( calo->clID() == LHCb::CLID_CaloCluster && !calo->parent() ) delete dynamic_cast<LHCb::CaloCluster*>( calo );
+                  }
+                  proto = iproto;
+                  protoClone=true;
+                  break;
+                }
+              }
+            }
+            else{
+              // neutral case
+              if( iproto->calo().size() != proto->calo().size() ) continue;
+              // if we find a hypo that is not in the proto in the container then continue
+              unsigned int commonHypos=0;
+              for( auto hypo : proto->calo() ){
+                if( compareHypoPosition(hypo, iproto->calo())==hypo ){
+                  break;
+                }
+                else commonHypos++;
+              }
+              // if every hypo is in a proto already in the container, then use that proto
+              if( commonHypos==proto->calo().size() ){
+                delete proto;
+                proto=iproto;
+                protoClone=true;
+                break;
+              }
+            }
+          }
+          Part->setProto( proto );
 
-      }
-      
-      if( m_PV3D || m_refitted ) {
-        cont_P2PV->relate( Part , bestPV( Part, cont_PV ) );
-        if( msgLevel(MSG::DEBUG) ){
-          debug() << "Finding related PV" << endmsg;
-          if(bestPV( Part, cont_PV )){
-            debug() << "Related PV has chi^2: " << bestPV( Part, cont_PV )->chi2() << endmsg;
+          if(!protoClone){
+            cont_Proto->insert( proto );
+            // Make sure we don't insert zombie objects
+            if(track->type()!=LHCb::Track::Types::TypeUnknown) {
+              cont_Track->insert( track );
+              cont_MPID->insert( muon );
+              cont_RPID->insert( rich );
+            }
+            else{
+              delete track;
+              delete muon;
+              delete rich;
+            }
+
+            for( auto calo : calo_mother ){
+              if( calo->clID() == LHCb::CLID_CaloHypo && !calo->parent() ) cont_CaloHypo->insert( dynamic_cast<LHCb::CaloHypo*>( calo ) );
+              if( calo->clID() == LHCb::CLID_CaloCluster && !calo->parent() ) cont_CaloClust->insert( dynamic_cast<LHCb::CaloCluster*>( calo ) );
+            }
           }
         }
-      }
-    } // candidate (loop)
-  } // report exists (if)
+        else{
 
+          fillParticleInfo( newObjects_mother , Obj , motherBasic, cont_Track, &calo_mother, cont_CaloHypo, cont_CaloClust );
+          ProcessObject( 0, Part, Obj, cont_PV, cont_Vert, cont_Part,
+              cont_Proto, cont_RPID, cont_MPID, cont_Track, cont_CaloHypo, cont_CaloClust, cont_P2PV);
+
+        }
+
+        if( m_PV3D || m_refitted ) {
+          cont_P2PV->relate( Part , bestPV( Part, cont_PV ) );
+          if( msgLevel(MSG::DEBUG) ){
+            debug() << "Finding related PV" << endmsg;
+            if(bestPV( Part, cont_PV )){
+              debug() << "Related PV has chi^2: " << bestPV( Part, cont_PV )->chi2() << endmsg;
+            }
+          }
+        }
+      } // candidate (loop)
+    } // report exists (if)
+  }
   setFilterPassed(true);  // Mandatory. Set to true if event is accepted.
   if ( msgLevel(MSG::DEBUG) ) debug() << "End of algorithm execution" << endmsg;
   return StatusCode::SUCCESS;
@@ -461,6 +497,8 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, LHCb::Particle* Part, const LHC
     ){
 
   n+=1;
+  
+  
   LHCb::Vertex* vert_mother = new LHCb::Vertex();
   cont_Vert->insert( vert_mother );
 
@@ -473,14 +511,15 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, LHCb::Particle* Part, const LHC
       AddRelInfo(Obj_d,Part);
       continue;
     }
-
+    
     if( Obj_d->summarizedObjectCLID()==LHCb::RecVertex::classID() ) {
       if(n!=1) {
-        warning() << "RecVertex should not be here!!!" << endmsg;
+        warning() << "RecVertex found below the top level, probably indicates a shared stage refitted PVs and was then combined. The refitted PV will not be restored." << endmsg;
         return StatusCode::FAILURE;
       }
       else continue;
     }
+
     if( Obj_d->summarizedObjectCLID()==LHCb::Vertex::classID() ){
       // for a non-basic particle, the end vertex is the last
       // element of the substructure
@@ -517,7 +556,6 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, LHCb::Particle* Part, const LHC
       //
       LHCb::ProtoParticle* proto_d = new LHCb::ProtoParticle();
       newObjects_d.push_back(proto_d);
-      cont_Proto->insert( proto_d );
       //
       LHCb::RichPID* rich_d = new LHCb::RichPID();
       newObjects_d.push_back(rich_d);
@@ -529,14 +567,66 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, LHCb::Particle* Part, const LHC
       
       fillParticleInfo( newObjects_d , Obj_d , d_Basic, cont_Track, &calo_daughter, cont_CaloHypo, cont_CaloClust);
       
-      // Make sure we don't insert zombie objects
-      if(track_d) cont_Track->insert( track_d );
-      if(muon_d) cont_MPID->insert( muon_d );
-      if(rich_d) cont_RPID->insert( rich_d );
+      // check if we already have the protoparticle in the shared container,
+      // if so use that one
+      bool protoClone=false;
+      for(auto iproto : *cont_Proto){
+        if(proto_d->track()){
+          // charged case
+          if(iproto->track()){
+            if( LHCb::HashIDs::overlap(proto_d->track(),iproto->track()).first>0.99 ) {
+              // found the protoparticle already in the container
+              delete proto_d; delete track_d; delete rich_d; delete muon_d;
+              for( auto calo : calo_daughter ){
+                if( calo->clID() == LHCb::CLID_CaloHypo && !calo->parent() ) delete dynamic_cast<LHCb::CaloHypo*>( calo );
+                if( calo->clID() == LHCb::CLID_CaloCluster && !calo->parent() ) delete dynamic_cast<LHCb::CaloCluster*>( calo );
+              }
+              proto_d = iproto;
+              protoClone=true;
+              break;
+            }
+          }
+        }
+        else{
+          // neutral case
+          if( iproto->calo().size() != proto_d->calo().size() ) continue;
+          // if we find a hypo that is not in the proto in the container then continue
+          unsigned int commonHypos=0;
+          for( auto hypo_d : proto_d->calo() ){
+            if( compareHypoPosition(hypo_d, iproto->calo())==hypo_d ){
+              break;
+            }
+            else commonHypos++;
+          }
+          // if every hypo is in a proto already in the container, then use that proto
+          if( commonHypos==proto_d->calo().size() ){
+            delete proto_d;
+            proto_d=iproto;
+            protoClone=true;
+            break;
+          }
+        }
+      }
+      Part_d->setProto( proto_d );
       
-      for( auto calo : calo_daughter ){
-        if( calo->clID() == LHCb::CLID_CaloHypo && !calo->parent() ) cont_CaloHypo->insert( dynamic_cast<LHCb::CaloHypo*>( calo ) );
-        if( calo->clID() == LHCb::CLID_CaloCluster && !calo->parent() ) cont_CaloClust->insert( dynamic_cast<LHCb::CaloCluster*>( calo ) );
+      if(!protoClone){
+        cont_Proto->insert( proto_d );
+        // Make sure we don't insert zombie objects
+        if(track_d->type()!=LHCb::Track::Types::TypeUnknown) {
+          cont_Track->insert( track_d );
+          cont_MPID->insert( muon_d );
+          cont_RPID->insert( rich_d );
+        }
+        else{
+          delete track_d;
+          delete muon_d;
+          delete rich_d;
+        }
+
+        for( auto calo : calo_daughter ){
+          if( calo->clID() == LHCb::CLID_CaloHypo && !calo->parent() ) cont_CaloHypo->insert( dynamic_cast<LHCb::CaloHypo*>( calo ) );
+          if( calo->clID() == LHCb::CLID_CaloCluster && !calo->parent() ) cont_CaloClust->insert( dynamic_cast<LHCb::CaloCluster*>( calo ) );
+        }
       }
     }
     else {
@@ -727,6 +817,7 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
             //
             m_conv->CaloHypoObjectFromSummary(&hypo_info,hypotemp,turbo);
             LHCb::CaloHypo* hypo = compareHypoPosition(hypotemp,cont_CaloHypo);
+            debug() << "Hypo object Z: " << hypo->position()->z() << endmsg;
             if(hypo!=hypotemp) {
               if ( msgLevel(MSG::DEBUG) ) debug() << "Found already inserted hypo, using that one" << endmsg;
               delete hypotemp;
@@ -797,7 +888,7 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
     }
 
     // Only want to do this for charged particles, not neutral ones
-    part->setProto( proto );
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Track states vector of size: " << track->states().size() << endmsg;
     if(track->states().size()>0){
       proto->setMuonPID( muon );
       proto->setRichPID( rich );
@@ -840,11 +931,6 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
       if ( m_versionNum < 9 && Rich::ParticleIDType::Deuteron == rich->bestParticleID() ){
         rich->setBestParticleID( Rich::ParticleIDType::BelowThreshold );
       }
-    }
-    else {
-      delete muon;
-      delete track;
-      delete rich;
     }
 
     // add calorimeter hypos
@@ -1014,6 +1100,15 @@ LHCb::CaloHypo* TeslaReportAlgo::compareHypoPosition(LHCb::CaloHypo* calo, LHCb:
         + pow(calo->position()->z()-icalo->position()->z(),2.0)  
         + pow(calo->position()->e()-icalo->position()->e(),2.0) )<0.01; });
   if(found!=cont->end()) return *found;
+  return calo;
+}
+LHCb::CaloHypo* TeslaReportAlgo::compareHypoPosition(LHCb::CaloHypo* calo, SmartRefVector<LHCb::CaloHypo> cont){
+  auto found = std::find_if(cont.begin(),cont.end(),
+      [&calo](LHCb::CaloHypo* icalo){ return std::sqrt( pow(calo->position()->x()-icalo->position()->x(),2.0) 
+        + pow(calo->position()->y()-icalo->position()->y(),2.0) 
+        + pow(calo->position()->z()-icalo->position()->z(),2.0)  
+        + pow(calo->position()->e()-icalo->position()->e(),2.0) )<0.01; });
+  if(found!=cont.end()) return *found;
   return calo;
 }
 
