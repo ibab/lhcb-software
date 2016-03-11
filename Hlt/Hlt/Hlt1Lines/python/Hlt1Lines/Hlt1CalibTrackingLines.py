@@ -619,7 +619,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
                }
 
     for line, algos in to_build.iteritems():
-      l0 = "L0_ALL"
+      l0 = "L0_DECISION_PHYSICS"
       if 'Gamma' in line:
         l0 = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in ['Photon', 'Electron'] ] )
       self.build_line( line, algos, l0 )

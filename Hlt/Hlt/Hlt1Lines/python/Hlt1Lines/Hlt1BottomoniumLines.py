@@ -66,7 +66,7 @@ class Hlt1BottomoniumLinesConf( HltLinesConfigurableUser ) :
                  ,'Bb2KstKstMassMin'              :  8900    # MeV
                  ,'Bb2KstKstMassMax'              : 10000    # MeV                 
                                  
-                 ,'l0'                     : 'L0_ALL'
+                 ,'l0'                     : 'L0_DECISION_PHYSICS'
                  
                  }
 
@@ -324,6 +324,6 @@ class Hlt1BottomoniumLinesConf( HltLinesConfigurableUser ) :
       }
 
     for line, algos in to_build.iteritems():
-      l0 = "L0_ALL"
+      l0 = self.getProp("l0")
       self.build_line( line, algos, l0 )
 

@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2016-03-11 - Roel Aaij
+ - Use L0_DECISION_PHYSICS in Bottomonium and CalibTracking lines.
+
 !========================= Hlt1Lines v7r21 2016-02-26 =========================
 
 ! 2016-02-24 - Jibo He
