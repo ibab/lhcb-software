@@ -146,7 +146,7 @@ void ReportConvertTool::SummaryFromRaw(HltObjectSummary::Info* info, HltSelRepRB
           // Looking at Run 1 data, need to know which map to use
           if( subbank->size() == (m_recvertex_unordered_map2.at(1)).size() ) run1version = 1;
           else if( subbank->size() == (m_recvertex_unordered_map2.at(2)).size() ) run1version = 2;
-          used_map = m_particle_unordered_map2;
+          used_map = m_recvertex_unordered_map2;
           m_version=run1version;
         }
         else if( subbank->size()<m_recvertex_unordered_map2_Turbo.at( findBestPrevious( m_recvertex_unordered_map2_Turbo, m_version ) ).size() ) used_map = m_recvertex_unordered_map2;
@@ -1103,13 +1103,12 @@ void ReportConvertTool::CaloHypoObjectFromSummary( const HltObjectSummary::Info*
       case 5: object->setHypothesis( static_cast<LHCb::CaloHypo::Hypothesis>( (*info)[ calo_it->first ] ) ); break;
     }
   }
-  if(fabs(z+1.0)<0.01){
+  if(fabs(z+1.0)>0.01){
     xye(0) = x; 
     xye(1) = y; 
     xye(2) = e;
     object->position()->setZ( z );
   }
- 
 }
 
 void ReportConvertTool::RecVertexObjectFromSummary( const HltObjectSummary::Info* info, LHCb::RecVertex* object, bool turbo) {

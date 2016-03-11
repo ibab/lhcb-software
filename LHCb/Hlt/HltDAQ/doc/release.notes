@@ -6,6 +6,7 @@
 
 ! 2016-03-02 - Sean Benson
  - Version 9 of reports, includes ProbNNs.
+ - Fix for CaloHypo positions.
 
 !========================= HltDAQ v4r25 2016-02-09 =========================
 
