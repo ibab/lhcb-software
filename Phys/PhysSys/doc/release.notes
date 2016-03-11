@@ -3,7 +3,7 @@ Package             : PhysSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics packages
 
-</PRE><H1><A NAME=v21r1>2016-03-06 Phys v21r1</A></H1><PRE>
+</PRE><H1><A NAME=v21r1>2016-03-11 Phys v21r1</A></H1><PRE>
 Development release for 2016 data taking.
 Also needed for the stack for the run-I restripping.
 It is based on Gaudi v27r0, LHCb v40r0 and Rec v19r0 and uses LCG_83 with ROOT 6.06.00.
@@ -12,6 +12,9 @@ It is based on Gaudi v27r0, LHCb v40r0 and Rec v19r0 and uses LCG_83 with ROOT 6
   Phys/DaVinciKernel v12r4, Phys/PhysConf v1r32, Phys/VertexFit v6r24, Phys/RelatedInfoTools v1r5,
   Phys/LoKiJets v6r15, Phys/LoKiAlgo v9r11, Phys/LoKiTracks v3r6, Phys/JetAccessories v3r16p1,
   PhysSel/PhysSelPython v9r9.
+
+- Packages patched :
+  Hlt/HltDAQ v4r25p1 updated from patch v4r25 in previous Phys project release.
 
 - In Phys/DaVinciKernel v12r4 :
   . PVSentry: extend a bit to allow protect the whole decay tree.
