@@ -18,7 +18,6 @@ class LFVLines(Hlt2LinesConfigurableUser):
                              'ElectronProbNn': 0.93,
                              'ElectronTrChi2DoF': 3,
                              'ElectronTrGhostProb': 0.2,
-                             'ElectronVertexChi2DoF': 3,
                              'MassHigh': (m_jpsi + 500) * MeV,
                              'MassLow': (m_jpsi - 1000) * MeV,
                              'MuonProbNn': 0.9,
@@ -33,6 +32,7 @@ class LFVLines(Hlt2LinesConfigurableUser):
 
         for name, algos in self.algorithms(stages):
             Hlt2Line(name,
+                     L0DU="(L0_DATA('Spd(Mult)') < {})".format(self.getProp('SpdCut')['NSPD']),
                      prescale=self.prescale,
                      algos=algos,
                      postscale=self.postscale)

@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-03-11 - Kevin Dungs
+ - Fix SPD cut in Hlt2LFVJpsiMuE.
+
 ! 2016-03-10 - Roel Aaij
  - Fixed a bug in Hlt2LFVJpsiMuE.
 
