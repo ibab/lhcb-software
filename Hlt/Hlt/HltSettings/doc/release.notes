@@ -4,8 +4,12 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-03-11 - Roel Aaij
+ - Added settings for Hlt1BottomoniumLines and set {Multi,Di}MuonNoL0 L0 settings
+   to L0_DECISION_PHYSICS.
+
 ! 2016-03-06 - Jessica Prisciandaro
-- Added Sttange lines settings 
+- Added Strange lines settings 
 
 ! 2016-03-03 - Sascha Stahl
  - Removed duplication of Rare Strange and TriMuon in Physics_pp_Draft2016.py.

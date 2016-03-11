@@ -78,6 +78,7 @@ class Physics_pp_Draft2016( object ):
         from Hlt1Lines.Hlt1CalibTrackingLines   import Hlt1CalibTrackingLinesConf
         from Hlt1Lines.Hlt1LowMultLines         import Hlt1LowMultLinesConf
         from Hlt1Lines.Hlt1CalibRICHMirrorLines import Hlt1CalibRICHMirrorLinesConf
+        from Hlt1Lines.Hlt1BottomoniumLines     import Hlt1BottomoniumLinesConf
 
         thresholds = { Hlt1TrackLinesConf :   {  'AllL0_Velo_NHits'  : 9
                                                , 'AllL0_Velo_Qcut'   : 3
@@ -212,10 +213,10 @@ class Physics_pp_Draft2016( object ):
                                                                               'SingleMuonNoIP'   : ( 'Muon', ),
                                                                               'DiMuonLowMass'    : ( 'Muon', 'DiMuon' ),
                                                                               'DiMuonHighMass'   : ( 'Muon', 'DiMuon' ),
-                                                                              'DiMuonNoIP'   : ( 'Muon', 'DiMuon' ),
-                                                                              'MultiDiMuonNoIP'   : ( 'Muon', 'DiMuon' ),
-                                                                              'DiMuonNoL0'       : None,
-                                                                              'MultiMuonNoL0'    : None
+                                                                              'DiMuonNoIP'       : ( 'Muon', 'DiMuon' ),
+                                                                              'MultiDiMuonNoIP'  : ( 'Muon', 'DiMuon' ),
+                                                                              'DiMuonNoL0'       : 'L0_DECISION_PHYSICS',
+                                                                              'MultiMuonNoL0'    : 'L0_DECISION_PHYSICS'
                                                                              }
                                                , 'Prescale'                 : { 'Hlt1NoPVPassThrough': 1.0,
                                                                                 'Hlt1SingleMuonNoIP' : 0.01,
@@ -317,6 +318,45 @@ class Physics_pp_Draft2016( object ):
                                                           , 'LM_MaxTr' : 40
                                                           , 'LM_GEC'   : 'Loose'
                                                           }
+                       , Hlt1BottomoniumLinesConf : { 'PhiDauPT'             : 650     # MeV
+                                                    , 'PhiDauP'              : 3000    # MeV
+                                                    , 'PhiDauCHI2DOF'        : 3       # dimensionless
+                                                    , 'PhiDauIPCHI2'         : 12
+                                                    , 'PhiCombMaxDaughtPT'   : 1500    # MeV
+                                                    , 'PhiCombAPT'           : 1000    # MeV
+                                                    , 'PhiCombDOCA'          : 0.1     # mm
+                                                    , 'PhiCombVCHI2DOFLoose' : 10      # dimensionless
+                                                    , 'PhiMassWinLoose'      : 50      # MeV
+                                                    , 'PhiMassWin'           : 30      # MeV
+                                                    , 'PhiMassWinTight'      : 30      # MeV
+                                                    , 'PhiPT'                : 1200    # MeV
+                                                    , 'PhiPTLoose'           : 1000    # MeV
+                                                    , 'PhiSumPT'             : 1000    # MeV
+                                                    , 'Bb2PhiPhiAMassMin'    :  8500    # MeV
+                                                    , 'Bb2PhiPhiAMassMax'    : 11000    # MeV
+                                                    , 'Bb2PhiPhiMassMin'     :  8900    # MeV
+                                                    , 'Bb2PhiPhiMassMax'     : 10500    # MeV
+                                                    , 'KstDauPT'             : 1500    # MeV
+                                                    , 'KstDauP'              : 5000    # MeV
+                                                    , 'KstDauCHI2DOF'        : 2       # dimensionless  
+                                                    , 'KstDauIPCHI2'         : 12      
+                                                    , 'KstCombMaxDaughtPT'   : 2000    # MeV
+                                                    , 'KstCombAPT'           : 2000    # MeV
+                                                    , 'KstCombDOCA'          : 0.1     # mm
+                                                    , 'KstCombVCHI2DOFLoose' : 9       # dimensionless
+                                                    , 'KstMassWinLoose'      : 100      # MeV
+                                                    , 'KstMassWin'           : 75       # MeV
+                                                    , 'KstMassWinTight'      : 75       # MeV
+                                                    , 'KstPT'                : 2000     # MeV
+                                                    , 'KstPTLoose'           : 2000     # MeV
+                                                    , 'KstSumPT'             : 5000     # MeV
+                                                    , 'Bb2KstKstAMassMin'    :  8500    # MeV
+                                                    , 'Bb2KstKstAMassMax'    : 11000    # MeV
+                                                    , 'Bb2KstKstMassMin'     :  8900    # MeV
+                                                    , 'Bb2KstKstMassMax'     : 10000    # MeV                 
+                                                    , 'l0'                   : 'L0_DECISION_PHYSICS'
+                 
+                                                    }
                        , Hlt1LowMultLinesConf : { 'Prescale' : {"Hlt1LowMultPassThrough" : 0.01}
                                                 , 'SpdMult'  :   100.   # dimensionless, Spd Multiplicity cut
                                                 , 'VeloCut_Hadrons_MinVelo'     :     2    # dimensionless
@@ -392,8 +432,8 @@ class Physics_pp_Draft2016( object ):
                  , 'Hlt1LowMultMaxVeloCut'
                  , 'Hlt1LowMultPassThrough'
                  , 'Hlt1NoBiasNonBeamBeam'
-                   , 'Hlt1Bottomonium2PhiPhi'
-                   , 'Hlt1Bottomonium2KstarKstar']
+                 , 'Hlt1Bottomonium2PhiPhi'
+                 , 'Hlt1Bottomonium2KstarKstar']
                    
                    
                    
