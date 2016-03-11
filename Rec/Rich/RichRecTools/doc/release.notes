@@ -8,9 +8,9 @@
  - Update TabulatedSignalDetectionEff to use the MassHypothesisRingCreator
    mass hypothesis rings, instead of performing its own ray tracing, to
    save CPU due to ring reuse.
- - Use the meeted photon spetra, and not the detected one when computing
-   the average CK theta value for a given segment/hypothesis, when creating
-   the CK rings in MassHypothesisRingCreator. In theory not as good, but in
+ - Use the emitted photon spetra, not the detected one, when computing the
+   average CK theta value for a given segment/hypothesis, when creating the
+   CK rings in MassHypothesisRingCreator. In theory not as good, but in
    practise makes no difference, and required to prevent a circular dependency
    due to the above change.
 
