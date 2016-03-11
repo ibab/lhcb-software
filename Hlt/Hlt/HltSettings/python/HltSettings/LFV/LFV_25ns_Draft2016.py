@@ -30,14 +30,13 @@ class LFV_25ns_Draft2016(object):
                                   'ElectronProbNn': 0.93,
                                   'ElectronTrChi2DoF': 3,
                                   'ElectronTrGhostProb': 0.2,
-                                  'ElectronVertexChi2DoF': 3,
                                   'MassHigh': (m_jpsi + 500) * MeV,
                                   'MassLow': (m_jpsi - 1000) * MeV,
                                   'MuonProbNn': 0.9,
                                   'MuonTrChi2DoF': 3,
                                   'MuonTrGhostProb': 0.1,
-                                  'MuonVertexChi2DoF': 3},
-                      'SpdCut': {'NSPD': 350}}
+                                  'VertexChi2DoF': 3},
+                      'SpdCut': {'NSPD': 250}}
 
         from Hlt2Lines.LFV.Lines import LFVLines
         
