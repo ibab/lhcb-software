@@ -3,7 +3,7 @@
 # Maintainer : Tomasz Skwarnicki
 #=====================================================================
 package           HltDAQ
-version           v4r25
+version           v4r25p1
 
 #=====================================================================
 # Structure, i.e. directories to process.
