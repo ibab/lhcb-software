@@ -4,6 +4,14 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2016-03-11 - Chris Jones
+ - Some minor optimisations of the likelihood minimisation
+  + Implicitly start the log(exp(x)-1) interpolation table from x=0 instead of
+    x=<small value>. Allows for some instructions to be removed when computing
+    the table index from x.
+  + Remove some unused data members from the table data object.
+  + Remove some local temporaries from LikelihoodTool::deltaLogLikelihood.
+
 ! 2016-03-10 - Chris Jones
  - Add some direct member initialisation.
 

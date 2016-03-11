@@ -35,15 +35,6 @@
 #include "boost/numeric/conversion/bounds.hpp"
 #include "boost/limits.hpp"
 
-// Vc
-//#include "Vc/Vc"
-
-// Eigen
-//#include <Eigen/Geometry>
-
-// VectorClass
-//#include "VectorClass/vectorclass.h"
-
 // VDT
 #include "vdt/exp.h"
 #include "vdt/log.h"
@@ -79,10 +70,7 @@ namespace Rich
         virtual ~LikelihoodTool( );
 
         // Initialize method
-        virtual StatusCode initialize();
-
-        // Initialize method
-        virtual StatusCode finalize();
+        virtual StatusCode initialize() override;
 
       public: // IRichPID
 
@@ -150,15 +138,50 @@ namespace Rich
         public:
           /// Default Constructor
           LogExpLookUp() { clear(); }
-          /// Initialise
-          void init( const TYPE& minX, const TYPE& maxX, const unsigned int nBins )
+        private:
+          /// A single data point
+          class Data
+          {
+          public:
+            /// Constructor from bin low/high edges
+            Data( const TYPE& lowX, const TYPE& highX)
+            {
+              const TYPE absMinX = 1e-20; // avoid log(0) in next line
+              const auto lowY  = logexp( lowX > absMinX ? lowX : absMinX );
+              const auto highY = logexp( highX );
+              m_slope = ( lowY - highY ) / ( lowX - highX );
+              m_const = lowY - ( lowX * m_slope );
+            }
+            /// Get the y value for a given x for this Data point
+            inline TYPE getY( const TYPE& x ) const
+            {
+              return ( x * m_slope ) + m_const;
+            }
+          public:
+            /// The log(exp(x)-1) function to initialise the map
+            inline static TYPE logexp( const TYPE& x )
+            { 
+              return vdt::fast_logf( vdt::fast_expf(x) - 1.0f ); 
+            }
+          private:
+            /// The slope parameter
+            TYPE m_slope;
+            /// The constant parameter
+            TYPE m_const;
+          public:
+            /// type for a list of data points
+            typedef std::vector<Data> Vector;
+          };
+        public:
+          /// Initialise. Range is from 0 to maxX.
+          void init( const TYPE& maxX, const unsigned int nBins )
           {
             // clear the current interpolation data
             clear();
             // reset the cached parameters
-            m_minX = minX;
+            // not that minX is implicitly 0
             m_maxX = maxX;
-            m_incX = (double)nBins / ( m_maxX - m_minX );
+            m_incX = (double)nBins / m_maxX ;
             // refill the data vector
             m_data.reserve( nBins );
             for ( unsigned int i = 0; i < nBins; ++i )
@@ -169,52 +192,19 @@ namespace Rich
           inline TYPE lookup( const TYPE& x ) const
           {
             return ( x < m_maxX ? m_data[xIndex(x)].getY(x) :
-                     vdt::fast_logf( vdt::fast_expf(x) - 1.0f ) );
+                     LogExpLookUp::Data::logexp(x) );
           }
-        private:
-          /// A single data point
-          class Data
-          {
-          public:
-            /// Constructor from bin low/high edges
-            Data( const TYPE& lowX, const TYPE& highX)
-              : m_xLow(lowX),         m_xHigh(highX),
-                m_yLow(logexp(lowX)), m_yHigh(logexp(highX))
-            {
-              m_slope = ( m_yLow - m_yHigh ) / ( m_xLow - m_xHigh );
-              m_const = m_yLow - ( m_xLow * m_slope );
-            }
-            /// Get the y value for a given x for this Data point
-            inline TYPE getY( const TYPE& x ) const
-            {
-              return ( x * m_slope ) + m_const;
-            }
-          private:
-            /// The log(exp(x)-1) function to initialise the map
-            inline TYPE logexp( const TYPE& x ) const
-            { return vdt::fast_logf( vdt::fast_expf(x) - 1.0f ); }
-          private:
-            // The (x,y) values for the low and high edge of this bin
-            TYPE m_xLow, m_xHigh, m_yLow, m_yHigh;
-            /// The slope parameter
-            TYPE m_slope;
-            /// The constant parameter
-            TYPE m_const;
-          public:
-            /// type for a list of data points
-            typedef std::vector<Data> Vector;
-          };
         private:
           /// Clear this object
           void clear()
           {
             m_data.clear();
-            m_minX = m_maxX = m_incX = 0;
+            m_maxX = m_incX = 0;
           }
           /// Get the low x value for a given bin index
           inline TYPE binLowX( const unsigned int i ) const
           {
-            return m_minX + (i/m_incX);
+            return (i/m_incX);
           }
           /// GGet the high x value for a given bin index
           inline TYPE binHighX( const unsigned int i ) const
@@ -225,13 +215,11 @@ namespace Rich
            *  Note NO range checking is done. Assumed done beforehand */
           inline unsigned int xIndex( const TYPE& x ) const
           {
-            return (unsigned int)((x-m_minX)*m_incX);
+            return (unsigned int)(x*m_incX);
           }
         private:
           /// The look up vector of data points
           typename Data::Vector m_data;
-          /// The minimum valid x
-          TYPE m_minX;
           /// The maximum valid x
           TYPE m_maxX;
           /// 1 / the bin increment
@@ -267,15 +255,6 @@ namespace Rich
         /// track to the given hypothesis
         double deltaLogLikelihood( LHCb::RichRecTrack * track,
                                    const Rich::ParticleIDType newHypo ) const;
-
-        /// Implementation of log( e^x -1 ) (Original)
-        //float logExpOriginal( const float x ) const;
-
-        /// Implementation of log( e^x -1 ) (Eigen)
-        //float logExpEigen( const float x ) const;
-
-        /// Implementation of log( e^x -1 ) (VectorClass)
-        //float logExpVectorClass( const float x ) const;
 
         /// Implementation of log( e^x -1 ) (Private Interpolator)
         inline float logExpInterp( const float x ) const
