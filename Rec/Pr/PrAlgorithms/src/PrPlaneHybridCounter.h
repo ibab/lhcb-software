@@ -2,7 +2,6 @@
 #define PRPLANEHYBRIDCOUNTER_H 1
 
 // Include files
-
 /** @class PrPlaneHybridCounter PrPlaneHybridCounter.h
  *  Class to count how many different planes are in a List and how many planes with a single hit fired. It also check if the content of hits is distributed in the SciFi in a proper way 1 hit per station X ( and UV ).
  *
@@ -62,24 +61,25 @@ public:
       //UV Layer T3
       m_nbT3UV=0;
       m_nbT3UV_singleHit=0;
+      //single hits in T1 / T3 
       m_nbT1_singleHit = 0;
       m_nbT2_singleHit = 0;
       m_nbT3_singleHit = 0;
     }
     PrHit *hit = nullptr;
-    for( PrHits::const_iterator itH = itBeg; itEnd != itH; ++itH) {
+    for( auto itH = itBeg; itEnd != itH; ++itH) {
       m_nbHits++;
       hit = (*itH);
       if(hit->isUsed()) m_nbUsed++;
       unsigned int plane = hit->planeCode();
       if( m_planeList[plane] >0 ){m_planeList[plane]++;}
-      //if no hits in the plane, increase the counters anyway even if the plane
+      //if no hits in the plane, increase the counters anyway
       if( 0 == m_planeList[ plane ] ){
         m_planeList[plane]++;
         m_nbFiredLayers_singleHit++;
         m_nbFiredLayers++;
         if( isT1(hit) ){ // increase conters of T1
-          m_nbT1++;                                                                                                     
+          m_nbT1++;
           m_nbT1_singleHit++;
           if( hit->isX() ){
             m_nbT1X++;
@@ -109,46 +109,13 @@ public:
             m_nbT3UV_singleHit++;
           }
         }
-      }
-      
-      //  if( isT1(hit) &&  hit->isX()){
-      //     m_nbT1X++  ; 
-      //     m_nbT1X_singleHit++;  
-      //   }
-      //   if(isT1(hit) && !hit->isX()){
-      //     m_nbT1UV++ ; 
-      //     m_nbT1UV_singleHit++; 
-      //   }
-      //   if( isT2(hit) &&  hit->isX()){ 
-      //     m_nbT2X++  ; 
-      //     m_nbT2X_singleHit++;  
-      //   }
-      //   if( isT2(hit) && !hit->isX()){ 
-      //     m_nbT2UV++ ;
-      //     m_nbT2UV_singleHit++; 
-      //   }
-      //   if( isT3(hit) &&  hit->isX()){ 
-      //     m_nbT3X++  ; 
-      //     m_nbT3X_singleHit++;  
-      //   }
-      //   if( isT3(hit) && !hit->isX()){
-      //     m_nbT3UV++ ; m_nbT3UV_singleHit++; 
-      //   }
-      //   if(isT1(hit)){ 
-      //     m_nbT1++; m_nbT1_singleHit++;  }
-      //   if(isT2(hit)){ 
-      //     m_nbT2++; m_nbT2_singleHit++;  }
-      //   if(isT3(hit)){ 
-      //     m_nbT3++; m_nbT3_singleHit++;  }
-      // }
-      if(2 == m_planeList[plane]){
+      }else if(2 == m_planeList[plane]){ // you have already increased it in the >0 condition, never from ==0 conditio
         m_nbFiredLayers_singleHit --;
-        if( isT1(hit) ){
-          m_nbT1_singleHit--;
-          if( hit->isX() ){ 
-            m_nbT1X_singleHit--;
-          }else{  
-            m_nbT1UV_singleHit--;}
+        if( isT1(hit) ){ m_nbT1_singleHit--;
+          if( hit->isX() ){  m_nbT1X_singleHit--;
+          }else{ 
+            m_nbT1UV_singleHit--; 
+          }
         }else if( isT2(hit)){
           m_nbT2_singleHit--;
           if(hit->isX()){
@@ -165,17 +132,6 @@ public:
           }
         }
       }
-      // m_nbFiredLayers_singleHit--;
-      //   if( isT1(hit) && hit->isX()) { m_nbT1X_singleHit--;}
-      //   if( isT1(hit) && !hit->isX()){ m_nbT1UV_singleHit--;}
-      //   if( isT2(hit) && hit->isX() ) { m_nbT2X_singleHit--; }
-      //   if( isT2(hit)&& !hit->isX()){ m_nbT2UV_singleHit--;}
-      //   if( isT3(hit) && hit->isX()) { m_nbT3X_singleHit--; }
-      //   if( isT3(hit) && !hit->isX()){ m_nbT3UV_singleHit--;}
-      //   if(isT1(hit)){ m_nbT1_singleHit--; }
-      //   if(isT2(hit)){ m_nbT2_singleHit--; }
-      //   if(isT3(hit)){ m_nbT3_singleHit--; }
-      // }
     }//end loop hits
   }
   
@@ -183,10 +139,10 @@ public:
     //if(hit->isUsed()) return m_nbFiredLayers;
     unsigned int plane = hit->planeCode();
     m_nbHits++;
-    
     if( 0 == m_planeList[plane]++){
        m_nbFiredLayers_singleHit ++;
        m_nbFiredLayers ++;
+       // optimization with the elseif possible here ( not used anyway)
        if( isT1(hit) && hit->isX()) { m_nbT1X++; m_nbT1X_singleHit++;}
        if( isT1(hit) && !hit->isX()){ m_nbT1UV++ ;m_nbT1UV_singleHit++;}
        if( isT2(hit) && hit->isX()) { m_nbT2X++; m_nbT2X_singleHit++;}
@@ -260,7 +216,7 @@ public:
     unsigned int m_uvlist[12];
     unsigned int nDiff = 0;
     std::fill( m_uvlist,m_uvlist+12,0);
-    for( PrHits::iterator it = itBeg; itEnd!=it ; ++it){
+    for( auto it = itBeg; itEnd!=it ; ++it){
       if((*it)->isX()) continue;
       if( m_uvlist[ (*it)->planeCode() ] == 0){
         m_uvlist[(*it)->planeCode()]++; nDiff++;
@@ -268,10 +224,6 @@ public:
     }
     return nDiff;
   }
-  
-  //  bool isOKHole() const{
-    
-  //}
   
   bool isOK2() const{
     return ( isOK() && isOKUV() && (m_nbT1X+m_nbT1UV>=3) && (m_nbT2X+m_nbT2UV>=3) && (m_nbT3X+m_nbT3UV>=3));
@@ -293,21 +245,25 @@ public:
     return false;
   }
   unsigned int nbInPlane( const int plane) const{return m_planeList[plane];}
+  unsigned int nbInPlane( int plane){ return m_planeList[plane];}
+    
   //Checkers for the Hits
-  bool isT1(const PrHit *hit)const{
+  inline bool isT1(const PrHit *hit)const{
     if( hit->planeCode()>-1 && hit->planeCode() <4){
       return true;
     }
     return false;
   }
-  bool isT2(const PrHit *hit)const{
+  void removeHitInPlane( unsigned int plane) { m_planeList[plane]--; return;}
+  
+  inline bool isT2(const PrHit *hit)const{
     if(hit->planeCode() >3 && hit->planeCode() <8){
       return true;
     }
     return false;
   }
   
-  bool isT3(const PrHit *hit)const{
+  inline bool isT3(const PrHit *hit)const{
     if( hit->planeCode() >7 && hit->planeCode() < 12){
       return true;
     }

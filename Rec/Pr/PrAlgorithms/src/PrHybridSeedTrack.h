@@ -12,15 +12,32 @@
  *  @date   2015-05-13
  */
 //Comment it if you don't want to do truth matching
+#include "LHCbMath/BloomFilter.h"
+
 class PrHybridSeedTrack {
 public: 
+  
+  typedef BloomFilter<LHCb::LHCbID, 6, 98, 16384>  XHitFingerPrint;
+  const XHitFingerPrint& bloomfilter() const noexcept{
+    return m_ids;
+  }
+private:
+  XHitFingerPrint m_ids;
+public:
+  void updateIDs() noexcept{
+    m_ids.clear();
+    for( auto&&hit:m_hits){
+      m_ids.insert(hit->id());
+    }
+  }
+public:
   /// Constructor with the z reference
-  PrHybridSeedTrack( unsigned int zone, double zRef ) 
+  PrHybridSeedTrack( unsigned int zone, float zRef ) 
     : m_zone( zone ), m_zRef( zRef ){
     init();
   };
   
-  PrHybridSeedTrack( unsigned int zone, double zRef, PrHits& hits )
+  PrHybridSeedTrack( unsigned int zone, float zRef, PrHits& hits )
     : m_zone( zone ), m_zRef( zRef ), m_hits( hits ){
     init();
   }; 
@@ -44,35 +61,51 @@ public:
   //SETTERS & Getters  Genearl One
   //====================================
   //***********Track Parameters to compute distances
-  void setParameters( double ax, double bx, double cx, double ay, double by ) {
+  void setParameters( float ax, float bx, float cx, float ay, float by ) {
     m_ax = ax;
     m_bx = bx;
     m_cx = cx;
     m_ay = ay;
     m_by = by;
   }
-  double ax()                      const { return m_ax;}
-  double bx()                      const { return m_bx;}
-  double cx()                      const { return m_cx;}
-  double ay()                      const { return m_ay;}
-  double by()                      const { return m_by;}
+  float ax()                      const { return m_ax;}
+  float bx()                      const { return m_bx;}
+  float cx()                      const { return m_cx;}
+  float ay()                      const { return m_ay;}
+  float by()                      const { return m_by;}
   
   //**********Update the parameters of a track iteratively in the Fit
-  void updateParameters( double dax, double dbx, double dcx,
-                         double day=0., double dby= 0.  ) {
+  void updateParameters( float dax, float dbx, float dcx,
+                         float day=0., float dby= 0.  ) {
     m_ax += dax;
     m_bx += dbx;
     m_cx += dcx;
     m_ay += day;
     m_by += dby;
   }
-  void setYParam( double ay=0., double by=0.){
+  void setYParam( float ay=0., float by=0.){
     m_ay = ay;
     m_by = by;
   }
-  // void setnDiff( unsigne int i){
-  //   m_nDiff = i;
-  // }
+  
+  void setXT1( float value){
+    m_xT1 = value;
+  }
+  float xT1( ) const{
+    return m_xT1;
+  }
+  void setXT3( float value){
+    m_xT3 = value;
+  }
+  float xT3( )const{
+    return m_xT3;
+  }
+  void setXT2(float value){
+    m_xT2 = value;
+  }
+  float xT2()const{
+    return m_xT2;
+  }
   
   void setnXnY( unsigned int nx, unsigned int ny){
     m_nx = nx;
@@ -80,47 +113,32 @@ public:
   }
   unsigned int nx() const{return m_nx;}
   unsigned int ny() const{return m_ny;}
-
+  
 
   //validity
   void setValid( bool v )               { m_valid = v; }
   bool   valid()                 const { return m_valid; }
   //dRatio
-
-  void setdRatio( double dRatio )       { m_dRatio = dRatio;}
-  double dRatio()                 const{return m_dRatio;}
+  void setdRatio( float dRatio )       { m_dRatio = dRatio;}
+  float dRatio()                 const{return m_dRatio;}
   
   // chi2
-  void setChi2(double chi2, int nDoF) { m_chi2 = chi2;m_nDoF = nDoF;m_chi2DoF = m_chi2/m_nDoF; }
-  double chi2()                   const { return m_chi2; }
-  double chi2PerDoF()         const { return m_chi2DoF;}//m_chi2 / m_nDoF;}
+  void setChi2(float chi2, int nDoF) { m_chi2 = chi2;m_nDoF = nDoF;m_chi2DoF = m_chi2/m_nDoF; }
+  float chi2()                   const { return m_chi2; }
+  float chi2PerDoF()         const { return m_chi2DoF;}//m_chi2 / m_nDoF;}
   int nDoF()                        const { return m_nDoF; }
-  //MeanDy
-  // double meanDy()             const { return m_meanDy; }
-  // void setMeanDy( double meanDy )        { m_meanDy = meanDy;}
-  //MaxChi2OnHit
-  void setMaxChi2(double val1)                { m_maxChi2 = val1;}
-  double MaxChi2()              const { return m_maxChi2;}
- 
-  //BackProjection
-  void setX0(double X0)                  { m_X0=X0;}
-  double X0()                      const { return m_X0;}
 
-  //RefitX status
-  // int RefitX()                        const { return m_RefitX;}
-  // void setRefitX(int Refit)                         { m_RefitX = Refit;}
-  
-  //dXCoord
-  // void setDXCoord( double dxCoord )        { m_dXCoord = dxCoord;}  
-  // double dXCoord()             const { return m_dXCoord; }
-  //y(at a given z)
-  double y( double z )          const { return (m_ay + m_by*z);}
+  //BackProjection
+  void setX0(float X0)                  { m_X0=X0;}
+  float X0()                      const { return m_X0;}
+
+  float y( float z )          const { return (m_ay + m_by*z);}
   //Slope by
-  double ySlope( )               const { return m_by; }
+  float ySlope( )               const { return m_by; }
   
   //X at a given Z
-  double x( double z )const{
-    const double dz = z-m_zRef;
+  float x( float z )const{
+    const float dz = z-m_zRef;
     return m_ax + dz * ( m_bx + dz* m_cx * (1.+m_dRatio*dz) );
   }
   void setType( int type){
@@ -130,8 +148,8 @@ public:
     return m_type;
   }
   //Slope X-Z plane track at a given z
-  double xSlope( double z )const{ 
-    const double dz = z-m_zRef;
+  float xSlope( float z )const{ 
+    const float dz = z-m_zRef;
     return m_bx + 2.*dz*m_cx + 3.*dz*dz*m_cx*m_dRatio; //is it need?
   }
   void setCase(unsigned int Case){
@@ -141,39 +159,29 @@ public:
     return m_case;
   }
   //y positon on Track
-  double yOnTrack( PrHit* hit ) const{ return hit->yOnTrack( m_ay , m_by ); }
+  float yOnTrack( PrHit* hit ) const{ return hit->yOnTrack( m_ay , m_by ); }
   //distance from Hit of the track
-  double distance( PrHit* hit ) const{ 
-    double yTra = yOnTrack(hit); //is it needed for x - layers?
+  float distance( PrHit* hit ) const{ 
+    float yTra = yOnTrack(hit); //is it needed for x - layers?
     return hit->x( yTra ) - x( hit->z(yTra) );
   }
   //Chi2 contribution from a single Hit
-  double chi2( PrHit* hit )           const{ 
-    const double d = distance( hit );
-    double w = hit->w();
-    if(m_slopeCorr){
-      double yTra = yOnTrack(hit);
-      const double Corr = std::cos(xSlope( (double) hit->z(yTra) ));
-      w = hit->w()*(Corr*Corr);
-    }
+  float chi2( PrHit* hit )           const{ 
+    const float d = distance( hit );
+    float w = hit->w();
     return d * d * w;
   }
-  void setSlopeCorr( bool corr){
-    m_slopeCorr = corr;
-  }
-  bool slopeCorr() const{
-    return m_slopeCorr;
-  }
   //DeltaY
-  double deltaY( PrHit* hit )        const{
-    if ( hit->isX() ) return 0.;
+  float deltaY( PrHit* hit )        const{
+    if ( hit->isX() ) return 0.f;
     return distance( hit ) / hit->dxDy();
   }
   void sortbyz(){
     std::sort(m_hits.begin(),m_hits.end(),[](const PrHit* hit1, const PrHit* hit2)->bool{return hit1->z()<hit2->z();});
   }
+  
   struct GreaterBySize{//Before elements with lower n hits later and lower Chi2
-    bool operator() (const PrHybridSeedTrack& lhs, const PrHybridSeedTrack& rhs) const { 
+    inline bool operator() (const PrHybridSeedTrack& lhs, const PrHybridSeedTrack& rhs) const {
       if( lhs.hits().size() == rhs.hits().size() ){
         return lhs.chi2PerDoF() > rhs.chi2PerDoF();
       }
@@ -182,7 +190,7 @@ public:
     }
   };
   struct LowerBySize{ //Before higher number of hits and better chi2
-    bool operator() ( const PrHybridSeedTrack& lhs, const PrHybridSeedTrack& rhs) const{
+    inline bool operator() ( const PrHybridSeedTrack& lhs, const PrHybridSeedTrack& rhs) const{
       if(lhs.hits().size() == rhs.hits().size()){
         return lhs.chi2PerDoF() < rhs.chi2PerDoF();
       }
@@ -190,13 +198,7 @@ public:
     }
   };
   
-  
-    
-  // struct LowerBySize{
-  // bool operator() ( const PrHybridSeedTrack& lhs, const PrHybridSeedTrack rhs) const { return lhs.hits().size() < rhs.hits().size(); }
-  // }
-  
-  int size() const{
+  unsigned int size() const{
     return m_hits.size();
   };
   
@@ -205,49 +207,51 @@ protected:
 private:
 
   void init(){
-    m_type = -1;
-    m_slopeCorr = false;
+    // m_xT1 = std::numeric_limits<float>::min();
+    // m_xT3 = std::numeric_limits<float>::max();
+    // m_xT2 = std::numeric_limits<float>::min();
     m_valid = true;
     m_hits.reserve( 32 );
+    //m_ids.reserve(12);
     m_case = -1;
     m_nx = 0;
     m_ny = 0;
     //track params
-    m_ax = 0.;
-    m_bx = 0.;
-    m_cx = 0.;
-    m_by = 0.;
-    m_ay = 0.;
+    m_ax = 0.f;
+    m_bx = 0.f;
+    m_cx = 0.f;
+    m_by = 0.f;
+    m_ay = 0.f;
     //track chi2 settings
-    m_chi2 = 0.;
-    m_chi2DoF = 0.;
+    m_chi2 = 0.f;
+    m_chi2DoF = 0.f;
     m_nDoF = -1;
-    m_dRatio = 0.;
-    m_X0 = -99999.;
-    m_maxChi2 = -99999.;
+    m_dRatio = 0.f;
+    m_X0 = std::numeric_limits<float>::min();
   }
   //Global Private variables
 private:
-  double m_chi2DoF;
+  float m_chi2DoF;
   int m_type;
-  bool m_slopeCorr;
   unsigned int m_nx;
   unsigned int m_ny;
-  // int m_nUVLine;  
+  // int m_nUVLine;
   unsigned int m_zone;
-  double       m_zRef;
+  float       m_zRef;
   PrHits       m_hits;
   bool         m_valid;
   int          m_nDoF;
-  double       m_chi2;
-  double       m_ax;
-  double       m_bx;
-  double       m_cx;
-  double       m_ay;
-  double       m_by;
-  double       m_dRatio;
-  double       m_maxChi2;
-  double       m_X0;
+  float       m_chi2;
+  float       m_ax;
+  float       m_bx;
+  float       m_cx;
+  float       m_ay;
+  float       m_by;
+  float       m_dRatio;
+  float       m_X0;
+  float       m_xT1;
+  float       m_xT2;
+  float       m_xT3;
   unsigned int m_case;
 };
 

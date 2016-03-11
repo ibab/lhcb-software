@@ -16,6 +16,10 @@
 #include "TfKernel/RecoFuncs.h"
 #include "Event/MCParticle.h"
 
+//this defines the depth for 4/5/6 uv-hits in the stored clusters the depth at which you store them
+//
+#define DEPTH_HOUGH 3
+
 /** @class PrHybridSeeding PrHybridSeeding.h
  *  Stand-alone seeding for the FT T stations
  *  Used for the upgrade tracker TDR
@@ -116,10 +120,6 @@ protected:
    * @param part (if 1, y<0 ; if 0 , y>0)
    */
   void findXProjections( unsigned int part, unsigned int iCase);
-  /** @brief Add Hits on the x-z projection found
-   *   @param part lower (1) or upper (0) half
-   */
-  void addStereo( unsigned int part , unsigned int iCase);
   
   /** @brief Collect Hits in UV layers given the tolerances
    * @param xProje x-z plane track projection
@@ -134,7 +134,8 @@ protected:
       The hough clusters are pre-stored in a 3X3 matrix so that the algorithm is much faster
       Need some re-tuning of parameters. it allows to not let explode the timing when TolTy is large
   */
-  void addStereo2( unsigned int part , unsigned int iCase);
+  void addStereo( unsigned int part , unsigned int iCase);
+  
   typedef PrHits::iterator HitIter;
   typedef std::pair<HitIter,HitIter> IteratorPair;
   typedef std::vector< IteratorPair > HitIterPairs; //Vector of iterators
@@ -147,7 +148,7 @@ protected:
   
   /** @brief, It checks if the hough cluster satisfy the tolerance 
    */
-  bool CheckCluster( PrHits::iterator& itBeg, PrHits::iterator& itEnd, double tol);
+  bool CheckCluster( PrHits::iterator& itBeg, PrHits::iterator& itEnd, float tol);
   
   
   /** @brief, It increases the iterators
@@ -157,12 +158,14 @@ protected:
   
   /** @brief Check if the found line in the hough cluster satisfy the selection criteria
    */
-  bool LineOK( double chi2low, double chi2high, PrLineFitterY& line, PrHybridSeedTrack& temp);
+  bool LineOK( float chi2low, float chi2high, PrLineFitterY& line, PrHybridSeedTrack& temp);
   
   
   /** @brief Remove Clones of produced tracks for each Case and part
    */
   void removeClonesX( unsigned int part, unsigned int iCase , bool xOnly);
+  
+  void removeFlagged( unsigned int part, unsigned int iCase, bool xOnly);
   
   
   /** @brief Remove Clones of produced tracks once all cases are run
@@ -227,15 +230,6 @@ protected:
    */
   void printTrack( PrHybridSeedTrack& track );
   
-  /** @brief Internal method to construct parabolic parametrisation out of three hits, using Cramer's rule.
-   *  @param hit1 First hit
-   *  @param hit2 Second hit
-   *  @param hit3 Third hit
-   *  @param a quadratic coefficient
-   *  @param b linear coefficient
-   *  @param c offset
-   */
-  void solveParabola(const PrHit* hit1, const PrHit* hit2, const PrHit* hit3, double& a, double& b, double& c);
   /** @brief Internal method to construct parabolic parametrisation + cubic correction included out of three hits, using Cramer's rule.
    *  @param hit1 First hit
    *  @param hit2 Second hit
@@ -244,40 +238,36 @@ protected:
    *  @param b linear coefficient
    *  @param c offset
    */
-  void solveParabola2(const PrHit* hit1, const PrHit* hit2, const PrHit* hit3, double& a1, double& b1, double& c1);
+  void solveParabola(const PrHit* hit1, const PrHit* hit2, const PrHit* hit3, float& a1, float& b1, float& c1);
   
   /// Classe to find lower bound of x of PrHits
   class lowerBoundX {
   public:
-    bool operator() (const PrHit* lhs, const double testval ) const { return lhs->x() < testval; }
+    inline bool operator() (const PrHit* lhs, const float testval ) const { return lhs->x() < testval; }
   };
   /// Classe to find upper bound of x of PrHits
   class upperBoundX {
   public:
-    bool operator() (const double testval, const PrHit* rhs) const { return testval < rhs->x(); }
+    inline bool operator() (const float testval, const PrHit* rhs) const { return testval < rhs->x(); }
   };
   /// Class to compare x positions of PrHits
   class compX {
   public:
-    bool operator() (const PrHit* lhs, const PrHit* rhs ) const { return lhs->x() < rhs->x(); }
+    inline bool operator() (const PrHit* lhs, const PrHit* rhs ) const { return lhs->x() < rhs->x(); }
   };
   ///Class to find lower bound of LHCbIDs of PrHits
   class lowerBoundLHCbID {
   public:
-    bool operator() (const PrHit* lhs, const LHCb::LHCbID id ) const { return lhs->id() < id; }
+    inline bool operator() (const PrHit* lhs, const LHCb::LHCbID id ) const { return lhs->id() < id; }
   };
   ///Class to compare LHCbIDs of PrHits
   class compLHCbID {
   public:
-    bool operator() (const PrHit* lhs, const PrHit* rhs ) const { return lhs->id() < rhs->id(); }
+    inline bool operator() (const PrHit* lhs, const PrHit* rhs ) const { return lhs->id() < rhs->id(); }
   };
   
 private:
   //-------------Names for input container(if forward as input), output container name, HitManager name
-  bool m_SlopeCorr;
-  bool m_stereo2;
-  
-  
   std::string        m_inputName;
   std::string        m_outputName;
   std::string        m_hitManagerName;
@@ -289,7 +279,6 @@ private:
   unsigned int   m_nCases;
   bool               m_doTiming;
   bool               m_printSettings;
-  bool               m_useCubic;
   bool               m_removeClones;
   bool               m_removeClonesX;
   bool               m_FlagHits;
@@ -298,97 +287,82 @@ private:
   //------------X-search parametrisation
   //1st / Last Layer search windows
   
-  std::vector<double> m_alphaCorrection;
-  std::vector<double> m_TolFirstLast;
+  std::vector<float> m_alphaCorrection;
+  std::vector<float> m_TolFirstLast;
   
   
   //Add of the third hit in middle layers (p and Pt dependent, i.e., case dependent)
-  std::vector<double> m_x0Corr;
-  std::vector<double> m_x0SlopeChange;
-  std::vector<double> m_TolX0SameSign;
-  std::vector<double> m_x0Cut;
-  std::vector<double> m_tolAtX0Cut;
+  std::vector<float> m_x0Corr;
+  std::vector<float> m_x0SlopeChange;
+  std::vector<float> m_TolX0SameSign;
+  std::vector<float> m_x0Cut;
+  std::vector<float> m_tolAtX0Cut;
   
-  std::vector<double> m_tolX0Oppsig;
-  std::vector<double> m_x0SlopeChange2;
-  std::vector<double> m_x0CutOppSig;
-  std::vector<double> m_tolAtx0CutOppSig;
+  std::vector<float> m_tolX0Oppsig;
+  std::vector<float> m_x0SlopeChange2;
+  std::vector<float> m_x0CutOppSig;
+  std::vector<float> m_tolAtx0CutOppSig;
   
   //Add of remaining Hits in remaining X Layers
-  std::vector<double> m_tolRemaining;
+  std::vector<float> m_tolRemaining;
   //-----------
   //Add of third hit in T2
   unsigned int m_maxParabolaSeedHits;
   //Look up in remaining X layers
   //Look up in remaining X layers and Track Fitting parameters
-  double           m_dRatio;
-  double           m_ConstC;
+  float           m_dRatio;
+  float           m_ConstC;
   //--------_Fit X parametrisation
-  std::vector<double>            m_maxChi2HitsX;
-  std::vector<double>            m_maxChi2DoFX;
+  std::vector<float>            m_maxChi2HitsX;
+  std::vector<float>            m_maxChi2DoFX;
   
   //--------_Full Fit parametrisation
-  std::vector<double>            m_maxChi2FullFit;
-  std::vector<double>            m_maxChi2HitFullFitHigh;
-  std::vector<double>            m_maxChi2HitFullFitLow;
-  std::vector<double>            m_maxY0Low;
-  std::vector<double>            m_maxYZrefLow;
-  std::vector<double>            m_maxChi2HitLow;
+  std::vector<float>            m_maxChi2FullFit;
+  std::vector<float>            m_maxChi2HitFullFitHigh;
+  std::vector<float>            m_maxChi2HitFullFitLow;
+  std::vector<float>            m_maxY0Low;
+  std::vector<float>            m_maxYZrefLow;
+  std::vector<float>            m_maxChi2HitLow;
   
-  std::vector<double>            m_maxChi2HitFull ;
+  std::vector<float>            m_maxChi2HitFull ;
   
   //-----------------UV search parametrisation
   //Added
-  double          m_yMin;
-  double          m_yMin_TrFix;
-  double          m_yMax;
-  double          m_yMax_TrFix;
-  double          m_doAsymmUV;
-  double          m_radiusHole;
-  
+  float          m_yMin;
+  float          m_yMin_TrFix;
+  float          m_yMax;
+  float          m_yMax_TrFix;
+  float          m_doAsymmUV;
+  float          m_radiusHole;
   //
-  // double          m_coord;
   //Triangle Fix
   bool            m_useFix; 
   bool            m_removeHole;
   bool            m_useFix2ndOrder;
-  
-  
-  bool m_useLineY;
-  std::vector<double> m_Chi2LowLine;
-  std::vector<double> m_Chi2HighLine;
-  
+  std::vector<float> m_Chi2LowLine;
+  std::vector<float> m_Chi2HighLine;
   std::vector<unsigned int> m_minUV6;
   std::vector<unsigned int> m_minUV5;
   std::vector<unsigned int> m_minUV4;
   std::vector<unsigned int> m_minTot;
-  
-  // std::vector<double> m_X0ChangeCoord; (use Backward projection to define hough cluster?) ( to be implemented )
-  
-  std::vector<double> m_tolTyOffset;
-  std::vector<double> m_tolTySlope;
-    
-  
+  // std::vector<float> m_X0ChangeCoord; (use Backward projection to define hough cluster?) ( to be implemented )
+  std::vector<float> m_tolTyOffset;
+  std::vector<float> m_tolTySlope;
   //X+Y fit configure
-  std::vector<double>          m_maxChi2PerDoF;
-
+  std::vector<float>          m_maxChi2PerDoF;
   unsigned int m_nCommonTot;
-  
   //Flag Hits Settings
-    
-  std::vector<double>         m_MaxChi2Flag;
-  std::vector<double>         m_MaxX0Flag;
+  std::vector<float>         m_MaxChi2Flag;
+  std::vector<float>         m_MaxX0Flag;
   std::vector<unsigned int>   m_SizeFlag;
-  
   //dRatio correction to use (temporary)
-  bool m_useCorrPos;    
-  
+  bool m_useCorrPos;
   //--------------------Global things
-  
   PrHitManager*   m_hitManager;
   PrGeometryTool* m_geoTool;
   
   //== Debugging controls
+  bool m_debug;
   std::string     m_debugToolName;
   int             m_wantedKey;
   IPrDebugTool*   m_debugTool;
@@ -398,7 +372,7 @@ private:
   std::array<std::vector<PrHybridSeedTrack>,2>      m_trackCandidates;
   std::array<std::vector<PrHybridSeedTrack>,2>      m_xCandidates;
   std::vector<PrHitZone*>        m_zones;
-  double m_zReference;
+  float m_zReference;
   ISequencerTimerTool* m_timerTool;
   int            m_timeTotal;
   int            m_timeFromForward;
@@ -430,6 +404,6 @@ private:
   static const unsigned int s_T3X2 = 22;
   static const unsigned int s_down = 0;
   static const unsigned int s_up   = 1;
-
+  
 };
 #endif // PRHYBRIDSEEDING_H

@@ -3,6 +3,13 @@
 ! Responsible : Yasmine Amhis
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
+! 2016-03-11 - Renato Quagliani
+ - Timing improvements for the Hybrid Seeding ( ~30% average, cure the max timing of a factor 3 from clone removal )
+ - Implementation of Manuel Class SIMDLine fitter and BloomFilter ( not optimized yet )
+ - Clean up of the HybridSeeding code to avoid the 6 nested loops to find the best 1-hit per layer combination starting from
+   one hough cluster
+ - Inline the comparators used to do the sorting
+
 ! 2016-02-13 - Gerhard Raven
  - follow const-ification of interface
  - C++11 modernization
