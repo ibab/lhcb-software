@@ -4,6 +4,10 @@
 ! Purpose     : Detector element for upgraded VELO
 !-----------------------------------------------------------------------------
 
+! 2016-03-12 - Heinrich Schindler
+ - Remove getters for sensor iterators.
+ - Replace hard-coded pixel pitch by corresponding variable. 
+
 !========================= VPDet v3r4 2016-01-27 =========================
 ! 2016-01-07 - Gerhard Raven
  - prefer std::unique_ptr over raw pointer + explicit delete

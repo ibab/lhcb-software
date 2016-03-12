@@ -93,19 +93,19 @@ class DeVPSensor : public DetectorElement {
                                         const bool local) const {
 
     const double x = DeVPSensor::m_local_x[channel.scol()];
-    const double y = (channel.row() + 0.5) * 0.055;
+    const double y = (channel.row() + 0.5) * m_pixelSize;
     const Gaudi::XYZPoint point(x, y, 0.0);
     return (local ? point : localToGlobal(point));
   }
 
   /// Calculate the position of a given pixel and inter pixel fractions.
   Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel,
-                                 std::pair<double, double> fraction) const {
+                                 const std::pair<double, double>& fraction) const {
 
     const unsigned int col = channel.scol();
     const double pitch = DeVPSensor::m_x_pitch[col];
     const double x = DeVPSensor::m_local_x[col] + fraction.first * pitch;
-    const double y = (channel.row() + 0.5 + fraction.second) * 0.055;
+    const double y = (channel.row() + 0.5 + fraction.second) * m_pixelSize;
     const Gaudi::XYZPoint point(x, y, 0.0);
     return localToGlobal(point);
   }

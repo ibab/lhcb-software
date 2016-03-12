@@ -71,8 +71,8 @@ StatusCode DeVPSensor::initialize() {
   ISvcLocator* svcLoc = Gaudi::svcLocator();
   auto jobSvc = svcLoc->service<IJobOptionsSvc>("JobOptionsSvc");
   if (jobSvc) {
-      auto sc = jobSvc->setMyProperties("DeVPSensor", pmgr.get());
-      if (!sc) return sc;
+    auto sc = jobSvc->setMyProperties("DeVPSensor", pmgr.get());
+    if (!sc) return sc;
   }
   if (outputLevel > 0) {
     msgSvc()->setOutputLevel("DeVPSensor", outputLevel);

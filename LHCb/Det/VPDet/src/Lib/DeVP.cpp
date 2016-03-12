@@ -70,19 +70,17 @@ StatusCode DeVP::initialize() {
   }
   std::sort(sensors.begin(), sensors.end(), less_SensorNumber());
 
-  m_nSensors = 0;
   unsigned int nLeftSensors = 0;
   unsigned int nRightSensors = 0;
   for (auto it = sensors.begin(), end = sensors.end(); it != end; ++it) {
     m_sensors.push_back(*it);
-    ++m_nSensors;
     if ((*it)->isLeft()) {
       ++nLeftSensors;
     } else {
       ++nRightSensors;
     }
   }
-  msg() << MSG::INFO << "There are " << m_nSensors << " sensors "
+  msg() << MSG::INFO << "There are " << m_sensors.size() << " sensors "
         << "(left: " << nLeftSensors << ", right: " << nRightSensors << ")"
         << endmsg;
   return StatusCode::SUCCESS;

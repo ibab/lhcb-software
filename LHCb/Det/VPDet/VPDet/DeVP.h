@@ -41,19 +41,10 @@ class DeVP : public DetectorElement {
   virtual int sensitiveVolumeID(const Gaudi::XYZPoint& point) const;
 
   /// Return the number of sensors.
-  unsigned int numberSensors() const { return m_nSensors; }
+  unsigned int numberSensors() const { return m_sensors.size(); }
 
   /// Return vector of sensors.
   const std::vector<DeVPSensor*>& sensors() const { return m_sensors; }
-
-  /// Return iterator corresponding to first sensor.
-  std::vector<DeVPSensor*>::const_iterator sensorsBegin() const {
-    return m_sensors.begin();
-  }
-  /// Return iterator corresponding to last sensor.
-  std::vector<DeVPSensor*>::const_iterator sensorsEnd() const {
-    return m_sensors.end();
-  }
 
   /// Return pointer to sensor for a given point in the global frame.
   const DeVPSensor* sensor(const Gaudi::XYZPoint& point) const {
@@ -77,15 +68,6 @@ class DeVP : public DetectorElement {
   /// List of pointers to all sensors.
   std::vector<DeVPSensor*> m_sensors;
 
-  /// Number of sensors
-  unsigned int m_nSensors = 0;
-
-  /// Custom operator for sorting sensors by z position.
-  struct less_Z {
-    bool operator()(DeVPSensor* const& x, DeVPSensor* const& y) {
-      return (x->z() < y->z());
-    }
-  };
   /// Custom operator for sorting sensors by sensor number.
   struct less_SensorNumber {
     bool operator()(DeVPSensor* const& x, DeVPSensor* const& y) {
