@@ -72,10 +72,26 @@ variables = {
 
 import Ostap.Kisa as Kisa
 
-ppservers = ( 'lxplus051' , )
-ds = Kisa.fillDataSet ( dataY.chain , variables , '8.5<=mass && mass<11.5 && -0.1<c2dtf && c2dtf<5' , ppservers = ppservers ) 
+ppservers = () ## 'lxplus051' , )
 
-print ds 
+
+one_file =  dataY.chain[:1]
+with timing('One file %s' % len ( one_file ) ) : 
+    ds0 = Kisa.fillDataSet (
+        one_file        ,
+        variables       ,
+        '8.5<=mass && mass<11.5 && -0.1<c2dtf && c2dtf<5' , ppservers = ppservers ) 
+    logger.info ( 'Dataset: %s' % ds0 )
+
+
+with timing('All files %s' % len( dataY.chain ) ) :  
+    dsa = Kisa.fillDataSet (
+        dataY.chain ,
+        variables   ,
+        '8.5<=mass && mass<11.5 && -0.1<c2dtf && c2dtf<5' , ppservers = ppservers ) 
+    
+    logger.info ( 'Dataset: %s' % dsa )
+
 # =============================================================================
 # The END 
 # =============================================================================

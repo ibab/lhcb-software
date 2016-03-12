@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$
+# $Id$
 # =============================================================================
 ## @file ParallelPathos.py 
 #
@@ -10,32 +10,48 @@
 #  GaudiMP.Parallel module developed by Pere MATO Pere.Mato@cern.ch
 #
 #  The original module relies on some obsolete python modules (e.g. pyssh)
-#  and it has limitations related ti the pickling.
+#  and it has limitations related to the pickling.
 #
 #  The upgraded module relies on <code>pathos</code> suite that
 #  has very attratcive functionality and solve pickling issues
 #  @see https://github.com/uqfoundation/pathos
 #
+#  Current version works nicely for 'multicore' regime
+#  however 'cluster' mode does not work due to two following reasons:
+#  - conflict between pp/ppft and readline module
+#  - problem with serialization of  C++ types,
+#  @see https://its.cern.ch/jira/browse/GAUDI-1197
+#  @see https://sft.its.cern.ch/jira/browse/ROOT-8046
+#
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2016-02-23
 #
-#                    $Revision:$
-#  Last modification $Date:$
-#  by                $Author:$
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """   Useful utilities for multiprocessing and parallel processing for Ostap
 Actualy it is just a little bit upgraded version of original
 GaudiMP.Parallel module developed by Pere MATO Pere.Mato@cern.ch
 
 The original module relies on some obsolete python modules (e.g. pyssh)
-and it has limitations related ti the pickling.
+and it has limitations related to the pickling.
 
 The upgraded module relies on <code>pathos</code> suite that
 has very attractive functionality and solve pickling issues
 @see https://github.com/uqfoundation/pathos
+
+Current version works for multicore regime
+'Cluster' mode doe nto work due to two following reasons:
+- conflict between pp/ppft and readline module
+- problem with serialization of  C++ types,
+
+see https://its.cern.ch/jira/browse/GAUDI-1197
+see https://sft.its.cern.ch/jira/browse/ROOT-8046
+
 """
 # =============================================================================
-__version__ = '$Revision:$'
+__version__ = '$Revision$'
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = '2016-02-23'
 __all__     = (
@@ -49,21 +65,19 @@ else                      : logger = getLogger ( __name__                )
 # =============================================================================
 import sys, os, time, copy
 excluded_varnames =  ( 'HOSTNAME', 'SSH_CLIENT', 'SSH_CONNECTION', 'DISPLAY' ) 
+
 # =============================================================================
-    
-## try to use bare import 
-import pathos.multiprocessing as MP
-import pathos.core            as PC 
-    
+import pathos.core as PC
+import pathos.multiprocessing
+import pathos.parallel
+import dill 
+
 
 
 def _prefunction( f, task, item) :
-    print 'I AM PREFUNCTION'
-    ##import ROOT 
     return f((task,item))
 
 def _ppfunction( args ) :
-    print 'I AM PPFUNCTION'
     import ROOT 
     #--- Unpack arguments
     task, item = args
@@ -99,7 +113,6 @@ class Statistics(object):
         import time
         self.time = time.time() - self.start
             
-
 # =============================================================================
 ## @class Task
 #  Basic base class to encapsulate any processing that is going to be porcessed in parallel.
@@ -163,42 +176,6 @@ class Task(object) :
         for o in output :
             if hasattr( o , 'Reset'): o.Reset()
 
-## import pp
-## for i in range(1000):
-##     job_server = pp.Server(restart=True)
-##     for worker in job_server._Server__workers:
-##         worker.is_free = False
-##         worker.t.send('EXIT')
-##         worker.t.close()
-##     print 'Killed #%d'%(i)    
-##     job_server.destroy()
-
-def isprime(n):
-    """Returns True if n is prime and False otherwise"""
-    if not isinstance(n, int):
-        raise TypeError("argument passed to is_prime is not of 'int' type")
-    if n < 2:
-        return False
-    if n == 2:
-        return True
-    import math 
-    max = int(math.ceil(math.sqrt(n)))
-    i = 2
-    while i <= max:
-        if n % i == 0:
-            return False
-        i += 1
-    return True
-
-def sum_primes(n):
-    """Calculates sum of all primes below given integer n"""
-    return sum([x for x in xrange(2, n) if isprime(x)])
-
-def test_func( *args ) :
-    return 1
-def my_test_func( *args ) :
-    return 1
-
 # =============================================================================
 ## @class WorkManager
 #  Class to in charge of managing the tasks and distributing them to
@@ -209,31 +186,32 @@ class WorkManager(object) :
     """ Class to in charge of managing the tasks and distributing them to
         the workers. They can be local (using other cores) or remote
         using other nodes in the local cluster """
-    def __init__( self, ncpus='autodetect', ppservers=None) :
-        if ncpus == 'autodetect' : self.ncpus = MP.cpu_count()
+    def __init__( self, ncpus='autodetect', ppservers=None , silent = False ) :
+        
+        if ncpus == 'autodetect' :
+            from pathos.helpers import cpu_count
+            self.ncpus = cpu_count()
         else :                     self.ncpus = ncpus
         if ppservers :
             self._ppservers = ppservers
             self.sessions   =  [ ppServer(srv) for srv in ppservers ]
             self.ppservers  = tuple ( [ i.local_server for i in self.sessions ] )
-            ##self.ppservers  = tuple ( [ i.remote_server for i in self.sessions ] )
             from pathos.parallel import ParallelPool as PPPool            
             self.pool       = PPPool( ncpus = self.ncpus , ppservers=self.ppservers)
             self.mode       = 'cluster'
             from pathos.parallel import stats as pp_stats
             self.pp_stats   = pp_stats
-            print 'I AM INIT MANAGER PARALLEL!!!'
         else :
             from pathos.multiprocessing import ProcessPool as MPPool
             self.pool = MPPool(self.ncpus)
             self.mode = 'multicore'
-            print 'I AM INIT MANAGER MULTICORE !!!'
-        self.stats = {}
-
+        self.stats  = {}
+        self.silent = silent
+        
     def __del__(self):
-        if hasattr(self,'server') : self.server.destroy()
+        del self.pool
 
-    def process(self, task, items, timeout=90000):
+    def process(self, task, items, timeout=90000 ):
         if not isinstance(task,Task) :
             raise TypeError("task argument needs to be an 'Task' instance")
         # --- Call the Local initialialization
@@ -241,57 +219,34 @@ class WorkManager(object) :
         # --- Schedule all the jobs ....
         if self.mode == 'cluster' :
             
-            
-            ## job_server = self.server
-            
-            ## inputs = [ 10*(i+1) for i in range(20) ]
-            
-            ## print 'HERE1'
-            ## from random import shuffle
-            ## shuffle ( inputs ) 
-            ## jobs   = [(input, job_server.submit(sum_primes, (input, ), (isprime,),
-            ##                                     ('math',))) for input in inputs]
-            
-            ## for input, job in jobs:
-            ##     print "Sum of primes below", input
-            ##     print "is", job()
-
-            ## return
-        
-            #jobs   = []
-            #for item in items :
-            #    print 'SUBMIT' , item 
-            #    jobs += [ self.server.submit ( my_test_func, (item, ) ) ] 
-            
-            ## jobs = [self.server.submit(_prefunction, (_ppfunction, task, item), (), ('ROOT','Ostap.ParallelPathos')) for item in items]
-
-            print 'I AM UIMAP-1'
-            ##jobs = self.pool.uimap(_prefunction, [ (_ppfunction, task, item) for item in items]  ) 
-            jobs = self.pool.uimap(_ppfunction, zip([task for i in items] , items ))
-            print 'I AM UIMAP-2'
-                    
+            from Ostap.progress_bar import ProgressBar
+            with ProgressBar ( max_value = len(items) , silent = self.silent ) as bar : 
+                
+                jobs = self.pool.uimap(_ppfunction, zip([task for i in items] , items ))
             
             ##jobs = [self.server.submit(_prefunction, (_ppfunction, task, item), (), ('ROOT','Ostap.ParallelPathos')) for item in items]
             ##jobs = [self.server.submit(_prefunction, (_ppfunction, task, item), (), ('Ostap.Parallel','time')) for item in items]
             ##jobs = [self.server.submit(_prefunction, (_ppfunction, task, item), (_ppfunction,), ('Ostap','time')) for item in items]
-            for job in jobs :
-                print 'in loop'
-                result, stat = job()
-                print 'AFTER JOB', result 
-            
-                task._mergeResults    ( result )
-                self._mergeStatistics ( stat   )
+                for result, stat in jobs :
+                    bar += 1 
+                    task._mergeResults    ( result )
+                    self._mergeStatistics ( stat   )
+                    
             self._printStatistics()
             self.pp_stats() 
+
         elif self.mode == 'multicore' :
+            
             start = time.time()
-            ##jobs = self.pool.map_async(_ppfunction, zip([task for i in items] , items ))
-            ## for result, stat in  jobs.get(timeout) :
-            jobs = self.pool.uimap(_ppfunction, zip([task for i in items] , items ))
-            for result, stat in  jobs : 
-                task._mergeResults(result)
-                self._mergeStatistics(stat)
+            from Ostap.progress_bar import ProgressBar
+            with ProgressBar ( max_value = len(items) , silent = self.silent ) as bar : 
+                jobs = self.pool.uimap(_ppfunction, zip([task for i in items] , items ))
+                for result, stat in  jobs :
+                    bar += 1 
+                    task._mergeResults(result)
+                    self._mergeStatistics(stat)
             end = time.time()
+            
             self._printStatistics()
             logger.info ( 'Time elapsed since server creation %f' %(end-start) ) 
         # --- Call the Local Finalize
@@ -300,17 +255,16 @@ class WorkManager(object) :
         njobs = 0
         for stat in self.stats.values():
             njobs += stat.njob
-        logger.info ( 'Job execution statistics:' ) 
-        logger.info ( 'job count | % of all jobs | job time sum | time per job | job server' ) 
-        for name, stat  in self.stats.items():
-            logger.info ( '       %d |        %6.2f |     %8.3f |    %8.3f | %s' % (stat.njob, 100.*stat.njob/njobs, stat.time, stat.time/stat.njob, name) ) 
-
+            logger.info ( 'Job execution statistics:' ) 
+            logger.info ( 'job count | % of all jobs | job time sum | time per job | job server' ) 
+            for name, stat  in self.stats.items():
+                logger.info ( '       %d |        %6.2f |     %8.3f |    %8.3f | %s' % (stat.njob, 100.*stat.njob/njobs, stat.time, stat.time/stat.njob, name) ) 
+                
     def _mergeStatistics(self, stat):
         if stat.name not in self.stats : self.stats[stat.name] = Statistics()
         s = self.stats[stat.name]
         s.time += stat.time
         s.njob += 1
-
 
 # =============================================================================
 ## @class ppServer
@@ -338,7 +292,6 @@ class ppServer(object) :
         sys.stdin .flush()
         
         self.tunnel  = PC.connect ( hostname )        
-        print 'OPEN TUNNEL', self.tunnel
         remport = self.tunnel._rport
         
         import sys
@@ -346,64 +299,70 @@ class ppServer(object) :
         sys.stdin .flush()
         
         self.input = open('/dev/null','r')
-        
-        python_path = os.environ['PYTHONPATH']
-        
+
         import pp 
         the_file = pp.__file__
         the_dir  = os.path.dirname(the_file)
+        the_server = the_dir + '/scripts/ppserver.py'  ## NB!!!
         
-        print 'FILE',the_file
-        print 'DIR ',the_dir + '/scripts/ppserver.py'
-        the_server = the_dir + '/scripts/ppserver.py'
-        
-        command = """
-        export PYTHONPATH=%s
-        export PATH=%s
-        export LD_LIBRARY_PATH=%s        
-        export LD_PRELOAD=%s        
-        %s -p%d
-        """ % ( os.environ['PYTHONPATH'        ] ,
-                os.environ['PATH'              ] ,
-                os.environ['LD_LIBRARY_PATH'   ] ,
-                os.environ.get( 'LD_PRELOAD','')  ,
-                the_server                , 
-                remport                   )
-        
-        ## command = 'ppserver.py -p%d ' % remport
         secret  = kwargs.pop( 'secret' , '' )
-        if secret : command += " -s%" % secret
+
+        if not secret : 
+            command = """
+            export PYTHONPATH=%s
+            export PATH=%s
+            export LD_LIBRARY_PATH=%s        
+            export LD_PRELOAD=%s        
+            %s -p%d
+            """ % ( os.environ['PYTHONPATH'        ] ,
+                    os.environ['PATH'              ] ,
+                    os.environ['LD_LIBRARY_PATH'   ] ,
+                    os.environ.get( 'LD_PRELOAD','') ,
+                    the_server                       , 
+                    remport                          )
+        else :
+            command = """
+            export PYTHONPATH=%s
+            export PATH=%s
+            export LD_LIBRARY_PATH=%s        
+            export LD_PRELOAD=%s        
+            %s -p%d -s%s 
+            """ % ( os.environ['PYTHONPATH'        ] ,
+                    os.environ['PATH'              ] ,
+                    os.environ['LD_LIBRARY_PATH'   ] ,
+                    os.environ.get( 'LD_PRELOAD','') ,
+                    the_server                       , 
+                    remport                          ,
+                    secret                           )
+
+        ## execute the command!
         self.session = PC.execute (
             command              ,
             hostname             ,
             options = '-q -T'    ,
             stdin   = self.input , 
             bg      = True       )
-        print 'HERE(3)'
         
         r = self.session.response()
         if self.session._stdout :
             self.session._stdout.flush() 
             
-        print 'HERE(4)', r 
-            
         import time
         time.sleep(0.2) ## sleep... 
-            
+        
         self.hostname      = hostname 
         self.local_server  = 'localhost:%d' %              self.tunnel._lport 
         self.remote_server = '%s:%d'        % ( hostname , self.tunnel._rport  )
         
         target     = '[P,p]ython[^#]*'+'ppserver'
         self.pid   = PC.getpid( target , hostname )
-
-        print self.local_server,  self.remote_server, self.pid
         
-        import sys
         sys.stdout.flush()
         sys.stdin .flush()        
- 
-        
+        logger.debug ( 'SSH tunnel:  %s <--> %s , #PID %d'  % ( self.local_server  ,
+                                                                self.remote_server ,
+                                                                self.pid           ) )
+                       
     # Context manager:  ENTER
     def __enter__ ( self ) : return self
 

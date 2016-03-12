@@ -347,8 +347,7 @@ ROOT.TTree.__str__  = _rt_print_
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-02-04
 def _rc_files_ ( chain ) :
-    """
-    Get the list of files used for the chain
+    """Get the list of files used for the chain
     
     >>> chain = ... ## get the files 
     >>> files = chain.files()
@@ -359,6 +358,29 @@ def _rc_files_ ( chain ) :
 
 ROOT.TChain. files = _rc_files_
 
+# =============================================================================
+## get the chain of reduced size (in terms of number of input files)
+#  @code
+#  chain = ...
+#  new_chain = chain[1:3] ## keep pnly files 1-3
+#  print len(chain), len(new_chain)
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2016-03-17
+def _rc_getslice_ ( self , start , stop , *step ) :
+    """ Get the chain of reduced size (in terms of number of input files) 
+    >>> chain = ...
+    >>> new_chain = chain[1:3] ## keep pnly files 1-3
+    >>> print len(chain), len(new_chain)
+    """
+    _files = self.files()
+    ## get slice 
+    _files = _files[ slice(start,stop,*step) ] 
+    _chain = ROOT.TChain( self.GetName() , self.GetTitle() )
+    for _f in _files : _chain.Add ( _f )
+    return _chain
+
+ROOT.TChain.__getslice__ = _rc_getslice_
 
 # =============================================================================
 ## get "slice" from TTree in a form of numpy.array

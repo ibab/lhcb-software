@@ -242,8 +242,7 @@ def  fillDataSet ( chain , variables , selection , ppservers = () ) :
     >>> dset  = fillDataSet ( chain , vars , 'pt>10' )
     - for 12-core machine, clear speed-up factor of about 8 is achieved 
     """
-    
-    
+        
     task  = FillTask ( variables , selection )
     wmgr  = Parallel.WorkManager( ppservers = ppservers )
     
@@ -253,8 +252,6 @@ def  fillDataSet ( chain , variables , selection , ppservers = () ) :
 
     wmgr.process( task, pairs )
 
-    print 'OUTPUT:', task.output
-    
     return task.output
 
 

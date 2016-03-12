@@ -227,8 +227,9 @@ class ProgressBar(object):
         self.bar      = ''
         self.min      = min_value
         self.max      = max_value
-        self.span     = max_value - min_value
-        ## 
+        self.span     = max(max_value - min_value,1) 
+        ##
+
         ncols         = columns ()  - 7
         self.width    = min ( ncols , width ) if ncols > 0 else width
         

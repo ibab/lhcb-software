@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$
+# $Id$
 # =============================================================================
 ## @file Parallel.py 
 #
@@ -9,34 +9,19 @@
 #  Actualy it is just a little bit upgraded version of original
 #  GaudiMP.Parallel module developed by Pere MATO Pere.Mato@cern.ch
 #
-#  The original module relies on some obsolete python modules (e.g. pyssh)
-#  and it has limitations related ti the pickling.
-#
-#  The upgraded module relies on <code>pathos</code> suite that
-#  has very attratcive functionality and solve pickling issues
-#  @see https://github.com/uqfoundation/pathos
-#
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2016-02-23
 #
-#                    $Revision:$
-#  Last modification $Date:$
-#  by                $Author:$
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """   Useful utilities for multiprocessing and parallel processing for Ostap
 Actualy it is just a little bit upgraded version of original
 GaudiMP.Parallel module developed by Pere MATO Pere.Mato@cern.ch
-
-The original module relies on some obsolete python modules (e.g. pyssh)
-and it has limitations related ti the pickling.
-
-
-The upgraded module relies on <code>pathos</code> suite that
-has very attratcive functionality and solve pickling issues
-@see https://github.com/uqfoundation/pathos
 """
 # =============================================================================
-__version__ = '$Revision:$'
+__version__ = '$Revision$'
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = '2016-02-23'
 __all__     = (
@@ -52,14 +37,15 @@ try:
     
     ## 
     from Ostap.ParallelPathos import Task, WorkManager 
-    logger.info ('Use Task and TaskManager from Ostap.ParallelPathos')
+    logger.info  ('Use Task and TaskManager from Ostap.ParallelPathos')
     
 except:
     
     ## 
+    logger.error ("Can't import Ostap.ParallelPathos" , exc_info = True )
     from GaudiMP.Parallel     import Task, WorkManager
-    logger.info ('Use Task and TaskManager from GaudiMP.Parallel')
-
+    logger.info  ('Use Task and TaskManager from GaudiMP.Parallel'    )
+    
     
 # =============================================================================
 if '__main__' == __name__ :

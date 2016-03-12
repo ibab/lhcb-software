@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$
+# $Id$
 # =============================================================================
 ## @file
 #  Module with decoration of TH* objects for efficient use in python
@@ -9,14 +9,14 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 #  
-#                    $Revision: 201717 $
-#  Last modification $Date: 2016-02-18 17:58:56 +0100 (Thu, 18 Feb 2016) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """Module with decoration of TH* objects for efficient use in python
 """
 # =============================================================================
-__version__ = "$Revision: 202618 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 __all__     = (
