@@ -266,8 +266,8 @@ PatForwardTool::PatForwardTool( const std::string& type,
 
   declareProperty( "UseMomentumEstimate", m_useMomentumEstimate = false );// Uses charge estimate only.
   declareProperty( "UseProperMomentumEstimate", m_useProperMomentumEstimate = false ); // Uses momentum and charge estimate.
-  declareProperty( "MomentumEstimateError"    , m_momentumEstimateError    =  0.5 );
-  declareProperty( "MinRange"              , m_minRange              =   300. * Gaudi::Units::mm  );//Only used when using momentum estimate.
+  declareProperty( "MomentumEstimateError"    , m_momentumEstimateError    =  0.3 );
+  declareProperty( "MinRange"              , m_minRange              =   100. * Gaudi::Units::mm  );//Only used when using momentum estimate.
 
   declareProperty("StateErrorX2",  m_stateErrorX2  =   4.0);
   declareProperty("StateErrorY2",  m_stateErrorY2  = 400.);
@@ -387,7 +387,7 @@ void PatForwardTool::handle ( const Incident& incident ) {
 //=========================================================================
 //  Prepare hits
 //=========================================================================
-void PatForwardTool::prepareHits()
+void PatForwardTool::prepareHits() const
 {
   m_tHitManager->prepareHits();
   //== if any hits to be flagged as used, do so now...
@@ -438,17 +438,16 @@ bool PatForwardTool::acceptTrack(const LHCb::Track& track) const
 //=========================================================================
 //  Main execution: Extend a track.
 //=========================================================================
-void PatForwardTool::forwardTrack( const LHCb::Track* tr, LHCb::Tracks* output ) {
+void PatForwardTool::forwardTrack( const LHCb::Track& tr, LHCb::Tracks& output ) const {
 
   std::vector<LHCb::Track*> outvec;
-  tracksFromTrack(*tr,outvec).ignore();
+  tracksFromTrack(tr,outvec).ignore();
 
-  output->reserve(output->size()+outvec.size());
-  for ( const auto& i : outvec ) output->insert(i);
+  output.reserve(output.size()+outvec.size());
+  for ( const auto& i : outvec ) output.insert(i);
 }
 
-StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
-                                            std::vector<LHCb::Track*>& output ){
+StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector<LHCb::Track*>& output ) const {
   if ( !acceptTrack(seed) ) return StatusCode::SUCCESS;
 
   counter("#Seeds") += 1;

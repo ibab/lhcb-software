@@ -29,6 +29,9 @@
 #include "PatKernel/PatTStationHitManager.h"
 #include "PatKernel/PatForwardHit.h"
 
+//For convenient trailing-return-types in C++11:
+#define AUTO_RETURN(...) noexcept(noexcept(__VA_ARGS__)) -> decltype(__VA_ARGS__) {return (__VA_ARGS__);}
+
 /** @class PatForwardTool PatForwardTool.h
  *  Tool to extend one Velo (VeloTT) track through the magnet
  *
@@ -39,7 +42,7 @@
 
 class IClassifierReader;
 
-class PatForwardTool : public extends2<GaudiTool,IPatForwardTool,ITracksFromTrack>, public IIncidentListener {
+class PatForwardTool : public extends<GaudiTool,IPatForwardTool,ITracksFromTrack,IIncidentListener> {
 public:
 
   /// Standard constructor
@@ -52,35 +55,35 @@ public:
   StatusCode initialize() override;
   StatusCode finalize() override;
 
-  void forwardTrack( const LHCb::Track* track, LHCb::Tracks* output ) override;
+  void forwardTrack( const LHCb::Track& track, LHCb::Tracks& output ) const override;
 
-  StatusCode tracksFromTrack( const LHCb::Track& seed,
-                              std::vector<LHCb::Track*>& tracks ) override;
-  
+  StatusCode tracksFromTrack( const LHCb::Track& seed, std::vector<LHCb::Track*>& output ) const override;
+
   bool acceptTrack(const LHCb::Track& track) const;
-  
+
   // added for NNTools
   void setNNSwitch( bool nnSwitch) override { m_nnSwitch = nnSwitch;}
   bool nnSwitch()       const       { return m_nnSwitch;}
-  
-  void handle ( const Incident& incident ) override;
-  void prepareHits();
 
+  void handle ( const Incident& incident ) override;
 private:
+  void prepareHits() const;
+
   std::vector<PatFwdTrackCandidate*> buildXCandidatesList(PatFwdTrackCandidate& track , boost::iterator_range<typename PatFwdHits::const_iterator> &rng) const;
 
+  template <typename Storage = double>
   class XInterval {
-    double m_zMagnet,m_xMagnet,m_txMin,m_txMax,m_xmin,m_xmax;
+    Storage m_zMagnet,m_xMagnet,m_txMin,m_txMax,m_xmin,m_xmax;
   public:
-    XInterval(double zMagnet,double xMagnet, double txMin, double txMax, double xMinRef, double xMaxRef)
+    XInterval(Storage zMagnet, Storage xMagnet, Storage txMin, Storage txMax, Storage xMinRef, Storage xMaxRef)
       : m_zMagnet{zMagnet}, m_xMagnet{xMagnet}, m_txMin{txMin}, m_txMax{txMax}, m_xmin {xMinRef},m_xmax{xMaxRef} {}
-    double xMinAtZ(double z) const { return m_txMin*(z-m_zMagnet)+m_xMagnet; }
-    double xMaxAtZ(double z) const { return m_txMax*(z-m_zMagnet)+m_xMagnet; }
+    template <typename T> auto xMinAtZ(T z) const AUTO_RETURN( m_txMin*(z-m_zMagnet)+m_xMagnet )
+    template <typename T> auto xMaxAtZ(T z) const AUTO_RETURN( m_txMax*(z-m_zMagnet)+m_xMagnet )
     //== This is the range at the reference plane
-    double xMin() const { return m_xmin; }
-    double xMax() const { return m_xmax; }
-    bool inside(double x) const { return m_xmin <= x && x < m_xmax; }
-    bool outside(double x) const { return x < m_xmin || m_xmax <= x ; }
+    auto xMin() const AUTO_RETURN( m_xmin )
+    auto xMax() const AUTO_RETURN( m_xmax )
+    template <typename T> auto inside(T x) const AUTO_RETURN( m_xmin <= x && x < m_xmax )
+    template <typename T> auto outside(T x) const AUTO_RETURN( x < m_xmin || m_xmax <= x )
     template <typename Range, typename Projection>
     Range inside(const Range& r, Projection p) const {
       // TODO: linear search from the edges is probably faster given the typical input...
@@ -97,7 +100,8 @@ private:
     return sinTrack * m_magnetKickParams.first / ( pt - sinTrack * m_magnetKickParams.second );
   }
 
-  XInterval make_XInterval(const PatFwdTrackCandidate& track) const {
+  template <typename T = double>
+  XInterval<T> make_XInterval(const PatFwdTrackCandidate& track) const {
     double xExtrap = track.xStraight( m_fwdTool->zReference() );
     //== calculate center of magnet from Velo track
     const double zMagnet =  m_fwdTool->zMagnet( track );
@@ -128,22 +132,21 @@ private:
         xMax = xExtrap + kickRange;
         dSlopeMax = kickRange/dz;
       }
-    }else if (m_useProperMomentumEstimate && !m_withoutBField && track.qOverP() != 0 ) {
-      const double q = track.qOverP() > 0. ? 1. : -1.;
-      double kick =  (-1.)*q * m_fwdTool->magscalefactor() * dSlope_kick(std::abs(track.sinTrack()/track.qOverP()), track.sinTrack());
-      double kickError =  m_minRange/dz + m_momentumEstimateError * std::abs(kick);
-      dSlopeMin = kick-kickError;
-      dSlopeMax = kick+kickError;
-      xMin = xExtrap+dSlopeMin*dz;
-      xMax = xExtrap+dSlopeMax*dz;
+    }else if ( m_useProperMomentumEstimate && !m_withoutBField && track.qOverP() != 0 ) {
+      auto q = track.qOverP() > 0. ? 1. : -1.;
+      auto kick =  -q * m_fwdTool->magscalefactor() * dSlope_kick(std::abs( track.sinTrack()/track.qOverP()), track.sinTrack() );
+      auto kickError =  m_minRange/dz + m_momentumEstimateError * std::abs(kick);
+      dSlopeMin = kick - kickError;
+      dSlopeMax = kick + kickError;
+      xMin = xExtrap + dSlopeMin * dz;
+      xMax = xExtrap + dSlopeMax * dz;;
     }
-
     // compute parameters of deltaX as a function of z
     return { zMagnet, track.xStraight( zMagnet ),
           track.slX()+dSlopeMin,
           track.slX()+dSlopeMax,
           xMin, xMax };
-  };
+  }
 
 
   boost::iterator_range<typename PatFwdHits::const_iterator>
@@ -256,7 +259,7 @@ private:
   std::string                                 m_addUtToolName;
 
   std::string      m_trackSelectorName;
-  ITrackSelector*      m_trackSelector;
+  ITrackSelector*      m_trackSelector = nullptr;
 
   //== Parameters of the algorithm
   bool   m_secondLoop;
@@ -272,8 +275,8 @@ private:
   double m_maxSpreadY;
   double m_maxSpreadSlopeX;
   double m_maxSpreadSlopeY;
-  int    m_minXPlanes;
-  int    m_minPlanes;
+  mutable int    m_minXPlanes;
+  mutable int    m_minPlanes;
   double m_minPt;
   double m_minMomentum;
   double m_maxChi2X;
@@ -296,7 +299,7 @@ private:
   double m_stateErrorTY2;
   double m_stateErrorP;
 
-  bool m_newEvent;
+  mutable bool m_newEvent;
   
   mutable PatFwdHits  m_xHitsAtReference; // workspace
 
@@ -316,10 +319,10 @@ private:
 
   bool   m_NNBXF;
   bool   m_NNASF;
-  double m_BXF4XPcut;  
+  double m_BXF4XPcut;
   double m_ASFcut;
   double m_nbr;
-  IClassifierReader* m_BXF4reader;  
+  IClassifierReader* m_BXF4reader;
   IClassifierReader* m_ASFreader ;
 };
 
