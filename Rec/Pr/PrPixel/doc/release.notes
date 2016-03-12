@@ -4,6 +4,9 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2016-03-12 - Heinrich Schindler
+ - Follow change in DeVP (r202920).
+
 !========================= PrPixel v1r13p1 2015-10-13 =========================
 ! 2015-08-12 - Gerhard Raven
  - remove #include of obsolete Gaudi headers

@@ -46,7 +46,7 @@ StatusCode PrPixelHitManager::initialize() {
   // Get detector element.
   m_vp = getDet<DeVP>(DeVPLocation::Default);
   // Make sure we are up-to-date on populated VELO stations
-  registerCondition((*(m_vp->sensorsBegin()))->geometry(),
+  registerCondition(m_vp->sensors().front()->geometry(),
                     &PrPixelHitManager::rebuildGeometry);
   // First update
   sc = updMgrSvc()->update(this);
@@ -227,26 +227,25 @@ StatusCode PrPixelHitManager::rebuildGeometry() {
 
   int previousLeft = -1;
   int previousRight = -1;
-  std::vector<DeVPSensor *>::const_iterator its = m_vp->sensorsBegin();
-
+  const auto sensors = m_vp->sensors();
   // get pointers to local x coordinates and pitches
-  m_local_x = (*its)->xLocal();
-  m_x_pitch = (*its)->xPitch();
-  m_pixel_size = (*its)->pixelSize(LHCb::VPChannelID(0, 0, 0, 0)).second;
+  m_local_x = sensors.front()->xLocal();
+  m_x_pitch = sensors.front()->xPitch();
+  m_pixel_size = sensors.front()->pixelSize(LHCb::VPChannelID(0, 0, 0, 0)).second;
 
   float ltg_rot_components[9];
   int idx = 0;
-  for (; m_vp->sensorsEnd() != its; ++its) {
+  for (auto sensor : sensors) {
     // TODO:
-    // if (!(*its)->isReadOut()) continue;
+    // if (!sensor->isReadOut()) continue;
 
     // get the local to global transformation matrix and
     // store it in a flat float array of sixe 12.
     Gaudi::Rotation3D ltg_rot;
     Gaudi::TranslationXYZ ltg_trans;
-    (*its)->geometry()->toGlobalMatrix().GetDecomposition(ltg_rot, ltg_trans);
+    sensor->geometry()->toGlobalMatrix().GetDecomposition(ltg_rot, ltg_trans);
     ltg_rot.GetComponents(ltg_rot_components);
-    idx = 16 * (*its)->sensorNumber();
+    idx = 16 * sensor->sensorNumber();
     m_ltg[idx++] = ltg_rot_components[0];
     m_ltg[idx++] = ltg_rot_components[1];
     m_ltg[idx++] = ltg_rot_components[2];
@@ -261,7 +260,7 @@ StatusCode PrPixelHitManager::rebuildGeometry() {
     m_ltg[idx++] = ltg_trans.Z();
 
     // Get the number of the module this sensor is on.
-    const unsigned int number = (*its)->module();
+    const unsigned int number = sensor->module();
     if (number < m_modules.size()) {
       // Check if this module has already been setup.
       if (m_modules[number]) continue;
@@ -270,10 +269,10 @@ StatusCode PrPixelHitManager::rebuildGeometry() {
     }
 
     // Create a new module and add it to the list.
-    m_module_pool.push_back(PrPixelModule(number, (*its)->isRight()));
+    m_module_pool.push_back(PrPixelModule(number, sensor->isRight()));
     PrPixelModule *module = &m_module_pool.back();
-    module->setZ((*its)->z());
-    if ((*its)->isRight()) {
+    module->setZ(sensor->z());
+    if (sensor->isRight()) {
       module->setPrevious(previousRight);
       previousRight = number;
     } else {
