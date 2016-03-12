@@ -22,7 +22,7 @@ __date__    = "2014-06-08"
 __all__     = ( 'Corr2D', )
 # =============================================================================
 import ROOT,math
-from   Ostap.Core import cpp , WSE , Gaudi 
+from   Ostap.Core import cpp , WSE
 # =============================================================================
 # logging 
 # =============================================================================
@@ -81,7 +81,7 @@ class Corr2D(object) :
         ##
         self.stat1 = WSE () 
         self.stat2 = WSE ()
-        self.cov2  = Gaudi.SymMatrix2x2()
+        self.cov2  = cpp.Gaudi.SymMatrix2x2()
         ##
         self.var1 = var1
         self.var2 = var2
@@ -145,8 +145,8 @@ class Corr2D(object) :
 
         ## normalize eigenvectors for 1/sqrt(2), just for convinency of erf. 
         sqr2i         = math.sqrt(0.5) 
-        self.nvct0    = Gaudi.Vector2() 
-        self.nvct1    = Gaudi.Vector2()
+        self.nvct0    = cpp.Gaudi.Vector2() 
+        self.nvct1    = cpp.Gaudi.Vector2()
         
         self.nvct0[0] = self.vct0[0]*sqr2i
         self.nvct0[1] = self.vct0[1]*sqr2i
