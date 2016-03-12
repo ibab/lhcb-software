@@ -408,7 +408,7 @@ Decays::Trees::GenExclusive::ok ( const HepMC::GenParticle* p ) const
     if ( 0 == q3 ) { osc2 = LoKi::GenParticles::oscillated2 ( p ) ; }
     //
     // spaghetti 
-    // explicitly requiested oscillation 
+    // explicitly requested oscillation 
     if      ( Decays::Trees::   Oscillated == oscillation () ) 
     {
       if ( !mother ( pid ) ) { return 0 ; }                      // RETURN 
@@ -418,7 +418,7 @@ Decays::Trees::GenExclusive::ok ( const HepMC::GenParticle* p ) const
     else if ( Decays::Trees::NotOscillated == oscillation () ) 
     {
       //
-      if ( 0 != osc1 || 0 != osc1 ) { return 0 ; }
+      if ( 0 != osc1 || 0 != osc2 ) { return 0 ; }
       if ( !mother ( pid )        ) { return 0 ; }               // RETURN 
       //
       return p ;  

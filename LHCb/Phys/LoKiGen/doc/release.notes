@@ -13,6 +13,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2016-03-12 - Vanya Belyaev
+ - GenExlusive.cpp
+   fix a bug with matching of oscillating/non-oscillating patterns
+   (thanks to Marco Cattaneo and Coverity for reporting the  bug)
+
 ! 2016-02-17 - Vanya Belyaev
  - remove the explicit loading of HepMC reflex library 
 
