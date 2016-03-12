@@ -44,8 +44,17 @@ class ForwardConf(object):
     PFAlg.PatForwardTool.UseWrongSignWindow = True
     PFAlg.PatForwardTool.WrongSignPT = 2000.
     PFAlg.PatForwardTool.PreselectionPT = 0.8*500.
-    PFAlg.PatForwardTool.Preselection = True   
+    PFAlg.PatForwardTool.Preselection = True
     PFAlg.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
+    # optimized settings for 2016 Data taking
+    PFAlg.PatForwardTool.MaxXCandidateSize = [50,24]
+    PFAlg.PatForwardTool.MaxSpreadX        = 0.65
+    PFAlg.PatForwardTool.MaxSpreadSlopeX   = 0.0075
+    PFAlg.PatForwardTool.MaxChi2X          = 32
+    PFAlg.PatForwardTool.MaxChi2Y          = 24
+    PFAlg.PatForwardTool.NNASF             = True
+    PFAlg.PatForwardTool.NNASFcut          = 0.1
+    PFAlg.PatForwardTool.NextBestResponse  = 0.7
     
 
   def configureAlgRun2HLT2(self, PFAlg = PatForward("PatForwardHLT2")):
@@ -53,13 +62,25 @@ class ForwardConf(object):
     self.configureGEC(PFAlg)
     PFAlg.addTool(PatForwardTool)
     PFAlg.OutputTracksName = "Rec/Track/ForwardHLT2"
-    PFAlg.PatForwardTool.MinMomentum = 1000.
-    PFAlg.PatForwardTool.SecondLoop = True
+    PFAlg.PatForwardTool.MinMomentum = 1000.    
     PFAlg.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
     PFAlg.PatForwardTool.addTool( TrackUsedLHCbID, name = "TrackUsedLHCbID")
     PFAlg.PatForwardTool.UsedLHCbIDToolName = "TrackUsedLHCbID"
     PFAlg.PatForwardTool.TrackUsedLHCbID.inputContainers = ["Rec/Track/FittedHLT1ForwardTracks"]
     PFAlg.PatForwardTool.VeloVetoTracksNames = [ "Rec/Track/FittedHLT1ForwardTracks"]
+    # optimized settings for 2016 Data taking
+    # for a faster algorithm switch off SecondLoop and NNBXF (Scenario A)
+    PFAlg.PatForwardTool.SecondLoop = True
+    PFAlg.PatForwardTool.MaxXCandidateSize = [70,26,12]
+    PFAlg.PatForwardTool.MaxSpreadX        = 1.5
+    PFAlg.PatForwardTool.MaxSpreadSlopeX   = 0.007
+    PFAlg.PatForwardTool.MaxChi2X          = 52
+    PFAlg.PatForwardTool.MaxChi2Y          = 42
+    PFAlg.PatForwardTool.NNBXF             = True
+    PFAlg.PatForwardTool.NNASF             = True
+    PFAlg.PatForwardTool.NNBXFcut          = 0.12
+    PFAlg.PatForwardTool.NNASFcut          = 0.09
+    PFAlg.PatForwardTool.NextBestResponse  = 0.75
   
 #class DownstreamConf(object):
 #  '''Configure a downstream algorithm'''

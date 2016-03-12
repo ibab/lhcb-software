@@ -1,3 +1,4 @@
+// $Id: PatForwardTool.h,v 1.3 2008-07-17 13:16:49 smenzeme Exp $
 #ifndef PATFORWARDTOOL_H
 #define PATFORWARDTOOL_H 1
 
@@ -28,10 +29,6 @@
 #include "PatKernel/PatTStationHitManager.h"
 #include "PatKernel/PatForwardHit.h"
 
-
-// For convenient trailing-return-types in C++11:
-#define AUTO_RETURN(...) noexcept(noexcept(__VA_ARGS__)) -> decltype(__VA_ARGS__) {return (__VA_ARGS__);}
-
 /** @class PatForwardTool PatForwardTool.h
  *  Tool to extend one Velo (VeloTT) track through the magnet
  *
@@ -40,7 +37,9 @@
  *  @date   2007-08-20 Update for A-Team framework
  */
 
-class PatForwardTool : public extends<GaudiTool,IPatForwardTool,ITracksFromTrack,IIncidentListener> {
+class IClassifierReader;
+
+class PatForwardTool : public extends2<GaudiTool,IPatForwardTool,ITracksFromTrack>, public IIncidentListener {
 public:
 
   /// Standard constructor
@@ -51,10 +50,12 @@ public:
   ~PatForwardTool( ) override = default; ///< Destructor
 
   StatusCode initialize() override;
+  StatusCode finalize() override;
 
-  void forwardTrack( const LHCb::Track& track, LHCb::Tracks& output ) const override;
+  void forwardTrack( const LHCb::Track* track, LHCb::Tracks* output ) override;
 
-  StatusCode tracksFromTrack( const LHCb::Track& seed, std::vector<LHCb::Track*>& output ) const override;
+  StatusCode tracksFromTrack( const LHCb::Track& seed,
+                              std::vector<LHCb::Track*>& tracks ) override;
   
   bool acceptTrack(const LHCb::Track& track) const;
   
@@ -63,24 +64,23 @@ public:
   bool nnSwitch()       const       { return m_nnSwitch;}
   
   void handle ( const Incident& incident ) override;
+  void prepareHits();
+
 private:
-  void prepareHits() const;
+  std::vector<PatFwdTrackCandidate*> buildXCandidatesList(PatFwdTrackCandidate& track , boost::iterator_range<typename PatFwdHits::const_iterator> &rng) const;
 
-  void buildXCandidatesList( PatFwdTrackCandidate& track , boost::iterator_range<typename PatFwdHits::const_iterator> rng) const;
-
-  template <typename Storage = double>
   class XInterval {
-    Storage m_zMagnet,m_xMagnet,m_txMin,m_txMax,m_xmin,m_xmax;
+    double m_zMagnet,m_xMagnet,m_txMin,m_txMax,m_xmin,m_xmax;
   public:
-    XInterval(Storage zMagnet, Storage xMagnet, Storage txMin, Storage txMax, Storage xMinRef, Storage xMaxRef)
+    XInterval(double zMagnet,double xMagnet, double txMin, double txMax, double xMinRef, double xMaxRef)
       : m_zMagnet{zMagnet}, m_xMagnet{xMagnet}, m_txMin{txMin}, m_txMax{txMax}, m_xmin {xMinRef},m_xmax{xMaxRef} {}
-    template <typename T> auto xMinAtZ(T z) const AUTO_RETURN( m_txMin*(z-m_zMagnet)+m_xMagnet )
-    template <typename T> auto xMaxAtZ(T z) const AUTO_RETURN( m_txMax*(z-m_zMagnet)+m_xMagnet )
+    double xMinAtZ(double z) const { return m_txMin*(z-m_zMagnet)+m_xMagnet; }
+    double xMaxAtZ(double z) const { return m_txMax*(z-m_zMagnet)+m_xMagnet; }
     //== This is the range at the reference plane
-    auto xMin() const AUTO_RETURN( m_xmin )
-    auto xMax() const AUTO_RETURN( m_xmax )
-    template <typename T> auto inside(T x) const AUTO_RETURN( m_xmin <= x && x < m_xmax )
-    template <typename T> auto outside(T x) const AUTO_RETURN( x < m_xmin || m_xmax <= x )
+    double xMin() const { return m_xmin; }
+    double xMax() const { return m_xmax; }
+    bool inside(double x) const { return m_xmin <= x && x < m_xmax; }
+    bool outside(double x) const { return x < m_xmin || m_xmax <= x ; }
     template <typename Range, typename Projection>
     Range inside(const Range& r, Projection p) const {
       // TODO: linear search from the edges is probably faster given the typical input...
@@ -97,8 +97,7 @@ private:
     return sinTrack * m_magnetKickParams.first / ( pt - sinTrack * m_magnetKickParams.second );
   }
 
-  template <typename T = double>
-  XInterval<T> make_XInterval(const PatFwdTrackCandidate& track) const {
+  XInterval make_XInterval(const PatFwdTrackCandidate& track) const {
     double xExtrap = track.xStraight( m_fwdTool->zReference() );
     //== calculate center of magnet from Velo track
     const double zMagnet =  m_fwdTool->zMagnet( track );
@@ -129,21 +128,22 @@ private:
         xMax = xExtrap + kickRange;
         dSlopeMax = kickRange/dz;
       }
-    }else if ( m_useProperMomentumEstimate && !m_withoutBField && track.qOverP() != 0 ) {
-      auto q = track.qOverP() > 0. ? 1. : -1.;
-      auto kick =  -q * m_fwdTool->magscalefactor() * dSlope_kick(std::abs( track.sinTrack()/track.qOverP()), track.sinTrack() );
-      auto kickError =  m_minRange/dz + m_momentumEstimateError * std::abs(kick);
-      dSlopeMin = kick - kickError;
-      dSlopeMax = kick + kickError;
-      xMin = xExtrap + dSlopeMin * dz;
-      xMax = xExtrap + dSlopeMax * dz;;
+    }else if (m_useProperMomentumEstimate && !m_withoutBField && track.qOverP() != 0 ) {
+      const double q = track.qOverP() > 0. ? 1. : -1.;
+      double kick =  (-1.)*q * m_fwdTool->magscalefactor() * dSlope_kick(std::abs(track.sinTrack()/track.qOverP()), track.sinTrack());
+      double kickError =  m_minRange/dz + m_momentumEstimateError * std::abs(kick);
+      dSlopeMin = kick-kickError;
+      dSlopeMax = kick+kickError;
+      xMin = xExtrap+dSlopeMin*dz;
+      xMax = xExtrap+dSlopeMax*dz;
     }
+
     // compute parameters of deltaX as a function of z
     return { zMagnet, track.xStraight( zMagnet ),
           track.slX()+dSlopeMin,
           track.slX()+dSlopeMax,
           xMin, xMax };
-  }
+  };
 
 
   boost::iterator_range<typename PatFwdHits::const_iterator>
@@ -210,7 +210,44 @@ private:
     return  m_withoutBField || ( momentum>m_minMomentum && pt>m_minPt) ;
   }
 
-
+  inline float nX ( const PatFwdHits &hits ) const {
+    return std::accumulate(hits.begin(),hits.end(),0,[](float last_it, const PatForwardHit *hit){ return last_it + (float)hit->isX(); });
+  }
+  inline std::pair<double,double> get_mdx_spread ( const PatFwdHits &hits ) const {
+    //not pretty, but it has to be done like this, since hits can be rearranged after the stereofit
+    auto sum_delta_x = 0.f;    std::vector<double> xproj;
+    for(auto hit : hits){ if(hit->isX()){ xproj.push_back(hit->projection()); } }
+    std::sort(xproj.begin(),xproj.end());
+    for(auto it = xproj.begin(); it != --xproj.end(); it++){ sum_delta_x += *next(it) - *it; }
+    return {sum_delta_x/(nX(hits)-1), xproj.back() - xproj.front()};
+  }
+  inline double get_cluster_mean ( const PatFwdHits &hits ) const {
+    auto sum_x = std::accumulate(hits.begin(),hits.end(),0.0,
+                                 [](double last_it, const PatForwardHit *hit){ return last_it + hit->isX()*hit->projection(); });
+    return sum_x/nX(hits);
+  }
+  inline double get_cluster_stddev ( const PatFwdHits &hits ) const {
+    auto mean = get_cluster_mean(hits);
+    auto sqs = std::accumulate(hits.begin(),hits.end(),0.0,
+                               [&mean](double last_it, const PatForwardHit *hit){ return last_it + hit->isX()*(hit->projection() - mean)*(hit->projection() - mean); });
+    return sqrt(sqs/nX(hits));
+  }
+  inline double get_Xmean ( const PatFwdHits &hits ) const {
+    auto sum_x = std::accumulate(hits.begin(),hits.end(),0.0,
+                                 [](double last_it, const PatForwardHit *hit){ return last_it + hit->isX()*hit->x(); });
+    return sum_x/nX(hits);
+  }
+  inline double get_Xstddev ( const PatFwdHits &hits ) const {
+    auto mean = get_Xmean(hits);
+    auto sqs = std::accumulate(hits.begin(),hits.end(),0.0,
+                               [&mean](double last_it, const PatForwardHit *hit){ return last_it + hit->isX()*(hit->x() - mean)*(hit->x() - mean); });
+    return sqrt(sqs/nX(hits));
+  }
+  inline double get_OTness ( const PatFwdHits &hits ) const {
+    auto nXOT = std::accumulate(hits.begin(),hits.end(),0.0,
+                                [](double last_it, const PatForwardHit *hit){ return last_it + hit->isX()*hit->isOT(); });
+    return nXOT/nX(hits);
+  }
 
   PatFwdTool*                                 m_fwdTool;        ///< Tool to compute extrapolations of tracks
   Tf::TStationHitManager <PatForwardHit> *    m_tHitManager;    ///< Tool to provide hits
@@ -219,12 +256,12 @@ private:
   std::string                                 m_addUtToolName;
 
   std::string      m_trackSelectorName;
-  ITrackSelector*      m_trackSelector = nullptr;
+  ITrackSelector*      m_trackSelector;
 
   //== Parameters of the algorithm
   bool   m_secondLoop;
   bool   m_useMomentumEstimate;
-  bool m_useProperMomentumEstimate;
+  bool   m_useProperMomentumEstimate;
   double m_momentumEstimateError;
   double m_zAfterVelo;
   double m_yCompatibleTol;
@@ -235,18 +272,19 @@ private:
   double m_maxSpreadY;
   double m_maxSpreadSlopeX;
   double m_maxSpreadSlopeY;
-  mutable int    m_minXPlanes;
-  mutable int    m_minPlanes;
+  int    m_minXPlanes;
+  int    m_minPlanes;
   double m_minPt;
   double m_minMomentum;
-  double m_maxChi2;
-  double m_maxChi2Track;
+  double m_maxChi2X;
+  double m_maxChi2Y;
   int    m_minHits;
   int    m_minOTHits;
   double m_centerOTYSize;
   double m_maxDeltaY;
   double m_maxDeltaYSlope;
-  unsigned int m_maxXCandidateSize;
+  std::vector <int> m_maxXCandidateSize;
+  static const int m_maxXPlanes = 6;//number of XPlanes in the T-stations
 
   std::pair<double,double>  m_magnetKickParams ;
   double m_minRange;
@@ -258,10 +296,9 @@ private:
   double m_stateErrorTY2;
   double m_stateErrorP;
 
-  mutable bool m_newEvent;
+  bool m_newEvent;
   
   mutable PatFwdHits  m_xHitsAtReference; // workspace
-  mutable std::vector<PatFwdTrackCandidate> m_candidates; // workspace
 
   bool  m_withoutBField;
   bool  m_Preselection;
@@ -276,6 +313,14 @@ private:
   IUsedLHCbID*                                m_usedLHCbIDTool; ///< Tool to check if hits are already being used
 
   bool  m_nnSwitch = false;           // switch on or off NN var. writing
+
+  bool   m_NNBXF;
+  bool   m_NNASF;
+  double m_BXF4XPcut;  
+  double m_ASFcut;
+  double m_nbr;
+  IClassifierReader* m_BXF4reader;  
+  IClassifierReader* m_ASFreader ;
 };
 
 #endif // PATFORWARDTOOL_H

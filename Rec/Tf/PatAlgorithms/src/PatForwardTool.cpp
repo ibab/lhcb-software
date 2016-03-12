@@ -17,6 +17,11 @@
 #include "PatFwdPlaneCounter.h"
 #include "PatFwdRegionCounter.h"
 
+#include "vdt/log.h"
+
+#include "TMVA/Forward/BXF_4XPlanes.class.C"
+#include "TMVA/Forward/ASFDeep.class.C"
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatForwardTool
 //
@@ -85,14 +90,8 @@ class RangeGenerator {
   Iter next(Iter current) const { return std::next( std::move(current), m_minPlanes-1 ); }
 public:
   RangeGenerator( int minPlanes, Iter last ) :  m_last{ std::move(last) }, m_minPlanes{minPlanes} { }
-
-  template <typename Iterator> 
-  bool operator()(Iterator&& first, Iterator&& last) const
-  { return std::distance(std::forward<Iterator>(first),std::forward<Iterator>(last)) > m_minPlanes-1; }
-
-  template <typename Iterator>
-  bool operator()(Iterator&& first ) const 
-  { return std::distance(std::forward<Iterator>(first),m_last) > m_minPlanes-1; }
+  template <typename Iterator> bool operator()(Iterator&& first, Iterator&& last) const { return std::distance(std::forward<Iterator>(first),std::forward<Iterator>(last)) > m_minPlanes-1; }
+  template <typename Iterator> bool operator()(Iterator&& first ) const { return std::distance(std::forward<Iterator>(first),m_last) > m_minPlanes-1; }
 
   template <typename Iterator, typename Predicate>
   boost::iterator_range<Iterator> next_range(Iterator first, Predicate predicate)
@@ -234,6 +233,8 @@ PatForwardTool::PatForwardTool( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
   : base_class( type, name , parent )
+  , m_trackSelector(nullptr)
+
 {
   declareInterface<IPatForwardTool>(this);
   declareInterface<ITracksFromTrack>(this);
@@ -252,21 +253,21 @@ PatForwardTool::PatForwardTool( const std::string& type,
   declareProperty( "MaxSpreadSlopeY"       , m_maxSpreadSlopeY       = 70.   );
   declareProperty( "MinPt"                 , m_minPt                 = 80. * Gaudi::Units::MeV );
   declareProperty( "MinMomentum"           , m_minMomentum           =  1. * Gaudi::Units::GeV );
-  declareProperty( "MaxChi2"               , m_maxChi2               =  40       );
-  declareProperty( "MaxChi2Track"          , m_maxChi2Track          =  40       );
+  declareProperty( "MaxChi2X"              , m_maxChi2X              =  40       );
+  declareProperty( "MaxChi2Y"              , m_maxChi2Y              =  40       );
   declareProperty( "MinHits"               , m_minHits               =  12       );
   declareProperty( "MinOTHits"             , m_minOTHits             =  14       );
   declareProperty( "CenterOTYSize"         , m_centerOTYSize         =  100 * Gaudi::Units::mm );
   declareProperty( "MaxDeltaY"             , m_maxDeltaY             =  30.      );
   declareProperty( "MaxDeltaYSlope"        , m_maxDeltaYSlope        =  300.      );
-  declareProperty( "MaxXCandidateSize"     , m_maxXCandidateSize     =  50       );
+  declareProperty( "MaxXCandidateSize"     , m_maxXCandidateSize     =  {70,36,20});
 
   declareProperty( "MagnetKickParams"      , m_magnetKickParams      =  { 1255 * Gaudi::Units::MeV, 175 * Gaudi::Units::MeV } );
 
-  declareProperty( "UseMomentumEstimate", m_useMomentumEstimate = false ); // Uses charge estimate only.
+  declareProperty( "UseMomentumEstimate", m_useMomentumEstimate = false );// Uses charge estimate only.
   declareProperty( "UseProperMomentumEstimate", m_useProperMomentumEstimate = false ); // Uses momentum and charge estimate.
-  declareProperty( "MomentumEstimateError"    , m_momentumEstimateError    =  0.3 );
-  declareProperty( "MinRange"              , m_minRange              =   100. * Gaudi::Units::mm  ); //Only used when using momentum estimate.
+  declareProperty( "MomentumEstimateError"    , m_momentumEstimateError    =  0.5 );
+  declareProperty( "MinRange"              , m_minRange              =   300. * Gaudi::Units::mm  );//Only used when using momentum estimate.
 
   declareProperty("StateErrorX2",  m_stateErrorX2  =   4.0);
   declareProperty("StateErrorY2",  m_stateErrorY2  = 400.);
@@ -290,6 +291,12 @@ PatForwardTool::PatForwardTool( const std::string& type,
   declareProperty( "UsedLHCbIDToolName",m_LHCbIDToolName = "");
   //declareProperty( "UnusedVeloSeeds", m_unusedVeloSeeds = false);
   declareProperty( "TrackSelectorName",  m_trackSelectorName   = "None");
+
+  declareProperty( "NNBXF"           , m_NNBXF        = false );
+  declareProperty( "NNASF"           , m_NNASF        = true  );
+  declareProperty( "NNBXFcut"        , m_BXF4XPcut    = 0.1   );
+  declareProperty( "NNASFcut"        , m_ASFcut       = 0.1   );
+  declareProperty( "NextBestResponse", m_nbr          = 0.1   );
 
 }
 
@@ -327,7 +334,43 @@ StatusCode PatForwardTool::initialize ( ) {
 
   m_skipUsedSeeds = !m_veloVetoTracksNames.empty();
 
+  if (m_useMomentumEstimate && m_useProperMomentumEstimate){
+    warning()<<"You have activated UseMomentumEstimate which uses only the charge measurement of the seed track"<<endmsg;
+    warning()<<"and UseProperMomentumEstimate which uses the momentum estimate of the seed track."<<endmsg;
+    warning()<<"Will use UseMomentumEstimate."<<endmsg;
+  }
+
+  if(m_NNBXF){
+    std::vector<std::string> BXFvarnames{"mdx", "sx", "spread", "pp", "nwHits", "sx_pos", "mx", "tx", "ty"};
+    m_BXF4reader = new Read4XPlanes(BXFvarnames);
+  }
+  if(m_NNASF){
+    std::vector<std::string> ASFvarnames{"mdx", "sx", "spread", "nwHits", "mx", "nPlanes", "tx", "ty", "log(PT)", "log(chi2)", "log(P)", "Bx", "dt", "xRef", "nYPlanes", "sdy"};
+    m_ASFreader  = new ReadASFDeep(ASFvarnames);
+  }
+
+  info() << "Running PatForwardTool with the following options:"                                 << endmsg;
+  info() << "MaxXCandidateSize: "; for(auto i : m_maxXCandidateSize){info() << i << " ";} info() << endmsg;
+  info() << "MaxSpreadSlopeX  : " << m_maxSpreadSlopeX                                           << endmsg;
+  info() << "MaxSpreadX       : " << m_maxSpreadX                                                << endmsg;
+  info() << "MaxChi2X         : " << m_maxChi2X                                                  << endmsg;
+  info() << "MaxChi2Y         : " << m_maxChi2Y                                                  << endmsg;
+  info() << "NNBXF            : " << m_NNBXF                                                     << endmsg;
+  info() << "NNASF            : " << m_NNASF                                                     << endmsg;
+  info() << "NNBXFcut         : " << m_BXF4XPcut                                                 << endmsg;
+  info() << "NNASFcut         : " << m_ASFcut                                                    << endmsg;
+  info() << "NextBestResponse : " << m_nbr                                                       << endmsg;
+
   return StatusCode::SUCCESS;
+}
+
+//=========================================================================
+//  Finalization, delete readers
+//=========================================================================
+StatusCode PatForwardTool::finalize ( ) {
+  if(m_NNBXF){delete m_BXF4reader;}
+  if(m_NNASF){delete m_ASFreader;}
+  return GaudiTool::finalize();
 }
 
 //=============================================================================
@@ -344,7 +387,7 @@ void PatForwardTool::handle ( const Incident& incident ) {
 //=========================================================================
 //  Prepare hits
 //=========================================================================
-void PatForwardTool::prepareHits() const
+void PatForwardTool::prepareHits()
 {
   m_tHitManager->prepareHits();
   //== if any hits to be flagged as used, do so now...
@@ -395,19 +438,19 @@ bool PatForwardTool::acceptTrack(const LHCb::Track& track) const
 //=========================================================================
 //  Main execution: Extend a track.
 //=========================================================================
-void 
-PatForwardTool::forwardTrack( const LHCb::Track& tr, LHCb::Tracks& output ) const
-{
-  std::vector<LHCb::Track*> out;
-  tracksFromTrack(tr,out).ignore();
+void PatForwardTool::forwardTrack( const LHCb::Track* tr, LHCb::Tracks* output ) {
 
-  output.reserve(output.size()+out.size());
-  for ( const auto& i : out) output.insert(i);
+  std::vector<LHCb::Track*> outvec;
+  tracksFromTrack(*tr,outvec).ignore();
+
+  output->reserve(output->size()+outvec.size());
+  for ( const auto& i : outvec ) output->insert(i);
 }
 
-StatusCode
-PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector<LHCb::Track*>& output ) const {
+StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
+                                            std::vector<LHCb::Track*>& output ){
   if ( !acceptTrack(seed) ) return StatusCode::SUCCESS;
+
   counter("#Seeds") += 1;
 
   PatFwdTrackCandidate track( &seed );
@@ -428,6 +471,8 @@ PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector<LHCb::Trac
   // correct.
   if(m_newEvent) prepareHits();
   //m_tHitManager->prepareHits();
+
+  //== Project hits into reference plane
   auto rng = fillXList( track ) ;
 
   bool processingSecondLoop = false;
@@ -445,7 +490,7 @@ PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector<LHCb::Trac
           hit->setIgnored( false );
           hit->setRlAmb( 0 );
           hit->setSelected( this->driftInRange(*hit) );
-          if(not_selected(hit)) { 
+          if(not_selected(hit)) {
             // move the 'bad' hit to the end of rng, and shorten the range..
             // do NOT erase from m_xHitsAtReference , as then rng is invalidated!
             auto w_f = std::next( m_xHitsAtReference.begin(), std::distance(m_xHitsAtReference.cbegin(),it ) );
@@ -462,31 +507,53 @@ PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector<LHCb::Trac
         }
       }
     }
-
     //== Build the initial list of X candidates
-    buildXCandidatesList( track, rng );
+    auto xcandidates = buildXCandidatesList( track, rng );
 
     int minPlanes = m_minPlanes;  //== Initial value, can be updated later...
 
-    std::vector<PatFwdTrackCandidate> xCandidates; xCandidates.reserve( m_candidates.size() );
+    std::vector<PatFwdTrackCandidate> xCandidates;
 
     int minOTX = int( 1.5 * m_minXPlanes );
     auto accept = [=](const PatFwdTrackCandidate& cnd) {
       //== Check the chi2 with magnet center constraint.
       //== Count how many weighted hits
       //== reject if below threshold
-      return cnd.chi2PerDoF() < m_maxChi2Track &&
-          ( !m_withoutBField || fabs(cnd.slX()-cnd.xSlope(0.))<0.005) &&
+      return ( !m_withoutBField || fabs(cnd.slX()-cnd.xSlope(0.))<0.005) &&
           ( nT(cnd) >= minOTX || inCenter(cnd) ) &&
           passMomentum( cnd, track.sinTrack() );
     };
 
-    for( auto& icand : m_candidates ) {
+    for( auto icand : xcandidates ) {
+
+      std::for_each(std::begin(icand->coords()),std::end(icand->coords()),[](PatForwardHit *hit){hit->setIsUsed(false);});
+
+      if( m_NNBXF && nbDifferent(icand->coords()) == 4 ){
+        //"mdx", "sx", "spread", "pp", "nwHits", "sx_pos", "mx", "tx", "ty"
+        std::vector<double> BXFMVAvariables;
+        auto mdx_spread = get_mdx_spread(icand->coords());
+        BXFMVAvariables.push_back( mdx_spread.first );
+        BXFMVAvariables.push_back( get_cluster_stddev(icand->coords()) );
+        BXFMVAvariables.push_back( mdx_spread.second );
+        BXFMVAvariables.push_back( get_cluster_mean(icand->coords()) - icand->xStraight(m_fwdTool->zReference()) );
+        BXFMVAvariables.push_back( nT(*icand) );
+        BXFMVAvariables.push_back( get_Xstddev(icand->coords()) );
+        BXFMVAvariables.push_back( get_Xmean(icand->coords()) );
+        BXFMVAvariables.push_back( icand->slX() );
+        BXFMVAvariables.push_back( icand->slY() );
+        double MVAResponse = 0.f;
+
+        MVAResponse = m_BXF4reader->GetMvaValue(BXFMVAvariables);
+        if ( UNLIKELY(isDebug) )
+          debug() << "MVA response " << MVAResponse << endmsg;
+        if( MVAResponse < m_BXF4XPcut ) continue;
+      }
+
       //== Fit the candidate, and store them (fitXCandidate also updates the hits
-      while ( m_fwdTool->fitXCandidate( icand, m_maxChi2, m_minXPlanes ) ) {
+      while ( m_fwdTool->fitXCandidate( *icand, m_maxChi2X, m_minXPlanes ) ) {
 
         // Copy the whole stuff, keep only used ones and store it.
-        PatFwdTrackCandidate temp = icand;
+        PatFwdTrackCandidate temp(*icand);
         temp.cleanCoords();
         m_fwdTool->chi2PerDoF( temp );  // Compute and store chi2/dof
         if ( UNLIKELY(isDebug) ) {
@@ -495,12 +562,11 @@ PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector<LHCb::Trac
                   << endmsg;
           debugFwdHits( temp );
         }
-        if ( accept(temp) ) xCandidates.push_back( std::move(temp) );
 
         //== tag these coordinates in the original, so that we don't find the same track again
-        std::for_each( std::begin(icand), std::end(icand), [](PatFwdHit* hit) {
-          if ( hit->isSelected() ) hit->setIgnored( true );
-        } );
+        std::for_each( std::begin(*icand), std::end(*icand), [](PatFwdHit* hit) {if ( hit->isSelected() ) hit->setIgnored( true );} );
+        if ( !accept(temp) )continue;
+        xCandidates.push_back( std::move(temp) );
       }
     }
 
@@ -538,7 +604,7 @@ PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector<LHCb::Trac
       temp.setSelectedCoords( );
 
       //== Fit and reject if not good enough
-      if ( !m_fwdTool->fitStereoCandidate( temp, m_maxChi2, minPlanes ) ) continue;
+      if ( !m_fwdTool->fitStereoCandidate( temp, m_maxChi2Y, minPlanes ) ) continue;
 
       temp.cleanCoords();
       m_fwdTool->chi2PerDoF( temp );  //== compute and store Chi2PerDoF
@@ -563,16 +629,15 @@ PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector<LHCb::Trac
         continue;
       }
 
-      if ( m_maxDeltaY + m_maxDeltaYSlope * qOverP *qOverP < fabs(  m_fwdTool->changeInY( temp ) ))  {
+      if (!m_NNASF && m_maxDeltaY + m_maxDeltaYSlope * qOverP *qOverP < fabs(  m_fwdTool->changeInY( temp ) ))  {
         if( UNLIKELY( isDebug ) ) debug() << "  --- Too big change in Y : " <<  m_fwdTool->changeInY( temp ) << endmsg;
         continue;
       }
 
-      temp.setQuality( computeQuality(temp, qOverP) );
+      if(!m_NNASF) temp.setQuality( computeQuality(temp, qOverP) );
 
       //== Verify if enough OT measurements, counting IT for 2/plane
       //== Ignore the y central region, OT inefficient there.
-
       PatFwdRegionCounter regions( std::begin(temp), std::end(temp) );
       temp.setNbIT( regions.nbIT() );
       temp.setNbOT( regions.nbOT() );
@@ -596,6 +661,37 @@ PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector<LHCb::Trac
 
       //== Update requirement according to already found good solutions...
       minPlanes = std::max( minPlanes,   nbDifferent(temp)-1 );
+
+      if(m_NNASF){
+        std::vector<double> ASFMVAvariables;
+        //"mdx", "sx", "spread", "nwHits", "mx", "nPlanes", "tx", "ty", "log(PT)", "log(chi2)", "log(P)", "Bx", "dt", "xRef", "nYPlanes", "sdy"
+        auto qop_af = computeQOverP(temp);
+        auto toldy = m_maxDeltaY + qop_af*qop_af*m_maxDeltaYSlope;
+        auto dy_over_toldy = fabs(m_fwdTool->changeInY(temp))/toldy;
+        auto momentum = 1.0/fabs(qop_af);
+        auto mdx_spread = get_mdx_spread(temp.coords());
+        ASFMVAvariables.push_back(mdx_spread.first);
+        ASFMVAvariables.push_back(get_cluster_stddev(temp.coords()));
+        ASFMVAvariables.push_back(mdx_spread.second);
+        ASFMVAvariables.push_back(nT(temp));
+        ASFMVAvariables.push_back(get_Xmean(temp.coords()) );
+        ASFMVAvariables.push_back(nbDifferent(temp.coords()));
+        ASFMVAvariables.push_back(temp.slX());
+        ASFMVAvariables.push_back(temp.slY());
+        ASFMVAvariables.push_back(vdt::fast_log(temp.sinTrack()*momentum));
+        ASFMVAvariables.push_back(vdt::fast_log(temp.chi2PerDoF()));
+        ASFMVAvariables.push_back(vdt::fast_log(momentum));
+        ASFMVAvariables.push_back(temp.bx());
+        ASFMVAvariables.push_back(temp.dSlope());
+        ASFMVAvariables.push_back(temp.x(m_fwdTool->zReference()));
+        ASFMVAvariables.push_back(PatFwdPlaneCounter{temp}.nbStereo());
+        ASFMVAvariables.push_back(dy_over_toldy);
+
+        auto netresponse = m_ASFreader->GetMvaValue(ASFMVAvariables);
+        if(netresponse < m_ASFcut) continue;
+        temp.setQuality(netresponse);
+      }
+
       goodCandidates.push_back( std::move(temp) );
     }
 
@@ -616,33 +712,41 @@ PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector<LHCb::Trac
       }
     }
     // end of NNTools loop
-    //================================================================================
-    //  Now some filtering of tracks, in case of multiple candidates.
-    //================================================================================
 
-    if ( goodCandidates.size() > 1  ) {
+    if ( goodCandidates.size() > 1 ) {
 
-      // remove track with sensibly lower number of planes
-      int minPlanes = maxPlanes - 1;
-      auto last = std::remove_if( std::begin(goodCandidates), std::end(goodCandidates),
-                                  [=](const PatFwdTrackCandidate& t) { return nbDifferent(t) < minPlanes; } );
-      // remove worst quality
-      auto bestQuality = std::accumulate( std::begin(goodCandidates), last, 1000.,
-                                          [](double m, const PatFwdTrackCandidate& t) { return std::min(m,t.quality()); } );
-      bestQuality += 1.0;
-      last = std::remove_if( std::begin(goodCandidates), last,
-                             [=](const PatFwdTrackCandidate& t) { return t.quality()  >= bestQuality; }  );
-      // remove if sensibly less OT
-      auto maxOT = std::accumulate( std::begin(goodCandidates), last, 0,
-                                    [](int m, const PatFwdTrackCandidate& t) { return std::max(m,nbT(t)); } );
-      maxOT = std::min(24,maxOT)-3;
-      last = std::remove_if( std::begin(goodCandidates), last,
-                             [=](const PatFwdTrackCandidate& t) { return nbT(t)  <= maxOT; }  );
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
-        debug() << "Ignoring " << std::distance(last,std::end(goodCandidates))
-                << " candidates -- either not enough planes, or bad quality, or not enough OT" << endmsg;
+      if(m_NNASF){
+        auto bestQuality = (*(std::max_element(goodCandidates.begin(),goodCandidates.end(),
+                                               [](const PatFwdTrackCandidate& t, const PatFwdTrackCandidate& f){return t.quality() < f.quality();}))).quality();
+        //remove_if will move elements that are not to be removed appear in the beginning of the range
+        auto last = std::remove_if( goodCandidates.begin(), goodCandidates.end(), [=](const PatFwdTrackCandidate& t) { return t.quality() < bestQuality * m_nbr; }  );
+        //that means, that the "bad" elements will have to be erased by hand
+        goodCandidates.erase(last,std::end(goodCandidates));
       }
-      goodCandidates.erase(last,std::end(goodCandidates));
+      else {
+        // remove track with sensibly lower number of planes
+        int minPlanes = maxPlanes - 1;
+        auto last = std::remove_if( std::begin(goodCandidates), std::end(goodCandidates),
+                                    [=](const PatFwdTrackCandidate& t) { return nbDifferent(t) < minPlanes; } );
+        // remove worst quality
+        auto bestQuality = std::accumulate( std::begin(goodCandidates), last, 1000.,
+                                            [](double m, const PatFwdTrackCandidate& t) { return std::min(m,t.quality()); } );
+        bestQuality += 1.0;
+        last = std::remove_if( std::begin(goodCandidates), last,
+                               [=](const PatFwdTrackCandidate& t) { return t.quality()  >= bestQuality; }  );
+        // remove if sensibly less OT
+        auto maxOT = std::accumulate( std::begin(goodCandidates), last, 0,
+                                      [](int m, const PatFwdTrackCandidate& t) { return std::max(m,nbT(t)); } );
+        maxOT = std::min(24,maxOT)-3;
+        last = std::remove_if( std::begin(goodCandidates), last,
+                               [=](const PatFwdTrackCandidate& t) { return nbT(t)  <= maxOT; }  );
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+          debug() << "Ignoring " << std::distance(last,std::end(goodCandidates))
+                  << " candidates -- either not enough planes, or bad quality, or not enough OT" << endmsg;
+        }
+        goodCandidates.erase(last,std::end(goodCandidates));
+      }
+
     }
 
     if( UNLIKELY( isDebug ) )
@@ -714,7 +818,6 @@ PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector<LHCb::Trac
     // std::for_each( std::begin(seed.ancestors()), std::end(seed.ancestors()),
     //                 [](const LHCb::Track* anc) { const_cast<LHCb::Track*>(anc)->setFlag(LHCb::Track::Used,true); } );
     //}
-
     if(processingSecondLoop){
       m_minXPlanes += 1;
       m_minPlanes += 1;
@@ -727,7 +830,6 @@ PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector<LHCb::Trac
     }
     else break;
   }
-
   counter("#FinishedTracks") += output.size();
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "Finished track" << endmsg;
   return StatusCode::SUCCESS;
@@ -885,6 +987,7 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
   }
 
   //== Select a coherent group
+
   auto bestRangeFinder = make_BestRangeFinder(boost::make_iterator_range(std::end(temp),std::end(temp)), 0, 1000. );
 
   unsigned int minYPlanes = 4;
@@ -950,10 +1053,10 @@ void PatForwardTool::debugFwdHits ( const PatFwdTrackCandidate& track, MsgStream
 //=========================================================================
 //  Build the list of vector of X hit candidates.
 //=========================================================================
-void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track,
-                                            boost::iterator_range<typename PatFwdHits::const_iterator> rng ) const{
+std::vector<PatFwdTrackCandidate*> PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track,
+                                                                          boost::iterator_range<typename PatFwdHits::const_iterator> &rng ) const{
 
-  m_candidates.clear();
+  std::vector<PatFwdTrackCandidate*> Candidates;
 
   auto iter = std::begin(rng);
   auto sentinel = make_RangeGenerator( m_minXPlanes, std::end(rng) );
@@ -962,17 +1065,14 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track,
   while ( sentinel( iter ) ) {
     auto predicate = make_predicate(*iter);
     auto range = sentinel.next_range( iter, std::cref(predicate) );
-    if (!range.empty() && range.size()  <  m_maxXCandidateSize ) {
-      //== Protect against too dirty area.
-      //== Merge the lists, if the first new point is close to the last one...
-      if (!m_candidates.empty() && predicate(m_candidates.back().coords().back(), range.front() )) {
-        m_candidates.back().addCoords( std::begin(range), std::end(range));
-      } else {
-        m_candidates.emplace_back( track.track(), std::begin(range), std::end(range) );
-      }
-    }
     iter = std::end(range);
+    auto inx = m_maxXPlanes-nbDifferent(range);
+    if (inx >= (int)m_maxXCandidateSize.size() || inx < 0) continue;
+    if (range.empty() || std::accumulate(range.begin(),range.end(),0,
+                                         [](int last_it, const PatForwardHit *hit){return last_it + (int)(hit->isOT() + 2*(!hit->isOT()));})> m_maxXCandidateSize.at(inx) ) continue;
+    Candidates.emplace_back( new PatFwdTrackCandidate(track.track(), std::begin(range), std::end(range)) );
   }
+  return std::move(Candidates);//should be moved implicitly, but who knows?
 }
 
 //=============================================================================
