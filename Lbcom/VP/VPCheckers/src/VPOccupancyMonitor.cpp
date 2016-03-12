@@ -37,14 +37,14 @@ StatusCode VPOccupancyMonitor::initialize() {
   // Get detector element
   m_det = getDet<DeVP>(DeVPLocation::Default);
 
-  for (auto its = m_det->sensorsBegin(); its != m_det->sensorsEnd(); ++its) {
-    if ((*its)->station() != m_station) continue;
-    const unsigned int sn = (*its)->sensorNumber();
+  for (auto sensor : m_det->sensors()) {
+    if (sensor->station() != m_station) continue;
+    const unsigned int sn = sensor->sensorNumber();
     for (unsigned int i = 0; i < VP::NChipsPerSensor; ++i) {
       for (unsigned int j = 0; j < VP::NColumns; ++j) {
         for (unsigned int k = 0; k < VP::NRows; ++k) {
           LHCb::VPChannelID id(sn, i, j, k);
-          Gaudi::XYZPoint p = (*its)->channelToPoint(id, false);
+          Gaudi::XYZPoint p = sensor->channelToPoint(id, false);
           plot(p.rho(), "ChannelsPerBin", 5.1, 40.1, 500); 
         } 
       }

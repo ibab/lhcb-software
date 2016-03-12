@@ -1,6 +1,3 @@
-// Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // LHCb
 #include "Linker/LinkerTool.h"
 
@@ -17,8 +14,7 @@ DECLARE_ALGORITHM_FACTORY(VPTrackEff)
 //=============================================================================
 VPTrackEff::VPTrackEff(const std::string& name,
                        ISvcLocator* pSvcLocator ) :
-  GaudiTupleAlg(name, pSvcLocator),
-  m_det(NULL) {
+  GaudiTupleAlg(name, pSvcLocator) {
 
   declareProperty("TrackLocation", m_trackLocation = LHCb::TrackLocation::Velo);
   declareProperty("MCHitLocation", m_mchitLocation = LHCb::MCHitLocation::VP);
@@ -72,7 +68,7 @@ StatusCode VPTrackEff::execute() {
   
   // First collect hits
   for (const LHCb::MCHit* hit : *hits) {
-    if (hit == NULL) {
+    if (!hit) {
       warning() << "MCHit shouldn't be NULL!" << endmsg;
       continue;
     }
@@ -83,9 +79,9 @@ StatusCode VPTrackEff::execute() {
       continue;
     }
     bool inAA(false);
-    for (auto it = m_det->sensorsBegin(); it != m_det->sensorsEnd(); ++it) {
-      if (!(*it)->isInside(hit->midPoint())) continue;
-      if ((*it)->isInActiveArea((*it)->globalToLocal(hit->midPoint()))) {
+    for (const auto sensor : m_det->sensors()) {
+      if (!sensor->isInside(hit->midPoint())) continue;
+      if (sensor->isInActiveArea(sensor->globalToLocal(hit->midPoint()))) {
         inAA = true;
         break;
       }

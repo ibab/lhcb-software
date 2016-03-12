@@ -39,7 +39,7 @@ private:
   std::string m_trackLocation;    ///< Input track container location
   std::string m_mchitLocation;    ///< Input hit container location
  
-  const DeVP* m_det;
+  const DeVP* m_det = nullptr;
 
 };
 
