@@ -31,6 +31,7 @@
 // ============================================================================
 #include "LoKi/Trees.h"
 #include "LoKi/Child.h"
+#include "LoKi/DecayChain.h"
 // ============================================================================
 // ROOT/Mathlib
 // ============================================================================
@@ -96,6 +97,7 @@ namespace
   const LHCb::Math::Equal_To<double> s_equal ; // equality comparison 
   // ==========================================================================
 }
+//
 // ============================================================================
 // load the data from the daughter particles into the internal structures 
 // ============================================================================
@@ -116,7 +118,18 @@ StatusCode LoKi::VertexFitter::_load
   //
   if ( !LoKi::KalmanFilter::okForVertex ( m_entries ) &&
        ( !m_use_rho_like_branch || !LoKi::KalmanFilter::rhoPlusLike ( m_entries ) ) )
-  { return _Error( "Input set could not be vertexed"  , InvalidData ) ; }
+  {
+    const bool dbg = msgLevel ( MSG::DEBUG ) ;
+    StatusCode sc  = _Error( "Input set could not be vertexed"  , 
+                             InvalidData  , dbg ? 100 : 2     ) ;
+    if ( dbg ) 
+    {
+      LoKi::DecayChain printer ;
+      error() << "Problem to vertex:"  << endmsg  
+              << printer.print_ ( ds ) << endmsg ;
+    }
+    return sc ;
+  }
   //
   return StatusCode::SUCCESS ;
 } 

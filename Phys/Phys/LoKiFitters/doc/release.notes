@@ -5,6 +5,9 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2016-03-12 - Vanya Belyaev
+ - improve a bit the printout to for easier debugging 
+
 !===================== Phys/LoKiFitters v4r20 2016-02-04 ======================
 
 ! 2016-01-21 - Vanya Belyaev
