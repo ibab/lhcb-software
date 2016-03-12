@@ -1131,9 +1131,10 @@ bool LoKi::KalmanFilter::okForVertex
     //
     switch ( ientry->m_type ) 
     {
-    case ShortLivedParticle : return true ;           // RETURN 
-    case LongLivedParticle  : ++nLong ; break ;
-    default                 :           break ;
+    case ShortLivedParticle  : return true ;           // RETURN 
+    case LongLivedParticle   : ++nLong ; break ;
+    case RhoPlusLikeParticle : ++nLong ; break ;
+    default                  :           break ;
     } 
     //
     if ( 2 <= nLong )       { return true ; }        //  RETURN 
