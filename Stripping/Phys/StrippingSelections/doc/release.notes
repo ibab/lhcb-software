@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-03-12  Cédric Potterat
+ - changing LoKi::VertexFiiter for MomentumCombiner in StrippingMicroDiJets.py
+
 ! 2016-03-09 - Andrea Contu
  - New test script for s26
 

@@ -40,7 +40,7 @@ class MicroDiJetsConf( LineBuilder ) :
 
         self._myname = name
         self._config = config
-        
+
         self.emptySel = ClearDaughters("MDSTJets", Inputs = ["Phys/StdJets/Particles"])
         self.emptySelLoc = updateDoD(self.emptySel)
         #print self.emptySelLoc
@@ -48,7 +48,7 @@ class MicroDiJetsConf( LineBuilder ) :
         #print self.emptySelLoc
 
         self.sel_MicroDiJets  = self.makeJetGroup (self._myname + 'MicroDiJets')
-        
+
         self.line_MicroDiJetsLine = StrippingLine( self._myname + 'Line',
                                                   prescale  = config[ 'MicroDiJetsLine_Prescale' ],
                                                   postscale = config[ 'MicroDiJetsLine_Postscale' ],
@@ -59,8 +59,8 @@ class MicroDiJetsConf( LineBuilder ) :
                                                   )
 
         self.registerLine( self.line_MicroDiJetsLine )
-     
-     
+
+
 
 
 
@@ -68,21 +68,21 @@ class MicroDiJetsConf( LineBuilder ) :
 
         JetGroup = CombineParticles("Combine"+_name)
         JetGroup.DecayDescriptor = "H_10 -> CELLjet CELLjet"
-       
-      
-        
-        JetGroup.ParticleCombiners = {"" : "LoKi::VertexFitter"}
-        JetGroup.addTool( LoKi__VertexFitter, name="LoKi::VertexFitter" )
-        vfitter = getattr ( JetGroup , "LoKi::VertexFitter" )
-        vfitter.Jets = ""
-        
+
+
+
+        JetGroup.ParticleCombiners = {"" : "MomentumCombiner"}
+       # JetGroup.addTool( LoKi__VertexFitter, name="LoKi::VertexFitter" )
+       # vfitter = getattr ( JetGroup , "LoKi::VertexFitter" )
+       # vfitter.Jets = ""
+
         JetGroup.DaughtersCuts = { "CELLjet" :" (PT > %(min_jet_pT)s ) " %self._config }
-     
+
         JetGroup.CombinationCut = "AALLSAMEBPV "
         JetGroup.MotherCut = "ALL"
-        
+
         return Selection("Sel"+_name, Algorithm = JetGroup, RequiredSelections = [DataOnDemand(self.emptySelLoc)])
-        
 
 
-  
+
+
