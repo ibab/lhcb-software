@@ -11,6 +11,7 @@
 ! 2016-03-10 - Vanya Belyaev
  - restore multicore with pathos.multiprocessing 
  - fix progress bar 
+ - add slicing for TChain 
 
 !=========================== Ostap v1r14 2016-03-07 ===========================
 
