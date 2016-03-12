@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$Id: test_selection_sequence.py,v 1.22 2010-05-26 14:31:29 jpalac Exp $
+#$Id$
 '''
 Test suite for SelectionSequence class.
 '''

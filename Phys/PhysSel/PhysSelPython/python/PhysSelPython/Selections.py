@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$ 
+# $Id$ 
 # =============================================================================
 ## @file PhysSelPython/Selections.py
 #  Collection of high-level blocks for ``Seelctions''-framework
@@ -27,9 +27,9 @@
 #  @author Juan  PALACIOS 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #
-#                    $Revision:$
-#  Last modification $Date:$
-#                 by $Author:$ 
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$ 
 # =============================================================================
 """ Collection of high-level blocks for ``Selections''-framework:
 
@@ -53,7 +53,7 @@ Derived blocks:
 """
 # =============================================================================
 __author__  = 'Juan PALACIOS, Vanya BELYAEV'
-__version__ = '$Revision:$'
+__version__ = '$Revision$'
 __date__    = '2016-03-12'
 __all__     = ( 'AutomaticData'                 ,
                 'Selection'                     ,

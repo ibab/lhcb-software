@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#$Id: test_multi_selection_sequence.py,v 1.7 2010-05-26 13:47:18 jpalac Exp $
+#$Id$
 '''
 Test suite for MultiSelectionSequence class.
 '''

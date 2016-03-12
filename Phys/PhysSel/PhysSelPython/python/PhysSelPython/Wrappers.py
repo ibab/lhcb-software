@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.50 2010-08-11 08:42:14 ibelyaev Exp $
+#$Id$
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
