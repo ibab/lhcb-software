@@ -6,6 +6,13 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2016-03-12 - Vanya Belyaev
+  - Functions.cpp, 
+  - Bernstein.cpp, 
+  - Polynomials.cpp, 
+  - Hesse.cpp    
+   fix minor problems reported by Marco Cattaneo (&Coverity)
+
 ! 2016-03-10 - Vanya Belyaev
  - fix test 
 

@@ -9135,11 +9135,18 @@ double Gaudi::Math::Sigmoid::integral
   else if ( high < xmin ()            ) { return 0 ; }
   else if ( low  > xmax ()            ) { return 0 ; }
   //
-  else if ( s_zero ( m_alpha ) ) { return m_positive.integral ( high , low ) ; }
+  else if ( s_zero ( m_alpha ) ) { return m_positive.integral ( low , high ) ; }
   //
-  // split it:
+  // split it, if needed 
   if ( low < m_x0 && m_x0 < high ) 
   { return integral ( low , m_x0 ) + integral ( m_x0 , high ) ; }
+  // split further, if needed 
+  const double a1 = m_x0 + 3 / m_alpha ;
+  if ( low < a1 && a1 < high ) { return integral ( low , a1 ) + integral ( a1 , high ) ; }
+  // split further, if needed  
+  const double a2 = m_x0 - 3 / m_alpha ;
+  if ( low < a2 && a2 < high ) { return integral ( low , a2 ) + integral ( a2 , high ) ; }
+  //
   //
   // use GSL to evaluate the integral
   //

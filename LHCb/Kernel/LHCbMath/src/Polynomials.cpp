@@ -984,8 +984,8 @@ Gaudi::Math::ChebyshevSum::operator-= ( const double a )
 // ============================================================================
 Gaudi::Math::LegendreSum::LegendreSum
 ( const unsigned short degree , 
-  const double         xmax   , 
-  const double         xmin   )  
+  const double         xmin   , 
+  const double         xmax   )  
   : Gaudi::Math::PolySum ( degree ) 
   , m_xmin ( std::min ( xmin, xmax ) )
   , m_xmax ( std::max ( xmin, xmax ) )

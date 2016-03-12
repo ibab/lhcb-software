@@ -793,7 +793,7 @@ namespace
       nc[ k + m ] = r_kNm ( k , N , m ) * ci ;  
     }
     //
-    Gaudi::Math::Bernstein a ( nc.begin() , nc.end  () , b.xmax() , b.xmin() ) ;
+    Gaudi::Math::Bernstein a ( nc.begin() , nc.end  () , b.xmin() , b.xmax() ) ;
     //
     return Gaudi::Math::pow ( b.xmax() - b.xmin()  , m ) * a.integral ( low , high ) ;  
   }

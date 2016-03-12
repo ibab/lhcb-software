@@ -299,7 +299,7 @@ Gaudi::Math::GSL::Hesse::~Hesse ()
 {
   // free matrices 
   if ( 0 != m_cov2  ) { gsl_matrix_free ( m_cov2  ) ; m_cov2  = 0 ; }
-  if ( 0 != m_aux   ) { gsl_matrix_free ( m_aux   ) ; m_cov2  = 0 ; }
+  if ( 0 != m_aux   ) { gsl_matrix_free ( m_aux   ) ; m_aux   = 0 ; }
   if ( 0 != m_hesse ) { gsl_matrix_free ( m_hesse ) ; m_hesse = 0 ; }
   // free vectors 
   if ( 0 != m_a     ) { gsl_vector_free ( m_a     ) ; m_a     = 0 ; }
