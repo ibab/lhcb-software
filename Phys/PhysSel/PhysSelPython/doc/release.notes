@@ -5,6 +5,26 @@
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
 
+! 2016-03-12 - Vanya Belyaev
+ - add 'TupleSelection'
+
+#  charm    = .... ## some selectiton object 
+#  my_tuple = TupleSelection (
+#     'charm'            , ## unique name 
+#      [ charm ]         , ## required selections
+#      Decay             = '[ D+ -> ^K- ^pi+ ^pi+]CC' ,
+#      ToolList          = [ ... ]      
+#      )
+#  # get the congigurable (for subsequent modification, if needed)
+#  algo = mu_tuple.algorithm()
+#  # e.g. define the branches: 
+#  algo.addBranches ( ... )
+#  # make use of nice decoration yb Rob Lambert 
+#  tool1 = algo.addTupleTool ( .....  )
+#  ...
+
+ - put all symbols into new file PhysSelPython/Selections.py 
+
 ! 2016-03-11 - Vanya Belyaev
  - minor fix in CombineSelections 
 

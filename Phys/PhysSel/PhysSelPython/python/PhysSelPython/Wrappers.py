@@ -14,6 +14,7 @@ are available:
    - VoidEventSelection Selects event based on TES container properties, applying a LoKi__VoidFilter compatible cut to the data from a required selection.
    - PassThroughSelection
    - PrintSelection     Specialization of PassThroughSelection to print the objects
+   - CheckPVSelection   Specialization of PassThroughSelection to limit the selection to use CheckPV 
    - LimitSelection     Specialization of PassThroughSelection to limit the selection 
    - MomentumScaling    ``pseudo-selection'' that applyes (globally) Momentum calibration
    - SimpleSelection    simple compact 1-step way to create the selection 
@@ -21,33 +22,37 @@ are available:
    - CombineSelection      Specialization of SimpleSelection for CombineParticles algorithm
    - Combine3BodySelection Specialization of SimpleSelection for DaVinci::N3BodyDecays algorithm
    - Combine4BodySelection Specialization of SimpleSelection for DaVinci::N4BodyDecays algorithm
+   - TupleSelection        Specialization of SimpleSelection for DecayTreeTuple algorithm
    """
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
-__all__ = ('DataOnDemand',
-           'AutomaticData',
-           'Selection',
-           'MergedSelection',
-           'EventSelection',
-           'PassThroughSelection',
-           'ChargedProtoParticleSelection',
-           'SelectionSequence',
-           'MultiSelectionSequence',
-           'SelSequence',
-           'NameError',
-           'NonEmptyInputLocations',
-           'IncompatibleInputLocations',
-           ##
-           'SimpleSelection'       , 
-           'FilterSelection'       , 
-           'PrintSelection'        , 
-           'LimitSelection'        ,
-           'CombineSelection'      ,
-           'Combine3BodySelection' ,
-           'Combine4BodySelection' ,
-           ## 
-           'MomentumScaling'   ## ``pseudo-selection'' to aplly (globally) momentum sclaing         
-           )
+__all__ = ( 'DataOnDemand'                  ,
+            'AutomaticData'                 ,
+            'Selection'                     ,
+            'MergedSelection'               ,
+            'EventSelection'                ,
+            'PassThroughSelection'          ,
+            'ChargedProtoParticleSelection' ,
+            'SelectionSequence'             ,
+            'MultiSelectionSequence'        ,
+            'SelSequence'                   ,
+            'NameError'                     ,
+            'NonEmptyInputLocations'        ,
+            'IncompatibleInputLocations'    ,
+            ##
+            'SimpleSelection'               , 
+            'FilterSelection'               , 
+            'PrintSelection'                , 
+            'LimitSelection'                ,
+            'CombineSelection'              ,
+            'Combine3BodySelection'         ,
+            'Combine4BodySelection'         ,
+            'TupleSelection'                ,
+            ##
+            'CheckPVSelection'              ,  
+            ## 
+            'MomentumScaling'   ## ``pseudo-selection'' to aplly (globaly) momentum sclaing         
+            )
 
 from copy import copy
 
@@ -647,44 +652,84 @@ def LimitSelection ( input               ,
         ) ,
         RequiredSelection = input                    )
 
-# =============================================================================
-## Useful shortcut for selection with FilterDesktop algorithm
+
+# ========================================================================#
+## special type of PassThroughSelection, that used CheckPV algorithm
 #  @code
-#  from StandardParticles import StdAllLoosePions   as pions
-#  good_poins = FilterSelection (
-#     'good_pions'       , ## unique name 
-#      [ pions ]         , ## required selections  
-#      Code = "PT>1*GeV" , ## properties of FilterDesktop algorithm
-#      )
-#  @endcode 
-#  @see SimpleSelection
-#  @see Selection
-#  @see SelPy.Selection
-#  @see FilterDesktop
-#
-#  @param name          unique selection name 
-#  @param inputs        list of input/required selection
-#  @param Code          "Code"-property of FilterDesktop 
-#  @param args          additional arguments to be used for algorithm
-#  @param kwargs        additional arguments to be used for algorithm
-#  @return the selection object
-#
+#  my_selection = ....
+#  my_selection_pv   = CheckPVSelection ( my_selection , MinPVs = 1 )
+#  another_selection = XXXSelection ( 'another_selection' ,
+#                                       ... ,
+#                       RequiredSelections = [ my_selection_pv ] )
+#  @endcode
+#  @see PassThroughSelection
+#  @see LimitSelection
+#  @see CheckPV 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2014-02-12
-# 
-def FilterSelection ( name, inputs , Code , **kwargs ) :
-    """ Useful shortcut for selection with FilterDesktop algorithm
-    >>> from StandardParticles import StdAllLoosePions   as pions
-    >>> good_poins = FilterSelection (
-    ...    'good_pions'       , ## unique name 
-    ...    [ pions ]          , ## ``inputs'': required selections  
-    ...    Code = 'PT>1*GeV'  , ## properties of FilterDesktop algorithm
-    ...    )
+#  @date 2016-03-11
+def CheckPVSelection ( input         ,                     
+                       MinPVs   =  1 ,
+                       MaxPVs   = -1 ,
+                       **kwargs      ) :
+    """Special type of PassThroughSelection, that used CheckPV algorithm 
+    >>> my_selection = ....
+    >>> my_selection_pv = LimitSelection ( my_selection , MinPVs = 1  )
+    >>> another_selection  = XXXSelection ( 'another_selection' ,
+    ...                                        ... ,
+    ...                 RequiredSelections = [ my_selection_pv ] )
     """
-    #
-    from GaudiConfUtils.ConfigurableGenerators import FilterDesktop as _FILTER_ 
-    ## create selection
-    return SimpleSelection ( name , _FILTER_ , inputs , Code = Code , **kwargs )
+    if   0 <= MinPVs <= MaxPVs : 
+        name = 'CHECKPV_%d_%d' %  ( MinPVs , MaxPVs )
+    elif 0 <= MinPVs : 
+        name = 'CHECKPV_%d'    %    MinPVs
+    else :
+        raise TypeError, 'CheckPV: invalid setting: %s/%s' %( MinPVs, MaxPVs ) 
+    ##
+    from GaudiConfUtils.ConfigurableGenerators import CheckPV as _CHECK_PV_
+    return PassThroughSelection (
+        name                        ,
+        Algorithm         = _CHECKPV_ ( MinPVs = MinPVs , MaxPVs = MaxPVs , **kwargs ) ,
+        RequiredSelection = input   )
+
+
+
+# ========================================================================#
+## special type of PassThroughSelection, that used CheckPV algorithm
+#  @code
+#  my_selection = ....
+#  my_selection_pv   = CheckPVSelection ( my_selection , MinPVs = 1 )
+#  another_selection = XXXSelection ( 'another_selection' ,
+#                                       ... ,
+#                       RequiredSelections = [ my_selection_pv ] )
+#  @endcode
+#  @see PassThroughSelection
+#  @see LimitSelection
+#  @see CheckPV 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2016-03-11
+def CheckPVSelection ( input         ,                     
+                       MinPVs   =  1 ,
+                       MaxPVs   = -1 ,
+                       **kwargs      ) :
+    """Special type of PassThroughSelection, that used CheckPV algorithm 
+    >>> my_selection = ....
+    >>> my_selection_pv = LimitSelection ( my_selection , MinPVs = 1  )
+    >>> another_selection  = XXXSelection ( 'another_selection' ,
+    ...                                        ... ,
+    ...                 RequiredSelections = [ my_selection_pv ] )
+    """
+    if   0 <= MinPVs <= MaxPVs : 
+        name = 'CHECKPV_%d_%d' %  ( MinPVs , MaxPVs )
+    elif 0 <= MinPVs : 
+        name = 'CHECKPV_%d'    %    MinPVs
+    else :
+        raise TypeError, 'CheckPV: invalid setting: %s/%s' %( MinPVs, MaxPVs ) 
+    ##
+    from GaudiConfUtils.ConfigurableGenerators import CheckPV as _CHECK_PV_
+    return PassThroughSelection (
+        name                        ,
+        Algorithm         = _CHECKPV_ ( MinPVs = MinPVs , MaxPVs = MaxPVs , **kwargs ) ,
+        RequiredSelection = input   )
 
 # =============================================================================
 ## Useful shortcut for selection CombineParticles  algorithm
@@ -886,6 +931,68 @@ def Combine4BodySelection ( name  , inputs    ,
                              Combination123Cut = Combination123Cut ,
                              CombinationCut    = CombinationCut    ,
                              MotherCut         = MotherCut         , **kwargs )
+
+
+
+
+# =============================================================================
+## Useful shortcut for "selection" bases on DecayTreeTuple 
+#  @code
+#  charm    = .... ## some selectiton object 
+#  my_tuple = TupleSelection (
+#     'charm'            , ## unique name 
+#      [ charm ]         , ## required selections
+#      Decay             = '[ D+ -> ^K- ^pi+ ^pi+]CC' ,
+#      ToolList          = [ ... ]      
+#      )
+#  # get the congigurable (for subsequent modification, if needed)
+#  algo = mu_tuple.algorithm()
+#  # e.g. define the branches: 
+#  algo.addBranches ( ... )
+#  # make use of nice decoration yb Rob Lambert 
+#  tool1 = algo.addTupleTool ( .....  )
+#  ...
+#  @endcode 
+#  @see SimpleSelection
+#  @see Selection
+#  @see SelPy.Selection
+#  @see DecayTreeTuple 
+#
+#  @param name              unique selection name 
+#  @param inputs            list of input/required selection
+#  @param Decay              'Decay'-property of DecayTreeTuple 
+#  @param kwargs          additional arguments to be used for algorithm
+#  @return the selection object
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2016-03-10 
+def TupleSelection ( name     ,
+                     inputs   ,
+                     Decay    , 
+                     **kwargs ) :
+    """ Useful shortcut for selection with  
+    >>> charm    = .... ## some selectiton object 
+    >>> my_tuple = TupleSelection (
+    ...            'charm'          , ## unique name 
+    ...           [ charm ]         , ## required selections
+    ...             Decay             = '[ D+ -> ^K- ^pi+ ^pi+]CC' ,
+    ...             ToolList          = [ ... ]      
+    ...             )
+    >>> algo = mu_tuple.algorithm()
+    >>> algo.addBranches ( ... )
+    ##  make use of nice decoration yb Rob Lambert 
+    >>> tool1 = algo.addTupleTool ( .....  )
+    """
+    #
+    from   GaudiConfUtils.ConfigurableGenerators import DecayTreeTuple as _TUPLE_
+    ## make use of nice decoration by Rob Lambert:
+    import DecayTreeTuple.Configuration 
+    ## create the selection    
+    return SimpleSelection ( name          ,
+                             _TUPLE_       ,
+                             inputs        ,
+                             Decay = Decay ,
+                             **kwargs      ) 
 
 
 
