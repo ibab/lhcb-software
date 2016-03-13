@@ -75,6 +75,65 @@ from Bender.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'BenderTools.Parser' )
 else                      : logger = getLogger ( __name__ )
 # =============================================================================
+import argparse
+# =============================================================================
+## @class Collect
+#  simple parsing action to collect multiple arguments
+#  @code
+#  parser =...
+#  parser.add_argument('--foo',
+#  ... action  = Collect ,
+#  ... nargs   = '*'     ,
+#  ... default = []      ,
+#  ...)
+#  print parser.parse_args('a.txt b.txt --foo 1 2 3 --foo 4 -foo 5 '.split())
+#  @encode
+class Collect(argparse.Action):
+    """Simple parsing action to collect multiple arguments
+    >>> parser =...
+    >>> parser.add_argument('--foo',
+    ... action  = Collect ,
+    ... nargs   = '*'     ,
+    ... default = []      ,
+    ...)
+    >>> print parser.parse_args('a.txt b.txt --foo 1 2 3 --foo 4 -foo 5 '.split())
+    """
+    def __init__(self            ,
+                 option_strings  ,
+                 dest            ,
+                 nargs    =None  ,
+                 const    =None  ,
+                 default  =None  , 
+                 type     =None  ,
+                 choices  =None  ,
+                 required =False ,
+                 help     =None  ,
+                 metavar  =None  ) :
+        if nargs == 0:
+            raise ValueError('nargs for Collect actions must be > 0; if arg '
+                             'strings are not supplying the value to append, '
+                             'the append const action may be more appropriate')
+        if const is not None and nargs != argparse.OPTIONAL:
+            raise ValueError('nargs must be %r to supply const' % argparse.OPTIONAL)
+        super(Collect, self).__init__(
+            option_strings = option_strings ,
+            dest           = dest           ,
+            nargs          = nargs          ,
+            const          = const          ,
+            default        = default        ,
+            type           = type           ,
+            choices        = choices        ,
+            required       = required       ,
+            help           = help           ,
+            metavar        = metavar        )
+        
+    def __call__(self, parser, namespace, values, option_string=None):
+        items = argparse._copy.copy(argparse._ensure_value(namespace, self.dest, []))
+        ## the only one important line: 
+        for v in values : items.append(v)
+        setattr(namespace, self.dest, items)
+
+# =============================================================================
 ## create the base parser, suitable for many bender-based scripts
 #  @date   2010-09-10
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -82,15 +141,14 @@ def makeParser ( **kwargs ) :
     """
     Create the parser 
     """
-    #
-    version = kwargs.pop('version', None )
-    
-    import argparse 
-    parser = argparse.ArgumentParser( **kwargs )
-
+   
     ## version:
+    version = kwargs.pop('version', None )
+    ## create the parser 
+    parser = argparse.ArgumentParser( **kwargs )
     if version: 
         parser.add_argument ( '-v', '--version' , action='version', version = version )
+    
     ##
     parser.add_argument (
         '-q'                          ,
@@ -106,7 +164,7 @@ def makeParser ( **kwargs ) :
         '--import'                 ,
         dest    = 'ImportOptions'  ,
         metavar = 'IMPORT'         ,
-        ##action  = 'append'         , 
+        action  = Collect          , 
         nargs   = '*'              ,
         default = []               , 
         help    = """List of files to be used for 'importOptions',
@@ -193,7 +251,6 @@ def makeParser ( **kwargs ) :
     group_da.add_argument (
         '-g'                       ,
         '--grid'                   ,
-#        type    = str             ,
         nargs   = '*'              ,
         dest    = 'Grid'           ,
         help    = "Grid-site(s) to access LFN-files (has precedence over 'castor/eos', but grid proxy is needed) [default : %(default)s]" ,
@@ -213,8 +270,9 @@ def makeParser ( **kwargs ) :
         '--xml'                     ,
         dest    = 'XmlCatalogs'     ,
         help    = "``XmlCatalogs'' to be transferred to setData-function [default: %(default)s]" ,
-        ##action  = 'append'          ,
-        nargs   = '*'           , 
+        ## action  = 'append'       ,
+        action  = Collect           ,
+        nargs   = '*'               , 
         default = []                
         )
     ## 

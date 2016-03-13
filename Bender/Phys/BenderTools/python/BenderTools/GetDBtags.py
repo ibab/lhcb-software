@@ -375,9 +375,13 @@ def getMetaInfo ( file_name          ,
 def extractTags ( args ) :
     """ Extract DB-tags from the files 
     """
-    
     import argparse 
-    parser = argparse.ArgumentParser( ) ##**kwargs )
+    parser = argparse.ArgumentParser(
+        prog        = 'get-dbtags'  ,
+        description = """
+        Extract DB-tags directly from the data file 
+        """,
+        ) ##**kwargs )
     
     parser.add_argument (
         '-g'                       ,
@@ -420,12 +424,14 @@ def extractTags ( args ) :
         help    = "Input data file(s) to be processed [defaut : %(default)s ]" 
         )
     
+    from BenderTools.Parser import Collect 
     parser.add_argument (
         '-i'                       ,
         '--import'                 ,
         dest    = 'ImportOptions'  ,
         metavar = 'IMPORT'         ,
         nargs   = '*'              ,
+        action  = Collect          , 
         default = []               , 
         help    = """List of files to be used for 'importOptions',
         e.g. input data [default:%(default)s].
@@ -437,6 +443,7 @@ def extractTags ( args ) :
         '--xml'                 ,
         dest    = 'XmlCatalogs' ,
         help    = "``XmlCatalogs'' to be transferred to setData-function [default: %(default)s]" ,
+        action  = Collect       , 
         nargs   = '*'           , 
         default = []                
         )
@@ -498,8 +505,13 @@ def extractMetaInfo ( args ) :
     """
 
     import argparse 
-    parser = argparse.ArgumentParser( ) ##**kwargs )
-    
+    parser = argparse.ArgumentParser (
+        prog        = 'get-dbtags'  ,
+        description = """
+        Extract meta-information directly from the data file and Run-DB
+        """
+        )
+
     parser.add_argument (
         '-g'                       ,
         '--grid'                   ,
@@ -541,11 +553,13 @@ def extractMetaInfo ( args ) :
         help    = "Input data file(s) to be processed [defaut : %(default)s ]" 
         )
     
+    from BenderTools.Parser import Collect 
     parser.add_argument (
         '-i'                       ,
         '--import'                 ,
         dest    = 'ImportOptions'  ,
         metavar = 'IMPORT'         ,
+        action  = Collect          , 
         nargs   = '*'              ,
         default = []               , 
         help    = """List of files to be used for 'importOptions',
@@ -558,6 +572,7 @@ def extractMetaInfo ( args ) :
         '--xml'                 ,
         dest    = 'XmlCatalogs' ,
         help    = "``XmlCatalogs'' to be transferred to setData-function [default: %(default)s]" ,
+        action  = Collect       , 
         nargs   = '*'           , 
         default = []                
         )

@@ -70,11 +70,14 @@ import ROOT, sys
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 # =============================================================================
 from BenderTools.Parser      import makeParser
-# make parser 
-parser = makeParser  (
+parent_parser = makeParser  ( add_help = False )
+# make parser
+import argparse 
+parser = argparse.ArgumentParser (
+    parents = [ parent_parser ] , 
     prog        = 'dst-dump',
     description = "Bender-based script to dump the content of (x,mu,s,r,...)DSTs",
-    version     = __version__
+    version     = 'dst-dump ' + __version__
     )
 parser.add_argument (
     '-n'                          ,

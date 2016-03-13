@@ -5,6 +5,21 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2016-03-13 - Vanya Belyaev
+ - improve command line parser, allowing action=Collect
+
+    Simple parsing action to collect multiple arguments
+    >>> parser =...
+    >>> parser.add_argument('--foo',
+    ... action  = Collect ,
+    ...     nargs   = '*'     ,
+    ... default = []      ,
+    ...)
+    >>> print parser.parse_args('a.txt b.txt --foo 1 2 3 --foo 4 -foo 5 '.split())
+
+  - make use of updated parser 
+
+
 ! 2016-03-10 - Vanya Belyaev
  - add more variables for photons:
     - IsNotE

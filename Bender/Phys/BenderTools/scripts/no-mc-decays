@@ -92,13 +92,16 @@ from Bender.Logger import getLogger, setLogging
 if '__main__' == __name__ : logger = getLogger ( 'Bender/no-mc-decay' )
 else                      : logger = getLogger ( __name__ )
 # =============================================================================
-from BenderTools.Parser import makeParser 
-parser = makeParser  (
+from BenderTools.Parser import makeParser
+parent_parser = makeParser  ( add_help = False )
+import argparse
+parser = argparse.ArgumentParser  (
+    parents = [ parent_parser ] , 
     prog        = 'no-mc-decays' ,
     description = """Address ``MCDecayTuple does not contain all events'' problem,
     adjusting the proper MC decay descriptor to pickup proper simulated decays
     """,
-    version     = __version__ 
+    version     = 'no-mc-decays ' + __version__ 
     )
 group_dec = parser.add_argument_group(
     'Decays' ,

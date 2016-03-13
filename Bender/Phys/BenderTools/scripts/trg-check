@@ -69,10 +69,13 @@ def with_ipython() :
 if with_ipython () : raise RuntimeError("Can't run trg-check from ipython!")
 # =============================================================================
 from BenderTools.Parser import makeParser
-parser = makeParser (
-    prog        = 'trg-check' ,
+parent_parser = makeParser  ( add_help = False )
+import argparse 
+parser = argparse.ArgumentParser (
+    parents = [ parent_parser ] , 
+    prog        = 'trg-check'   ,
     description = "Script to check trigger decisions for certain lines" ,
-    version     = __version__ )
+    version     = 'trg-check ' + __version__ )
 parser.add_argument (
     '-n'                          ,
     '--nevents'                   ,
