@@ -4,6 +4,19 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2016-03-13 - Marian Stahl
+ - deleted parameter infos in initialize of PatForwardTool
+
+! 2016-03-12 - Marian Stahl
+ - reimplemented changes from r201466 onward in PatForwardTool
+
+! 2016-03-12 - Marian Stahl
+ - Implemented 2 neural nets. One that replaces the quality parameter when switched on, the other before the fit of XCandidates that (if switched on) is only used in the SecondLoop
+ - Clustering: MaxXCandidateSize now depends on the number of hit XPlanes
+ - removed chi2 after XFit, since chi2 in the XFit was sufficient
+ - added new chi2 for stereo fit
+ - updated config file
+
 ! 2016-03-03 - Michel De Cian
  - Put in protection against empty layers in PatAddTTCoord (again...).
 

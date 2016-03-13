@@ -349,18 +349,6 @@ StatusCode PatForwardTool::initialize ( ) {
     m_ASFreader  = new ReadASFDeep(ASFvarnames);
   }
 
-  info() << "Running PatForwardTool with the following options:"                                 << endmsg;
-  info() << "MaxXCandidateSize: "; for(auto i : m_maxXCandidateSize){info() << i << " ";} info() << endmsg;
-  info() << "MaxSpreadSlopeX  : " << m_maxSpreadSlopeX                                           << endmsg;
-  info() << "MaxSpreadX       : " << m_maxSpreadX                                                << endmsg;
-  info() << "MaxChi2X         : " << m_maxChi2X                                                  << endmsg;
-  info() << "MaxChi2Y         : " << m_maxChi2Y                                                  << endmsg;
-  info() << "NNBXF            : " << m_NNBXF                                                     << endmsg;
-  info() << "NNASF            : " << m_NNASF                                                     << endmsg;
-  info() << "NNBXFcut         : " << m_BXF4XPcut                                                 << endmsg;
-  info() << "NNASFcut         : " << m_ASFcut                                                    << endmsg;
-  info() << "NextBestResponse : " << m_nbr                                                       << endmsg;
-
   return StatusCode::SUCCESS;
 }
 
