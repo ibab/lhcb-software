@@ -47,6 +47,8 @@ list_S21rXp1 = (
   'StrippingLb2dp',
   'StrippingMicroDiJets',
   'StrippingTaggedJets',          # Need Phys/JetTagging post-v1r9
+  'StrippingA2MuMuSameSign',
+  'StrippingA2MuMu'
 )
 
 ## Choose the list to use here
