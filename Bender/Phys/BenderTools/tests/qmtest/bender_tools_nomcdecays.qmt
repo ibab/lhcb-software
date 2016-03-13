@@ -13,9 +13,9 @@
   </set></argument>
   <argument name="validator"><text>
 block="""
-# BenderTools.NoMCdecay     INFO    Generic decays     found     Stat: #=1000    Sum=1000        Mean=     1.000 +- 0.0000     Min/Max=     1.000/1.000      
-# BenderTools.NoMCdecay     INFO    Decays-in-question found(1)  Stat: #=1000    Sum=658         Mean=    0.6580 +- 0.47438    Min/Max=     0.000/1.000      
-# BenderTools.NoMCdecay     INFO    Decays-in-question found(2)  Stat: #=1000    Sum=658         Mean=    0.6580 +- 0.47438    Min/Max=     0.000/1.000      
+# BenderTools.NoMCdecay     INFO    Generic decays     found     #=1000    Sum=1000        Mean=     1.000 +- 0.0000     Min/Max=     1.000/1.000      
+# BenderTools.NoMCdecay     INFO    Decays-in-question found(1)  #=1000    Sum=658         Mean=    0.6580 +- 0.47438    Min/Max=     0.000/1.000      
+# BenderTools.NoMCdecay     INFO    Decays-in-question found(2)  #=1000    Sum=658         Mean=    0.6580 +- 0.47438    Min/Max=     0.000/1.000      
 """
 findReferenceBlock(block)
 </text></argument>
