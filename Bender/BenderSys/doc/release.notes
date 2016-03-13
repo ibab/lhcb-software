@@ -23,20 +23,37 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v28r3> 2016-03-13 Bender v28r3 based on the DaVinci v39r1</A>
+<ul>						 
+<li>Based on the DaVinci v39r1</li>
+<li>very similar to v28r2p1</li>
+<li>make use of improved command line parser</li>
+<li>few additions in <code>BenderTools.Fill</code> module </li>
+<ul>						 
+	  <li>more variables for gammas is added to  <code>treatPhotons</code> method</li>
+	  <li>more variables for di-gammas is added to  <code>treatDiGammas</code> method</li>
+	  <li>(thanks to Miriam, see 
+		<a href="https://twiki.cern.ch/twiki/bin/view/LHCbPhysics/CalorimeterObjectsToolsGroupSoftTools#Calorimeter_related_variables_in">here</a>
+		and 
+		<a href="https://indico.cern.ch/event/496903/session/7/contribution/167/attachments/1241408/1825748/Calo_Objects_summary_lhcb_week_March_2016.pdf">here</a>
+    </li>
+</ul>						 
+</ul>						 
+
 <A NAME=v28r2p1> 2016-02-29 Bender v28r2p1 based on the DaVinci v39r0p1</A>
 <ul>						 
 <li>Based on the DaVinci v39r0p1</li>
 <li>very similar to v28r2</li>
 <li>fixed issue with history file</li>
 <li>dedicated to Bender and BenderScript tutoruals for Russian students</li>
-<ul>						 
+</ul>						 
 
 <A NAME=v28r2> 2016-02-27 Bender v28r2 based on the DaVinci v39r0p1</A>
 <ul>						 
 <li>Based on the DaVinci v39r0p1</li>
 <li>very similar to v28r1</li>
 <li>dedicated to Bender and BenderScript tutoruals for Russian students</li>
-<ul>						 
+</ul>						 
 
 <A NAME=v28r1> 2016-02-21 Bender v28r1 based on the DaVinci v39r0p1</A>
 <ul>						 
@@ -44,7 +61,7 @@
 <li>fix a bug in treatment of <code>RawEvent</code> in <code>dst-dump</code> </li>
 <li>improve logging and colorization</li>
 <li>add more examples and qmtests in <code>Ex/BenderExample</code> package</li>
-<ul>						 
+</ul>						 
 
 
 <A NAME=v28r0> 2016-02-12 Bender v28r0 based on the DaVinci v39r0p1</A>
@@ -66,7 +83,7 @@
 <li> Tutorials for Bender (updated) and for BenderScript (new)
      are available at 
      https://twiki.cern.ch/twiki/bin/view/LHCb/LHCbSoftwareTutorials
-<ul>						 
+</ul>						 
 
 
 
@@ -76,7 +93,7 @@
 <li>Similar to v27r0p1 </li>
 <li>Added example for usage of <code>TupleTools</code> withg Bender</li>
 <li>Patched <code>Ostap</code> </li>
-<ul>						 
+</ul>						 
 
 <A NAME=v27r0> 2015-10-26 Bender v27r0 based on the DaVinci v38r0</A>
 <ul>						 
@@ -85,27 +102,27 @@
 <li>Some extension of Bender.Fill: <code>hasrich</code> is added for hadrons</li>
 <li>Further simplification of <code>treatXXX</code> and <code>tistos</code> 
     machinery</li>
-<ul>						 
+</ul>						 
 
 <A NAME=v26r3p1> 2015-08-28 Bender v26r3p1 based on the DaVinci v37r2p2</A>
 <ul>						 
 <li>Based on the DaVinci v37r2p2</li>
 <li>Similar to v26r3 </li>
 <li>Add command line option <code>-a/--all</code> for all bender-based scripts</li>
-<ul>						 
+</ul>						 
 
 <A NAME=v26r3> 2015-08-17 Bender v26r3 based on the DaVinci v37r2p1</A>
 <ul>						 
 <li>Based on the DaVinci v37r2p1</li>
 <li>Similar to v26r2p1 </li>
 <li>fix recently introduced bug in <code>dst-dump</code> for simulated data</li>
-<ul>						 
+</ul>						 
 
 <A NAME=v26r2p1> 2015-08-17 Bender v26r2p1 based on the DaVinci v37r1p3</A>
 <ul>						 
 <li>Based on the DaVinci v37r1p3</li>
 <li>Identical to v26r2 </li>
-<ul>						 
+</ul>						 
 
 <A NAME=v26r2> 2015-08-16 Bender v26r2 based on the DaVinci v37r1p2</A>
 <ul>						 
