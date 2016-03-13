@@ -6,31 +6,34 @@
 
 !========================= StrippingSettings v2r43 2016-03-02 ========================
 
-! 2015-02-17 Andrea Contu
+! 2016-03-13 - Andrea Contu
+ - Quick Fix
+
+! 2015-02-17 - Andrea Contu
  - Modified settings for S25
 
-! 2015-02-12 Andrea Contu
+! 2015-02-12 - Andrea Contu
  - added configuration and dbase for S25
 
-! 2015-02-12 Ricardo Vazquez Gomez
+! 2015-02-12 - Ricardo Vazquez Gomez
  - update dictionaries in RD for incremental stripping of Run 1
 
-! 2015-02-01 Ricardo Vazquez Gomez
+! 2015-02-01 - Ricardo Vazquez Gomez
  - Revert last change in S24 and apply it to S21r0,1p1
 
-! 2015-01-31 Ramon Niet
+! 2015-01-31 - Ramon Niet
  - Modified LineConfigDictionaries_B2CC for S24 (changes in StrippingBd2JpsieeKSLines)
 
-! 2016-01-29 Chitsanu Khurewathanakul
+! 2016-01-29 - Chitsanu Khurewathanakul
  - Patch fix in QEE/Ditau for S21rXp1
 
-! 2016-01-04 Ricardo Vazquez Gomez
+! 2016-01-04 - Ricardo Vazquez Gomez
  - create dbase for S21r0p1 and S21r1p1
 
-! 2015-12-14 Eva Gersabeck
+! 2015-12-14 - Eva Gersabeck
  - Modified LineConfigDictionaries_Charm for S21r0p1 and S21r1p1
 
-! 2015-12-17 Pablo Ruiz Valls
+! 2015-12-17 - Pablo Ruiz Valls
  - Prescale StrippingBs2MuMuLinesNoMuIDLine to 0 in RD dictionaries.
 
 ! 2015-12-15 - Ricardo Vazquez Gomez
@@ -39,15 +42,16 @@
 ! 2015-12-15 - Ricardo Vazquez Gomez
  - Fix Charm config dictionaries for S21r0,1p1.
 
-! 2015-12-14 Eva Gersabeck
+! 2015-12-14 - Eva Gersabeck
  - Modified LineConfigDictionaries_Charm for S21r0p1 and S21r1p1
+
 ! 2015-12-13 Jinlin Fu
  - Added LineConfigDictionaries_Charm for S21r0p1 and S21r1p1 
 
-! 2015-12-09 Pablo Ruiz Valls (RD)
+! 2015-12-09 - Pablo Ruiz Valls (RD)
  - Modifications to XLLBDT and Bs2MuMu lines dictionaries.
 
-! 2015-12-09 Pablo Ruiz Valls
+! 2015-12-09 - Pablo Ruiz Valls
  - Modifications to XLLBDT and RareStrange lines dictionaries.
 
 ! 2015-12-09 - Roberta Cardinale

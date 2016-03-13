@@ -575,3 +575,30 @@ TaggedJets = {
     "STREAMS": [ "BhadronCompleteEvent" ], 
     "WGs": [ "QEE" ]
 }
+
+A2MuMu = {
+    'BUILDERTYPE' : 'A2MuMuConf',
+    'WGs'         : [ 'QEE'],
+    'STREAMS'     : [ 'EW' ],
+    'CONFIG'      : {
+        'A2MuMu_Prescale'  : 1.0,
+        'A2MuMu_Postscale' : 1.0,
+        'pT'               : 2.5 * GeV,
+        'MMmin'            : 12. * GeV,
+        'MMmax'            : 60. * GeV,
+    },
+}
+
+A2MuMuSameSign = {
+    'BUILDERTYPE' : 'A2MuMuSameSignConf',
+    'WGs'         : [ 'QEE'],
+    'STREAMS'     : [ 'EW' ],
+    'CONFIG'      : {
+        'A2MuMuSameSign_Prescale'  : 1.0,
+        'A2MuMuSameSign_Postscale' : 1.0,
+        'pT'               : 2.5 * GeV,
+        'MMmin'            : 12. * GeV,
+        'MMmax'            : 60. * GeV,
+    },
+}
+
