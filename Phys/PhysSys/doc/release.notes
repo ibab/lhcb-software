@@ -10,7 +10,7 @@ It is based on Gaudi v27r0, LHCb v40r0 and Rec v19r0 and uses LCG_83 with ROOT 6
 
 - Packages updated :
   Phys/DaVinciKernel v12r4, Phys/PhysConf v1r32, Phys/VertexFit v6r24, Phys/RelatedInfoTools v1r5,
-  Phys/LoKiJets v6r15, Phys/LoKiAlgo v9r11, Phys/LoKiTracks v3r6, Phys/JetAccessories v3r16p1,
+  Phys/LoKiJets v6r15, Phys/LoKiAlgo v9r11, Phys/LoKiTracks v3r6, Phys/JetAccessories v3r16p1,Phys/KalmanFilter v1r17,
   PhysSel/PhysSelPython v9r9.
 
 - Packages patched :

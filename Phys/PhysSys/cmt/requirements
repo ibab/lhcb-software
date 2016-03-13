@@ -54,7 +54,7 @@ use  LoKiPhys                   v11r7    Phys    # Vanya Belyaev
 use  LoKiProtoParticles         v3r2     Phys    # Vanya Belyaev
 use  LoKi                       v9r0p1   Phys    # Vanya Belyaev
 use  LoKiTracks                 v3r6     Phys    # Vanya Belyaev
-use  KalmanFilter               v1r16    Phys    # Vanya Belyaev
+use  KalmanFilter               v1r17    Phys    # Vanya Belyaev
 
 #===================================================================
 
