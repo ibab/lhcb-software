@@ -1,7 +1,7 @@
 ################################################################################
 # Package: KalmanFilter
 ################################################################################
-gaudi_subdir(KalmanFilter v1r16)
+gaudi_subdir(KalmanFilter v1r17)
 
 gaudi_depends_on_subdirs(Calo/CaloUtils
                          Event/PhysEvent
