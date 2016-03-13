@@ -123,16 +123,20 @@ if with_ipython () : raise RuntimeError("Can't start Bender from ipython!")
 # Input arguments: create ans customize parser; parse arguments 
 # =============================================================================
 from BenderTools.Parser import makeParser
-parser = makeParser  ( 
-    prog        = 'bender'    , 
-    version     = __version__ , 
+parent_parser = makeParser  ( add_help = False )
+import argparse 
+parser = argparse.ArgumentParser (
+    parents = [ parent_parser ] ,
+    prog        = 'bender'      , 
+    version     = 'bender ' + __version__ , 
     description = """
     Powerfull interactive environment for Smart and Friendly Physics Analysis
     """,
+    ## usage       = __doc__     ,  
     epilog      = """
     P.S. Actually it is ``steroid-enhanced''  GaudiPython session 
-    """   
-)
+    """
+    ) 
 ## update the parser
 parser.add_argument (
     '-o'                     ,

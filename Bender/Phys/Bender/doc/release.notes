@@ -24,6 +24,13 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2016-03-13 - Vanya Belyaev
+ - make use of updated BenderTools.Parser with new action=Collect 
+   it allows to use multiple command line arguments, e.g.:
+ 
+    bender -i file1.py file2.py -q -i file3.py -e -i file4.py file5.py '
+
+
 ! 2016-03-10 - Vanya Belyaev
  - fix...
 
