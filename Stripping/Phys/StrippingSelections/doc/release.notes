@@ -4,13 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingSelections v4r10 2016-03-02 ===============
 ! 2016-03-12  Cédric Potterat
- - changing LoKi::VertexFiiter for MomentumCombiner in StrippingMicroDiJets.py
+ - changing LoKi::VertexFitter for MomentumCombiner in StrippingMicroDiJets.py
 
 ! 2016-03-09 - Andrea Contu
  - New test script for s26
-
-!========================== StrippingSelections v4r10 2016-03-02 ===============
 
 ! 2016-02-25 - Andrea Contu
  - Fix to StrippingForPromptCharm
