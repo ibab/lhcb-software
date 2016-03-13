@@ -267,7 +267,7 @@ bool DeVPSensor::isInActiveArea(const Gaudi::XYZPoint& point) const {
 // Return the size of a pixel with given channel ID.
 //==============================================================================
 std::pair<double, double>
-DeVPSensor::pixelSize( LHCb::VPChannelID channel) const {
+DeVPSensor::pixelSize(const LHCb::VPChannelID channel) const {
 
   return { isLong(channel) ? DeVPSensor::m_interChipPixelSize
                            : DeVPSensor::m_pixelSize,
@@ -278,7 +278,7 @@ DeVPSensor::pixelSize( LHCb::VPChannelID channel) const {
 //==============================================================================
 // Return true if a pixel with given channel ID is an elongated pixel.
 //==============================================================================
-bool DeVPSensor::isLong(LHCb::VPChannelID channel) const {
+bool DeVPSensor::isLong(const LHCb::VPChannelID channel) const {
 
   const unsigned int chip = channel.chip();
   const unsigned int col = channel.col();

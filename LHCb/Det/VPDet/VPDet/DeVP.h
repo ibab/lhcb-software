@@ -52,7 +52,7 @@ class DeVP : public DetectorElement {
     return sensorNumber >= 0 ? m_sensors[sensorNumber] : nullptr;
   }
   /// Return pointer to sensor for a given channel ID.
-  const DeVPSensor* sensorOfChannel(LHCb::VPChannelID channel) const {
+  const DeVPSensor* sensorOfChannel(const LHCb::VPChannelID channel) const {
     return sensor(channel.sensor());
   }
   /// Return pointer to sensor for a given sensor number.
@@ -76,7 +76,7 @@ class DeVP : public DetectorElement {
   };
 
   /// Output level flag
-  bool m_debug;
+  bool m_debug = false;
 
   /// Message stream
   mutable std::unique_ptr<MsgStream> m_msg;

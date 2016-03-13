@@ -47,10 +47,10 @@ class DeVPSensor : public DetectorElement {
                       std::pair<double, double>& fraction) const;
 
   /// Return the pixel size.
-  std::pair<double, double> pixelSize(LHCb::VPChannelID channel) const;
+  std::pair<double, double> pixelSize(const LHCb::VPChannelID channel) const;
 
   /// Return true if the pixel is elongated.
-  bool isLong(LHCb::VPChannelID channel) const;
+  bool isLong(const LHCb::VPChannelID channel) const;
 
   /// Determine if a local 3-d point is inside the sensor active area.
   bool isInActiveArea(const Gaudi::XYZPoint& point) const;
@@ -83,31 +83,19 @@ class DeVPSensor : public DetectorElement {
   double siliconThickness() const { return DeVPSensor::m_thickness; }
 
   /// Return array of cached local x-coordinates by column
-  inline const double* xLocal(void) const { return DeVPSensor::m_local_x; }
+  const double* xLocal() const { return DeVPSensor::m_local_x; }
 
   /// Return array of cached x pitches by column
-  inline const double* xPitch(void) const { return DeVPSensor::m_x_pitch; }
+  const double* xPitch() const { return DeVPSensor::m_x_pitch; }
 
   /// Calculate the position of a given pixel.
-  inline Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel,
-                                        const bool local) const {
+  Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel,
+                                 const bool local) const {
 
     const double x = DeVPSensor::m_local_x[channel.scol()];
     const double y = (channel.row() + 0.5) * m_pixelSize;
     const Gaudi::XYZPoint point(x, y, 0.0);
     return (local ? point : localToGlobal(point));
-  }
-
-  /// Calculate the position of a given pixel and inter pixel fractions.
-  Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel,
-                                 const std::pair<double, double>& fraction) const {
-
-    const unsigned int col = channel.scol();
-    const double pitch = DeVPSensor::m_x_pitch[col];
-    const double x = DeVPSensor::m_local_x[col] + fraction.first * pitch;
-    const double y = (channel.row() + 0.5 + fraction.second) * m_pixelSize;
-    const Gaudi::XYZPoint point(x, y, 0.0);
-    return localToGlobal(point);
   }
 
  private:
@@ -140,7 +128,7 @@ class DeVPSensor : public DetectorElement {
   static double m_interChipPixelSize;
 
   /// Output level flag
-  bool m_debug;
+  bool m_debug = false;
 
   /// Message stream
   mutable std::unique_ptr<MsgStream> m_msg;
@@ -157,8 +145,8 @@ class DeVPSensor : public DetectorElement {
   /// Cache validity, so we create it only once on startup
   static bool m_common_cache_valid;
 
-  /// Calculate and cache the local x positions an pitches
-  void cacheLocalXAndPitch(void);
+  /// Calculate and cache the local x positions and pitches
+  void cacheLocalXAndPitch();
   /// Update geometry cache when the alignment changes
   StatusCode updateGeometryCache();
 

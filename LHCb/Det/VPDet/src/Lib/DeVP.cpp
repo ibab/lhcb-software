@@ -1,4 +1,3 @@
-// STL (for std::sort)
 #include <algorithm>
 
 // Gaudi
@@ -48,8 +47,8 @@ StatusCode DeVP::initialize() {
   ISvcLocator* svcLoc = Gaudi::svcLocator();
   auto jobSvc = svcLoc->service<IJobOptionsSvc>("JobOptionsSvc");
   if (jobSvc) {
-      auto sc = jobSvc->setMyProperties("DeVP", pmgr.get());
-      if (!sc) return sc;
+    auto sc = jobSvc->setMyProperties("DeVP", pmgr.get());
+    if (!sc) return sc;
   }
   if (outputLevel > 0) msgSvc()->setOutputLevel("DeVP", outputLevel);
   m_debug = (msgSvc()->outputLevel("DeVP") == MSG::DEBUG ||
@@ -93,7 +92,7 @@ StatusCode DeVP::initialize() {
 int DeVP::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
 
   const double z = point.z();
-  const double tol = 10 * Gaudi::Units::mm; 
+  constexpr double tol = 10 * Gaudi::Units::mm; 
   auto i = std::find_if( m_sensors.begin(), m_sensors.end(),
                          [&]( const DeVPSensor* s) {
     // Quickly skip sensors which are far away in z, only
