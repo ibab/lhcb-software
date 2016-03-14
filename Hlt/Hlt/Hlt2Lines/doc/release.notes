@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-03-14 - Francesco Dettori
+ - Removing duplications of Jpsi and Psi2S Turbo lines. Only lines with PID are kept, but "PID" is removed from line names. 
+
 ! 2016-03-11 - Kevin Dungs
  - Fix SPD cut in Hlt2LFVJpsiMuE.
 
