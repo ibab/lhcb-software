@@ -648,8 +648,13 @@ bool L0DUFromRawTool::decoding(int ibank){
       m_sumEt[-im]= (*m_data >> 16*odd) & 0x3FFF ;
       if( msgLevel( MSG::VERBOSE) )verbose() << "   -> SumEt[Bx=" << -im << "] = " <<  m_sumEt[-im] << endmsg;
     }
-    dataMap("Sum(Et,Prev2)",m_sumEt[-2],scale(L0DUBase::Sum::Et));
-    dataMap("Sum(Et,Prev1)",m_sumEt[-1],scale(L0DUBase::Sum::Et));
+    encode( "Sum(Et,Prev2)",  m_sumEt[-2]  , L0DUBase::Sum::Et , -2      ); // new OD - 2016
+    encode( "Sum(Et,Prev1)",  m_sumEt[-1]  , L0DUBase::Sum::Et , -1      ); // new OD - 2016
+    //dataMap("Sum(Et,Prev2)",m_sumEt[-2],scale(L0DUBase::Sum::Et)); // new OD - 2015 (dataMap incl. in encode())
+    //dataMap("Sum(Et,Prev1)",m_sumEt[-1],scale(L0DUBase::Sum::Et)); // new OD - 2015 (dataMap incl. in encode())
+
+
+
 
     if( msgLevel( MSG::VERBOSE) )verbose() << "   ... " << nm << " previous BX sumET decoded ... " << endmsg;
 
@@ -677,8 +682,10 @@ bool L0DUFromRawTool::decoding(int ibank){
       if( msgLevel( MSG::VERBOSE) )verbose() << " SumEt[Bx=" << ip+1 << "] = " <<  m_sumEt[ip+1] << endmsg;
     }
     if( msgLevel( MSG::VERBOSE) )verbose() << "   ... " << nm << " next BX sumET decoded ..." << endmsg;
-    dataMap("Sum(Et,Next1)",m_sumEt[1],scale(L0DUBase::Sum::Et));
-    dataMap("Sum(Et,Next2)",m_sumEt[2],scale(L0DUBase::Sum::Et));
+    encode( "Sum(Et,Next2)",  m_sumEt[2]  , L0DUBase::Sum::Et , +2      ); // new OD - 2016
+    encode( "Sum(Et,Next1)",  m_sumEt[1]  , L0DUBase::Sum::Et , +1      ); // new OD - 2016
+    //dataMap("Sum(Et,Next1)",m_sumEt[1],scale(L0DUBase::Sum::Et));
+    //dataMap("Sum(Et,Next2)",m_sumEt[2],scale(L0DUBase::Sum::Et));
 
     // check the size 
     if( msgLevel( MSG::VERBOSE) )verbose() << " <============= Decoding completed successfuly =============>" << endmsg;

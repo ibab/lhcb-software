@@ -24,7 +24,7 @@ namespace {
   static const std::vector<std::string> s_dataFlags = 
     (boost::assign::list_of(std::string("name")),"data","operator");
   static const std::vector<std::string> s_condFlags = 
-    (boost::assign::list_of(std::string("name")),"data","comparator","threshold","index","reported");
+    (boost::assign::list_of(std::string("name")),"data","comparator","threshold","index","reported","bx");
   static const std::vector<std::string> s_chanFlags = 
     (boost::assign::list_of(std::string("name")),"condition","rate","enable","disable","mask","index");
   static const std::vector<std::string> s_trigFlags = 
@@ -33,8 +33,7 @@ namespace {
   static const std::vector<std::string> s_comparators=  (boost::assign::list_of( std::string(">") ),"<","==","!=");
   // pair(operator,dimension)
   static const std::vector<std::pair<std::string, unsigned int> > 
-  s_operators = boost::assign::list_of(std::make_pair("Id",1))
-    (std::make_pair("+", 2))
+  s_operators = boost::assign::list_of(std::make_pair("+", 2))
     (std::make_pair("-", 2))
     (std::make_pair("&", 2))
     (std::make_pair("^", 2));
@@ -291,7 +290,7 @@ void L0DUConfigProvider::predefinedData( ) {
   int max = NumberOf::Data;
   for(int i = 0 ; i < max ; ++i){
     std::string name = PredefinedData::Name[i];
-    LHCb::L0DUElementaryData* data = new LHCb::L0DUElementaryData(i,LHCb::L0DUElementaryData::Predefined,name,"Id",name);
+    LHCb::L0DUElementaryData* data = new LHCb::L0DUElementaryData(i,LHCb::L0DUElementaryData::Predefined,name);
     m_dataMap[name]= data;
     if ( msgLevel(MSG::DEBUG) ) 
       debug() << "Predefined Data : " << data->description() << endmsg;
@@ -308,8 +307,8 @@ void L0DUConfigProvider::predefinedData( ) {
 void L0DUConfigProvider::constantData(){
   for(std::map<std::string,int>::const_iterator idata = m_constData.begin();idata!=m_constData.end();++idata){
     LHCb::L0DUElementaryData* data = 
-      new LHCb::L0DUElementaryData(m_pData+m_cData,LHCb::L0DUElementaryData::Constant,idata->first,"Id",idata->first);
-    data->setOperand( idata->second , 1. );
+      new LHCb::L0DUElementaryData(m_pData+m_cData,LHCb::L0DUElementaryData::Constant,idata->first);
+    data->setDigit( idata->second  );
     m_dataMap[idata->first]=data ;
     if ( msgLevel(MSG::DEBUG) ) 
       debug() << "Constant Data : " << data->summary() << endmsg;
@@ -378,7 +377,7 @@ std::vector<std::string> L0DUConfigProvider::Parse(std::string flag, std::vector
 
 //===============================================================
 StatusCode L0DUConfigProvider::createData(){
-
+  //===== create compound data
   int id = m_dataMap.size();
   for(ConfigIterator iconfig = m_data.begin(); iconfig != m_data.end() ; ++iconfig){
   std::vector<std::string> values;
@@ -401,8 +400,6 @@ StatusCode L0DUConfigProvider::createData(){
         return StatusCode::FAILURE;
       } 
     }
-
-
 
     // The Data name 
     //--------------
@@ -473,12 +470,10 @@ StatusCode L0DUConfigProvider::createData(){
     }
 
     
-    // create Data
-    LHCb::L0DUElementaryData* data = 
-      new LHCb::L0DUElementaryData(id, LHCb::L0DUElementaryData::Compound, dataName, op , operands ) ;
+    // create Compound Data
+    LHCb::L0DUElementaryData* data = new LHCb::L0DUElementaryData(id, dataName,op,operands); // compound constructor
     m_dataMap[dataName]=data;
     id++;
-    
     if ( msgLevel(MSG::DEBUG) ) 
       debug() << "Created Data : " << data->description() << endmsg;
 
@@ -559,7 +554,7 @@ StatusCode L0DUConfigProvider::createConditions(){
     if( data.rfind("RAM") != std::string::npos && data.rfind("(BCID)") != std::string::npos ){
       int idData = m_dataMap.size();
       LHCb::L0DUElementaryData* ramData = 
-        new LHCb::L0DUElementaryData(idData, LHCb::L0DUElementaryData::RAMBcid, data, "Id" , data ) ;
+        new LHCb::L0DUElementaryData(idData, LHCb::L0DUElementaryData::RAMBcid, data ) ;
       m_dataMap[data]=ramData;
       // TEMP
       int ind = data.rfind("(BCID)");
@@ -658,9 +653,9 @@ StatusCode L0DUConfigProvider::createConditions(){
     int index = id;
     values = Parse("index", *iconfig);
     if(values.size() > 0){
-      std::string id =  *(values.begin()); // The INDEX
+      std::string sid =  *(values.begin()); // The INDEX
       std::stringstream str("");
-      str << id;
+      str << sid;
       str >> index;
     }
     else if(values.size() > 1){
@@ -674,14 +669,29 @@ StatusCode L0DUConfigProvider::createConditions(){
         error() << "The bit index " << index << " is already assigned to the Condition " << ii->second->name() << endmsg;
         return StatusCode::FAILURE;
       }
-    }     
+    }    
 
-    
+    // the BX (facultative)
+    //---------------------
+    values = Parse("bx", *iconfig);
+    int bx=0;
+    if(values.size() > 1){
+      error() << "Should be an unique BX for the CONDITION : " 
+              << conditionName << " (found "<< values.size() << ")" << endmsg;
+      return StatusCode::FAILURE;  
+    }else if(values.size() == 1){
+      std::string sbx =  *(values.begin()); // The BX
+      std::stringstream str("");
+      str << sbx;
+      str >> bx;
+      if( bx != 0 || bx != -1 )Warning("L0DU firmware can only be configured for BX=[0] or BX=[-1]",StatusCode::SUCCESS,5).ignore();
+    }
 
     // create condition (name,data,comparator,threshold)
     LHCb::L0DUElementaryCondition* condition = 
       new LHCb::L0DUElementaryCondition(index , conditionName, idata->second , comp , threshold);
 
+    condition->setBx(bx);
     condition->setReported(reported);
     m_conditionsMap[conditionName]=condition;
     id++;
@@ -1129,7 +1139,7 @@ bool L0DUConfigProvider::getDataList(const std::string dataName, std::vector<std
     dataList.push_back( data->name() );
     return ok;
   }else if(  LHCb::L0DUElementaryData::Compound == data->type() ){
-    for(std::vector<std::string>::const_iterator op = data->operandsName().begin() ; op != data->operandsName().end() ; op++ ){
+    for(std::vector<std::string>::const_iterator op = data->componentsName().begin() ; op != data->componentsName().end(); op++ ){
       ok = ok && getDataList( *op , dataList );
     }    
   }
@@ -1390,9 +1400,15 @@ bool L0DUConfigProvider::configChecker(){
     for( std::vector<std::vector<LHCb::L0DUElementaryCondition*> >::iterator it = m_condOrder.begin();m_condOrder.end()!=it;++it){
       std::vector<LHCb::L0DUElementaryCondition*> conds = *it;
       for(std::vector<LHCb::L0DUElementaryCondition*>::iterator itt = conds.begin();itt!=conds.end();++itt){
+        int bx=(*itt)->bx();
         info() << " condition = '" << (*itt)->name() << "' index = " << (*itt)->id()  
-               << " |   hardware  " <<kk<< " |  reported ? "<< (*itt)->reported() << " (reportBit  "<< (*itt)->reportBit() << ")"
-               << endmsg;
+               << " |   hardware  " <<kk<< " |  reported ? "<< (*itt)->reported() << " (reportBit  "<< (*itt)->reportBit() << ")";
+        if(bx !=0 ) info() << " applied to BX=["<< bx << "]";
+        info()<< endmsg;
+        if( bx != 0 && bx != -1){
+          warning() << "  !! condition = '" << (*itt)->name() << " BX=["<<bx<<"] exceeds the current hardware capabilities (BX=0/-1 only)" << endmsg;
+          ok = false;
+        }        
         kk++;
       }
     } 

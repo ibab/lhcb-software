@@ -47,7 +47,8 @@ public:
   
 protected:
 private:
-  unsigned long digit(const unsigned int   base[L0DUBase::Index::Size]);
+  std::vector<int> bxList(const unsigned int   base[L0DUBase::Index::Size]);
+  unsigned long digit(const unsigned int   base[L0DUBase::Index::Size],int bx=0);
   double        scale(const unsigned int   base[L0DUBase::Index::Size]);
   long          max  (const unsigned int   base[L0DUBase::Index::Size]);
   void setDataValue(LHCb::L0DUElementaryData* data, 

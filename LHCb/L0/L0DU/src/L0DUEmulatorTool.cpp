@@ -182,7 +182,7 @@ StatusCode L0DUEmulatorTool::fillData(){
     }
     std::stringstream num("");
     num << i+1;
-    dataMap["Muon"+num.str()+"(Pt)"]->setOperand( pt , ptScale , ptMax );
+    dataMap["Muon"+num.str()+"(Pt)"]->setDigit( pt , ptScale , ptMax );
     int add = 0;
     int sgn = 0;
     if( k == 0 ){
@@ -210,11 +210,11 @@ StatusCode L0DUEmulatorTool::fillData(){
       add = digit( L0DUBase::Muon8::Address)  | (7 << 13)  ;
       sgn = digit( L0DUBase::Muon8::Sign    ) ;
     }
-    dataMap["Muon"+num.str()+"(Add)"]->setOperand(add , adScale , adMax);
-    dataMap["Muon"+num.str()+"(Sgn)"]->setOperand(sgn , sgScale , sgMax);
+    dataMap["Muon"+num.str()+"(Add)"]->setDigit(add , adScale , adMax);
+    dataMap["Muon"+num.str()+"(Sgn)"]->setDigit(sgn , sgScale , sgMax);
   }
-  dataMap[Name[DiMuonPt]]->setOperand( dimuon , ptScale , ptMax*2+1);  
-  dataMap[Name[DiMuonProdPt]]->setOperand( dimuonP , ptScale , (ptMax+1)*(ptMax+1)-1);  
+  dataMap[Name[DiMuonPt]]->setDigit( dimuon , ptScale , ptMax*2+1);  
+  dataMap[Name[DiMuonProdPt]]->setDigit( dimuonP , ptScale , (ptMax+1)*(ptMax+1)-1);  
   if( msgLevel(MSG::VERBOSE))verbose() << "DiMuon OK " << endmsg;
 
   // -------------------------------------
@@ -238,7 +238,8 @@ StatusCode L0DUEmulatorTool::fillData(){
       }
       const int ramBcid = m_condDB->RAMBCID( ram , odBX);
       //info() << "--------------- " << odBX << " " << ram << " " << ramBcid << endmsg;
-      data->setOperand( ramBcid  , m_condDB->scale(L0DUBase::Type::Digit) , L0DUBase::RAMBCID::Max  );
+      data->setDigit( ramBcid  );
+      data->setScaleAndSaturation(m_condDB->scale(L0DUBase::Type::Digit) , L0DUBase::RAMBCID::Max  );
     }
     if( data->type() != LHCb::L0DUElementaryData::Compound )continue;
     StatusCode sc = dataTree(data, dataMap);
@@ -259,34 +260,24 @@ StatusCode L0DUEmulatorTool::fillData(){
 //===========================================================================================================
 void L0DUEmulatorTool::setDataValue(LHCb::L0DUElementaryData* l0Data, 
                                     const unsigned int  base[L0DUBase::Index::Size]){
-  l0Data->setOperand( digit( base ) , scale(base) , max(base)  );
-  if( msgLevel(MSG::VERBOSE))
-    verbose() << "Set Data digit " << l0Data->name() << " : " <<digit(base) << " : scale  = " << scale(base) << endmsg;
+
+  l0Data->setScaleAndSaturation(scale(base) , max(base)  );
+  const std::vector<int>& BXs = bxList( base );
+  for( std::vector<int>::const_iterator ibx=BXs.begin();BXs.end()!=ibx;ibx++){
+    l0Data->setDigit( digit( base, *ibx ) , *ibx );
+    if( msgLevel(MSG::VERBOSE))
+      verbose() << "Set Data digit " << l0Data->name() << " : " <<digit(base) << " : scale  = " << scale(base) 
+                << " for BX="<< Gaudi::Utils::toString(*ibx)<< endmsg;
+  }
 }
 //===========================================================================================================
 StatusCode  L0DUEmulatorTool::dataTree(LHCb::L0DUElementaryData* data, LHCb::L0DUElementaryData::Map dataMap   ){  
   if( data->type() != LHCb::L0DUElementaryData::Compound )return StatusCode::SUCCESS;
-  std::vector<std::string>::const_iterator iop = data->operandsName().begin();
-  double scale = 0;
-  for(iop =  data->operandsName().begin() ; iop != data->operandsName().end() ; iop++){
+  for(std::vector<std::string>::const_iterator iop =  data->componentsName().begin() ; iop != data->componentsName().end();iop++){
+    if( dataMap.find(*iop) == dataMap.end() )
+      return Warning("dataTree: the data '"+*iop+"' is not defined in the L0DUConfig data map",StatusCode::FAILURE);
     LHCb::L0DUElementaryData* preData = dataMap[ *iop ];
-    // process pre-Data (if not yet done)
-    LHCb::L0DUElementaryData::Map::key_compare kc = dataMap.key_comp();
-    if( kc( data->name(), preData->name() ))dataTree( preData, dataMap);
-    //    if( std::map::key_compare<std::string>(data->name(), preData->name() ))dataTree( preData, dataMap);
-    // set the same scale as the 1st pre-data
-    if(iop ==  data->operandsName().begin()){ 
-      scale = preData->scale();
-      data->setScale( scale );
-    }
-    data->addOperand( preData->digit() );
-    data->setSaturation( preData->saturation() + data->saturation() );
-    // check the scale is the same for the other operands
-    if( scale != preData->scale() ){ 
-      error() << "Cannot combine data with different scales in the compound data "<< *iop << endmsg;
-      return StatusCode::FAILURE;
-    }
-    scale = preData->scale();
+    data->addComponent( preData );
   }
   return StatusCode::SUCCESS;
 }
@@ -345,8 +336,11 @@ const LHCb::L0DUReport L0DUEmulatorTool::emulatedReport(){
   return m_report;
 }
 
-unsigned long L0DUEmulatorTool::digit(const unsigned int   base[L0DUBase::Index::Size]){
-  return m_decoder->digit(base);
+std::vector<int> L0DUEmulatorTool::bxList(const unsigned int   base[L0DUBase::Index::Size]){
+  return m_decoder->bxList(base);
+}
+unsigned long L0DUEmulatorTool::digit(const unsigned int   base[L0DUBase::Index::Size],int bx){
+  return m_decoder->digit(base,bx);
 }
 double L0DUEmulatorTool::scale(const unsigned int base[L0DUBase::Index::Size]){
   return m_condDB->scale(base[L0DUBase::Index::Scale]);

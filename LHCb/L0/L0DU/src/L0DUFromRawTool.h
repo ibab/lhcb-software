@@ -55,7 +55,7 @@ public:
 private:
   bool decoding(int ibank);
   bool getL0DUBanksFromRaw();
-  inline void encode(const std::string& name, unsigned int data ,  const unsigned int base[L0DUBase::Index::Size]);
+  inline void encode(const std::string& name, unsigned int data ,  const unsigned int base[L0DUBase::Index::Size],int bx=0);
   inline void dataMap(const std::string& name, unsigned int data , double scale = 1.);
   void fillBCIDData();
   double scale(const unsigned int base[L0DUBase::Index::Size]) const;
@@ -113,20 +113,20 @@ private:
 
 
 
-inline void L0DUFromRawTool::encode(const std::string& name, unsigned int data ,  const unsigned int base[L0DUBase::Index::Size]){
-  if (!name.empty()) dataMap(name,data,scale(base));
-  if (!m_encode) return;
+inline void L0DUFromRawTool::encode(const std::string& name, unsigned int data ,  const unsigned int base[L0DUBase::Index::Size],int bx){
+  if(name != "")dataMap(name,data,scale(base));
+  if(!m_encode)return;
   LHCb::L0ProcessorData* fiber = m_processorDatas->object( base[ L0DUBase::Index::Fiber ]  )  ;
-  unsigned int word = fiber->word();  
+  unsigned int word = fiber->word(bx);  
   //  word |= ( (data << base[L0DUBase::Index::Shift]) & base[L0DUBase::Index::Mask] );
   word |= ( (data & ( base[L0DUBase::Index::Mask] >> base[L0DUBase::Index::Shift] )) << base[L0DUBase::Index::Shift]);
-  fiber->setWord( word);
+  fiber->setWord( word,bx);
   if( L0DUBase::Fiber::Empty != base[ L0DUBase::Index::Fiber2 ]  ) {
     fiber = m_processorDatas->object( base[ L0DUBase::Index::Fiber2 ]  )  ;
-    word = fiber->word();
+    word = fiber->word(bx);
     unsigned int val = data >> base[L0DUBase::Index::Offset];
     word |= ( ( val << base[L0DUBase::Index::Shift2]) & base[L0DUBase::Index::Mask2] );
-    fiber->setWord( word);
+    fiber->setWord( word,bx);
   }
 }
 

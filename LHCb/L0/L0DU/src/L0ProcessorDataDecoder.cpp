@@ -108,12 +108,23 @@ bool L0ProcessorDataDecoder::setL0ProcessorData(std::string dataLoc ){
 
 
 // ============================================================================
-double L0ProcessorDataDecoder::value( const unsigned int base[L0DUBase::Index::Size]){
-  return ((double) digit(base))*m_condDB->scale(base[L0DUBase::Index::Scale]);
+double L0ProcessorDataDecoder::value( const unsigned int base[L0DUBase::Index::Size],int bx){
+  return ((double) digit(base,bx))*m_condDB->scale(base[L0DUBase::Index::Scale]);
 }
 
 
-unsigned long L0ProcessorDataDecoder::digit( const unsigned int base[L0DUBase::Index::Size]){
+std::vector<int> L0ProcessorDataDecoder::bxList( const unsigned int base[L0DUBase::Index::Size]){
+  std::vector<int> def;
+  LHCb::L0ProcessorData* fiber = m_dataContainer->object( base[ L0DUBase::Index::Fiber ]  )  ;
+  if( 0 == fiber ){ 
+    Warning("Fiber "+ Gaudi::Utils::toString(base[ L0DUBase::Index::Fiber ]) +" not found ",StatusCode::SUCCESS).ignore();
+    m_ok=false;
+    return def;
+  }
+  return fiber->bxList();
+}
+
+unsigned long L0ProcessorDataDecoder::digit( const unsigned int base[L0DUBase::Index::Size], int bx){
   
   //  if(!m_ok)return 0;
 
@@ -124,7 +135,10 @@ unsigned long L0ProcessorDataDecoder::digit( const unsigned int base[L0DUBase::I
     return 0;
   }
   
-  unsigned long val = ( ( fiber->word()   &  base[L0DUBase::Index::Mask]  ) >> base[L0DUBase::Index::Shift]  ) ; 
+  if( ! fiber->hasData(bx))
+    Warning("Fiber "+ Gaudi::Utils::toString(base[ L0DUBase::Index::Fiber ]) +
+            " has no defined data for BX="+Gaudi::Utils::toString(bx)).ignore();
+  unsigned long val = ( ( fiber->word(bx)   &  base[L0DUBase::Index::Mask]  ) >> base[L0DUBase::Index::Shift]  ) ; 
 
   if( L0DUBase::Fiber::Empty != base[ L0DUBase::Index::Fiber2 ]  ) {
     LHCb::L0ProcessorData* fiber2= m_dataContainer->object( base[ L0DUBase::Index::Fiber2 ]  )  ;
@@ -133,7 +147,10 @@ unsigned long L0ProcessorDataDecoder::digit( const unsigned int base[L0DUBase::I
       m_ok=false;
       return 0;
     }
-    unsigned long val2 =( ( fiber2->word() & base[ L0DUBase::Index::Mask2 ]  )  >> base[ L0DUBase::Index::Shift2 ]) ;
+  if( ! fiber->hasData(bx))
+    Warning("Fiber "+ Gaudi::Utils::toString(base[ L0DUBase::Index::Fiber2 ]) +
+            " has no defined data for BX="+Gaudi::Utils::toString(bx)).ignore();
+    unsigned long val2 =( ( fiber2->word(bx) & base[ L0DUBase::Index::Mask2 ]  )  >> base[ L0DUBase::Index::Shift2 ]) ;
     val |=  (val2  << base[ L0DUBase::Index::Offset ]  ); 
   }
   m_ok=true;
