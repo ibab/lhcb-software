@@ -1,12 +1,15 @@
 !-----------------------------------------------------------------------------
 ! Package     : Rec/FSRAlgs
-! Responsible : Jaap Panman, Rob Lambert
+! Responsible : 
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-03-14 - Marco Cattaneo
+ - Update test reference to follow Gaudi v27r1 changes in algorithm properties
+
 ! 2016-02-09 - Marco Clemencic
  - Normalized a bit test fsralgs.mergesmallfiles
-   - use standard stdout/ref comparison function
+   . use standard stdout/ref comparison function
 
 !========================= FSRAlgs v2r0 2016-01-27 =========================
 ! 2016-01-29 - Marco Cattaneo
