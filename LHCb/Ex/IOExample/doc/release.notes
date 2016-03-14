@@ -4,6 +4,9 @@
 ! Purpose: Tests reading and writing of legacy datasets
 !-------------------------------------------------------------------------------
 
+! 2016-03-14 - Marco Cattaneo
+ - Update references and tests to follow Gaudi v27r1 
+
 !========================= IOExample v4r17 2015-11-23 =========================
 ! 2015-10-24 - Marco Cattaneo
   - Add tests to copy and read Stripping21 MDST

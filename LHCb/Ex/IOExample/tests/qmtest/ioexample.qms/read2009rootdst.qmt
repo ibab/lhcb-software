@@ -5,13 +5,7 @@
   <argument name="reference"><text>../refs/2009dst.ref</text></argument>
   <argument name="validator"><text>
 from GaudiConf.QMTest.LHCbExclusions import preprocessor as LHCbPreprocessor
-preprocessor = LHCbPreprocessor + \
-  LineSkipper(["EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE"]) + \
-  LineSkipper(["EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc"]) + \
-  LineSkipper(["InputCopyStream"]) + \
-  LineSkipper(["FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc"]) + \
-  LineSkipper(["DumpTracks        SUCCESS Number of counters : 1"]) + \
-  RegexpReplacer(when = 'Handled "DataFault" incidents:', orig = r'0/0/41', repl = r'0/0/71') 
+preprocessor = LHCbPreprocessor
 validateWithReference(preproc = preprocessor)
 </text></argument>
   <argument name="prerequisites"><set>

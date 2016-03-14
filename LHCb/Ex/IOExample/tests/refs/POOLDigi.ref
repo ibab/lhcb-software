@@ -1,30 +1,93 @@
-# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/CopyPOOLtoROOTdigi.py'
-# ROOT output file requested. Forcing reading of POOL input files with RootCnv
-# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/CopyPOOLtoROOTdigi.py'
+# setting LC_ALL to "C"
+# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/lhcb-gaudi-head/LHCbDev_HEAD/Ex/IOExample/tests/options/CopyPOOLtoROOTdigi.py'
+# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmakeuser/lhcb-gaudi-head/LHCbDev_HEAD/Ex/IOExample/tests/options/CopyPOOLtoROOTdigi.py'
+# applying configuration of LHCbApp
+# /***** User LHCbApp/LHCbApp ************************************************************************
+# |-Persistency    = None
+# |-DataType       = '2009'  (default: '2012')
+# |-DDDBtag        = 'head-20090508'  (default: '')
+# |-SkipEvents     = 0
+# |-XMLSummary     = None
+# |-OutputLevel    = 3
+# |-EvtMax         = -1
+# |-Simulation     = True  (default: False)
+# |-DQFLAGStag     = ''
+# |-IgnoreDQFlags  = True
+# |-Detectors      = []  (default: [])
+# |-LocalDataTypes = []  (default: [])
+# |-TimeStamp      = False
+# |-CondDBtag      = 'sim-20090508-vc-mu100'  (default: '')
+# |-Monitors       = []  (default: [])
+# \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
+# skipping configuration of XMLSummary
 # applying configuration of IOTest
+# WARNING: Property 'EvtMax' is set in both 'IOTest' and 'ApplicationMgr', using 'IOTest.EvtMax'
 # /***** User IOTest/IOTest **************************************************************************
+# |-KillDAQ     = False
+# |-DataContent = 'DIGI'  (default: 'DST')
 # |-DataType    = '2011'
 # |-LoadAll     = True  (default: False)
-# |-DataContent = 'DIGI'  (default: 'DST')
-# |-WithMC      = True  (default: False)
 # |-EvtMax      = 5  (default: -1)
+# |-WithMC      = True  (default: False)
 # \----- (End of User IOTest/IOTest) -----------------------------------------------------------------
+# applying configuration of DDDBConf
+# /***** User DDDBConf/DDDBConf **********************************************************************
+# |-DataType    = '2009'  (default: '2012')
+# |-DbRoot      = 'conddb:/lhcb.xml'
+# |-InitialTime = 'Safe'
+# |-AutoTags    = False
+# |-Simulation  = True  (default: False)
+# \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
 # skipping configuration of DstConf
+# applying configuration of CondDB
+# /***** User CondDB/CondDB **************************************************************************
+# |-Upgrade                    = False
+# |-EnableRunStampCheck        = False
+# |-DBSnapshotDirectory        = '/group/online/hlt/conditions'
+# |-LatestLocalTagsByDataType  = []  (default: [])
+# |-Online                     = False
+# |-LogFile                    = ''
+# |-SQLiteLocalCopiesDir       = ''
+# |-EnableRunChangeHandler     = False
+# |-RunChangeHandlerConditions = {'online_%d.xml': ['Conditions/Online/LHCb/Magnet/Set', 'Conditions/Online/Velo/MotionSystem', 'Conditions/Online/LHCb/Lumi/LumiSettings', 'Conditions/Online/LHCb/LHCFillingScheme', 'Conditions/Online/LHCb/RunParameters', 'Conditions/Online/Rich1/R1HltGasParameters', 'Conditions/Online/Rich2/R2HltGasParameters']}
+# |                            (default: {'online_%d.xml': ['Conditions/Online/LHCb/Magnet/Set', 'Conditions/Online/Velo/MotionSystem', 'Conditions/Online/LHCb/Lumi/LumiSettings', 'Conditions/Online/LHCb/LHCFillingScheme', 'Conditions/Online/LHCb/RunParameters', 'Conditions/Online/Rich1/R1HltGasParameters', 'Conditions/Online/Rich2/R2HltGasParameters']})
+# |-Tags                       = {}  (default: {})
+# |-LoadCALIBDB                = 'HLT1'
+# |-AllLocalTagsByDataType     = []  (default: [])
+# |-UseOracle                  = False
+# |-RunStampCondition          = ''
+# |-PartitionConnectionString  = {}  (default: {})
+# |-LocalTags                  = {}  (default: {})
+# |-IgnoreHeartBeat            = False
+# |-Overrides                  = []  (default: [])
+# |-Simulation                 = True  (default: False)
+# |-QueryGranularity           = 0
+# |-LatestGlobalTagByDataType  = ''
+# |-UseDBSnapshot              = False
+# |-DisableLFC                 = False
+# |-HeartBeatCondition         = '/Conditions/Online/LHCb/Tick'
+# |-LatestGlobalTagByDataTypes = []  (default: [])
+# |-UseLatestTags              = []  (default: [])
+# |-OverwriteSQLiteLocalCopy   = False
+# \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 # applying configuration of DigiConf
 # WARNING: Property 'EnableUnpack' is set in both 'DigiConf' and 'SimConf', using 'DigiConf.EnableUnpack'
 # No Writer defined for DIGI
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v1r2)
-                                          running on lxbuild163.cern.ch on Wed Sep 19 15:13:05 2012
+                                                   Welcome to LHCbDev version HEAD
+                                          running on lxplus016.cern.ch on Mon Mar 14 13:29:45 2016
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
-TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
+DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
+DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
+TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service EventDataSvc
+TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service TimelineSvc
 TESFingerPrint      DEBUG Initialize base class GaudiCommon<Algorithm>
 TESFingerPrint      DEBUG could not locate CounterSummarySvc, no counter summary will be made
-TESFingerPrint      DEBUG List of ALL properties of TESFingerPrint/TESFingerPrint  #properties = 34
+TESFingerPrint      DEBUG List of ALL properties of TESFingerPrint/TESFingerPrint  #properties = 38
 TESFingerPrint      DEBUG Property ['Name': Value] =  'OutputFileName':tes_finger_print.dat
 TESFingerPrint      DEBUG Property ['Name': Value] =  'HeuristicsLevel':Medium
 TESFingerPrint      DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
@@ -35,16 +98,18 @@ TESFingerPrint      DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 TESFingerPrint      DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 TESFingerPrint      DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 TESFingerPrint      DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-TESFingerPrint      DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
-TESFingerPrint      DEBUG Property ['Name': Value] =  'RootOnTES':
 TESFingerPrint      DEBUG Property ['Name': Value] =  'RootInTES':
 TESFingerPrint      DEBUG Property ['Name': Value] =  'Context':
 TESFingerPrint      DEBUG Property ['Name': Value] =  'TypePrint':True
 TESFingerPrint      DEBUG Property ['Name': Value] =  'StatPrint':True
 TESFingerPrint      DEBUG Property ['Name': Value] =  'PropertiesPrint':False
 TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+TESFingerPrint      DEBUG Property ['Name': Value] =  'NeededResources':[  ]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'Cardinality':1
+TESFingerPrint      DEBUG Property ['Name': Value] =  'IsClonable':False
 TESFingerPrint      DEBUG Property ['Name': Value] =  'RegisterForContextService':True
 TESFingerPrint      DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+TESFingerPrint      DEBUG Property ['Name': Value] =  'Timeline':False
 TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditStop':False
 TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditStart':False
 TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditEndRun':False
@@ -55,24 +120,29 @@ TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditRestart':False
 TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditReinitialize':False
 TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditInitialize':False
 TESFingerPrint      DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
-TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorCount':0
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ExtraOutputs':[]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ExtraInputs':[]
+TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorCounter':0
 TESFingerPrint      DEBUG Property ['Name': Value] =  'ErrorMax':1
 TESFingerPrint      DEBUG Property ['Name': Value] =  'Enable':True
 TESFingerPrint      DEBUG Property ['Name': Value] =  'OutputLevel':1
+TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service EventDataSvc
 TESFingerPrint      DEBUG ==> Initialize
 TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service ToolSvc
+TESFingerPrint      DEBUG input handles: 0
+TESFingerPrint      DEBUG output handles: 0
+TESFingerPrint      DEBUG Data Deps for TESFingerPrint
 EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
 InputCopyStream      INFO Data source: EventDataSvc output: DATAFILE='PFN:ROOT.digi' SVC='RootCnvSvc' OPT='REC'
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
 FSRInputCopyStream   INFO Data source: FileRecordDataSvc output: DATAFILE='PFN:ROOT.digi' SVC='FileRecordCnvSvc' OPT='REC'
-EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v19r2/30000000-100ev-20090407-MC09.digi' SVC='Gaudi::RootEvtSelector' OPT='READ'
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/swtest/lhcb/swtest/MC09-pool-digi/30000000-100ev-20090407-MC09.digi' SVC='Gaudi::RootEvtSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
-TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x1cf30ef0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x64a51f0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -127,10 +197,9 @@ evtTime :	212000
 DumpMCEventAlg       INFO MCVertex/MCParticle tree structure is OK
 DumpMCEventAlg       INFO There are 1208 Vertices:
 DumpMCEventAlg       INFO There are 1195 Particles:
-IODataManager        INFO Referring to dataset ROOT.digi by its file ID:C6DD80C6-5B02-E211-BED6-003048C9CD62
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x1da3bbe0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x64d6650@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -187,7 +256,7 @@ DumpMCEventAlg       INFO There are 1992 Vertices:
 DumpMCEventAlg       INFO There are 2042 Particles:
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x1d7d3750@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x788ae20@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -244,7 +313,7 @@ DumpMCEventAlg       INFO There are 1092 Vertices:
 DumpMCEventAlg       INFO There are 1190 Particles:
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x1d5d1df0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x7cbfea0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -301,7 +370,7 @@ DumpMCEventAlg       INFO There are 718 Vertices:
 DumpMCEventAlg       INFO There are 764 Particles:
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x1da6f370@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x7e1ad30@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -356,7 +425,6 @@ evtTime :	212100
 DumpMCEventAlg       INFO MCVertex/MCParticle tree structure is OK
 DumpMCEventAlg       INFO There are 79 Vertices:
 DumpMCEventAlg       INFO There are 101 Particles:
-TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 ApplicationMgr       INFO Application Manager Stopped successfully
 PrintHeader          INFO Filtered 5 events
 PrintHeader       SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
@@ -373,7 +441,7 @@ FSRInputCopyStream   INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 10/0/15(Alg/Node/Total).
 ToolSvc              INFO Removing all tools created by ToolSvc
-RootCnvSvc           INFO Disconnected data IO:C6DD80C6-5B02-E211-BED6-003048C9CD62 [ROOT.digi]
-RootCnvSvc           INFO Disconnected data IO:D499FBE3-4762-DE11-B281-00304879EE40 [castor:/castor/cern.ch/user/c/cattanem/Boole/v19r2/30000000-100ev-20090407-MC09.digi]
+RootCnvSvc           INFO Disconnected data IO:A499B861-D1E9-E511-941C-02163E010F5E [ROOT.digi]
+RootCnvSvc           INFO Disconnected data IO:D499FBE3-4762-DE11-B281-00304879EE40 [root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/swtest/lhcb/swtest/MC09-pool-digi/30000000-100ev-20090407-MC09.digi]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
