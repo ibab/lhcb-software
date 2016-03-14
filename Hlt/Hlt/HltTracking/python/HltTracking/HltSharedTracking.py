@@ -49,6 +49,7 @@ ToolSvc().addTool(TrackMasterExtrapolator, "TrackMasterExtrapolator")
 ToolSvc().TrackMasterExtrapolator.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
 ToolSvc().addTool(TrackStateProvider, "TrackStateProvider")
 ToolSvc().TrackStateProvider.Extrapolator.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
+#ToolSvc().TrackStateProvider.CacheStatesOnDemand = False
 ToolSvc().TrackStateProvider.Interpolator.addTool(TrackMasterExtrapolator,name="Extrapolator")
 ToolSvc().TrackStateProvider.addTool(TrackInterpolator,"Interpolator")
 ToolSvc().TrackStateProvider.Interpolator.Extrapolator.addTool(SimplifiedMaterialLocator, name="MaterialLocator")

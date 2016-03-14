@@ -1646,6 +1646,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         # protoparticles here!
         myCALOProcessor.CaloReco     = True
         myCALOProcessor.CaloPIDs     = True
+        myCALOProcessor.CaloPIDTrTypes = [3,5] 
         #
         # Check if we are making neutrals or not
         #

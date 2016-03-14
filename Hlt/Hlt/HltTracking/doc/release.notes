@@ -7,6 +7,8 @@
 ! 2016-03-14 - Sascha Stahl
  - Fix configuration of PatForwardTool to follow the recent changes in the tool.
    Updated settings for 2016 data tuning.
+ - Update settings of Calo reconstruction to not calculate PID variables for T-Tracks.
+   This information is used nowhere.
 
 ! 2016-03-10 - Agnieszka Dziurda
  - new tuning for PVs, double threshold for radial cut 
