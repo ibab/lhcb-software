@@ -70,7 +70,9 @@ class Gauss(LHCbConfigurableUser):
         'calo',  'spd', 'prs', 'ecal', 'hcal' ,
         'muon' ,
         'magnet',
-        'rich1pmt', 'rich2pmt'
+        'rich1pmt', 'rich2pmt',
+        'hc', 
+        'bcm', 'bls'
         ]
 
     ## Possible used Configurables
@@ -84,7 +86,7 @@ class Gauss(LHCbConfigurableUser):
         # Simple lists of sub detectors
         ,"DetectorGeo"       : {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
         ,"DetectorSim"       : {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
-        ,"DetectorMoni"      : {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
+        ,"DetectorMoni"      : {"Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon'] }
         ,"SpilloverPaths"    : []
         ,"PhysicsList"       : {"Em":'NoCuts', "Hadron":'FTFP_BERT', "GeneralPhys":True, "LHCbPhys":True, "Other": '' }
         ,"DeltaRays"         : True
@@ -1424,11 +1426,191 @@ class Gauss(LHCbConfigurableUser):
             cHcal = DataPacking__Check_LHCb__MCHcalHitPacker_("CheckHcalHits"+slot)
             packCheckSeq.Members += [upHcal,cHcal]
 
+    
+########################################################################################################
+#
+# Herschel
+#
+########################################################################################################
+
+    def defineHCGeo(self, detPieces):
+      # Add the non-standard pieces of the BeforeMagnet region.
+      region = 'BeforeMagnetRegion'
+      if detPieces.has_key(region):
+        pieces = ['PipeJunctionBeforeVelo', 'BeforeVelo']
+        for piece in pieces:
+          if piece in detPieces[region]: continue
+          detPieces[region] += [piece] 
+      # Add the AfterMuon part of the Downstream region.
+      region = 'DownstreamRegion'
+      if detPieces.has_key(region):
+        pieces = ['AfterMuon']
+        for piece in pieces:
+          if piece in detPieces[region]: continue
+          detPieces[region] += [piece] 
+      # Add the entire Upstream, BeforeUpstream, and AfterDownstream regions.
+      geo = GiGaInputStream('Geo')
+      regions = ['UpstreamRegion', 'BeforeUpstreamRegion', 
+                 'AfterDownstreamRegion']
+      for region in regions:
+        if detPieces.has_key(region):
+          detPieces[region] = []
+        geo.StreamItems.append("/dd/Structure/LHCb/" + region)
+      # Extend the world volume.
+      GiGaGeo().ZsizeOfWorldVolume = 300.0 * SystemOfUnits.m
+
+    def configureHCSim(self, slot, detHits):
+      det = "HC"
+      getHits = GetTrackerHitsAlg("Get" + det + "Hits" + slot)
+      getHits.MCHitsLocation = "MC/" + det + "/Hits"
+      getHits.CollectionName = det + "SDet/Hits"
+      getHits.Detectors = ["/dd/Structure/LHCb/UpstreamRegion/HCB0", 
+                           "/dd/Structure/LHCb/UpstreamRegion/HCB1", 
+                           "/dd/Structure/LHCb/BeforeUpstreamRegion/HCB2", 
+                           "/dd/Structure/LHCb/DownstreamRegion/AfterMuon/HCF1", 
+                           "/dd/Structure/LHCb/AfterDownstreamRegion/HCF2"]
+      detHits.Members += [getHits]
+
+    def configureHCMoni(self, slot, packCheckSeq, detMoniSeq, checkHits):
+      from Configurables import HCHitChecker
+      detMoniSeq.Members += [HCHitChecker("HCHitChecker" + slot)]
+
+      if self.getProp("EnablePack") and self.getProp("DataPackingChecks"):
+        packCheckSeq = GaudiSequencer("DataUnpackTest" + slot)
+        from Configurables import DataPacking__Unpack_LHCb__MCHCHitPacker_
+        upHC = DataPacking__Unpack_LHCb__MCHCHitPacker_("UnpackHCHits" + slot,
+                                                        OutputName = "MC/HC/HitsTest")
+        packCheckSeq.Members += [upHC]
+
+        from Configurables import DataPacking__Check_LHCb__MCHCHitPacker_
+        cHC = DataPacking__Check_LHCb__MCHCHitPacker_("CheckHCHits" + slot)
+        packCheckSeq.Members += [cHC]
 
 
+########################################################################################################
+#
+# Beam Condition Monitors
+#
+########################################################################################################
 
+    def defineBcmGeo(self, detPieces):
+      # Add the non-standard pieces of the BeforeMagnet region.
+      region = 'BeforeMagnetRegion'
+      if detPieces.has_key(region):
+        pieces = ['PipeJunctionBeforeVelo', 'BeforeVelo']
+        for piece in pieces:
+          if piece in detPieces[region]: continue
+          detPieces[region] += [piece] 
+      # Add the entire Upstream region.
+      geo = GiGaInputStream('Geo')
+      region = 'UpstreamRegion'
+      if detPieces.has_key(region):
+        detPieces[region] = []
+      geo.StreamItems.append("/dd/Structure/LHCb/" + region)
+      # Add the AfterMuon part of the Downstream region.
+      region = 'DownstreamRegion'
+      if detPieces.has_key(region):
+        pieces = ['AfterMuon']
+        for piece in pieces:
+          if piece in detPieces[region]: continue
+          detPieces[region] += [piece] 
 
+    def configureBcmSim(self, slot, detHits):
+      det = "Bcm"
+      getHits = GetTrackerHitsAlg("Get" + det + "Hits" + slot)
+      getHits.MCHitsLocation = "MC/" + det + "/Hits"
+      getHits.CollectionName = det + "SDet/Hits"
+      getHits.Detectors = ["/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo/BcmUp",
+                           "/dd/Structure/LHCb/MagnetRegion/BcmDown"] 
+      detHits.Members += [getHits]
 
+    def configureBcmMoni(self, slot, packCheckSeq, detMoniSeq, checkHits):
+      from Configurables import BcmHitChecker
+      checkerUp = BcmHitChecker("BcmHitCheckerUp" + slot)
+      checkerUp.BcmDetLocation = "/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo/BcmUp"
+      checkerUp.MonitorInDetail = False
+      checkerDn = BcmHitChecker("BcmHitCheckerDown" + slot)
+      checkerDn.BcmDetLocation = "/dd/Structure/LHCb/MagnetRegion/BcmDown"
+      checkerDn.MonitorInDetail = False
+      detMoniSeq.Members += [checkerUp, checkerDn]
+
+      if self.getProp("EnablePack") and self.getProp("DataPackingChecks"):
+        packCheckSeq = GaudiSequencer("DataUnpackTest" + slot)
+        from Configurables import DataPacking__Unpack_LHCb__MCBcmHitPacker_
+        upBcm = DataPacking__Unpack_LHCb__MCBcmHitPacker_("UnpackBcmHits" + slot,
+                                                          OutputName = "MC/Bcm/HitsTest")
+        packCheckSeq.Members += [upBcm]
+
+        from Configurables import DataPacking__Check_LHCb__MCBcmHitPacker_
+        cBcm = DataPacking__Check_LHCb__MCBcmHitPacker_("CheckBcmHits" + slot)
+        packCheckSeq.Members += [cBcm]
+
+    
+########################################################################################################
+#
+# Beam Loss Scintillators
+
+########################################################################################################
+#
+
+    def defineBlsGeo(self, detPieces):
+      # Add the non-standard pieces of the BeforeMagnet region.
+      region = 'BeforeMagnetRegion'
+      if detPieces.has_key(region):
+        pieces = ['PipeJunctionBeforeVelo', 'BeforeVelo']
+        for piece in pieces:
+          if piece in detPieces[region]: continue
+          detPieces[region] += [piece] 
+      # Add the non-standard pieces of the Upstream region,
+      # unless the Upstream region has been added as a whole.
+      geo = GiGaInputStream('Geo') 
+      region = 'UpstreamRegion'
+      path = '/dd/Structure/LHCb/' + region
+      if detPieces.has_key(region) and path not in geo.StreamItems:
+        pieces = ['BlockWallUpstr']
+        for piece in pieces:
+          if piece in detPieces[region]: continue
+          detPieces[region] += [piece] 
+
+    def configureBlsSim(self, slot, detHits):
+      det = "Bls"
+      getHits = GetTrackerHitsAlg("Get" + det + "Hits" + slot)
+      getHits.MCHitsLocation = "MC/" + det + "/Hits"
+      getHits.CollectionName = det + "SDet/Hits"
+      # The geometry of the BLS changed in 2011
+      idBLS = ["3", "4", "5", "6", "7", "8"]
+      if self.getProp("DataType") == "2010" :
+          idBLS = ["1", "2"]
+      getHits.Detectors = []
+      for iDet in idBLS:
+         getHits.Detectors.append("/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo/Bls"+iDet)
+      detHits.Members += [getHits]
+      
+
+    def configureBlsMoni(self, slot, packCheckSeq, detMoniSeq, checkHits):
+      from Configurables import BlsHitChecker
+      checkerA = BlsHitChecker("BlsHitCheckerBlsA" + slot)
+      checkerA.HistoDir = "BlsHitChecker/BlsHitCheckerBlsA"
+      checkerA.BlsAOn = TRUE
+      checkerA.HistogramTitlePrefix = "BlsA: "
+      checkerC = BlsHitChecker("BlsHitCheckerBlsC" + slot)
+      checkerC.HistoDir = "BlsHitChecker/BlsHitCheckerBlsC"
+      checkerC.BlsCOn = TRUE
+      checkerC.HistogramTitlePrefix = "BlsC: "
+      detMoniSeq.Members += [checkerA, checkerC]
+
+      if self.getProp("EnablePack") and self.getProp("DataPackingChecks"):
+        packCheckSeq = GaudiSequencer("DataUnpackTest" + slot)
+        from Configurables import DataPacking__Unpack_LHCb__MCBlsHitPacker_
+        upBls = DataPacking__Unpack_LHCb__MCBlsHitPacker_("UnpackBlsHits" + slot,
+                                                          OutputName = "MC/Bls/HitsTest")
+        packCheckSeq.Members += [upBls]
+
+        from Configurables import DataPacking__Check_LHCb__MCBlsHitPacker_
+        cBls = DataPacking__Check_LHCb__MCBlsHitPacker_("CheckBlsHits" + slot)
+        packCheckSeq.Members += [cBls]
+
+    
 #"""
 #    ><<       ><<                                             ><<  
 #    >< ><<   ><<<                                             ><<  
@@ -1464,7 +1646,8 @@ class Gauss(LHCbConfigurableUser):
 
     def defineMagnetGeoField( self, giGaGeo ):
         # Only bother with the FIELD Geometry if simulated.
-        if "Magnet" in self.getProp('DetectorSim')['Detectors']:
+        simDets = self.getProp('DetectorSim')['Detectors']
+        if "Magnet" in simDets or "HC" in simDets:
             GiGaGeo().FieldManager           = "GiGaFieldMgr/FieldMgr"
             GiGaGeo().addTool( GiGaFieldMgr("FieldMgr"), name="FieldMgr" )
             GiGaGeo().FieldMgr.Stepper       = "ClassicalRK4"
@@ -1473,9 +1656,29 @@ class Gauss(LHCbConfigurableUser):
             GiGaGeo().FieldMgr.addTool( GiGaMagFieldGlobal("LHCbField"), name="LHCbField" ) 
             GiGaGeo().FieldMgr.LHCbField.MagneticFieldService = "MagneticFieldSvc"
 
+        if "HC" in simDets:
+            from Configurables import MagneticFieldSvc, MultipleMagneticFieldSvc
+            # Use MultipleMagneticFieldSvc instead of default MagneticFieldSvc.
+            GiGaGeo().FieldMgr.LHCbField.MagneticFieldService = "MultipleMagneticFieldSvc"
+            # Add LHCb dipole magnet and compensators.
+            if "Magnet" in simDets:
+              MultipleMagneticFieldSvc().MagneticFieldServices += ["MagneticFieldSvc"]
+              importOptions("$MAGNETROOT/options/UseCompensators.py")
+            # Import LSS fields.
+            importOptions("$MAGNETROOT/options/UseTripletLeft.py")
+            importOptions("$MAGNETROOT/options/UseTripletRight.py")
+            # Scale dipoles and quadrupoles.
+            scalableMagnets = ["Q1", "Q2", "Q3", "D1", "MCBX"]
+            magnets = MultipleMagneticFieldSvc().getProp("MagneticFieldServices")
+            scale =  self.getProp("BeamMomentum") / (3.5 * SystemOfUnits.TeV )
+            for magnet in magnets:
+              if any(m in magnet for m in scalableMagnets):
+                 MagneticFieldSvc(magnet).ForcedSignedCurrentScaling = scale
+                 print "Scaling", magnet, "by", scale
 
 
 
+    
 #"""
 # ><<<<<<<            ><<         ><<              ><<             
 # ><<    ><<           ><<       ><<               ><<             
@@ -1696,6 +1899,9 @@ class Gauss(LHCbConfigurableUser):
         if 'Prs'     in self.getProp('DetectorSim')['Detectors'] : detlist += ['Prs']
         if 'Ecal'    in self.getProp('DetectorSim')['Detectors'] : detlist += ['Ecal']
         if 'Hcal'    in self.getProp('DetectorSim')['Detectors'] : detlist += ['Hcal']
+        if 'HC'      in self.getProp('DetectorSim')['Detectors'] : detlist += ['HC']
+        if 'Bcm'     in self.getProp('DetectorSim')['Detectors'] : detlist += ['Bcm']
+        if 'Bls'     in self.getProp('DetectorSim')['Detectors'] : detlist += ['Bls']
         # PSZ - add upgrade detectors here
         if 'VP'      in self.getProp('DetectorSim')['Detectors'] : detlist += ['VP']
         if 'UT'      in self.getProp('DetectorSim')['Detectors'] : detlist += ['UT']
@@ -2067,11 +2273,13 @@ class Gauss(LHCbConfigurableUser):
 
     def defineGeoBasePieces( self, basePieces ):
         #basePieces['BeforeMagnetRegion']=['Velo2Rich1']
-        basePieces['UpstreamRegion']     = []
-        basePieces['BeforeMagnetRegion'] = []
-        basePieces['MagnetRegion']       = []
-        basePieces['AfterMagnetRegion']  = []
-        basePieces['DownstreamRegion']   = []
+        basePieces['BeforeUpstreamRegion']  = []
+        basePieces['UpstreamRegion']        = []
+        basePieces['BeforeMagnetRegion']    = []
+        basePieces['MagnetRegion']          = []
+        basePieces['AfterMagnetRegion']     = []
+        basePieces['DownstreamRegion']      = []
+        basePieces['AfterDownstreamRegion'] = []
 
         #basePieces['UpstreamRegion']=[]
         #basePieces['BeforeMagnetRegion']=[]
@@ -2139,6 +2347,12 @@ class Gauss(LHCbConfigurableUser):
             self.defineEcalGeo( detPieces )
         elif lDet == "hcal":
             self.defineHcalGeo( detPieces )
+        elif lDet == "hc":
+            self.defineHCGeo(detPieces)
+        elif lDet == "bcm":
+            self.defineBcmGeo(detPieces)
+        elif lDet == "bls":
+            self.defineBlsGeo(detPieces)
         # Upgrade detectors below
         elif lDet == "vp":
             self.defineVPGeo( detPieces )
@@ -2197,7 +2411,9 @@ class Gauss(LHCbConfigurableUser):
         gaussSimulationSeq.Members += [ geo ]
 
         # Detector geometry to simulate
-        detPieces = {'UpstreamRegion':[], 'BeforeMagnetRegion':[],'AfterMagnetRegion':[],'DownstreamRegion':[],'MagnetRegion':[]}
+        detPieces = {'BeforeUpstreamRegion':[], 'UpstreamRegion':[],
+                     'BeforeMagnetRegion':[], 'MagnetRegion':[], 'AfterMagnetRegion':[],
+                     'DownstreamRegion':[], 'AfterDownstreamRegion':[]}
         #detPieces = {'BeforeMagnetRegion':[],'AfterMagnetRegion':[],'DownstreamRegion':[],'MagnetRegion':[]}
         basePieces = {}
 
@@ -2315,6 +2531,12 @@ class Gauss(LHCbConfigurableUser):
             self.configureEcalSim( slot, detHits )
         elif det == "hcal":
             self.configureHcalSim( slot, detHits )
+        elif det == "hc":
+            self.configureHCSim(slot, detHits)
+        elif det == "bcm":
+            self.configureBcmSim(slot, detHits)
+        elif det == "bls":
+            self.configureBlsSim(slot, detHits)
         # Upgrade detectors below
         elif det == "vp":
             self.configureVPSim( slot, detHits )
@@ -2331,7 +2553,10 @@ class Gauss(LHCbConfigurableUser):
         elif det == "sl":
             self.configureSLSim( slot, detHits )
         else:
-            log.warning("Sim Detector not known : %s" %(det))
+            if det != "magnet": 
+            ## Magnetic field defined in defineMagnetGeoField called
+            ## via defineDetectorGeoStream in defineGeo
+                log.warning("Sim Detector not known : %s" %(det))
 
     ##
     ##
@@ -2495,6 +2720,12 @@ class Gauss(LHCbConfigurableUser):
             self.configureEcalMoni( slot, packCheckSeq, detMoniSeq, checkHits )
         elif det == "hcal":
             self.configureHcalMoni( slot, packCheckSeq, detMoniSeq, checkHits )
+        elif det == "hc":
+            self.configureHCMoni(slot, packCheckSeq, detMoniSeq, checkHits)
+        elif det == "bcm":
+            self.configureBcmMoni(slot, packCheckSeq, detMoniSeq, checkHits)
+        elif det == "bls":
+            self.configureBlsMoni(slot, packCheckSeq, detMoniSeq, checkHits)
         # Upgrade detectors below
         elif det == "vp":
             self.configureVPMoni( slot, packCheckSeq, detMoniSeq, checkHits )
@@ -2728,6 +2959,12 @@ class Gauss(LHCbConfigurableUser):
          giga.RunAction = "GiGaRunActionSequence/RunSeq"
          if not skipG4:
              giga.RunSeq.addTool( TrCutsRunAction("TrCuts") , name = "TrCuts" )
+             # To simulate Herschel or BCM, we need to change the default cuts.
+             if 'HC' in self.getProp('DetectorSim')['Detectors']:
+               giga.RunSeq.TrCuts.MinZ = -125.0 * SystemOfUnits.m
+               giga.RunSeq.TrCuts.MaxZ =  125.0 * SystemOfUnits.m
+             elif 'Bcm' in self.getProp('DetectorSim')['Detectors']:
+               giga.RunSeq.TrCuts.MinZ = -25.0 * SystemOfUnits.m
              giga.RunSeq.Members += [ "TrCutsRunAction/TrCuts" ] 
              giga.RunSeq.addTool( GiGaRunActionCommand("RunCommand") , name = "RunCommand" ) 
              giga.RunSeq.Members += [ "GiGaRunActionCommand/RunCommand" ]

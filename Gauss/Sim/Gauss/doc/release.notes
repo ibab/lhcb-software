@@ -4,6 +4,16 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2016-03-14 - Gloria Corti
+ - Modified Gauss() configurable to allow simulating Herschel (HC), BCM and BLS
+   Note that for the last two the hist are not saved and these three detectors
+   can only be simulated one-by-one (some conflict with the geometry)
+ - Fixed warning for unknown Magnet in SimDetector and MoniDetector, details
+   at https://its.cern.ch/jira/browse/LHCBGAUSS-624 
+
+! 2016-03-13 - Gloria Corti
+ - Updated qmtests for current detector
+
 ! 2015-09-03 - Dmitry Popov
  - Updated the upgrade tests to skip some messages in the output.
 
