@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+
+! 2016-03-14 - Simone Stracka
+ - Line name changes in Bc2JpsiX, CcDiHadron (added folder name), and DPS lines (removed special characters)
+
 ! 2016-03-14 - Francesco Dettori
  - Removing duplications of Jpsi and Psi2S Turbo lines. Only lines with PID are kept, but "PID" is removed from line names. 
 

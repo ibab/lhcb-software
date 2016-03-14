@@ -96,7 +96,7 @@ class CcDiHadronLines(Hlt2LinesConfigurableUser):
         stages = self.stages()
         cuts   = self.getProps()
         for nickname, algos in self.algorithms(stages):
-            Hlt2Line(nickname,
+            Hlt2Line('CcDiHadron' + nickname,
                      prescale = cuts[nickname].get('Prescale', 1.0),
                      L0DU     = cuts[nickname].get('L0Req',    None),
                      HLT1     = cuts[nickname].get('Hlt1Req',  None),

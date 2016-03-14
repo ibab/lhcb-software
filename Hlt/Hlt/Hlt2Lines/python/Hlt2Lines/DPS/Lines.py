@@ -77,7 +77,7 @@ class DPSLines(Hlt2LinesConfigurableUser) :
             self._stages  = {
                 '2x2mu'  : [ DoubleDiMuon   ('2x2mu'  , [ mu2      ] ) ] ,
                 '2xHc'   : [ DoubleCharm    ('2xHc'   , [       Hc ] ) ] ,
-                '2mu&Hc' : [ DiMuonAndCharm ('2mu&Hc' , [ mu2 , Hc ] ) ]
+                '2muHc' : [ DiMuonAndCharm ('2muHc' , [ mu2 , Hc ] ) ]
                 }
 
         return self._stages[nickname] if nickname else self._stages
@@ -88,7 +88,7 @@ class DPSLines(Hlt2LinesConfigurableUser) :
         _stages = self.stages()
         for ( linename , algos ) in self.algorithms( _stages ):
             from HltLine.HltLine import Hlt2Line
-            Hlt2Line( 'DPS:' + linename          ,
+            Hlt2Line( 'DPS' + linename          ,
                       prescale  = self.prescale  ,
                       algos     = algos          ,
                       postscale = self.postscale )
