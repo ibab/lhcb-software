@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2016-03-14 - Adlene Hicheur
+ - Updating TupleToolConeIsolation to deal with pi0s of partially reconstructed backgrounds
+
 !================= DecayTreeTupleTracking v1r5 2016-03-07 ====================
 
 ! 2016-03-03 - Francesco Dettori

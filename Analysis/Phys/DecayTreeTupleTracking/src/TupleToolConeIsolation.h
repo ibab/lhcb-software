@@ -26,6 +26,12 @@
  * - FillMaxPt: flag to fill the momentum of the max-pT object in the cone (default = true)
  * - MaxPtParticleLocation: set the type of max-pT particles that are considered in the charged cone (default = "Phys/StdAllLooseMuons/Particles")
  * - FillComponents: flag to fill the components of all variables (default = false)
+ * - FillPi0Info: flag to fill the resolved pi0 info (default = false)
+ * - FillMergedPi0Info: flag to fill the merged pi0 info (default = false)
+ * - PizerosLocation: set the resolved pi0 type considered for combination with the seed (default = Phys/StdLoosePi02gg/Particles)
+ * - MergedPizerosLocation: set the merged pi0 type considered for combination with the seed (default = Phys/StdLooseMergedPi0/Particles)
+ * - MinhPi0Mass: Set the lower seed-Pi0 invariant mass cut (default = 0 MeV)
+ * - MaxhPi0Mass: Set the upper seed-Pi0 invariant mass cut (default = 5000 MeV)
  *
  * If Verbose, all options are set to true
  *
@@ -33,6 +39,8 @@
  *
  * - head_cc: charged cone
  * - head_nc: neutral cone
+ * 
+ * The pi0 variables are not dependent on the cone size
  *
  * Variables (XX = cc or nc):
  *
@@ -52,11 +60,17 @@
  *
  * - head_cc_maxPt_Q : charge of the max-pT object in the charged cone
  * - head_XX_maxPt_P : x, y, z (and e) components of the max-pT object momentum in the cone
+ * - head_MasshPi0: invariant mass of the seed-Pi0 combinations
+ * - head_Pi0_DeltaR: DeltaR between the seed and the pi0 directions
+ * - head_Pi0_E, head_Pi0_PX, head_Pi0_PY, head_Pi0_PZ: four momentum of the pi0
+ * - head_Pi0_M: invariant mass of the pi0
+ * - head_Pi0Ph1_CL, head_Pi0Ph2_CL: confidence levels of the (photon) pi0 daughters
+ * - For the merged pi0, the names of the variables are labelled replacing Pi0 by MergPi0
  *
  * \sa DecayTreeTuple, TupleToolTrackIsolation
  *
- *  @author Simone Bifani, Michel De Cian
- *  @date   2015-02-19
+ *  @author Simone Bifani, Michel De Cian, Adlene Hicheur
+ *  @date   2016-03-10
  *
  */
 
@@ -87,16 +101,21 @@ private:
   double m_minConeSize;
   double m_maxConeSize;
   double m_sizeStep;
+  double m_MinhPi0Mass;
+  double m_MaxhPi0Mass;
 
   std::string  m_extraParticlesLocation;
   std::string  m_maxPtParticleLocation;
   std::string  m_extraPhotonsLocation;
+  std::string  m_PizerosLocation;
+  std::string  m_MergedPizerosLocation;
 
   int m_trackType;
 
   bool m_fillCharged;
   bool m_fillNeutral;
-
+  bool m_fillPi0Info;
+  bool m_fillMergedPi0Info;
   bool m_fillAsymmetry;
   bool m_fillDeltas;
   bool m_fillIsolation;
@@ -126,10 +145,30 @@ private:
 			  int &multiplicity,
 			  double &scalarPt,
 			  std::vector<double> &momentum,
-			  std::vector<double> &maxPt );
+			  std::vector<double> &maxPt,
+			  double &AvConfLevel,
+			  double &MaxConfLevel,
+                          double &LR1,
+                          double &LR2,
+                          double &LR3,
+                          double &LR4);
 
   /// Check if a track belongs to the decay
   bool isTrackInDecay( const LHCb::Track *track );
+
+  //fill pi0-track mass info
+  StatusCode pi0Comb( const LHCb::Particle  *seed,
+		      const LHCb::Particles *pi0s,
+                      int &multiplicity,
+                      std::vector<double> &InvMass,
+		      std::vector<double> &Pi0PX,
+		      std::vector<double> &Pi0PY,
+		      std::vector<double> &Pi0PZ,
+                      std::vector<double> &Pi0E,
+                      std::vector<double> &Pi0M,
+                      std::vector<double> &Pi0DeltaR,
+		      std::vector<double> &Pi0Photon1CL,
+		      std::vector<double> &Pi0Photon2CL);
 
 };
 
