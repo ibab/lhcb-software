@@ -19,9 +19,9 @@ class CcDiHadron_25ns_Draft2016 :
         """
 
         lines = [
-            'Hlt2DiProton',
-            'Hlt2DiProtonLowMult',
-            'Hlt2DiPhi'
+            'Hlt2CcDiHadronDiProton',
+            'Hlt2CcDiHadronDiProtonLowMult',
+            'Hlt2CcDiHadronDiPhi'
             ]
         
         return lines

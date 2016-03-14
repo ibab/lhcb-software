@@ -19,8 +19,8 @@ class Bc2JpsiX_25ns_Draft2016 :
         """
 
         lines = [
-            'Hlt2TFBc2JpsiMuX'
-            #, 'Hlt2Bc2JpsiH'
+            'Hlt2Bc2JpsiXTFBc2JpsiMuX'
+            #, 'Hlt2Bc2JpsiXBc2JpsiH'
             ]
         
         return lines

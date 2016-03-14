@@ -19,9 +19,9 @@ class DPS_25ns_Draft2016 :
         """
 
         lines = [
-            'Hlt2DPS:2x2mu',
-            'Hlt2DPS:2xHc',
-            'Hlt2DPS:2mu&Hc'
+            'Hlt2DPS2x2mu',
+            'Hlt2DPS2xHc',
+            'Hlt2DPS2muHc'
             ]
         
         return lines
@@ -36,12 +36,12 @@ class DPS_25ns_Draft2016 :
         d.update (
             {
               DPSLines : {
-                  'Prescale'  : {'DPS:2x2mu'  : 1.0,
-                                 'DPS:2xHc'   : 1.0,
-                                 'DPS:2mu&Hc' : 1.0},
-                  'Postscale' : {'DPS:2x2mu'  : 1.0,
-                                 'DPS:2xHc'   : 1.0,
-                                 'DPS:2mu&Hc' : 1.0}
+                  'Prescale'  : {'DPS2x2mu'  : 1.0,
+                                 'DPS2xHc'   : 1.0,
+                                 'DPS2muHc' : 1.0},
+                  'Postscale' : {'DPS2x2mu'  : 1.0,
+                                 'DPS2xHc'   : 1.0,
+                                 'DPS2muHc' : 1.0}
                  }
               }
             )
