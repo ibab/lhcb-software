@@ -15,7 +15,7 @@
 // from Event
 #include "Event/L0ProcessorData.h"
 #include "Event/L0DUBase.h"
-static const InterfaceID IID_L0ProcessorDataDecoder( "IL0ProcessorDataDecoder", 1, 0 );
+static const InterfaceID IID_L0ProcessorDataDecoder( "IL0ProcessorDataDecoder", 2, 0 );
 
 
 
@@ -43,8 +43,9 @@ class IL0ProcessorDataDecoder : public virtual IAlgTool {
   virtual bool   setL0ProcessorData(std::vector<LHCb::L0ProcessorDatas*> datass ) = 0;
   virtual bool   setL0ProcessorData(std::string dataLoc )=0;
   virtual bool   setL0ProcessorData(LHCb::L0ProcessorDatas* datas ) = 0;
-  virtual double value(  const unsigned int  data[L0DUBase::Index::Size]) = 0;
-  virtual unsigned long digit(  const unsigned int  data[L0DUBase::Index::Size]) = 0;
+  virtual double value(  const unsigned int  data[L0DUBase::Index::Size],int bx=0) = 0;
+  virtual unsigned long digit(  const unsigned int  data[L0DUBase::Index::Size],int bx=0) = 0;
+  virtual std::vector<int> bxList(  const unsigned int  data[L0DUBase::Index::Size]) = 0;
   virtual bool   isValid()=0;
   
 };
