@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-03-14 - Francesco Dettori
+ - Updating DiMuon_25ns_Draft2016 to match changes in Hlt2Lines 
+
 ! 2016-03-11 - Roel Aaij
  - Added settings for Hlt1BottomoniumLines and set {Multi,Di}MuonNoL0 L0 settings
    to L0_DECISION_PHYSICS.

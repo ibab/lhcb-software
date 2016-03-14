@@ -42,10 +42,8 @@ class DiMuon_25ns_Draft2016(object) :
             # Turbo lines 
             'Hlt2DiMuonJPsiTurbo',
             'Hlt2DiMuonPsi2STurbo',
-            'Hlt2DiMuonBTurbo',
-            'Hlt2DiMuonJPsiPIDTurbo',
-            'Hlt2DiMuonPsi2SPIDTurbo',
-            'Hlt2DiMuonPsi2SLowPTPIDTurbo'
+            'Hlt2DiMuonPsi2SLowPTTurbo',
+            'Hlt2DiMuonBTurbo'
             ]
 
         return lines
