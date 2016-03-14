@@ -27,7 +27,7 @@ from pprint import pprint
 ## Bit 30 is assigned to "for MC"
 ## Bit 29 is assigned to "HLT2 only"
 ## Bit 28 is assigned to "HLT1 only"
-## Neither 30 nor 29 is "old style" Hlt1 + Hlt2
+## Neither 29 nor 28 is "old style" Hlt1 + Hlt2
 
 ### add some decoration...
 MD5 = cppyy.gbl.Gaudi.Math.MD5
@@ -656,18 +656,34 @@ class RemoteAccess(object) :
             tck = _tck(tck)
             # check whether L0 part of the TCK is specified
             l0tck = tck & 0xffff
+            hlt1, hlt2 = (False, False)
+            masks = {(True, False) : 1 << 28, (False, True) : 1 << 29, (True, True) : 0}
             if l0tck :
-                l0tck = '0x%04X'%l0tck
-                for cfg in svc.collectLeafRefs( id ) :
+                l0tck = '0x%04X' % l0tck
+            for cfg in svc.collectLeafRefs( id ) :     
+                if l0tck and cfg.name == 'ToolSvc.L0DUConfig' :
                     #  check for either a MultiConfigProvider with the right setup,
                     #  or for a template with the right TCK in it...
-                    if cfg.name == 'ToolSvc.L0DUConfig' :
-                        if cfg.type not in [ 'L0DUMultiConfigProvider', 'L0DUConfigProvider' ] :
-                            raise KeyError("not a valid L0DU config provider: %s" % cfg.type )
-                        if cfg.type == 'L0DUMultiConfigProvider' and l0tck not in cfg.props['registerTCK'] :
-                            raise KeyError('requested L0TCK %s not known by L0DUMultiConfigProvider in config %s; known L0TCKs: %s' % ( l0tck, id, cfg.props['registerTCK'] ))
-                        elif cfg.type == 'L0DUConfigProvider' and l0tck != cfg.props['TCK'] :
-                            raise KeyError('requested L0TCK %s not known by L0DUConfigProvider in config %s; known L0TCK: %s' % ( l0tck, id, cfg.props['TCK'] ))
+                    if cfg.type not in [ 'L0DUMultiConfigProvider', 'L0DUConfigProvider' ] :
+                        raise KeyError("not a valid L0DU config provider: %s" % cfg.type )
+                    if cfg.type == 'L0DUMultiConfigProvider' and l0tck not in cfg.props['registerTCK'] :
+                        raise KeyError('requested L0TCK %s not known by L0DUMultiConfigProvider in config %s; known L0TCKs: %s' % ( l0tck, id, cfg.props['registerTCK'] ))
+                    elif cfg.type == 'L0DUConfigProvider' and l0tck != cfg.props['TCK'] :
+                        raise KeyError('requested L0TCK %s not known by L0DUConfigProvider in config %s; known L0TCK: %s' % ( l0tck, id, cfg.props['TCK'] ))
+                if cfg.type == 'GaudiSequencer' and cfg.name == 'HltDecisionSequence':
+                    hlt1 = 'GaudiSequencer/Hlt1' in cfg.props['Members']
+                    hlt2 = 'GaudiSequencer/Hlt2' in cfg.props['Members']
+
+            # Check and set HLT1/HLT2 bits
+            # If technical TCK, don't do anything else
+            if not tck & (1 << 31):
+                mask = masks[(hlt1, hlt2)]
+                # In case bits were already assigned, check if they are correct
+                if ((tck & (3 << 28)) | mask) != mask:
+                    raise ValueError('Wrong HLT1 and HLT2 specific bits set in tck: %x instead of %x for highest four bits.' % (tck >> 28, mask >> 28))
+                # Apply HLT1/HLT2 mask
+                tck |= mask
+
             print 'creating mapping TCK: 0x%08x -> ID: %s' % (tck,id)
             ref = svc.resolveConfigTreeNode( id )
             alias = TCK( ref, tck )
