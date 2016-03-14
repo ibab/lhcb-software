@@ -31,7 +31,7 @@ std::string LHCb::L0DUElementaryCondition::summary(){
   if(m_data->scale() != 1.)ss<< " ( => " << m_data->scale() * (double) m_threshold << " MeV )" ;
   
   s << "Condition [ " << m_name << " : "
-    << m_data->summary()
+    << m_data->summary(m_bx)
     << " "   << m_comparator  
     << " "   << m_threshold << ss.str() <<"] ?  ==> " << emulatedValue() ;
   return s.str(); 
@@ -43,7 +43,7 @@ std::string LHCb::L0DUElementaryCondition::description(){
   std::ostringstream s(" ");
   
   s << "Condition [ " << m_name << " : "
-    << m_data->description() << " "   << m_comparator  << " "   << m_threshold <<"] ?";
+    << m_data->description(m_bx) << " "   << m_comparator  << " "   << m_threshold <<"] ?";
   return s.str(); 
 
 }

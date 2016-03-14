@@ -29,7 +29,7 @@
       <constructor
         desc = "non default constructor"
         argList   = "unsigned int id, const std::string name, LHCb::L0DUElementaryData* data ,const std::string comp, unsigned int threshold" 
-        initList  = "m_id(id),m_name(name),m_data(data),m_comparator(comp),m_threshold(threshold),m_reported(true),m_reportBit(id)">
+        initList  = "m_id(id),m_name(name),m_data(data),m_comparator(comp),m_threshold(threshold),m_reported(true),m_reportBit(id),m_bx(0)">
       </constructor>
 
       <attribute name = "id" desc = " L0DU condition index "  type = "unsigned int" />
@@ -38,21 +38,27 @@
       <attribute name = "comparator" desc = " comparator symbol"  type = "std::string" />
       <attribute name = "threshold"  desc = "threshold value (digit)" type = "unsigned int" />
       <attribute name = "reported"   desc = "true if the condition-bit is reported the summaryReport" type = "bool" init="true" />
-      <attribute name = "reportBit" desc = "bit position in the  summaryReport == id() if all conditions are to be reported" type = "int" />
+      <attribute name = "reportBit"  desc = "bit position in the  summaryReport == id() if all conditions are to be reported" type = "int" />
+      <attribute name = "bx"         desc = "BX to be considered for the data value (default 0 = current BX)" type = "int" init="0" getMeth="FALSE"/>
 
+
+      <method name = "bx" 
+              desc = "return bx to be considered"
+              type = "int">
+        <code> 
+          return m_bx;
+        </code>
+      </method>
 
       <method name      = "emulatedValue" 
         desc = "Condition value = comparaison(data,comparator,threshold)" type  = "bool" >
-        <code> return comparison( m_data->digit()  ,m_comparator , m_threshold ); </code>
+        <code> return comparison( m_data->digit(m_bx)  ,m_comparator , m_threshold ); </code>
       </method>
-
 
       <method name  = "description" desc = "L0DUElementaryCondition short description" type  = "std::string" ></method>
       <method name  = "summary" desc = "L0DUElementaryCondition full summary after processing" type  = "std::string" ></method>
-
-
-      <method name      = "comparison" desc = "Comparison method" type  = "bool" 
-        argList   = "unsigned int a, const std::string comparator, unsigned int b">
+      <method name  = "comparison" desc = "Comparison method" type  = "bool" 
+              argList  = "unsigned int a, const std::string comparator, unsigned int b">
       </method>
 
 

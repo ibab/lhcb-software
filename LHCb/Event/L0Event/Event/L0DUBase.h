@@ -65,15 +65,17 @@ namespace L0DUBase{
       CompoundData::MuonAdd,CompoundData::MuonAdd,CompoundData::MuonAdd,
       CompoundData::MuonSgn,CompoundData::MuonSgn,CompoundData::MuonSgn
     };
-    static const unsigned int MaxNumber[NumberOf::Data]={8,6,5,5,8,
-                                                         4,8,
-                                                         4,4,
-                                                         2,2,
-                                                         6,
-                                                         10,5,3,4,4,
-                                                         0,0,0,0,0,
-                                                         0,0,0,
-                                                         0,0,0};
+
+    // - OD - 2016 :  Pi0G/Pi0L/SumEt  :  5/5/4  => 3/3/8 
+    static const unsigned int MaxNumber[NumberOf::Data]={8,6,3,3,8,    // ElectronEt, PhotonEt, GlobalPi0Et, LocalPi0Et, HadronEt
+                                                         8,8,          // SumEt , SpdMult
+                                                         4,4,          // PuPeak1, PUPeak2
+                                                         2,2,          // PuPeak1Pos, PuPeak2Pos
+                                                         6,            // PuHits
+                                                         10,5,3,4,4,   // Muon1, Muon2, Muon3, DiMuon, MuonProd
+                                                         0,0,0,0,0,    // Calo Addresses
+                                                         0,0,0,        // Muon Addresses
+                                                         0,0,0};       // Muon Sign
     
     static const unsigned int ConditionOrder[NumberOf::Data]={1,2,3,4,5,
                                                               6,7,

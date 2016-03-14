@@ -180,11 +180,13 @@
         <code>
           std::for_each( m_data.begin(), m_data.end(),
               [](LHCb::L0DUElementaryData::Map::reference i) {
-                    if( i.second->type() != L0DUElementaryData::Constant) i.second->operands().clear();
+                    if( i.second->type() != L0DUElementaryData::Constant) i.second->clear();
           });
           resetEmulated();
         </code>
       </method>
+
+
 
       <method name  = "emulate" desc = "emulate all channels" type  = "LHCb::L0DUConfig*" >
         <code>

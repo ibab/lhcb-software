@@ -140,43 +140,66 @@
         </code>
       </method>
 
+
+      <method
+        name="hasData"
+        argList="const std::string name,int bx=0"
+        desc="return the data evaluation for a given bx"
+        type="bool"
+        const="TRUE">
+        <code>         
+          // first check the embedded data map
+          std::map&lt;std::string,std::pair&lt;int,double&gt; &gt;::const_iterator ib = m_dataMap.find(name);
+          if( ( bx == 0 || ( std::abs(bx) &lt;=2 &amp;&amp; name == "Sum(Et)") ) &amp;&amp; m_dataMap.end() != ib)return true;
+          // else check the configuration
+          if(0 == m_configuration)return false;
+          const LHCb::L0DUElementaryData::Map&amp; data = m_configuration->data();
+          LHCb::L0DUElementaryData::Map::const_iterator it = data.find( name );
+          if( it == data.end() )return false;
+          return (it->second)->hasData(bx);
+        </code>
+      </method>
+
       <method
         name="dataDigit"
-        argList="const std::string name"
+        argList="const std::string name,int bx=0"
         desc="return L0DU elementary data value (digit) from m_configuration->data()"
         type="unsigned int"
         const="TRUE">
         <code> 
+         
+          if( name == "Sum(Et)" &amp;&amp; std::abs(bx)&lt;=2)return sumEt(bx);
           // first check the embedded data map
           std::map&lt;std::string,std::pair&lt;int,double&gt; &gt;::const_iterator ib = m_dataMap.find(name);
-          if( m_dataMap.end() != ib)return (ib->second).first;
+          if( bx == 0 &amp;&amp; m_dataMap.end() != ib)return (ib->second).first;
 
           // else check the configuration
           if(0 == m_configuration)return 0;
           const LHCb::L0DUElementaryData::Map&amp; data = m_configuration->data();
           LHCb::L0DUElementaryData::Map::const_iterator it = data.find( name );
           if( it == data.end() )return 0;
-          return (it->second)->digit();
+          return (it->second)->digit(bx);
         </code>
       </method>
 
       <method
         name="dataValue"
-        argList="const std::string name"
+        argList="const std::string name,int bx=0"
         desc="return L0DU elementary data value (converted) from m_configuration->data()"
         type="double"
         const="TRUE">
         <code> 
           // first check the embedded data map
           std::map&lt;std::string,std::pair&lt;int,double&gt; &gt;::const_iterator ib = m_dataMap.find(name);
-          if( m_dataMap.end() != ib)return double((ib->second).first)*(ib->second).second;
+          if( bx==0 &amp;&amp; m_dataMap.end() != ib)return double((ib->second).first)*(ib->second).second;
 
           // else check the configuration
           if(0 == m_configuration)return 0.;
           const LHCb::L0DUElementaryData::Map&amp; data=m_configuration->data();
           LHCb::L0DUElementaryData::Map::const_iterator it = data.find( name );
           if( it == data.end() )return 0.;
-          return ((*it).second)->value();
+          if( name == "Sum(Et)" &amp;&amp; std::abs(bx)&lt;=2)return sumEt(bx)*((*it).second)->scale();
+          return ((*it).second)->value(bx);
         </code>
       </method>
 

@@ -35,55 +35,109 @@
       <constructor 
         argList="L0DUBase::Fiber::Type fiber, unsigned int word"
         desc="Special constructor from 32 bit word" 
-        initList="Base ( fiber ), m_word(word)"
+        initList="Base ( fiber ), m_wordmap{{0,word}}"
         ><code/></constructor>
 
       <constructor 
         argList="L0DUBase::Fiber::Type fiber, unsigned int msb , unsigned int lsb"
         desc="Special constructor from  16bit msb + 16bit lsb" 
-        initList="Base ( fiber ), m_word(lsb | (msb &lt;&lt; 16 ))"
+        initList="Base ( fiber ), m_wordmap{{0,lsb | (msb &lt;&lt; 16 )}}"
         ><code/></constructor>
 
       <constructor
         desc     = "Default constructor"
-        initList="Base ( ), m_word(0x10000)"
+        initList="Base ( ), m_wordmap{{0,0x10000}}"
         > <code/> </constructor>
 
       <attribute
-        name = "word"
-        desc = "32 bit L0 word produced by the processor"
-        type = "unsigned int" 
+        name = "wordmap"
+        desc = "32 bit L0 word produced by the processor (BX mapped) "
+        type = "std::map&lt;int,int&gt;" 
         />
 
       
       <method
-        name      = "lsb"
-        desc      = "get 16 bits lsb of L0 word"
+        name      = "word"
+        argList   = "int bx=0"
+        desc      = "get the 32 bit word"
         type      = "unsigned int"
-        const     = "TRUE" >
+        const     = "FALSE"
+        >
         <code>
-        return (unsigned int)(m_word &amp; 0xFFFF);
-        </code>
-      </method>
-
-      <method
-        name      = "msb"
-        desc      = "get  16 bits msb of L0 word"
-        type      = "unsigned int"
-        const     = "TRUE" >
-        <code>
-        return (unsigned int)((m_word >> 16) &amp; 0xFFFF);
+          if( m_wordmap.find(bx) == m_wordmap.end() )m_wordmap[bx]=0x10000;
+          return (unsigned int)m_wordmap[bx];
         </code>
       </method>
 
       <method
         name      = "setWord"
-        desc      = "update L0 word from MSB+LSB"
+        argList   = "unsigned int word, int bx=0"
+        desc      = "set the 32 bit word"
+        type      = "void"
+        const     = "FALSE" >
+        <code>
+          m_wordmap[bx]=word;
+        </code>
+      </method>
+
+      <method
+        name      = "lsb"
+        argList   = "int bx=0"
+        desc      = "get 16 bits lsb of L0 word"
+        type      = "unsigned int"
+        const     = "FALSE" >
+        <code>
+          if( m_wordmap.find(bx) == m_wordmap.end() )m_wordmap[bx]=0x10000;
+          return (unsigned int)(m_wordmap[bx] &amp; 0xFFFF);
+        </code>
+      </method>
+
+      <method
+        name      = "msb"
+        argList   = "int bx=0"
+        desc      = "get  16 bits msb of L0 word"
+        type      = "unsigned int"
+        const     = "FALSE" >
+        <code>
+          if( m_wordmap.find(bx) == m_wordmap.end() )m_wordmap[bx]=0x10000;
+          return (unsigned int)((m_wordmap[bx] >> 16) &amp; 0xFFFF);
+        </code>
+      </method>
+
+      <method
+        name      = "setWord"
+        desc      = "update L0 word from MSB+LSB for a given bx"
         type      = "void"
         const     = "FALSE" 
-        argList   = "unsigned int msb , unsigned int lsb">
+        argList   = "unsigned int msb , unsigned int lsb,int bx">
         <code>
-          m_word = lsb | (msb &lt;&lt; 16 );
+          if( m_wordmap.find(bx) == m_wordmap.end() )m_wordmap[bx]=0x10000;
+          m_wordmap[bx] = lsb | (msb &lt;&lt; 16 );
+        </code>
+      </method>
+      
+
+      <method
+        name      = "hasData"
+        desc      = "check of data is defined for a given BX"
+        type      = "bool"
+        argList   = "int bx=0">
+        <code>
+          return ( m_wordmap.find(bx) != m_wordmap.end() );
+        </code>
+      </method>
+      
+
+      <method
+        name      = "bxList"
+        desc      = "return a vector of available BXs"
+        type      = "std::vector&lt;int&gt;">
+        <code>
+          std::vector&lt;int&gt; bxs;
+          for(std::map&lt;int,int&gt;::iterator ibx=m_wordmap.begin();m_wordmap.end()!=ibx;ibx++){
+              bxs.push_back(ibx->first);
+          }
+          return bxs;
         </code>
       </method>
       

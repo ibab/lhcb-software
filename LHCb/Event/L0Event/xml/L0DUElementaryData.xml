@@ -29,87 +29,149 @@
 
       <copyconstructor/>
       <constructor 
-        desc="non-default constructor" 
-        argList   = "int id, LHCb::L0DUElementaryData::Type type, const std::string name, const std::string op , const std::string operandName" 
-        initList  = "m_id(id),m_type(type),m_name(name),m_operator(op),m_scale(1.),m_saturation(0)">
-        <code> m_operandsName.push_back(operandName);</code>
+        desc="non-default constructor (for single data)" 
+        argList   = "int id, LHCb::L0DUElementaryData::Type type, const std::string name, double scale=1., int saturation=0." 
+        initList  = "m_id(id),m_type(type),m_name(name),m_scale(scale),m_saturation(saturation),m_evaluated(false)">
+        <code> 
+          m_operator="";
+        </code>
       </constructor>
+
       <constructor 
-        desc="non-default constructor" 
-        argList   = "int id, LHCb::L0DUElementaryData::Type type, const std::string name, const std::string op , const std::string operandName1,const std::string operandName2" 
-        initList  = "m_id(id),m_type(type),m_name(name),m_operator(op),m_scale(1.),m_saturation(0)">
+        desc="non-default constructor (for compound data)" 
+        argList   = "int id,  const std::string name, const std::string op , const std::vector&lt;std::string&gt; names"
+        initList  = "m_id(id),m_type(Compound),m_name(name),m_scale(1.),m_saturation(0),m_evaluated(false),m_operator(op)">
         <code> 
-          m_operandsName.push_back(operandName1);
-          m_operandsName.push_back(operandName2);
+          m_componentsName=names;
         </code>
       </constructor>
-      <constructor 
-        desc="non-default constructor" 
-        argList   = "int id, LHCb::L0DUElementaryData::Type type, const std::string name, const std::string op , const std::vector&lt;std::string&gt; operandsName"
-        initList  = "m_id(id),m_type(type),m_name(name),m_operator(op),m_operandsName(operandsName), m_scale(1.),m_saturation(0)">
-      </constructor>
+      
+      <attribute name = "id"         desc = " L0DU data index "            type = "int" />
+      <attribute name = "type"       desc = " data type (predefined [0]/constant value [1]/user-defined [2])"  type = "LHCb::L0DUElementaryData::Type" />
+      <attribute name = "name"       desc = " L0DU data name "             type = "std::string" />
+      <attribute name = "digit"      desc = " L0DU data digit per BX"      type = "std::map&lt;int,unsigned int&gt;" getMeth="FALSE" setMeth="FALSE"/>
+      <attribute name = "scale"      desc = " L0DU data value scale"       type = "double "  init="1." getMeth="FALSE"/>
+      <attribute name = "saturation" desc = " L0DU data digit saturation"  type = "unsigned int "  init="0" getMeth="FALSE"/>    
+      <attribute name = "evaluated"  desc = " L0DU data evaluation status" type = "bool" init="false" setMeth="FALSE" getMeth='FALSE'/>
+      <attribute name = "operator"       desc = " Operator symbol"         type = " std::string" getMeth="FALSE" init='""'/>
+      <attribute name = "componentsName" 
+                 desc = " Compount components name"  
+                 type = " std::vector&lt;std::string&gt;"
+                 nonconstaccessor='TRUE' />
+      <attribute name = "components" 
+                 desc = " Compound components" 
+                 type = "std::vector&lt;LHCb::L0DUElementaryData*&gt;"
+                 nonconstaccessor='TRUE' />
 
 
-
-
-      <attribute name = "id" desc = " L0DU Data index "  type = "int" />
-      <attribute name = "type"     desc = " data type (predefined [0]/constant value [1]/user-defined [2])"  type = "LHCb::L0DUElementaryData::Type" />
-      <attribute name = "name" desc = " L0DU Data name "  type = "std::string" />
-      <attribute name = "operator" desc = " Operator symbol"  type = "std::string" getMeth="FALSE"/>
-      <attribute name = "operandsName" desc = " Operands name"  type = " std::vector&lt;std::string&gt;"  />
-      <attribute name = "scale"      desc = " Operands scale"  type = "double "  init="1."/>
-      <attribute name = "saturation" desc = " Operands saturation value"  type = "unsigned int "  init="0"/>
-      <attribute name = "operands"  desc = " Operands value"  type = "std::vector&lt;unsigned int&gt;" 
-nonconstaccessor='TRUE' />
-
-
-
-      <method name      = "getOperator" desc = "get operator symbol" type  = "std::string" >
-        <code> return m_operator; </code>
-      </method>
-
-      <method name      = "setOperand" desc = "push_back a single operand value" type  = "void" 
-        argList   = "const unsigned int operand, const double scale=1.,const unsigned int satur=0">
-        <code> 
-          m_operands.clear(); 
-          m_operands.push_back(operand);
-          m_scale = scale;
-          m_saturation=satur;
+      <method name = "getOperator" desc = "get operator symbol for compound data" type="std::string">
+        <code>
+          return m_operator;
         </code>
       </method>
 
-      <method name      = "addOperand" desc = "add a single operand value" type  = "void" 
-        argList   = "unsigned int operand, const double scale=1.,const unsigned int satur=0">
-        <code> 
-          m_operands.push_back(operand);
-          m_scale = scale ;
-          m_saturation += satur;
+      <method name = "clear" desc = "clear data and reset status" type="void">
+        <code>
+          if( m_type == Constant)return;
+          m_components.clear();
+          m_digit.clear();
+          m_evaluated=false;
+        </code>
+      </method>
+        
+
+      <method name = "addComponent" desc = "add component Name" type="void" argList="std::string name">
+        <code>
+          m_componentsName.push_back(name);
         </code>
       </method>
 
-
-
-      <method name      = "digit" desc = "L0DU data value (digit) = operation(operands,operator)" type  = "unsigned int" >
-        <code> return operation(m_operator,m_operands); </code>
-      </method>
-
-
-      <method name      = "value" 
-        desc = "data operand value in natural unit" type= "double" >
-        <code> 
-          return ((double) digit())* m_scale; 
+      <method name = "addComponent" desc = "add component data" type="void" argList="LHCb::L0DUElementaryData* data">
+        <code>
+          m_components.push_back(data);
         </code>
       </method>
 
 
+      <method name = "setScaleAndSaturation" desc = "set digit scale and saturation" type="void" argList="double scale,unsigned int saturation">
+        <code>
+          m_scale      = scale;
+          m_saturation = saturation; 
+        </code>
+      </method>
+
+      <method name = "scale" desc = "get digit scale" type = "double" > 
+        <code>
+          if(m_type==Compound)evaluate();  
+          return m_scale;
+        </code>
+      </method>
+      <method name = "saturation" desc = "get digit saturation" type = "unsigned int" > 
+        <code>
+          if(m_type==Compound)evaluate();  
+          return m_saturation;
+        </code>
+      </method>
+
+      <method name = "setDigit" desc = "set digit value for a given bx, scale and saturation" type  = "void" 
+              argList    = "const unsigned int value, double scale, unsigned int saturation, int bx=0" >
+        <code> 
+	  if(m_type != Compound)m_evaluated=true;
+	  setDigit(value,bx);
+          setScaleAndSaturation(scale,saturation);
+        </code>
+      </method>
 
 
+      <method name = "setDigit" desc = "set digit value for given bx" type  = "void" 
+              argList    = "const unsigned int value, int bx=0" >
+        <code> 
+	  if(m_type != Compound)m_evaluated=true;
+          if(m_type==Constant)m_digit[0]=value;
+          if(m_type==RAMBcid)m_digit[0]=value-bx;
+          m_digit[bx] = value;
+        </code>
+      </method>
 
-      <method name  = "description" desc = "L0DUElementaryData short description" type  = "std::string" > </method>
-      <method name  = "summary" desc = "L0DUElementaryData summary" type  = "std::string" > </method>
+      <method name = "setDigit" desc = "set digit map" type  = "void" 
+              argList    = "const std::map&lt;int,unsigned int&gt; map" >
+        <code> 
+	  if(m_type != Compound)m_evaluated=true;
+          m_digit = map;
+        </code>
+      </method>
 
-      <method name      = "operation" desc = "Operation method" type  = "unsigned int" 
-        argList   = "std::string v_operator , std::vector&lt;unsigned int&gt; v_operands">
+      <method name  = "digit" desc = "get digit value for given bx" type  = "unsigned int" argList   = "int bx=0" >
+        <code> 
+          // check if compound data
+          if( m_type == Compound )evaluate(bx);  // evaluate compound
+          else if( m_type == Constant )m_digit[bx]=m_digit[0]; // constant for any BX
+          else if( m_type == RAMBcid )m_digit[bx]=m_digit[0]+bx; // RAMBcid bx shift
+          if(m_digit.end() == m_digit.find(bx) ){
+              m_evaluated = false;
+              return 0.;
+          }
+          return m_digit[bx] ;
+        </code>
+      </method>
+
+
+      <method name = "value"  desc = "scaled data  value" type= "double" argList = "int bx=0" >
+        <code> 
+          return ((double) digit(bx)) * m_scale; 
+        </code>
+      </method>
+
+      <method name  = "description" desc = "L0DUElementaryData short description" type  = "std::string" argList="int bx=0"> </method>
+      <method name  = "summary" desc = "L0DUElementaryData summary for a given bx" type  = "std::string" argList="int bx" > </method>
+      <method name  = "summary" desc = "L0DUElementaryData summary" type  = "std::string"> </method>
+      <method name  = "evaluate" desc = "Compound evaluation for a given BX" type  = "void"  argList="int bx=0" ></method>
+      <method name = "hasData"  desc = "data status" type= "bool" argList = "int bx=0" >
+        <code> 
+          if(m_type==Compound)evaluate(bx);  
+          bool ok =  m_digit.find(bx) != m_digit.end() &amp;&amp; m_evaluated;
+          return ok;
+        </code>
       </method>
 
 
