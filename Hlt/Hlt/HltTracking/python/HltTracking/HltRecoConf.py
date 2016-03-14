@@ -107,22 +107,39 @@ CommonForwardOptions = { "MaxITHits" : 999999 ,
                          "MaxNVelo" : 999999 }
 
 #Sascha: Rename this to tool,
-CommonForwardTrackingOptions = { "MaxChi2" : 40.,
-                                 "MaxChi2Track" : 40.,
-                                 "MinHits" : 12,
-                                 "MinOTHits" : 14  }
+CommonForwardTrackingOptions = { "MinHits" : 12,
+                                 "MinOTHits" : 14,
+                                 "AddTTClusterName" : "PatAddTTCoord" }
 
 #Sascha: Rename this to tool and hlt1
 ForwardTrackingOptions_MomEstimate = { "UseMomentumEstimate" : True,
-                                       "UseWrongSignWindow" : True,
-                                       "WrongSignPT" : 2000.,
-                                       "Preselection" : True,
-                                       "PreselectionPT" : 400.,
-                                       "AddTTClusterName" : "PatAddTTCoord",
-                                       "SecondLoop" : False}
+                                       "UseWrongSignWindow"  : True,
+                                       "WrongSignPT"         : 2000.,
+                                       "Preselection"        : True,
+                                       "PreselectionPT"      : 400.,
+                                       "SecondLoop"          : False,
+                                       # optimized settings for 2016 Data taking
+                                       "MaxXCandidateSize"   : [50,24],
+                                       "MaxSpreadX"          : 0.65,
+                                       "MaxSpreadSlopeX"     : 0.0075,
+                                       "MaxChi2X"            : 32,
+                                       "MaxChi2Y"            : 24,
+                                       "NNASF"               : True,
+                                       "NNASFcut"            : 0.1,
+                                       "NextBestResponse"    : 0.7 }
 
-ComplementForwardToolOptions = { "AddTTClusterName" : "PatAddTTCoord"
-                                 ,"SecondLoop" : True} # decided
+ComplementForwardToolOptions = { "SecondLoop"        : True,
+                                 "MaxXCandidateSize" : [70,26,12],
+                                 "MaxSpreadX"        : 1.5,
+                                 "MaxSpreadSlopeX"   : 0.007,
+                                 "MaxChi2X"          : 52,
+                                 "MaxChi2Y"          : 42,
+                                 "NNBXF"             : True,
+                                 "NNASF"             : True,
+                                 "NNBXFcut"          : 0.12,
+                                 "NNASFcut"          : 0.09,
+                                 "NextBestResponse"  : 0.75
+                                 }
 
 OnlineSeedingToolOptions = { "NDblOTHitsInXSearch" : 2,
                              "MinMomentum" : 1000.}
