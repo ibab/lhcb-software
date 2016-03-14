@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2016-03-14 - Marco Cattaneo
+ - Update test references to follow Gaudi v27r1 changes in output
+
 !========================= LumiAlgs v9r11 2016-01-29 =========================
 ! 2016-01-29 - Marco Cattaneo
  - Update test references to follow Gaudi v27r0 changes in output

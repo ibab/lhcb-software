@@ -5,7 +5,6 @@ MergeFSR             INFO Subtract BXType Beam1
 MergeFSR             INFO Subtract BXType Beam2
 MergeFSR             INFO Subtract BXType NoBeam
 FSRCleaner          DEBUG Property update for OutputLevel : new value = 2
-FSRCleaner          DEBUG Property update for OutputLevel : new value = 2
 FSRCleaner          DEBUG Initialize base class GaudiCommon<Algorithm>
 FSRCleaner          DEBUG found CounterSummarySvc OK
 FSRCleaner          DEBUG List of ALL properties of FSRCleaner/FSRCleaner  #properties = 38
@@ -19,7 +18,6 @@ FSRCleaner          DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':T
 FSRCleaner          DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 FSRCleaner          DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
 FSRCleaner          DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-FSRCleaner          DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
 FSRCleaner          DEBUG Property ['Name': Value] =  'RootInTES':
 FSRCleaner          DEBUG Property ['Name': Value] =  'Context':
 FSRCleaner          DEBUG Property ['Name': Value] =  'TypePrint':True
@@ -31,6 +29,7 @@ FSRCleaner          DEBUG Property ['Name': Value] =  'Cardinality':1
 FSRCleaner          DEBUG Property ['Name': Value] =  'IsClonable':False
 FSRCleaner          DEBUG Property ['Name': Value] =  'RegisterForContextService':True
 FSRCleaner          DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+FSRCleaner          DEBUG Property ['Name': Value] =  'Timeline':False
 FSRCleaner          DEBUG Property ['Name': Value] =  'AuditStop':False
 FSRCleaner          DEBUG Property ['Name': Value] =  'AuditStart':False
 FSRCleaner          DEBUG Property ['Name': Value] =  'AuditEndRun':False
@@ -41,14 +40,15 @@ FSRCleaner          DEBUG Property ['Name': Value] =  'AuditRestart':False
 FSRCleaner          DEBUG Property ['Name': Value] =  'AuditReinitialize':False
 FSRCleaner          DEBUG Property ['Name': Value] =  'AuditInitialize':False
 FSRCleaner          DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
-FSRCleaner          DEBUG Property ['Name': Value] =  'DataOutputs':
-FSRCleaner          DEBUG Property ['Name': Value] =  'DataInputs':
+FSRCleaner          DEBUG Property ['Name': Value] =  'ExtraOutputs':[]
+FSRCleaner          DEBUG Property ['Name': Value] =  'ExtraInputs':[]
 FSRCleaner          DEBUG Property ['Name': Value] =  'ErrorCounter':0
 FSRCleaner          DEBUG Property ['Name': Value] =  'ErrorMax':1
 FSRCleaner          DEBUG Property ['Name': Value] =  'Enable':True
 FSRCleaner          DEBUG Property ['Name': Value] =  'OutputLevel':2
-FSRCleaner          DEBUG Property update for OutputLevel : new value = 2
-FSRCleaner          DEBUG Property update for OutputLevel : new value = 2
+FSRCleaner          DEBUG input handles: 0
+FSRCleaner          DEBUG output handles: 0
+FSRCleaner          DEBUG Data Deps for FSRCleaner
 MergeFSR             INFO ========== Merging FSRs ==========
 MergeFSR             INFO /FileRecords/LumiFSRBeamCrossing 1570 FSRs
 MergeFSR             INFO /FileRecords/LumiFSRBeam1 1570 FSRs
