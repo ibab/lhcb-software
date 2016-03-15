@@ -128,19 +128,19 @@ if __name__ == '__main__':
 
     # 2 halves
     c.cd()
-    mp1 = MultiPlot('1', title = '(20) Convergence Halves;Iteration;Variation [#mum]',kind='g', hlines=[0,-2,2,-4,4],
+    mp1 = MultiPlot('1', title = '(20) Convergence Halves;Iteration;Variation [#mum]',kind='g', hlines=[0,-1.5,1.5,-5,5],
                     hlines_colors = {-4: r.kGreen+3, 4: r.kGreen+3}, rangeY = [-10, 10])
     mp1.DrawOption = 'alp'
     mp1.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Tx', alignable='Velo/VeloLeft')), 'Tx')
     mp1.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Ty', alignable='Velo/VeloLeft')), 'Ty')
     mp1.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Tz', alignable='Velo/VeloLeft')), 'Tz')
 
-    mp2 = MultiPlot('2', title = '(21) Convergence Halves;Iteration;Variation [#murad]',kind='g', hlines=[0,-3.5,3.5], rangeY = [-25, 25])
+    mp2 = MultiPlot('2', title = '(21) Convergence Halves;Iteration;Variation [#murad]',kind='g', hlines=[0,-4,4], rangeY = [-25, 25])
     mp2.DrawOption = 'alp'
     mp2.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Rx', alignable='Velo/VeloLeft')), 'Rx')
     mp2.Add(makeGraph(*getDofDeltaConvergence(aout, dof='Ry', alignable='Velo/VeloLeft')), 'Ry')
 
-    mp3 = MultiPlot('3', title = '(22) Convergence Halves Rz;Iteration;Variation [#murad]', kind='g', drawLegend = False, hlines=[0,-15,15], rangeY = [-100, 100],
+    mp3 = MultiPlot('3', title = '(22) Convergence Halves Rz;Iteration;Variation [#murad]', kind='g', drawLegend = False, hlines=[0,-30,30], rangeY = [-100, 100],
                     histos = {'Rz1': makeGraph(*getDofDeltaConvergence(aout, dof='Rz', alignable='Velo/VeloLeft'))},
                       )
     mp3.DrawOption = 'alp'
