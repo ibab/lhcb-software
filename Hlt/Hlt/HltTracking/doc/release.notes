@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2016-03-15 - Marian Stahl
+ - Fix configuration of PatForwardTool to follow renaming of NN variables in the tool
+
 ! 2016-03-14 - Sascha Stahl
  - Fix configuration of PatForwardTool to follow the recent changes in the tool.
    Updated settings for 2016 data tuning.

@@ -124,21 +124,21 @@ ForwardTrackingOptions_MomEstimate = { "UseMomentumEstimate" : True,
                                        "MaxSpreadSlopeX"     : 0.0075,
                                        "MaxChi2X"            : 32,
                                        "MaxChi2Y"            : 24,
-                                       "NNASF"               : True,
-                                       "NNASFcut"            : 0.1,
+                                       "NNAfterStereoFit"    : True,
+                                       "NNAfterStereoFitCut" : 0.1,
                                        "NextBestResponse"    : 0.7 }
 
-ComplementForwardToolOptions = { "SecondLoop"        : True,
-                                 "MaxXCandidateSize" : [70,26,12],
-                                 "MaxSpreadX"        : 1.5,
-                                 "MaxSpreadSlopeX"   : 0.007,
-                                 "MaxChi2X"          : 52,
-                                 "MaxChi2Y"          : 42,
-                                 "NNBXF"             : True,
-                                 "NNASF"             : True,
-                                 "NNBXFcut"          : 0.12,
-                                 "NNASFcut"          : 0.09,
-                                 "NextBestResponse"  : 0.75
+ComplementForwardToolOptions = { "SecondLoop"          : True,
+                                 "MaxXCandidateSize"   : [70,26,12],
+                                 "MaxSpreadX"          : 1.5,
+                                 "MaxSpreadSlopeX"     : 0.007,
+                                 "MaxChi2X"            : 52,
+                                 "MaxChi2Y"            : 42,
+                                 "NNBeforeXFit"        : True,
+                                 "NNAfterStereoFit"    : True,
+                                 "NNBeforeXFitCut"     : 0.12,
+                                 "NNAfterStereoFitCut" : 0.09,
+                                 "NextBestResponse"    : 0.75
                                  }
 
 OnlineSeedingToolOptions = { "NDblOTHitsInXSearch" : 2,
@@ -152,14 +152,14 @@ DownstreamOptions = { "MinMomentum": 0.,
                       "MinPt": 0.}
 
 MuonTTOptions = {
-		"SeedStation"  : 2,
-		"YTolSlope"    : 40000.,
-		"XTolSlope"    : 40000.,
-		"XTol"         : 25.,
-		"MaxChi2Tol"   : 7.,
-		"MinAxProj"    : 5.5,
-		"MaxAxProj"    : 25.
-		}
+               "SeedStation"  : 2,
+               "YTolSlope"    : 40000.,
+               "XTolSlope"    : 40000.,
+               "XTol"         : 25.,
+               "MaxChi2Tol"   : 7.,
+               "MinAxProj"    : 5.5,
+               "MaxAxProj"    : 25.
+               }
 
 #
 # The default RICH options
@@ -174,6 +174,3 @@ OfflineRichDefaultHypos	       = ["electron","muon","pion","kaon","proton","deut
 OfflineRichDefaultRadiators    = ["Rich1Gas","Rich2Gas"]
 OfflineRichDefaultTrackCuts    = { tt : {'Chi2Cut' : [0,MaxChi2], 'PCut' : [0,1e9], 'PtCut' : [0,1e9] } for tt in ['Forward','Match'] }
 OfflineRichDefaultDownTrackCuts    = { tt : {'Chi2Cut' : [0,MaxChi2], 'PCut' : [0,1e9], 'PtCut' : [0,1e9] } for tt in ['KsTrack'] }
-
-
-
