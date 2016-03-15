@@ -36,7 +36,7 @@ use           BenderTools    v28r3   Phys
 use           BenderExample  v28r2   Ex
 
 # =========== Bender tutorial =================================================
-use           BenderTutor    v28r33   Tutorial
+use           BenderTutor    v28r3   Tutorial
 
 # =========== template of user module/script ==================================
 use           BenderUser     v26r3   Phys 
