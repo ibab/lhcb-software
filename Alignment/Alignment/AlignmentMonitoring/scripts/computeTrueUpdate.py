@@ -11,6 +11,7 @@ if __name__ == '__main__':
     parser.add_argument('--activity', help='choose between Velo, Tracker; default is Velo', choices = ['Velo', 'Tracker'] ,default= 'Velo')
     parser.add_argument('--AligWork_dir', help='folder with alignment', default = std_AligWork_dir)
     parser.add_argument('--new_alignment_dir', help='folder with alignment', default = std_new_alignment_dir)
+    parser.add_argument('-r','--runs', help='run numbers, default is all the availables', nargs=2, type=int,default=[0, 1e20])
     args = parser.parse_args()
 ##########################
 
@@ -64,7 +65,9 @@ if __name__ == '__main__':
                 os.makedirs(directory)
     
     runs = getListRuns(args.AligWork_dir)
-
+    runs = [i for i in runs if i >= args.runs[0] and i <= args.runs[1]]
+    print 'Considering {0} runs'.format(len(runs))
+    assert 1==2
     updatesRuns = [runs[0]]
 
     

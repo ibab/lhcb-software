@@ -40,13 +40,15 @@ class MultiPlot:
     colori += colori[2:]+colori[:2]
     markersA=[20,21,22,23,29,33,34,8]*2
     markersC=[24,25,26,32,30,27,28,4]*2
+    linee = range(1,11)*2
 
-    def __init__(self, name, title='', kind='h', histos={}, labels={}, styles = {}, colors={}, markerStyles={}, markerSizes={}, lineStyles={}, fillHisto={}, legPosition = (.80, 0.80, .99, .99), rangeY = [None, None], rangeX = [None, None], autoStyle=True, legMarker=None, drawLegend = True, hlines = [], vlines = [], hlines_colors ={},  vlines_colors ={}, hlines_styles ={},  vlines_styles ={}, hlines_width ={},  vlines_width ={}):
+    def __init__(self, name, title='', kind='h', histos={}, labels={}, styles = {}, colors={}, markerStyles={}, markerSizes={}, lineStyles={}, fillHisto={}, legPosition = (.80, 0.80, .99, .99), rangeY = [None, None], rangeX = [None, None], autoStyle=True, legMarker=None, drawLegend = True, legTransparent = False, hlines = [], vlines = [], hlines_colors ={},  vlines_colors ={}, hlines_styles ={},  vlines_styles ={}, hlines_width ={},  vlines_width ={}):
         self.kind = kind
         self.autoStyle = autoStyle
         self.numHistos = 0
         self.leg = r.TLegend(*legPosition)
         self.leg.SetFillColor(0)
+        if legTransparent: self.leg.SetFillStyle(4000)
         self.hist_list = [0]*32
         self.rangeY = rangeY[:]
         self.rangeX = rangeX[:]
@@ -93,29 +95,32 @@ class MultiPlot:
             self.Add(histo=_histo,label=_label, style=_style, color=_color,markerStyle=_markerStyle, markerSize = _markerSize, lineStyle = _lineStyle, fill=_fill)
             
 
-    def Add(self, histo, label=None, style=None, color=None, markerStyle=None, markerSize=None, lineStyle=None, fill=None):
+    def Add(self, histo, label=None, style=None, color=None, markerStyle=None, markerSize=None, lineStyle=None, fill=None, legMarker=None):
         """
         if style is positive the marker is full, if negative it'is empty
         """
+        if legMarker == None: legMarker = self.legMarker
         self.hist_list[self.numHistos] = histo.Clone()
         self.numHistos += 1
-        _style, _color, _markerStyle = None, None, None
+        _style, _color, _markerStyle, _lineStyle, _markerSize = [None]*5
         if self.autoStyle:
             _style = self.numHistos
         if style: _style = style
         if _style:
             _color = MultiPlot.colori[abs(_style)-1]
+            _lineStyle = MultiPlot.linee[abs(_style)-1]
             _markerStyle = MultiPlot.markersA[_style-1] if _style>0 else MultiPlot.markersC[abs(_style)-1] 
         if color: _color = color
         if markerStyle: _markerStyle = markerStyle
-        _markerSize = markerSize
-        _lineStyle = lineStyle
+        if lineStyle: _lineStyle = lineStyle
+        if markerSize: _markerSize = markerSize
+        
         if fill != None: _fill = fill
         else: _fill = self.kind == 's'
         setPlotAttributes(self.hist_list[self.numHistos-1], color=_color, markerStyle=_markerStyle, markerSize=_markerSize, lineStyle = _lineStyle, fill=_fill)
         self.hs.Add(self.hist_list[self.numHistos-1])
         if label:
-            self.leg.AddEntry(self.hist_list[self.numHistos-1], label, self.legMarker)
+            self.leg.AddEntry(self.hist_list[self.numHistos-1], label, legMarker)
 
 
     def AddLine(self, val, kind='h', color=None, style=None, width=None):
@@ -133,7 +138,16 @@ class MultiPlot:
             if style != None: self.hlines_styles[val] = style
             if width != None: self.hlines_width[val] = width
 
-    
+    def setLegPos(self, x1, y1, x2, y2):
+        '''
+        change position of legend
+        '''
+        self.leg.SetX1(x1)
+        self.leg.SetX2(x2)
+        self.leg.SetY1(y1)
+        self.leg.SetY2(y2)
+        
+                
     def Draw(self):
         if self.kind.lower() in ('p', 'profile'):
             newMin, newMax = None, None

@@ -23,9 +23,9 @@ if __name__ == '__main__':
     parser.add_argument('-l', '--labelAU', help='Use label in AU as x axis', action='store_true')
     parser.add_argument('-y', '--freeY', help='Leave Y axis range free, implies -l', action='store_true') # not yet implemented
     parser.add_argument('-c', '--canvasSize', help='Canvas dimensions in pixels, default is 900, 500', nargs=2, type=int, default=[900, 500]) # not yet implemented
-    parser.add_argument('--AligWork_dir', help='folder with alignment', default = std_AligWork_dir)
-    parser.add_argument('--alignment_dir', help='folder with alignment', default = std_alignment_dir)
-    parser.add_argument('--references', help='folder with alignment', default = std_references)
+    parser.add_argument('--AligWork_dir', help='folder with alignments', default = std_AligWork_dir)
+    parser.add_argument('--alignment_dir', help='folder with alignments updated', default = std_alignment_dir)
+    parser.add_argument('--references', help='file with references file', default = std_references)
     args = parser.parse_args()
     if args.freeY: args.labelAU = True
     if args.activity == 'Muon': args.noUpdate = True
@@ -219,7 +219,7 @@ def drawPlot(allConstants, runsUpdated, aligndofs, diffUpdate = False, noUpdate 
 
 
     alignable, dof = aligndofs[0].split('.')
-    line, maxim = getLimits(dof, alignable)
+    line, maxim = getLimits(dof, alignable, references)
     
     if 'T' in dof:
         if maxim < 1e-1:

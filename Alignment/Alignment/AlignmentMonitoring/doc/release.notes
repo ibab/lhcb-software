@@ -4,6 +4,10 @@
 !------------------------------------------------------------------------------
 
 ! 2016-03-03
+ - Updates thresholds for Velo update
+ - Other minor changes in plotting scripts
+
+! 2016-03-03
  - new TT mapping lookup table (histogram bin id <-> TT sector name) due to the changes in TTTrackMonitor
  - small change in MultiPlot.py to allow vertical line range goes below 0
 
