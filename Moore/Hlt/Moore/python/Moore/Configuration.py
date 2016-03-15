@@ -430,8 +430,9 @@ class Moore(LHCbConfigurableUser):
         ApplicationMgr().OutputLevel              = INFO #I still want the Application Manager Finalized Sucessfully printout
 
         # Print algorithm name with 40 characters
-        if not MessageSvc().isPropertySet("Format"):
-            MessageSvc().Format = '% F%40W%S%7W%R%T %0W%M'
+        if not self.getProp("RunOnline"):
+            if not MessageSvc().isPropertySet("Format"):
+                MessageSvc().Format = '% F%40W%S%7W%R%T %0W%M'
 
         #this should be OK to do here...
         from Funcs import _minSetFileTypes
@@ -475,7 +476,8 @@ class Moore(LHCbConfigurableUser):
             return
 
         if level>INFO:
-            MessageSvc().OutputLevel = level
+            if not self.getProp("RunOnline"):
+                MessageSvc().OutputLevel = level
             ToolSvc().OutputLevel = level
 
         if level>INFO and hasattr(self, "EnableTimer") and self.getProp("EnableTimer") and type(self.getProp("EnableTimer")) is not str:
