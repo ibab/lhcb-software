@@ -4,6 +4,11 @@
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2016-02-03 - Gloria Corti
+ - Changed the default production tool from Pythia6 to Pythia8.
+   . src/Lib/ExternalGenerators.cpp, changed value of property ProductionTool
+   . src/component/Special.cpp, changed value of property PileUpTool
+
 !======================= Generators v15r1 2016-03-02 =========================
 ! 2016-02-03 - John Back
  - src/component/EvtGenDecay.cpp: Corrected the name of the m_imHelZero double

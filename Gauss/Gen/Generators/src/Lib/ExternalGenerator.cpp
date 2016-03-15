@@ -42,7 +42,7 @@ ExternalGenerator::ExternalGenerator( const std::string& type,
     m_defaultLhaPdfSettings.clear() ;
     declareInterface< ISampleGenerationTool >( this ) ;
     declareProperty( "ProductionTool" , 
-                     m_productionToolName = "PythiaProduction" ) ; 
+                     m_productionToolName = "Pythia8Production" ) ; 
     declareProperty( "DecayTool" , m_decayToolName = "EvtGenDecay" ) ;
     declareProperty( "CutTool" , m_cutToolName = "LHCbAcceptance" ) ;
     declareProperty( "LhaPdfCommands" , m_userLhaPdfSettings ) ;

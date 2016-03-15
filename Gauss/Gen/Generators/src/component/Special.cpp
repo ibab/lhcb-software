@@ -42,7 +42,7 @@ Special::Special( const std::string & type , const std::string & name ,
     m_pileUpProductionTool(  0 ) { 
   declareProperty( "PileUpProductionTool" , 
                    m_pileUpProductionToolName = 
-                   "PythiaProduction/MinimumBiasPythiaProduction" ) ;
+                   "Pythia8Production/MinimumBiasPythia8Production" ) ;
   declareProperty( "ReinitializePileUpGenerator" ,
                    m_reinitialize = true ) ;
 }
