@@ -449,7 +449,7 @@ class bhad2PMuXBuilder(LineBuilder):
         if self._daughtersSel is not None:
             return self._daughtersSel
         from PhysSelPython.Wrappers import MergedSelection
-        _sel_Daughters = MergedSelection("Selection_mergeddaughters",
+        _sel_Daughters = MergedSelection("Selection_mergeddaughters"+self._name,
                                          RequiredSelections = [self._protonFilter(),self._PPbar(),self._Ppipi()])
         self._daughtersSel=_sel_Daughters
         return _sel_Daughters
@@ -458,7 +458,7 @@ class bhad2PMuXBuilder(LineBuilder):
         if self._fakedaughtersSel is not None:
             return self._fakedaughtersSel
         from PhysSelPython.Wrappers import MergedSelection
-        _sel_Daughters = MergedSelection("Selection_fakemergeddaughters",
+        _sel_Daughters = MergedSelection("Selection_fakemergeddaughters"+self._name,
                                          RequiredSelections = [self._fakeprotonFilter(),self._fakePPbar(),self._fakePpipi()])
         self._fakedaughtersSel=_sel_Daughters
         return _sel_Daughters
