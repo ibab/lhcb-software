@@ -29,8 +29,9 @@ Purpose: LHCb reconstruction program
     brunel-mc09-withtruth
   . Modify brunel-mc11-xdst to test Brunel().Histograms="Expert". Exposes an FPE
     in TrackPacker::check()...
-  . Add sim08-invfield test to replace brunel-mc09-withtruth-invfield
-    TODO: understand differences with sim08 test....
+  . Add sim08-invfield-up and sim08-invfield-down tests to replace
+    brunel-mc09-withtruth-invfield
+    TODO: understand field up/down differences....
   . Remove setting of InitialTime in 2015magdown test, no longer needed
   . Add a placeholder for 2016magdown test. Currently a copy of 2015magdown but 
     with DataType=2015

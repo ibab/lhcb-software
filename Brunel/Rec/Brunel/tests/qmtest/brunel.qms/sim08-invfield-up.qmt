@@ -29,16 +29,19 @@ Brunel().WithMC=True
 Brunel().InputType = "DIGI"
 Brunel().OutputType = "LDST"
 Brunel().DataType="2012"
+Brunel().EvtMax=10
 
-# invert the Magnetic field
+# Force down Magnetic field, switch off components known to cause asymmetries
 from Configurables import MagneticFieldSvc, STOfflinePosition
 MagneticFieldSvc().ForceToUseUpMap=True
 STOfflinePosition('ToolSvc.ITClusterPosition').applyLorentzCorrection=False
-STOfflinePosition('ToolSvc.STOfflinePosition').applyLorentzCorrection=False
+STOfflinePosition('ToolSvc.TTClusterPosition').applyLorentzCorrection=False
   </text></argument>
-  <argument name="reference"><text>../refs/sim08.ref</text></argument>
+  <argument name="reference"><text>../refs/sim08-invfield.ref</text></argument>
   <argument name="validator"><text>
-from Brunel.QMTest.BrunelExclusions import preprocessor
+from Brunel.QMTest.BrunelExclusions import preprocessor as BrunelPreprocessor
+preprocessor = BrunelPreprocessor + \
+  RegexpReplacer(when = "MagneticFieldSvc     INFO Map scaled by factor 1 with polarity internally used:", orig = r'used: -1 signed relative current: -1', repl = r'used: 1 signed relative current: 1')
 validateWithReference(preproc = preprocessor)
 </text></argument>
 </extension>
