@@ -4,6 +4,14 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2016-03-15 - Marian Stahl
+ - forgot to commit release notes
+
+! 2016-03-15 - Marian Stahl
+ - fixed memory problem in PatForwardTool 
+ - renamed NN variables 
+ - specified several lambda captures
+
 ! 2016-03-13 - Marian Stahl
  - deleted parameter infos in initialize of PatForwardTool
 
