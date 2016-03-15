@@ -116,7 +116,7 @@ public:
     // Note: at this point, only 'selected' hits are used, so we can omit
     //       the check inside the plane counter....
     PatFwdPlaneCounter_<PatFwdPlaneCounter_Policy::OmitSelectedCheck> counter{ first, mid };
-    auto enough_planes = [&]() { return counter.nbDifferent() >= m_minPlanes; } ;
+    auto enough_planes = [this,&counter]() { return counter.nbDifferent() >= m_minPlanes; } ;
     if ( !enough_planes() ) {
       ++first;
       return { first, first };
@@ -292,11 +292,11 @@ PatForwardTool::PatForwardTool( const std::string& type,
   //declareProperty( "UnusedVeloSeeds", m_unusedVeloSeeds = false);
   declareProperty( "TrackSelectorName",  m_trackSelectorName   = "None");
 
-  declareProperty( "NNBXF"           , m_NNBXF        = false );
-  declareProperty( "NNASF"           , m_NNASF        = true  );
-  declareProperty( "NNBXFcut"        , m_BXF4XPcut    = 0.1   );
-  declareProperty( "NNASFcut"        , m_ASFcut       = 0.1   );
-  declareProperty( "NextBestResponse", m_nbr          = 0.1   );
+  declareProperty( "NNBeforeXFit"        , m_NNBeforeXFit        = true  );
+  declareProperty( "NNAfterStereoFit"    , m_NNAfterStereoFit    = true  );
+  declareProperty( "NNBeforeXFitCut"     , m_NNBeforeXFitCut     = 0.12  );
+  declareProperty( "NNAfterStereoFitCut" , m_NNAfterStereoFitCut = 0.1   );
+  declareProperty( "NextBestResponse"    , m_NextBestResponse    = 0.7   );
 
 }
 
@@ -340,13 +340,13 @@ StatusCode PatForwardTool::initialize ( ) {
     warning()<<"Will use UseMomentumEstimate."<<endmsg;
   }
 
-  if(m_NNBXF){
+  if(m_NNBeforeXFit){
     std::vector<std::string> BXFvarnames{"mdx", "sx", "spread", "pp", "nwHits", "sx_pos", "mx", "tx", "ty"};
-    m_BXF4reader = new Read4XPlanes(BXFvarnames);
+    m_NNBeforeXFitReader      = new Read4XPlanes(BXFvarnames);
   }
-  if(m_NNASF){
+  if(m_NNAfterStereoFit){
     std::vector<std::string> ASFvarnames{"mdx", "sx", "spread", "nwHits", "mx", "nPlanes", "tx", "ty", "log(PT)", "log(chi2)", "log(P)", "Bx", "dt", "xRef", "nYPlanes", "sdy"};
-    m_ASFreader  = new ReadASFDeep(ASFvarnames);
+    m_NNAfterStereoFitReader  = new ReadASFDeep(ASFvarnames);
   }
 
   return StatusCode::SUCCESS;
@@ -356,8 +356,8 @@ StatusCode PatForwardTool::initialize ( ) {
 //  Finalization, delete readers
 //=========================================================================
 StatusCode PatForwardTool::finalize ( ) {
-  if(m_NNBXF){delete m_BXF4reader;}
-  if(m_NNASF){delete m_ASFreader;}
+  if(m_NNBeforeXFit)    {delete m_NNBeforeXFitReader    ;}
+  if(m_NNAfterStereoFit){delete m_NNAfterStereoFitReader;}
   return GaudiTool::finalize();
 }
 
@@ -495,14 +495,14 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector
       }
     }
     //== Build the initial list of X candidates
-    auto xcandidates = buildXCandidatesList( track, rng );
+    auto initialXCandidates = buildXCandidatesList( track, rng );
 
     int minPlanes = m_minPlanes;  //== Initial value, can be updated later...
 
     std::vector<PatFwdTrackCandidate> xCandidates;
 
     int minOTX = int( 1.5 * m_minXPlanes );
-    auto accept = [=](const PatFwdTrackCandidate& cnd) {
+    auto accept = [this,&minOTX,&track](const PatFwdTrackCandidate& cnd) {
       //== Check the chi2 with magnet center constraint.
       //== Count how many weighted hits
       //== reject if below threshold
@@ -511,37 +511,36 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector
           passMomentum( cnd, track.sinTrack() );
     };
 
-    for( auto icand : xcandidates ) {
+    for( auto& icand : initialXCandidates ) {
 
-      std::for_each(std::begin(icand->coords()),std::end(icand->coords()),[](PatForwardHit *hit){hit->setIsUsed(false);});
+      std::for_each(std::begin(icand.coords()),std::end(icand.coords()),[](PatForwardHit *hit){hit->setIsUsed(false);});
 
-      if( m_NNBXF && nbDifferent(icand->coords()) == 4 ){
+      if( m_NNBeforeXFit && nbDifferent(icand.coords()) == 4 ){
         //"mdx", "sx", "spread", "pp", "nwHits", "sx_pos", "mx", "tx", "ty"
         std::vector<double> BXFMVAvariables;
-        auto mdx_spread = get_mdx_spread(icand->coords());
+        auto mdx_spread = get_mdx_spread(icand.coords());
         BXFMVAvariables.push_back( mdx_spread.first );
-        BXFMVAvariables.push_back( get_cluster_stddev(icand->coords()) );
+        BXFMVAvariables.push_back( get_cluster_stddev(icand.coords()) );
         BXFMVAvariables.push_back( mdx_spread.second );
-        BXFMVAvariables.push_back( get_cluster_mean(icand->coords()) - icand->xStraight(m_fwdTool->zReference()) );
-        BXFMVAvariables.push_back( nT(*icand) );
-        BXFMVAvariables.push_back( get_Xstddev(icand->coords()) );
-        BXFMVAvariables.push_back( get_Xmean(icand->coords()) );
-        BXFMVAvariables.push_back( icand->slX() );
-        BXFMVAvariables.push_back( icand->slY() );
-        double MVAResponse = 0.f;
+        BXFMVAvariables.push_back( get_cluster_mean(icand.coords()) - icand.xStraight(m_fwdTool->zReference()) );
+        BXFMVAvariables.push_back( nT(icand) );
+        BXFMVAvariables.push_back( get_Xstddev(icand.coords()) );
+        BXFMVAvariables.push_back( get_Xmean(icand.coords()) );
+        BXFMVAvariables.push_back( icand.slX() );
+        BXFMVAvariables.push_back( icand.slY() );
 
-        MVAResponse = m_BXF4reader->GetMvaValue(BXFMVAvariables);
+        auto MVAResponse = m_NNBeforeXFitReader->GetMvaValue(BXFMVAvariables);
         if ( UNLIKELY(isDebug) )
           debug() << "MVA response " << MVAResponse << endmsg;
-        if( MVAResponse < m_BXF4XPcut ) continue;
+        if( MVAResponse < m_NNBeforeXFitCut ) continue;
       }
 
       //== Fit the candidate, and store them (fitXCandidate also updates the hits
-      while ( m_fwdTool->fitXCandidate( *icand, m_maxChi2X, m_minXPlanes ) ) {
+      while ( m_fwdTool->fitXCandidate( icand, m_maxChi2X, m_minXPlanes ) ) {
 
         // Copy the whole stuff, keep only used ones and store it.
-        PatFwdTrackCandidate temp(*icand);
-        temp.cleanCoords();
+        PatFwdTrackCandidate temp(icand);
+        temp.cleanCoords();        
         m_fwdTool->chi2PerDoF( temp );  // Compute and store chi2/dof
         if ( UNLIKELY(isDebug) ) {
           debug() << "Chi2/nDof = " << temp.chi2PerDoF() << " nDoF " << temp.nDoF()
@@ -551,7 +550,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector
         }
 
         //== tag these coordinates in the original, so that we don't find the same track again
-        std::for_each( std::begin(*icand), std::end(*icand), [](PatFwdHit* hit) {if ( hit->isSelected() ) hit->setIgnored( true );} );
+        std::for_each( std::begin(icand), std::end(icand), [](PatFwdHit* hit) {if ( hit->isSelected() ) hit->setIgnored( true );} );
         if ( !accept(temp) )continue;
         xCandidates.push_back( std::move(temp) );
       }
@@ -616,12 +615,12 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector
         continue;
       }
 
-      if (!m_NNASF && m_maxDeltaY + m_maxDeltaYSlope * qOverP *qOverP < fabs(  m_fwdTool->changeInY( temp ) ))  {
+      if (!m_NNAfterStereoFit && m_maxDeltaY + m_maxDeltaYSlope * qOverP *qOverP < fabs(  m_fwdTool->changeInY( temp ) ))  {
         if( UNLIKELY( isDebug ) ) debug() << "  --- Too big change in Y : " <<  m_fwdTool->changeInY( temp ) << endmsg;
         continue;
       }
 
-      if(!m_NNASF) temp.setQuality( computeQuality(temp, qOverP) );
+      if(!m_NNAfterStereoFit) temp.setQuality( computeQuality(temp, qOverP) );
 
       //== Verify if enough OT measurements, counting IT for 2/plane
       //== Ignore the y central region, OT inefficient there.
@@ -649,7 +648,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector
       //== Update requirement according to already found good solutions...
       minPlanes = std::max( minPlanes,   nbDifferent(temp)-1 );
 
-      if(m_NNASF){
+      if(m_NNAfterStereoFit){
         std::vector<double> ASFMVAvariables;
         //"mdx", "sx", "spread", "nwHits", "mx", "nPlanes", "tx", "ty", "log(PT)", "log(chi2)", "log(P)", "Bx", "dt", "xRef", "nYPlanes", "sdy"
         auto qop_af = computeQOverP(temp);
@@ -674,8 +673,8 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector
         ASFMVAvariables.push_back(PatFwdPlaneCounter{temp}.nbStereo());
         ASFMVAvariables.push_back(dy_over_toldy);
 
-        auto netresponse = m_ASFreader->GetMvaValue(ASFMVAvariables);
-        if(netresponse < m_ASFcut) continue;
+        auto netresponse = m_NNAfterStereoFitReader->GetMvaValue(ASFMVAvariables);
+        if(netresponse < m_NNAfterStereoFitCut) continue;
         temp.setQuality(netresponse);
       }
 
@@ -702,11 +701,11 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector
 
     if ( goodCandidates.size() > 1 ) {
 
-      if(m_NNASF){
+      if(m_NNAfterStereoFit){
         auto bestQuality = (*(std::max_element(goodCandidates.begin(),goodCandidates.end(),
                                                [](const PatFwdTrackCandidate& t, const PatFwdTrackCandidate& f){return t.quality() < f.quality();}))).quality();
         //remove_if will move elements that are not to be removed appear in the beginning of the range
-        auto last = std::remove_if( goodCandidates.begin(), goodCandidates.end(), [=](const PatFwdTrackCandidate& t) { return t.quality() < bestQuality * m_nbr; }  );
+        auto last = std::remove_if( goodCandidates.begin(), goodCandidates.end(), [this,&bestQuality](const PatFwdTrackCandidate& t) { return t.quality() < bestQuality * m_NextBestResponse; }  );
         //that means, that the "bad" elements will have to be erased by hand
         goodCandidates.erase(last,std::end(goodCandidates));
       }
@@ -714,19 +713,19 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed, std::vector
         // remove track with sensibly lower number of planes
         int minPlanes = maxPlanes - 1;
         auto last = std::remove_if( std::begin(goodCandidates), std::end(goodCandidates),
-                                    [=](const PatFwdTrackCandidate& t) { return nbDifferent(t) < minPlanes; } );
+                                    [this,&minPlanes](const PatFwdTrackCandidate& t) { return nbDifferent(t) < minPlanes; } );
         // remove worst quality
         auto bestQuality = std::accumulate( std::begin(goodCandidates), last, 1000.,
                                             [](double m, const PatFwdTrackCandidate& t) { return std::min(m,t.quality()); } );
         bestQuality += 1.0;
         last = std::remove_if( std::begin(goodCandidates), last,
-                               [=](const PatFwdTrackCandidate& t) { return t.quality()  >= bestQuality; }  );
+                               [&bestQuality](const PatFwdTrackCandidate& t) { return t.quality()  >= bestQuality; }  );
         // remove if sensibly less OT
         auto maxOT = std::accumulate( std::begin(goodCandidates), last, 0,
                                       [](int m, const PatFwdTrackCandidate& t) { return std::max(m,nbT(t)); } );
         maxOT = std::min(24,maxOT)-3;
         last = std::remove_if( std::begin(goodCandidates), last,
-                               [=](const PatFwdTrackCandidate& t) { return nbT(t)  <= maxOT; }  );
+                               [this,&maxOT](const PatFwdTrackCandidate& t) { return nbT(t)  <= maxOT; }  );
         if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
           debug() << "Ignoring " << std::distance(last,std::end(goodCandidates))
                   << " candidates -- either not enough planes, or bad quality, or not enough OT" << endmsg;
@@ -979,7 +978,7 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
 
   unsigned int minYPlanes = 4;
 
-  auto make_predicate = [=]( const PatFwdHit* hit ) -> MaxSpread { return { this->allowedStereoSpread(hit) }; };
+  auto make_predicate = [this]( const PatFwdHit* hit ) -> MaxSpread { return { this->allowedStereoSpread(hit) }; };
   auto iter = std::begin(temp);
   auto sentinel = make_RangeGenerator(minYPlanes, std::end(temp));
 
@@ -1040,15 +1039,15 @@ void PatForwardTool::debugFwdHits ( const PatFwdTrackCandidate& track, MsgStream
 //=========================================================================
 //  Build the list of vector of X hit candidates.
 //=========================================================================
-std::vector<PatFwdTrackCandidate*> PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track,
+std::vector<PatFwdTrackCandidate> PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track,
                                                                           boost::iterator_range<typename PatFwdHits::const_iterator> &rng ) const{
 
-  std::vector<PatFwdTrackCandidate*> Candidates;
+  std::vector<PatFwdTrackCandidate> Candidates;
 
   auto iter = std::begin(rng);
   auto sentinel = make_RangeGenerator( m_minXPlanes, std::end(rng) );
   auto xExtrap = track.xStraight( m_fwdTool->zReference() );
-  auto make_predicate = [=]( const PatFwdHit* hit ) -> MaxSpread { return { allowedXSpread(hit,xExtrap) }; };
+  auto make_predicate = [this,&xExtrap]( const PatFwdHit* hit ) -> MaxSpread { return { allowedXSpread(hit,xExtrap) }; };
   while ( sentinel( iter ) ) {
     auto predicate = make_predicate(*iter);
     auto range = sentinel.next_range( iter, std::cref(predicate) );
@@ -1057,7 +1056,7 @@ std::vector<PatFwdTrackCandidate*> PatForwardTool::buildXCandidatesList ( PatFwd
     if (inx >= (int)m_maxXCandidateSize.size() || inx < 0) continue;
     if (range.empty() || std::accumulate(range.begin(),range.end(),0,
                                          [](int last_it, const PatForwardHit *hit){return last_it + (int)(hit->isOT() + 2*(!hit->isOT()));})> m_maxXCandidateSize.at(inx) ) continue;
-    Candidates.emplace_back( new PatFwdTrackCandidate(track.track(), std::begin(range), std::end(range)) );
+    Candidates.emplace_back( PatFwdTrackCandidate(track.track(), std::begin(range), std::end(range)) );
   }
   return std::move(Candidates);//should be moved implicitly, but who knows?
 }

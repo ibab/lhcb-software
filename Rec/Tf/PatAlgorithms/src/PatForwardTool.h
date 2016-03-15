@@ -69,7 +69,7 @@ public:
 private:
   void prepareHits() const;
 
-  std::vector<PatFwdTrackCandidate*> buildXCandidatesList(PatFwdTrackCandidate& track , boost::iterator_range<typename PatFwdHits::const_iterator> &rng) const;
+  std::vector<PatFwdTrackCandidate> buildXCandidatesList(PatFwdTrackCandidate& track , boost::iterator_range<typename PatFwdHits::const_iterator> &rng) const;
 
   template <typename Storage = double>
   class XInterval {
@@ -317,13 +317,13 @@ private:
 
   bool  m_nnSwitch = false;           // switch on or off NN var. writing
 
-  bool   m_NNBXF;
-  bool   m_NNASF;
-  double m_BXF4XPcut;
-  double m_ASFcut;
-  double m_nbr;
-  IClassifierReader* m_BXF4reader;
-  IClassifierReader* m_ASFreader ;
+  bool   m_NNBeforeXFit;
+  bool   m_NNAfterStereoFit;
+  double m_NNBeforeXFitCut;
+  double m_NNAfterStereoFitCut;
+  double m_NextBestResponse;
+  IClassifierReader* m_NNBeforeXFitReader;
+  IClassifierReader* m_NNAfterStereoFitReader ;
 };
 
 #endif // PATFORWARDTOOL_H

@@ -38,8 +38,7 @@ class ForwardConf(object):
     PFAlg.addTool( PatForwardTool ) 
 
     PFAlg.PatForwardTool.MinPt = 500.
-    PFAlg.PatForwardTool.MinMomentum = 3000.
-    PFAlg.PatForwardTool.SecondLoop = False
+    PFAlg.PatForwardTool.MinMomentum = 3000.    
     PFAlg.PatForwardTool.UseMomentumEstimate = True
     PFAlg.PatForwardTool.UseWrongSignWindow = True
     PFAlg.PatForwardTool.WrongSignPT = 2000.
@@ -47,14 +46,15 @@ class ForwardConf(object):
     PFAlg.PatForwardTool.Preselection = True
     PFAlg.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
     # optimized settings for 2016 Data taking
-    PFAlg.PatForwardTool.MaxXCandidateSize = [50,24]
-    PFAlg.PatForwardTool.MaxSpreadX        = 0.65
-    PFAlg.PatForwardTool.MaxSpreadSlopeX   = 0.0075
-    PFAlg.PatForwardTool.MaxChi2X          = 32
-    PFAlg.PatForwardTool.MaxChi2Y          = 24
-    PFAlg.PatForwardTool.NNASF             = True
-    PFAlg.PatForwardTool.NNASFcut          = 0.1
-    PFAlg.PatForwardTool.NextBestResponse  = 0.7
+    PFAlg.PatForwardTool.SecondLoop          = False
+    PFAlg.PatForwardTool.MaxXCandidateSize   = [50,24]
+    PFAlg.PatForwardTool.MaxSpreadX          = 0.65
+    PFAlg.PatForwardTool.MaxSpreadSlopeX     = 0.0075
+    PFAlg.PatForwardTool.MaxChi2X            = 32
+    PFAlg.PatForwardTool.MaxChi2Y            = 24
+    PFAlg.PatForwardTool.NNAfterStereoFit    = True
+    PFAlg.PatForwardTool.NNAfterStereoFitCut = 0.1
+    PFAlg.PatForwardTool.NextBestResponse    = 0.7
     
 
   def configureAlgRun2HLT2(self, PFAlg = PatForward("PatForwardHLT2")):
@@ -70,17 +70,17 @@ class ForwardConf(object):
     PFAlg.PatForwardTool.VeloVetoTracksNames = [ "Rec/Track/FittedHLT1ForwardTracks"]
     # optimized settings for 2016 Data taking
     # for a faster algorithm switch off SecondLoop and NNBXF (Scenario A)
-    PFAlg.PatForwardTool.SecondLoop = True
-    PFAlg.PatForwardTool.MaxXCandidateSize = [70,26,12]
-    PFAlg.PatForwardTool.MaxSpreadX        = 1.5
-    PFAlg.PatForwardTool.MaxSpreadSlopeX   = 0.007
-    PFAlg.PatForwardTool.MaxChi2X          = 52
-    PFAlg.PatForwardTool.MaxChi2Y          = 42
-    PFAlg.PatForwardTool.NNBXF             = True
-    PFAlg.PatForwardTool.NNASF             = True
-    PFAlg.PatForwardTool.NNBXFcut          = 0.12
-    PFAlg.PatForwardTool.NNASFcut          = 0.09
-    PFAlg.PatForwardTool.NextBestResponse  = 0.75
+    PFAlg.PatForwardTool.SecondLoop          = True
+    PFAlg.PatForwardTool.MaxXCandidateSize   = [70,26,12]
+    PFAlg.PatForwardTool.MaxSpreadX          = 1.5
+    PFAlg.PatForwardTool.MaxSpreadSlopeX     = 0.007
+    PFAlg.PatForwardTool.MaxChi2X            = 52
+    PFAlg.PatForwardTool.MaxChi2Y            = 42
+    PFAlg.PatForwardTool.NNBeforeXFit        = True
+    PFAlg.PatForwardTool.NNAfterStereoFit    = True
+    PFAlg.PatForwardTool.NNBeforeXFitCut     = 0.12
+    PFAlg.PatForwardTool.NNAfterStereoFitCut = 0.09
+    PFAlg.PatForwardTool.NextBestResponse    = 0.75
   
 #class DownstreamConf(object):
 #  '''Configure a downstream algorithm'''
