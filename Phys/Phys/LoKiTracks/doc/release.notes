@@ -5,6 +5,10 @@
 ! Purpose     : track-related functors for LoKi-framework
 ! -----------------------------------------------------------------------------
 
+! 2016-03-16 - Vanya Belyaev
+ - fix clang problem 
+
+
 ! 2016-03-05 - Vanya Belyaev
  - add the functions for tracks and state to allow easy getting the 
    values and uncertainties
