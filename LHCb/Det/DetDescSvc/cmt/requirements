@@ -3,7 +3,7 @@
 # Maintainer : Marco Clemencic
 # ====================================================================
 package           DetDescSvc
-version           v4r0
+version           v4r1
 
 branches          cmt doc src
 
