@@ -4,6 +4,7 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output)
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r57 2016-03-16 =========================
 ! 2016-03-03 - Sascha Stahl
  - Update convertExtraInfo of a ProtoParticle to include ProbNNghost.
 
