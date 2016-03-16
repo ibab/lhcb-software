@@ -147,7 +147,7 @@ parser.add_argument (
     )
 parser.add_argument (
     '-w'                       ,
-    '--withcontext'            ,
+    '--with-context'           ,
     action  = "store_true"     ,
     dest    = 'WithContext'    ,
     help    = """Use locals/globals context for python scripts [default: %(default)s].
@@ -392,6 +392,7 @@ for cmd in arguments.Commands :
 
 del cmd
 
+# =============================================================================
 ## exit if batch 
 if  arguments.batch :
     ## nothing to do 
