@@ -4,6 +4,7 @@
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiHlt v3r22 2016-03-16 =========================
 ! 2016-02-10 - Roel Aaij
  - Do not insert "dir()" function in case of debug; this causes cache misses
    when using the generated C++ of functors.
