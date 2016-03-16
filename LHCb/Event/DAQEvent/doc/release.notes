@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2016-03-16 - Rosen Matev
+ - Update ODIN event type bits
+
 !========================= DAQEvent v9r22 2016-03-16 =========================
 ! 2016-03-07 - Gerhard Raven
  - RawBankReadoutStatus: add 'const' where appropriate, avoid duplicate lookup,
