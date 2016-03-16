@@ -122,7 +122,7 @@ if with_ipython () : raise RuntimeError("Can't start Bender from ipython!")
 # =============================================================================
 # Input arguments: create ans customize parser; parse arguments 
 # =============================================================================
-from BenderTools.Parser import makeParser
+from BenderTools.Parser import makeParser, Collect
 parent_parser = makeParser  ( add_help = False )
 import argparse 
 parser = argparse.ArgumentParser (
@@ -207,12 +207,14 @@ parser.add_argument (
     help    = "Do not use colorization", 
     default = True          )
 parser.add_argument ( 
-    '-c'        ,
-    '--command' ,
-    dest    = 'Command'   ,
-    type    = str         , 
-    help    = "The command for ``exec'' [default: %(default)s]" , 
-    default = ''          )
+    '-c'                  ,
+    '--command'           ,
+    dest    = 'Commands'  ,
+    nargs   = '*'         ,
+    default = []          , 
+    action  = Collect     , 
+    help    = "The commands for ``exec'' [default: %(default)s]" ,
+    )
 ## eliminate artifacts and parse command-line arguments 
 arguments = parser.parse_args( [ a for a in sys.argv[1:] if '--' != a ] )  
 
@@ -381,12 +383,15 @@ import atexit
 atexit.register ( __release_tuples__ )
 
 ## command to be executed:
-if arguments.Command :
-    logger.debug   ("Try to exec command:\n%s" % arguments.Command )
-    exec ( arguments.Command ) 
+for cmd in arguments.Command :
+    command = cmd.strip()
+    if not command : continue 
+    logger.debug   ("Try to exec command:\n%s" % command )
+    exec ( command ) 
     logger.verbose ("After exec...") 
 
-    
+del cmd
+
 ## exit if batch 
 if  arguments.batch :
     ## nothing to do 
