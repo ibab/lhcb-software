@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LHCbAlgs
 ################################################################################
-gaudi_subdir(LHCbAlgs v3r8)
+gaudi_subdir(LHCbAlgs v3r9)
 
 gaudi_depends_on_subdirs(Det/DDDB
                          Det/DetDesc

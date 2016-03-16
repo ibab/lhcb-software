@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!========================= LHCbAlgs v3r9 2016-03-16 =========================
 ! 2016-02-24 - Sean Benson
  - Move TESMerger here.
 
