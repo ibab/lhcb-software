@@ -4,6 +4,7 @@
 ! Purpose     : Detector element for upgraded VELO
 !-----------------------------------------------------------------------------
 
+!========================= VPDet v3r5 2016-03-16 =========================
 ! 2016-03-12 - Heinrich Schindler
  - Remove getters for sensor iterators.
  - Replace hard-coded pixel pitch by corresponding variable. 
