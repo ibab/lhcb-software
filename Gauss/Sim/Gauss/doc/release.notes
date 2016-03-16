@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2016-03-15 - Gloria Corti
+ - Introduce protection to prevent simulation of Hereschel if not Run2DataType
+   (i.e. 2015 and 2016)
+ - Switch off simulation of BCM and BLS for the moment since cannot write their
+   hits
 ! 2016-03-14 - Gloria Corti
  - Modified Gauss() configurable to allow simulating Herschel (HC), BCM and BLS
    Note that for the last two the hist are not saved and these three detectors

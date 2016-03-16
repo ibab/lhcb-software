@@ -71,8 +71,8 @@ class Gauss(LHCbConfigurableUser):
         'muon' ,
         'magnet',
         'rich1pmt', 'rich2pmt',
-        'hc', 
-        'bcm', 'bls'
+        'hc' 
+#        'bcm', 'bls'
         ]
 
     ## Possible used Configurables
@@ -142,6 +142,10 @@ class Gauss(LHCbConfigurableUser):
     KnownHistOptions     = ['NONE','DEFAULT']
     TrackingSystem       = ['VELO','TT','IT','OT']
     PIDSystem            = ['RICH','CALO','MUON']
+    
+    Run1DataTypes = [ "2009", "2010", "2011", "2012", "2013" ]
+    Run2DataTypes = [ "2015", "2016" ]
+        
     _beamPipeStates = ['beampipeon', 'beampipeoff', 'beampipeindet']
 
     _incompatibleDetectors = {
@@ -1434,6 +1438,10 @@ class Gauss(LHCbConfigurableUser):
 ########################################################################################################
 
     def defineHCGeo(self, detPieces):
+      year = self.getProp("DataType")
+      if year not in self.Run2DataTypes:
+        log.warning( "Check your options: you have asked to simulate Herschel but not in %s."%year )
+        log.warning( "Simulating only the LHC tunnel.")
       # Add the non-standard pieces of the BeforeMagnet region.
       region = 'BeforeMagnetRegion'
       if detPieces.has_key(region):
@@ -1460,6 +1468,10 @@ class Gauss(LHCbConfigurableUser):
       GiGaGeo().ZsizeOfWorldVolume = 300.0 * SystemOfUnits.m
 
     def configureHCSim(self, slot, detHits):
+      year = self.getProp("DataType")
+      if year not in self.Run2DataTypes:
+        raise RuntimeError( "Asking to simulate Herschel response but not present in %s" %year )
+        
       det = "HC"
       getHits = GetTrackerHitsAlg("Get" + det + "Hits" + slot)
       getHits.MCHitsLocation = "MC/" + det + "/Hits"
@@ -1549,7 +1561,7 @@ class Gauss(LHCbConfigurableUser):
 ########################################################################################################
 #
 # Beam Loss Scintillators
-
+#
 ########################################################################################################
 #
 
@@ -1579,7 +1591,7 @@ class Gauss(LHCbConfigurableUser):
       getHits.CollectionName = det + "SDet/Hits"
       # The geometry of the BLS changed in 2011
       idBLS = ["3", "4", "5", "6", "7", "8"]
-      if self.getProp("DataType") == "2010" :
+      if self.getProp("DataType") in [ "2009", "2010" ]:
           idBLS = ["1", "2"]
       getHits.Detectors = []
       for iDet in idBLS:
@@ -3005,7 +3017,7 @@ class Gauss(LHCbConfigurableUser):
                  GiGaPhysConstructorHpd
                  )
 
-             if self.getProp("DataType") == "2015" :
+             if self.getProp("DataType") in self.Run2DataTypes :
                  # Line to remove AEROGEL warnings
                  SimulationSvc().SimulationDbLocation = "$GAUSSROOT/xml/SimulationRICHesOff.xml"
              else:
@@ -3013,7 +3025,7 @@ class Gauss(LHCbConfigurableUser):
 
              if [det for det in ['Rich1', 'Rich2'] if det in self.getProp('DetectorSim')['Detectors']]:
                  importOptions("$GAUSSRICHROOT/options/Rich.opts")
-                 if self.getProp("DataType") == "2015" :
+                 if self.getProp("DataType") in self.Run2DataTypes :
                      importOptions("$GAUSSRICHROOT/options/RichRemoveAerogel.opts")
                  
              else:
