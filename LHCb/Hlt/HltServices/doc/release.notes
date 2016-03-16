@@ -1,13 +1,15 @@
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltServices
-! Responsible : Rob Lambert, Gerhard Raven
+! Responsible : Gerhard Raven
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
+
+!========================= HltServices v2r14 2016-03-16 =========================
 ! 2016-03-05 - Gerhard Raven
  - fix coverity warnings
 
 ! 2016-02-12 - Gerhard Raven
- - tweak equals in ProperyConfigSvc to avoid gcc 4.8 warning
+ - tweak equals in PropertyConfigSvc to avoid gcc 4.8 warning
 
 ! 2016-02-01 - Gerhard Raven
  - prefer SmartIF over bare pointer to interface in a few additional places
