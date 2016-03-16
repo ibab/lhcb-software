@@ -1,5 +1,5 @@
 package LHCbSys
-version v40r0
+version v40r1
 
 branches doc cmt tests
 
@@ -28,55 +28,55 @@ use DetSys                v17r2   Det     # Marco Cattaneo
 use BcmDet                v1r4    Det     # Magnus Lieng
 use CaloDet               v10r21  Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r3p1  Det     # Olivier Deschamps
-use DDDB                  v1r83   Det     # Marco Cattaneo
+use DDDB                  v1r84   Det     # Marco Cattaneo
 use DetCond               v12r46  Det     # Marco Clemencic
-use DetDesc               v19r0   Det     # Marco Clemencic
-use DetDescChecks         v5r12p1 Det     # Marco Clemencic, Ivan Belyaev
+use DetDesc               v19r1   Det     # Marco Clemencic
+use DetDescChecks         v5r13 Det     # Marco Clemencic, Ivan Belyaev
 use DetDescCnv            v4r19   Det     # Marco Clemencic
-use DetDescSvc            v4r0    Det     # Marco Clemencic
-use FTDet                 v2r12   Det     # Diego Milanes
+use DetDescSvc            v4r1    Det     # Marco Clemencic
+use FTDet                 v2r13   Det     # Luigi Del Buono
 use Magnet                v8r0    Det     # Marco Cattaneo
 use MuonDet               v10r0   Det     # Giovanni Passaleva
 use OTDet                 v9r0    Det     # Lucia Grillo
-use RichDet               v17r6   Det     # Chris Jones
-use STDet                 v5r0    Det     # J. van Tilburg
-use VeloDet               v14r0   Det     # Mark Tobin, Kurt Rinnert
-use VPDet                 v3r4    Det     # Pawel Jalocha
+use RichDet               v17r7   Det     # Chris Jones
+use STDet                 v5r1    Det     # J. van Tilburg
+use VeloDet               v14r1   Det     # Mark Tobin, Kurt Rinnert
+use VPDet                 v3r5    Det     # Pawel Jalocha
 
 # Event data model
-use DAQEvent              v9r21   Event   # Marco Cattaneo, Markus Frank
+use DAQEvent              v9r22   Event   # Marco Cattaneo, Markus Frank
 use DigiEvent             v4r5    Event   # Marco Cattaneo and sub-det experts
 use EventAssoc            v5r6    Event   # Iven Belyaev
 use EventBase             v3r1    Event   # Marco Cattaneo, Gloria Corti
-use EventPacker           v5r9    Event   # Chris Jones
+use EventPacker           v5r11   Event   # Chris Jones
 use EventSys              v26r2   Event   # Marco Cattaneo
 use FSREvent              v1r2    Event   # ??
 use FTEvent               v1r8    Event   # Eric Cogneras
 use GenEvent              v7r0    Event   # Gloria Corti
 use HltEvent              v9r6    Event   # Jose Angel Hernando-Morata
-use L0Event               v19r9   Event   # Olivier Deschamps, Julien Cogan
+use L0Event               v19r10  Event   # Olivier Deschamps, Julien Cogan
 use LinkerEvent           v3r11   Event   #
 use LinkerInstances       v4r1    Event   # Thomas Ruf
 use LumiEvent             v3r10   Event   # 
 use MCEvent               v3r4    Event   # Gloria Corti and sub-det experts
 use MicroDst              v1r3    Event   # ??
 use PhysEvent             v11r28  Event   # Anton Poluetkov
-use RecEvent              v2r56   Event   # Marco Cattaneo and sub-det experts
-use RecreatePIDTools      v1r8    Event   # Chris Jones
+use RecEvent              v2r57   Event   # Marco Cattaneo and sub-det experts
+use RecreatePIDTools      v1r9    Event   # Chris Jones
 use SwimmingEvent         v1r7    Event   # Roel Aaij, Vava Gligorov
-use TrackEvent            v6r5    Event   # Wouter Hulsbergen
+use TrackEvent            v6r6    Event   # Wouter Hulsbergen
 use VeloEvent             v16r11  Event   # Tomasz Szumlak, Chris Parkes
 
 # LHCb  Examples
-use DetCondExample        v11r15  Ex      # Marco Clemencic
+use DetCondExample        v11r16  Ex      # Marco Clemencic
 use DetDescExample        v7r8p1  Ex      # Marco Clemencic
-use IOExample             v4r17   Ex      # Marco Cattaneo
+use IOExample             v4r18   Ex      # Marco Cattaneo
 
-use FTDAQ                 v1r7p1  FT      # Eric Cogneras
+use FTDAQ                 v1r8    FT      # Eric Cogneras
 
 # Packages without Hat, cannot have comment field.
 # Maintainer M.Cattaneo
-use GaudiConf             v19r16
+use GaudiConf             v19r17
 # Maintainer ??
 use GaudiConfUtils        v1r1
 # Maintainer I.Shapoval
@@ -88,16 +88,16 @@ use GaudiObjDesc          v11r24
 use HCDAQ                 v1r5    HC      # Heinrich Schindler 
 
 # Hlt packages
-use HltDAQ                v4r24   Hlt     # Gerhard Raven
-use HltServices           v2r13   Hlt     # Gerhard Raven
+use HltDAQ                v4r25p1 Hlt     # Gerhard Raven
+use HltServices           v2r14   Hlt     # Gerhard Raven
 
 # Kernel packages
-use FSRAlgs               v2r0    Kernel  #
-use HltInterfaces         v6r5    Kernel  # Gerhard Raven
+use FSRAlgs               v2r1    Kernel  #
+use HltInterfaces         v6r6    Kernel  # Gerhard Raven
 use KernelSys             v12r3   Kernel  # Marco Cattaneo
-use LHCbAlgs              v3r8    Kernel  # Marco Cattaneo
-use LHCbKernel            v16r0   Kernel  # Marco Cattaneo
-use LHCbMath              v3r61   Kernel  # Ivan Belyaev
+use LHCbAlgs              v3r9    Kernel  # Marco Cattaneo
+use LHCbKernel            v16r1   Kernel  # Marco Cattaneo
+use LHCbMath              v3r62   Kernel  # Ivan Belyaev
 use MCInterfaces          v1r19   Kernel  # Marco Cattaneo et al.
 use PartProp              v1r21   Kernel  # Ivan Belyaev
 use Relations             v6r3    Kernel  # Ivan Belyaev
@@ -106,34 +106,34 @@ use XMLSummaryKernel      v1r13p1 Kernel  # ??
 use VectorClass           v1r19   Kernel  # C.Jones (temporary until available via LCG)
 
 use L0Base                v2r4p1  L0      # Julien Cogan
-use L0Calo                v11r15  L0      # Patrick Robbe
-use L0DU                  v10r34p1 L0      # Olivier Deschamps
-use L0Interfaces          v2r3    L0      # Olivier Deschamps
-use L0Muon                v9r14p1 L0      # Julien Cogan
+use L0Calo                v11r16  L0      # Patrick Robbe
+use L0DU                  v10r35  L0      # Olivier Deschamps
+use L0Interfaces          v2r4    L0      # Olivier Deschamps
+use L0Muon                v9r15   L0      # Julien Cogan
 use L0MuonKernel          v9r10   L0      # Julien Cogan
-use ProcessorKernel       v7r1    L0      # Julien Cogan
+use ProcessorKernel       v7r2    L0      # Julien Cogan
 
-use MuonDAQ               v4r21   Muon    # Giovanni Passaleva
+use MuonDAQ               v4r22   Muon    # Giovanni Passaleva
 use MuonKernel            v5r0    Muon    # Andrei Tsaregorodtsev
 
 #use RootCnv               v1r18   Online  # (also in GAUDI and ONLINE projects)
 
-use OTDAQ                 v8r0    OT      # Wouter Hulsbergen
+use OTDAQ                 v8r1    OT      # Wouter Hulsbergen
 
-use LoKiCore              v11r29  Phys    # Ivan Belyaev
-use LoKiGen               v10r23  Phys    # Ivan Belyaev
-use LoKiHlt               v3r21   Phys    # Ivan Belyaev
-use LoKiMC                v10r21  Phys    # Ivan Belyaev
+use LoKiCore              v11r30  Phys    # Ivan Belyaev
+use LoKiGen               v10r24  Phys    # Ivan Belyaev
+use LoKiHlt               v3r22   Phys    # Ivan Belyaev
+use LoKiMC                v10r22  Phys    # Ivan Belyaev
 use LoKiNumbers           v10r9   Phys    # Ivan Belyaev
 
 use RichDAQ               v3r44   Rich    # Chris Jones
-use RichKernel            v7r62   Rich    # Chris Jones
+use RichKernel            v7r63   Rich    # Chris Jones
 
-use SiDAQ                 v2r3    Si      # Matt Needham
+use SiDAQ                 v2r4    Si      # Matt Needham
 
 use SimComponents         v4r0    Sim     # Gloria Corti, Marco Cattaneo
 
-use STDAQ                 v4r8    ST      # Mark Tobin
+use STDAQ                 v4r9    ST      # Mark Tobin
 use STKernel              v2r14   ST      # Mark Tobin
 use STTELL1Event          v1r12   ST      # Matt Needham
 
@@ -144,9 +144,9 @@ use XmlTools              v6r9    Tools   # Marco Clemencic
 
 use LHCbTrackInterfaces   v2r3    Tr      # Marco Cattaneo
 
-use VeloDAQ               v6r12p1 Velo    # Kurt Rinnert
+use VeloDAQ               v6r13   Velo    # Kurt Rinnert
 
-use VPDAQ                 v2r7p1  VP      # Kurt Rinnert
+use VPDAQ                 v2r8    VP      # Kurt Rinnert
 
 
 # Declare this as a container package

@@ -5,6 +5,264 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v40r1>2016-03-17 LHCbSys v40r1</A></H1><PRE>
+This version uses Gaudi v27r1 and LCG_84 with ROOT 6.06.02.
+
+- Packages modified: Det/DDDB v1r84, Det/DetDesc v19r1, Det/DetDescChecks v5r13,
+    Det/DetDescSvc v4r1, Det/FTDet v2r13, Det/RichDet v17r7, Det/STDet v5r1,
+    Det/VeloDet v14r1, Det/VPDet v3r5, Event/DAQEvent v9r22,
+    Event/EventPacker v5r11, Event/L0Event v19r10, Event/RecEvent v2r57,
+    Event/RecreatePIDTools v1r9, Event/TrackEvent v6r6, Ex/DetCondExample v11r16,
+    Ex/IOExample v4r18, FT/FTDAQ v1r8, GaudiConf v19r17, Hlt/HltDAQ v4r25p1,
+    Hlt/HltServices v2r14, Kernel/FSRAlgs v2r1, Kernel/HltInterfaces v6r6,
+    Kernel/LHCbAlgs v3r9, Kernel/LHCbKernel v16r1, Kernel/LHCbMath v3r62,
+    L0/L0Calo v11r16, L0/L0DU v10r35, L0/L0Interfaces v2r4, L0/L0Muon v9r15,
+    L0/ProcessorKernel v7r2, Muon/MuonDAQ v4r22, OT/OTDAQ v8r1,
+    Phys/LoKiCore v11r30, Phys/LoKiGen v10r24, Phys/LoKiHlt v3r22,
+    Phys/LoKiMC v10r22, Rich/RichKernel v7r63, Si/SiDAQ v2r4, ST/STDAQ v4r9,
+    Velo/VeloDAQ v6r13, VP/VPDAQ v2r8
+
+- In Det/DDDB v1r84
+  . Do not set default tag for LHCBCOND, CALIBOFF and DQFLAGS partitions in
+    case of Simulation
+  . Remove MC09 default tags
+
+- In Det/DetDesc v19r1, Det/DetDescSvc v4r1, Det/FTDet v2r13, Det/RichDet v17r7,
+     Det/STDet v5r1, Det/VeloDet v14r1, Event/DAQEvent v9r22,
+     Event/L0Event v19r10, Event/RecEvent v2r57, Event/TrackEvent v6r6,
+     Ex/DetCondExample v11r16, FT/FTDAQ v1r8, Hlt/HltDAQ v4r25, 
+     Hlt/HltServices v2r14, L0/L0Calo v11r16, L0/L0DU v10r35, L0/L0Muon v9r15,
+     Muon/MuonDAQ v4r22, OT/OTDAQ v8r1, Si/SiDAQ v2r4, ST/STDAQ v4r9,
+     Velo/VeloDAQ v6r13, VP/VPDAQ v2r8
+  . Code modernisations. See package release notes for details 
+
+- In Det/DetDescChecks v5r13
+  . Add loaddddb2016 test
+  . Remove obsolete loaddddb-mc09 test
+  . Update checkoverlap, materialbudget, volumecheck tests to use "2015" DataType
+    instead of MC09 
+
+- In Det/FTDet v2r13
+  . Optimized the temporary hack in DeFTDetector::findFibreMat
+
+- In Det/RichDet v17r7
+  . Improvements to DeRichBeamPipe:
+    o Change the API to take a start and end point for the direction to be tested,
+      rather than a point and direction.
+    o Add a fast first check to the intersection methods to first test if the
+      line in question is close enough to the beam pipe to then proceed to the
+      full, slow, intersection check. Speeds up testForIntersection by ~40%,
+      which leads to an O(2%) speed up in
+      PhotonRecoUsingQuarticSoln::reconstructPhoton.
+    o Implement the faster start/end point check, that allows for many photons to
+      be rejected as not passing near the beampipe, before the conversion to local
+      coordinates is required. In all saves further O(5%) on
+      PhotonRecoUsingQuarticSoln::reconstructPhoton.
+  . Add a new method to DeRichHPD to perform a fast line intersection with
+    the HPD entrance window, modelled as a simple sphere. 
+    Used by DeRichHPDPanel::PDWindowPoint as a new ray tracing mode.
+  . Remove some legacy DC06 alignment methods from DeRich(1,2).
+  . Update how the nominal RICH mirror parameters are determined to compute 
+    them on the fly from the aligned individual mirror segments.
+
+- In Det/VPDet v3r5
+  . Remove getters for sensor iterators.
+  . Replace hard-coded pixel pitch by corresponding variable. 
+  . Remove unused function. Constify some arguments.
+
+- In Event/EventPacker v5r11
+  . Fix a typo in the PackedTrack unpacker check and protect divide by zero FPEs
+  . Fix a bug in the unpacking of related info objects caused by too aggressive
+    caching of information, that caused an attempt to access a container from a
+    previous event, and thus a seg. fault, in some rare circumstances.
+  . Add work around to the RichPID unpacking to deal with the change in the
+    numerical value of the BelowThreshold enum, that means when old RichPID
+    objects from before the additional of Deuteron are unpacked, the best
+    particle ID field in the bitpacked word would would be wrongly set to
+    Deuteron. Manually adjust this to Below Threshold in this case.
+  . Update to support Deuteron in RichPID data objects.
+
+- In Event/L0Event v19r10
+  . L0ProcessorData         :  store ProcessorData for consecutive BX
+  . L0DUElementaryData      :  store ElementaryData for consecutive BX and
+                               improve the Compound data creation
+  . L0DUElementaryCondition :  add data BX as attribute
+  . L0DUConfig              :  adapt to change in L0DUElementaryData  
+  . L0DUReport              :  dataDigit & dataValue getter-method per BX
+
+- In Event/RecEvent v2r57
+  . Update convertExtraInfo of a ProtoParticle to include ProbNNghost.
+  . Update (from Ulrik Egede) to support Deuteron RICH PID type.
+  . Add Deuteron threshold flags to RichPID.
+
+- In Event/RecreatePIDTools v1r9
+  . Add a check to RichPIDsFromProtoParticlesAlg to detect when old unpacked
+    (Pre-Deuteron) have been read in that have inconsistent
+    Deuteron/BelowThreshold information due to changes in the enum values,
+    and to correct for it.
+  . Update to support Deuteron RICH PID type.
+
+- In Event/TrackEvent v6r6
+  . Fix Track::deleteFromList in case a value not actually in the list is passed
+  . Fix Track::removeFromLhcbIds in case an id is passed which is not actually 
+    on the track
+  . Track::addSortedToLHcbIDs: avoid redundant initial write to container
+
+- In Ex/IOExample v4r18, Kernel/FSRAlgs v2r1
+  . Update references and tests to follow Gaudi v27r1 
+
+- In GaudiConf v19r17
+  . Add shared clusters and hypos to DstConf (not from persist reco).
+  . DstConf: extend Run 2 support to all Run2 data types (2015,2016,2017,2018)
+    Currently all years treated like 2015.
+  . GaudiLink for PVs.
+  . Normalise $LHCBRELEASE path in LHCbExclusions.py, to take into account also
+    the cvmfs release area
+  . Add merger and linker such that standard particles work when persisting reco.
+  . Fix misconfiguration of Turbo persist reco unpackers.
+  . Improved GaudiConf.QMTest.LHCbExclusions
+    o small refactoring
+    o excluded more messages
+  . Made IOHelper debug output more stable
+
+- In Hlt/HltDAQ v4r25, v4r25p1
+  . Version 9 of reports, includes ProbNNs.
+  . Fix for CaloHypo positions.
+  . Protection against missing calo hypo position.
+  . Fixed compilation with CMT and Gaudi v27r0.
+  . Remove error message when Hlt2MonSvc is not there
+  . Port changes in development branch for Turbo reprocessing.
+
+- In Kernel/FSRAlgs v2r1
+  . Normalized a bit test fsralgs.mergesmallfiles
+    use standard stdout/ref comparison function
+
+- In Kernel/HltInterfaces v6r6
+  . Fix coverity warnings
+  . Ported to the CMT configuration the workaround for Boost bug 11743.
+    (unfortunately it cannot be made conditional to the version of Boost)
+  . Do not use move semantics in TCK::set as it implies in some cases one more
+    move than passing by const ref.
+
+- In Kernel/LHCbAlgs v3r9
+  . Add TESMerger, allows to merge HLT2 long and downstream unpacked locations.
+  . Use Python options in FPEAuditor Doxygen documentation (LHCBPS-1495)
+  . Add a debug message to ApplicationVersionFilter
+
+- In Kernel/LHCbKernel v16r1
+  . Extend the HPD handling modes in RichTraceMode with a new fast mode that
+    models the entry window as a simple sphere. 
+  . Add FastClusterContainer::emplace_back
+  . Update to support Deuteron RICH PID type.
+
+- In Kernel/LHCbMath v3r62
+  . Various minor fixes
+  . ValueWithError.h/.cpp, math_ve.py
+    add few more functions to be coherent with cmath
+    implement comparison criteria for ValueWithErrors 
+  . add transverseKineticEnergy 
+  . add atan2 
+  . HistoInterpolation
+    o add cubic interpolation 
+    o add possibiilty to suppress special treatment of edges 
+  . Change from float to double in EigenTypes.h to cure some small precision 
+    problems in the RICH ray tracing.
+  . deriv.py: add EvalVE helper class to evaluate 
+    the generic function taking into account uncertainty in the argument
+  . Import and cleanup a bit LorenzVectorWithError 
+  . Add calculation of uncertanities for several quantities  
+  . Modernize MD5 code
+  . Improve the Eigen Plane3D constructor from a Gaudi Plane3D.
+
+- In L0/L0DU v10r35
+  . L0ProcessorDataDecoder : adapt to BX-mapped ProcessorData
+  . L0DUConfigProvider     : parse BX from L0TCK configuration + adapt to change
+                             in L0DUElementaryData/Condition base classes
+  . L0DUEmulatorTool       : adapt to BX-mapped ProcessorData
+                             (to be completed for L0Muons)
+  . L0DUFromRawTool        : insert BX=-2 => +2 for Sum(Et) in the L0DU-produced
+                             Processor data
+  . (temporarily) remove L0Pattern
+
+- In L0/L0Interfaces v2r4
+  . IL0ProcessorDecoder : adapt to BX-mapped L0ProcessorData
+  . add const to IL0DUFromRawTool methods where possible
+
+- In L0/ProcessorKernel v7r2
+  . Do not pass ostream by value (coverity warning)
+
+- In Muon/MuonDAQ v4r22
+  . IMuonTell1Config: prefer extends/DeclareInterfaceID, const-ify configTell1
+  . modernize MuonTell1Config: follow interface change, use static const map 
+    instead of invariant data member
+
+- In OT/OTDAQ v8r1
+  . Implemented caching of total number of hits.
+
+- In Phys/LoKiCore v11r30
+  . Restored workaround for ROOT-5721.
+    Its removal was causing problems when importing LoKiGenMC.
+  . Add methods to get TES location in python
+  . Add a function into namespace LoKi::Print
+  . Remove PyCintex
+  . Add print-functions for smart-refs
+  . Improve a bit AlgFunctors.cpp (at least fix the issue with
+    the misinterpretation of  Algorithm::isInitialized
+  . AlgFunctors.cpp
+    Add a shortcut to bypass all the dirty machinery copied from GaudiSequencer
+    if algorithm is already known for AlgManager
+
+- In Phys/LoKiGen v10r24
+  . GenExlusive.cpp
+    fix a bug with matching of oscillating/non-oscillating patterns
+  . Remove the explicit loading of HepMC reflex library 
+
+- In Phys/LoKiHlt v3r22, Phys/LoKiCore v11r30
+  . Do not insert "dir()" function in case of debug; this causes cache misses
+    when using the generated C++ of functors.
+
+- In Phys/LoKiMC v10r22
+  . Add print functions to smart refs 
+
+- In Rich/RichKernel v7r63
+  . Small improvement to the flat mirror reflection method, to avoid an
+    unneccesary dot product.
+  . Add a new header file, RichRayTracingUtils.h, that contains some basic
+    ray tracing methods, previous part of the ray tracing tools in RichTools.
+  . Convert back to the ROOT based ray tracing to cure small precision
+    differences between the Eigen based math library to the ROOT math library.
+  . Add new method to IRichRayTracing to perform an intersection with a
+    spherical shell.
+  . Invalidate merged and removed clusters pointers after merger.
+  . Throw exception if pixel cluster builder is initialised with a null pointer
+    to the cluster object it should form.
+  . Disable use of Pool allocated vectors for std::unique_ptr<Cluster>, as it 
+    appears using the POOL allocators require a copy constructor for the 
+    contained objects, which is explicitly deleted for std::unique_ptr.
+  . Move the method that creates new clusters into the HPDPixelClusters class,
+    such that it is more closely bind to the memory management and the 
+    eventual (implicit) deletion of the objects.
+  . Update RichPixelCluster classes to use std::unique_ptr for its internal
+    memory management, in preference to doing it by hand with raw pointers.
+  . Enforce memory management in the cluster object returned by 
+    IPixelClusteringTool by returning an std::unique_ptr instead of a raw pointer.
+  . Remove deleted typedef from dictionary generation.
+  . Prefer std::sqrt( x*x + y*y ) to std::hypot(x,y) as it is (much) faster.
+  . Remove (unused) smart pointer aliases from RichPixelCluster.h
+  . Prefer aliases to typedefs.
+  . Remove some old backwards compatibility typedefs.
+  . Prefer std::unique_ptr to raw pointers.
+  . Properly support only arithemtic and pointer types in RichHypoData, 
+    using type traits.
+  . Add move (experimental) semantics to RichTrackSegment.
+
+- In ST/STDAQ v4r9
+  . Change string comparison in RawBankToSTLiteCluster, such that it is not
+    performed for each cluster.
+
+
+
+
 </PRE><H1><A NAME=v40r0>2016-01-29 LHCbSys v40r0</A></H1><PRE>
 This version uses Gaudi v27r0 and LCG_83 with ROOT 6.06.00.
 
