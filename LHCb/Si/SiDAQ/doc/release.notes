@@ -1,6 +1,8 @@
 Package         : SiDAQ
 Package manager : Matt Needham
 !-------------------------------------------------------------------------
+
+!========================= SiDAQ v2r4 2016-03-16 =========================
 ! 2016-02-08 - Gerhard Raven
  - C++11 modernization
    o add 'final' qualifier to internal classes
