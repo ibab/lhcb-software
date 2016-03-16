@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2016-03-16 - Vanya Belyaev
+ - convert "--command" argument from the single command to the list of commands
+
 ! 2016-03-12 - Vanya Belyaev
  - fix Corr2D test 
 

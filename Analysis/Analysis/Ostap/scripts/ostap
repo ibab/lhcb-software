@@ -65,11 +65,72 @@ __version__ = '$Revision$'
 import ROOT, sys, os  
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 # =============================================================================
+
+# =============================================================================
 ## parse arguments 
 def parse_args ( ) :
     """
     Parse arguments 
     """
+    # =========================================================================
+    import argparse 
+    ## @class Collect
+    #  simple parsing action to collect multiple arguments
+    #  @code
+    #  parser =...
+    #  parser.add_argument('--foo',
+    #  ... action  = Collect ,
+    #  ... nargs   = '*'     ,
+    #  ... default = []      ,
+    #  ...)
+    #  print parser.parse_args('a.txt b.txt --foo 1 2 3 --foo 4 -foo 5 '.split())
+    #  @encode
+    class Collect(argparse.Action):
+        """Simple parsing action to collect multiple arguments
+        >>> parser =...
+        >>> parser.add_argument('--foo',
+        ... action  = Collect ,
+        ... nargs   = '*'     ,
+        ... default = []      ,
+        ...)
+        >>> print parser.parse_args('a.txt b.txt --foo 1 2 3 --foo 4 -foo 5 '.split())
+        """
+        def __init__(self            ,
+                     option_strings  ,
+                     dest            ,
+                     nargs    =None  ,
+                     const    =None  ,
+                     default  =None  , 
+                     type     =None  ,
+                     choices  =None  ,
+                     required =False ,
+                     help     =None  ,
+                     metavar  =None  ) :
+            if nargs == 0:
+                raise ValueError('nargs for Collect actions must be > 0; if arg '
+                                 'strings are not supplying the value to append, '
+                                 'the append const action may be more appropriate')
+            if const is not None and nargs != argparse.OPTIONAL:
+                raise ValueError('nargs must be %r to supply const' % argparse.OPTIONAL)
+            super(Collect, self).__init__(
+                option_strings = option_strings ,
+                dest           = dest           ,
+                nargs          = nargs          ,
+                const          = const          ,
+                default        = default        ,
+                type           = type           ,
+                choices        = choices        ,
+                required       = required       ,
+                help           = help           ,
+                metavar        = metavar        )
+            
+        def __call__(self, parser, namespace, values, option_string=None):
+            items = argparse._copy.copy(argparse._ensure_value(namespace, self.dest, []))
+            ## the only one important line: 
+            for v in values : items.append(v)
+            setattr(namespace, self.dest, items)
+            
+    
     from argparse import ArgumentParser 
     parser = ArgumentParser ( prog = 'ostap' )
     #
@@ -96,14 +157,17 @@ def parse_args ( ) :
     parser.add_argument ( 
         '-c'        ,
         '--command' ,
-        dest    = 'Command'   ,
-        type    = str         , 
-        help    = "The command for ``exec'' [default: %(default)s]" , 
-        default = ''          )
+        dest    = 'Commands'   ,
+        nargs   = '*'          ,
+        action  = Collect      , 
+        help    = "The commands for ``exec'' [default: %(default)s]" , 
+        default = []           )
     #
     parser.add_argument ( 
-        "-m" , "--modules" ,
-        metavar = "MODULE" , nargs = '*' ,
+        "-m" , "--modules"     ,
+        metavar = "MODULE"     ,
+        nargs   = '*'          ,
+        action  = Collect      , 
         help    = "ROOT/python modules to be imported [default: %(default)s]",
         default = []  )
     #
@@ -383,12 +447,18 @@ if root_files :
         
 # =============================================================================
 ## command to be executed:
-if arguments.Command :
-    logger.debug   ("Try to exec command:\n%s" % arguments.Command )
-    exec ( arguments.Command ) 
+for cmd in arguments.Commands :
+    command = cmd.strip()
+    if not command : continue 
+    logger.debug   ("Try to exec command:\n%s" % command )
+    exec ( command ) 
     logger.verbose ("After exec...") 
 
-## exit it! 
+del cmd
+
+
+# =============================================================================
+## exit if batch 
 if arguments.batch :
     
     ## nothing to do 
