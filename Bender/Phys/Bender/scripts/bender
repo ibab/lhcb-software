@@ -383,7 +383,7 @@ import atexit
 atexit.register ( __release_tuples__ )
 
 ## command to be executed:
-for cmd in arguments.Command :
+for cmd in arguments.Commands :
     command = cmd.strip()
     if not command : continue 
     logger.debug   ("Try to exec command:\n%s" % command )
