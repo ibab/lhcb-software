@@ -3,7 +3,7 @@
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
 # =====================================================================
 package           DetDescChecks
-version           v5r12p1
+version           v5r13
 
 # =============== structure ================================================
 branches          cmt doc src python
