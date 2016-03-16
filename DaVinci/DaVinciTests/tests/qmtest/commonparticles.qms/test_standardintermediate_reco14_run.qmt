@@ -32,10 +32,10 @@ CountParticles                                              SUCCESS Number of co
  | "# Phys/StdLooseD02PiPi"                        |       500 |       1126 |     2.2520 |     5.9337 |      0.0000 |      76.000 |
  | "# Phys/StdLooseDalitzPi0"                      |       500 |        117 |    0.23400 |    0.88501 |      0.0000 |      10.000 |
  | "# Phys/StdLooseDetachedDiElectron"             |       500 |        586 |     1.1720 |     2.3534 |      0.0000 |      19.000 |
- | "# Phys/StdLooseDetachedDipion"                 |       500 |       3203 |     6.4060 |     7.4195 |      0.0000 |      55.000 |
- | "# Phys/StdLooseDetachedKpi"                    |       500 |      26117 |     52.234 |     108.00 |      0.0000 |      1108.0 |
- | "# Phys/StdLooseDetachedKst2Kpi"                |       500 |       9506 |     19.012 |     36.519 |      0.0000 |      356.00 |
- | "# Phys/StdLooseDetachedPhi2KK"                 |       500 |        799 |     1.5980 |     3.9629 |      0.0000 |      36.000 |
+ | "# Phys/StdLooseDetachedDipion"                 |       500 |       3202 |     6.4040 |     7.4198 |      0.0000 |      55.000 |
+ | "# Phys/StdLooseDetachedKpi"                    |       500 |      26116 |     52.232 |     108.02 |      0.0000 |      1108.0 |
+ | "# Phys/StdLooseDetachedKst2Kpi"                |       500 |       9505 |     19.010 |     36.536 |      0.0000 |      356.00 |
+ | "# Phys/StdLooseDetachedPhi2KK"                 |       500 |        798 |     1.5960 |     3.9624 |      0.0000 |      36.000 |
  | "# Phys/StdLooseDetachedTau3pi"                 |       500 |       1329 |     2.6580 |     7.3939 |      0.0000 |      106.00 |
  | "# Phys/StdLooseDiElectron"                     |       500 |        320 |    0.64000 |     1.7670 |      0.0000 |      14.000 |
  | "# Phys/StdLooseDiMuon"                         |       500 |       1592 |     3.1840 |     10.475 |      0.0000 |      133.00 |
@@ -52,15 +52,15 @@ CountParticles                                              SUCCESS Number of co
  | "# Phys/StdLooseKsLD_NegLong"                   |       500 |       1733 |     3.4660 |     5.7676 |      0.0000 |      51.000 |
  | "# Phys/StdLooseKsLD_PosLong"                   |       500 |       1572 |     3.1440 |     4.6090 |      0.0000 |      41.000 |
  | "# Phys/StdLooseKsLL"                           |       500 |        380 |    0.76000 |     1.4827 |      0.0000 |      15.000 |
- | "# Phys/StdLooseKstar2Kpi"                      |       500 |     100925 |     201.85 |     250.77 |      0.0000 |      1949.0 |
+ | "# Phys/StdLooseKstar2Kpi"                      |       500 |     100923 |     201.85 |     250.78 |      0.0000 |      1949.0 |
  | "# Phys/StdLooseLambdaDD"                       |       500 |       1535 |     3.0700 |     4.1271 |      0.0000 |      29.000 |
  | "# Phys/StdLooseLambdaLD"                       |       500 |       1485 |     2.9700 |     6.3982 |      0.0000 |      74.000 |
  | "# Phys/StdLooseLambdaLDpDown"                  |       500 |         87 |    0.17400 |    0.48551 |      0.0000 |      3.0000 |
  | "# Phys/StdLooseLambdaLDpLong"                  |       500 |       1398 |     2.7960 |     6.2054 |      0.0000 |      71.000 |
  | "# Phys/StdLooseLambdaLL"                       |       500 |        208 |    0.41600 |     1.4181 |      0.0000 |      17.000 |
  | "# Phys/StdLooseLambdac2PKPi"                   |       500 |        719 |     1.4380 |     9.1471 |      0.0000 |      175.00 |
- | "# Phys/StdLooseLambdastar2pK"                  |       500 |     188666 |     377.33 |     535.35 |      0.0000 |      4622.0 |
- | "# Phys/StdLoosePhi2KK"                         |       500 |      14787 |     29.574 |     38.312 |      0.0000 |      361.00 |
+ | "# Phys/StdLooseLambdastar2pK"                  |       500 |     188664 |     377.33 |     535.36 |      0.0000 |      4622.0 |
+ | "# Phys/StdLoosePhi2KK"                         |       500 |      14786 |     29.572 |     38.313 |      0.0000 |      361.00 |
  | "# Phys/StdLooseRho0"                           |       500 |        672 |     1.3440 |     2.2094 |      0.0000 |      19.000 |
  | "# Phys/StdLooseRhoPlus"                        |       500 |      19058 |     38.116 |     61.987 |      0.0000 |      549.00 |
  | "# Phys/StdMassConstrainedJpsi2MuMu"            |       500 |         18 |   0.036000 |    0.18629 |      0.0000 |      1.0000 |
