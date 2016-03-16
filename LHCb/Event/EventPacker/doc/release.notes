@@ -4,7 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
-!========================= EventPacker v5r11 2016-03-16 =========================
+!========================= EventPacker v5r10 2016-03-16 =========================
 ! 2016-02-25 - Marco Cattaneo
  - Fix a typo in the PackedTrack unpacker check and protect divide by zero FPEs
 
