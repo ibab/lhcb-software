@@ -1758,16 +1758,14 @@ inline double ReadGhost_Long_TMVA::GetMvaValue__( const std::vector<double>& inp
   // layer 0 to 1
   for (int o=0; o<fLayerSize[1]-1; o++) {
     for (int i=0; i<fLayerSize[0]; i++) {
-      double inputVal = fWeightMatrix0to1[o][i] * fWeights[0][i];
-      fWeights[1][o] += inputVal;
+      fWeights[1][o] += fWeightMatrix0to1[o][i] * fWeights[0][i];
     }
     fWeights[1][o] = ActivationFnc(fWeights[1][o]);
   }
   // layer 1 to 2
   for (int o=0; o<fLayerSize[2]; o++) {
     for (int i=0; i<fLayerSize[1]; i++) {
-      double inputVal = fWeightMatrix1to2[o][i] * fWeights[1][i];
-      fWeights[2][o] += inputVal;
+      fWeights[2][o] += fWeightMatrix1to2[o][i] * fWeights[1][i];
     }
     fWeights[2][o] = OutputActivationFnc(fWeights[2][o]);
   }
@@ -1775,11 +1773,14 @@ inline double ReadGhost_Long_TMVA::GetMvaValue__( const std::vector<double>& inp
   return fWeights[2][0];
 }
 
-double ReadGhost_Long_TMVA::ActivationFnc(double x) const {
+double ReadGhost_Long_TMVA::ActivationFnc(double x) const 
+{
   // sigmoid
   return 1.0/(1.0+exp(-x));
 }
-double ReadGhost_Long_TMVA::OutputActivationFnc(double x) const {
+
+double ReadGhost_Long_TMVA::OutputActivationFnc(double x) const
+{
   // sigmoid
   return 1.0/(1.0+exp(-x));
 }
@@ -1788,10 +1789,12 @@ double ReadGhost_Long_TMVA::OutputActivationFnc(double x) const {
 inline void ReadGhost_Long_TMVA::Clear()
 {
   // clean up the arrays
-  for (int lIdx = 0; lIdx < 3; lIdx++) {
+  for (int lIdx = 0; lIdx < 3; lIdx++) 
+  {
     delete[] fWeights[lIdx];
   }
 }
+
 inline double ReadGhost_Long_TMVA::GetMvaValue( const std::vector<double>& inputValues ) const
 {
   // classifier response value

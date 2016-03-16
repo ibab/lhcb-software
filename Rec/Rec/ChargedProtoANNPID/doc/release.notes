@@ -4,6 +4,11 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2016-03-16 - Chris Jones
+ - Add an FPE Guard to compiler TMVA response call, to protect against 
+   exceptions from things like exp(large number) within the TMVA generated code. 
+ - Remove some temporaries fromm the TMVA MC15TuneV1 MVA code.
+
 ! 2016-02-23 - Chris Jones
  - 'Manual' code optimisation of the MC15TuneV1 networks. Saves O(10%).
 

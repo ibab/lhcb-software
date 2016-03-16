@@ -20,6 +20,8 @@ gaudi_depends_on_subdirs(Event/MCEvent
 find_package(ROOT COMPONENTS TMVA)
 find_package(VDT)
 
+#set_property(SOURCE src/TMVAImpFactory-MC15TuneV1.cpp APPEND_STRING PROPERTY COMPILE_FLAGS " -ffast-math " )
+
 gaudi_add_module(ChargedProtoANNPID
                  src/*.cpp
                  INCLUDE_DIRS ROOT VDT Rec/RecInterfaces
@@ -30,3 +32,4 @@ gaudi_add_module(ChargedProtoANNPID
 #endif()
 
 gaudi_install_python_modules()
+

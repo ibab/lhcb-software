@@ -322,7 +322,10 @@ getOutput( const LHCb::ProtoParticle * proto ) const
     m_vars[i++] = input->value(proto);
   }
   
-  // get the output and return
+  // FPE Guard for MVA call
+  FPE::Guard guard(true);
+
+  // get the output response and return
   return m_reader->GetMvaValue(m_vars);
 }
 
