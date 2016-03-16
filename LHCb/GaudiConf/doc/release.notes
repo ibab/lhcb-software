@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v19r17 2016-03-16 =========================
 ! 2016-03-10 - Sean Benson
  - Add shared clusters and hypos to DstConf (not from persist reco).
 
