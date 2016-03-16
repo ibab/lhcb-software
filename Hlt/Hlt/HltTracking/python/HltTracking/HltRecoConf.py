@@ -89,10 +89,7 @@ MatchVeloMuonOptions = {"MaxChi2DoFX" : 10.,
                         }
 
 MatchVeloTTMuonOptions = {"MaxChi2DoFX" : 20.,
-                          "XWindow" : 200.,
-                          "YWindow" : 400.,
-                          "FoIToleranceX" : 5.,
-                          "FoIToleranceY" : 1.5
+                          "Window" : {1:(100,200),2:(200,400),3:(300,500),4:(400,600)}
                           }
 
 VeloTTToolOptions = {"minMomentum" : 0.0,
