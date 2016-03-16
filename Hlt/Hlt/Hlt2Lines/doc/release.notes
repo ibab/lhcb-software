@@ -8,6 +8,8 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-03-16 - Jon Harrison
+ - Line name changes in Phi lines and addition of header information in Lines.py
 
 ! 2016-03-14 - Simone Stracka
  - Line name changes in Bc2JpsiX, CcDiHadron (added folder name), and DPS lines (removed special characters)
