@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v17r7 2016-03-16 =========================
 ! 2016-03-04 - Chris Jones
  - More improvements to DeRichBeamPipe. Change the API to take a start and end
    point for the direction to be tested, rather than a point and direction.
