@@ -1,15 +1,17 @@
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
-! 2016-03-08 - Gerhard Raven
- - C++11 modernization
 
+!========================= L0Event v19r10 2016-03-16 =========================
 ! 2016-03-12 - Olivier Deschamps
    - L0ProcessorData         :  store ProcessorData for consecutive BX
    - L0DUElementaryData      :  store ElementaryData for consecutive BX and improve the Compound data creation
    - L0DUElementaryCondition :  add data BX as attribute
    - L0DUConfig              :  adapt to change in L0DUElementaryData  
    - L0DUReport              :  dataDigit & dataValue getter-method per BX
+
+! 2016-03-08 - Gerhard Raven
+ - C++11 modernization
 
 !========================= L0Event v19r9 2014-10-14 =========================
 ! 2014-09-17 - Marco Clemencic
