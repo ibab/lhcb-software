@@ -4,6 +4,7 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+!========================= FSRAlgs v2r1 2016-03-16 =========================
 ! 2016-03-14 - Marco Cattaneo
  - Update test reference to follow Gaudi v27r1 changes in algorithm properties
 
