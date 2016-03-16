@@ -13,6 +13,7 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiGen v10r24 2016-03-16 =========================
 ! 2016-03-12 - Vanya Belyaev
  - GenExlusive.cpp
    fix a bug with matching of oscillating/non-oscillating patterns

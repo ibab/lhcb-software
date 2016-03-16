@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LoKiGen
 ################################################################################
-gaudi_subdir(LoKiGen v10r23)
+gaudi_subdir(LoKiGen v10r24)
 
 find_package(Graphviz) 
 gaudi_depends_on_subdirs(Event/GenEvent
