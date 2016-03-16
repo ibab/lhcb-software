@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DAQEvent
 ################################################################################
-gaudi_subdir(DAQEvent v9r21)
+gaudi_subdir(DAQEvent v9r22)
 
 gaudi_depends_on_subdirs(GaudiKernel
                          GaudiObjDesc)
