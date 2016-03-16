@@ -4,6 +4,9 @@
 !------------------------------------------------------------------------------
 
 !========================= GaudiConf v19r17 2016-03-16 =========================
+! 2016-03-16 - Gloria Corti
+ - SimConf: Add possibility to write Bls and Bcm MCHits
+
 ! 2016-03-10 - Sean Benson
  - Add shared clusters and hypos to DstConf (not from persist reco).
 

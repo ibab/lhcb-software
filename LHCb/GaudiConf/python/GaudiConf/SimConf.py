@@ -266,6 +266,14 @@ class SimConf(LHCbConfigurableUser) :
                 from Configurables import DataPacking__Unpack_LHCb__MCHCHitPacker_
                 self._makeUnpacker( DataPacking__Unpack_LHCb__MCHCHitPacker_, "UnpackMCHCHits", slot, 'HC/Hits' )
 
+            if 'Bcm' in dets :
+                from Configurables import DataPacking__Unpack_LHCb__MCBcmHitPacker_
+                self._makeUnpacker( DataPacking__Unpack_LHCb__MCHCHitPacker_, "UnpackMCBmcHits", slot, 'Bcm/Hits' )
+
+            if 'Bls' in dets :
+                from Configurables import DataPacking__Unpack_LHCb__MCBlsHitPacker_
+                self._makeUnpacker( DataPacking__Unpack_LHCb__MCHCHitPacker_, "UnpackMCBlsHits", slot, 'Bls/Hits' )
+
     def addHeaders( self, tape ):
 
         # Event locations
@@ -419,6 +427,12 @@ class SimConf(LHCbConfigurableUser) :
 
                 if 'HC' in dets :
                     simList += [ self.tapeLocation( slot, mcRoot, 'HC/Hits' ) ]
+
+                if 'Bcm' in dets :
+                    simList += [ self.tapeLocation( slot, mcRoot, 'Bcm/Hits' ) ]
+
+                if 'Bls' in dets :
+                    simList += [ self.tapeLocation( slot, mcRoot, 'Bls/Hits' ) ]
 
                 # main event is manditory, spillover events optional.
                 if slot != '':
