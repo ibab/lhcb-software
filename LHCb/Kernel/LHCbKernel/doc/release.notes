@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+!========================= LHCbKernel v16r1 2016-03-16 =========================
 ! 2016-03-01 - Chris Jones
  - Extend the HPD handling modes in RichTraceMode with a new fast mode that
    models the entry window as a simple sphere. 
