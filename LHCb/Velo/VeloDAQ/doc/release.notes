@@ -2,6 +2,8 @@
 ! Package     : VeloDAQ
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
+
+!========================= VeloDAQ v6r13 2016-03-16 =========================
 ! 2016-02-08 - Gerhard Raven
  - C++11 modernization:
   o prefer pass-by-reference over pass-by-pointer if nullptr is not a valid argument
