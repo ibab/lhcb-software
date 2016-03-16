@@ -4,6 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-03-16 - Jon Harrison
+ - Added Phi_25ns_Draft2016 and updated Physics_pp_Draft2016 accordingly
 
 ! 2016-03-14 - Simone Stracka
  - Updating {DPS,CcDiHadron,Bc2JpsiX}_25ns_Draft2016 to match name changes in Hlt2Lines 
