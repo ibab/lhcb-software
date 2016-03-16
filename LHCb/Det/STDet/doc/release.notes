@@ -2,6 +2,8 @@
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
+
+!========================= STDet v5r1 2016-03-16 =========================
 ! 2016-02-07 - Gerhard Raven
  - DeSTSensor: prefer std::unique_ptr over raw pointer + explicit delete
 
