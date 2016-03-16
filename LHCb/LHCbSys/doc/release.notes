@@ -112,6 +112,7 @@ This version uses Gaudi v27r1 and LCG_84 with ROOT 6.06.02.
   . Update references and tests to follow Gaudi v27r1 
 
 - In GaudiConf v19r17
+  . SimConf: Add possibility to write Bls and Bcm MCHits
   . Add shared clusters and hypos to DstConf (not from persist reco).
   . DstConf: extend Run 2 support to all Run2 data types (2015,2016,2017,2018)
     Currently all years treated like 2015.
