@@ -2,6 +2,8 @@
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
+
+!========================= HltInterfaces v6r6 2016-03-16 =========================
 ! 2016-03-05 - Gerhard Raven
  - fix coverity warnings
 
