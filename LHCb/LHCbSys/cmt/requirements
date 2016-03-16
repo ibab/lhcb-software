@@ -48,7 +48,7 @@ use DAQEvent              v9r22   Event   # Marco Cattaneo, Markus Frank
 use DigiEvent             v4r5    Event   # Marco Cattaneo and sub-det experts
 use EventAssoc            v5r6    Event   # Iven Belyaev
 use EventBase             v3r1    Event   # Marco Cattaneo, Gloria Corti
-use EventPacker           v5r11   Event   # Chris Jones
+use EventPacker           v5r10   Event   # Chris Jones
 use EventSys              v26r2   Event   # Marco Cattaneo
 use FSREvent              v1r2    Event   # ??
 use FTEvent               v1r8    Event   # Eric Cogneras

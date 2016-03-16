@@ -11,7 +11,7 @@ This version uses Gaudi v27r1 and LCG_84 with ROOT 6.06.02.
 - Packages modified: Det/DDDB v1r84, Det/DetDesc v19r1, Det/DetDescChecks v5r13,
     Det/DetDescSvc v4r1, Det/FTDet v2r13, Det/RichDet v17r7, Det/STDet v5r1,
     Det/VeloDet v14r1, Det/VPDet v3r5, Event/DAQEvent v9r22,
-    Event/EventPacker v5r11, Event/L0Event v19r10, Event/RecEvent v2r57,
+    Event/EventPacker v5r10, Event/L0Event v19r10, Event/RecEvent v2r57,
     Event/RecreatePIDTools v1r9, Event/TrackEvent v6r6, Ex/DetCondExample v11r16,
     Ex/IOExample v4r18, FT/FTDAQ v1r8, GaudiConf v19r17, Hlt/HltDAQ v4r25p1,
     Hlt/HltServices v2r14, Kernel/FSRAlgs v2r1, Kernel/HltInterfaces v6r6,
@@ -70,7 +70,7 @@ This version uses Gaudi v27r1 and LCG_84 with ROOT 6.06.02.
   . Replace hard-coded pixel pitch by corresponding variable. 
   . Remove unused function. Constify some arguments.
 
-- In Event/EventPacker v5r11
+- In Event/EventPacker v5r10
   . Fix a typo in the PackedTrack unpacker check and protect divide by zero FPEs
   . Fix a bug in the unpacking of related info objects caused by too aggressive
     caching of information, that caused an attempt to access a container from a
