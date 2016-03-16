@@ -1,7 +1,7 @@
 ################################################################################
 # Package: L0Interfaces
 ################################################################################
-gaudi_subdir(L0Interfaces v2r3)
+gaudi_subdir(L0Interfaces v2r4)
 
 gaudi_depends_on_subdirs(Event/L0Event)
 
