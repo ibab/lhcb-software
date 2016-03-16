@@ -12,8 +12,7 @@ class Commissioning_Physics_MC2015(Commissioning_Physics_2015):
             raise RuntimeError( 'Must update HltType when modifying ActiveHlt.Lines()' )
         
     def L0TCK(self) :
-        #return '0xFF66'
-        return '0x0050'
+        return '0xFF66'
 
     def HltType(self) :
         self.verifyType( Commissioning_Physics_MC2015 ) 

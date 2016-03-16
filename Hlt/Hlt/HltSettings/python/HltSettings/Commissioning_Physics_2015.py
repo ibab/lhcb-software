@@ -264,13 +264,32 @@ class Commissioning_Physics_2015( object ):
                                                 }
                           })
 
+        from Muons_March2015 import Muons_March2015
+        __update_conf__(thresholds,  Muons_March2015().Thresholds() )
+
+        from Hadrons_March2015 import Hadrons_March2015
+        __update_conf__(thresholds,  Hadrons_March2015().Thresholds() )
+
+        from Radiative_April2015 import Radiative_April2015
+        __update_conf__(thresholds,   Radiative_April2015().Thresholds() )
+
         return thresholds
 
     def ActiveHlt2Lines(self) :
         """
         Returns a list of active lines
         """
-        hlt2 = []
+        hlt2 = ['Hlt2PassThrough','Hlt2Lumi','Hlt2DebugEvent',
+                'Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent']
+
+        from Muons_March2015 import Muons_March2015
+        hlt2.extend( Muons_March2015().ActiveHlt2Lines() )
+
+        from Hadrons_March2015 import Hadrons_March2015
+        hlt2.extend( Hadrons_March2015().ActiveHlt2Lines() )
+
+        from Radiative_April2015 import Radiative_April2015
+        hlt2.extend( Radiative_April2015().ActiveHlt2Lines() )
 
         return hlt2
 
