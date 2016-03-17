@@ -4,6 +4,7 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+!========================= RichGlobalPID v3r26 2016-03-17 =========================
 ! 2016-03-11 - Chris Jones
  - Some minor optimisations of the likelihood minimisation
   + Implicitly start the log(exp(x)-1) interpolation table from x=0 instead of
