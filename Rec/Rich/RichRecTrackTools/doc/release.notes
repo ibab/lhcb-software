@@ -4,6 +4,7 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RichRecTrackTools v1r42 2016-03-17 =======================
 ! 2016-03-10 - Chris Jones
  - Some more C++11 modernisations.
  - Speed up the ExpectedTrackSignal::hasRichInfo by limiting it on only
