@@ -4,6 +4,7 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+!========================= PrPixel v1r14 2016-03-17 =========================
 ! 2016-03-12 - Heinrich Schindler
  - Follow change in DeVP (r202920).
 
