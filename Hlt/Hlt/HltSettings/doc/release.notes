@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-03-17 - Roel Aaij
+ - Add configuration dictionary of Hlt1MVALines to Hlt2_TrackingOnly.
+
 ! 2016-03-17 - Francesco Dettori
  - Committing bug fix for RareStrange lines 
 
