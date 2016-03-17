@@ -21,6 +21,9 @@ find_path(GOD_DATA_DIR templates/header.tpl
           HINTS ${_base} ${_base}/data/GaudiObjDesc
           NO_SYSTEM_ENVIRONMENT_PATH)
 
+get_filename_component(_dep_script_loc ${CMAKE_CURRENT_LIST_FILE} PATH)
+set(god_gen_deps_cmd ${PYTHON_EXECUTABLE} ${_dep_script_loc}/god_generate_deps.py)
+
 # GaudiObjDesc functions
 #-------------------------------------------------------------------------------
 # god_build_headers(pattern1 pattern2 ...
@@ -58,34 +61,40 @@ function(god_build_headers)
   else()
     set(dest ${CMAKE_CURRENT_BINARY_DIR})
   endif()
-  set(stamps)
+  set(generated_files)
   foreach(xmlfile ${xmlfiles})
     get_filename_component(fname ${xmlfile} NAME_WE)
-    add_custom_command(OUTPUT ${fname}.obj2doth
-                       COMMAND ${env_cmd}
-                         --xml ${env_xml}
-                       ${god_cmd} -g src -r ${GOD_DATA_DIR} -t ${GOD_DTD_FILE} -s ${dest} ${xmlfile}
-                       COMMAND touch ${fname}.obj2doth
+    set(_gen_deps COMMAND ${god_gen_deps_cmd} -s ${dest}
+          ${CMAKE_CURRENT_BINARY_DIR}/${fname}HeaderDependInfo.cmake ${xmlfile})
+    if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${fname}HeaderDependInfo.cmake)
+      execute_process(${_gen_deps})
+    endif()
+    include(${CMAKE_CURRENT_BINARY_DIR}/${fname}HeaderDependInfo.cmake)
+    add_custom_command(OUTPUT ${${fname}_generated_files}
+                       COMMAND ${env_cmd} --xml ${env_xml}
+                         ${god_cmd} -g src -r ${GOD_DATA_DIR} -t ${GOD_DTD_FILE} -s ${dest}
+                           ${xmlfile}
+                       ${_gen_deps}
                        DEPENDS ${xmlfile}
                        COMMENT "Generating headers from ${xmlfile}")
-    list(APPEND stamps ${fname}.obj2doth)
+    list(APPEND generated_files ${${fname}_generated_files})
   endforeach()
 
   gaudi_get_package_name(package)
-  add_custom_target(${package}Obj2doth ALL DEPENDS ${stamps})
+  add_custom_target(${package}GODHeaders ALL DEPENDS ${generated_files})
 
   # notify the framework that this directory produces headers via this target
   # - for the other directories
   set_property(DIRECTORY APPEND
-               PROPERTY GENERATED_HEADERS_TARGETS ${package}Obj2doth)
+               PROPERTY GENERATED_HEADERS_TARGETS ${package}GODHeaders)
   # - for the current one
-  set(required_local_genheader_targets ${package}Obj2doth PARENT_SCOPE)
+  set(required_local_genheader_targets ${package}GODHeaders PARENT_SCOPE)
 
   # Create a global target for all the obj2doth targets
-  if(TARGET AllObj2doth)
-    add_dependencies(AllObj2doth ${package}Obj2doth)
+  if(TARGET GODHeaders)
+    add_dependencies(GODHeaders ${package}GODHeaders)
   else()
-    add_custom_target(AllObj2doth DEPENDS ${package}Obj2doth)
+    add_custom_target(GODHeaders DEPENDS ${package}GODHeaders)
   endif()
 
   if(ARG_DESTINATION)
@@ -108,7 +117,7 @@ function(god_build_dictionary)
 
   gaudi_get_package_name(package)
 
-  if(NOT TARGET ${package}Obj2doth)
+  if(NOT TARGET ${package}GODHeaders)
     set(args ${ARG_UNPARSED_ARGUMENTS})
     if(ARG_HEADERS_DESTINATION)
       set(args ${args} DESTINATION ${ARG_HEADERS_DESTINATION})
@@ -140,8 +149,10 @@ function(god_build_dictionary)
   add_custom_command(OUTPUT ${header} ${selection}
                      COMMAND ${env_cmd}
                        --xml ${env_xml}
-                     ${god_cmd} ${cmd_args} -g dct -r ${GOD_DATA_DIR} -t ${GOD_DTD_FILE} -d ${dest} ${xmlfiles}
-                     DEPENDS ${xmlfiles} ${package}Obj2doth
+                     ${god_cmd} ${cmd_args} -g dct -r ${GOD_DATA_DIR} -t ${GOD_DTD_FILE}
+                       -d ${dest} -p ${package}
+                       ${xmlfiles}
+                     DEPENDS ${xmlfiles} ${package}GODHeaders
                      COMMENT "Generating dictionary from ${xmlfiles}")
 
   # copy the provided files

@@ -43,11 +43,6 @@ class godII(object):
         Note that for backward compatibility the list of arguments is the full
         content of sys.argv (which is not what optparse expects).
         """
-        # FIXME: backward compatibility, to be removed
-        if 'GAUDIOBJDESCROOT' not in os.environ:
-            print >>sys.stderr, "Environment variable GAUDIOBJDESCROOT not defined."
-            sys.exit(1)
-
         self._parser = None # to make pylint happy
         self._setupOptParser()
         # FIXME: backward compatibility, sys.args[0] should not be in args
@@ -60,7 +55,7 @@ class godII(object):
             logging.basicConfig(level=logging.DEBUG)
         else:
             logging.basicConfig(level=logging.WARNING)
-                
+
         #self._log = logging.getLogger(self._parser.get_prog_name())
         self._log = logging.getLogger('GODII')
 
@@ -70,6 +65,10 @@ class godII(object):
 
         if self.opts.namespace == '':
             self._parser.error("invalid value for option -n (--namespace)")
+
+        if not self.opts.root:
+            self._parser.error('root dir not defined and environment '
+                               'variable GAUDIOBJDESCROOT not set')
 
         # fix options
         if self.opts.classdb is None:
@@ -158,6 +157,8 @@ class godII(object):
                      help='path to the DTD file (gdd.dtd). '
                      '[default: use the value of GODDTDPATH if defined, or find it in the '
                      'same directory as the xml file]')
+        p.add_option('-p', '--package', action='store',
+                     help='override the package name defined in the XML files')
         p.add_option('--allocator', action='store', type='choice',
                      choices=('FROMXML', 'NO', 'BOOST', 'BOOST2', 'DEBUG', 'ORDERED', 'DEFAULT'),
                      help='chose the type of allocator to use. Allowed values are: '
@@ -182,12 +183,11 @@ class godII(object):
 
         p.add_option_group(deprecated)
 
-        root = os.environ['GAUDIOBJDESCROOT']
         p.set_defaults(info_file=[],
                        src_output=os.curdir,
                        dict_output=os.curdir,
                        classdb=None,
-                       root=root,
+                       root=os.environ.get('GAUDIOBJDESCROOT'),
                        namespace='LHCb',
                        allocator='FROMXML',
                        dtd=os.environ.get("GODDTDPATH")
@@ -238,6 +238,8 @@ class godII(object):
 
             gdd = x.parseSource(srcFile)
             godPackage = gdd['package'][0]
+            if self.opts.package:
+                godPackage['attrs']['name'] = self.opts.package
 
             # Set default namespace if not set in <package>
             try:
