@@ -1,6 +1,6 @@
 project REC
 
-use LBCOM	LBCOM_v18r0
+use LBCOM	LBCOM_v18r1
 
 build_strategy with_installarea
 setup_strategy root
