@@ -4,7 +4,7 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
-!========================= TrackTools v6r1 2016-03-17 =========================
+!========================= TrackTools v6r2 2016-03-17 =========================
 ! 2016-02-22 - Sascha Stahl
  - Run2GhostID: Use OTHitCreator instead OTRawBankDecoder to get the total 
    number of OT hits. This avoids a duplication of work.
