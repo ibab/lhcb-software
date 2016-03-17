@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecBase v4r24 2016-03-17 =========================
 ! 2016-03-10 - Chris Jones
  - Small cleanup to track creator base class.
 
