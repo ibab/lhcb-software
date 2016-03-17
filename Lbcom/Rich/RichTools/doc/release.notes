@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!========================= RichTools v2r53 2016-03-17 =========================
 ! 2016-03-10 - Chris Jones
  - Update ray tracing methods with a new option on how to treat the secondary
    mirrors, as either spherical or to assume they are completely flat.
