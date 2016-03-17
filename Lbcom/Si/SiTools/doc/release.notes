@@ -1,6 +1,8 @@
 Package         : Si/SiTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
+
+!========================= SiTools v1r11 2016-03-17 =========================
 ! 2016-02-09 - Gerhard Raven
  - modernize: prefer stack over heap, prefer std::unique_ptr over raw pointer
    and explicit delete, prefer override over virtual

@@ -1,7 +1,7 @@
 ################################################################################
 # Package: SiTools
 ################################################################################
-gaudi_subdir(SiTools v1r10)
+gaudi_subdir(SiTools v1r11)
 
 gaudi_depends_on_subdirs(Event/MCEvent
                          GaudiAlg
