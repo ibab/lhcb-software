@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-03-17  Jon Harrison
+ - Optimised cuts in StrippingCharm/StrippingD2XMuMuSS
+
 !========================== StrippingSelections v4r10 2016-03-02 ===============
 ! 2016-03-12  Cédric Potterat
  - changing LoKi::VertexFitter for MomentumCombiner in StrippingMicroDiJets.py

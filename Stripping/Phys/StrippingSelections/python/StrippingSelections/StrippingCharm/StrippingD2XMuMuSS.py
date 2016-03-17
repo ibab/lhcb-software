@@ -14,20 +14,20 @@ default_config =  {
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'Charm' ],
     'CONFIG':{
-                  'MuonP'         : 3000. ,    #MeV
-                  'MuonPT'        : 500.  ,    #MeV
-                  'MuonMINIPCHI2' : 6     ,    #adminensional
+                  'MuonP'         : 2000. ,    #MeV
+                  'MuonPT'        : 300.  ,    #MeV
+                  'MuonMINIPCHI2' : 5     ,    #adminensional
                   'MuonTRCHI2'    : 5     ,    #adminensional
                   
                   'PionP'         : 2000. ,    #MeV
                   'PionPT'        : 300.  ,    #MeV
-                  'PionMINIPCHI2' : 6     ,    #adminensional
+                  'PionMINIPCHI2' : 5     ,    #adminensional
                   'PionTRCHI2'    : 5     ,    #adminensional
                   
                   'KaonP'         : 2000. ,    #MeV
                   'KaonPT'        : 300.  ,    #MeV
                   'KaonPIDK'      : -1.   ,    #adimensional
-                  'KaonMINIPCHI2' : 6     ,    #adminensional
+                  'KaonMINIPCHI2' : 5     ,    #adminensional
                   'KaonTRCHI2'    : 5     ,    #adminensional
 
                   'ProtonP'         : 2000. ,    #MeV
@@ -35,9 +35,9 @@ default_config =  {
                   'ProtonMINIPCHI2' : 6     ,    #adminensional
                   'ProtonTRCHI2'    : 5     ,    #adminensional
 
-                  'EleP'         : 3000. ,    #MeV
-                  'ElePT'        : 500.  ,    #MeV
-                  'EleMINIPCHI2' : 6     ,    #adminensional
+                  'EleP'         : 2000. ,    #MeV
+                  'ElePT'        : 300.  ,    #MeV
+                  'EleMINIPCHI2' : 5     ,    #adminensional
                   'EleTRCHI2'    : 5     ,    #adminensional
                   
 
