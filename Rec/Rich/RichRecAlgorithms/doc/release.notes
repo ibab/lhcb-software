@@ -4,6 +4,7 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+!========================= RichRecAlgorithms v2r22 2016-03-17 ========================
 ! 2016-02-16 - Chris Jones
  - Small C++11 clean up.
 
