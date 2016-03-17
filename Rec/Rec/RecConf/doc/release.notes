@@ -4,6 +4,7 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+!========================= RecConf v2r24 2016-03-17 =========================
 ! 2016-03-09 - Agnieszka Dziurda
  - add double threshold for radial cut in PV reconstruction
 
