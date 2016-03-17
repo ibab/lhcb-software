@@ -4,6 +4,7 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+!========================= PatPV v3r31 2016-03-17 =========================
 ! 2016-03-08 - Agnieszka Dziurda 
  - add two new options to PVOfllineTool which allow to set double radial treshold.
    -- BeamSpotRHighMultiplicityCut - relaxed cut for PV with many associated tracks
