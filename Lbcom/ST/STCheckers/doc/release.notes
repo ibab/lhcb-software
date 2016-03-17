@@ -2,6 +2,8 @@
 ! Package         : ST/STCheckers
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
+
+!========================= STCheckers v4r6 2016-03-17 =========================
 ! 2016-02-10 - Gerhard Raven
  - C++11 modernization:
     o prefer STL algorithms
