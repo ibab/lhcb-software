@@ -118,8 +118,8 @@ EvtSpinDensity EvtDiracParticle::rotateToHelicityBasis() const{
     spplus.set(1.0,0.0,0.0,0.0);
     spminus.set(0.0,1.0,0.0,0.0);
   } else {
-    spplus.set(0.0,0.0,0.0,1.0);
-    spminus.set(0.0,0.0,1.0,0.0);
+    spplus.set(0.0,0.0,1.0,0.0);
+    spminus.set(0.0,0.0,0.0,1.0);
   }
 
       
@@ -127,13 +127,8 @@ EvtSpinDensity EvtDiracParticle::rotateToHelicityBasis() const{
   R.setDim(2);
       
   for (int i=0; i<2; i++) {
-    if (EvtPDL::getStdHep(getId())>0){  
-      R.set(0,i,(spplus*_spinorRest[i])/sqmt2);
-      R.set(1,i,(spminus*_spinorRest[i])/sqmt2);
-    } else {
-      R.set(0,i,(_spinorRest[i]*spplus)/sqmt2);
-      R.set(1,i,(_spinorRest[i]*spminus)/sqmt2);
-    } 
+    R.set(0,i,(spplus*_spinorRest[i])/sqmt2);
+    R.set(1,i,(spminus*_spinorRest[i])/sqmt2);
   }
 
   return R;
@@ -155,8 +150,8 @@ EvtSpinDensity EvtDiracParticle::rotateToHelicityBasis(double alpha,
     spplus.set(1.0,0.0,0.0,0.0);
     spminus.set(0.0,1.0,0.0,0.0);
   } else {
-    spplus.set(0.0,0.0,0.0,1.0);
-    spminus.set(0.0,0.0,1.0,0.0);
+    spplus.set(0.0,0.0,1.0,0.0);
+    spminus.set(0.0,0.0,0.0,1.0);
   }
       
   spplus.applyRotateEuler(alpha,beta,gamma);
@@ -166,13 +161,8 @@ EvtSpinDensity EvtDiracParticle::rotateToHelicityBasis(double alpha,
   R.setDim(2);
       
   for (int i=0; i<2; i++) {
-    if (EvtPDL::getStdHep(getId())>0){  
-      R.set(0,i,(spplus*_spinorRest[i])/sqmt2);
-      R.set(1,i,(spminus*_spinorRest[i])/sqmt2);
-    } else {
-      R.set(0,i,(_spinorRest[i]*spplus)/sqmt2);
-      R.set(1,i,(_spinorRest[i]*spminus)/sqmt2);
-    } 
+    R.set(0,i,(spplus*_spinorRest[i])/sqmt2);
+    R.set(1,i,(spminus*_spinorRest[i])/sqmt2);
   }
 
   return R;

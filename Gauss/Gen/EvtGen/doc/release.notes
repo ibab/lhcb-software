@@ -4,6 +4,12 @@
 ! Purpose     :
 !-----------------------------------------------------------------------------
 
+! 2016-03-17 - John Back
+  - Fixed incorrect spinor algebra used in S1 -> 1/2 S2, 1/2 -> S3 S4 decays
+    in EvtDiracParticle::rotateToHelicityBasis() functions, courtesy of 
+    Luis Miguel Garcia Martin and the IFIC Valencia group. For details, see
+    https://its.cern.ch/jira/browse/LHCBGAUSS-688.
+
 !========================== EvtGen v14r5 2016-02-26 ==========================
 
 ! 2016-02-18 - Tom Blake
