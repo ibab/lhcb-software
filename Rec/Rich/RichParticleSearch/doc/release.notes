@@ -4,6 +4,7 @@
 ! Purpose     : Find exotic particles with the RICHes. Get Nobel price.
 !-----------------------------------------------------------------------------
 
+!========================= RichParticleSearch v1r13 2016-03-17 ========================
 ! 2016-02-02 - Chris Jones
  - Adapt to removal of old backwards compatibility typedefs.
 
