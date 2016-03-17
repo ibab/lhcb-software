@@ -3,11 +3,14 @@
 ! package manager: Maurizio Martinelli
 !------------------------------------------------------------------------------
 
-! 2016-03-03
+! 2016-03-03 - Giulio Dujany
+ - Added possibility to have regex for selecting alignables in trendPlots.py
+
+! 2016-03-03 - Giulio Dujany
  - Updates thresholds for Velo update
  - Other minor changes in plotting scripts
 
-! 2016-03-03
+! 2016-03-03 - Zhirui Xu
  - new TT mapping lookup table (histogram bin id <-> TT sector name) due to the changes in TTTrackMonitor
  - small change in MultiPlot.py to allow vertical line range goes below 0
 

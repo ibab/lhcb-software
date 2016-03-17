@@ -11,7 +11,7 @@ std_references = os.path.expandvars('$ALIGNMENTMONITORINGROOT/files/ConstantsRef
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description ="Macro to make trend plots alignments")
-    parser.add_argument('-a','--alignables', help='eg. VeloLeft.Tx Module01.Rz, for having all 6 dof for an alignable: VeloLeft.*', default= ['VeloLeft.Tx', 'VeloLeft.Ty'],nargs='+')
+    parser.add_argument('-a','--alignables', help='eg. VeloLeft.Tx Module01.Rz, for having all 6 dof for an alignable: VeloLeft.* Also regex like Module[0-9]{2}.Tx can be used for the first part (not for the dof) and will be matched to available alignables for the activity', default= ['VeloLeft.Tx', 'VeloLeft.Ty'],nargs='+')
     parser.add_argument('-r','--runs', help='run numbers, default is all the availables', nargs=2, type=int,default=[0, 1e20])
     parser.add_argument('--activity', help='choose between Velo, Tracker, Muon; default is Velo', choices = ['Velo', 'Tracker', 'Muon'] ,default= 'Velo')
     parser.add_argument('-o','--outName',help='output file name without extension, make both pdf and directory', default='trendPlots')
@@ -309,16 +309,28 @@ if __name__ == '__main__':
 
     allConstants = getAllConstants(runs, args.activity, args.AligWork_dir)
 
+    # Accept regex in alignables
+    allAlignables = allConstants[0][1].keys()
+    alignables = []
+    for alignableDof in args.alignables:
+        alignable_regex, dof = '.'.join(alignableDof.split('.')[:-1]), alignableDof.split('.')[-1]
+        if alignable_regex[-1] == '\\':
+            alignable_regex = alignable_regex[:-1]
+        for alignable in allAlignables:
+            if re.match('^'+alignable_regex+'$', alignable):
+                alignables.append('.'.join([alignable, dof]))
+
+    
     c = r.TCanvas('c', 'c', *args.canvasSize)
     c.Print(outFile_name+'[')
 
     if args.samePlot:
-        mp=drawPlot(allConstants,runsUpdated, args.alignables, args.diffUpdate, args.noUpdate, args.labelAU, args.freeY, args.projection, references = args.references, drawLegend41=args.drawLegend)
+        mp=drawPlot(allConstants,runsUpdated, alignables, args.diffUpdate, args.noUpdate, args.labelAU, args.freeY, args.projection, references = args.references, drawLegend41=args.drawLegend)
         c.Print(outFile_name)
-        c.Print(os.path.join(outDir,'{0}_{1}.pdf'.format(*args.alignables[0].split('.'))))
+        c.Print(os.path.join(outDir,'{0}_{1}.pdf'.format(*alignables[0].split('.'))))
 
     else:
-        for align in args.alignables:
+        for align in alignables:
             alignable, dof = align.split('.')
             dofs = ['Tx', 'Ty', 'Tz', 'Rx', 'Ry', 'Rz'] if dof == '*' else [dof]
 
