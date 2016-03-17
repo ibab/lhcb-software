@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= RichRecQC v2r74 2016-03-17 =========================
 ! 2016-02-24 - Chris Jones
  - Add configuration for new RichPhotonRayTraceTest monitor.
 
