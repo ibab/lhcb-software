@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VeloAlgorithms
 ################################################################################
-gaudi_subdir(VeloAlgorithms v5r8)
+gaudi_subdir(VeloAlgorithms v5r9)
 
 gaudi_depends_on_subdirs(DAQ/Tell1Kernel
                          Det/VeloDet
