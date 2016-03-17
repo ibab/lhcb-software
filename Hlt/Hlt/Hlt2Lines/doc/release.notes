@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-03-17 - Francesco Dettori
+ - Bug fix to RareStrange lines to include also same sign muons for LFV  K-> pi mu mu 
+
 ! 2016-03-16 - Jon Harrison
  - Line name changes in Phi lines and addition of header information in Lines.py
 

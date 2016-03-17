@@ -74,7 +74,38 @@ class KPiMuMuCombiner(Hlt2Combiner):
                               Preambulo = [])
         
     
+class KPiMuMuSSCombiner(Hlt2Combiner):
+    def __init__(self,name):
+        
+        daughters_cuts = { "mu+" : "(TRCHI2DOF< %(TrChi2)s) & (TRGHOSTPROB< %(TrGP)s) &" + \
+                                   "(MIPCHI2DV(PRIMARY)>%(muonMinIpChi2)s)",
+                           "pi+" : "(TRCHI2DOF< %(TrChi2)s) & (TRGHOSTPROB< %(TrGP)s) & "+\
+                                   "(MIPCHI2DV(PRIMARY)>%(piMinIpChi2)s)",
+                           }
+        
+        combination_cuts = "(ADAMASS('K+') < %(KMassWin)s ) & " + \
+                           "(AMAXDOCA('')      < %(KMaxDOCA)s )"
+        
+
+        mother_cuts = "(VFASPF(VCHI2/VDOF)< %(KVtxChi2)s) & " + \
+                      "(PT                > %(KMinPt)s ) & " + \
+                      "(ADMASS('K+')  < %(KMassWin)s ) & "\
+                      "(BPVDIRA           > %(KMinDIRA)s) & "\
+                      "(BPVIPCHI2()       < %(KMaxIpChi2)s) & "\
+                      "(BPVLTIME()        > %(KMinTauPs)s )"
+
+        inputs = [Hlt2Muons, Hlt2Pions]
+        decay = "[K+ -> pi- mu+ mu+]cc"
+        Hlt2Combiner.__init__(self, name, decay ,
+                              inputs,
+                              dependencies = [ PV3D('Hlt2') ],
+                              DaughtersCuts = daughters_cuts,
+                              CombinationCut = combination_cuts,
+                              MotherCut = mother_cuts,
+                              Preambulo = [])
+        
+    
 
 
-#SigmaPMuMuComb = SigmaPMuMuCombiner("SigmaPMuMuComb")
+
 

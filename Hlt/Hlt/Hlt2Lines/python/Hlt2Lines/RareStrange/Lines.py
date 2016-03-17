@@ -37,6 +37,16 @@ class RareStrangeLines(Hlt2LinesConfigurableUser):
                               'KMinDIRA' : 0.9 ,   # adimensional
                               'KMaxIpChi2' : 36 ,  # adimensional
                               'KMinTauPs'  : 10 * picosecond
+                               },
+                 'KPiMuMuSS' : { 'muonMinIpChi2' :  25. ,
+                                 'piMinIpChi2' :  25. ,
+                                 'KMassWin' : 500 * MeV ,
+                                 'KMaxDOCA' : 2. * mm ,
+                                 'KVtxChi2' : 25. ,  # adimensional
+                                 'KMinPt' : 500 * MeV ,
+                                 'KMinDIRA' : 0.9 ,   # adimensional
+                                 'KMaxIpChi2' : 36 ,  # adimensional
+                                 'KMinTauPs'  : 10 * picosecond
                               }
 
                  }
@@ -49,9 +59,10 @@ class RareStrangeLines(Hlt2LinesConfigurableUser):
             else:
                 return self._stages
 
-        from Stages import SigmaPMuMuCombiner, KPiMuMuCombiner
+        from Stages import SigmaPMuMuCombiner, KPiMuMuCombiner, KPiMuMuSSCombiner
         self._stages = { 'SigmaPMuMu'   : [ SigmaPMuMuCombiner('SigmaPMuMu') ],
-                         'KPiMuMu'      : [ KPiMuMuCombiner('KPiMuMu')]
+                         'KPiMuMu'      : [ KPiMuMuCombiner('KPiMuMu')],
+                         'KPiMuMuSS'    : [ KPiMuMuSSCombiner('KPiMuMuSS')]
                   }
 
         if nickname:
