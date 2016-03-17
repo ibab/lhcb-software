@@ -3,6 +3,8 @@
 ! Responsible : Yasmine Amhis
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
+
+!========================= PrAlgorithms v1r18 2016-03-17 =========================
 ! 2016-03-11 - Renato Quagliani
  - Timing improvements for the Hybrid Seeding ( ~30% average, cure the max timing of a factor 3 from clone removal )
  - Implementation of Manuel Class SIMDLine fitter and BloomFilter ( not optimized yet )
