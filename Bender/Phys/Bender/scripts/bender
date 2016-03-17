@@ -390,8 +390,6 @@ for cmd in arguments.Commands :
     exec ( command ) 
     logger.verbose ("After exec...") 
 
-del cmd
-
 # =============================================================================
 ## exit if batch 
 if  arguments.batch :
