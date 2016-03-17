@@ -5,6 +5,279 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v19r1>2016-03-18 RecSys v19r1</A></H1><PRE>
+This version uses Gaudi v27r1, LHCb v40r1 and Lbcom v18r1 (and ROOT 6.06.02)
+
+- Packages modified: Calo/CaloPIDs v5r22, Calo/CaloReco v5r28, 
+    Calo/CaloTools v6r13, Muon/MuonID v10r1, Muon/MuonTrackMonitor v2r10,
+    Pr/PrAlgorithms v1r18, Pr/PrPixel v1r14, Rec/ChargedProtoANNPID v2r14,
+    Rec/GlobalReco v6r55, Rec/LumiAlgs v9r12, Rec/RecConf v2r24,
+    Rich/RichGlobalPID v3r26, Rich/RichIFBAnalysis v1r5,
+    Rich/RichParticleSearch v1r13, Rich/RichRecAlgorithms v2r22,
+    Rich/RichRecBase v4r24, Rich/RichRecMCTools v2r34, Rich/RichRecMonitors v2r38,
+    Rich/RichRecPhotonTools v1r21, Rich/RichRecQC v2r74, Rich/RichRecSys v5r10,
+    Rich/RichRecTools v4r30, Rich/RichRecTrackTools v1r42, Tf/FastVelo v1r25,
+    Tf/PatAlgorithms v5r0, Tf/PatVelo v3r34, Tf/PatVeloTT v4r9, Tf/TfKernel v2r35,
+    Tf/TfTools v1r20p2, Tf/TrackSys v9r13, Tr/TrackCheckers v4r23,
+    Tr/TrackExtrapolators v2r41, Tr/TrackFitter v5r8, Tr/TrackInterfaces v6r0,
+    Tr/TrackMonitors v2r13, Tr/TrackTools v6r1, Tr/TrackUtils v1r64
+
+- In Calo/CaloPIDs v5r22
+  . CaloPIDs configurable :  add slots to configure the Accepted Track::Types 
+  . src : add counter per track type in match algs
+
+- In Calo/CaloPIDs v5r22, Calo/CaloReco v5r28, Calo/CaloTools v6r13
+  . Fix clang warning in friend declarations of ToolFactory (class->struct)
+
+- In Calo/CaloReco v5r28
+  . CaloProcessor configurables : add slots to configure the Accepted Track::Types
+                                  at CaloPID level
+  . CaloMergedPi0 : replace setOuputLevel with setProperty("OutputLevel", ...)
+                    to please Gaudi v27r1
+  . Configuration.py : - fix :  propagate cluster mask to SplitClusters
+                       - Fix EnergyTags & PositionTags property setting
+                       - revert change done in v5r27 : the exception handling to
+                         check TES was intentional, to avoid triggering the
+                         splitcluster onDemand with another instance of the same
+                         algorithm !
+
+- In Muon/MuonID v10r1
+  . Add the default constructor for CommonMuonHit so a dictionary for it
+    can be generated and it can be used in GaudiPython.
+  . DistMuIDTool: replace (internal) std::vector<int> with std::bitset<4>
+
+- In Muon/MuonTrackMonitor v2r10, Rec/RecConf v2r24, Tf/TrackSys v9r13
+  . Extend Run 2 support to all Run2 data types (2015,2016,2017,2018)
+    Currently all years treated like 2015.
+
+- In Pr/PrAlgorithms v1r18
+  . Timing improvements for the Hybrid Seeding (~30% average, cure the max timing
+    of a factor 3 from clone removal)
+  . Implementation of SIMDLine fitter and BloomFilter ( not optimized yet )
+  . Clean up HybridSeeding code to avoid 6 nested loops to find the best 1-hit
+    per layer combination starting from one hough cluster
+  . Inline the comparators used to do the sorting
+  . Follow const-ification of interface
+
+- In Pr/PrPixel v1r14
+  . Follow change in DeVP (r202920).
+
+- In Rec/ChargedProtoANNPID v2r14
+  . Add an FPE Guard to compiler TMVA response call, to protect against 
+    exceptions from things like exp(large number) within the TMVA generated code. 
+  . Add 'official' V1 tuning for Run 2 data. "MC15TuneV1". This is now the
+    default for 2015 data onwards (which includes the Upgrade...).
+  . Add a new Run 1 tuning based on MC12 samples. Called "MC12TuneV4" this
+    uses the same input variables as for the Run 2 tuning, so with Velo dE/dx
+    and track likelihood removed. It also provides a more balanced set of tunes
+    attempting to take the best of the V2 and V3 MC12 tunes.
+    Default Run 1 tune is, for the moment, still "MC12TuneV2"
+  . Add RICH Deuteron DLL and threshold variables.
+  . Optimise a bit the MC12TuneV2 networks, as a test to see what can be gained.
+    o Remove redundant input vector size test, that in terms of the use of the
+      TMVA C++ classes in this library can never fail.
+    o Remove an unused loop variable.
+    Saves in total about 16% (according to valgrind)
+  . Add some nexcept qualifiers.
+  . Update InTrackExInfo and InRecSummary to pass correct enum rather than int.
+  . Replace raw pointers with std::unique_ptr or std::shared_ptr as required.
+  . Protect against missing RecSummary data objects.
+  . Make TES location for the RecSummary a configurable property.
+
+- In Rec/GlobalReco v6r55
+  . Add RICH Deuteron DLL and threshold variables to expert tuple monitor.
+
+- In Rec/LumiAlgs v9r12
+  . Update test references to follow Gaudi v27r1 changes in output
+
+- In Rec/RecConf v2r24
+  . Add double threshold for radial cut in PV reconstruction
+  . RecSysConf: Remove Velo tracks in FittedHLT1VeloTracks container that don't
+    belong to a PV. 
+    This is done for all Run2, also for 2015 (which was originally not the case).
+
+- In Rich/RichGlobalPID v3r26
+  . Some minor optimisations of the likelihood minimisation
+    o Implicitly start the log(exp(x)-1) interpolation table from x=0 instead of
+      x=<small value>. Allows for some instructions to be removed when computing
+      the table index from x.
+    o Remove some unused data members from the table data object.
+    o Remove some local temporaries from LikelihoodTool::deltaLogLikelihood.
+  . Add some direct member initialisation.
+
+- In Rich/RichIFBAnalysis v1r5
+  . Modernise a bit, and make blind to the underlying type use for clusters.
+
+- In Rich/RichIFBAnalysis v1r5, Rich/RichRecBase v4r24
+  . Adapt to change in clustering interface, which now returns an 
+    std::unique_ptr managing the cluster object, to enforce memory management.
+
+- In Rich/RichRecBase v4r24, Rich/RichParticleSearch v1r13,
+     Rich/RichRecMCTools v2r34, Rich/RichRecTrackTools v1r42
+  . Remove (and adapt to removal of) old backwards compatibility typedefs.
+
+- In Rich/RichRecBase v4r24
+  . Small cleanup to track creator base class.
+  . Adapt to change in pixel class due to using smart points for internal
+    memory management.
+  . Add a new definition to RichDetParams.h
+  . Prefer aliases to typedefs.
+  . Properly enforce support for arithemic types only in RichPhotonSpectra
+    using type traits.
+
+- In Rich/RichRecMonitors v2r38, Rich/RichRecTools v4r30, 
+     Rich/RichRecTrackTools v1r42
+  . Adapt to changes in ray tracing enums.
+
+- In Rich/RichRecMonitors v2r38
+  . Add a new monitor, RichTrackRayTraceTest that is designed to compare
+    directly reconstructed (Quartic) to ray trace information, to look for
+    biases etc.
+  . Modernise a few more monitors.
+  . Add some additional histograms to RichPhotonRecoCompare to investigate
+    'bad' photons.
+
+- In Rich/RichRecPhotonTools v1r21, Rich/RichRecTrackTools v1r42
+  . Adapt to changes in DeRichBeamPipe.
+  . Adapt to the move of some basic methods to a utility header file 
+    in Rich/RichKernel.
+
+- In Rich/RichRecPhotonTools v1r21
+  . Update Quartic reconstruction tool to perform intersection with a sphere
+    instead of a plane for the secondary mirrors when appropriate.
+  . Add a property to RichPhotonRecoUsingCKEstiFromRadius to allow the
+    inter-ring interpolation to be turned on/off via options.
+  . Improve the reconstruction in RichPhotonRecoUsingCKEstiFromRadius to 
+    interpolate both in Cherenkov phi, and (new) radius.
+  . Update the adaptive photon reconstruction to more efficiently disable when 
+    it is not active for a given radiator, by avoiding virtual function calls.
+
+- In Rich/RichRecQC v2r74
+  . Add configuration for new RichPhotonRayTraceTest monitor.
+  . Fix RichPIDQC to remove hard coded assumptions on the number of PID types
+    (was 6). This broke when deuteron was added as an option.
+  . Increase precision to 3 d.p. in RichPIDQC summary table printout.
+
+- In Rich/RichRecSys v5r10
+  . Propagate properly custom options for the ray tracing, mass hypothesis and
+    expected track signal tools.
+  . Enable by default Deuteron.
+  . Update RichPID version number from 1 to 2, to reflect the fact the data
+    objects have changed in structure (an additional float in the DLL vector
+    for the Deuteron hypothesis).
+
+- In Rich/RichRecTools v4r30
+  . Update TabulatedSignalDetectionEff to use the MassHypothesisRingCreator
+    mass hypothesis rings, instead of performing its own ray tracing, to
+    save CPU due to ring reuse.
+  . Use the emitted photon spectra, not the detected one, when computing the
+    average CK theta value for a given segment/hypothesis, when creating the
+    CK rings in MassHypothesisRingCreator.
+
+- In Rich/RichRecTrackTools v1r42
+  . Speed up the ExpectedTrackSignal::hasRichInfo by limiting it on only
+    checking the lightest hypothesis (largest CK ring).
+  . Adapt to removal of typedefs in RichDet.
+  . Add a flag to RichDetailedTrSegMakerFromRecoTracks to turn on/off the
+    State sanity checks. Default now off to save CPU.
+  . (Experimental) use of move semantics when constructing 
+    LHCb::RichTrackSegment in RichDetailedTrSegMakerFromRecoTracks.
+    (There appears to be a modest improvement from using this on the
+    Rich::RadIntersection::Vector vector.)
+  . Set the Deuteron threshold information in ExpectedTrackSignal.
+
+- In Tf/FastVelo v1r25
+  . Adapt FastVeloDecoding and FastSTDecoding to search the raw events in the
+    correct locations.
+
+- In Tf/PatAlgorithms v5r0
+  . Implemented 2 neural nets. One that replaces the quality parameter when
+    switched on, the other before the fit of XCandidates that (if switched on) is
+    only used in the SecondLoop
+  . Clustering: MaxXCandidateSize now depends on the number of hit XPlanes
+  . removed chi2 after XFit, since chi2 in the XFit was sufficient
+  . added new chi2 for stereo fit
+  . updated config file
+  . Put in protection against empty layers in PatAddTTCoord (again...).
+  . PatForwardTool: Reimplement option to use momentum estimate to guide the
+    Forward tracking. Can be activated with option UseProperMomentumEstimate.
+  . Adapt PatAddTTCoord and PatLongLivedTracking for the changes in
+    TTStationHitManager
+  . PatForward: Use OTHitCreator to get the number of OT hits. This will trigger
+    the creation of all OT hits, if not done before. Since we do not cut tight on
+    the number of hits the hits are created anyways later for almost all events
+    and one avoids double work.
+  . Fix three bugs in PatLongLivedTracking, change chi2-cut in x-layers fit,
+    implement some speedups
+  . Add more debugging tools to PatLongLivedTracking
+
+- In Tf/PatVelo v3r34
+  . Changes to PatVeloGeneralTracking, PatVeloRHitManager and
+    PatVeloPhiHitManager for VELO CCE scan running
+  . Addition of FindKilledSensors
+
+- In Tf/PatVeloTT v4r9
+  . Fix a wrong 'weight' in PatVeloTTHybridTool.
+  . Speed improvements of PatVeloTTHybridTool (and some efficiency improvements),
+    cleanup of PatVeloTTHybrid, fixing a memory leak in PatVeloTT.
+  . Only rebuild Bdl tables on magnet polarity or current change.
+
+- In Tf/TfKernel v2r35
+  . Separate treatment of sorted hits in layers and hits in regions, as only the
+    former is used for the pattern recognition (and doing both is time consuming)
+  . Adapt IndexedHitContainer to deal with stations and layers only.
+  . Make sure ranges refer to the right container...
+
+- In Tf/TfTools v1r20p2
+  . Add a missing override qualifier
+
+- In Tf/TrackSys v9r13
+  . Remove calculation of TrackLikelihood from 2016 on per default
+
+- In Tr/TrackExtrapolators v2r41
+  . Simplify TrackRungeKuttaExtrapolator
+  . Vectorise TrackRungeKuttaExtrapolator using the Eigen Math library.
+    Leads to a 25% improvement in extrapolation speed.
+
+- In Tr/TrackFitter v5r8
+  . TrackMasterFitter: Implement property MaxUpdateTransports to restrict maximum
+    number of transport updates. Default is the same as number of iterations
+    to not change fitter behaviour by default.
+
+- In Tr/TrackInterfaces v6r0
+  . Major change: const-ify interfaces, use extend_interfaces
+
+- In Tf/FastVelo v1r25, Tf/PatAlgorithms v5r0,,Tf/PatVelo v3r34,
+     Tf/PatVeloTT v4r9, Tr/TrackCheckers v4r23, Tr/TrackFitter v5r8,
+     Tr/TrackTools v6r1
+  . Follow const-ification of Tr/TrackInterfaces
+
+- In Tr/TrackMonitors v2r13
+  . Code style fix for STEfficiency.cpp (coverity fix)
+  . Fixed a bug in STEfficiency.cpp for TT sectors (Efficiency was filled several
+    times for some sectors)
+  . Replaced TH2DSummaryHist by TH1DSummaryHist in STEfficiency algorithm. 
+    Removed "DrawProfile" option for this algorithm.
+  . Fixed a bug with missing TT sectors number 26 in 2D histograms.
+    (TTTrackMonitor, STEfficiency, STTrackTuple)
+
+- In Tr/TrackTools v6r1
+  . Run2GhostID: Use OTHitCreator instead OTRawBankDecoder to get the total 
+    number of OT hits. This avoids a duplication of work.
+  . Adapt to modernization of DeFTFibreMat
+
+- In Tr/TrackUtils v1r64
+  . TrackCloneCleaner, TrackBuildCloneTable, TrackV0Finder: Add possibility
+    to run with several input locations.
+  . Protect against non-existing input location in TrackContainerCleaner,
+    add two counters.
+
+- In Pr/PrAlgorithms v1r18, Rich/RichRecAlgorithms v2r22, Rich/RichRecQC v2r74,
+     Rich/RichRecTrackTools v1r42, Tf/PatVelo v3r34, Tf/PatVeloTT v4r9,
+     Tr/TrackCheckers v4r23, Tr/TrackExtrapolators v2r41, Tr/TrackFitter v5r8,
+     Tr/TrackTools v6r1
+  . C++11 modernizations and cleanups
+
 </PRE><H1><A NAME=v19r0>2016-01-29 RecSys v19r0</A></H1><PRE>
 This version uses Gaudi v27r0, LHCb v40r0 and Lbcom v18r0 (and ROOT 6.06.00)
 
