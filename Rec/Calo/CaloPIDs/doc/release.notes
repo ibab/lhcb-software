@@ -4,6 +4,7 @@
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+!========================= CaloPIDs v5r22 2016-03-17 =========================
 ! 2016-03-05 - Olivier Deschamps
   - CaloPIDs configurable :  add slots to configure the Accepted Track::Types 
   - src : add counter per track type in match algs
