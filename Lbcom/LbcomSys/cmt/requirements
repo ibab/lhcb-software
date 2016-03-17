@@ -20,7 +20,7 @@ use DAQMonitors       v1r9p1   DAQ       # Olivier Deschamps
 use HCMonitors        v1r2     HC        # Heinrich Schindler
 
 # L0 trigger simulation
-use L0MuonMonitor     v2r4p1   L0        # Julien Cogan
+use L0MuonMonitor     v2r5     L0        # Julien Cogan
 use PuVeto            v7r10p1  L0        # 
 
 # Muon
@@ -33,29 +33,29 @@ use OTMonitor         v3r10    OT        # Francesco Dettori
 # Rich
 use RichAlgorithms    v1r9     Rich      # Chris Jones
 use RichMCMonitors    v1r10p1  Rich      # Chris Jones
-use RichMCTools       v3r19    Rich      # Chris Jones
-use RichTools         v2r52    Rich      # Chris Jones
+use RichMCTools       v3r20    Rich      # Chris Jones
+use RichTools         v2r53    Rich      # Chris Jones
 
 # Silicon detectors
-use SiTools           v1r10    Si        # Matt Needham
+use SiTools           v1r11    Si        # Matt Needham
 
 # Silicon Tracker
 use STAlgorithms      v4r8     ST        # Jeroen van Tilburg
 use STAssociators     v1r8p1   ST        # Jeroen van Tilburg
-use STCheckers        v4r5     ST        # Jeroen van Tilburg
-use STMonitors        v4r5     ST        # Mark Tobin
-use STTools           v4r19    ST        # Jeroen van Tilburg
+use STCheckers        v4r6     ST        # Jeroen van Tilburg
+use STMonitors        v4r6     ST        # Mark Tobin
+use STTools           v4r20    ST        # Jeroen van Tilburg
 
 # Velo
-use VeloAlgorithms    v5r8     Velo      # Tomasz Szumlak
+use VeloAlgorithms    v5r9     Velo      # Tomasz Szumlak
 use VeloAssociators   v2r5p1   Velo      # Tomasz Szumlak
-use VeloSimulation    v3r16    Velo      # Tomasz Szumlak
-use VeloTools         v4r2p1   Velo      # Tomasz Szumlak
+use VeloSimulation    v3r17    Velo      # Tomasz Szumlak
+use VeloTools         v4r3     Velo      # Tomasz Szumlak
 
 # Velo Pixel
-use VPAlgorithms      v4r5     VP        # Heinrich Schindler
+use VPAlgorithms      v4r6     VP        # Heinrich Schindler
 use VPAssociators     v2r7     VP        # Heinrich Schindler
-use VPCheckers        v1r1     VP        # Mark Williams
+use VPCheckers        v1r2     VP        # Mark Williams
 use VPTools           v2r6     VP        # Heinrich Schindler
 
 # Declare this as a container package

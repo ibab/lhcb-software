@@ -6,6 +6,52 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v18r1>2016-03-18 LbcomSys v18r1</A></H1><PRE>
+This version uses Gaudi v27r1 and LHCb v40r1 (and ROOT 6.06.02)
+
+- Packages modified: L0/L0MuonMonitor v2r5, Rich/RichMCTools v3r20,
+    Rich/RichTools v2r53, Si/SiTools v1r11, ST/STCheckers v4r6,
+    ST/STMonitors v4r6, ST/STTools v4r20, Velo/VeloAlgorithms v5r9,
+    Velo/VeloSimulation v3r17, Velo/VeloTools v4r3, VP/VPAlgorithms v4r6,
+    VP/VPCheckers v1r2
+
+- In L0/L0MuonMonitor v2r5, Rich/RichMCTools v3r20, Si/SiTools v1r11,
+     ST/STCheckers v4r6, ST/STMonitors v4r6, Velo/VeloAlgorithms v5r9,
+     Velo/VeloSimulation v3r17, VP/VPAlgorithms v4r6
+  . Code modernizations. See package release notes for details
+
+- In Rich/RichTools v2r53
+  . Update ray tracing methods with a new option on how to treat the secondary
+    mirrors, as either spherical or to assume they are completely flat.
+    Default is to assume flat for RICH1, but spherical in RICH2
+  . Adapt to changes in DeRichBeamPipe.
+  . Update ray tacing tools to adapt to the move of some basic methods
+    to a utility header file in Rich/RichKernel.
+  . Set average pd position return by pdPosition to (0,0,0) when returned
+    status code is failure.
+  . Add new ray tracing methods to perform intersection with a sphere.
+  . Return 'correct' (i.e. large) values from thresholdMomentum with the 
+    Rich::ParticleProperties tool for BelowThreshold types.
+  . Adapt pixel clustering tool to changes in memory management in the pixel
+    classes.
+  . Return objects std::unique_ptr in HPDPixelClusteringTool to enforce
+    smart pointer memory management in client code.
+  . Prefer unique_ptr to raw pointer in HPDPixelClusterSuppressionTool
+  . Add support for Deuteron.
+
+- In ST/STTools v4r20
+  . Default constructors of some tools were protected, so required to have 
+    ToolFactory as friend class. Was giving clang warnings now that (Gaudi v27r0)
+    it is a struct. Made constructors public and removed friend declaration
+
+- In Velo/VeloTools v4r3
+  . Remove unnecessary friend ToolFactory declarations
+
+- In VP/VPCheckers v1r2
+  . Follow change in DeVP (r202920).
+  . Add VPOccupancyChecker and VPTrackEff algorithms
+
+
 </PRE><H1><A NAME=v18r0>2016-01-29 LbcomSys v18r0</A></H1><PRE>
 This version uses Gaudi v27r0 and LHCb v40r0 (and ROOT 6.06.00)
 
