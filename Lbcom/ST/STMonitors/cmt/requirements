@@ -1,12 +1,10 @@
 #=========================================================================
 # Created    : 2009-02-24
 # Maintainer : Mark Tobin
-#            : Mathias Knecht
-#            : Nicola Chiapolini
 #=========================================================================
 
 package           STMonitors
-version           v4r5
+version           v4r6
 
 #=========================================================================
 # Structure, i.e. directories to process. 

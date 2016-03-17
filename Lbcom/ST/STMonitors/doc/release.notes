@@ -3,6 +3,8 @@
 ! Responsible : Mark Tobin
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
+
+!========================= STMonitors v4r6 2016-03-17 =========================
 ! 2016-02-09 - Gerhard Raven
  - modernize STDQSummaryAlg:
     o prefer direct member initialization
