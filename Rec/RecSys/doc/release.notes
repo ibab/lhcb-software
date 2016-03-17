@@ -10,17 +10,19 @@ This version uses Gaudi v27r1, LHCb v40r1 and Lbcom v18r1 (and ROOT 6.06.02)
 
 - Packages modified: Calo/CaloPIDs v5r22, Calo/CaloReco v5r28, 
     Calo/CaloTools v6r13, Muon/MuonID v10r1, Muon/MuonTrackMonitor v2r10,
-    Pr/PrAlgorithms v1r18, Pr/PrPixel v1r14, Rec/ChargedProtoANNPID v2r14,
+    Pr/PrAlgorithms v1r18, Pr/PrPixel v1r14, Rec/ChargedProtoANNPID v2r15,
     Rec/GlobalReco v6r55, Rec/LumiAlgs v9r12, Rec/RecConf v2r24,
     Rich/RichGlobalPID v3r26, Rich/RichIFBAnalysis v1r5,
     Rich/RichParticleSearch v1r13, Rich/RichRecAlgorithms v2r22,
-    Rich/RichRecBase v4r24, Rich/RichRecMCTools v2r34, Rich/RichRecMonitors v2r38,
+    Rich/RichRecBase v4r24, Rich/RichRecMCAlgorithms v1r7,
+    Rich/RichRecMCTools v2r34, Rich/RichRecMonitors v2r38,
     Rich/RichRecPhotonTools v1r21, Rich/RichRecQC v2r74, Rich/RichRecSys v5r10,
     Rich/RichRecTools v4r30, Rich/RichRecTrackTools v1r42, Tf/FastVelo v1r25,
     Tf/PatAlgorithms v5r0, Tf/PatVelo v3r34, Tf/PatVeloTT v4r9, Tf/TfKernel v2r35,
     Tf/TfTools v1r20p2, Tf/TrackSys v9r13, Tr/TrackCheckers v4r23,
     Tr/TrackExtrapolators v2r41, Tr/TrackFitter v5r8, Tr/TrackInterfaces v6r0,
-    Tr/TrackMonitors v2r13, Tr/TrackTools v6r1, Tr/TrackUtils v1r64
+    Tr/TrackMonitors v2r13, Tr/TrackTools v6r2, Tr/TrackUtils v1r64,
+    Tr/PatPV v3r31
 
 - In Calo/CaloPIDs v5r22
   . CaloPIDs configurable :  add slots to configure the Accepted Track::Types 
@@ -62,7 +64,7 @@ This version uses Gaudi v27r1, LHCb v40r1 and Lbcom v18r1 (and ROOT 6.06.02)
 - In Pr/PrPixel v1r14
   . Follow change in DeVP (r202920).
 
-- In Rec/ChargedProtoANNPID v2r14
+- In Rec/ChargedProtoANNPID v2r15
   . Add an FPE Guard to compiler TMVA response call, to protect against 
     exceptions from things like exp(large number) within the TMVA generated code. 
   . Add 'official' V1 tuning for Run 2 data. "MC15TuneV1". This is now the
@@ -126,7 +128,7 @@ This version uses Gaudi v27r1, LHCb v40r1 and Lbcom v18r1 (and ROOT 6.06.02)
     using type traits.
 
 - In Rich/RichRecMonitors v2r38, Rich/RichRecTools v4r30, 
-     Rich/RichRecTrackTools v1r42
+     Rich/RichRecTrackTools v1r42, Rich/RichRecMCAlgorithms v1r7
   . Adapt to changes in ray tracing enums.
 
 - In Rich/RichRecMonitors v2r38
@@ -261,7 +263,7 @@ This version uses Gaudi v27r1, LHCb v40r1 and Lbcom v18r1 (and ROOT 6.06.02)
   . Fixed a bug with missing TT sectors number 26 in 2D histograms.
     (TTTrackMonitor, STEfficiency, STTrackTuple)
 
-- In Tr/TrackTools v6r1
+- In Tr/TrackTools v6r2
   . Run2GhostID: Use OTHitCreator instead OTRawBankDecoder to get the total 
     number of OT hits. This avoids a duplication of work.
   . Adapt to modernization of DeFTFibreMat
@@ -271,6 +273,12 @@ This version uses Gaudi v27r1, LHCb v40r1 and Lbcom v18r1 (and ROOT 6.06.02)
     to run with several input locations.
   . Protect against non-existing input location in TrackContainerCleaner,
     add two counters.
+
+- In Tr/PatPV v3r31
+  . Add new options to PVOfllineTool which allow to set double radial treshold:
+    o BeamSpotRHighMultiplicityCut: relaxed cut for PV with many associated tracks
+    o BeamSpotRMultiplicityTreshold: multiplicity treshold to switch between
+                                     tight and relaxed cut. 
 
 - In Pr/PrAlgorithms v1r18, Rich/RichRecAlgorithms v2r22, Rich/RichRecQC v2r74,
      Rich/RichRecTrackTools v1r42, Tf/PatVelo v3r34, Tf/PatVeloTT v4r9,

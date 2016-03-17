@@ -35,7 +35,7 @@ use PrUtils              v2r0p1  Pr   # Thomas Nikodem
 use PrVeloUT             v2r4    Pr   # Jianchun Wang
 
 # Non sub-detector specific components
-use ChargedProtoANNPID   v2r14   Rec  # Chris Jones
+use ChargedProtoANNPID   v2r15   Rec  # Chris Jones
 use GlobalReco           v6r55   Rec  # Chris Jones, Olivier Deschamps
 use LumiAlgs             v9r12   Rec  # Rosen Matev
 use RecAlgs              v3r4    Rec  # Marco Cattaneo
@@ -52,7 +52,7 @@ use RichParticleSearch   v1r13   Rich # Matt Coombes
 use RichPIDMerge         v2r11p1 Rich # Chris Jones
 use RichRecAlgorithms    v2r22   Rich # Chris Jones
 use RichRecBase          v4r24   Rich # Chris Jones
-use RichRecMCAlgorithms  v1r6p1  Rich # Chris Jones
+use RichRecMCAlgorithms  v1r7    Rich # Chris Jones
 use RichRecMCTools       v2r34   Rich # Chris Jones
 use RichRecMonitors      v2r38   Rich # Chris Jones
 use RichRecPhotonTools   v1r21   Rich # Chris Jones
@@ -89,11 +89,11 @@ use TrackKernel          v3r0    Tr   # Wouter Hulsbergen
 use TrackMCTools         v3r12p2 Tr   # Michel De Cian
 use TrackMonitors        v2r13   Tr   # Wouter Hulsbergen, Stephanie Menzemer
 use TrackProjectors      v3r4    Tr   # Wouter Hulsbergen
-use TrackTools           v6r1    Tr   # Wouter Hulsbergen
+use TrackTools           v6r2    Tr   # Wouter Hulsbergen
 use TrackUtils           v1r64   Tr   # Michel De Cian
 
 # Primary Vertex Finder
-use PatPV                v3r30   Tr   # Mariusz Witek
+use PatPV                v3r31   Tr   # Mariusz Witek
 use FastPV               v1r2p1  Tf   # Pawel Jalocha
 
 # Velo
