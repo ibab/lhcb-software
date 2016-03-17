@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecSys v5r10 2016-03-17 =========================
 ! 2016-03-10 - Chris Jones
  - Propagate properly custom options for the ray tracing tool.
 
