@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!========================= RichRecTools v4r30 2016-03-17 =========================
 ! 2016-03-10 - Chris Jones
  - Update TabulatedSignalDetectionEff to use the MassHypothesisRingCreator
    mass hypothesis rings, instead of performing its own ray tracing, to
