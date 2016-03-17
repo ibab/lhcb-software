@@ -15,7 +15,9 @@ class RareStrange_25ns_Draft2016(object):
         """Returns a list of active lines."""
 
         lines = ['Hlt2RareStrangeSigmaPMuMu',
-                 'Hlt2RareStrangeKPiMuMu']
+                 'Hlt2RareStrangeKPiMuMu',
+                 'Hlt2RareStrangeKPiMuMuSS'
+                 ]
 
         return lines
 
@@ -41,8 +43,19 @@ class RareStrange_25ns_Draft2016(object):
                                   'KMinPt'       : 500 * MeV,
                                   'KMinDIRA'     : 0.9,  # adimensional
                                   'KMaxIpChi2'   : 36,   # adimensional
-                                  'KMinTauPs'    : 10 * picosecond}}
-        # Noew build the final dictionary
+                                  'KMinTauPs'    : 10 * picosecond},
+                      'KPiMuMuSS' : { 'muonMinIpChi2' :  25. ,
+                                      'piMinIpChi2' :  25. ,
+                                      'KMassWin' : 500 * MeV ,
+                                      'KMaxDOCA' : 2. * mm ,
+                                      'KVtxChi2' : 25. ,  # adimensional
+                                      'KMinPt' : 500 * MeV ,
+                                      'KMinDIRA' : 0.9 ,   # adimensional
+                                      'KMaxIpChi2' : 36 ,  # adimensional
+                                      'KMinTauPs'  : 10 * picosecond
+                                      }
+                      }
+                      # Noew build the final dictionary
         from Hlt2Lines.RareStrange.Lines import RareStrangeLines
 
         return {RareStrangeLines: thresholds}
