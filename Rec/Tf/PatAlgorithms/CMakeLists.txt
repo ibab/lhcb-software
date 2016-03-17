@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PatAlgorithms
 ################################################################################
-gaudi_subdir(PatAlgorithms v4r45)
+gaudi_subdir(PatAlgorithms v5r0)
 
 gaudi_depends_on_subdirs(Det/OTDet
                          Det/STDet
