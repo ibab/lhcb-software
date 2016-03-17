@@ -3,6 +3,7 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+!========================= TrackFitter v5r8 2016-03-17 =========================
 ! 2016-03-04 - Sascha Stahl
  - TrackMasterFitter: Implement property MaxUpdateTransports to restrict maximum
    number of transport updates. Default is the same as number of iterations
