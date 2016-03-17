@@ -3,6 +3,8 @@
 ! Responsible : David Hutchcroft
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
+
+!========================= PatVelo v3r34 2016-03-17 =========================
 ! 2016-02-23 - Jon Harrison
  - Changes to PatVeloGeneralTracking, PatVeloRHitManager and PatVeloPhiHitManager for VELO CCE scan running
  - Addition of FindKilledSensors
