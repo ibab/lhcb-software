@@ -4,6 +4,7 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!========================= CaloReco v5r28 2016-03-17 =========================
 ! 2016-03-05 - Olivier Deschamps
   - CaloProcessor configurables :  add slots to configure the Accepted Track::Types at CaloPID level
 
