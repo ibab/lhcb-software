@@ -3,7 +3,7 @@
 # Maintainer : Rosen Matev
 #=====================================================================
 package           LumiAlgs
-version           v9r11
+version           v9r12
 
 #=====================================================================
 # Structure, i.e. directories to process. 
