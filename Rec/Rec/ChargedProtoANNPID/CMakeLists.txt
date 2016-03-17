@@ -1,7 +1,7 @@
 ################################################################################
 # Package: ChargedProtoANNPID
 ################################################################################
-gaudi_subdir(ChargedProtoANNPID v2r14)
+gaudi_subdir(ChargedProtoANNPID v2r15)
 
 gaudi_depends_on_subdirs(Event/MCEvent
                          Event/PhysEvent
