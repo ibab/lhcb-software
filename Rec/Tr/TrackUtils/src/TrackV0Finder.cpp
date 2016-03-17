@@ -46,6 +46,7 @@ protected:
 		     double& decaylength) const ;
 private:
   std::string m_trackInputListName; // Input Tracks container location
+  std::vector<std::string> m_trackInputListNames; // Input Tracks containers locations
   std::string m_pvContainerName;
   std::string m_v0ContainerName;
   ToolHandle<ITrajPoca> m_pocatool ;
@@ -112,7 +113,6 @@ DECLARE_ALGORITHM_FACTORY( TrackV0Finder )
 TrackV0Finder::TrackV0Finder( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-    m_trackInputListName(LHCb::TrackLocation::Default),
     m_pocatool("TrajPoca"),
     m_vertexer("TrackVertexer"),
     m_stateprovider("TrackStateProvider"),
@@ -143,8 +143,9 @@ TrackV0Finder::TrackV0Finder( const std::string& name,
     m_addExtraInfo(false),
     m_addStateAtVertex(true),
     m_stateZTolerance(TrackParameters::propagationTolerance)
-{
-  declareProperty( "TrackContainer", m_trackInputListName = LHCb::TrackLocation::Default  );
+{ 
+  declareProperty( "TrackContainer", m_trackInputListName = ""  );
+  declareProperty( "TrackContainers", m_trackInputListNames = {LHCb::TrackLocation::Default}  );
   declareProperty( "PVContainer", m_pvContainerName = LHCb::RecVertexLocation::Primary ) ;
   declareProperty( "V0Container", m_v0ContainerName = LHCb::RecVertexLocation::V0 ) ;
   declareProperty( "KsMassCutLL", m_ksmasscutLL) ;
@@ -206,7 +207,13 @@ StatusCode TrackV0Finder::initialize() {
     error() << "Did not find all properties." << endmsg ;
     sc = StatusCode::FAILURE ;
   }
-  
+   // backwards compatibile. Retain for a while to allow for transistion...
+  if ( !m_trackInputListName.empty() )
+  {
+    Warning( "'TrackContainer' properyt is obsolete. Please change to use 'TrackContainers' instead").ignore();
+    m_trackInputListNames = { m_trackInputListName };
+  }
+ 
   return sc;
 }
 
@@ -269,29 +276,33 @@ StatusCode TrackV0Finder::execute()
     zprimary = std::min(zprimary, (*ipv)->position().z()) ;
   
   // Get the Tracks
-  const LHCb::Tracks* tracks = get<LHCb::Tracks>( m_trackInputListName );
+  
 
   // Sort them by charge, make some cuts
   typedef std::vector<TrackTrajPair> TrackContainer ;
   TrackContainer postracks,negtracks ;
-  for( LHCb::Tracks::const_iterator it = tracks->begin() ;
-       it != tracks->end(); ++it) {
-    const LHCb::Track* track = *it ;
-    // require tracks with T and (TT or Velo)
-    if( (track->type() == LHCb::Track::Long ||
-	 track->type() == LHCb::Track::Downstream ) &&
-	track->chi2PerDoF() < m_maxTrackChi2PerDoF &&
-        // remove tracks from PVs, if required
-        (pvcontainer==0 || !m_excludePVTracks || !inAnyVertex(*track,*pvcontainer) ) ) {
-      const LHCb::TrackTraj* traj = m_stateprovider->trajectory( *track ) ;
-      if( traj ) {
-	if( (*it)->firstState().qOverP()>0 )
-	  postracks.push_back(TrackTrajPair(track,traj)) ;
-	else
-	  negtracks.push_back(TrackTrajPair(track,traj)) ;
+  for (const auto& loc : m_trackInputListNames){
+    const LHCb::Tracks* tracks = get<LHCb::Tracks>( loc );
+    for( LHCb::Tracks::const_iterator it = tracks->begin() ;
+         it != tracks->end(); ++it) {
+      const LHCb::Track* track = *it ;
+      // require tracks with T and (TT or Velo)
+      if( (track->type() == LHCb::Track::Long ||
+           track->type() == LHCb::Track::Downstream ) &&
+          track->chi2PerDoF() < m_maxTrackChi2PerDoF &&
+          // remove tracks from PVs, if required
+          (pvcontainer==0 || !m_excludePVTracks || !inAnyVertex(*track,*pvcontainer) ) ) {
+        const LHCb::TrackTraj* traj = m_stateprovider->trajectory( *track ) ;
+        if( traj ) {
+          if( (*it)->firstState().qOverP()>0 )
+            postracks.push_back(TrackTrajPair(track,traj)) ;
+          else
+            negtracks.push_back(TrackTrajPair(track,traj)) ;
+        }
       }
     }
   }
+  
   
   const double pimass = m_pionProperty->mass() ;
   const double pmass  = m_protonProperty->mass() ;

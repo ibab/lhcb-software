@@ -40,6 +40,7 @@ private:
 
   double m_klCut; ///< Maximum distance for the information to be stored in the linker
   std::string m_inputLocation;  ///< Input TES location for tracks
+  std::vector<std::string> m_inputLocations;  ///< Input TES locations for tracks
   std::string m_outputLocation; ///< Output TES location for the linker object
 
   std::vector<double> m_zStates = { 0.0 } ; ///< The z position(s) to use for the comparision

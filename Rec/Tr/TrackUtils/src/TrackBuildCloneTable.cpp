@@ -83,7 +83,8 @@ TrackBuildCloneTable::TrackBuildCloneTable(const std::string& name,
                                            ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name, pSvcLocator )
 {
-  declareProperty("inputLocation", m_inputLocation = TrackLocation::Default);
+  declareProperty("inputLocation", m_inputLocation = "" );
+  declareProperty("inputLocations", m_inputLocations = { TrackLocation::Default });
   declareProperty("outputLocation", m_outputLocation = TrackLocation::Default+"Clones");
   declareProperty("klCut", m_klCut = 5000);
   declareProperty("zStates", m_zStates );
@@ -104,61 +105,79 @@ StatusCode TrackBuildCloneTable::initialize()
          << "mm at '" << m_outputLocation << "'" << endmsg;
   info() << "Max Kullbeck Liebler Distance = " << m_klCut << endmsg;
 
+  // backwards compatibile. 
+  if ( !m_inputLocation.empty() )
+  {
+    Warning( "'inputLocation' Property is obsolete. Please change to use 'inputLocations' instead").ignore();
+    m_inputLocations = { m_inputLocation };
+  }
+
   return sc;
 }
 
 StatusCode TrackBuildCloneTable::execute()
 {
-
-  // Tracks
-  const Tracks* inCont = get<Tracks>(m_inputLocation);
-
+  
   // new linker to store results
   LinkerWithKey<Track,Track> myLink( eventSvc(), msgSvc(), m_outputLocation);
 
-  // need more than one track to do something usefull...
-  if (inCont->size()<2) return StatusCode::SUCCESS;
-
   // working objects ---> invert the covariance matrix only once...
-  CloneTrack::Vector tracks; tracks.reserve(inCont->size());
-  for ( const auto& track : *inCont )
-  {
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-      debug() << "Track " << track->key() << " " << track->history() << endmsg;
-
-    // make working track object, directly in the vector
-    tracks.emplace_back( track );
-    CloneTrack& cloneTrack = tracks.back();
-    cloneTrack.states.reserve( m_zStates.size() );
-
-    // Loop over all z positions
-    for ( auto z : m_zStates ) {
-      // get state closest to reference z pos
-      const State & cState = track->closestState(z);
-
-      // only take ones that are close in z
-      if ( fabs( cState.z() - z ) > m_maxDz ) continue ;
+  CloneTrack::Vector tracks; 
+  
+  // loop and make working tracks
+  for (const auto& loc : m_inputLocations ){
+    // Tracks
+    auto inCont = getIfExists<Tracks>(loc);
+    if ( inCont == nullptr ){
+      error()<<"Container "<<loc<<" does not exist"<<endmsg;
+      continue;
+    }
+    if ( msgLevel(MSG::VERBOSE) ){
+      verbose() << "Found " << inCont->size() << " Tracks at " << loc << endmsg;
+    }
+    tracks.reserve(tracks.size()+inCont->size());
+    
+    for ( const auto& track : *inCont )
+    {
       if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-        debug() << " -> Found state closest to z=" << z << " at z=" << cState.z() << endmsg;
+        debug() << "Track " << track->key() << " " << track->history() << endmsg;
+      
+      // make working track object, directly in the vector
+      tracks.emplace_back( track );
+      CloneTrack& cloneTrack = tracks.back();
+      cloneTrack.states.reserve( m_zStates.size() );
 
-      // clone state
-      State tmpState ( cState );
+      // Loop over all z positions
+      for ( auto z : m_zStates ) {
+        // get state closest to reference z pos
+        const State & cState = track->closestState(z);
 
-      // extrapolate to desired z pos
-      const StatusCode sc = m_extrapolator->propagate(tmpState,z);
-      if (sc.isFailure())
-      { Warning("Problem extrapolating state",StatusCode::SUCCESS).ignore(); continue; }
+        // only take ones that are close in z
+        if ( fabs( cState.z() - z ) > m_maxDz ) continue ;
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+          debug() << " -> Found state closest to z=" << z << " at z=" << cState.z() << endmsg;
+        
+        // clone state
+        State tmpState ( cState );
 
-      // Add Clone state to clone track
-      cloneTrack.states.emplace_back( z,tmpState );
-
-    } // z states
-
-    // Did we find any states ? If not remove clone track
-    if ( cloneTrack.states.empty() ) tracks.pop_back();
-
-  } // inCont
-
+        // extrapolate to desired z pos
+        const StatusCode sc = m_extrapolator->propagate(tmpState,z);
+        if (sc.isFailure())
+        { Warning("Problem extrapolating state",StatusCode::SUCCESS).ignore(); continue; }
+        
+        // Add Clone state to clone track
+        cloneTrack.states.emplace_back( z,tmpState );
+        
+      } // z states
+      
+      // Did we find any states ? If not remove clone track
+      if ( cloneTrack.states.empty() ) tracks.pop_back();
+      
+    } // inCont
+  }
+  //need more than one track to do something usefull...
+  if (tracks.size()<2) return StatusCode::SUCCESS;
+  
   // loop over the working objects
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
     debug() << "Looping over all Track pairs to find clones :-" << endmsg;

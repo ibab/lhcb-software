@@ -60,24 +60,39 @@ TrackCloneCleaner::TrackCloneCleaner(const std::string& name,
   GaudiAlgorithm(name, pSvcLocator)
 {
   // track locaton
-  declareProperty("inputLocation",  m_inputLocation  = TrackLocation::Default);
+  declareProperty("inputLocation",  m_inputLocation  = "");
+  declareProperty("inputLocations",  m_inputLocations  = {TrackLocation::Default});
   declareProperty("linkerLocation", m_linkerLocation = TrackLocation::Default+"Clones");
   declareProperty("CloneCut", m_cloneCut = 5000 );
 }
 
 TrackCloneCleaner::~TrackCloneCleaner() = default;
 
+//=============================================================================
+// Initialize
+//=============================================================================
+StatusCode TrackCloneCleaner::initialize()
+{
+  // Initializes  at the begin of program execution.
+
+  StatusCode sc = GaudiAlgorithm::initialize();
+  if (sc.isFailure()){
+    return Error("Failed to initialize",sc);
+  }
+
+  // backwards compatibile. Retain for a while to allow for transistion...
+  if ( !m_inputLocation.empty() )
+  {
+    Warning( "'inputLocation' Property is obsolete. Please change to use 'inputLocations' instead").ignore();
+    m_inputLocations = { m_inputLocation };
+  }
+  return sc ;
+}
 
 StatusCode TrackCloneCleaner::execute()
 {
-  // tracks to flag
-  Tracks* trackCont = get<Tracks>(m_inputLocation);
-  if ( msgLevel(MSG::VERBOSE) )
-  {
-    verbose() << "Found " << trackCont->size() << " Tracks at " << m_inputLocation << endmsg;
-  }
 
-  // Get the clone libnker info
+  // Get the clone linker info
   LinkedFrom<LHCb::Track,LHCb::Track> linker(evtSvc(), msgSvc(),m_linkerLocation);
   if ( linker.notFound() )
   {
@@ -85,12 +100,24 @@ StatusCode TrackCloneCleaner::execute()
   }
 
   // copy the tracks into a temporary vector
-  WorkingTrack::Vector tempTracks; tempTracks.reserve(trackCont->size());
+  WorkingTrack::Vector tempTracks; 
 
   // loop and make working tracks
-  for ( const auto& t : *trackCont ) {
-    // only consider tracks with clone info
-    if ( linker.first( t ) ) tempTracks.emplace_back( t );
+  for (const auto& loc : m_inputLocations ){
+    // tracks to flag
+    auto trackCont = getIfExists<Tracks>(loc);
+    if ( trackCont == nullptr ){
+      error()<<"Container "<<loc<<" does not exist"<<endmsg;
+      continue;
+    }
+    if ( msgLevel(MSG::VERBOSE) ){
+      verbose() << "Found " << trackCont->size() << " Tracks at " << loc << endmsg;
+    }
+    tempTracks.reserve(tempTracks.size()+trackCont->size());
+    for ( const auto& t : *trackCont ) {
+      // only consider tracks with clone info
+      if ( linker.first( t ) ) tempTracks.emplace_back( t );
+    }
   }
 
   // sort by type Lowest rank , then highest # of LHCbID, then smallest chi2

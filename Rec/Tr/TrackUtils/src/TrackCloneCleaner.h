@@ -18,6 +18,8 @@ public:
   TrackCloneCleaner(const std::string& name,
                     ISvcLocator* pSvcLocator);
 
+  StatusCode initialize() override;
+  
   /// Destructor
   ~TrackCloneCleaner() override;
 
@@ -27,6 +29,7 @@ public:
 private:
 
   std::string m_inputLocation;  ///< Locations of Tracks in TES
+  std::vector<std::string> m_inputLocations;  ///< Locations of Tracks in TES
   std::string m_linkerLocation; ///< Location of Clone linker in TES
   double m_cloneCut;            ///< Clone cut value
 

@@ -4,6 +4,10 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-03-17 - Sascha Stahl
+ - TrackCloneCleaner, TrackBuildCloneTable, TrackV0Finder: Add possibility
+   to run with several input locations.
+
 !========================= TrackUtils v1r64 2016-03-17 =========================
 ! 2016-03-04 - Michel De Cian
  - Protect against non-existing input location in TrackContainerCleaner, add two counters.
