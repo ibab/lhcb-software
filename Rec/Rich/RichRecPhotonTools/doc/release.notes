@@ -4,6 +4,7 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RichRecPhotonTools v1r21 2016-03-17 =======================
 ! 2016-03-04 - Chris Jones
  - Adapt to changes in DeRichBeamPipe.
 
