@@ -148,7 +148,6 @@
           else if( m_type == Constant )m_digit[bx]=m_digit[0]; // constant for any BX
           else if( m_type == RAMBcid )m_digit[bx]=m_digit[0]+bx; // RAMBcid bx shift
           if(m_digit.end() == m_digit.find(bx) ){
-              m_evaluated = false;
               return 0.;
           }
           return m_digit[bx] ;
@@ -166,11 +165,9 @@
       <method name  = "summary" desc = "L0DUElementaryData summary for a given bx" type  = "std::string" argList="int bx" > </method>
       <method name  = "summary" desc = "L0DUElementaryData summary" type  = "std::string"> </method>
       <method name  = "evaluate" desc = "Compound evaluation for a given BX" type  = "void"  argList="int bx=0" ></method>
-      <method name = "hasData"  desc = "data status" type= "bool" argList = "int bx=0" >
+      <method name = "hasData"  desc = "data status" type= "bool" argList = "int bx=0" const="TRUE">
         <code> 
-          if(m_type==Compound)evaluate(bx);  
-          bool ok =  m_digit.find(bx) != m_digit.end() &amp;&amp; m_evaluated;
-          return ok;
+          return ( m_digit.find(bx) != m_digit.end() &amp;&amp; m_evaluated);
         </code>
       </method>
 
