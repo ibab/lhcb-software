@@ -61,6 +61,7 @@ private:
   LHCb::L0DUReport             m_report;              ///<  L0DU Report
   bool                         m_muCleaning;          ///<  Activate muon cleaning
   bool                         m_muZeroSup;           ///<  Activate muon 0-suppression
+  bool                         m_emuBX;               ///<  Emulate Prev2/Prev1/Next2/Next1 data in the bank 
   std::vector<int>             m_muHighest;           ///<  Array of  index of the 3 highest muon (Pt-decreasing order)
   int                          m_muPattern;           ///<  Pattern of muon cleaning 
   int                          m_nMu;

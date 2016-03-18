@@ -135,5 +135,6 @@ private:
   unsigned int m_reported;
   std::vector<int> m_FOIx;
   std::vector<int> m_FOIy;
+  std::vector<int> m_knownBXs;
 };
 #endif // L0DUCONFIGPROVIDER_H

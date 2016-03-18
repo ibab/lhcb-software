@@ -31,7 +31,7 @@ L0DURawBankMonitor::L0DURawBankMonitor( const std::string& name,
   , m_spd(NULL)
   , m_first(true)
 {
-  declareProperty( "RawLocations"           , m_rawLocations  );
+  declareProperty( "RawLocations"      , m_rawLocations  );
   declareProperty( "L0DUFromRawTool"   , m_fromRawTool = "L0DUFromRawTool" );
   declareProperty( "EmulatorTool"      , m_emulatorTool= "L0DUEmulatorTool");
   declareProperty( "Convert"           , m_conv = false);
@@ -607,14 +607,20 @@ bool L0DURawBankMonitor::emulatorCheck(LHCb::L0DUConfig* config, int unit, std::
 
   // Conditions
   for(LHCb::L0DUElementaryCondition::Map::iterator it = conditions.begin();it!=conditions.end();it++){
-    int id = ((*it).second)->id() ;
-    if( report.conditionValue( id ) != ((*it).second)->emulatedValue() ){
+    int id = it->second->id() ;
+    int bx=it->second->bx();
+    bool hasData =  it->second->data()->hasData(bx);
+    if(!hasData)
+      Warning("Cannot monitor condition '"+ it->first + "' - data is not set for BX="
+              +Gaudi::Utils::toString(bx),StatusCode::SUCCESS,10).ignore();
+    if( (report.conditionValue( id ) != it->second->emulatedValue()) || !hasData ){
       if ( msgLevel(MSG::DEBUG) )
         debug() << "Emulator check error for condition " << (*it).first << endmsg;
       plot1D( (double) id ,"Status/L0DU/EmulatorCheck/Conditions/" + Gaudi::Utils::toString(unit),
               "L0DU conditions value emulator check (" + txt + ")",-1. ,(double) ecBin  , ecBin+1);
       check = false;
     }
+
     std::string name = (*it).first;
     if(m_first)ax2->SetBinLabel( id+2 , name.c_str() );
   }

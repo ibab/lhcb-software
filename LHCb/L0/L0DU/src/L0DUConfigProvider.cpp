@@ -96,6 +96,10 @@ L0DUConfigProvider::L0DUConfigProvider( const std::string& type,
     m_detail = true;
     m_check = true;
   }
+
+  // The BXs the firmware can use in the algorithm
+  m_knownBXs.push_back(0);
+  m_knownBXs.push_back(-1);
 }
 //============================================================================= 
 // Destructor 
@@ -684,7 +688,9 @@ StatusCode L0DUConfigProvider::createConditions(){
       std::stringstream str("");
       str << sbx;
       str >> bx;
-      if( bx != 0 || bx != -1 )Warning("L0DU firmware can only be configured for BX=[0] or BX=[-1]",StatusCode::SUCCESS,5).ignore();
+      if( (std::find(m_knownBXs.begin(),m_knownBXs.end(), bx ) == m_knownBXs.end() ))
+        Warning("'"+conditionName+"' : L0DU firmware can only be configured for BX="+Gaudi::Utils::toString(m_knownBXs)
+                ,StatusCode::SUCCESS,5).ignore();
     }
 
     // create condition (name,data,comparator,threshold)
@@ -1324,21 +1330,20 @@ bool L0DUConfigProvider::configChecker(){
   double chRate = (double) m_channelsMap.size() / (double) NumberOf::Channels;
   bool ok  = true;
 
-  if(m_check)info() << "ConfigChecker : channels usage    = "  
+  if(m_check)info() << "ConfigChecker : channels usage    : "  
                     <<  m_channelsMap.size() << " / " << NumberOf::Channels  
-                    << " = [" << format("%3.1f", 100.*chRate) << "% ] " << endmsg;
+                    << "  [" << format("%3.1f", 100.*chRate) << "% ] " << endmsg;
   if( chRate > 1. ){
     warning() << "L0DU ConfigChecker : the number of channels exceeds the hardware capabilities " << m_channelsMap.size() 
               << " / " << NumberOf::Channels << endmsg;
     ok = false;
-  }
-  
+  }  
 
   // check number of conditions
   double cdRate = (double) m_conditionsMap.size() / (double) NumberOf::Conditions;
-  if(m_check)info() << "ConfigChecker : conditions usage  = "  
+  if(m_check)info() << "ConfigChecker : conditions usage  : "  
                     <<  m_conditionsMap.size() << " / " << NumberOf::Conditions  
-                    << " = [" << format("%3.1f", 100.*cdRate) << "% ] " << endmsg;
+                    << "  [" << format("%3.1f", 100.*cdRate) << "% ] " << endmsg;
   if( cdRate > 1. ){
     warning()  << "L0DU ConfigChecker : the number of conditions exceeds the hardware capabilities " << m_conditionsMap.size() 
                << " / " << NumberOf::Conditions << endmsg;
@@ -1349,21 +1354,31 @@ bool L0DUConfigProvider::configChecker(){
               << m_conditionsMap.size() << " conditions are stored in the L0DU bank from hardware" << endmsg;
   }
   if(m_check)info() <<"ConfigChecker : reported conditions : " << m_reported << " / " << m_conditionsMap.size() 
-                    << " / max = " << NumberOf::ConditionsInBank << endmsg;
+                    << " [max = " << NumberOf::ConditionsInBank << "]" << endmsg;
   
   
 
   // check number of conditions / type
   unsigned int k = 0;
   double maxRate = -1.;
+  std::string tCheck="";
   for( std::vector<std::vector<LHCb::L0DUElementaryCondition*> >::iterator it = m_condOrder.begin();m_condOrder.end()!=it;++it){
     std::vector<LHCb::L0DUElementaryCondition*> conds = *it;
-    double ctRate = 0;
-    if( conds.size() != 0)ctRate = (m_condMax[k] > 0) ? (double) conds.size() / (double) m_condMax[k] : 999.;
-    if(ctRate > maxRate)maxRate = ctRate;
-
-
-    if(m_check && conds.size() != 0){
+    double ctRate = 0.;
+    if( conds.size() == 0){k++;continue;}
+    
+    ctRate = (m_condMax[k] > 0) ? (double) conds.size() / (double) m_condMax[k] : 999.;
+    if(ctRate >= maxRate){
+      tCheck = ( ctRate > maxRate ) ? "" : tCheck + "&";
+      maxRate = ctRate;
+      const LHCb::L0DUElementaryCondition* cond = *(conds.begin());
+      const LHCb::L0DUElementaryData* data= (NULL != cond) ? cond->data() : NULL;
+      std::string nData = (NULL != data ) ? data->name() : "???";
+      tCheck += "["+nData+ " : " +Gaudi::Utils::toString(conds.size())+"/"+Gaudi::Utils::toString(m_condMax[k])+"]";
+    }
+    
+    
+    if(m_check ){
       std::string name = "??";
       if( k == L0DUBase::RAMBCID::ConditionOrder){
         name = L0DUBase::RAMBCID::Name;
@@ -1380,16 +1395,14 @@ bool L0DUConfigProvider::configChecker(){
              << " = [" << format("%3.1f", 100.*ctRate) << "% ] " << endmsg;
     }
     
-
+    
     if( ctRate > 1.){
       warning() << "ConfigChecker : number of conditions of type " << k 
                 << " exceeds the hardware capabilities " << conds.size()<< " / " << m_condMax[k] << endmsg;
       ok = false;
     }
     k++; 
-  } 
-
-
+  }
 
   //
   if(m_check && m_reOrder ){
@@ -1405,10 +1418,6 @@ bool L0DUConfigProvider::configChecker(){
                << " |   hardware  " <<kk<< " |  reported ? "<< (*itt)->reported() << " (reportBit  "<< (*itt)->reportBit() << ")";
         if(bx !=0 ) info() << " applied to BX=["<< bx << "]";
         info()<< endmsg;
-        if( bx != 0 && bx != -1){
-          warning() << "  !! condition = '" << (*itt)->name() << " BX=["<<bx<<"] exceeds the current hardware capabilities (BX=0/-1 only)" << endmsg;
-          ok = false;
-        }        
         kk++;
       }
     } 
@@ -1427,16 +1436,18 @@ bool L0DUConfigProvider::configChecker(){
       order += " (restored)" ;
     }
   }
+  for( LHCb::L0DUElementaryCondition::Map::iterator ic=m_conditionsMap.begin();m_conditionsMap.end() != ic;ic++){
+    if( (std::find(m_knownBXs.begin(),m_knownBXs.end(), ic->second->bx() ) == m_knownBXs.end() ))ok=false;
+  }
   if( ok )info() << "The configuration "<< format("0x%04X" , m_tckopts ) <<" matches the hardware limitations " << endmsg;
   else warning() << "The configuration "<< format("0x%04X" , m_tckopts ) << " DOES NOT match the hardware limitations " << endmsg;
-
-
-
-  info() << "- Usage : Channels ["  << format("%3.1f", 100.*chRate) << "% ]  |  "
-         << "Conditions [" << format("%3.1f", 100.*cdRate) << "% ]; "
-         << "max/type [" << format("%3.1f", 100.*maxRate) << "% ]; "
-         << "order : " << order << " ; "
-         << "reported  : " << m_reported<<"/" << m_conditionsMap.size()
-         << endmsg; 
+  info() << "- Usage : #Channels   : " << m_channelsMap.size()  << " ["  << format("%3.1f", 100.*chRate) << "% ]    " << endmsg;
+  info() << "- Usage : #Conditions : " <<m_conditionsMap.size() << " ["  << format("%3.1f", 100.*cdRate) << "% ]; order : " << order 
+         << " ; reported  : " << m_reported<<"/" << m_conditionsMap.size() << endmsg;
+  info() << "- Usage : #Conditions/type (max)  :"<< tCheck << endmsg; 
+  for( LHCb::L0DUElementaryCondition::Map::iterator ic=m_conditionsMap.begin();m_conditionsMap.end() != ic;ic++){
+    std::string stamp =( (std::find(m_knownBXs.begin(),m_knownBXs.end(), ic->second->bx() ) == m_knownBXs.end() )) ? "Warning" : "Info   ";
+    if( ic->second != NULL && ic->second->bx() != 0)info()<<"- "<< stamp <<" : the condition '" << ic->first << "' relies on BX=["<<Gaudi::Utils::toString(ic->second->bx())<<"]"<<endmsg;
+  }
   return ok; 
 }

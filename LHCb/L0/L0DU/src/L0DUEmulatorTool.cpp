@@ -34,9 +34,10 @@ L0DUEmulatorTool::L0DUEmulatorTool( const std::string& type,
     m_begEvent(true)
 {
   declareInterface<IL0DUEmulatorTool>(this);
-  declareProperty( "MuonCleaning" , m_muCleaning = false);
-  declareProperty( "MuonZeroSup"  , m_muZeroSup    = false);
-  m_nMu = 3;
+  declareProperty( "MuonCleaning" , m_muCleaning = false);   // set to false as long as the L0Muon cleaning is commented in the firmware.
+  declareProperty( "MuonZeroSup"  , m_muZeroSup    = false); // no matter for the emulation/simulation
+  declareProperty( "EmulateBXs"   , m_emuBX        = false); // Emulate Prev/Next BX (& Sum(Et)) in the bank - filled with 0 on MC!!
+  m_nMu = 3; // # of largestmuon pT
   m_muHighest.reserve( m_nMu );
 }
 //=============================================================================
@@ -93,6 +94,7 @@ StatusCode L0DUEmulatorTool::fillData(){
   LHCb::L0DUElementaryData::Map& dataMap = m_config->data();
   using namespace L0DUBase::PredefinedData;
 
+  // == L0Calo processing
   setDataValue( dataMap[Name[ElectronEt ]] , L0DUBase::Electron::Et        );
   setDataValue( dataMap[Name[PhotonEt]]    , L0DUBase::Photon::Et          );
   setDataValue( dataMap[Name[HadronEt]]    , L0DUBase::Hadron::Et          );
@@ -108,115 +110,129 @@ StatusCode L0DUEmulatorTool::fillData(){
   setDataValue( dataMap[Name[HadronAdd]]   , L0DUBase::Hadron::Address     );
   setDataValue( dataMap[Name[GlobalPi0Add]], L0DUBase::Pi0Global::Address  );
   setDataValue( dataMap[Name[LocalPi0Add]] , L0DUBase::Pi0Local::Address   );
-  // PileUp
+  // == L0PileUp processing
   setDataValue(dataMap[Name[PuPeak1Pos]]   , L0DUBase::PileUp::Peak1Pos );
   setDataValue(dataMap[Name[PuPeak2Pos]]   , L0DUBase::PileUp::Peak2Pos );
 
+  // == L0Muon processing is a bit more complicated :
 
+  // - collect the scale and saturation parameters (assumed to be the same for all L0Muons)
+  int sPt = scale(L0DUBase::Muon1::Pt);
+  int mPt = max  (L0DUBase::Muon1::Pt);
+  int sAd = scale(L0DUBase::Muon1::Address);
+  int mAd = max  (L0DUBase::Muon1::Address);
+  int sSg = scale(L0DUBase::Muon1::Sign);
+  int mSg = max  (L0DUBase::Muon1::Sign);
 
-  // The Muon case
-  m_muPattern = 0;
-  std::vector<int> muonVec;
-  int pt1 = digit( L0DUBase::Muon1::Pt   );
-  int pt2 = digit( L0DUBase::Muon2::Pt   );
-  muonVec.push_back( pt1 );
-  if(m_muCleaning && pt1 == pt2)  m_muPattern |= 1<<1 ; else muonVec.push_back( pt2 );
+  // - process the L0Muon data (per bX - assume the bX are set for all muons in the same way)
+  m_muHighest.clear(); // reset
+  m_muPattern=0;       // reset
+  const std::vector<int>& BXs = bxList( L0DUBase::Muon1::Pt );
+  for( std::vector<int>::const_iterator ibx=BXs.begin();BXs.end()!=ibx;ibx++){
+    int bx = *ibx;
 
-  int pt3 = digit( L0DUBase::Muon3::Pt   );
-  int pt4 = digit( L0DUBase::Muon4::Pt   );
-  muonVec.push_back(  pt3 );
-  if(m_muCleaning && pt3 == pt4) m_muPattern |= 1<<3  ; else muonVec.push_back( pt4 );
+    // - collect the 4x2 pT
+    std::vector<unsigned long> muonVec;
+    muonVec.push_back( digit( L0DUBase::Muon1::Pt   , bx ));
+    muonVec.push_back( digit( L0DUBase::Muon2::Pt   , bx ));
+    muonVec.push_back( digit( L0DUBase::Muon3::Pt   , bx ));
+    muonVec.push_back( digit( L0DUBase::Muon4::Pt   , bx ));
+    muonVec.push_back( digit( L0DUBase::Muon5::Pt   , bx ));
+    muonVec.push_back( digit( L0DUBase::Muon6::Pt   , bx ));
+    muonVec.push_back( digit( L0DUBase::Muon7::Pt   , bx ));
+    muonVec.push_back( digit( L0DUBase::Muon8::Pt   , bx ));
+    
+    // - define the pattern for ghost cleaning 
+    int muPattern = 0;
+    if(m_muCleaning ){ 
+      if( muonVec[0] == muonVec[1])  muPattern |= 1<<1 ; 
+      if( muonVec[2] == muonVec[3])  muPattern |= 1<<3 ; 
+      if( muonVec[4] == muonVec[5])  muPattern |= 1<<5 ; 
+      if( muonVec[6] == muonVec[7])  muPattern |= 1<<7 ; 
+    }
+    if( bx == 0 )m_muPattern = muPattern; // collect muPattern for current BX (==>L0Bank)
 
-  int pt5 = digit( L0DUBase::Muon5::Pt   );
-  int pt6 = digit( L0DUBase::Muon6::Pt   );
-  muonVec.push_back(  pt5 );
-  if(m_muCleaning && pt5 == pt6)  m_muPattern |= 1<<5 ; else muonVec.push_back( pt6 );
-
-  int pt7 = digit( L0DUBase::Muon7::Pt   );
-  int pt8 = digit( L0DUBase::Muon8::Pt   );
-  muonVec.push_back(  pt7 );
-  if(m_muCleaning && pt7 == pt8)  m_muPattern |= 1<<7 ; else muonVec.push_back( pt8 );
-
-  // get the 3 highest muon
-  m_muHighest.clear();
-  for(int i=0 ; i != m_nMu ; i++){
-    int maxPt = -1;    
-    int imax = -1;
-    for(unsigned int  j=0 ; j != muonVec.size() ; j++){
-      bool ok=true;
-      for(unsigned int k=0 ; k !=m_muHighest.size() ; k++){
-        if( (int) j == m_muHighest[k])
-          ok=false;
+    // - identify the m_nMu (3) highest pT
+    std::vector<int> muHighest;
+    for(int i=0 ; i != m_nMu ; i++){
+      int maxPt = -1;    
+      int imax = -1;
+      int mask = 1 << i;
+      if(m_muCleaning && (mask & muPattern) != 0) continue; // apply the ghost-cleaning when requested
+      for(unsigned int  j=0 ; j != muonVec.size() ; j++){
+        bool ok=true;
+        for(unsigned int k=0 ; k !=muHighest.size() ; k++){
+          if( (int) j == muHighest[k])
+            ok=false;
+        }
+        if(!ok)continue;
+        int pt = muonVec[j];
+        if( maxPt < pt ){
+          maxPt= pt ;
+          imax=j;
+        }
       }
-      if(!ok)continue;
-      int pt = muonVec[j];
-      if( maxPt < pt ){
-        maxPt= pt ;
-        imax=j;
+      if(-1 == imax){
+        Error("Error in muon processing").ignore();
+      }else{
+        muHighest.push_back(imax);
       }
     }
-    if(-1 == imax){
-      Error("Error in muon processing").ignore();
-    }else{
-      m_muHighest.push_back(imax);
-    }
-  }
-  if( msgLevel(MSG::VERBOSE))verbose() << "Muon sorted " << endmsg;
-
-  int dimuon = 0;
-  int dimuonP= 0;
-  double ptScale = scale(L0DUBase::Muon1::Pt);
-  double adScale = scale(L0DUBase::Muon1::Address);
-  double sgScale = scale(L0DUBase::Muon1::Sign);
-  long   ptMax   = max(  L0DUBase::Muon1::Pt);
-  long   adMax   = max(  L0DUBase::Muon1::Address);
-  long   sgMax   = max(  L0DUBase::Muon1::Sign);
-  for(unsigned int i = 0; i != m_muHighest.size();++i){
-    int k = m_muHighest[i];
-    int pt = muonVec[k];
-    if(i<2){
-      dimuon += pt;
-      if( i==0)dimuonP=pt;
-      else 
+    if( bx == 0 )m_muHighest = muHighest; // collect the 3 highest muon for the current BX (==>L0Bank)
+    if( msgLevel(MSG::VERBOSE))verbose() << "L0Muon pT-sorted " << endmsg;
+    
+    int dimuon = 0; // diMuon sum(Pt)
+    int dimuonP= 1; // diMuon prod(Pt)
+    for(unsigned int i = 0; i != muHighest.size();++i){
+      int k = muHighest[i];
+      unsigned long add=0;
+      unsigned long sgn=0;
+      unsigned long pt=0;
+      if( k == 0 ){
+        add = digit( L0DUBase::Muon1::Address , bx )  | (0 << 13)  ;
+        sgn = digit( L0DUBase::Muon1::Sign    , bx ) ;
+        pt  = digit( L0DUBase::Muon1::Pt      , bx ) ;
+      }else if( k == 1 ){
+        add = digit( L0DUBase::Muon2::Address , bx )  | (1 << 13)  ;
+        sgn = digit( L0DUBase::Muon2::Sign    , bx ) ;
+        pt  = digit( L0DUBase::Muon2::Pt      , bx ) ;
+      }else if( k == 2 ){
+        add = digit( L0DUBase::Muon3::Address , bx ) | (2 << 13)  ;
+        sgn = digit( L0DUBase::Muon3::Sign    , bx ) ;
+        pt  = digit( L0DUBase::Muon3::Pt      , bx ) ;
+      }else if( k == 3 ){
+        add = digit( L0DUBase::Muon4::Address , bx )  | (3 << 13)  ;
+        sgn = digit( L0DUBase::Muon4::Sign    , bx ) ;
+        pt  = digit( L0DUBase::Muon4::Pt      , bx ) ;
+      }else if( k == 4 ){
+        add = digit( L0DUBase::Muon5::Address , bx )  | (4 << 13)  ;
+        sgn = digit( L0DUBase::Muon5::Sign    , bx ) ;
+        pt  = digit( L0DUBase::Muon5::Pt      , bx ) ;
+      }else if( k == 5 ){
+        add = digit( L0DUBase::Muon6::Address , bx )  | (5 << 13)  ;
+        sgn = digit( L0DUBase::Muon6::Sign    , bx ) ;
+        pt  = digit( L0DUBase::Muon6::Pt      , bx ) ;
+      }else if( k == 6 ){
+        add = digit( L0DUBase::Muon7::Address , bx )  | (6 << 13)  ;
+        sgn = digit( L0DUBase::Muon7::Sign    , bx ) ;
+        pt  = digit( L0DUBase::Muon7::Pt      , bx ) ;
+      }else if( k == 7 ){
+        add = digit( L0DUBase::Muon8::Address , bx )  | (7 << 13)  ;
+        sgn = digit( L0DUBase::Muon8::Sign    , bx ) ; 
+        pt  = digit( L0DUBase::Muon8::Pt      , bx ) ;
+     }
+      std::string num=Gaudi::Utils::toString(i+1);
+      dataMap["Muon"+num+"(Pt)" ]->setDigit(pt  , sPt , mPt , bx );
+      dataMap["Muon"+num+"(Add)"]->setDigit(add , sAd , mAd , bx );
+      dataMap["Muon"+num+"(Sgn)"]->setDigit(sgn , sSg , mSg , bx );
+      if( i < 2 ){
+        dimuon  += pt;
         dimuonP *= pt;
+      }
     }
-    std::stringstream num("");
-    num << i+1;
-    dataMap["Muon"+num.str()+"(Pt)"]->setDigit( pt , ptScale , ptMax );
-    int add = 0;
-    int sgn = 0;
-    if( k == 0 ){
-      add = digit( L0DUBase::Muon1::Address)  | (0 << 13)  ;
-      sgn = digit( L0DUBase::Muon1::Sign    ) ;
-    }else if( k == 1 ){
-      add = digit( L0DUBase::Muon2::Address)  | (1 << 13)  ;
-      sgn = digit( L0DUBase::Muon2::Sign    ) ;
-    }else if( k == 2 ){
-      add = digit( L0DUBase::Muon3::Address)  | (2 << 13)  ;
-      sgn = digit( L0DUBase::Muon3::Sign    ) ;
-    }else if( k == 3 ){
-      add = digit( L0DUBase::Muon4::Address)  | (3 << 13)  ;
-      sgn = digit( L0DUBase::Muon4::Sign    ) ;
-    }else if( k == 4 ){
-      add = digit( L0DUBase::Muon5::Address)  | (4 << 13)  ;
-      sgn = digit( L0DUBase::Muon5::Sign    ) ;
-    }else if( k == 5 ){
-      add = digit( L0DUBase::Muon6::Address)  | (5 << 13)  ;
-      sgn = digit( L0DUBase::Muon6::Sign    ) ;
-    }else if( k == 6 ){
-      add = digit( L0DUBase::Muon7::Address)  | (6 << 13)  ;
-      sgn = digit( L0DUBase::Muon7::Sign    ) ;
-    }else if( k == 7 ){
-      add = digit( L0DUBase::Muon8::Address)  | (7 << 13)  ;
-      sgn = digit( L0DUBase::Muon8::Sign    ) ;
-    }
-    dataMap["Muon"+num.str()+"(Add)"]->setDigit(add , adScale , adMax);
-    dataMap["Muon"+num.str()+"(Sgn)"]->setDigit(sgn , sgScale , sgMax);
+    dataMap[Name[DiMuonPt]]->setDigit(     dimuon  ,  sPt     , 1+2*mPt           , bx );  
+    dataMap[Name[DiMuonProdPt]]->setDigit( dimuonP ,  sPt*sPt , (mPt+1)*(mPt+1)-1 , bx );  
   }
-  dataMap[Name[DiMuonPt]]->setDigit( dimuon , ptScale , ptMax*2+1);  
-  dataMap[Name[DiMuonProdPt]]->setDigit( dimuonP , ptScale , (ptMax+1)*(ptMax+1)-1);  
-  if( msgLevel(MSG::VERBOSE))verbose() << "DiMuon OK " << endmsg;
-
   // -------------------------------------
   // Data processing of user-defined data
   // ------------------------------------  
@@ -390,9 +406,9 @@ const std::vector<unsigned int> L0DUEmulatorTool::bank(unsigned int version){
   //---------------------------------------------------------
   else  if( 1 == version || 2 == version ){
 
-    // simulation : no previous/next report
-    unsigned int nBxp = 0;
-    unsigned int nBxm = 0;
+    // simulation : no previous/next report (emulated with 0's when requested)
+    unsigned int nBxp = (m_emuBX) ? 2: 0;
+    unsigned int nBxm = (m_emuBX) ? 2: 0;
 
 
     // global header ( simulation : no PGA f/w version )
@@ -538,6 +554,18 @@ const std::vector<unsigned int> L0DUEmulatorTool::bank(unsigned int version){
                        digit( L0DUBase::PileUp::Peak1Pos) << 16 |
                        digit( L0DUBase::PileUp::Peak2Pos) << 24 );
     // put here the summaries for the sequence of consecutive BX if any
+    if( m_emuBX ){
+      for(unsigned int i=0;i< tc_size;++i)l0Block.push_back(0);// Prev2 channels-map
+      for(unsigned int i=0;i< ec_size;++i)l0Block.push_back(0);// Prev2 conditions-map
+      for(unsigned int i=0;i< tc_size;++i)l0Block.push_back(0);// Prev1 channels-map
+      for(unsigned int i=0;i< ec_size;++i)l0Block.push_back(0);// Prev1 conditions-map
+      l0Block.push_back( digit(L0DUBase::Sum::Et , -2) | digit(L0DUBase::Sum::Et , -1)<< 16); // SumEt Prev2/Prev1
+      for(unsigned int i=0;i< tc_size;++i)l0Block.push_back(0);// Next1 channels-map
+      for(unsigned int i=0;i< ec_size;++i)l0Block.push_back(0);// Next1 conditions-map
+      for(unsigned int i=0;i< tc_size;++i)l0Block.push_back(0);// Next2 channels-map
+      for(unsigned int i=0;i< ec_size;++i)l0Block.push_back(0);// Next2 conditions-map
+      l0Block.push_back( digit(L0DUBase::Sum::Et , +1) | digit(L0DUBase::Sum::Et , +2)<< 16); // SumEt Prev2/Prev1
+    }
     
   }
   else{

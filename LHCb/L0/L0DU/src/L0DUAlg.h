@@ -40,7 +40,6 @@ private:
   // parameters
   unsigned int m_rawSrcID;
   std::string m_emulatorType;
-  std::string m_rawLocation;
   std::string m_reportLocation;
   std::string m_tck;
   std::string m_configName;

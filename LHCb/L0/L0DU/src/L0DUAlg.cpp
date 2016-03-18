@@ -39,7 +39,6 @@ L0DUAlg::L0DUAlg( const std::string& name,
   declareProperty( "BankVersion"             , m_rawVsn   = 2 );
   declareProperty( "EmulatorTool"            , m_emulatorType="L0DUEmulatorTool");
   //
-  declareProperty( "RawLocation"             , m_rawLocation    = LHCb::RawEventLocation::Default   );
   declareProperty( "L0DUReportLocation"          , m_reportLocation = LHCb::L0DUReportLocation::Default );
   //
   declareProperty( "TCK"                     , m_tck="");

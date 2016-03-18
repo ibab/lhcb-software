@@ -3,13 +3,19 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2016-03-18 - Olivier Deschamps
+  - L0DUConfigProvide & L0DUEmulatorTool & monitoring algs  : complete BX-related update
+
 !========================= L0DU v10r35 2016-03-16 =========================
 ! 2016-03-12 - Olivier Deschamps
   - L0ProcessorDataDecoder : adapt to BX-mapped ProcessorData
   - L0DUConfigProvider     : parse BX from L0TCK configuration + adapt to change in L0DUElementaryData/Condition base classes
   - L0DUEmulatorTool       : adapt to BX-mapped ProcessorData (to be completed for L0Muons)
   - L0DUFromRawTool        : insert BX=-2 => +2 for Sum(Et) in the L0DU-produced Processor data
+  - L0DUReportMonitor      : adapt to above changes
+  - L0DURawBankMonitor     : adapt to above changes
   - (temporarily) remove L0Pattern (expert code producing data patterns for hardware tests)
+  - to be done             : use ProcessorData from adjacent BX when running in TAE mode (or to be done by L0Processor emulators)
 
 ! 2016-03-08 - Gerhard Raven
  - C++11 modernization

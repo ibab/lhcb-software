@@ -61,6 +61,8 @@ private:
   std::map<int , double > m_decCnt;
   std::map<int ,std::map<unsigned int, double> > m_decCntMap;
   std::map<unsigned int, double>  m_evtCntMap;
+  std::map<int , std::map<std::string,int> > m_condBXMap;
+  std::map<int , std::map<std::string,int> > m_condErrorMap;
   double m_evtCnt;
 
   std::map<unsigned int, LHCb::L0DUConfig*> m_configs;
@@ -79,5 +81,7 @@ private:
   void label( AIDA::IHistogram2D* h2d , std::map<int,std::string>  labels, int mask=0x3,bool count=true,std::string opt="");
   bool m_generic;
   bool m_swap;
+  std::map<std::string,int> m_condBX;
+  std::map<std::string,int> m_condError;
 };
 #endif // L0DUREPORTMONITOR_H

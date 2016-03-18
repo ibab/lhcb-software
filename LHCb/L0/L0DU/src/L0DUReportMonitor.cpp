@@ -23,21 +23,23 @@ DECLARE_ALGORITHM_FACTORY( L0DUReportMonitor )
 // Standard constructor, initializes variables
 //=============================================================================
 L0DUReportMonitor::L0DUReportMonitor( const std::string& name,
-                                      ISvcLocator* pSvcLocator)
-  : L0AlgBase ( name , pSvcLocator ),
-    m_chanCntMap(), 
-    m_condCntMap(),
-    m_chanRateMap(),
-    m_condRateMap(),
-    m_trigCntMap(),
-    m_trigRateMap(),
-    m_trigRelRateMap(),
-    m_decCntMap(),
-    m_evtCntMap(),
-    m_evtCnt(0),
-    m_prevTCK(-1),
-    m_swap(true)
-{
+                                      ISvcLocator* pSvcLocator): L0AlgBase ( name , pSvcLocator ),
+  m_chanCntMap(), 
+  m_condCntMap(),
+  m_chanRateMap(),
+  m_condRateMap(),
+  m_trigCntMap(),
+  m_trigRateMap(),
+  m_trigRelRateMap(),
+  m_decCntMap(),
+  m_evtCntMap(),
+  m_condBXMap(),
+  m_condErrorMap(),
+  m_evtCnt(0),
+  m_prevTCK(-1),
+  m_swap(true),
+  m_condBX(),
+  m_condError(){
   declareProperty( "ReportLocation"    , m_reportLocation =  LHCb::L0DUReportLocation::Default );
   declareProperty( "DataMonitor"       , m_data = false );
   declareProperty( "ConditionsMonitor" , m_cond = false );
@@ -132,6 +134,8 @@ StatusCode L0DUReportMonitor::execute() {
       m_trigCnt.clear();     
       m_trigRate.clear();    
       m_trigRelRate.clear();
+      m_condBX.clear();
+      m_condError.clear();
     }
     else{  
       m_swap = false;
@@ -140,6 +144,8 @@ StatusCode L0DUReportMonitor::execute() {
       m_chanRate    = m_chanRateMap[tck];
       m_condRate    = m_condRateMap[tck];
       m_evtCnt      = m_evtCntMap[tck];
+      m_condBX      = m_condBXMap[tck];
+      m_condError   = m_condErrorMap[tck];
       int i = 1;
       while( i < LHCb::L0DUDecision::Any){
         m_decCnt[i]      = m_decCntMap[i][tck];
@@ -239,6 +245,14 @@ StatusCode L0DUReportMonitor::execute() {
     m_condRate[(*it).first ] = 0.;
     m_condSeq[ (*it).first ] = 0;
     condNames[ (*it).second->id() ] =  (*it).first ;
+    int bx = it->second->bx();
+    m_condBX[ it->first ]=bx;
+    if( ! it->second->data()->hasData( bx )){
+      std::string _name = ( bx == 0 ) ? it->first : it->first +" [BX="+Gaudi::Utils::toString(bx)+"]";
+      m_condError[_name] += 1;
+      Warning("L0DUElementaryData '"+it->second->data()->name()+"' has no value set for BX="+Gaudi::Utils::toString(bx),
+              StatusCode::SUCCESS,5).ignore();
+    } 
   }
   
   // Trigger counters 
@@ -295,7 +309,8 @@ StatusCode L0DUReportMonitor::execute() {
   m_condCntMap[tck]     = m_condCnt;
   m_condRateMap[tck]    = m_condRate;
   m_evtCntMap[tck]      = m_evtCnt;
-
+  m_condBXMap[tck]      = m_condBX;
+  m_condErrorMap[tck]   = m_condError;
   idec = 1;
   while( idec < LHCb::L0DUDecision::Any){
     m_decCntMap[idec][tck]  = m_decCnt[idec];
@@ -777,7 +792,9 @@ StatusCode L0DUReportMonitor::finalize() {
     m_chanRate    = m_chanRateMap[tck];
     m_condRate    = m_condRateMap[tck];
     m_evtCnt      = m_evtCntMap[tck];
-    
+    m_condBX      = m_condBXMap[tck];
+    m_condError   = m_condErrorMap[tck];
+
     std::map<int,double> rate;
     std::map<int,double> eRate;
     int i = 1;
@@ -891,10 +908,14 @@ StatusCode L0DUReportMonitor::finalize() {
     
     info() << "   ------------------------ CONDITIONS ------------------------------ " <<endmsg; 
     for(CounterMap::iterator ic =  m_condRate.begin(); m_condRate.end()!=ic ; ic++){ 
-      std::string name = (*ic).first; 
-    info() << "   *  Elementary Condition  " 
+      std::string name = ic->first; 
+      int bx=m_condBX[name];
+      std::string _name = ( bx == 0 ) ? name : name +" [BX="+Gaudi::Utils::toString(bx)+"]";
+      int err=m_condError[_name];
+      std::string stamp  = ( err == 0 )? "" : " [#ERRORS :"+ Gaudi::Utils::toString(err)+"] ";
+      info() << "   *  Elementary Condition  " << stamp 
              << format( "%20s :  %8.0f events : rate = %6.2f  %%   ", 
-                        name.c_str(), m_condCnt[name], m_condRate[name]) << endmsg;
+                        _name.c_str(), m_condCnt[name], m_condRate[name]) << endmsg;
     }
     info() << "======================================================================== " <<endmsg;
   }
