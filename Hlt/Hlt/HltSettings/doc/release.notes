@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+
+! 2016-03-18 - Simone Stracka
+ - Bottomonium folder added to Physics_pp_Draft2016.py
+
 ! 2016-03-17 - Roel Aaij
  - Add configuration dictionary of Hlt1MVALines to Hlt2_TrackingOnly.
 
