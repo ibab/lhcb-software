@@ -15,10 +15,11 @@ Purpose: LHCb reconstruction program
     (PatVeloTT)
   . Add new default tuning for Run 2 data, "MC15TuneV1" (ChargedProtoANNPID)
   . Follow changes in debug printout of algorithms in Gaudi v27r1
-  . New tuning for forward tracks (PatAlgorithms)
+  . New tuning for forward tracks to remove ghosts (PatAlgorithms)
   . New tuning for Rich
   . Remove Velo tracks in FittedHLT1VeloTracks container that don't belong to a PV
     (RecConf)
+  . Update to L0DU to support using previous BX in trigger decision
 
 - Changes to tests
   . Remove temporary RegexpReplacer that was introduced in v49r2 to deal with the
