@@ -4,6 +4,7 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!========================= DetCond v12r47 2016-03-18 =========================
 ! 2016-03-18 - Roel Aaij
  - Remove configuration of environment variables meant to setup access to the
    LHCb online oracle instance. This should be done online as part of the
