@@ -1,0 +1,10 @@
+//_________________________________________________________
+// 
+// Monitor L0DU report
+//_________________________________________________________
+//
+#include "$L0DUROOT/options/L0Sequence.opts"
+ApplicationMgr.TopAlg += { "GaudiSequencer/L0DUMoniSeq" };
+
+
+

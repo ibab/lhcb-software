@@ -1,0 +1,53 @@
+#include "$ORWELLOPTS/OrwellApp.opts"
+//#include "$STDOPTS/LHCbApplication.opts"
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+//--------------------------------------------------------
+
+#include "$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts"
+
+//// ---emumate standard configs
+
+//#include "$L0TCK/L0DUConfig.opts"
+//ToolSvc.L0DUConfig.Preload = true; 
+
+//// --- emulate pattern configs
+
+L0DU.L0DUConfigProviderName = "L0PatternConfig";
+L0DUFromRaw.L0DUFromRawTool.L0DUConfigProviderName = "L0PatternConfig";
+
+// Emulation config : 
+L0DU.TCK = "0xDEB7";  
+L0DU.BankVersion = 2;
+
+
+// the processing options
+#include "$L0DUROOT/options/L0DUPatternConfig.opts"
+
+
+
+//---------------------------------------------------------------------------
+// Histogram output
+//---------------------------------------------------------------------------
+ApplicationMgr.ExtSvc += { "NTupleSvc" };
+
+//ApplicationMgr.HistogramPersistency = "HBOOK";
+//NTupleSvc.Output={"FILE1 DATAFILE='l0pattern.hbook' TYP='HBOOK' OPT='NEW'"};
+
+// Root format 
+ApplicationMgr.HistogramPersistency = "ROOT";
+NTupleSvc.Output={"FILE1 DATAFILE='L0Pattern.root' TYP='ROOT' OPT='NEW'"};
+
+
+//---------------------------------------------------------------------------
+// Event input  (& output)
+//---------------------------------------------------------------------------
+
+ApplicationMgr.EvtMax = 256;
+EventSelector.FirstEvent = 1;  
+//EventSelector.Input += {  
+//	"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v3-lumi2/00001883/DST/0000/00001883_00002264_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+//};
+#pragma print off
+//#include "$ORWELLOPTS/Beam5VeloCMagDownNu1WTruth_InclB.opts"
+#include "$ORWELLOPTS/inputRawData.opts"
+#pragma print on

@@ -1,0 +1,26 @@
+
+// Sequencer :
+
+L0ConfigMonitor.Members += { "L0DUFromRawAlg/L0DUFromRawMon",
+    "L0DUAlg/L0DUEmu",
+    "L0DUReportMonitor/ConfigMonitor"
+ };
+L0ConfigMonitor.MeasureTime = true;
+
+
+// Decoding :
+L0DUFromRawMon.L0Context = "Monitor";
+L0DUFromRawMon.WriteProcData  = true;
+L0DUFromRawMon.WriteOnTES  = false; // No report from raw
+
+// Emulation : 
+L0DUEmu.WriteBanks = false; // no bank
+L0DUEmu.WriteOnTES = true;  // write emulated report
+L0DUEmu.ProcessorDataLocations = {"Trig/L0/L0DUData"}; // data from decoding
+L0DUEmu.L0Context = "Monitor";
+
+// Monitor : 
+ConfigMonitor.L0Context = "Monitor";
+
+// Configs :
+#include "$L0TCK/L0DUConfig.opts"

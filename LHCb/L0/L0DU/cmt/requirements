@@ -1,0 +1,31 @@
+package		  L0DU
+version           v10r35
+
+# ================ structure =============================================
+branches	src cmt doc options python
+include_path none
+
+# ================ options ===============================================
+set L0DUOPTS	$(L0DUROOT)/options
+
+# ================ used packages =========================================
+use L0Event      v*    Event
+use DAQEvent     v*    Event
+use DAQKernel    v*    DAQ
+use CaloDet      v*    Det
+use CaloDAQ      v*    Calo
+use CaloUtils    v*    Calo
+use L0Interfaces v*    L0
+use AIDA         v*    LCG_Interfaces -no_auto_imports
+# the configuration database :
+use L0TCK        v5r*  TCK
+use L0Base       v*     L0
+# ================ component library =====================================
+library		L0DU  *.cpp -import=AIDA
+
+macro_append ROOT_linkopts " -lHist" \
+                     WIN32 " libHist.lib "
+
+
+apply_pattern component_library library=L0DU
+apply_pattern install_python_modules
