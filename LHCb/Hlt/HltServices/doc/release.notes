@@ -4,13 +4,13 @@
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
 
+!========================= HltServices v2r14 2016-03-18 =========================
 ! 2016-03-18 - Roel Aaij
  - Implement Hlt2Mode in HltConfigSvc.
 
 ! 2016-03-18 - Rosen Matev
  - Register PackedObjectLocations major key in the HltANNSvc for PersistReco
 
-!========================= HltServices v2r14 2016-03-16 =========================
 ! 2016-03-05 - Gerhard Raven
  - fix coverity warnings
 
