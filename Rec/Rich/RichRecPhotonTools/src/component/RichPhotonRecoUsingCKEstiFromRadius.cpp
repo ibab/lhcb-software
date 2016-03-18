@@ -53,7 +53,6 @@ StatusCode PhotonRecoUsingCKEstiFromRadius::initialize()
   if ( sc.isFailure() ) return sc;
 
   // Load used tools
-  acquireTool( "RichMassHypoRings",  m_massHypoRings );
   acquireTool( "RichCherenkovAngle", m_ckAngle       );
 
   // Setup PID types to consider
@@ -132,7 +131,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   {
 
     // Load the ring and select the point for this PID type
-    const auto * ring_tmp = m_massHypoRings->massHypoRing( segment, pid );
+    const auto * ring_tmp = massHypoRingCreator()->massHypoRing( segment, pid );
 
     // Did we find a ring (i.e. above threshold)
     if ( ring_tmp )

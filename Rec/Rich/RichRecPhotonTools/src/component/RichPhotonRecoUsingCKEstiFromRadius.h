@@ -21,7 +21,6 @@
 // Base class and interfaces
 #include "RichPhotonRecoBase.h"
 #include "RichRecBase/IRichPhotonReconstruction.h"
-#include "RichRecBase/IRichMassHypothesisRingCreator.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichKernel/IRichParticleProperties.h"
 
@@ -89,9 +88,6 @@ namespace Rich
       }
 
     private: // data
-
-      /// Pointer to ring creator
-      const IMassHypothesisRingCreator * m_massHypoRings = nullptr;
 
       /// Cherenkov angle tool
       const ICherenkovAngle * m_ckAngle = nullptr; 
