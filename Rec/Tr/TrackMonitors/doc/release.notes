@@ -4,10 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+!========================= TrackMonitors v2r13 2016-03-18 =========================
 ! 2016-03-18 - Silvia Borghi
 - Change histogram range in TrackVertexMonitor and TrackPV2HalfMonitor
 
-!========================= TrackMonitors v2r13 2016-03-17 =========================
 ! 2016-07-03 - Komarov Ilya
 - Code style fix for STEfficiency.cpp
 
