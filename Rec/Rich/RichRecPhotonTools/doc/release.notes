@@ -4,10 +4,10 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RichRecPhotonTools v1r21 2016-03-18 =======================
 ! 2016-03-18 - Chris Jones
  - Use new base class method to access mass hypothesis ring creator.
 
-!========================= RichRecPhotonTools v1r21 2016-03-17 =======================
 ! 2016-03-04 - Chris Jones
  - Adapt to changes in DeRichBeamPipe.
 
