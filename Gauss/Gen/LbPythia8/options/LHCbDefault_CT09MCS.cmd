@@ -53,12 +53,18 @@ PDF:useLHAPDF = on
 PDF:LHAPDFset = CT09MCS 
 PDF:LHAPDFmember = 0
 # -------------------------------
-# rough tuning for pythia8 and cteq6L1
+# First tuning for pythia8 and ct09mcs: Tune 1
 # -------------------------------
+SpaceShower:rapidityOrder = off      # General
 MultipartonInteractions:bProfile = 1 # reset the default bProfile
-MultipartonInteractions:ecmRef = 7000
-MultipartonInteractions:pT0Ref = 2.88
-MultipartonInteractions:ecmPow = 0.238
+SpaceShower:alphaSvalue             = 0.130
+MultipartonInteractions:alphaSvalue = 0.130
+StringFlav:mesonSvector             = 7.474387e-01 # Flavour selection
+StringFlav:probQQtoQ                = 1.615701e-01
+StringFlav:probStoUD                = 3.501613e-01
+MultipartonInteractions:ecmRef      = 7000
+MultipartonInteractions:pT0Ref      = 2.742289e+00' # Multiparton interactions
+MultipartonInteractions:ecmPow      = 0.238
 # -------------------------------
 # flavour selection and excited states
 # tuning adapted from pythia6)

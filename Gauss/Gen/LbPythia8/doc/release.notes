@@ -4,6 +4,10 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2016-03-18 - Gloria Corti
+ - Put Tune 1 parameters for CT09MCS that will be the default for production
+   . options/LHCbDefault_CT09MCS.cmd
+
 ! 2016-03-18 - Philip Ilten
  - Added in the quarkonia tune parameters and updated LhcbHooks to handle 
    these settings
