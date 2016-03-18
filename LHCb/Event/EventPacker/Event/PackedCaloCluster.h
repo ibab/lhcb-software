@@ -29,6 +29,16 @@ namespace LHCb
     long long digit{-1};
     unsigned int status{0};
     short int fraction{0};
+
+    template<typename T>
+    inline void save(T& buf) const {
+      buf.io(digit, status, fraction);
+    }
+
+    template<typename T>
+    inline void load(T& buf, unsigned int /*version*/) {
+      save(buf); // identical operation until version is incremented
+    }
   };
 
   /** @struct PackedCaloCluster Event/PackedCaloCluster.h
@@ -50,6 +60,25 @@ namespace LHCb
     int pos_spread00{0},pos_spread11{0};
     short int pos_spread10{0};
     unsigned short int firstEntry{0}, lastEntry{0};
+
+    template<typename T>
+    inline void save(T& buf) const {
+      buf.io(
+        key, type, seed,
+        pos_x, pos_y, pos_z, pos_e,
+        pos_c0, pos_c1,
+        pos_cov00, pos_cov11, pos_cov22,
+        pos_cov10, pos_cov20, pos_cov21,
+        pos_spread00, pos_spread11,
+        pos_spread10,
+        firstEntry, lastEntry
+      );
+    }
+
+    template<typename T>
+    inline void load(T& buf, unsigned int /*version*/) {
+      save(buf); // identical operation until version is incremented
+    }
   };
 
   // -----------------------------------------------------------------------
@@ -112,6 +141,28 @@ namespace LHCb
 
     /// Access the packing version
     char packingVersion() const { return m_packingVersion; }
+
+    /// Describe serialization of object
+    template<typename T>
+    inline void save(T& buf) const {
+      buf.template save<uint8_t>(m_packingVersion);
+      buf.template save<uint8_t>(version());
+      buf.save(m_clusters);
+      buf.save(m_entries);
+    }
+
+    /// Describe de-serialization of object
+    template<typename T>
+    inline void load(T& buf) {
+      setPackingVersion(buf.template load<uint8_t>());
+      setVersion(buf.template load<uint8_t>());
+      if (m_packingVersion > defaultPackingVersion()) {
+        throw std::runtime_error("PackedCaloClusters packing version is not supported: "
+                                 + std::to_string(m_packingVersion));
+      }
+      buf.load(m_clusters, m_packingVersion);
+      buf.load(m_entries, m_packingVersion);
+    }
 
   private:
 

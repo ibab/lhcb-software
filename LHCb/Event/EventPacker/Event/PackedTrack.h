@@ -1,6 +1,6 @@
 // $Id: PackedTrack.h,v 1.8 2009-11-07 12:20:26 jonrob Exp $
 #ifndef EVENT_PACKEDTRACK_H
-#define EVENT_PACHEDTRACK_H 1
+#define EVENT_PACKEDTRACK_H 1
 
 #include <string>
 #include <vector>
@@ -45,6 +45,24 @@ namespace LHCb
     int ghostProba{0};
 
     //== Note that Nodes and Measurements on Track are transient only, an thus never stored.
+
+    template<typename T>
+    inline void save(T& buf) const {
+      buf.io(
+        key,
+        chi2PerDoF, nDoF, flags,
+        firstId, lastId,
+        firstState, lastState,
+        firstExtra, lastExtra,
+        likelihood,
+        ghostProba
+      );
+    }
+
+    template<typename T>
+    inline void load(T& buf, unsigned int /*version*/) {
+      save(buf); // identical operation until version is incremented
+    }
   };
 
   /** @class PackedState PackedState.h Event/PackedState.h
@@ -82,6 +100,20 @@ namespace LHCb
     short int cov_42{0};
     short int cov_43{0};
 
+    template<typename T>
+    inline void save(T& buf) const {
+      buf.io(
+        flags,
+        x, y, z, tx, ty, p,
+        cov_00, cov_11, cov_22, cov_33, cov_44,
+        cov_10, cov_20, cov_21, cov_30, cov_31, cov_32, cov_40, cov_41, cov_42, cov_43
+      );
+    }
+    
+    template<typename T>
+    inline void load(T& buf, unsigned int /*version*/) {
+      save(buf); // identical operation until version is incremented
+    }
   };
 
   static const CLID CLID_PackedTracks = 1550;
@@ -134,6 +166,30 @@ namespace LHCb
 
     std::vector<std::pair<int,int> >&       extras()       { return m_extra; }
     const std::vector<std::pair<int,int> >& extras() const { return m_extra; }
+
+    /// Describe serialization of object
+    template<typename T> 
+    inline void save(T& buf) const {
+      buf.template save<uint8_t>(version());
+      buf.save(m_vect);
+      buf.save(m_state);
+      buf.save(m_ids);
+      buf.save(m_extra);
+    }
+    
+    /// Describe de-serialization of object
+    template<typename T> 
+    inline void load(T& buf) {
+      setVersion(buf.template load<uint8_t>());
+      if (version() != 4) {
+        throw std::runtime_error("PackedTracks packing version is not supported: "
+                                 + std::to_string(version()));
+      }
+      buf.load(m_vect, version());
+      buf.load(m_state, version());
+      buf.load(m_ids);
+      buf.load(m_extra, version());
+    }
 
   private:
 

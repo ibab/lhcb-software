@@ -49,6 +49,25 @@ namespace LHCb
     unsigned short int lastCluster{0};
     unsigned short int firstHypo{0};
     unsigned short int lastHypo{0};
+
+    template<typename T>
+    inline void save(T& buf) const {
+      buf.io(
+        key, hypothesis, lh, z, posX, posY, posE,
+        cov00, cov11, cov22,
+        cov10, cov20, cov21,
+        cerr10,
+        centX, centY, cerr00, cerr11,
+        firstDigit, lastDigit,
+        firstCluster, lastCluster,
+        firstHypo, lastHypo
+      );
+    }
+
+    template<typename T>
+    inline void load(T& buf, unsigned int /*version*/) {
+      save(buf); // identical operation until version is incremented
+    }
   };
 
   static const CLID CLID_PackedCaloHypos = 1551;
@@ -107,6 +126,28 @@ namespace LHCb
 
     /// Access the packing version
     char packingVersion() const { return m_packingVersion; }
+
+    /// Describe serialization of object
+    template<typename T>
+    inline void save(T& buf) const {
+      buf.template save<uint8_t>(m_packingVersion);
+      buf.template save<uint8_t>(version());
+      buf.save(m_vect);
+      buf.save(m_refs);
+    }
+
+    /// Describe de-serialization of object
+    template<typename T>
+    inline void load(T& buf) {
+      setPackingVersion(buf.template load<uint8_t>());
+      setVersion(buf.template load<uint8_t>());
+      if (m_packingVersion < 1 || m_packingVersion > defaultPackingVersion()) {
+        throw std::runtime_error("PackedCaloHypos packing version is not supported: "
+                                 + std::to_string(m_packingVersion));
+      }
+      buf.load(m_vect, m_packingVersion);
+      buf.load(m_refs);
+    }
 
   private:
 

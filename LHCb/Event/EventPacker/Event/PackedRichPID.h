@@ -35,6 +35,45 @@ namespace LHCb
     int dllBt{0};
     long long key{0};
     int dllDe{0};
+
+    template<typename T>
+    inline void save(T& buf) const {
+      buf.io(
+        pidResultCode,
+        dllEl, dllMu, dllPi, dllKa, dllPr,
+        track,
+        dllBt,
+        key,
+        dllDe
+      );
+    }
+
+    template<typename T>
+    inline void load(T& buf, unsigned int /*version*/) {
+      buf.io(pidResultCode);
+      buf.io(dllEl);
+      buf.io(dllMu);
+      buf.io(dllPi);
+      buf.io(dllKa);
+      buf.io(dllPr);
+      buf.io(track);
+      buf.io(dllBt);
+      buf.io(key);
+      buf.io(dllDe);
+      
+      // - Example 1, adding fields
+      // if (version >= 5) buf.io(dllIon)
+      
+      // - Example 2, expanding (changing) field type
+      // int -> long long pidResultCode
+      // if (version >= 5) {
+      //   buf.io(pidResultCode);
+      // } else {
+      //   int tmp;
+      //   buf.io(tmp);
+      //   pidResultCode = tmp;
+      // }
+    }
   };
 
   // -----------------------------------------------------------------------
@@ -89,6 +128,26 @@ namespace LHCb
 
     /// Access the packing version
     char packingVersion() const { return m_packingVersion; }
+
+    /// Describe serialization of object
+    template<typename T>
+    inline void save(T& buf) const {
+      buf.template save<uint8_t>(m_packingVersion);
+      buf.template save<uint8_t>(version());
+      buf.save(m_vect);
+    }
+
+    /// Describe de-serialization of object
+    template<typename T>
+    inline void load(T& buf) {
+      setPackingVersion(buf.template load<uint8_t>());
+      setVersion(buf.template load<uint8_t>());
+      if (m_packingVersion < 4 || m_packingVersion > defaultPackingVersion()) {
+        throw std::runtime_error("PackedRichPIDs packing version is not supported: "
+                                 + std::to_string(m_packingVersion));
+      }
+      buf.load(m_vect, m_packingVersion);
+    }
 
   private:
 
