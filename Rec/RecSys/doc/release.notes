@@ -18,11 +18,11 @@ This version uses Gaudi v27r1, LHCb v40r1 and Lbcom v18r1 (and ROOT 6.06.02)
     Rich/RichRecMCTools v2r34, Rich/RichRecMonitors v2r38,
     Rich/RichRecPhotonTools v1r21, Rich/RichRecQC v2r74, Rich/RichRecSys v5r10,
     Rich/RichRecTools v4r30, Rich/RichRecTrackTools v1r42, Tf/FastVelo v1r25,
-    Tf/PatAlgorithms v5r0, Tf/PatVelo v3r34, Tf/PatVeloTT v4r9, Tf/TfKernel v2r35,
-    Tf/TfTools v1r20p2, Tf/TrackSys v9r13, Tr/TrackCheckers v4r23,
-    Tr/TrackExtrapolators v2r41, Tr/TrackFitter v5r8, Tr/TrackInterfaces v6r0,
-    Tr/TrackMonitors v2r13, Tr/TrackTools v6r2, Tr/TrackUtils v1r64,
-    Tr/PatPV v3r31
+    Tf/PatAlgorithms v5r0, Tf/PatKernel v2r11, Tf/PatVelo v3r34,
+    Tf/PatVeloTT v4r9, Tf/TfKernel v2r35, Tf/TfTools v1r20p2, Tf/TrackSys v9r13,
+    Tr/TrackCheckers v4r23, Tr/TrackExtrapolators v2r41, Tr/TrackFitter v5r8,
+    Tr/TrackInterfaces v6r0, Tr/TrackMCTools v2r13, Tr/TrackMonitors v2r13,
+    Tr/TrackTools v6r2, Tr/TrackUtils v1r64, Tr/PatPV v3r31
 
 - In Calo/CaloPIDs v5r22
   . CaloPIDs configurable :  add slots to configure the Accepted Track::Types 
@@ -118,7 +118,15 @@ This version uses Gaudi v27r1, LHCb v40r1 and Lbcom v18r1 (and ROOT 6.06.02)
      Rich/RichRecMCTools v2r34, Rich/RichRecTrackTools v1r42
   . Remove (and adapt to removal of) old backwards compatibility typedefs.
 
+- In Rich/RichRecAlgorithms v2r22
+  . Add new algorithm Rich::Rec::ClearEvent that clears out the transient
+    event objects as required.
+
 - In Rich/RichRecBase v4r24
+  . Add new clear() method to creator tool interfaces, to allow the transient
+    event information to be cleared out when required.
+  . Remove some unneccessary string data members from the Reco base class,
+    to save memory.
   . Small cleanup to track creator base class.
   . Adapt to change in pixel class due to using smart points for internal
     memory management.
@@ -126,6 +134,9 @@ This version uses Gaudi v27r1, LHCb v40r1 and Lbcom v18r1 (and ROOT 6.06.02)
   . Prefer aliases to typedefs.
   . Properly enforce support for arithemic types only in RichPhotonSpectra
     using type traits.
+
+- In Rich/RichRecMCTools v2r34, Rich/RichRecTrackTools v1r42
+  . make FinishEvent() and InitNewEvent() methods const.
 
 - In Rich/RichRecMonitors v2r38, Rich/RichRecTools v4r30, 
      Rich/RichRecTrackTools v1r42, Rich/RichRecMCAlgorithms v1r7
@@ -145,6 +156,7 @@ This version uses Gaudi v27r1, LHCb v40r1 and Lbcom v18r1 (and ROOT 6.06.02)
     in Rich/RichKernel.
 
 - In Rich/RichRecPhotonTools v1r21
+  . Use new base class method to access mass hypothesis ring creator.
   . Update Quartic reconstruction tool to perform intersection with a sphere
     instead of a plane for the secondary mirrors when appropriate.
   . Add a property to RichPhotonRecoUsingCKEstiFromRadius to allow the
@@ -161,6 +173,10 @@ This version uses Gaudi v27r1, LHCb v40r1 and Lbcom v18r1 (and ROOT 6.06.02)
   . Increase precision to 3 d.p. in RichPIDQC summary table printout.
 
 - In Rich/RichRecSys v5r10
+  . Add new option to the RICH configurable to turn on the clearing of the
+    transient event information at the end of the reconstruction sequence.
+    Should not be used (default is off) if monitoring is required, but 
+    potentially useful for the HLT in minimising the memory footprint.
   . Propagate properly custom options for the ray tracing, mass hypothesis and
     expected track signal tools.
   . Enable by default Deuteron.
@@ -169,6 +185,8 @@ This version uses Gaudi v27r1, LHCb v40r1 and Lbcom v18r1 (and ROOT 6.06.02)
     for the Deuteron hypothesis).
 
 - In Rich/RichRecTools v4r30
+  . Add new clear() method to mass hypothesis ring creator.
+  . Access mass hypo ring creator via new base class method.
   . Update TabulatedSignalDetectionEff to use the MassHypothesisRingCreator
     mass hypothesis rings, instead of performing its own ray tracing, to
     save CPU due to ring reuse.
@@ -211,7 +229,9 @@ This version uses Gaudi v27r1, LHCb v40r1 and Lbcom v18r1 (and ROOT 6.06.02)
     and one avoids double work.
   . Fix three bugs in PatLongLivedTracking, change chi2-cut in x-layers fit,
     implement some speedups
-  . Add more debugging tools to PatLongLivedTracking
+
+- In Tf/PatAlgorithms v5r0, Tf/PatKernel v2r11, Tr/TrackMCTools v3r13
+  . Add more debugging tools for PatLongLivedTracking
 
 - In Tf/PatVelo v3r34
   . Changes to PatVeloGeneralTracking, PatVeloRHitManager and

@@ -66,7 +66,7 @@ use RichRecTrackTools    v1r42   Rich # Chris Jones
 # Tf packages: Track Pattern Recognition
 use FastVelo             v1r25   Tf   # David Hutchcroft
 use PatAlgorithms        v5r0    Tf   # Michel De Cian
-use PatKernel            v2r10p1 Tf   # Michel De Cian
+use PatKernel            v2r11   Tf   # Michel De Cian
 use PatVelo              v3r34   Tf   # David Hutchcroft
 use PatVeloTT            v4r9    Tf   # Mariusz Witek
 use TfKernel             v2r35   Tf   # Michel De Cian
@@ -86,7 +86,7 @@ use TrackFitter          v5r8    Tr   # Wouter Hulsbergen
 use TrackIdealPR         v2r20p1 Tr   # Michel De Cian
 use TrackInterfaces      v6r0    Tr   # Wouter Hulsbergen
 use TrackKernel          v3r0    Tr   # Wouter Hulsbergen
-use TrackMCTools         v3r12p2 Tr   # Michel De Cian
+use TrackMCTools         v3r13   Tr   # Michel De Cian
 use TrackMonitors        v2r13   Tr   # Wouter Hulsbergen, Stephanie Menzemer
 use TrackProjectors      v3r4    Tr   # Wouter Hulsbergen
 use TrackTools           v6r2    Tr   # Wouter Hulsbergen
