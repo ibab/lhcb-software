@@ -61,11 +61,11 @@ TrackPV2HalfAlignMonitor::TrackPV2HalfAlignMonitor( const std::string& name,
 {
   declareProperty( "TrackContainer", m_trackContainerName = LHCb::TrackLocation::Default  );
   declareProperty( "MinNumTrPerPV", m_PV_trackmin = 5 ) ;
-  declareProperty( "limPx",m_limpvx=1.*Gaudi::Units::mm ) ;
+  declareProperty( "limPx",m_limpvx=2.*Gaudi::Units::mm ) ;
   declareProperty( "limPy",m_limpvy=1.*Gaudi::Units::mm ) ;
   declareProperty( "limPz", m_limpvz=150.*Gaudi::Units::mm ) ;
-  declareProperty( "limDPx",m_limdpvx=0.5*Gaudi::Units::mm ) ;
-  declareProperty( "limDPy",m_limdpvy=0.5*Gaudi::Units::mm ) ;
+  declareProperty( "limDPx",m_limdpvx=0.2*Gaudi::Units::mm ) ;
+  declareProperty( "limDPy",m_limdpvy=0.2*Gaudi::Units::mm ) ;
   declareProperty( "limDPz",m_limdpvz=1.*Gaudi::Units::mm ) ;
   declareProperty( "limChi2",m_limchi2=10.);
   declareProperty( "MinZPV", m_zpvmin = -20*Gaudi::Units::cm ) ;

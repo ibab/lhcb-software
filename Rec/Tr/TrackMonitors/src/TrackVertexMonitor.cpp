@@ -37,7 +37,8 @@ private:
   double m_ipmax ;
   double m_ipmaxprof ;
   double m_dzmax ;
-  double m_rpvmax ;
+  double m_xpvmax ;
+  double m_ypvmax ;
   double m_zpvmin ;
   double m_zpvmax ;
   double m_zpvmin_wide ;
@@ -102,7 +103,8 @@ TrackVertexMonitor::TrackVertexMonitor( const std::string& name,
   declareProperty( "MaxIP", m_ipmax = 0.5*Gaudi::Units::mm ) ;
   declareProperty( "MaxIPProfile", m_ipmaxprof = 0.1*Gaudi::Units::mm ) ;
   declareProperty( "MaxDz", m_dzmax =   5*Gaudi::Units::mm ) ;
-  declareProperty( "MaxRPV", m_rpvmax = 1*Gaudi::Units::mm ) ;
+  declareProperty( "MaxXPV", m_xpvmax = 2*Gaudi::Units::mm ) ;
+  declareProperty( "MaxYPV", m_ypvmax = 1*Gaudi::Units::mm ) ;
   declareProperty( "MinZPV", m_zpvmin = -20*Gaudi::Units::cm ) ;
   declareProperty( "MaxZPV", m_zpvmax =  20*Gaudi::Units::cm ) ;
   declareProperty( "MinZPV_Wide", m_zpvmin_wide = -150*Gaudi::Units::cm , "Wide z window for PV plot" ) ;
@@ -276,15 +278,15 @@ StatusCode TrackVertexMonitor::execute()
     // position with crap hack for vertices at exactly 0
     if(std::abs(pv->position().x()) > 0.00001 && std::abs(pv->position().y()) > 0.00001 ){
       //info() << "pvx " << pv->position().x() << endmsg;
-      plot( pv->position().x(), "PV x position",-m_rpvmax,m_rpvmax) ;
-      plot( pv->position().y(), "PV y position",-m_rpvmax,m_rpvmax) ;
+      plot( pv->position().x(), "PV x position",-m_xpvmax,m_xpvmax,200) ;
+      plot( pv->position().y(), "PV y position",-m_ypvmax,m_ypvmax) ;
       plot( pv->position().z(), "PV z position", m_zpvmin,m_zpvmax) ;
       plot( pv->position().z(), "PV z position (wide)", m_zpvmin_wide,m_zpvmax_wide) ;
     }
 
-    if( std::abs( pv->position().y() ) < m_rpvmax )
+    if( std::abs( pv->position().y() ) < m_ypvmax )
       profile1D( pv->position().z(), pv->position().y(),"PV y versus z",m_zpvmin,m_zpvmax,m_nprbins) ;
-    if( std::abs( pv->position().x() ) < m_rpvmax )
+    if( std::abs( pv->position().x() ) < m_xpvmax )
       profile1D( pv->position().z(), pv->position().x(),"PV x versus z",m_zpvmin,m_zpvmax,m_nprbins) ;
 
     // refit the primary vertex with only the long tracks
@@ -301,22 +303,22 @@ StatusCode TrackVertexMonitor::execute()
       auto leftvertex  = std::unique_ptr<LHCb::RecVertex>(m_vertexer->fit( lefttracks ) );
 
       if( leftvertex ) {
-        plot( leftvertex->position().x(), "PV left x",-m_rpvmax,m_rpvmax) ;
-        plot( leftvertex->position().y(), "PV left y",-m_rpvmax,m_rpvmax) ;
+        plot( leftvertex->position().x(), "PV left x",-m_xpvmax,m_xpvmax,200) ;
+        plot( leftvertex->position().y(), "PV left y",-m_ypvmax,m_ypvmax) ;
         plot( leftvertex->position().z(), "PV left z", m_zpvmin,m_zpvmax) ;
         if( leftSensor ) {
-          plot( -(leftSensor->globalToVeloHalfBox(leftvertex->position())).x(), "PV left-Left half x",-m_rpvmax/2,m_rpvmax/2) ;
-          plot( -(leftSensor->globalToVeloHalfBox(leftvertex->position())).y(), "PV left-Left half y",-m_rpvmax/2,m_rpvmax/2) ;
+          plot( -(leftSensor->globalToVeloHalfBox(leftvertex->position())).x(), "PV left-Left half x",-m_xpvmax/4,m_xpvmax/4) ;
+          plot( -(leftSensor->globalToVeloHalfBox(leftvertex->position())).y(), "PV left-Left half y",-m_ypvmax/2,m_ypvmax/2) ;
         }
       }
       auto  rightvertex = std::unique_ptr<LHCb::RecVertex>(m_vertexer->fit( righttracks ));
       if( rightvertex) {
-        plot( rightvertex->position().x(), "PV right x",-m_rpvmax,m_rpvmax) ;
-        plot( rightvertex->position().y(), "PV right y",-m_rpvmax,m_rpvmax) ;
+        plot( rightvertex->position().x(), "PV right x",-m_xpvmax,m_xpvmax,200) ;
+        plot( rightvertex->position().y(), "PV right y",-m_ypvmax,m_ypvmax) ;
         plot( rightvertex->position().z(), "PV right z", m_zpvmin,m_zpvmax) ;
         if( rightSensor ) {
-          plot( -(rightSensor->globalToVeloHalfBox(rightvertex->position())).x(), "PV right-Right half x",-m_rpvmax/2,m_rpvmax/2) ;
-          plot( -(rightSensor->globalToVeloHalfBox(rightvertex->position())).y(), "PV right-Right half y",-m_rpvmax/2,m_rpvmax/2) ;
+          plot( -(rightSensor->globalToVeloHalfBox(rightvertex->position())).x(), "PV right-Right half x",-m_xpvmax/4,m_xpvmax/4) ;
+          plot( -(rightSensor->globalToVeloHalfBox(rightvertex->position())).y(), "PV right-Right half y",-m_ypvmax/2,m_ypvmax/2) ;
         }
       }
       if( leftvertex && rightvertex) {
