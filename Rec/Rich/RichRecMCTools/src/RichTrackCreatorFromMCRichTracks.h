@@ -70,21 +70,21 @@ namespace Rich
 
         // Returns a RichRecTrack object pointer for given ContainedObject.
         // In this implementation the ContainedObject must be a reconstruction 'Track'.
-        virtual LHCb::RichRecTrack * newTrack ( const ContainedObject * obj ) const;
+        virtual LHCb::RichRecTrack * newTrack ( const ContainedObject * obj ) const override;
 
         // Form all possible RichRecTracks from input Tracks
-        virtual StatusCode newTracks() const;
+        virtual StatusCode newTracks() const override;
 
         /// Returns the number of tracks in the input Track container.
-        virtual unsigned int nInputTracks() const;
+        virtual unsigned int nInputTracks() const override;
 
       protected: // methods
 
         /// Initialise for a new event
-        virtual void InitNewEvent();
+        virtual void InitNewEvent() const override;
 
         /// Finalise current event
-        virtual void FinishEvent();
+        virtual void FinishEvent() const override;
 
       private: // definitions
 

@@ -4,6 +4,9 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2016-03-18 - Chris Jones
+ - make FinishEvent() and InitNewEvent() methods const.
+
 !========================= RichRecMCTools v2r34 2016-03-17 =========================
 ! 2016-02-02 - Chris Jones
  - Adapt to removal of old backwards compatibility typedefs.

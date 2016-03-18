@@ -376,15 +376,15 @@ TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
 
 }
 
-void TrackCreatorFromMCRichTracks::InitNewEvent()
+void TrackCreatorFromMCRichTracks::InitNewEvent() const
 {
   TrackCreatorBase::InitNewEvent();
   m_allDone    = false;
-  m_mcrTracks  = 0;
-  m_fakeTracks = 0;
+  m_mcrTracks  = nullptr;
+  m_fakeTracks = nullptr;
 }
 
-void TrackCreatorFromMCRichTracks::FinishEvent()
+void TrackCreatorFromMCRichTracks::FinishEvent() const
 {
   TrackCreatorBase::FinishEvent();
   if ( m_fakeTracks )

@@ -184,7 +184,7 @@ PhotonCreatorWithGaussianCKSmear::buildPhoton( LHCb::RichRecSegment * segment,
 
 }
 
-void PhotonCreatorWithGaussianCKSmear::InitNewEvent()
+void PhotonCreatorWithGaussianCKSmear::InitNewEvent() const
 {
   // initialize base class
   PhotonCreatorBase::InitNewEvent();
