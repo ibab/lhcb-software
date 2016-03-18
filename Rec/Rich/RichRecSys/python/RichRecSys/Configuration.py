@@ -51,6 +51,7 @@ class RichRecSysBaseConf(RichConfigurableUser):
        ,"InitPixels":      True   # Run an initialisation algorithm to create the pixels
        ,"InitTracks":      True   # Run an initialisation algorithm to create the tracks
        ,"InitPhotons":     True   # Run an initialisation algorithm to create the photons
+       ,"ClearTransientEvent": False # Forcibly clear the transient event objects at the end of the processing sequence
        ,"TrackTypeGroups": [ ] # Track type groupings. Empty list means all at once.
        ,"TracklessRingAlgs": ["ENN"] # Run the given Trackless ring finding algorithms
        ,"CheckProcStatus": True   # Check the status of the ProcStatus object
@@ -427,14 +428,22 @@ class RichRecSysBaseConf(RichConfigurableUser):
             pidMerge.OutputPIDLocation = self.getProp("RichPIDLocation")
             pidMerge.PIDVersion = self.getProp("PIDVersion")
             pidSeq.Members += [pidMerge]
-        
+
         #-----------------------------------------------------------------------------
         # Summary objects
         #-----------------------------------------------------------------------------
-        if self.getProp("MakeSummaryObjects"):
+        if self.getProp("MakeSummaryObjects") :
             from Configurables import Rich__Rec__SummaryAlg
             summary = self.makeRichAlg(Rich__Rec__SummaryAlg,"RichRec"+cont+"Summary")
             sequence.Members += [summary]
+
+        #-----------------------------------------------------------------------------
+        # Clear Transient event
+        #-----------------------------------------------------------------------------
+        if self.getProp("ClearTransientEvent") :
+            from Configurables import Rich__Rec__ClearEvent
+            clear = self.makeRichAlg(Rich__Rec__ClearEvent,"RichRec"+cont+"ClearEvent")
+            sequence.Members += [clear]
         
     ## @brief Configure the RICH tools
     #
