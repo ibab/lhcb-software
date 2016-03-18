@@ -11,10 +11,12 @@
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiAlg/IGenericTool.h"
 #include "GaudiKernel/ToolHandle.h"
 #include "PropertyConfigSvc.h"
 
+class Condition;
 
 /** @class HltConfig HltConfig.h
  *
@@ -36,8 +38,8 @@ public:
   void handle(const Incident&) override;
 
 private:
-  void dummyCheckOdin();
-  void checkOdin();
+
+  StatusCode updateTCK();
   void createHltDecReports();
 
   void updateMap(Property&);
@@ -64,7 +66,11 @@ private:
   bool                         m_checkOdin;
   bool                         m_maskL0TCK;
   unsigned int                 m_id = ~0u;
-  bool                         m_hlt2mode;
+  bool                         m_hlt2Mode;
+  std::string                  m_taskNameRegex;
+  std::string                  m_tckConditionPath;
+
+  Condition*                   m_tckCondition;
 
   // resolve TCK -> toplevel config ID, then call method with ID
   ConfigTreeNode::digest_type tck2id(TCK    tck) const;
