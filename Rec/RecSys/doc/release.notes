@@ -5,7 +5,7 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
-</PRE><H1><A NAME=v19r1>2016-03-18 RecSys v19r1</A></H1><PRE>
+</PRE><H1><A NAME=v19r1>2016-03-21 RecSys v19r1</A></H1><PRE>
 This version uses Gaudi v27r1, LHCb v40r1 and Lbcom v18r1 (and ROOT 6.06.02)
 
 - Packages modified: Calo/CaloPIDs v5r22, Calo/CaloReco v5r28, 
