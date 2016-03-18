@@ -275,6 +275,7 @@ This version uses Gaudi v27r1, LHCb v40r1 and Lbcom v18r1 (and ROOT 6.06.02)
   . Follow const-ification of Tr/TrackInterfaces
 
 - In Tr/TrackMonitors v2r13
+  . Change histogram range in TrackVertexMonitor and TrackPV2HalfMonitor
   . Code style fix for STEfficiency.cpp (coverity fix)
   . Fixed a bug in STEfficiency.cpp for TT sectors (Efficiency was filled several
     times for some sectors)
