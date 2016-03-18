@@ -4,6 +4,11 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2016-03-18 - Roel Aaij
+ - Remove configuration of environment variables meant to setup access to the
+   LHCb online oracle instance. This should be done online as part of the
+   environment.
+
 !========================= DetCond v12r46 2016-01-27 =========================
 ! 2016-01-06 - Gerhard Raven
  - prefer SmartIF over raw pointer to interface

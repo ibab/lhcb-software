@@ -432,16 +432,10 @@ class CondDB(ConfigurableUser):
                         %(datatypes, self.getProp("LocalTags")))
 
         # Import SQLDDDB specific info
-        if self.getProp("UseOracle") or self.getProp("UseDBSnapshot"):
-#            importOptions("$SQLDDDBROOT/options/SQLDDDB-Oracle.py")
+        if self.getProp("UseOracle"):
             CondDBAccessSvc("ONLINE", ConnectionString = "CondDBOnline/ONLINE")
             if self.getProp("DisableLFC"):
                 COOLConfSvc(UseLFCReplicaSvc = False)
-            if self.getProp("Online"):
-                COOLConfSvc(UseLFCReplicaSvc = False)
-                CORAL_XML_DIR = "/group/online/condb_viewer"
-                ApplicationMgr().Environment["CORAL_AUTH_PATH"] = CORAL_XML_DIR
-                ApplicationMgr().Environment["CORAL_DBLOOKUP_PATH"] = CORAL_XML_DIR
                 
         else:
             configureOnlineSnapshots()
@@ -791,5 +785,3 @@ def configureOnlineSnapshots(start = None, end = None, connStrFunc = None):
     until = 0x7fffffffffffffffL # Defined in PyCool.cool as ValidityKeyMax
     descr = "'%s':(%d,%d)" % ( accSvc.getFullName(), since, until )
     ONLINE.Readers.append(descr)
-
-
