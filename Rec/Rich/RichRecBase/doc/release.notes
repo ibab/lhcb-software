@@ -4,6 +4,12 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2016-03-18 - Chris Jones
+ - Add new clear() method to creator tool interfaces, to allow the transient
+   event information to be cleared out when required.
+ - Remove some unneccessary string data members from the Reco base class,
+   to save memory.
+
 !========================= RichRecBase v4r24 2016-03-17 =========================
 ! 2016-03-10 - Chris Jones
  - Small cleanup to track creator base class.

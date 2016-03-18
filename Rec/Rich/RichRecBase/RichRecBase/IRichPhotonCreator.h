@@ -146,6 +146,9 @@ namespace Rich
        */
       virtual StatusCode reconstructPhotons() const = 0;
 
+      /// Clear the current transient event data
+      virtual void clear() const = 0;
+
     };
 
   }

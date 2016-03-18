@@ -83,6 +83,9 @@ namespace Rich
        */
       virtual unsigned int nInputTracks() const = 0;
 
+      /// Clear the current transient event data
+      virtual void clear() const = 0;
+      
     };
 
   }

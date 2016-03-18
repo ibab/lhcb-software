@@ -19,18 +19,7 @@
 // Standard constructor
 //=============================================================================
 template <class PBASE>
-Rich::Rec::CommonBase<PBASE>::CommonBase( PBASE * base )
-  : m_base          ( base ),
-    m_pixTool       ( nullptr ),
-    m_tkTool        ( nullptr ),
-    m_segTool       ( nullptr ),
-    m_photTool      ( nullptr ),
-    m_statTool      ( nullptr ),
-    m_trackCrName   ( "RichTrackCreator"   ),
-    m_pixelCrName   ( "RichPixelCreator"   ),
-    m_segmentCrName ( "RichSegmentCreator" ),
-    m_photonCrName  ( "RichPhotonCreator"  ),
-    m_statusCrName  ( "RichStatusCreator"  )
+Rich::Rec::CommonBase<PBASE>::CommonBase( PBASE * base ) : m_base( base )
 {
   base->declareProperty( "ProcStatusLocation",
                          m_procStatLocation = LHCb::ProcStatusLocation::Default );

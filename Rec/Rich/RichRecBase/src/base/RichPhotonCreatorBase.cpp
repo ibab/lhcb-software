@@ -148,6 +148,16 @@ void PhotonCreatorBase::handle ( const Incident & incident )
   }
 }
 
+void PhotonCreatorBase::clear() const
+{
+  // Run Finalise (print stats etc.)
+  FinishEvent();
+  // clear the photon container
+  m_photons->clear();
+  // Initialise for new event
+  InitNewEvent();
+}
+
 void PhotonCreatorBase::printStats() const
 {
   if ( nEvents() > 0 )
@@ -576,7 +586,7 @@ bool PhotonCreatorBase::checkPhotonProb( LHCb::RichRecPhoton * photon ) const
   return keepPhoton;
 }
 
-void PhotonCreatorBase::InitNewEvent()
+void PhotonCreatorBase::InitNewEvent() const
 {
   m_hasBeenCalled = false;
   if ( bookKeep() ) m_photonDone.clear();
@@ -584,7 +594,7 @@ void PhotonCreatorBase::InitNewEvent()
   m_photCountLast = m_photCount;
 }
 
-void PhotonCreatorBase::FinishEvent()
+void PhotonCreatorBase::FinishEvent() const
 {
   if ( m_hasBeenCalled ) ++m_Nevts;
   if ( msgLevel(MSG::DEBUG) )

@@ -68,6 +68,9 @@ namespace Rich
        */
       virtual LHCb::RichRecSegments * richSegments() const = 0;
 
+      /// Clear the current transient event data
+      virtual void clear() const = 0;
+
     };
 
   }

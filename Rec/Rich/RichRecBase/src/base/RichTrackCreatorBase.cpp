@@ -100,6 +100,16 @@ namespace Rich
       }
     }
 
+    void TrackCreatorBase::clear() const
+    {
+      // print stats etc.
+      FinishEvent();
+      // clear the track container
+      m_tracks->clear();
+      // initialise for next time
+      InitNewEvent();
+    }
+
     void TrackCreatorBase::printStats() const
     {
 
@@ -141,7 +151,7 @@ namespace Rich
 
     }
 
-    void TrackCreatorBase::InitNewEvent()
+    void TrackCreatorBase::InitNewEvent() const
     {
       m_hasBeenCalled = false;
       if ( bookKeep() ) m_trackDone.clear();
@@ -152,7 +162,7 @@ namespace Rich
       }
     }
 
-    void TrackCreatorBase::FinishEvent()
+    void TrackCreatorBase::FinishEvent() const
     {
       if ( m_hasBeenCalled )
       {

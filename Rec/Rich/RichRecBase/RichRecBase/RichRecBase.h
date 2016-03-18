@@ -30,6 +30,7 @@ namespace LHCb
 #include "RichRecBase/IRichPhotonCreator.h"
 #include "RichRecBase/IRichPixelCreator.h"
 #include "RichRecBase/IRichStatusCreator.h"
+#include "RichRecBase/IRichMassHypothesisRingCreator.h"
 
 // Processing abort codes
 #include "RichRecBase/RichRecProcCode.h"
@@ -59,7 +60,7 @@ namespace Rich
       CommonBase( PBASE * base = nullptr );
 
       /// Destructor
-      ~CommonBase( ) { }
+      ~CommonBase( ) = default;
 
     protected:
 
@@ -77,53 +78,6 @@ namespace Rich
       /// Non-const access to derived class
       inline       PBASE * base()       { return m_base; }
 
-    protected: // tool nicknames
-
-      /** Access the RichRecPixel creator nickname
-       *
-       *  @return RichRecPixel creator nickname
-       */
-      inline const std::string & pixelCreatorNickName() const
-      {
-        return m_pixelCrName;
-      }
-
-      /** Access the RichRecSegment creator nickname
-       *
-       *  @return RichRecSegment creator nickname
-       */
-      inline const std::string & segmentCreatorNickName() const
-      {
-        return m_segmentCrName;
-      }
-
-      /** Access the RichRecTrack creator nickname
-       *
-       *  @return RichRecTrack creator nickname
-       */
-      inline const std::string & trackCreatorNickName() const
-      {
-        return m_trackCrName;
-      }
-
-      /** Access the RichRecPhoton creator nickname
-       *
-       *  @return RichRecPhoton creator nickname
-       */
-      inline const std::string & photonCreatorNickName() const
-      {
-        return m_photonCrName;
-      }
-
-      /** Access the RichRecStatus creator nickname
-       *
-       *  @return RichRecStatus creator nickname
-       */
-      inline const std::string & statusCreatorNickName() const
-      {
-        return m_statusCrName;
-      }
-
     protected: // Pointers to data object creator tools
 
       /** Access to the RichRecTrack creator tool
@@ -132,7 +86,7 @@ namespace Rich
        */
       inline const ITrackCreator * trackCreator() const
       {
-        if ( !m_tkTool ) base()->acquireTool(trackCreatorNickName(), m_tkTool);
+        if ( !m_tkTool ) { base()->acquireTool("RichTrackCreator",m_tkTool); }
         return m_tkTool;
       }
 
@@ -142,7 +96,7 @@ namespace Rich
        */
       inline const ISegmentCreator * segmentCreator() const
       {
-        if ( !m_segTool ) base()->acquireTool(segmentCreatorNickName(), m_segTool);
+        if ( !m_segTool ) { base()->acquireTool("RichSegmentCreator",m_segTool); }
         return m_segTool;
       }
 
@@ -152,7 +106,7 @@ namespace Rich
        */
       inline const IPixelCreator * pixelCreator() const
       {
-        if ( !m_pixTool ) base()->acquireTool(pixelCreatorNickName(), m_pixTool);
+        if ( !m_pixTool ) { base()->acquireTool("RichPixelCreator",m_pixTool); }
         return m_pixTool;
       }
 
@@ -162,8 +116,18 @@ namespace Rich
        */
       inline const IPhotonCreator * photonCreator() const
       {
-        if ( !m_photTool ) base()->acquireTool(photonCreatorNickName(), m_photTool);
+        if ( !m_photTool ) { base()->acquireTool("RichPhotonCreator",m_photTool); }
         return m_photTool;
+      }
+
+      /** Access the mass hypothesis ring creator tool
+       *
+       *  @return Pointer to the MassHypothesisRingCreator creator interface
+       */
+      inline const IMassHypothesisRingCreator * massHypoRingCreator() const
+      {
+        if ( !m_massHypoRings ) { base()->acquireTool("RichMassHypoRings",m_massHypoRings); }
+        return m_massHypoRings;
       }
 
       /** Access to the RichRecStatus creator tool
@@ -172,7 +136,7 @@ namespace Rich
        */
       inline const IStatusCreator * statusCreator() const
       {
-        if ( !m_statTool ) base()->acquireTool(statusCreatorNickName(), m_statTool);
+        if ( !m_statTool ) { base()->acquireTool("RichStatusCreator",m_statTool); }
         return m_statTool;
       }
 
@@ -220,6 +184,17 @@ namespace Rich
       inline LHCb::RichRecPhotons * richPhotons()
       {
         return photonCreator()->richPhotons();
+      }
+
+      /** Read/write access to the Mass Hypothesis Rings for the current event
+       *
+       * Internal consistency checking guarantees the data to be valid
+       *
+       * @return Pointer to the RichRecRings data object.
+       */
+      inline LHCb::RichRecRings * richMassHypoRings()
+      {
+        return massHypoRingCreator()->massHypoRings();
       }
 
       /** Read/write access to the RichRecStatus for the current event
@@ -279,6 +254,17 @@ namespace Rich
         return photonCreator()->richPhotons();
       }
 
+      /** Read access to the Mass Hypothesis Rings for the current event
+       *
+       * Internal consistency checking guarantees the data to be valid
+       *
+       * @return Pointer to the RichRecRings data object.
+       */
+      inline const LHCb::RichRecRings * richMassHypoRings() const
+      {
+        return massHypoRingCreator()->massHypoRings();
+      }
+
       /** Read access to the RichRecStatus for the current event
        *
        * Internal consistency checking guarantees the data to be valid
@@ -312,11 +298,8 @@ namespace Rich
       mutable const IPhotonCreator * m_photTool = nullptr; ///< RichRecPhoton Creator tool
       mutable const IStatusCreator * m_statTool = nullptr; ///< RichRecStatus Creator tool
 
-      std::string m_trackCrName;      ///< Track creator nickname
-      std::string m_pixelCrName;      ///< Pixel creator nickname
-      std::string m_segmentCrName;    ///< Segment creator nickname
-      std::string m_photonCrName;     ///< Photon creator nickname
-      std::string m_statusCrName;     ///< Status creator nickname
+      /// Pointer to mass hypothesis ring creator
+      mutable const IMassHypothesisRingCreator * m_massHypoRings = nullptr; 
 
       /// Location of processing status object in TES
       std::string m_procStatLocation;

@@ -100,30 +100,32 @@ namespace Rich
     public: // methods from interface
 
       // Returns a pointer to the RichRecPixels
-      LHCb::RichRecPixels * richPixels() const;
-
+      LHCb::RichRecPixels * richPixels() const override;
 
       // Access the range for the pixels in the given RICH detector
-      IPixelCreator::PixelRange range( const Rich::DetectorType rich ) const;
+      IPixelCreator::PixelRange range( const Rich::DetectorType rich ) const override;
 
       // Access the range for the pixels in the given RICH detector and HPD panel
       IPixelCreator::PixelRange range( const Rich::DetectorType rich,
-                                       const Rich::Side         panel ) const;
+                                       const Rich::Side         panel ) const override;
 
       // Access the begin iterator for the pixels in the given RICH HPD
-      IPixelCreator::PixelRange range( const LHCb::RichSmartID hpdID ) const;
+      IPixelCreator::PixelRange range( const LHCb::RichSmartID hpdID ) const override;
 
       // Form all possible RichRecPixels from RawBuffer
       // The most efficient way to make all RichRecPixel objects in the event.
-      StatusCode newPixels() const;
+      StatusCode newPixels() const override;
+
+      // Clear the current transient event data
+      void clear() const override;
 
     protected: // methods
 
       /// Initialise for a new event
-      virtual void InitNewEvent();
+      virtual void InitNewEvent() const;
 
       /// Finalise current event
-      virtual void FinishEvent();
+      virtual void FinishEvent() const;
 
       /// Read the pixels and fill the RICH and panel begin and end iterators
       void fillIterators() const;
@@ -340,7 +342,7 @@ namespace Rich
       mutable boost::array<PixStats, Rich::NRiches> m_hitCount;
 
       /// Event count
-      unsigned long long m_Nevts = 0;
+      mutable unsigned long long m_Nevts = 0;
 
       /// Flag to indicate if the tool has been used in a given event
       mutable bool m_hasBeenCalled = false;

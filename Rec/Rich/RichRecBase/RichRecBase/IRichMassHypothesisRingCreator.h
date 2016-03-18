@@ -104,6 +104,9 @@ namespace Rich
        */
       virtual LHCb::RichRecRings * massHypoRings() const = 0;
 
+      /// Clear the current transient event data
+      virtual void clear() const = 0;
+
     };
 
   }

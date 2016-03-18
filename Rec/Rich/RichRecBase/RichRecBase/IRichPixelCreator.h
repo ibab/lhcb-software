@@ -113,6 +113,9 @@ namespace Rich
        */
       virtual IPixelCreator::PixelRange range( const LHCb::RichSmartID hpdID ) const = 0;
 
+      /// Clear the current transient event data
+      virtual void clear() const = 0;
+
     };
 
   }

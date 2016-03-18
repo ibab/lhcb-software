@@ -64,7 +64,7 @@ namespace Rich
                         const IInterface* parent );
 
       /// Destructor
-      virtual ~TrackCreatorBase( ) {}
+      virtual ~TrackCreatorBase( ) { }
 
       // Initialize method
       virtual StatusCode initialize() override;
@@ -79,6 +79,9 @@ namespace Rich
 
       // Return a pointer to the container of RichRecTracks
       LHCb::RichRecTracks * richTracks() const;
+
+      // Clear the current transient event data
+      void clear() const override;
 
     private: // methods
 
@@ -137,10 +140,10 @@ namespace Rich
     protected: // methods
 
       /// Initialise for a new event
-      virtual void InitNewEvent();
+      virtual void InitNewEvent() const;
 
       /// Finalise current event
-      virtual void FinishEvent();
+      virtual void FinishEvent() const;
 
       /** Should book-keeping be performed ?
        *
@@ -210,7 +213,7 @@ namespace Rich
       std::string m_richRecTrackLocation;
 
       /// Number of events processed tally
-      unsigned long long m_Nevts = 0;
+      mutable unsigned long long m_Nevts = 0;
 
       /// Flag to turn on or off the book keeping features to save cpu time.
       bool m_bookKeep = false;

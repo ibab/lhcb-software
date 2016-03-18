@@ -106,13 +106,16 @@ namespace Rich
       // Form all photon candidates for a given segment, with all possible pixels.
       const LHCb::RichRecSegment::Photons & reconstructPhotons( LHCb::RichRecSegment * segment ) const override;
 
+      // Clear the current event data
+      void clear() const override;
+
     protected: // methods
 
       /// Initialise for a new event
-      virtual void InitNewEvent();
+      virtual void InitNewEvent() const;
 
       /// Finalise current event
-      virtual void FinishEvent();
+      virtual void FinishEvent() const;
 
       /** Should book-keeping be performed ?
        *
@@ -328,7 +331,7 @@ namespace Rich
       const IParticleProperties * m_richPartProp = nullptr;
 
       /// Number of events processed tally
-      unsigned long long m_Nevts = 0;
+      mutable unsigned long long m_Nevts = 0;
 
       /// N sigma for acceptance bands
       std::vector<double> m_nSigma;   

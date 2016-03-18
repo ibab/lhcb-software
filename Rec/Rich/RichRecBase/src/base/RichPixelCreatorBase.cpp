@@ -28,7 +28,6 @@ namespace Rich
                                         const std::string& name,
                                         const IInterface* parent )
       : Rich::Rec::ToolBase ( type, name, parent ),
-        m_allDone       ( false ),
         m_hpdOcc        ( Rich::NRiches ),
         m_hpdClus       ( Rich::NRiches ),
         m_clusterHits   ( Rich::NRiches, false ),
@@ -528,7 +527,14 @@ namespace Rich
       }
     }
 
-    void PixelCreatorBase::InitNewEvent()
+    void PixelCreatorBase::clear() const
+    {
+      this->FinishEvent();
+      m_pixels->clear();
+      this->InitNewEvent();
+    }
+
+    void PixelCreatorBase::InitNewEvent() const
     {
       m_hasBeenCalled = false;
       m_allDone       = false;
@@ -540,11 +546,14 @@ namespace Rich
       }
     }
 
-    void PixelCreatorBase::FinishEvent()
+    void PixelCreatorBase::FinishEvent() const
     {
-      if ( m_hasBeenCalled ) ++m_Nevts;
-      _ri_debug << "Created " << richPixels()->size() << " RichRecPixels at "
-                << pixelLocation() << endmsg;
+      if ( m_hasBeenCalled ) 
+      { 
+        ++m_Nevts;
+        _ri_debug << "Created " << richPixels()->size() << " RichRecPixels at "
+                  << pixelLocation() << endmsg;
+      }
     }
 
   }
