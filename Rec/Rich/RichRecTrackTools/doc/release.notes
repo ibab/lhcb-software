@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2016-03-18 - Chris Jones
+ - Make FinishEvent and InitEvent methods const.
+
 !========================= RichRecTrackTools v1r42 2016-03-17 =======================
 ! 2016-03-10 - Chris Jones
  - Some more C++11 modernisations.

@@ -164,7 +164,7 @@ DelegatedTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) co
 
 }
 
-void DelegatedTrackCreatorFromRecoTracks::InitNewEvent()
+void DelegatedTrackCreatorFromRecoTracks::InitNewEvent() const
 {
   TrackCreatorBase::InitNewEvent();
   m_allDone  = false;

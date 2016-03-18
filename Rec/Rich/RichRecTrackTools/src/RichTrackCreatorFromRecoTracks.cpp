@@ -404,7 +404,7 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
 
 }
 
-void TrackCreatorFromRecoTracks::InitNewEvent()
+void TrackCreatorFromRecoTracks::InitNewEvent() const
 {
   TrackCreatorBase::InitNewEvent();
   m_allDone  = false;

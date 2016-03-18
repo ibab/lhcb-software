@@ -77,22 +77,25 @@ namespace Rich
     public: // methods (and doxygen comments) inherited from public interface
 
       // Save a new RichRecSegment in the container
-      void saveSegment( LHCb::RichRecSegment * segment ) const;
+      void saveSegment( LHCb::RichRecSegment * segment ) const override;
 
       // Create a new RichRecSegment
       LHCb:: RichRecSegment * newSegment( LHCb::RichTrackSegment* segment,
-                                          LHCb::RichRecTrack* pTrk ) const;
+                                          LHCb::RichRecTrack* pTrk ) const override;
 
       // Return a pointer to RichRecSegments
-      LHCb::RichRecSegments * richSegments() const;
+      LHCb::RichRecSegments * richSegments() const override;
+
+      /// Clear the current transient event data
+      void clear() const override;
 
     private: // methods
 
       /// Initialise for each event
-      void InitEvent();
+      void InitEvent() const;
 
       /// Finalise for each event
-      void FinishEvent();
+      void FinishEvent() const;
 
     private:  // Private data
 
@@ -116,28 +119,36 @@ namespace Rich
       mutable std::vector<unsigned long long> m_segCountLast;
 
       /// Number of events processed tally
-      unsigned long long m_Nevts{0};
+      mutable unsigned long long m_Nevts{0};
 
       /// Flag to indicate if the tool has been used in a given event
       mutable bool m_hasBeenCalled{false};
 
     };
 
-    inline void SegmentCreator::InitEvent()
+    inline void SegmentCreator::InitEvent() const
     {
       m_segments = nullptr;
-      if (msgLevel(MSG::DEBUG))
+      if ( msgLevel(MSG::DEBUG) )
       {
         m_segCountLast = m_segCount;
         m_hasBeenCalled = false;
       }
     }
 
-    inline void SegmentCreator::FinishEvent()
+    inline void SegmentCreator::FinishEvent() const
     {
-      if (msgLevel(MSG::DEBUG))
+      if ( msgLevel(MSG::DEBUG) )
       {
-        if ( m_hasBeenCalled ) ++m_Nevts;
+        if ( m_hasBeenCalled )
+        { 
+          ++m_Nevts;
+          debug() << "Saved " << richSegments()->size()
+                  << " RichRecSegments : Aerogel="
+                  << m_segCount[Rich::Aerogel]-m_segCountLast[Rich::Aerogel]
+                  << " Rich1Gas=" << m_segCount[Rich::Rich1Gas]-m_segCountLast[Rich::Rich1Gas]
+                  << " Rich2Gas=" << m_segCount[Rich::Rich2Gas]-m_segCountLast[Rich::Rich2Gas] << endmsg;
+        }
       }
     }
 

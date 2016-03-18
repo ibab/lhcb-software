@@ -1,3 +1,4 @@
+
 //-----------------------------------------------------------------------------
 /** @file RichSegmentCreator.cpp
  *
@@ -28,7 +29,6 @@ SegmentCreator::SegmentCreator ( const std::string& type,
     m_segCount      ( Rich::NRadiatorTypes, 0 ),
     m_segCountLast  ( Rich::NRadiatorTypes, 0 )
 {
-
   // tool interface
   declareInterface<ISegmentCreator>(this);
 
@@ -36,7 +36,6 @@ SegmentCreator::SegmentCreator ( const std::string& type,
   declareProperty( "EnergyBins", m_binsEn );
   declareProperty( "RichRecSegmentLocation", m_richRecSegmentLocation = 
                    contextSpecificTES(LHCb::RichRecSegmentLocation::Default) );
-
 }
 
 StatusCode SegmentCreator::initialize()
@@ -52,11 +51,11 @@ StatusCode SegmentCreator::initialize()
 
   // tools
   acquireTool( "RichExpectedTrackSignal", m_signal );
-  acquireTool( "RichDetParameters",    m_detParams, NULL, true );
+  acquireTool( "RichDetParameters",    m_detParams, nullptr, true );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
-  if (msgLevel(MSG::DEBUG)) incSvc()->addListener( this, IncidentType::EndEvent );
+  if ( msgLevel(MSG::DEBUG) ) incSvc()->addListener( this, IncidentType::EndEvent );
 
   return sc;
 }
@@ -93,15 +92,14 @@ void SegmentCreator::handle ( const Incident& incident )
   else if ( IncidentType::EndEvent == incident.type() )
   {
     FinishEvent();
-    if ( msgLevel(MSG::DEBUG) )
-    {
-      debug() << "Saved " << richSegments()->size()
-              << " RichRecSegments : Aerogel="
-              << m_segCount[Rich::Aerogel]-m_segCountLast[Rich::Aerogel]
-              << " Rich1Gas=" << m_segCount[Rich::Rich1Gas]-m_segCountLast[Rich::Rich1Gas]
-              << " Rich2Gas=" << m_segCount[Rich::Rich2Gas]-m_segCountLast[Rich::Rich2Gas] << endmsg;
-    }
   }
+}
+
+void SegmentCreator::clear() const
+{
+  FinishEvent();
+  m_segments->clear();
+  InitEvent();
 }
 
 // Create a new RichRecSegment

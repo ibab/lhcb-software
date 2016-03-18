@@ -72,7 +72,7 @@ namespace Rich
     protected: // methods
 
       /// Initialise for a new event
-      virtual void InitNewEvent();
+      virtual void InitNewEvent() const;
 
     private: // methods
 
