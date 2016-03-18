@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2016-03-18 - Chris Jones
+ - Add new clear() method to mass hypothesis ring creator.
+ - Access mass hypo ring creator via new base class method.
+
 !========================= RichRecTools v4r30 2016-03-17 =========================
 ! 2016-03-10 - Chris Jones
  - Update TabulatedSignalDetectionEff to use the MassHypothesisRingCreator

@@ -21,7 +21,6 @@
 
 // interfaces
 #include "RichRecBase/IRichSignalDetectionEff.h"
-#include "RichRecBase/IRichMassHypothesisRingCreator.h"
 
 // Kernel
 #include "Kernel/RichDetectorType.h"
@@ -110,9 +109,6 @@ namespace Rich
       typedef Rich::Map<const DeRichSphMirror *,unsigned int> MirrorCount;
 
     private: // Private data
-
-      /// Pointer to ring creator
-      const IMassHypothesisRingCreator * m_massHypoRings = nullptr;
 
       /// Pointers to RICHes
       std::vector<const DeRich*> m_riches;

@@ -39,9 +39,6 @@ StatusCode TabulatedSignalDetectionEff::initialize()
   const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  // get tools
-  acquireTool( "RichMassHypoRings", m_massHypoRings );
-
   // Rich1 and Rich2
   m_riches[Rich::Rich1] = getDet<DeRich1>( DeRichLocations::Rich1 );
   m_riches[Rich::Rich2] = getDet<DeRich2>( DeRichLocations::Rich2 );
@@ -103,7 +100,7 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
             << endmsg;
 
   // Load the CK ring
-  const auto * ring = m_massHypoRings->massHypoRing( segment, hypo );
+  const auto * ring = massHypoRingCreator()->massHypoRing( segment, hypo );
   if ( !ring ) { _ri_debug << " -> No Ring" << endmsg; return 0; }
 
   // If the ring is different to the cached one, update the count maps etc.

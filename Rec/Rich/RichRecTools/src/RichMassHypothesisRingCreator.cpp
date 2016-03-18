@@ -81,6 +81,13 @@ StatusCode MassHypothesisRingCreator::initialize()
   return sc;
 }
 
+// Clear the current transient event data
+void MassHypothesisRingCreator::clear() const
+{
+  m_rings->clear();
+  InitNewEvent();
+}
+
 // Method that handles various Gaudi "software events"
 void MassHypothesisRingCreator::handle ( const Incident& /* incident */ )
 {

@@ -73,29 +73,32 @@ namespace Rich
 
       // Implement the handle method for the Incident service.
       // This is used to inform the tool of software incidents.
-      void handle( const Incident& incident );
+      void handle( const Incident& incident ) override;
 
       // Returns the mas hypothesis ring for a given segment and mass hypothesis
       LHCb::RichRecRing * massHypoRing( LHCb::RichRecSegment * segment,
-                                        const Rich::ParticleIDType id ) const;
+                                        const Rich::ParticleIDType id ) const override;
 
       // Builds the mass hypothesis rings for all mass hypotheses for given RichRecSegment
-      void massHypoRings( LHCb::RichRecSegment * segment ) const;
+      void massHypoRings( LHCb::RichRecSegment * segment ) const override;
 
       // Returns a pointer to all mass hypothesis rings
-      LHCb::RichRecRings * massHypoRings() const;
+      LHCb::RichRecRings * massHypoRings() const override;
 
       // Returns a new default RichRecRing object
       // It is the reponsibility of the user to save or delete the ring
-      LHCb::RichRecRing * newMassHypoRing() const;
+      LHCb::RichRecRing * newMassHypoRing() const override;
 
       // Save the RichRecRing in the container
-      void saveMassHypoRing( LHCb::RichRecRing * ring ) const;
+      void saveMassHypoRing( LHCb::RichRecRing * ring ) const override;
+
+      // Clear the current transient event data
+      void clear() const override;
 
     private: // methods
 
       /// Initialise for a new event
-      void InitNewEvent();
+      void InitNewEvent() const;
 
       /// Build a new ring using photon ray tracing
       LHCb::RichRecRing * buildRing( LHCb::RichRecSegment * segment,
@@ -152,7 +155,7 @@ namespace Rich
 
     };
 
-    inline void MassHypothesisRingCreator::InitNewEvent()
+    inline void MassHypothesisRingCreator::InitNewEvent() const
     {
       // Initialise navigation data
       m_rings = nullptr;
