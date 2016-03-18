@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Gen/LbDeuteron
+! Responsible : Philip Ilten?
+! Purpose     : Production tool for deuterons
+!-----------------------------------------------------------------------------
+
+! 2016-03-18 - Philip Ilten
+ - Initial version, without any physics in yet
+!=============================================================================

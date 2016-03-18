@@ -1,0 +1,22 @@
+#============================================================================
+# Created    : 2016-03-18
+# Maintainer : Philip Ilten?
+#============================================================================
+package       LbBound
+version       v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches      doc cmt src
+
+# Used packages.
+#============================================================================
+use           Generators       v*    Gen
+
+# Component library building rule.
+#============================================================================
+library       LbBound          component/*.cpp
+
+# Define component and linker library link options.
+#============================================================================
+apply_pattern component_library library=LbBound
