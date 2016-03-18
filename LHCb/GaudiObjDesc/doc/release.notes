@@ -5,6 +5,9 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+! 2016-03-18 - Marco Clemencic
+ - forgot to install explicitly the script to generate dependencies info
+
 ! 2016-03-17 - Marco Clemencic
  - removed need to have GAUDIOBJDESCROOT set
  - override package name from XML with actual name of the package

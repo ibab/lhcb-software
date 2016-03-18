@@ -12,6 +12,9 @@ gaudi_install_python_modules()
 gaudi_install_scripts()
 
 gaudi_install_cmake_modules()
+# note: gaudi_install_cmake_modules only install .cmake files
+install(FILES cmake/god_generate_deps.py
+        DESTINATION cmake)
 
 #install(FILES xml_files/gdd.dtd DESTINATION data/GaudiObjDesc)
 gaudi_install_resources(xml_files/gdd.dtd)
