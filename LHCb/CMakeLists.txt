@@ -19,4 +19,4 @@ gaudi_project(LHCb v40r1
                    PRConfig
                    RawEventFormat
                    TCK/HltTCK
-		   TCK/L0TCK VERSION v4r*)
+		   TCK/L0TCK VERSION v5r*)
