@@ -4,6 +4,10 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+! 2016-03-18 - Chris Jones
+ - Add new algorithm Rich::Rec::ClearEvent that clears out the transient
+   event objects as required.
+
 !========================= RichRecAlgorithms v2r22 2016-03-17 ========================
 ! 2016-02-16 - Chris Jones
  - Small C++11 clean up.
