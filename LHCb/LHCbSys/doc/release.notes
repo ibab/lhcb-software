@@ -5,36 +5,35 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v40r1>2016-03-17 LHCbSys v40r1</A></H1><PRE>
+</PRE><H1><A NAME=v40r1>2016-03-21 LHCbSys v40r1</A></H1><PRE>
 This version uses Gaudi v27r1 and LCG_84 with ROOT 6.06.02.
 
-- Packages modified: Det/DDDB v1r84, Det/DetDesc v19r1, Det/DetDescChecks v5r13,
-    Det/DetDescSvc v4r1, Det/FTDet v2r13, Det/RichDet v17r7, Det/STDet v5r1,
-    Det/VeloDet v14r1, Det/VPDet v3r5, Event/DAQEvent v9r22,
-    Event/EventPacker v5r10, Event/L0Event v19r10, Event/RecEvent v2r57,
-    Event/RecreatePIDTools v1r9, Event/TrackEvent v6r6, Ex/DetCondExample v11r16,
-    Ex/IOExample v4r18, FT/FTDAQ v1r8, GaudiConf v19r17, Hlt/HltDAQ v4r25p1,
-    Hlt/HltServices v2r14, Kernel/FSRAlgs v2r1, Kernel/HltInterfaces v6r6,
-    Kernel/LHCbAlgs v3r9, Kernel/LHCbKernel v16r1, Kernel/LHCbMath v3r62,
-    L0/L0Calo v11r16, L0/L0DU v10r35, L0/L0Interfaces v2r4, L0/L0Muon v9r15,
-    L0/ProcessorKernel v7r2, Muon/MuonDAQ v4r22, OT/OTDAQ v8r1,
+- Packages modified: Det/DDDB v1r84, Det/DetCond v12r47, Det/DetDesc v19r1,
+    Det/DetDescChecks v5r13, Det/DetDescSvc v4r1, Det/FTDet v2r13,
+    Det/RichDet v17r7, Det/STDet v5r1, Det/VeloDet v14r1, Det/VPDet v3r5,
+    Event/DAQEvent v9r22, Event/EventPacker v5r10, Event/L0Event v19r10,
+    Event/RecEvent v2r57, Event/RecreatePIDTools v1r9, Event/TrackEvent v6r6,
+    Ex/DetCondExample v11r16, Ex/IOExample v4r18, FT/FTDAQ v1r8, GaudiConf v19r17,
+    Hlt/HltDAQ v4r25p1, Hlt/HltServices v2r14, Kernel/FSRAlgs v2r1,
+    Kernel/HltInterfaces v6r6, Kernel/LHCbAlgs v3r9, Kernel/LHCbKernel v16r1,
+    Kernel/LHCbMath v3r62, L0/L0Calo v11r16, L0/L0DU v10r35, L0/L0Interfaces v2r4,
+    L0/L0Muon v9r15, L0/ProcessorKernel v7r2, Muon/MuonDAQ v4r22, OT/OTDAQ v8r1,
     Phys/LoKiCore v11r30, Phys/LoKiGen v10r24, Phys/LoKiHlt v3r22,
     Phys/LoKiMC v10r22, Rich/RichKernel v7r63, Si/SiDAQ v2r4, ST/STDAQ v4r9,
     Velo/VeloDAQ v6r13, VP/VPDAQ v2r8
+
+- In LHCbSys/CMakeLists.txt, L0/L0DU v10r35
+  . Change L0TCK dependency to v5r*
 
 - In Det/DDDB v1r84
   . Do not set default tag for LHCBCOND, CALIBOFF and DQFLAGS partitions in
     case of Simulation
   . Remove MC09 default tags
 
-- In Det/DetDesc v19r1, Det/DetDescSvc v4r1, Det/FTDet v2r13, Det/RichDet v17r7,
-     Det/STDet v5r1, Det/VeloDet v14r1, Event/DAQEvent v9r22,
-     Event/L0Event v19r10, Event/RecEvent v2r57, Event/TrackEvent v6r6,
-     Ex/DetCondExample v11r16, FT/FTDAQ v1r8, Hlt/HltDAQ v4r25, 
-     Hlt/HltServices v2r14, L0/L0Calo v11r16, L0/L0DU v10r35, L0/L0Muon v9r15,
-     Muon/MuonDAQ v4r22, OT/OTDAQ v8r1, Si/SiDAQ v2r4, ST/STDAQ v4r9,
-     Velo/VeloDAQ v6r13, VP/VPDAQ v2r8
-  . Code modernisations. See package release notes for details 
+- In Det/DetCond v12r47
+  . Remove configuration of environment variables meant to setup access to the
+    LHCb online oracle instance. This should be done online as part of the
+    environment.
 
 - In Det/DetDescChecks v5r13
   . Add loaddddb2016 test
@@ -70,7 +69,12 @@ This version uses Gaudi v27r1 and LCG_84 with ROOT 6.06.02.
   . Replace hard-coded pixel pitch by corresponding variable. 
   . Remove unused function. Constify some arguments.
 
+- In Event/DAQEvent v9r22
+  . Update ODIN event type bits
+
 - In Event/EventPacker v5r10
+  . Add serialization functions to packed objects.
+    To be used for persistence in the raw event.
   . Fix a typo in the PackedTrack unpacker check and protect divide by zero FPEs
   . Fix a bug in the unpacking of related info objects caused by too aggressive
     caching of information, that caused an attempt to access a container from a
@@ -133,6 +137,10 @@ This version uses Gaudi v27r1 and LCG_84 with ROOT 6.06.02.
   . Fixed compilation with CMT and Gaudi v27r0.
   . Remove error message when Hlt2MonSvc is not there
   . Port changes in development branch for Turbo reprocessing.
+
+- In Hlt/HltServices v2r14
+  . Implement Hlt2Mode in HltConfigSvc.
+  . Register PackedObjectLocations major key in the HltANNSvc for PersistReco
 
 - In Kernel/FSRAlgs v2r1
   . Normalized a bit test fsralgs.mergesmallfiles
@@ -261,7 +269,14 @@ This version uses Gaudi v27r1 and LCG_84 with ROOT 6.06.02.
   . Change string comparison in RawBankToSTLiteCluster, such that it is not
     performed for each cluster.
 
-
+- In Det/DetDesc v19r1, Det/DetDescSvc v4r1, Det/FTDet v2r13, Det/RichDet v17r7,
+     Det/STDet v5r1, Det/VeloDet v14r1, Event/DAQEvent v9r22,
+     Event/L0Event v19r10, Event/RecEvent v2r57, Event/TrackEvent v6r6,
+     Ex/DetCondExample v11r16, FT/FTDAQ v1r8, Hlt/HltDAQ v4r25, 
+     Hlt/HltServices v2r14, L0/L0Calo v11r16, L0/L0DU v10r35, L0/L0Muon v9r15,
+     Muon/MuonDAQ v4r22, OT/OTDAQ v8r1, Si/SiDAQ v2r4, ST/STDAQ v4r9,
+     Velo/VeloDAQ v6r13, VP/VPDAQ v2r8
+  . Code modernisations. See package release notes for details 
 
 
 </PRE><H1><A NAME=v40r0>2016-01-29 LHCbSys v40r0</A></H1><PRE>
