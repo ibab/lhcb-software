@@ -29,34 +29,33 @@
 // Hlt1Muons
 #include <Hlt1Muons/Candidate.h>
 
-//not ordered map
+// Parsers for std::unordered_map types we need
 namespace {
    using CorrectMap = std::unordered_map<std::string, std::vector<double>>;
+   using WindowMap  = std::unordered_map<unsigned int, std::pair<double, double>>;
 }
 
 namespace Gaudi {
   namespace Parsers {
-    // Parser grammar
+    // Parser grammar and parse function for CorrectMap
     template <typename Iterator, typename Skipper>
     struct Grammar_<Iterator, CorrectMap, Skipper > {
       // In this case, the type is a mapping type, so it requires the MapGrammar.
       // For other grammars see GaudiKernel/GrammarsV2.h
       typedef MapGrammar<Iterator, CorrectMap, Skipper> Grammar;
     };
-
-    // Parse function... nothing special, but it must be done explicitely.
     StatusCode parse(CorrectMap& result, const std::string& input) {
         return parse_(result, input);
     }
 
+    // Parser grammar and parse function for WindowMap
     template <typename Iterator, typename Skipper>
-    struct Grammar_<Iterator, std::unordered_map<unsigned int, std::pair<double,double> >, Skipper > {
-      typedef MapGrammar<Iterator, std::unordered_map<unsigned int, std::pair<double,double> >, Skipper> Grammar;
+    struct Grammar_<Iterator, WindowMap, Skipper > {
+      typedef MapGrammar<Iterator, WindowMap, Skipper> Grammar;
     };
-    StatusCode parse(std::unordered_map<unsigned int, std::pair<double,double> >& result, const std::string& input) {
+    StatusCode parse(WindowMap& result, const std::string& input) {
       return parse_(result, input);
     }
-
   }
 }
 
@@ -84,7 +83,7 @@ namespace std {
     s << '{';
     // this is not strictly needed, but it makes the output sorted, which is
     // always nice (in particular for tests)
-    for(const auto& i: m) {
+    for (const auto& i : m) {
       if (first) first = false;
       else s << ", ";
       Gaudi::Utils::toStream(i.first, s) << ": ";
@@ -94,7 +93,6 @@ namespace std {
     return s;
   }
 }
-
 
 // local
 #include "MatchVeloTTMuon.h"
@@ -137,19 +135,21 @@ MatchVeloTTMuon::MatchVeloTTMuon( const string& type, const string& name,
   declareInterface<ITracksFromTrack>( this );
 
   // Stuff for Velo seeds.
+  declareProperty("Window", m_window = {{1u, {100, 200}},
+                                        {2u, {200, 400}},
+                                        {3u, {300, 500}},
+                                        {4u, {400, 600}}});
 
-  declareProperty("Window", m_Window = {{1u,{100,200}},{2u,{200,400}},{3u,{300,500}},{4u,{400,600}}});
+  declareProperty("MinMomentum", m_minMomentum =    3 * Gaudi::Units::GeV);
+  declareProperty("MaxPt",             m_maxPt = 1000 * Gaudi::Units::MeV);
+  declareProperty("KickScale",     m_kickScale = 1255 * Gaudi::Units::MeV);
+  declareProperty("KickOffset",   m_kickOffset = 175 * Gaudi::Units::MeV);
 
-  declareProperty( "MinMomentum", m_minMomentum =    3 * Gaudi::Units::GeV );
-  declareProperty( "MaxPt",             m_maxPt =  1000 * Gaudi::Units::MeV );
-  declareProperty( "KickScale",     m_kickScale = 1255 * Gaudi::Units::MeV );
-  declareProperty( "KickOffset",   m_kickOffset = 175 * Gaudi::Units::MeV );
-
-  // Focal plane parametrisation from B. Hommels
-  declareProperty( "MagnetPlaneParA", m_z0 =  5.412 * Gaudi::Units::m );
-  declareProperty( "MagnetPlaneParB", m_z1 = -3.567 * Gaudi::Units::m );
-  declareProperty( "MagnetCorParA",   m_c0 =     25.17 * Gaudi::Units::mm );
-  declareProperty( "MagnetCorParB",   m_c1 =   -701.5  * Gaudi::Units::mm );
+  // Focal plane parametrisation
+  declareProperty("MagnetPlaneParA", m_z0 =  5.412 * Gaudi::Units::m);
+  declareProperty("MagnetPlaneParB", m_z1 = -3.567 * Gaudi::Units::m);
+  declareProperty("MagnetCorParA",   m_c0 =     25.17 * Gaudi::Units::mm);
+  declareProperty("MagnetCorParB",   m_c1 =   -701.5  * Gaudi::Units::mm);
 
   // Corrections for errors should be of the form:
   // {'x'  : [a, b, c, d], 'y'  : [e, f, g, h],
@@ -160,16 +160,17 @@ MatchVeloTTMuon::MatchVeloTTMuon( const string& type, const string& name,
   //  - mx and my are coefficients of a polynomial in 1/p for the magnet hit,
   //    that gives the error on the hit in the magnet.
   //  x, y, mx and my must be present. x and y must contain 4 values, mx and my three.
-  declareProperty( "ErrorCorrections", m_errCorrect =
-        {{"mx", {1., 0., 0.}}, {"my", {1., 0., 0.}}, {"x", {1., 1. , 1., 1.}},
-                                                     {"y", {1., 1. , 1., 1.}}});
+  declareProperty("ErrorCorrections", m_errCorrect = {{"mx", {1., 0., 0.}},
+                                                      {"my", {1., 0., 0.}},
+                                                      {"x",  {1., 1. , 1., 1.}},
+                                                      {"y",  {1., 1. , 1., 1.}}});
 
   // General Stuff
-  declareProperty( "MaxChi2DoFX",   m_maxChi2DoFX = 20 );
-  declareProperty( "MaxMissedHits", m_maxMissed = 1 );
-  declareProperty( "SetQOverP",     m_setQOverP = false );
-  declareProperty( "FitY",          m_fitY = false, "Do a fit in Y instead of using the"
-                   "Velo track extrapolation to calculate the chi^2");
+  declareProperty("MaxChi2DoFX",   m_maxChi2DoFX = 20);
+  declareProperty("MaxMissedHits", m_maxMissed = 1);
+  declareProperty("SetQOverP",     m_setQOverP = false);
+  declareProperty("FitY",          m_fitY = false, "Do a fit in Y instead of using the"
+                  "Velo track extrapolation to calculate the chi^2");
 }
 
 //=============================================================================
@@ -226,9 +227,9 @@ StatusCode MatchVeloTTMuon::initialize()
       m_padSizeY[s * nRegions + r] = m_det->getPadSizeY( s, r );
     }
   }
-
-    return sc;
-  }
+  
+  return sc;
+}
 
 //=============================================================================
 StatusCode MatchVeloTTMuon::finalize()
@@ -262,27 +263,28 @@ StatusCode MatchVeloTTMuon::tracksFromTrack( const LHCb::Track& seed,
   if ( produceHistos() ) {
     plot( m_seeds.size(), "NSeedHits", -0.5, 50.5, 51 );
     for ( const Candidate& c : m_seeds ) {
-      plot( c.chi2DoF(), "Chi2DoFX", 0, 100, 100 );
+      if (c.fitted()) {
+        plot( c.chi2DoF(), "Chi2DoFX", 0, 100, 100 );
+      }
     }
   }
 
   // in this case, we only care whether a good seed exists for the specified track...
   if ( !m_setQOverP ) {
-
     if ( std::any_of( begin(m_seeds), end(m_seeds), [=](const Candidate& c) {
-          return c.chi2DoF() < m_maxChi2DoFX ;
-        }) ) {
+             return c.fitted() && c.chi2DoF() < m_maxChi2DoFX ;
+         }) ) {
       // There is a good enough candidate, put the seed into the output unmodified.
       tracks.push_back( const_cast<LHCb::Track*>( &seed ) );
       counter("#matched") += 1;
     }
   } else {
-    auto best =
-      std::min_element( begin(m_seeds), end(m_seeds),
-                        []( const Candidate& lhs, const Candidate& rhs ) {
-                          return lhs.chi2DoF() < rhs.chi2DoF();
-                        } );
-    if ( best != end(m_seeds) && best->chi2DoF() < m_maxChi2DoFX ) {
+    auto last = std::partition(begin(m_seeds), end(m_seeds), []( const Candidate& c) { return c.fitted(); });
+    auto best = std::min_element( begin(m_seeds), last,
+                                  []( const Candidate& lhs, const Candidate& rhs ) {
+                                     return lhs.chi2DoF() < rhs.chi2DoF();
+                                  } );
+    if ( best != last && best->chi2DoF() < m_maxChi2DoFX ) {
       std::unique_ptr<LHCb::Track> out{seed.clone()};
       out->addToAncestors( seed );
       out->addInfo( 35, best->slope() - best->tx() );
@@ -305,12 +307,14 @@ void MatchVeloTTMuon::i_findSeeds( const LHCb::Track& seed,
   // Make a Candidate from the track
   Candidate veloSeed{ &seed };
 
-  // extrapolation from TT to M3 station - Same extrapolation as in the VeloMuonMatch. dSlope is the maximum deflection
+  // extrapolation from TT to M3 station - Same extrapolation as in the VeloMuonMatch.
+  // dSlope is the maximum deflection
   double dSlope = dtx( m_minMomentum );
   const CommonMuonStation& station = m_hitManager->station( seedStation );
   const double zStation = station.z();
 
-  //parametrization of the z-position of the magnet’s focal plane as a function of the orizontal direction of the velo track ty
+  // parametrization of the z-position of the magnet’s focal plane as a function of
+  // the direction of the velo track ty^2
   const double zMagnet = m_z0 + m_z1 * veloSeed.ty2();
   double xMagnet = 0., errXMagnet = 0.;
   veloSeed.xStraight( zMagnet, xMagnet, errXMagnet );
@@ -319,6 +323,9 @@ void MatchVeloTTMuon::i_findSeeds( const LHCb::Track& seed,
   double xMin = 0. ;
   double xMax = 0. ;
 
+  double xWindow = 0., yWindow = 0.;
+  std::tie(xWindow, yWindow) = m_window.at(seedStation);
+  
   if (seed.hasTT()){
     //Use VeloTT info to get the charge of the seed.
     double tan = 0;
@@ -337,28 +344,27 @@ void MatchVeloTTMuon::i_findSeeds( const LHCb::Track& seed,
       std::swap(xMin,xMax);
     }
 
-    xMin -= m_Window.at(seedStation).first;
-    xMax += m_Window.at(seedStation).first;
-
-  }else{  
+    xMin -= xWindow;
+    xMax += xWindow;
+  } else {
     //if I cannot estimate the charge, do as in old VeloMuonMatch
     const double tanMin = ( veloSeed.tx() - dSlope ) / ( 1 + veloSeed.tx() * dSlope );
-    xMin = xMagnet + dz * tanMin - m_Window.at(seedStation).first;
+    xMin = xMagnet + dz * tanMin - xWindow;
     const double tanMax = ( veloSeed.tx() + dSlope ) / ( 1 - veloSeed.tx() * dSlope );
-    xMax = xMagnet + dz * tanMax + m_Window.at(seedStation).first;
+    xMax = xMagnet + dz * tanMax + xWindow;
   }
 
-  // Calculate window in y. In y I just extrapolate in a straight line. yRange==400==padVertical dimension
+  // Calculate window in y. In y I just extrapolate in a straight line.
   double yMuon = 0., yRange = 0;
   veloSeed.yStraight( zStation, yMuon, yRange );
-  yRange += m_Window.at(seedStation).second;
+  yRange += yWindow;
 
   const double yMin = yMuon - yRange;
   const double yMax = yMuon + yRange;
 
   // debug info: print hits in M3
   if ( UNLIKELY( msgLevel( MSG::DEBUG ) ) ) {
-    debug() << "Window: (" << xMin << "," << yMin << ") -> (" << xMax << "," << yMax << ")" << endmsg;
+    debug() << "window: (" << xMin << "," << yMin << ") -> (" << xMax << "," << yMax << ")" << endmsg;
     debug() << "Hits in seed station:" << endmsg;
     for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
       for ( const auto& hit : m_hitManager->hits( xMin, xMax, seedStation, r ) ) {
@@ -367,12 +373,12 @@ void MatchVeloTTMuon::i_findSeeds( const LHCb::Track& seed,
     }
   }
 
-  //it gives the calibrated version of p_inv with an N order polinomial?
+  // Momentum-dependent correction on zMagnet as a function of 1/p in 1/GeV
   auto correct = [](double p_inv, const CorrectMap& cor, CorrectMap::key_type key,
                     double def) -> double {
      if (!cor.count(key)) return def;
      double r = 0.;
-     auto coeffs = cor.find(key)->second;
+     auto coeffs = cor.at(key);
      for (size_t i = 0; i < coeffs.size(); ++i) {
         r += coeffs[i] * pow(p_inv, i);
      }
@@ -411,7 +417,8 @@ void MatchVeloTTMuon::i_findSeeds( const LHCb::Track& seed,
          LHCb::MuonTileID id;
          // Set the X and Y errors such that the error correction is a straigt multiplication
          // to get the desired resolution.
-	 //Calculate the error on the hit in the magnet from a parameterisation obtained from MC as a function of the first momentum estimate based on the single seed hit.
+         // Calculate the error on the hit in the magnet from a parameterisation obtained from MC
+         // as a function of the first momentum estimate based on the single seed hit.
          auto dx = 0.5 * correct(GeV / seed.p(), m_errCorrect, "mx", 1.);
          auto dy = 0.5 * correct(GeV / seed.p(), m_errCorrect, "my", 1.);
          m_magnetHits.emplace_back( new CommonMuonHit( id, xMagnet, dx, yMagnet, dy, zm, 0., false ) );
@@ -438,16 +445,19 @@ void MatchVeloTTMuon::i_addHits( Candidate& seed ) const
     const CommonMuonStation& station = m_hitManager->station( s );
     const double zStation = station.z();
 
+    double xWindow = 0., yWindow = 0.;
+    std::tie(xWindow, yWindow) = m_window.at(s);
+    
     // Calculate window in x and y for this station
     double yMuon = 0., yRange = 0;
     seed.yStraight( zStation, yMuon, yRange );
-    yRange = m_Window.at(s).second;
+    yRange = yWindow;
 
     const double yMin = yMuon - yRange;
     const double yMax = yMuon + yRange;
 
     const double xMuon = ( zStation - zMagnet ) * seed.slope() + xMagnet;
-    const double xRange = m_Window.at(s).first;
+    const double xRange = xWindow;
 
     const double xMin = xMuon - xRange;
     const double xMax = xMuon + xRange;

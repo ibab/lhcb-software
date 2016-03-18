@@ -4,9 +4,12 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2016-03-17 - Roel Aaij
+ - Add parameters used to calculate uncertainty on hits in magnet focal plane
+   used by MatchVeloTTMuon.
+
 ! 2016-03-16 - Jessica Prisciandaro
  - new search windows for MatchVeloTTMuon
-
 
 ! 2016-03-15 - Marian Stahl
  - Fix configuration of PatForwardTool to follow renaming of NN variables in the tool

@@ -19,4 +19,6 @@ gaudi_add_dictionary(Hlt1MuonsDict dict/Hlt1MuonsDict.h dict/Hlt1MuonsDict.xml
 
 gaudi_install_headers(Hlt1Muons)
 
+gaudi_install_python_modules()
+
 gaudi_add_test(QMTest QMTEST)

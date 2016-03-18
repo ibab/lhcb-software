@@ -4,9 +4,12 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
-! 2016-03-16 - Jessica Prisciandaro
+! 2016-03-17 - Roel Aaij
+ - Add check on candidate fit status before using the chi^2
+ - Add python scripts and algorithms that can be used to tune MatchVelo(TT)Muon
 
-- MatchVeloTTMuon update: new Chi2 and search windows optimized for each station
+! 2016-03-16 - Jessica Prisciandaro
+ - MatchVeloTTMuon update: new Chi2 and search windows optimized for each station
 
 ! 2016-02-23 - Francesco Dettori
  - Adding IsMuonTightTool: like IsMuonTool but for the crossed hits.

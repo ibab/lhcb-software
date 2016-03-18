@@ -56,7 +56,8 @@ private:
    //double m_xWindow;
    //double m_yWindow;
    
-   std::unordered_map<unsigned int, std::pair<double,double>> m_Window;
+   using WindowMap = std::unordered_map<unsigned int, std::pair<double, double>>;
+   WindowMap m_window;
 
    double m_minMomentum;
    double m_maxPt;

@@ -36,7 +36,7 @@ class HltRecoConf(LHCbConfigurableUser):
                , "Forward_LPT_MinPt"           :   80. * MeV  # was 200
                , "Forward_LPT_MinP"            : 1000. * MeV # was 3000
                , "Forward_MaxOTHits"           : 15000
-               , "MatchVeloMuon_MinP"          : 6000. * MeV
+               , "MatchVeloMuon_MinP"          : 4000. * MeV
                , "GoodTrCHI2PDOF"              : 4.0  # This TrCHI2PDOF is used in the sequence to mark hits of good tracks.
                , "MaxTrCHI2PDOF"               : 4.0  # This TrCHI2PDOF is used in the making of fitted tracks.
                , "ApplyGHOSTPROBCut"           : False  # Enable cut on ghost probability in the making of protoparticles.
@@ -88,8 +88,16 @@ MatchVeloMuonOptions = {"MaxChi2DoFX" : 10.,
                         "YWindow" : 400.
                         }
 
-MatchVeloTTMuonOptions = {"MaxChi2DoFX" : 20.,
-                          "Window" : {1:(100,200),2:(200,400),3:(300,500),4:(400,600)}
+MatchVeloTTMuonOptions = {"MaxChi2DoFX" : 3.,
+                          "HistoProduce" : False,
+                          "Window" : {1 : (100, 200),
+                                      2 : (200, 400),
+                                      3 : (300, 500),
+                                      4 : (400, 600)},
+                          "ErrorCorrections" : {'mx' : [9.55, -0.5, -143],
+                                                'my' : [7.46, -0.5, -112],
+                                                'x'  : [1., 1., 1., 1.],
+                                                'y'  : [1., 1., 1., 1.]}
                           }
 
 VeloTTToolOptions = {"minMomentum" : 0.0,
