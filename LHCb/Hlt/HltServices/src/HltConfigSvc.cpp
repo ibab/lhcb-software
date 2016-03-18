@@ -48,7 +48,7 @@ HltConfigSvc::HltConfigSvc( const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("checkOdin", m_checkOdin = true);
   declareProperty("maskL0TCK", m_maskL0TCK = false);
   declareProperty("HltDecReportsLocations", m_outputContainerName = {"/Event/Hlt1/DecReports","/Event/Hlt2/DecReports"} );
-  declareProperty("Hlt2Mode", m_hlt2mode = false);
+  declareProperty("Hlt2Mode", m_hlt2Mode = false);
   declareProperty("TaskNameRegex", m_taskNameRegex = "^(?:LHCb[A2]?|FEST)_HLT([^_]*)_Moore([12])_([0-9]+)");
   declareProperty("Hlt2TCKCondition", m_tckConditionPath = "/dd/Conditions/Online/LHCb/RunInfo/HLT2");
 }
@@ -106,7 +106,7 @@ StatusCode HltConfigSvc::initialize()
 
   // If in HLT2 only mode, register the condition we use to get the TCK.q
   if (m_hlt2Mode) {
-     SmartIF<IUpdateManagerSvc> updateSvc = service("UpdateManagerSvc");
+     SmartIF<IUpdateManagerSvc> updateSvc = service<IUpdateManagerSvc>("UpdateManagerSvc");
      if (!updateSvc) return StatusCode::FAILURE;
      updateSvc->registerCondition<HltConfigSvc>(this, m_tckConditionPath,
                                                 &HltConfigSvc::updateTCK,
