@@ -1,8 +1,0 @@
-//________________________________________________________________________
-// 
-// Replace the old bank format (L0DU v0/L0Muon) with the new one (L0DU v1)
-//_________________________________________________________________________
-//
-
-#include "$L0DUROOT/options/ReplaceL0BanksSeq.opts"
-ApplicationMgr.TopAlg += { "GaudiSequencer/L0DUBankSwap" };

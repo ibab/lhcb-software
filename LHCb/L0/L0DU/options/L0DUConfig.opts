@@ -1,8 +1,0 @@
-// -----------------------------------
-// WARNING : OBSOLETE OPTIONS
-// kept for backward compatibility
-// redirect to $L0TCK/L0DUCONFIG.opts
-// PLEASE UPDATE YOUR INCLUDE !
-// -----------------------------------
-
-#include "$L0TCK/L0DUConfig.opts"
