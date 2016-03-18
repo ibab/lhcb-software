@@ -32,6 +32,16 @@ SoftQCD:all = on
 Charmonium:all = on
 Bottomonium:all = on
 # -------------------------------
+# onia tuning
+# -------------------------------
+LhcbHooks:pT0Ref = 1.43
+LhcbHooks:ecmRef = 13000
+LhcbHooks:ecmPow = 0.09
+Bottomonium:O(3S1)[3S1(1)] = 9.28,4.63,3.54
+Bottomonium:O(3S1)[3S1(8)] = 0.15,0.045,0.075
+Bottomonium:O(3S1)[1S0(8)] = 0.02,0.006,0.01
+Bottomonium:O(3S1)[3P0(8)] = 0.02,0.006,0.01
+# -------------------------------
 # couplings and scales
 # -------------------------------
 SigmaProcess:alphaSorder = 2

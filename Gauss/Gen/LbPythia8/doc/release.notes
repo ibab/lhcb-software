@@ -4,6 +4,10 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2016-03-18 - Philip Ilten
+ - Added in the quarkonia tune parameters and updated LhcbHooks to handle 
+   these settings
+
 !======================== LbPythia8 v11r1 2015-08-05 =========================
 ! 2015-08-02 - Philip Ilten
  - Create new particles in Pythia if they don't exist in the database during 

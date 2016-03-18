@@ -129,13 +129,18 @@ StatusCode Pythia8Production::initialize() {
   // Add LhcbHooks parameters.
   Pythia8::Settings &set = m_pythia->settings;
   string sm("StandardModel:"), mpi("MultiPartonInteractions:"), 
-    pre("LhcbHooks:"), parm;
-  parm = "pT0Ref";      set.parm(pre + parm, set.parm(mpi + parm));
-  parm = "ecmRef";      set.parm(pre + parm, set.parm(mpi + parm));
-  parm = "ecmPow";      set.parm(pre + parm, set.parm(mpi + parm));
-  parm = "alphaSvalue"; set.parm(pre + parm, set.parm(mpi + parm));
-  parm = "alphaSorder"; set.parm(pre + parm, set.parm(mpi + parm));
-  parm = "alphaSnfmax"; set.parm(pre + parm, set.parm(sm + parm));
+    pre("LhcbHooks:"), parm("pT0Ref");
+  set.addParm(pre + parm, set.parm(mpi + parm), false, false, 0, 0);
+  parm = "ecmRef";
+  set.addParm(pre + parm, set.parm(mpi + parm), false, false, 0, 0);
+  parm = "ecmPow";
+  set.addParm(pre + parm, set.parm(mpi + parm), false, false, 0, 0);
+  parm = "alphaSvalue";
+  set.addParm(pre + parm, set.parm(mpi + parm), false, false, 0, 0);
+  parm = "alphaSorder";
+  set.addMode(pre + parm, set.mode(mpi + parm), false, false, 0, 0);
+  parm = "alphaSnfmax";
+  set.addMode(pre + parm, set.mode(sm  + parm), false, false, 0, 0);
 
   // Initialize the Pythia beam tool.
   m_pythiaBeamTool = new BeamToolForPythia8(m_beamTool, m_pythia->settings, sc);
