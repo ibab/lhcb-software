@@ -14,7 +14,7 @@ This version uses Gaudi v27r1 and LCG_84 with ROOT 6.06.02.
     Event/DAQEvent v9r22, Event/EventPacker v5r10, Event/L0Event v19r10,
     Event/RecEvent v2r57, Event/RecreatePIDTools v1r9, Event/TrackEvent v6r6,
     Ex/DetCondExample v11r16, Ex/IOExample v4r18, FT/FTDAQ v1r8, GaudiConf v19r17,
-    Hlt/HltDAQ v4r25p1, Hlt/HltServices v2r14, Kernel/FSRAlgs v2r1,
+    Hlt/HltDAQ v4r26, Hlt/HltServices v2r14, Kernel/FSRAlgs v2r1,
     Kernel/HltInterfaces v6r6, Kernel/LHCbAlgs v3r9, Kernel/LHCbKernel v16r1,
     Kernel/LHCbMath v3r62, L0/L0Calo v11r16, L0/L0DU v10r35, L0/L0Interfaces v2r4,
     L0/L0Muon v9r15, L0/ProcessorKernel v7r2, Muon/MuonDAQ v4r22, OT/OTDAQ v8r1,
@@ -130,7 +130,8 @@ This version uses Gaudi v27r1 and LCG_84 with ROOT 6.06.02.
     o excluded more messages
   . Made IOHelper debug output more stable
 
-- In Hlt/HltDAQ v4r25, v4r25p1
+- In Hlt/HltDAQ v4r25, v4r25p1, v4r26
+  . Implement packed object persistence in the raw event.
   . Version 9 of reports, includes ProbNNs.
   . Fix for CaloHypo positions.
   . Protection against missing calo hypo position.

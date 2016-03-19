@@ -88,7 +88,7 @@ use GaudiObjDesc          v11r24
 use HCDAQ                 v1r5    HC      # Heinrich Schindler 
 
 # Hlt packages
-use HltDAQ                v4r25p1 Hlt     # Gerhard Raven
+use HltDAQ                v4r26   Hlt     # Gerhard Raven
 use HltServices           v2r14   Hlt     # Gerhard Raven
 
 # Kernel packages
