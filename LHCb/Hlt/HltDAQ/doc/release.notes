@@ -4,6 +4,12 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2016-03-19 - Rosen Matev
+ - Implement packed object persistence in the raw event.
+   The existing DstData raw bank type is reused (with version 2).
+   HltPackedDataWriter and HltPackedDataDecoder are the relevant Gaudi algos.
+ - Adapt HltRawBankDecoderBase for use in the new HltPackedDataDecoder.
+
 !========================= HltDAQ v4r25p1 2016-03-11 =========================
 
 ! 2016-03-02 - Sean Benson

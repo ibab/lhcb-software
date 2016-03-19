@@ -1,4 +1,3 @@
-// $Id$
 #ifndef HLTRAWBANKDECODERBASE_H 
 #define HLTRAWBANKDECODERBASE_H 1
 
@@ -41,7 +40,15 @@ public:
     };
     const GaudiUtils::VectorMap<int,Gaudi::StringKey>& info2string(unsigned int tck) const {
         auto itbl =  m_infoTable.find(tck) ;
-        if ( itbl  == std::end(m_infoTable) ) itbl = fetch_info2string(tck);
+        static const Gaudi::StringKey InfoID{"InfoID"};
+        if ( itbl  == std::end(m_infoTable) ) itbl = fetch_info2string(tck, InfoID, m_infoTable);
+        return itbl->second;
+    }
+    const GaudiUtils::VectorMap<int,Gaudi::StringKey>& packedObjectLocation2string(unsigned int tck) const {
+        auto itbl =  m_packedObjectLocationsTable.find(tck) ;
+        static const Gaudi::StringKey PackedObjectLocations{"PackedObjectLocations"};
+        if ( itbl  == std::end(m_packedObjectLocationsTable) )
+            itbl = fetch_info2string(tck, PackedObjectLocations, m_packedObjectLocationsTable);
         return itbl->second;
     }
     unsigned int tck() const;
@@ -55,19 +62,22 @@ private:
     mutable IdTable_t m_idTable;
     IdTable_t::const_iterator fetch_id2string(unsigned int tck) const;
     mutable Table_t m_infoTable;
-    Table_t::const_iterator fetch_info2string(unsigned int tck) const;
+    mutable Table_t m_packedObjectLocationsTable;
+    Table_t::const_iterator fetch_info2string(unsigned int tck, const IANNSvc::major_key_type& major, Table_t& table) const;
     
+protected:
     /// SourceID to decode: 0=Hlt 1=Hlt1 2=Hlt2 ... (1,2 will decode from 0 if 1,2 not found)
     UnsignedIntegerProperty m_sourceID;
 
-    enum SourceIDs { kSourceID_Dummy=0,
-  		   kSourceID_Hlt=kSourceID_Dummy,
-  		   kSourceID_Hlt1=1,
-  		   kSourceID_Hlt2=2,
-  		   kSourceID_Max=7,
-  		   kSourceID_BitShift=13,
-  		   kSourceID_MinorMask=0x1FFF,
-  		   kSourceID_MajorMask=0xE000
+    enum SourceIDs {
+        kSourceID_Dummy=0,
+        kSourceID_Hlt=kSourceID_Dummy,
+        kSourceID_Hlt1=1,
+        kSourceID_Hlt2=2,
+        kSourceID_Max=7,
+        kSourceID_BitShift=13,
+        kSourceID_MinorMask=0x1FFF,
+        kSourceID_MajorMask=0xE000
     };
 };
 #endif

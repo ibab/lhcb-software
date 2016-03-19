@@ -116,7 +116,9 @@ HltRawBankDecoderBase::fetch_id2string(unsigned int tck) const
 
     std::function<void(const Gaudi::StringKey&, bool)> append;
     if (tck==0) {
-       warning() << "TCK obtained from rawbank seems to be 0 -- blindly ASSUMING that the current HltANNSvc somehow has the same configuration as when the input data was written. Proceed at your own risk, good luck..." << endmsg;
+       warning() << "TCK obtained from rawbank seems to be 0 -- blindly ASSUMING that "
+                 << "the current HltANNSvc somehow has the same configuration as when "
+                 << "the input data was written. Proceed at your own risk, good luck..." << endmsg;
        append = append0;
     } else {
        append = append1;
@@ -140,7 +142,7 @@ HltRawBankDecoderBase::fetch_id2string(unsigned int tck) const
 }
 
 HltRawBankDecoderBase::Table_t::const_iterator
-HltRawBankDecoderBase::fetch_info2string(unsigned int tck) const
+HltRawBankDecoderBase::fetch_info2string(unsigned int tck, const IANNSvc::major_key_type& major, Table_t& table) const
 {
     Table_t::mapped_type tbl;
     auto append0 =  [&]( const Gaudi::StringKey& id ) {
@@ -154,12 +156,14 @@ HltRawBankDecoderBase::fetch_info2string(unsigned int tck) const
            }
     };
     if (tck==0) {
-       warning() << "TCK in rawbank seems to be 0 -- blindly ASSUMING that the current HltANNSvc somehow has the same configuration as when the input data was written. Proceed at your own risk, good luck..." << endmsg;
-       append0(InfoID);
+       warning() << "TCK in rawbank seems to be 0 -- blindly ASSUMING that the current "
+                 << "HltANNSvc somehow has the same configuration as when the input data "
+                 << "was written. Proceed at your own risk, good luck..." << endmsg;
+       append0(major);
     } else {
-       append1(InfoID);
+       append1(major);
     }
-    auto res = m_infoTable.insert( tck, tbl );
+    auto res = table.insert( tck, tbl );
     assert(res.second);
     return  res.first;
 }
