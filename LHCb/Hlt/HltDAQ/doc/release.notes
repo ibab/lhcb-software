@@ -4,6 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+!========================= HltDAQ v4r26 2016-03-19 =========================
 ! 2016-03-19 - Rosen Matev
  - Implement packed object persistence in the raw event.
    The existing DstData raw bank type is reused (with version 2).
@@ -23,8 +24,6 @@
 
 ! 2016-02-05 - Marco Clemencic
  - Fixed compilation with CMT and Gaudi v27r0.
-
-!========================= HltDAQ v4r25 2016-02-05 =========================
 
 ! 2016-02-04 - Rosen Matev
  - Remove error message when Hlt2MonSvc is not there
