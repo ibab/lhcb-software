@@ -1,7 +1,7 @@
 // $Id: RawEventCopy.cpp,v 1.2 2009-05-25 08:56:21 cattanem Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h"
-#include "GaudiKernel/SmartDataPtr.h" 
+#include "GaudiKernel/SmartDataPtr.h"
 #include "MDF/RawEventHelpers.h"
 #include "Event/RawEvent.h"
 
@@ -25,27 +25,37 @@ namespace LHCb  {
     std::string m_source;
     /// Property: target leaf name for rawevent copy
     std::string m_destination;
+    /// Property: shallow or deep copy
+    bool m_deepCopy;
 
-  public: 
+  public:
     /// Standard constructor
-    RawEventCopy(const std::string& nam, ISvcLocator* pSvc) 
+    RawEventCopy(const std::string& nam, ISvcLocator* pSvc)
     : Algorithm(nam,pSvc) {
       declareProperty("Destination",m_destination="/Event/DAQ/RawCopy");
       declareProperty("Source",     m_source=RawEventLocation::Default);
+      declareProperty("DeepCopy",   m_deepCopy=false);
     }
     /// Destructor
-    virtual ~RawEventCopy()  {} 
+    virtual ~RawEventCopy()  {}
     /// Main execution
     virtual StatusCode execute()  {
       SmartDataPtr<RawEvent> raw(eventSvc(),m_source);
       if( raw ) {
         RawEvent *org = raw;
         RawEvent *res = 0;
-        StatusCode sc = cloneRawEvent(org, res);
+        StatusCode sc;
+        if (m_deepCopy) {
+           sc = deepCopyRawEvent(org, res);
+        } else {
+           sc = cloneRawEvent(org, res);
+        }
         if ( sc.isSuccess() )  {
           sc = eventSvc()->registerObject(m_destination, res);
           if ( !sc.isSuccess() )  {
             delete res;
+          } else {
+            return sc;
           }
         }
       }

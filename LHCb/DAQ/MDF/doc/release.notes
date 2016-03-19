@@ -6,9 +6,12 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2016-03-19 - Roel Aaij
+ - Fix RawEventCopy and give it a DeepCopy option.
+
 !========================= MDF v3r44 2016-01-27 =========================
 ! 2016-01-08 - Gerhard Raven
- - prefer SmartIF over raw interface pointer with explicit queryInterface / ref 
+ - prefer SmartIF over raw interface pointer with explicit queryInterface / ref
    count handling
  - prefer extends over direct virtual public inheritance from interface,
     and use extends' implementation of queryInterface
