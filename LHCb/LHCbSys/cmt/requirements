@@ -18,7 +18,7 @@ use CaloUtils             v10r6   Calo    # Olivier Deschamps
 use DAQKernel             v1r1    DAQ     # Marco Cattaneo
 use DAQSys                v8r10   DAQ     # Marco Cattaneo
 use DAQUtils              v1r14   DAQ     # Marco Cattaneo
-use MDF                   v3r44   DAQ     # Markus Frank
+use MDF                   v3r45   DAQ     # Markus Frank
 use MDF_ROOT              v1r9    DAQ     # Markus Frank
 use RawEventCompat        v1r6p2  DAQ     # Marco Cattaneo
 use Tell1Kernel           v1r13p1 DAQ     # Tomasz Szumlak
@@ -57,7 +57,7 @@ use HltEvent              v9r6    Event   # Jose Angel Hernando-Morata
 use L0Event               v19r10  Event   # Olivier Deschamps, Julien Cogan
 use LinkerEvent           v3r11   Event   #
 use LinkerInstances       v4r1    Event   # Thomas Ruf
-use LumiEvent             v3r10   Event   # 
+use LumiEvent             v3r10   Event   #
 use MCEvent               v3r4    Event   # Gloria Corti and sub-det experts
 use MicroDst              v1r3    Event   # ??
 use PhysEvent             v11r28  Event   # Anton Poluetkov
@@ -85,7 +85,7 @@ use GaudiMTTools          v1r3
 use GaudiObjDesc          v11r24
 #use GaudiPatches          v1r2
 
-use HCDAQ                 v1r5    HC      # Heinrich Schindler 
+use HCDAQ                 v1r5    HC      # Heinrich Schindler
 
 # Hlt packages
 use HltDAQ                v4r26   Hlt     # Gerhard Raven
