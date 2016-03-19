@@ -4,7 +4,12 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+
 !========================= HltDAQ v4r26 2016-03-19 =========================
+
+! 2016-03-19 - Roel Aaij
+ - Add RawEventLocation property to HltRoutingBitsWriter.
+
 ! 2016-03-19 - Rosen Matev
  - Implement packed object persistence in the raw event.
    The existing DstData raw bank type is reused (with version 2).

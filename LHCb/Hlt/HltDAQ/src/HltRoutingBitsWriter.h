@@ -69,6 +69,7 @@ private:
   std::string m_odin_location;
   std::string m_l0_location;
   std::string m_hlt_location[2];
+  std::string m_raw_location;
 
   unsigned long long m_startOfRun = 0;
   double m_binWidth; // in _minutes_!

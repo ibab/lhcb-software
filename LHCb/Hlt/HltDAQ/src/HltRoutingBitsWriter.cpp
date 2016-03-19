@@ -136,6 +136,7 @@ HltRoutingBitsWriter::HltRoutingBitsWriter( const std::string& name,
    declareProperty("TrendBinWidth",m_binWidth = 1 );
    declareProperty("GetStartOfRunFromCondDB",m_useCondDB = true);
    declareProperty("UpdateExistingRawBank",m_updateBank = false);
+   declareProperty("RawEventLocation", m_raw_location = LHCb::RawEventLocation::Default);
    declareProperty("MonitorSvc", m_monSvc = "HltMonitorSvc/Hlt2MonSvc");
 }
 
@@ -296,7 +297,7 @@ StatusCode HltRoutingBitsWriter::execute() {
          if ( result ) bits[j] |= (0x01UL << i);
       }
    }
-   LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
+   LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(m_raw_location);
 
    if (m_updateBank) {
       std::vector<LHCb::RawBank*> banks = rawEvent->banks( LHCb::RawBank::HltRoutingBits );
