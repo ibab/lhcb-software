@@ -59,21 +59,21 @@ namespace Rich
                                          const IInterface* parent );
 
         /// Destructor
-        virtual ~PixelCreatorFromSignalRawBuffer(){}
+        virtual ~PixelCreatorFromSignalRawBuffer() { }
 
         // Initialize method
-        StatusCode initialize();
+        StatusCode initialize() override;
 
       protected: // methods
 
         /// Build a new RichRecPixel from an Rich::HPDPixelCluster
-        virtual LHCb::RichRecPixel * buildPixel ( const Rich::HPDPixelCluster& cluster ) const;
+        virtual LHCb::RichRecPixel * buildPixel( const Rich::HPDPixelCluster& cluster ) const override;
 
         /// Build a new RichRecPixel from a single LHCb::RichSmartID
-        virtual LHCb::RichRecPixel * buildPixel( const LHCb::RichSmartID & id ) const;
+        virtual LHCb::RichRecPixel * buildPixel( const LHCb::RichSmartID & id ) const override;
 
         /// Initialise for a new event. Re-implmented from base class version.
-        virtual void InitNewEvent();
+        virtual void InitNewEvent() const override;
 
       private: // methods
 

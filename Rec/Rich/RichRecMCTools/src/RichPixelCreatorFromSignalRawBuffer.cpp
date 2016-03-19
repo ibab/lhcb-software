@@ -146,7 +146,7 @@ PixelCreatorFromSignalRawBuffer::trackedMCPs() const
   return m_trackedMCPs;
 }
 
-void PixelCreatorFromSignalRawBuffer::InitNewEvent()
+void PixelCreatorFromSignalRawBuffer::InitNewEvent() const
 {
   // Initialise data for new event
   PixelCreatorBase::InitNewEvent();
