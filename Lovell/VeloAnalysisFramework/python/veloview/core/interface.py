@@ -4,10 +4,6 @@ from functools import wraps
 from logging import getLogger, warning
 logger = getLogger(__name__)
 
-# Types for versioned tree branches
-VERSIONED_DOUBLE_TYPE = "VersionedObject<Double_t, TimeStamp, std::greater<TimeStamp> >"
-VERSIONED_USHORT_TYPE = "VersionedObject<UShort_t, TimeStamp, std::greater<TimeStamp> >"
-
 def check_hists1(comparefn):
     """Decorator for comparison functions.
 
@@ -78,7 +74,7 @@ class ComparisonFunction(object):
     def vars(cls):
         """This method returns a dictionary mapping variable names output by this
         function to their respective types."""
-        return {"score": VERSIONED_DOUBLE_TYPE, "lvl": VERSIONED_USHORT_TYPE}
+        return {"score": float, "lvl": int}
 
     @classmethod
     def check_if_hist_exists(cls, hist):
@@ -112,7 +108,7 @@ class ValueFunction(object):
     def vars(cls):
         """This method returns a dictionary mapping variable names output by this
         function to their respective types."""
-        return {"value": VERSIONED_DOUBLE_TYPE}
+        return {"value": float}
 
     @classmethod
     def create_final_dict(cls, value):

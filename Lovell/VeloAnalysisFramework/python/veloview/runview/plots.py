@@ -5,8 +5,7 @@ import ROOT
 
 from veloview.config import Config
 from veloview.config.run_view import run_view_pages
-from veloview.core import io
-from veloview.giantrootfile.gui_tree import Tree
+from veloview.core.io import DQDB
 from veloview.runview import utils
 from veloview.runview.response_formatters import dictionary_formatter
 
@@ -105,11 +104,6 @@ def get_plot_dictionary(name):
       if plot['name'] == name:
         return plot
 
-def format_run_range(runRange):
-    if len(runRange) == 2:
-        return lambda t: t.runnr >= runRange[0] and t.runnr <= runRange[1]
-    return lambda t: t.runnr in runRange
-
 def get_trending_plot(name, runRange, formatter = dictionary_formatter):
     """
     Get a trending plot, showing a certain variable plotted against run number.
@@ -119,25 +113,11 @@ def get_trending_plot(name, runRange, formatter = dictionary_formatter):
            run number greater than or equal to the first item but not greater
            than the second.
     """
-    f = ROOT.TFile(Config().grf_file_path, 'READ')
-    t = Tree(Config().grf_tree_name)
-    data = t.Data( 
-                ( # functions projecting out coordinates to plot
-                    lambda t: t.runnr,
-                    lambda t: getattr(t, name).value(),
-                ),
-                ( # cut(s) to apply
-                    format_run_range(runRange),
-                )
-            )
+    db = DQDB(Config().dq_db_file_path)
+    data = db.trend(name, runRange)
+    db.close()
 
-    formatted = formatter(dict(name=name, title='run number versus {0}'.format(name), xLabel="run number", yLabel=name, data=data))
-
-    del t
-    f.Close()
-    del f
-
-    return formatted
+    return formatter(dict(name=name, title='run number versus {0}'.format(name), xLabel="run number", yLabel=name, data=data))
 
 def get_2d_trending_plot(nameX, nameY, runRange, formatter = dictionary_formatter):
     """
@@ -149,23 +129,9 @@ def get_2d_trending_plot(nameX, nameY, runRange, formatter = dictionary_formatte
            run number greater than or equal to the first item but not greater
            than the second.
     """
-    f = ROOT.TFile(Config().grf_file_path, 'READ')
-    t = Tree(Config().grf_tree_name)
-    data = t.Data( 
-                ( # functions projecting out coordinates to plot
-                    lambda t: getattr(t, nameX).value(),
-                    lambda t: getattr(t, nameY).value(),
-                ),
-                ( # cut(s) to apply
-                    format_run_range(runRange),
-                )
-            )
+    db = DQDB(Config().dq_db_file_path)
+    data = db.trend2d(nameX, nameY, runRange)
+    db.close()
 
-    formatted = formatter(dict(name='{0};{1}'.format(nameX, nameY), title='{0} versus {1}'.format(nameX, nameY), xLabel=nameX, yLabel=nameY, data=data))
-
-    del t
-    f.Close()
-    del f
-
-    return formatted
+    return formatter(dict(name='{0};{1}'.format(nameX, nameY), title='{0} versus {1}'.format(nameX, nameY), xLabel=nameX, yLabel=nameY, data=data))
 

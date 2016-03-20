@@ -1,25 +1,14 @@
-"""This module implements an interface to GiantRootFileIO"""
+"""This module implements an interface to the DQ Database"""
 
-from ..config import Config
-from ..utils.rootutils import ROOT
-from ..utils.utils import flatten, unflatten
-from veloview.giantrootfile.gui_tree import Tree
+from ..utils.utils import flatten
 import os
+import sqlite3
+import time
 
-class GRFIO(object):
-    """Interface for versioned objects implemented by GiantRootFileIO."""
+class DQDB(object):
+    """Interface for versioned objects implemented using a SQLite DB."""
 
-    def __init__(self, fname, mode = 'read', treeName = Config().grf_tree_name, title ='',  branches = None):
-        """
-        Instantiate a new GRFIO object for interfacing with an (un)versioned
-        ROOT tree.
-
-        fname    -- The ROOT file with versioned objects
-        mode     -- Mode to open the file (create/new, read, update)
-        treeName -- Name of tree with versioned objects
-        branches -- List of branches, or dictionary of name and types
-        """
-
+    def __init__(self, fname, mode = 'read'):
         if not isinstance(fname, str):
             raise ValueError('File name must be a string')
 
@@ -27,135 +16,114 @@ class GRFIO(object):
         if self.mode == 'new':
             self.mode = 'create' #internally store 'new' as 'create' for easier parsing
 
-        if self.mode not in ['create', 'read', 'update']:
+        if self.mode not in ('create', 'read', 'update'):
             raise ValueError('File mode {} not allowed, must be one of create, new, read or update'.format(self.mode))
 
+        if self.mode == 'create' and os.path.isfile(fname):
+            raise ValueError("Can't create existing file {}".format(fname))
+
+        self.__connect(fname)
+
         if self.mode == 'create':
-            if not isinstance(branches, dict):
-                raise ValueError('Branch name-type dictionary mandatory for creation')
-            if os.path.isfile(fname):
-                raise ValueError("Can't create existing file {}".format(fname))
+            self.__create_db()
 
-        self._open_file(fname, self.mode)
-        self._open_tree(treeName, title, flatten(branches) if branches else None)
+    def __connect(self, fname):
+        self._connection = sqlite3.connect(fname)
 
-    def _open_file(self, fname, mode):
-        """Internal method to open file"""
-        self.lock = ROOT.DotLock(fname)
-        self.rfile = ROOT.TFile.Open(fname, mode)
-        if not self.rfile:
-            raise IOError("Giant ROOT file {} not found".format(fname))
+    def __create_db(self):
+        c = self.__get_cursor()
+        c.execute('CREATE TABLE runs(runnr integer PRIMARY KEY, timestamp integer, runendtimestamp integer, comment text NOT NULL DEFAULT "")')
+        c.execute('CREATE TABLE entries(timestamp integer NOT NULL, runnr integer NOT NULL)')
+        self.__commit()
 
-    def _open_tree(self, treeName, title, branches):
-        """Internal method to open tree"""
-        self.title = title
-        self.branches = branches
-        if self.mode == 'create':
-            try:
-                self.tree = Tree(treeName, treetitle = title, branches = branches)
-            except TypeError:
-                raise ValueError('Cannot find valid tree: {}'.format(treeName))
-        else:
-            getTree = self.rfile.Get(treeName)
-            self.tree = Tree(treeName)
+    def __get_cursor(self):
+        return self._connection.cursor()
+
+    def __commit(self):
+        self._connection.commit()
 
     @classmethod
-    def __getBranch(cls, tree, branchname):
-        """
-        Returns a tuple (isVersioned, branch), where isVersioned is a bool
-        specifiying whether the branch is versioned, and branch is the branch
-        of the specified tree corresponding to the branch name.
-        """
-        branch = getattr(tree, branchname)
-        return (hasattr(branch, 'value'), branch)
+    def __sanitize_column_name(cls, name):
+        """Check there's no backticks in the column name, as those could escape
+        the SQL string."""
+        assert('`' not in name)
 
-    def fill(self, dqdict):
+    def fill(self, runnr, dqdict):
         """Flatten and fill dictionary"""
         if self.mode == 'read':
-            raise RuntimeError('Cannot fill GRF in READ mode.')
+            raise RuntimeError('Cannot fill database in READ mode')
 
-        runnr = dqdict['runnr']
-        if self.tree.IsPresent('runnr', runnr):
-            self.edit(lambda tree: tree.runnr == runnr, dqdict)
-        else:
-            self._fill(self.tree, dqdict)
-
-    def _fill(self, tree, dqdict):
-        """
-        Internal method: flatten and fill dictionary
-
-        FIXME: doesn't check if branches match type'
-        """
-        now = ROOT.TimeStamp()
-        dqflat = flatten(dqdict)
-        # FIXME: verify dqflat matches branch scheme
-        for key, value in dqflat.iteritems():
-            isVersioned, branch = self.__class__.__getBranch(tree, key)
-            if isVersioned:
-                branch[now] = value
-            else:
-                setattr(tree, key, value)
-        tree.Fill()
-
-    def read(self, branches, version = None):
-        """Read branches and return unflattened dictionaries."""
-        res = {}
-        for br in branches:
-            isVersioned, branch = self.__class__.__getBranch(self.tree, br)
-            # FIXME: check if requested version is valid
-            if version and isVersioned:
-                value = branch[version]
-            else:
-                value = branch
-
-            if isVersioned:
-                res[br] = value.value()
-            else:
-                res[br] = value
-        return unflatten(res)
-
-    def edit(self, entry_p, dqdict):
-        if self.mode == 'read':
-            raise RuntimeError('Cannot edit GRF in READ mode.')
-
+        now = time.time()
+        runendtimestamp = dqdict.pop("endtimestamp")
         dqflat = flatten(dqdict)
 
-        newfilename = '{}.new'.format(self.rfile.GetName())
-        newlock = ROOT.DotLock(newfilename)
-        newfile = ROOT.TFile.Open(newfilename, 'recreate')
-        newfile.SetCompressionSettings(self.rfile.GetCompressionSettings())
-        newtree = self.tree.CloneTree(0)
+        c = self.__get_cursor()
 
-        for dummy in self.tree:
-            if entry_p(self.tree): # new
-                self._fill(newtree, dqflat)
-            else:               # old
-                self._fill(newtree, self.read([br for br in dqflat]))
-        newtree.Write()
-        treename = newtree.GetName()
+        vars = dqflat.keys()
+        existing = self.vars()
+        for var in vars:
+            if not var in existing:
+                self.__sanitize_column_name(var)
+                # The default DEFAULT is NULL, so all old entries will have NULL in this column
+                c.execute('ALTER TABLE entries ADD COLUMN `{}` REAL'.format(var))
+                existing.append(var)
+        self.__commit()
 
-        del newtree
-        newfile.Close()
-        del newfile
-        filename = self.rfile.GetName()
-        del self.tree
-        self.rfile.Close()
-        del self.rfile
+        c.executemany('INSERT INTO entries VALUES(?, ?{})'.format(',?' * len(existing)), [(now, runnr) + tuple(dqflat.get(value, 'NULL') for value in existing)])
+        c.execute('INSERT INTO runs(runnr, timestamp, runendtimestamp) VALUES(?, ?, ?)', (runnr, now, runendtimestamp))
+        self.__commit()
+    
+    def get_runs(self):
+        c = self.__get_cursor()
+        return list(row[0] for row in c.execute('SELECT runnr FROM runs'))
 
-        from os import rename
-        rename(newfilename, filename)
-        del self.lock
-        del newlock
+    def read(self, runnr):
+        """Return most recent value with runnr for each distinct var"""
+        c = self.__get_cursor()
+        result = c.execute('SELECT * FROM entries WHERE runnr = ? ORDER BY timestamp DESC LIMIT 1', (runnr,))
+        return dict(zip(self.__cols(), result))
 
-        self.mode = 'update'
-        self._open_file(filename, self.mode)
-        self._open_tree(treename, self.title, [br for br in self.branches])
+    def get_comment(self, runnr):
+        c = self.__get_cursor()
+        result = c.execute('SELECT comment FROM runs WHERE runnr = ?', (runnr,))
+        return str(result)
 
-    def write(self):
-        """Write tree to disk"""
-        self.rfile.cd()
-        self.tree.Write()
+    def set_comment(self, runnr, comment):
+        c = self.__get_cursor()
+        c.execute('UPDATE runs SET comment = ? WHERE runnr = ?', (comment, runnr))
+        self.__commit()
+
+    def vars(self):
+        cols = self.__cols()
+        cols.remove('runnr')
+        cols.remove('timestamp')
+        return cols
+
+    def __cols(self):
+        c = self.__get_cursor()
+        table_info = c.execute('PRAGMA table_info(entries)')
+        return [str(column[1]) for column in table_info]
+
+    def trend(self, var, runRange):
+        self.__sanitize_column_name(var)
+
+        c = self.__get_cursor()
+        result = c.execute('SELECT runnr, `{}` FROM entries WHERE runnr >= ? AND runnr <= ? GROUP BY runnr ORDER BY runnr ASC'.format(var), runRange)
+        return list(result)
+
+    def trend2d(self, varX, varY, runRange):
+        self.__sanitize_column_name(varX)
+        self.__sanitize_column_name(varY)
+
+        c = self.__get_cursor()
+        result = c.execute('''SELECT X.`{0}`, Y.`{1}` FROM (
+                (SELECT runnr, `{0}` FROM entries WHERE runnr >= ? AND runnr <= ? GROUP BY runnr ORDER BY runnr ASC) AS X
+                JOIN
+                (SELECT runnr, `{1}` FROM entries WHERE runnr >= ? AND runnr <= ? GROUP BY runnr ORDER BY runnr ASC) AS Y
+                ON X.runnr = Y.runnr)'''.format(varX, varY),
+                2 * runRange)
+        return list(result)
 
     def close(self):
-        """Close ROOT file"""
-        self.rfile.Close()
+        """Close DB connection"""
+        self._connection.close()

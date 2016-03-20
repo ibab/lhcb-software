@@ -5,7 +5,7 @@ import ROOT
 
 import veloview.analysis
 from veloview.config import Config
-from veloview.giantrootfile.gui_tree import Tree
+from veloview.core.io import DQDB
 
 def get_trending_variables(expert = False):
     dqVarsParser = DqVarsParser(True, True, expert)
@@ -14,30 +14,10 @@ def get_trending_variables(expert = False):
 def get_dq_vars():
     return DqVarsParser().get_dq_variables()
 
-def get_dq_values(run):
-    f = ROOT.TFile(Config().grf_file_path, 'READ')
-    t = Tree(Config().grf_tree_name)
-
-    maxEntry = t.GetEntriesFast()
-    currentEntry = 0
-    found = False
-    while (not found) and currentEntry <= maxEntry:
-        t.GetEntry(currentEntry)
-        found = (t.runnr == run)
-        currentEntry += 1
-
-    if not found:
-        return OrderedDict()
-
-    vars = get_dq_vars()
-    values = OrderedDict()
-    for var in vars:
-        if not var[0] or hasattr(t, var[0] + '.score'):
-            values[var[0]] = {
-                    'name':  var[1],
-                    'score': getattr(t, var[0] + '.score' if var[0] else 'score').value(),
-                    'lvl':   getattr(t, var[0] + '.lvl'   if var[0] else 'lvl'  ).value()
-                    }
+def get_dq_values(runnr):
+    db = DQDB(Config().dq_db_file_path)
+    values = db.read(runnr)
+    db.close()
     return values
 
 class DqVarsParser(object):

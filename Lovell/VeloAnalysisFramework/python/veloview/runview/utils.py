@@ -72,16 +72,3 @@ def reference_run_file(run):
     ref_run = refdb.reference_run(run, polarity)
     return run_file(ref_run)
 
-def is_in_grf(run):
-    f = open(Config().grf_runs_file_path, 'r')
-    runs = f.readlines()
-    f.close()
-    return str(run) in map(lambda x: x.strip(), runs)
-
-def add_to_grf(run):
-    if (is_in_grf(run)): return
-
-    f = open(Config().grf_runs_file_path, 'a')
-    f.write(str(run) + "\n")
-    f.close()
-

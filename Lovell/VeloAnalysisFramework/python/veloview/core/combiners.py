@@ -9,8 +9,8 @@ import os
 import ROOT
 
 from ..config import Config
-from .io import GRFIO
-from .interface import ComparisonFunction, VERSIONED_DOUBLE_TYPE, VERSIONED_USHORT_TYPE
+from .io import DQDB
+from .interface import ComparisonFunction
 from .score_manipulation import Score, ERROR_LEVELS
 from .exceptions import DescriptionDictionaryKeyException, \
         ComparisonFunctionNotFoundInEvalDictException, ComparisonFunctionNotCollableException, \
@@ -136,6 +136,7 @@ class Combiner(object):
 
     def getScore(self):
         self.evaluate()
+        if "score" not in self.results: return 0
         return self.results["score"]
 
     def getWarningsErrors(self):
@@ -161,14 +162,6 @@ class Combiner(object):
         """
         self.evaluate()
         return {k: (v() if hasattr(v, '__call__') else v) for k,v in self.results.iteritems()}
-
-    @abstractmethod
-    def getBranches(self):
-        """
-        Get a dictionary mapping branches required by this Combiner to the
-        respective ROOT types of those branches.
-        """
-        pass
 
     def get_combiner_summary(self):
         """Returns summary information (score, lvl, summary data)"""
@@ -274,17 +267,6 @@ class BranchCombiner(Combiner):
             results[child.getName()] = child.getWritableResults()
         return results
 
-    def getBranches(self):
-        if self.isComparison():
-            results = {"score": VERSIONED_DOUBLE_TYPE, "lvl": VERSIONED_USHORT_TYPE}
-        else:
-            results = {}
-
-        for child in self.children:
-            results[child.getName()] = child.getBranches()
-
-        return results
-
     def evaluate(self):
         """
         Evaluate this BranchCombiner by evluating all its children and
@@ -325,30 +307,22 @@ class RootCombiner(BranchCombiner):
         super(RootCombiner, self).__init__(RootCombiner.MASTER_COMBINER_NAME, desc_dict, eval_dict, data_file_path, ref_file_path)
         self.runnr = runnr
 
-    def write_to_grf(self):
+    def write_to_db(self):
         """
-        Write the entire tree to a Giant Root File.
+        Write the entire tree to the DQ database.
         """
-        fileName = Config().grf_file_path
+        fileName = Config().dq_db_file_path
         mode = "update" if os.path.isfile(fileName) else "create"
 
-        writer = GRFIO(fileName, mode = mode, branches = self.getBranches())
-        writer.fill(self.getWritableResults())
-        writer.write()
+        writer = DQDB(fileName, mode = mode)
+        writer.fill(self.runnr, self.getWritableResults())
         writer.close()
-
-    def getBranches(self):
-        branches = super(RootCombiner, self).getBranches()
-        branches["runnr"] = "UInt_t"
-        branches["endtimestamp"] = "ULong_t"
-        return branches
 
     def isRelevant(self):
         return True # Root is always relevant
 
     def getWritableResults(self):
         results = super(RootCombiner, self).getWritableResults()
-        results["runnr"] = self.runnr
         results["endtimestamp"] = RunDB().endtime(self.runnr)
         return results
 
@@ -378,13 +352,6 @@ class LeafCombiner(Combiner):
         reference ROOT files where the relevant histogram is located.
         """
         return self.__path
-
-    def getBranches(self):
-        """
-        Get a dictionary mapping branches required by this Combiner to the
-        respective ROOT types of those branches.
-        """
-        return self.compare_class.vars()
 
     def __setCompareFunc(self, myEval):
         """

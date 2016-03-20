@@ -4,12 +4,14 @@
 A run number is valid if it is present in the run list.
 """
 
+import os
 import sys
 import argparse
 
 from veloview.config import Config
 from veloview.core import AnalysisConfigWrapper
-from veloview.runview.utils import run_file_path, is_in_grf, add_to_grf
+from veloview.core.io import DQDB
+from veloview.runview.utils import run_file_path
 
 def create_parser():
     parser = argparse.ArgumentParser(
@@ -25,24 +27,34 @@ def create_parser():
 def main():
     parser = create_parser()
     args = parser.parse_args()
-    runs = args.runs
+    runs = frozenset(args.runs)
     run_data_dir = args.run_data_dir
     output_dir = args.output_dir
     if not output_dir:
-        output_dir = run_file_path(runs[0])
-
+        output_dir = run_file_path(args.runs[0])
 
     # Change the run data directory to the user-specified one
     Config().run_data_dir = run_data_dir
 
     configWrapper = AnalysisConfigWrapper(Config().analysis_config)
 
-    for run in runs:
-        if not is_in_grf(run):
-            combinerTrunk = configWrapper.getTrunkForRun(run)
-            combinerTrunk.evaluate()
-            combinerTrunk.write_to_grf()
-            add_to_grf(run)
+    # Create the DB if it doesn't exist already
+    file = Config().dq_db_file_path
+    if os.path.isfile(file):
+        db = DQDB(Config().dq_db_file_path)
+        existing_runs = frozenset(db.get_runs())
+        db.close()
+    else:
+        db = DQDB(file, 'CREATE')
+        db.close()
+        existing_runs = frozenset()
+
+    runs_to_process = sorted(list(runs - existing_runs))
+
+    for run in runs_to_process:
+        combinerTrunk = configWrapper.getTrunkForRun(run)
+        combinerTrunk.evaluate()
+        combinerTrunk.write_to_db()
 
 if __name__ == "__main__":
     main()

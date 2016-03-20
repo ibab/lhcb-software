@@ -32,9 +32,7 @@ DEFAULTS = {
     'reference_db': 'ReferenceDB.sqlite',
     'run_view_pages': run_view.run_view_pages,
     'analysis_config': (analysis_config.analysis_config_branches, analysis_config.analysis_config_leaves),
-    'grf_file_name': 'GRF.root',
-    'grf_tree_name': 'DQTree',
-    'grf_runs_file': 'RunList_GRF.txt',
+    'dq_db': 'DataQualityDB.sqlite',
 }
 
 # Only export the Config class
@@ -104,12 +102,7 @@ class Config(object):
         return os.path.join(self.run_data_dir, self.reference_db)
 
     @property
-    def grf_file_path(self):
-        """Return the full path of the GRF."""
-        return os.path.join(self.run_data_dir, self.grf_file_name)
+    def dq_db_file_path(self):
+        """Return the full path of the data quality database."""
+        return os.path.join(self.run_data_dir, self.dq_db)
 
-    @property
-    def grf_runs_file_path(self):
-        """Return the full path of the file containing run numbers present in
-        the GRF."""
-        return os.path.join(self.run_data_dir, self.grf_runs_file)
