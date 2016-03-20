@@ -54,7 +54,7 @@ class lPlottable():
         # Make sure a valid range is plotted
         if initial_run < final_run:
             nominal = lInterfaces.veloview_plot(trend_variable,
-                                                xrange(initial_run, final_run),
+                                                (initial_run, final_run),
                                                 tabOpsState.run_data_dir) 
             self.runview_trendingReturn(nominal)
         else:
