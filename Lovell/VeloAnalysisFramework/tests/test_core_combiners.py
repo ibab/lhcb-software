@@ -62,8 +62,8 @@ class TestCombiners(unittest.TestCase):
         self.rfref.Close()
         self.rfdata.Close()
 
-        # Write GRF to temp directory (rather than run directory)
-        Config().grf_file_path = os.path.join(self.tdir, Config().grf_file_name)
+        # Write DQ database to temp directory (rather than run directory)
+        Config().dq_db_file_path = os.path.join(self.tdir, Config().dq_db)
 
         configfile = os.path.join(os.path.dirname(__file__), 'analysis_config_test.py')
         with open(configfile, 'r') as inputFile:
@@ -82,7 +82,7 @@ class TestCombiners(unittest.TestCase):
         """Test all combiners recursively with real-life monitoring files"""
 
         self.mycombiner.evaluate()
-        self.mycombiner.write_to_grf()
+        self.mycombiner.write_to_db()
 
         self.assertEqual(self.mycombiner.results["lvl"], self.results["lvl"])
         self.assertAlmostEqual(self.mycombiner.results["score"].value, self.results["score"].value)
