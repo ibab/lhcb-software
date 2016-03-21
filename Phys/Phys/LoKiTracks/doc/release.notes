@@ -5,6 +5,8 @@
 ! Purpose     : track-related functors for LoKi-framework
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiTracks v3r7 2016-03-21 =========================
+
 ! 2016-03-16 - Vanya Belyaev
  - fix clang problem 
 
@@ -16,9 +18,6 @@
   >>> for s in states : print t.p  () 
   functions: 
     p,pt,theta,phi,eta,tx,ty,x,y,qOverP, ....
-
-
-
 
 !========================= LoKiTracks v3r6 2016-03-04 =========================
 
