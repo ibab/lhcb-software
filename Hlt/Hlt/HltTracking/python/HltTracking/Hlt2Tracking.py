@@ -83,6 +83,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                                                             # and Downstream tracks. Leave DoCleanups true for Hlt1 track filtering
                 , "NewDownstreamAlg"                : True  # TODO: Remove this option after some grace period
                 , "FitTTracks"                      : True
+                , "FindV0s"                         : True
                 , "RichHypos"                       : HltRichDefaultHypos
                 , "RichRadiators"                   : HltRichDefaultRadiators
                 , "RichTrackCuts"                   : HltRichDefaultTrackCuts
@@ -1252,6 +1253,20 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 if self.getProp("FitTTracks"):
                     hlt2TrackingOutput += [ self.__trackLocationByType("Ttrack") ]
                 trackRecoSequence        +=      [bestTrackCreator]
+                if self.getProp("FindV0s"):
+                    from HltTracking.HltPVs import PV3D
+                    pvs = PV3D("Hlt2")
+                    from Configurables import TrackV0Finder
+                    from Configurables import GaudiSequencer
+                    v0Sequence = GaudiSequencer( self.getProp("Prefix") + "TrackV0FinderSeq")
+                    v0Sequence.IgnoreFilterPassed = True
+                    trackV0Finder = TrackV0Finder( self.getProp("Prefix") +"TrackV0FinderLongLong")
+                    trackV0Finder.TrackContainers = [self.__trackLocationByType("Long"),self.__trackLocationByType("Downstream")]
+                    trackV0Finder.PVContainer = pvs.output
+                    trackV0Finder.V0Container = self.__trackLocationByType("Long")+"V0Vertices"
+                    v0Sequence.Members  += pvs.members()+ [ trackV0Finder]
+                    trackRecoSequence        +=  [ v0Sequence ]
+                    
                 from Configurables import HltRecoConf
                 if HltRecoConf().getProp("AddGhostProb") and not HltRecoConf().getProp("ApplyGHOSTPROBCutInTBTC"):
                     from Configurables import TrackAddNNGhostId

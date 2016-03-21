@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2016-03-21 - Sascha Stahl
+ - Hlt2Tracking: Add V0 finder to remove differences between online and offline.
+
 ! 2016-03-17 - Roel Aaij
  - Add parameters used to calculate uncertainty on hits in magnet focal plane
    used by MatchVeloTTMuon.
