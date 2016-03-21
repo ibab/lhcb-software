@@ -5,6 +5,16 @@
 ! Purpose     : Confining package of the Online cmt project
 !-----------------------------------------------------------------------------
 
+<H1><A NAME=v5r31>2016-03-21 OnlineSys v5r31</A></H1>
+<PRE>
+     MDF                 v3r45    DAQ
+     DAQEvent            v9r22    Event
+     DefHLTUtils         v1r18    Online
+     FarmConfig          v0r26    Online
+     GaudiOnline         v2r92    Online
+     ROMon               v1r60    Online
+</PRE>
+
 <H1><A NAME=v5r30>2016-03-02 OnlineSys v5r30</A></H1>
 <PRE>
      MDF                 v3r44    DAQ

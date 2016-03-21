@@ -1,5 +1,5 @@
 package OnlineSys
-version v5r30
+version v5r31
 ###
 ### Note: 
 ### last v4 release: v4r69 based on Gaudi v23r7
@@ -10,9 +10,9 @@ branches cmt doc
 #=======================================================
 # Overrides from LHCB  ( LHCB_v38r0 )
 #=======================================================
-use MDF                 v3r44    DAQ
+use MDF                 v3r45    DAQ
 use MDF_ROOT            v1r9     DAQ
-use DAQEvent            v9r21    Event
+use DAQEvent            v9r22    Event
 use GaudiObjDesc        v11r24
 #=======================================================
 # LHCb Online packages
@@ -25,14 +25,14 @@ use $(CondDBServer_use)
 use Controller          v0r26    Online
 use ControllerTests     v0r4     Online
 use DailyReport         v1r4     Online
-use DefHLTUtils         v1r17    Online
+use DefHLTUtils         v1r18    Online
 use DIM                 v20r16p1 Online
 use EventBuilder        v0r17    Online
-use FarmConfig          v0r25    Online
+use FarmConfig          v0r26    Online
 use Gaucho              v7r47    Online
 use GauchoAppl          v1r32    Online
 use GaudiCheckpointing  v0r26    Online
-use GaudiOnline         v2r91    Online
+use GaudiOnline         v2r92    Online
 use GaudiOnlineTests    v1r7     Online
 use GaudiRootCnvTests   v1r15    Online
 use GaudiSerialize      v0r16    Online
@@ -53,7 +53,7 @@ use PresenterDoc        v1r1     Online
 use PyDIM               v2r19    Online
 use RawBankSizes        v2r22    Online
 use RootCnv             v1r26    Online
-use ROMon               v1r59    Online
+use ROMon               v1r60    Online
 use ROLogger            v0r33    Online
 ## Only at the pit: macro Stomp_use "" CERN "Stomp v1r2 Online"
 ##use $(Stomp_use)
