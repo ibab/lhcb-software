@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2016-03-21 - Sascha Stahl
+ - TrackCloneDistance: Use long and downstream tracks in a single instance.
+
 ! 2016-03-10 - Roel Aaij
  - Don't add unneeded imports to factories.
 

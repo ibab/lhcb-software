@@ -90,30 +90,30 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
             from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
             from Configurables import LoKi__VoidFilter as Filter
-            trackLocations = {"Long" : Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks().outputSelection(),
-                              "Downstream" : Hlt2BiKalmanFittedDownstreamTracking().hlt2PrepareTracks().outputSelection()}
+            trackLocations = [ Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks().outputSelection(),
+                               Hlt2BiKalmanFittedDownstreamTracking().hlt2PrepareTracks().outputSelection() ]
             infoSeq = Sequence("TrackInfoSequence", IgnoreFilterPassed = True)
             # I don't want to pull in reconstruction if not run before, then there should be also no candidates needing this information
-            #infoSeq.Members +=  Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks().members() + Hlt2BiKalmanFittedDownstreamTracking().hlt2PrepareTracks().members()
-            for name, location in trackLocations.iteritems():
-                from Configurables import TrackBuildCloneTable, TrackCloneCleaner
-                prefix = name
-                trackClones = Sequence(prefix + "TrackClonesSeq")
-                checkTracks =  Filter(prefix+"CheckTrackLoc",Code = "EXISTS('%(trackLoc)s')"% {"trackLoc" : location})
-                trackClones.Members += [checkTracks]
-                cloneTable = TrackBuildCloneTable(prefix + "FindTrackClones")
-                cloneTable.maxDz   = 500*mm
-                cloneTable.zStates = [ 0*mm, 990*mm, 9450*mm ]
-                cloneTable.klCut   = 5e3
-                cloneTable.inputLocation = location
-                cloneTable.outputLocation = location + "Clones"
-                cloneCleaner = TrackCloneCleaner(prefix + "FlagTrackClones")
-                cloneCleaner.CloneCut = 5e3
-                cloneCleaner.inputLocation = location
-                cloneCleaner.linkerLocation = cloneTable.outputLocation
-                trackClones.Members += [ cloneTable, cloneCleaner ]
-
-                infoSeq.Members += [trackClones]
+            # This is anyhow done by the RecSummary above
+            infoSeq.Members +=  Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks().members() + Hlt2BiKalmanFittedDownstreamTracking().hlt2PrepareTracks().members()
+            prefix = "Hlt2"
+            trackClones = Sequence(prefix + "TrackClonesSeq")
+            #checkTracks =  Filter(prefix+"CheckTrackLoc",Code = "EXISTS('%(trackLocLong)s') & EXISTS('%(trackLocDown)s')" % {"trackLocLong" : trackLocations[0], "trackLocDown" : trackLocations[1]})
+            #trackClones.Members += [checkTracks]
+            from Configurables import TrackBuildCloneTable, TrackCloneCleaner
+            cloneTable = TrackBuildCloneTable(prefix + "FindTrackClones")
+            cloneTable.maxDz   = 500*mm
+            cloneTable.zStates = [ 0*mm, 990*mm, 9450*mm ]
+            cloneTable.klCut   = 5e3
+            cloneTable.inputLocations = trackLocations
+            cloneTable.outputLocation = trackLocations[0]+"Downstream" + "Clones"
+            cloneCleaner = TrackCloneCleaner(prefix + "FlagTrackClones")
+            cloneCleaner.CloneCut = 5e3
+            cloneCleaner.inputLocations = trackLocations
+            cloneCleaner.linkerLocation = cloneTable.outputLocation
+            trackClones.Members += [ cloneTable, cloneCleaner ]
+            
+            infoSeq.Members += [trackClones]
 
             Afterburner.Members += [infoSeq]
 
