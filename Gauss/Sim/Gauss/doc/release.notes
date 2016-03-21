@@ -5,6 +5,13 @@
 !-----------------------------------------------------------------------------
 
 ! 2016-03-15 - Gloria Corti
+ - Update reference due to expected differences, i.e. 
+   . default for pileup when not set explicitly is Pythia8
+   . geometry list order is different in Geo.InputStream, 
+     (Spd, Converter, Prs, Ecal, Hcal, Muon) is now after 
+     (TT, Rich1, Magnet,BcmDown)
+
+! 2016-03-15 - Gloria Corti
  - Introduce protection to prevent simulation of Hereschel if not Run2DataType
    (i.e. 2015 and 2016)
  - Switch off simulation of BCM and BLS for the moment since cannot write their

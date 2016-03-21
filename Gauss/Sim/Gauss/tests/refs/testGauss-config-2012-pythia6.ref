@@ -1,22 +1,20 @@
-# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v49r0/Sim/Gauss/options/Gauss-2012.py'
-# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r256/options/Gauss/Sim08-Beam4000GeV-md100-2012-nu2.5.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r256/options/Gauss/Sim08-Beam4000GeV-md100-2012-nu2.5.py'
-# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v49r0/Sim/Gauss/options/Gauss-2012.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@3/build/GAUSS/GAUSS_v49r0/Sim/Gauss/options/Gauss-2012.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r259/options/Gauss/Sim08-Beam4000GeV-md100-2012-nu2.5.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r259/options/Gauss/Sim08-Beam4000GeV-md100-2012-nu2.5.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@3/build/GAUSS/GAUSS_v49r0/Sim/Gauss/options/Gauss-2012.py'
 # --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v28r3/options/10000000.py'
 # <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Gen/DecFiles/v28r3/options/10000000.py'
-# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v49r0/Gen/LbPythia/options/Pythia.py'
-# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v49r0/Gen/LbPythia/options/Pythia.py'
-# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v49r0/Sim/Gauss/tests/options/testGauss-NoOutput.py'
-# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v49r0/Sim/Gauss/tests/options/testGauss-NoOutput.py'
-# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v49r0/Sim/Gauss/tests/options/testGauss-config-defaults.py'
-# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v49r0/Sim/Gauss/tests/options/testGauss-config-defaults.py'
-# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v49r0/Sim/Gauss/tests/options/testGauss-QMTests.py'
-# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v49r0/Sim/Gauss/tests/options/testGauss-QMTests.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@3/build/GAUSS/GAUSS_v49r0/Gen/LbPythia/options/Pythia.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@3/build/GAUSS/GAUSS_v49r0/Gen/LbPythia/options/Pythia.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@3/build/GAUSS/GAUSS_v49r0/Sim/Gauss/tests/options/testGauss-NoOutput.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@3/build/GAUSS/GAUSS_v49r0/Sim/Gauss/tests/options/testGauss-NoOutput.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@3/build/GAUSS/GAUSS_v49r0/Sim/Gauss/tests/options/testGauss-config-defaults.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@3/build/GAUSS/GAUSS_v49r0/Sim/Gauss/tests/options/testGauss-config-defaults.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@3/build/GAUSS/GAUSS_v49r0/Sim/Gauss/tests/options/testGauss-QMTests.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@3/build/GAUSS/GAUSS_v49r0/Sim/Gauss/tests/options/testGauss-QMTests.py'
 # applying configuration of Gauss
 veloMisAlignGeometry: 2
 Ecut value = 5.0
-# WARNING: Sim Detector not known : magnet
-# WARNING: Moni Detector not known : magnet
 # WARNING: No event data output produced
 # WARNING: No histograms produced
 # /***** User Gauss/Gauss ****************************************************************************
@@ -39,8 +37,8 @@ Ecut value = 5.0
 # |                     (default: {'Em': 'NoCuts', 'GeneralPhys': True, 'Other': '', 'Hadron': 'FTFP_BERT', 'LHCbPhys': True})
 # |-RICHRandomHits      = False
 # |-OutputType          = 'NONE'  (default: 'SIM')
-# |-DetectorMoni        = {'Detectors': ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet']}
-# |                     (default: {'Detectors': ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet']})
+# |-DetectorMoni        = {'Detectors': ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon']}
+# |                     (default: {'Detectors': ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon']})
 # |-DeltaRays           = True
 # |-EnablePack          = True
 # |-BeamBetaStar        = 3200.0  (default: 3100.0)
@@ -60,8 +58,8 @@ Ecut value = 5.0
 # GaussTape.OptItemList = ['/Event/Gen/HepMCEvents#1']
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Gauss version v48r3
-                                          running on lbbuild01.cern.ch on Fri Mar 11 05:02:02 2016
+                                                   Welcome to Gauss version v49r0
+                                          running on lbbuild08.cern.ch on Mon Mar 21 05:20:36 2016
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersistencySvc     INFO Added successfully Conversion service:XmlCnvSvc
@@ -75,7 +73,7 @@ ChronoStatSvc              INFO  Number of skipped events for MemStat-1
                             WWW : http://cern.ch/geant4
 *************************************************************
 
-SimulationSvc              INFO Loading simulation attributes file "/nightlies/jenkins/workspace/nightly-slot-test-project-platform@2/build/GAUSS/GAUSS_v49r0/Sim/Gauss/xml/Simulation.xml" ...
+SimulationSvc              INFO Loading simulation attributes file "/nightlies/jenkins/workspace/nightly-slot-test-project-platform@3/build/GAUSS/GAUSS_v49r0/Sim/Gauss/xml/Simulation.xml" ...
 GiGa.ModularPL             INFO GiGaPhysListModular initializing
 GiGa.ModularPL             INFO Registered GiGa.ModularPL.EmOpt1NoCutsPhysics
 GiGa.ModularPL             INFO Registered GiGa.ModularPL.DecayPhysics
@@ -185,7 +183,7 @@ RndmGenSvc.Engine          INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine          INFO Current Seed:1234567 Luxury:3
 RndmGenSvc.Engine          INFO This is the GEANT4 engine!
 RndmGenSvc                 INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.TIMER        INFO This machine has a speed about   1.94 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   1.34 times the speed of a 2.8 GHz Xeon.
 GaussSequencer            DEBUG Property update for OutputLevel : new value = 2
 GaussSequencer            DEBUG Property update for OutputLevel : new value = 2
 GaussSequencer            DEBUG Initialize base class GaudiCommon<Algorithm>
@@ -233,7 +231,7 @@ GaussSequencer            DEBUG ==> Initialise
 GaussSequencer            DEBUG Added algorithm Generator
 GaussSequencer            DEBUG Added algorithm Simulation
 GaussSequencer             INFO Member list: GaudiSequencer/Generator, GaudiSequencer/Simulation
-ToolSvc.SequencerTime...   INFO This machine has a speed about   1.98 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO This machine has a speed about   1.26 times the speed of a 2.8 GHz Xeon.
 GaussSequencer            DEBUG The tool of type 'SequencerTimerTool' has been added with the name 'ToolSvc.SequencerTimerTool'
 GaussSequencer            DEBUG Releasing tool 'ToolSvc.SequencerTimerTool'
 GaussSequencer            DEBUG The tool 'ToolSvc.SequencerTimerTool' of type 'SequencerTimerTool' is released
@@ -596,7 +594,7 @@ MODOP=5 -- corrects Energy from mass+flow
  |  |   P  P   Y Y     T    H   H   I    A A     This is PYTHIA version 8.186      |  |
  |  |   PPP     Y      T    HHHHH   I   AAAAA    Last date of change:  8 Jul 2014  |  |
  |  |   P       Y      T    H   H   I   A   A                                      |  |
- |  |   P       Y      T    H   H  III  A   A    Now is 11 Mar 2016 at 05:03:19    |  |
+ |  |   P       Y      T    H   H  III  A   A    Now is 21 Mar 2016 at 05:21:13    |  |
  |  |                                                                              |  |
  |  |   Torbjorn Sjostrand;  Department of Astronomy and Theoretical Physics,      |  |
  |  |      Lund University, Solvegatan 14A, SE-223 62 Lund, Sweden;                |  |
@@ -654,7 +652,7 @@ MODOP=5 -- corrects Energy from mass+flow
  |  |   P  P   Y Y     T    H   H   I    A A     This is PYTHIA version 8.186      |  |
  |  |   PPP     Y      T    HHHHH   I   AAAAA    Last date of change:  8 Jul 2014  |  |
  |  |   P       Y      T    H   H   I   A   A                                      |  |
- |  |   P       Y      T    H   H  III  A   A    Now is 11 Mar 2016 at 05:03:19    |  |
+ |  |   P       Y      T    H   H  III  A   A    Now is 21 Mar 2016 at 05:21:14    |  |
  |  |                                                                              |  |
  |  |   Torbjorn Sjostrand;  Department of Astronomy and Theoretical Physics,      |  |
  |  |      Lund University, Solvegatan 14A, SE-223 62 Lund, Sweden;                |  |
@@ -1943,7 +1941,7 @@ GiGaStore                 DEBUG Property ['Name': Value] =  'ErrorMax':1
 GiGaStore                 DEBUG Property ['Name': Value] =  'Enable':True
 GiGaStore                 DEBUG Property ['Name': Value] =  'OutputLevel':2
 Geo                       DEBUG List of ALL properties of GiGaInputStream/Geo  #properties = 20
-Geo                       DEBUG Property ['Name': Value] =  'StreamItems':[ '/dd/Structure/LHCb/MagnetRegion/PipeInMagnet' , '/dd/Structure/LHCb/MagnetRegion/PipeSupportsInMagnet' , '/dd/Structure/LHCb/AfterMagnetRegion/PipeAfterT' , '/dd/Structure/LHCb/AfterMagnetRegion/PipeSupportsAfterMagnet' , '/dd/Structure/LHCb/DownstreamRegion/PipeDownstream' , '/dd/Structure/LHCb/DownstreamRegion/PipeSupportsDownstream' , '/dd/Structure/LHCb/DownstreamRegion/PipeBakeoutDownstream' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/ModulePU00' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/ModulePU02' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/ModulePU01' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/ModulePU03' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module00' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module01' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module02' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module03' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module04' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module05' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module06' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module07' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module08' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module09' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module10' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module11' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module12' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module13' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module14' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module15' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module16' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module17' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module18' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module19' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module20' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module21' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module22' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module23' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module24' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module25' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module26' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module27' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module28' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module29' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module30' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module31' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module32' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module33' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module34' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module35' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module36' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module37' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module38' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module39' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module40' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module41' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/DownStreamWakeFieldCone' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/UpStreamWakeFieldCone' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/RFBoxRight' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/DetSupportRight' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/ConstSysRight' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/RFBoxLeft' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/DetSupportLeft' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/ConstSysLeft' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/DownstreamPipeSections' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/UpstreamPipeSections' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VacTank' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/RFFoilRight' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/RFFoilLeft' , '/dd/Structure/LHCb/DownstreamRegion/Spd' , '/dd/Structure/LHCb/DownstreamRegion/Converter' , '/dd/Structure/LHCb/DownstreamRegion/Prs' , '/dd/Structure/LHCb/DownstreamRegion/Ecal' , '/dd/Structure/LHCb/DownstreamRegion/Hcal' , '/dd/Structure/LHCb/DownstreamRegion/Muon' , '/dd/Structure/LHCb/BeforeMagnetRegion/TT' , '/dd/Structure/LHCb/BeforeMagnetRegion/Rich1' , '/dd/Structure/LHCb/MagnetRegion/Magnet' , '/dd/Structure/LHCb/MagnetRegion/BcmDown' , '/dd/Structure/LHCb/AfterMagnetRegion/T/IT' , '/dd/Structure/LHCb/AfterMagnetRegion/T/PipeInT' , '/dd/Structure/LHCb/AfterMagnetRegion/T/OT' , '/dd/Structure/LHCb/AfterMagnetRegion/Rich2' , '/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1Surfaces' , '/dd/Geometry/BeforeMagnetRegion/Rich1/RichHPDSurfaces' , '/dd/Geometry/AfterMagnetRegion/Rich2/Rich2Surfaces' ]
+Geo                       DEBUG Property ['Name': Value] =  'StreamItems':[ '/dd/Structure/LHCb/MagnetRegion/PipeInMagnet' , '/dd/Structure/LHCb/MagnetRegion/PipeSupportsInMagnet' , '/dd/Structure/LHCb/AfterMagnetRegion/PipeAfterT' , '/dd/Structure/LHCb/AfterMagnetRegion/PipeSupportsAfterMagnet' , '/dd/Structure/LHCb/DownstreamRegion/PipeDownstream' , '/dd/Structure/LHCb/DownstreamRegion/PipeSupportsDownstream' , '/dd/Structure/LHCb/DownstreamRegion/PipeBakeoutDownstream' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/ModulePU00' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/ModulePU02' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/ModulePU01' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/ModulePU03' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module00' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module01' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module02' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module03' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module04' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module05' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module06' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module07' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module08' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module09' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module10' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module11' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module12' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module13' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module14' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module15' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module16' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module17' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module18' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module19' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module20' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module21' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module22' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module23' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module24' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module25' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module26' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module27' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module28' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module29' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module30' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module31' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module32' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module33' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module34' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module35' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module36' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module37' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module38' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module39' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/Module40' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/Module41' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/DownStreamWakeFieldCone' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/UpStreamWakeFieldCone' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/RFBoxRight' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/DetSupportRight' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/ConstSysRight' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/RFBoxLeft' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/DetSupportLeft' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/ConstSysLeft' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/DownstreamPipeSections' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/UpstreamPipeSections' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VacTank' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/RFFoilRight' , '/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/RFFoilLeft' , '/dd/Structure/LHCb/BeforeMagnetRegion/TT' , '/dd/Structure/LHCb/BeforeMagnetRegion/Rich1' , '/dd/Structure/LHCb/MagnetRegion/Magnet' , '/dd/Structure/LHCb/MagnetRegion/BcmDown' , '/dd/Structure/LHCb/DownstreamRegion/Spd' , '/dd/Structure/LHCb/DownstreamRegion/Converter' , '/dd/Structure/LHCb/DownstreamRegion/Prs' , '/dd/Structure/LHCb/DownstreamRegion/Ecal' , '/dd/Structure/LHCb/DownstreamRegion/Hcal' , '/dd/Structure/LHCb/DownstreamRegion/Muon' , '/dd/Structure/LHCb/AfterMagnetRegion/T/IT' , '/dd/Structure/LHCb/AfterMagnetRegion/T/PipeInT' , '/dd/Structure/LHCb/AfterMagnetRegion/T/OT' , '/dd/Structure/LHCb/AfterMagnetRegion/Rich2' , '/dd/Geometry/BeforeMagnetRegion/Rich1/Rich1Surfaces' , '/dd/Geometry/BeforeMagnetRegion/Rich1/RichHPDSurfaces' , '/dd/Geometry/AfterMagnetRegion/Rich2/Rich2Surfaces' ]
 Geo                       DEBUG Property ['Name': Value] =  'DataProviderSvcName':DetectorDataSvc
 Geo                       DEBUG Property ['Name': Value] =  'ConversionSvcName':GiGaGeo
 Geo                       DEBUG Property ['Name': Value] =  'ExecuteOnce':True
@@ -3873,350 +3871,6 @@ GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.
 GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.VeloSDet' is retrieved from IToolSvc
 GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.VeloSDet' is retrieved from IToolSvc
 GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.VeloSDet' is retrieved from IToolSvc
-GiGaGeo.CaloSP            DEBUG Property update for OutputLevel : new value = 2
-GiGaGeo.CaloSP            DEBUG Initialize base class GaudiCommon<AlgTool>
-GiGaGeo.CaloSP            DEBUG could not locate CounterSummarySvc, no counter summary will be made
-GiGaGeo.CaloSP            DEBUG List of ALL properties of GaussSensPlaneDet/GiGaGeo.CaloSP  #properties = 35
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'CutForNeutral':10.000000
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'CutForCharged':10.000000
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'CutForMuon':-1.0000000
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'CutForPositron':10.000000
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'CutForElectron':10.000000
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'CutForPhoton':50.000000
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'OneEntry':True
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'KeepAllLinks':False
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'CollectionName':CaloSPHits
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'DetectorPath':/LHCb/Calo
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'Active':True
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'GiGaSetUpService':GiGa
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'GiGaService':GiGa
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'RootOnTES':
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'RootInTES':
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'Context':
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'TypePrint':True
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'StatPrint':True
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'PropertiesPrint':False
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'ErrorsPrint':True
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'AuditFinalize':False
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'AuditStop':False
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'AuditStart':False
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'AuditInitialize':False
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'AuditTools':False
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'OutputLevel':2
-GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
-GiGaGeo.CaloSP            DEBUG GaussSensPlaneDet::initialize() Names for G4VSensitiveDetector are:  Path=/LHCb/Calo/ Name=CaloSP FullPathName=/LHCb/Calo/CaloSP
-GiGaGeo.CaloSP            DEBUG GaussSensPlaneDet::initialize() Sensitive Detector is activated
-GiGaGeo                   DEBUG  The Tool of type 'GaussSensPlaneDet'/'GiGaGeo.CaloSP' is retrieved from IToolSvc
-GiGaGeo.Spd               DEBUG Property update for OutputLevel : new value = 2
-GiGaGeo.Spd               DEBUG Initialize base class GaudiCommon<AlgTool>
-GiGaGeo.Spd               DEBUG could not locate CounterSummarySvc, no counter summary will be made
-GiGaGeo.Spd               DEBUG List of ALL properties of SpdPrsSensDet/GiGaGeo.Spd  #properties = 41
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'FracMin':1.0000000e-05
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'IntegrationDelays':[ 18.500000 , 17.500000 , 16.500000 ]
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'NumberBXs':6
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'BunchCrossing':25.000000
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'Histograms':[ 'GaussCalo/SPDTIME/h1' , 'GaussCalo/SPDTIME/h2' , 'GaussCalo/SPDTIME/h3' ]
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'dT0':0.50000000
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'BirkC2':3.7398185e+34
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'BirkC1cor':0.57142857
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'BirkC1':8.1139625e+17
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'zMax':15000.000
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'zMin':12300.000
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'Detector':/dd/Structure/LHCb/DownstreamRegion/Spd
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'CollectionName':SpdHits
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'EndVolume':/dd/Geometry/DownstreamRegion/Spd/Installation/Spd
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'StartVolumes':[ '/dd/Geometry/DownstreamRegion/Spd/Modules/InnCell' , '/dd/Geometry/DownstreamRegion/Spd/Modules/MidCell' , '/dd/Geometry/DownstreamRegion/Spd/Modules/OutCell' ]
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'DetectorPath':/LHCb/Calo
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'Active':True
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'GiGaSetUpService':GiGa
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'GiGaService':GiGa
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'RootOnTES':
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'RootInTES':
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'Context':
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'TypePrint':True
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'StatPrint':True
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'PropertiesPrint':False
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'ErrorsPrint':True
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'AuditFinalize':False
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'AuditStop':False
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'AuditStart':False
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'AuditInitialize':False
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'AuditTools':False
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'OutputLevel':2
-GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
-GiGaGeo.Spd               DEBUG SpdPrsSensDet::initialize() Names for G4VSensitiveDetector are:  Path=/LHCb/Calo/ Name=Spd FullPathName=/LHCb/Calo/Spd
-GiGaGeo.Spd               DEBUG SpdPrsSensDet::initialize() Sensitive Detector is activated
-GiGaGeo.Spd               DEBUG The object of type 'DeCalorimeter*' has been retrieved from TS at address '/dd/Structure/LHCb/DownstreamRegion/Spd'
-RFileCnv                   INFO opening Root file "/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/data/gausscalo.root" for reading
-GiGaGeo                   DEBUG  The Tool of type 'SpdPrsSensDet'/'GiGaGeo.Spd' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'SpdPrsSensDet'/'GiGaGeo.Spd' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'SpdPrsSensDet'/'GiGaGeo.Spd' is retrieved from IToolSvc
-GiGaGeo.ZeroField         DEBUG Property update for OutputLevel : new value = 2
-GiGaGeo.ZeroField         DEBUG Initialize base class GaudiCommon<AlgTool>
-GiGaGeo.ZeroField         DEBUG could not locate CounterSummarySvc, no counter summary will be made
-GiGaGeo.ZeroField         DEBUG List of ALL properties of ZeroFieldMgr/GiGaGeo.ZeroField  #properties = 32
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'MaxEpsilonStep':0.0010000000
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'MinEpsilonStep':5.0000000e-05
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'DeltaOneStep':0.0010000000
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'DeltaIntersection':1.0000000e-05
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'DeltaChord':0.25000000
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'Global':False
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'Stepper':UNDEFINED
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'MinStep':0.010000000
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'GiGaSetUpService':GiGa
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'GiGaService':GiGa
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'RootOnTES':
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'RootInTES':
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'Context':
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'TypePrint':True
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'StatPrint':True
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'PropertiesPrint':False
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'ErrorsPrint':True
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'AuditFinalize':False
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'AuditStop':False
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'AuditStart':False
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'AuditInitialize':False
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'AuditTools':False
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'OutputLevel':2
-GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
-GiGaGeo                   DEBUG  The Tool of type 'ZeroFieldMgr'/'GiGaGeo.ZeroField' is retrieved from IToolSvc
-GiGaGeo.ZeroField          INFO createFieldMgr(): null magnetic field
-GiGaGeo.Prs               DEBUG Property update for OutputLevel : new value = 2
-GiGaGeo.Prs               DEBUG Initialize base class GaudiCommon<AlgTool>
-GiGaGeo.Prs               DEBUG could not locate CounterSummarySvc, no counter summary will be made
-GiGaGeo.Prs               DEBUG List of ALL properties of SpdPrsSensDet/GiGaGeo.Prs  #properties = 41
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'FracMin':1.0000000e-05
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'IntegrationDelays':[ 18.500000 , 17.500000 , 16.500000 ]
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'NumberBXs':6
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'BunchCrossing':25.000000
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'Histograms':[ 'GaussCalo/PRSTIME/h1' , 'GaussCalo/PRSTIME/h2' , 'GaussCalo/PRSTIME/h3' ]
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'dT0':0.50000000
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'BirkC2':3.7398185e+34
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'BirkC1cor':0.57142857
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'BirkC1':8.1139625e+17
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'zMax':15000.000
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'zMin':12300.000
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'Detector':/dd/Structure/LHCb/DownstreamRegion/Prs
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'CollectionName':PrsHits
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'EndVolume':/dd/Geometry/DownstreamRegion/Prs/Installation/Prs
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'StartVolumes':[ '/dd/Geometry/DownstreamRegion/Prs/Modules/InnCell' , '/dd/Geometry/DownstreamRegion/Prs/Modules/MidCell' , '/dd/Geometry/DownstreamRegion/Prs/Modules/OutCell' ]
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'DetectorPath':/LHCb/Calo
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'Active':True
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'GiGaSetUpService':GiGa
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'GiGaService':GiGa
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'RootOnTES':
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'RootInTES':
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'Context':
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'TypePrint':True
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'StatPrint':True
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'PropertiesPrint':False
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'ErrorsPrint':True
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'AuditFinalize':False
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'AuditStop':False
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'AuditStart':False
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'AuditInitialize':False
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'AuditTools':False
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'OutputLevel':2
-GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
-GiGaGeo.Prs               DEBUG SpdPrsSensDet::initialize() Names for G4VSensitiveDetector are:  Path=/LHCb/Calo/ Name=Prs FullPathName=/LHCb/Calo/Prs
-GiGaGeo.Prs               DEBUG SpdPrsSensDet::initialize() Sensitive Detector is activated
-GiGaGeo.Prs               DEBUG The object of type 'DeCalorimeter*' has been retrieved from TS at address '/dd/Structure/LHCb/DownstreamRegion/Prs'
-GiGaGeo                   DEBUG  The Tool of type 'SpdPrsSensDet'/'GiGaGeo.Prs' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'SpdPrsSensDet'/'GiGaGeo.Prs' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'SpdPrsSensDet'/'GiGaGeo.Prs' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'ZeroFieldMgr'/'GiGaGeo.ZeroField' is retrieved from IToolSvc
-GiGaGeo.Ecal              DEBUG Property update for OutputLevel : new value = 2
-GiGaGeo.Ecal              DEBUG Initialize base class GaudiCommon<AlgTool>
-GiGaGeo.Ecal              DEBUG could not locate CounterSummarySvc, no counter summary will be made
-GiGaGeo.Ecal              DEBUG List of ALL properties of EcalSensDet/GiGaGeo.Ecal  #properties = 46
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'a_reflection_width':6.0000000
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'a_reflection_height':0.090000000
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'a_global_outer_ecal':0.030000000
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'a_global_middle_ecal':0.0020000000
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'a_global_inner_ecal':0.00040000000
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'a_local_outer_ecal':0.0000000
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'a_local_middle_ecal':0.0000000
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'a_local_inner_ecal':0.0000000
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'SlotWidth':25.000000
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'Histograms':[ 'GaussCalo/ECALTIME/h1' , 'GaussCalo/ECALTIME/h2' ]
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'dT0':0.50000000
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'BirkC2':3.7398185e+34
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'BirkC1cor':0.57142857
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'BirkC1':8.1139625e+17
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'zMax':15000.000
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'zMin':12300.000
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'Detector':/dd/Structure/LHCb/DownstreamRegion/Ecal
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'CollectionName':EcalHits
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'EndVolume':/dd/Geometry/DownstreamRegion/Ecal/Installation/Ecal
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'StartVolumes':[ '/dd/Geometry/DownstreamRegion/Ecal/Modules/InnCell' , '/dd/Geometry/DownstreamRegion/Ecal/Modules/MidCell' , '/dd/Geometry/DownstreamRegion/Ecal/Modules/OutCell' ]
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'DetectorPath':/LHCb/Calo
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'Active':True
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'GiGaSetUpService':GiGa
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'GiGaService':GiGa
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'RootOnTES':
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'RootInTES':
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'Context':
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'TypePrint':True
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'StatPrint':True
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'PropertiesPrint':False
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'ErrorsPrint':True
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'AuditFinalize':False
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'AuditStop':False
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'AuditStart':False
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'AuditInitialize':False
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'AuditTools':False
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'OutputLevel':2
-GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
-GiGaGeo.Ecal              DEBUG EcalSensDet::initialize() Names for G4VSensitiveDetector are:  Path=/LHCb/Calo/ Name=Ecal FullPathName=/LHCb/Calo/Ecal
-GiGaGeo.Ecal              DEBUG EcalSensDet::initialize() Sensitive Detector is activated
-GiGaGeo.Ecal              DEBUG The object of type 'DeCalorimeter*' has been retrieved from TS at address '/dd/Structure/LHCb/DownstreamRegion/Ecal'
-GiGaGeo                   DEBUG  The Tool of type 'EcalSensDet'/'GiGaGeo.Ecal' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'EcalSensDet'/'GiGaGeo.Ecal' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'EcalSensDet'/'GiGaGeo.Ecal' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'ZeroFieldMgr'/'GiGaGeo.ZeroField' is retrieved from IToolSvc
-GiGaGeo.Hcal              DEBUG Property update for OutputLevel : new value = 2
-GiGaGeo.Hcal              DEBUG Initialize base class GaudiCommon<AlgTool>
-GiGaGeo.Hcal              DEBUG could not locate CounterSummarySvc, no counter summary will be made
-GiGaGeo.Hcal              DEBUG List of ALL properties of HcalSensDet/GiGaGeo.Hcal  #properties = 38
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'SlotWidth':25.000000
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'Histograms':[ 'GaussCalo/HCALTIME/h1' , 'GaussCalo/HCALTIME/h2' ]
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'dT0':0.50000000
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'BirkC2':3.7398185e+34
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'BirkC1cor':0.57142857
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'BirkC1':8.1139625e+17
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'zMax':15000.000
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'zMin':12300.000
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'Detector':/dd/Structure/LHCb/DownstreamRegion/Hcal
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'CollectionName':HcalHits
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'EndVolume':/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcal
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'StartVolumes':[ '/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellUpScTile' , '/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellLowScTile' , '/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalOutCellScTile' ]
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'DetectorPath':/LHCb/Calo
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'Active':True
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'GiGaSetUpService':GiGa
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'GiGaService':GiGa
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'RootOnTES':
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'RootInTES':
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'Context':
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'TypePrint':True
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'StatPrint':True
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'PropertiesPrint':False
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'ErrorsPrint':True
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'AuditFinalize':False
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'AuditStop':False
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'AuditStart':False
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'AuditInitialize':False
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'AuditTools':False
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'OutputLevel':2
-GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
-GiGaGeo.Hcal              DEBUG HcalSensDet::initialize() Names for G4VSensitiveDetector are:  Path=/LHCb/Calo/ Name=Hcal FullPathName=/LHCb/Calo/Hcal
-GiGaGeo.Hcal              DEBUG HcalSensDet::initialize() Sensitive Detector is activated
-GiGaGeo.Hcal              DEBUG The object of type 'DeCalorimeter*' has been retrieved from TS at address '/dd/Structure/LHCb/DownstreamRegion/Hcal'
-GiGaGeo                   DEBUG  The Tool of type 'HcalSensDet'/'GiGaGeo.Hcal' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'HcalSensDet'/'GiGaGeo.Hcal' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'HcalSensDet'/'GiGaGeo.Hcal' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'ZeroFieldMgr'/'GiGaGeo.ZeroField' is retrieved from IToolSvc
-GiGaGeo.MuonSDet          DEBUG Property update for OutputLevel : new value = 2
-GiGaGeo.MuonSDet          DEBUG Initialize base class GaudiCommon<AlgTool>
-GiGaGeo.MuonSDet          DEBUG could not locate CounterSummarySvc, no counter summary will be made
-GiGaGeo.MuonSDet          DEBUG List of ALL properties of GiGaSensDetTracker/GiGaGeo.MuonSDet  #properties = 27
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'RequireEDep':True
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'DetectorPath':
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'Active':True
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'GiGaSetUpService':GiGa
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'GiGaService':GiGa
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'RootOnTES':
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'RootInTES':
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'Context':
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'TypePrint':True
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'StatPrint':True
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'PropertiesPrint':False
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'ErrorsPrint':True
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'AuditFinalize':False
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'AuditStop':False
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'AuditStart':False
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'AuditInitialize':False
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'AuditTools':False
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'OutputLevel':2
-GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
-GiGaGeo.MuonSDet          DEBUG GiGaSensDetTracker::initialize() Names for G4VSensitiveDetector are:  Path=/ Name=MuonSDet FullPathName=/MuonSDet
-GiGaGeo.MuonSDet          DEBUG GiGaSensDetTracker::initialize() Sensitive Detector is activated
-GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
-GiGaGeo                   DEBUG  The Tool of type 'ZeroFieldMgr'/'GiGaGeo.ZeroField' is retrieved from IToolSvc
 GiGaGeo.TTSDet            DEBUG Property update for OutputLevel : new value = 2
 GiGaGeo.TTSDet            DEBUG Initialize base class GaudiCommon<AlgTool>
 GiGaGeo.TTSDet            DEBUG could not locate CounterSummarySvc, no counter summary will be made
@@ -4294,7 +3948,44 @@ GiGaGeo.HpdSiliconSen...  DEBUG Property ['Name': Value] =  'MonitorService':Mon
 GiGaGeo.HpdSiliconSen...  DEBUG RichSensDet::initialize() Names for G4VSensitiveDetector are:  Path=/ Name=HpdSiliconSensDet FullPathName=/HpdSiliconSensDet
 GiGaGeo.HpdSiliconSen...  DEBUG RichSensDet::initialize() Sensitive Detector is activated
 GiGaGeo                   DEBUG  The Tool of type 'RichSensDet'/'GiGaGeo.HpdSiliconSensDet' is retrieved from IToolSvc
+GiGaGeo.ZeroField         DEBUG Property update for OutputLevel : new value = 2
+GiGaGeo.ZeroField         DEBUG Initialize base class GaudiCommon<AlgTool>
+GiGaGeo.ZeroField         DEBUG could not locate CounterSummarySvc, no counter summary will be made
+GiGaGeo.ZeroField         DEBUG List of ALL properties of ZeroFieldMgr/GiGaGeo.ZeroField  #properties = 32
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'MaxEpsilonStep':0.0010000000
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'MinEpsilonStep':5.0000000e-05
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'DeltaOneStep':0.0010000000
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'DeltaIntersection':1.0000000e-05
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'DeltaChord':0.25000000
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'Global':False
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'Stepper':UNDEFINED
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'MinStep':0.010000000
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'GiGaSetUpService':GiGa
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'GiGaService':GiGa
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'RootOnTES':
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'RootInTES':
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'Context':
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'TypePrint':True
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'StatPrint':True
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'AuditFinalize':False
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'AuditStop':False
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'AuditStart':False
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'AuditInitialize':False
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'AuditTools':False
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'OutputLevel':2
+GiGaGeo.ZeroField         DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
 GiGaGeo                   DEBUG  The Tool of type 'ZeroFieldMgr'/'GiGaGeo.ZeroField' is retrieved from IToolSvc
+GiGaGeo.ZeroField          INFO createFieldMgr(): null magnetic field
 GiGaGeo                   DEBUG  The Tool of type 'RichSensDet'/'GiGaGeo.HpdSiliconSensDet' is retrieved from IToolSvc
 GiGaGeo                   DEBUG  The Tool of type 'ZeroFieldMgr'/'GiGaGeo.ZeroField' is retrieved from IToolSvc
 GiGaGeo                   DEBUG  The Tool of type 'RichSensDet'/'GiGaGeo.HpdSiliconSensDet' is retrieved from IToolSvc
@@ -4719,6 +4410,313 @@ GiGaGeo.BcmSDet           DEBUG Property ['Name': Value] =  'MonitorService':Mon
 GiGaGeo.BcmSDet           DEBUG GiGaSensDetTracker::initialize() Names for G4VSensitiveDetector are:  Path=/ Name=BcmSDet FullPathName=/BcmSDet
 GiGaGeo.BcmSDet           DEBUG GiGaSensDetTracker::initialize() Sensitive Detector is activated
 GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.BcmSDet' is retrieved from IToolSvc
+GiGaGeo.CaloSP            DEBUG Property update for OutputLevel : new value = 2
+GiGaGeo.CaloSP            DEBUG Initialize base class GaudiCommon<AlgTool>
+GiGaGeo.CaloSP            DEBUG could not locate CounterSummarySvc, no counter summary will be made
+GiGaGeo.CaloSP            DEBUG List of ALL properties of GaussSensPlaneDet/GiGaGeo.CaloSP  #properties = 35
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'CutForNeutral':10.000000
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'CutForCharged':10.000000
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'CutForMuon':-1.0000000
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'CutForPositron':10.000000
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'CutForElectron':10.000000
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'CutForPhoton':50.000000
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'OneEntry':True
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'KeepAllLinks':False
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'CollectionName':CaloSPHits
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'DetectorPath':/LHCb/Calo
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'Active':True
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'GiGaSetUpService':GiGa
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'GiGaService':GiGa
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'RootOnTES':
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'RootInTES':
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'Context':
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'TypePrint':True
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'StatPrint':True
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'AuditFinalize':False
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'AuditStop':False
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'AuditStart':False
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'AuditInitialize':False
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'AuditTools':False
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'OutputLevel':2
+GiGaGeo.CaloSP            DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+GiGaGeo.CaloSP            DEBUG GaussSensPlaneDet::initialize() Names for G4VSensitiveDetector are:  Path=/LHCb/Calo/ Name=CaloSP FullPathName=/LHCb/Calo/CaloSP
+GiGaGeo.CaloSP            DEBUG GaussSensPlaneDet::initialize() Sensitive Detector is activated
+GiGaGeo                   DEBUG  The Tool of type 'GaussSensPlaneDet'/'GiGaGeo.CaloSP' is retrieved from IToolSvc
+GiGaGeo.Spd               DEBUG Property update for OutputLevel : new value = 2
+GiGaGeo.Spd               DEBUG Initialize base class GaudiCommon<AlgTool>
+GiGaGeo.Spd               DEBUG could not locate CounterSummarySvc, no counter summary will be made
+GiGaGeo.Spd               DEBUG List of ALL properties of SpdPrsSensDet/GiGaGeo.Spd  #properties = 41
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'FracMin':1.0000000e-05
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'IntegrationDelays':[ 18.500000 , 17.500000 , 16.500000 ]
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'NumberBXs':6
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'BunchCrossing':25.000000
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'Histograms':[ 'GaussCalo/SPDTIME/h1' , 'GaussCalo/SPDTIME/h2' , 'GaussCalo/SPDTIME/h3' ]
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'dT0':0.50000000
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'BirkC2':3.7398185e+34
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'BirkC1cor':0.57142857
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'BirkC1':8.1139625e+17
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'zMax':15000.000
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'zMin':12300.000
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'Detector':/dd/Structure/LHCb/DownstreamRegion/Spd
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'CollectionName':SpdHits
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'EndVolume':/dd/Geometry/DownstreamRegion/Spd/Installation/Spd
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'StartVolumes':[ '/dd/Geometry/DownstreamRegion/Spd/Modules/InnCell' , '/dd/Geometry/DownstreamRegion/Spd/Modules/MidCell' , '/dd/Geometry/DownstreamRegion/Spd/Modules/OutCell' ]
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'DetectorPath':/LHCb/Calo
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'Active':True
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'GiGaSetUpService':GiGa
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'GiGaService':GiGa
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'RootOnTES':
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'RootInTES':
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'Context':
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'TypePrint':True
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'StatPrint':True
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'AuditFinalize':False
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'AuditStop':False
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'AuditStart':False
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'AuditInitialize':False
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'AuditTools':False
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'OutputLevel':2
+GiGaGeo.Spd               DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+GiGaGeo.Spd               DEBUG SpdPrsSensDet::initialize() Names for G4VSensitiveDetector are:  Path=/LHCb/Calo/ Name=Spd FullPathName=/LHCb/Calo/Spd
+GiGaGeo.Spd               DEBUG SpdPrsSensDet::initialize() Sensitive Detector is activated
+GiGaGeo.Spd               DEBUG The object of type 'DeCalorimeter*' has been retrieved from TS at address '/dd/Structure/LHCb/DownstreamRegion/Spd'
+RFileCnv                   INFO opening Root file "/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/data/gausscalo.root" for reading
+GiGaGeo                   DEBUG  The Tool of type 'SpdPrsSensDet'/'GiGaGeo.Spd' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'SpdPrsSensDet'/'GiGaGeo.Spd' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'SpdPrsSensDet'/'GiGaGeo.Spd' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'ZeroFieldMgr'/'GiGaGeo.ZeroField' is retrieved from IToolSvc
+GiGaGeo.Prs               DEBUG Property update for OutputLevel : new value = 2
+GiGaGeo.Prs               DEBUG Initialize base class GaudiCommon<AlgTool>
+GiGaGeo.Prs               DEBUG could not locate CounterSummarySvc, no counter summary will be made
+GiGaGeo.Prs               DEBUG List of ALL properties of SpdPrsSensDet/GiGaGeo.Prs  #properties = 41
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'FracMin':1.0000000e-05
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'IntegrationDelays':[ 18.500000 , 17.500000 , 16.500000 ]
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'NumberBXs':6
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'BunchCrossing':25.000000
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'Histograms':[ 'GaussCalo/PRSTIME/h1' , 'GaussCalo/PRSTIME/h2' , 'GaussCalo/PRSTIME/h3' ]
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'dT0':0.50000000
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'BirkC2':3.7398185e+34
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'BirkC1cor':0.57142857
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'BirkC1':8.1139625e+17
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'zMax':15000.000
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'zMin':12300.000
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'Detector':/dd/Structure/LHCb/DownstreamRegion/Prs
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'CollectionName':PrsHits
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'EndVolume':/dd/Geometry/DownstreamRegion/Prs/Installation/Prs
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'StartVolumes':[ '/dd/Geometry/DownstreamRegion/Prs/Modules/InnCell' , '/dd/Geometry/DownstreamRegion/Prs/Modules/MidCell' , '/dd/Geometry/DownstreamRegion/Prs/Modules/OutCell' ]
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'DetectorPath':/LHCb/Calo
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'Active':True
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'GiGaSetUpService':GiGa
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'GiGaService':GiGa
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'RootOnTES':
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'RootInTES':
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'Context':
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'TypePrint':True
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'StatPrint':True
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'AuditFinalize':False
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'AuditStop':False
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'AuditStart':False
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'AuditInitialize':False
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'AuditTools':False
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'OutputLevel':2
+GiGaGeo.Prs               DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+GiGaGeo.Prs               DEBUG SpdPrsSensDet::initialize() Names for G4VSensitiveDetector are:  Path=/LHCb/Calo/ Name=Prs FullPathName=/LHCb/Calo/Prs
+GiGaGeo.Prs               DEBUG SpdPrsSensDet::initialize() Sensitive Detector is activated
+GiGaGeo.Prs               DEBUG The object of type 'DeCalorimeter*' has been retrieved from TS at address '/dd/Structure/LHCb/DownstreamRegion/Prs'
+GiGaGeo                   DEBUG  The Tool of type 'SpdPrsSensDet'/'GiGaGeo.Prs' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'SpdPrsSensDet'/'GiGaGeo.Prs' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'SpdPrsSensDet'/'GiGaGeo.Prs' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'ZeroFieldMgr'/'GiGaGeo.ZeroField' is retrieved from IToolSvc
+GiGaGeo.Ecal              DEBUG Property update for OutputLevel : new value = 2
+GiGaGeo.Ecal              DEBUG Initialize base class GaudiCommon<AlgTool>
+GiGaGeo.Ecal              DEBUG could not locate CounterSummarySvc, no counter summary will be made
+GiGaGeo.Ecal              DEBUG List of ALL properties of EcalSensDet/GiGaGeo.Ecal  #properties = 46
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'a_reflection_width':6.0000000
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'a_reflection_height':0.090000000
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'a_global_outer_ecal':0.030000000
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'a_global_middle_ecal':0.0020000000
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'a_global_inner_ecal':0.00040000000
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'a_local_outer_ecal':0.0000000
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'a_local_middle_ecal':0.0000000
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'a_local_inner_ecal':0.0000000
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'SlotWidth':25.000000
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'Histograms':[ 'GaussCalo/ECALTIME/h1' , 'GaussCalo/ECALTIME/h2' ]
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'dT0':0.50000000
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'BirkC2':3.7398185e+34
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'BirkC1cor':0.57142857
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'BirkC1':8.1139625e+17
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'zMax':15000.000
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'zMin':12300.000
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'Detector':/dd/Structure/LHCb/DownstreamRegion/Ecal
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'CollectionName':EcalHits
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'EndVolume':/dd/Geometry/DownstreamRegion/Ecal/Installation/Ecal
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'StartVolumes':[ '/dd/Geometry/DownstreamRegion/Ecal/Modules/InnCell' , '/dd/Geometry/DownstreamRegion/Ecal/Modules/MidCell' , '/dd/Geometry/DownstreamRegion/Ecal/Modules/OutCell' ]
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'DetectorPath':/LHCb/Calo
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'Active':True
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'GiGaSetUpService':GiGa
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'GiGaService':GiGa
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'RootOnTES':
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'RootInTES':
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'Context':
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'TypePrint':True
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'StatPrint':True
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'AuditFinalize':False
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'AuditStop':False
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'AuditStart':False
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'AuditInitialize':False
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'AuditTools':False
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'OutputLevel':2
+GiGaGeo.Ecal              DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+GiGaGeo.Ecal              DEBUG EcalSensDet::initialize() Names for G4VSensitiveDetector are:  Path=/LHCb/Calo/ Name=Ecal FullPathName=/LHCb/Calo/Ecal
+GiGaGeo.Ecal              DEBUG EcalSensDet::initialize() Sensitive Detector is activated
+GiGaGeo.Ecal              DEBUG The object of type 'DeCalorimeter*' has been retrieved from TS at address '/dd/Structure/LHCb/DownstreamRegion/Ecal'
+GiGaGeo                   DEBUG  The Tool of type 'EcalSensDet'/'GiGaGeo.Ecal' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'EcalSensDet'/'GiGaGeo.Ecal' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'EcalSensDet'/'GiGaGeo.Ecal' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'ZeroFieldMgr'/'GiGaGeo.ZeroField' is retrieved from IToolSvc
+GiGaGeo.Hcal              DEBUG Property update for OutputLevel : new value = 2
+GiGaGeo.Hcal              DEBUG Initialize base class GaudiCommon<AlgTool>
+GiGaGeo.Hcal              DEBUG could not locate CounterSummarySvc, no counter summary will be made
+GiGaGeo.Hcal              DEBUG List of ALL properties of HcalSensDet/GiGaGeo.Hcal  #properties = 38
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'SlotWidth':25.000000
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'Histograms':[ 'GaussCalo/HCALTIME/h1' , 'GaussCalo/HCALTIME/h2' ]
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'dT0':0.50000000
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'BirkC2':3.7398185e+34
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'BirkC1cor':0.57142857
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'BirkC1':8.1139625e+17
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'zMax':15000.000
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'zMin':12300.000
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'Detector':/dd/Structure/LHCb/DownstreamRegion/Hcal
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'CollectionName':HcalHits
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'EndVolume':/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcal
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'StartVolumes':[ '/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellUpScTile' , '/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellLowScTile' , '/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalOutCellScTile' ]
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'DetectorPath':/LHCb/Calo
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'Active':True
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'GiGaSetUpService':GiGa
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'GiGaService':GiGa
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'RootOnTES':
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'RootInTES':
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'Context':
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'TypePrint':True
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'StatPrint':True
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'AuditFinalize':False
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'AuditStop':False
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'AuditStart':False
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'AuditInitialize':False
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'AuditTools':False
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'OutputLevel':2
+GiGaGeo.Hcal              DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+GiGaGeo.Hcal              DEBUG HcalSensDet::initialize() Names for G4VSensitiveDetector are:  Path=/LHCb/Calo/ Name=Hcal FullPathName=/LHCb/Calo/Hcal
+GiGaGeo.Hcal              DEBUG HcalSensDet::initialize() Sensitive Detector is activated
+GiGaGeo.Hcal              DEBUG The object of type 'DeCalorimeter*' has been retrieved from TS at address '/dd/Structure/LHCb/DownstreamRegion/Hcal'
+GiGaGeo                   DEBUG  The Tool of type 'HcalSensDet'/'GiGaGeo.Hcal' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'HcalSensDet'/'GiGaGeo.Hcal' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'HcalSensDet'/'GiGaGeo.Hcal' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'ZeroFieldMgr'/'GiGaGeo.ZeroField' is retrieved from IToolSvc
+GiGaGeo.MuonSDet          DEBUG Property update for OutputLevel : new value = 2
+GiGaGeo.MuonSDet          DEBUG Initialize base class GaudiCommon<AlgTool>
+GiGaGeo.MuonSDet          DEBUG could not locate CounterSummarySvc, no counter summary will be made
+GiGaGeo.MuonSDet          DEBUG List of ALL properties of GiGaSensDetTracker/GiGaGeo.MuonSDet  #properties = 27
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'RequireEDep':True
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'DetectorPath':
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'Active':True
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'GiGaSetUpService':GiGa
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'GiGaService':GiGa
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0.0000000
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'RootOnTES':
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'RootInTES':
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'Context':
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'TypePrint':True
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'StatPrint':True
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'PropertiesPrint':False
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'AuditFinalize':False
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'AuditStop':False
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'AuditStart':False
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'AuditInitialize':False
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'AuditTools':False
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'OutputLevel':2
+GiGaGeo.MuonSDet          DEBUG Property ['Name': Value] =  'MonitorService':MonitorSvc
+GiGaGeo.MuonSDet          DEBUG GiGaSensDetTracker::initialize() Names for G4VSensitiveDetector are:  Path=/ Name=MuonSDet FullPathName=/MuonSDet
+GiGaGeo.MuonSDet          DEBUG GiGaSensDetTracker::initialize() Sensitive Detector is activated
+GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'GiGaSensDetTracker'/'GiGaGeo.MuonSDet' is retrieved from IToolSvc
+GiGaGeo                   DEBUG  The Tool of type 'ZeroFieldMgr'/'GiGaGeo.ZeroField' is retrieved from IToolSvc
 GiGaGeo.ITSDet            DEBUG Property update for OutputLevel : new value = 2
 GiGaGeo.ITSDet            DEBUG Initialize base class GaudiCommon<AlgTool>
 GiGaGeo.ITSDet            DEBUG could not locate CounterSummarySvc, no counter summary will be made
@@ -5600,37 +5598,37 @@ GiGaGeo.Spd               DEBUG  Initialize(): CollectionName='SpdHits' for Sens
 GiGaGeo.Prs               DEBUG  Initialize(): CollectionName='PrsHits' for SensDet='Prs'
 GiGaGeo.Ecal              DEBUG  Initialize(): CollectionName='EcalHits' for SensDet='Ecal'
 GiGaGeo.Hcal              DEBUG  Initialize(): CollectionName='HcalHits' for SensDet='Hcal'
-DDDB_0.TimeOutChecker      INFO Disconnect from database after being idle for 120s (will reconnect if needed)
-DDDB.TimeOutChecker        INFO Disconnect from database after being idle for 120s (will reconnect if needed)
 G4Fragment::CalculateExcitationEnergy(): WARNING
 Fragment: A =   1, Z =   0, U = -2.000e-05 MeV  IsStable= 1
           P = (-2.410e+02,2.157e+01,6.213e+01) MeV   E = 9.722e+02 MeV
 
+DDDB_0.TimeOutChecker      INFO Disconnect from database after being idle for 120s (will reconnect if needed)
+DDDB.TimeOutChecker        INFO Disconnect from database after being idle for 120s (will reconnect if needed)
 GiGaGeo.CaloSP            DEBUG  #GaussSensPlaneHits=   0
 GiGaGeo.Spd             SUCCESS  #Hits=  334 #SubHits=  388 #Slots= 2302 Energy=    1.31[GeV]
 GiGaGeo.Prs             SUCCESS  #Hits=  624 #SubHits=  803 #Slots= 4765 Energy=    5.31[GeV]
 GiGaGeo.Ecal            SUCCESS  #Hits= 2371 #SubHits= 4964 #Slots= 5614 Energy=    84.9[GeV]
 GiGaGeo.Hcal            SUCCESS  #Hits=  300 #SubHits=  546 #Slots=  686 Energy=     7.5[GeV]
 GiGaFlush                 DEBUG  Dump G4 event object
-GiGaFlush                  INFO  GiGaUtil::DumpG4Event 0x25f705f0 **************************************************
+GiGaFlush                  INFO  GiGaUtil::DumpG4Event 0x273783b0 **************************************************
  GiGaUtil::DumpG4Event  EventID                : 0
  GiGaUtil::DumpG4Event  NumberOfPrimaryVertex  : 2
  GiGaUtil::DumpG4Event  #StoredTrajectories    : 2295
  GiGaUtil::DumpG4Event  # of Hit Collections       : 16
  GiGaUtil::DumpG4Event  Collection: ID = 0 	Name = 'Hits' 	SD = 'VeloPuSDet' 	#Hits = 60
  GiGaUtil::DumpG4Event  Collection: ID = 1 	Name = 'Hits' 	SD = 'VeloSDet' 	#Hits = 1529
- GiGaUtil::DumpG4Event  Collection: ID = 2 	Name = 'CaloSPHits' 	SD = 'CaloSP' 	#Hits = 0
- GiGaUtil::DumpG4Event  Collection: ID = 3 	Name = 'SpdHits' 	SD = 'Spd' 	#Hits = 334
- GiGaUtil::DumpG4Event  Collection: ID = 4 	Name = 'PrsHits' 	SD = 'Prs' 	#Hits = 624
- GiGaUtil::DumpG4Event  Collection: ID = 5 	Name = 'EcalHits' 	SD = 'Ecal' 	#Hits = 2371
- GiGaUtil::DumpG4Event  Collection: ID = 6 	Name = 'HcalHits' 	SD = 'Hcal' 	#Hits = 300
- GiGaUtil::DumpG4Event  Collection: ID = 7 	Name = 'Hits' 	SD = 'MuonSDet' 	#Hits = 574
- GiGaUtil::DumpG4Event  Collection: ID = 8 	Name = 'Hits' 	SD = 'TTSDet' 	#Hits = 621
- GiGaUtil::DumpG4Event  Collection: ID = 9 	Name = 'Rich1TopHC' 	SD = 'HpdSiliconSensDet' 	#Hits = 1729
- GiGaUtil::DumpG4Event  Collection: ID = 10 	Name = 'Rich1BotHC' 	SD = 'HpdSiliconSensDet' 	#Hits = 1174
- GiGaUtil::DumpG4Event  Collection: ID = 11 	Name = 'Rich2LeftHC' 	SD = 'HpdSiliconSensDet' 	#Hits = 1087
- GiGaUtil::DumpG4Event  Collection: ID = 12 	Name = 'Rich2RightHC' 	SD = 'HpdSiliconSensDet' 	#Hits = 1152
- GiGaUtil::DumpG4Event  Collection: ID = 13 	Name = 'Hits' 	SD = 'BcmSDet' 	#Hits = 21
+ GiGaUtil::DumpG4Event  Collection: ID = 2 	Name = 'Hits' 	SD = 'TTSDet' 	#Hits = 621
+ GiGaUtil::DumpG4Event  Collection: ID = 3 	Name = 'Rich1TopHC' 	SD = 'HpdSiliconSensDet' 	#Hits = 1729
+ GiGaUtil::DumpG4Event  Collection: ID = 4 	Name = 'Rich1BotHC' 	SD = 'HpdSiliconSensDet' 	#Hits = 1174
+ GiGaUtil::DumpG4Event  Collection: ID = 5 	Name = 'Rich2LeftHC' 	SD = 'HpdSiliconSensDet' 	#Hits = 1087
+ GiGaUtil::DumpG4Event  Collection: ID = 6 	Name = 'Rich2RightHC' 	SD = 'HpdSiliconSensDet' 	#Hits = 1152
+ GiGaUtil::DumpG4Event  Collection: ID = 7 	Name = 'Hits' 	SD = 'BcmSDet' 	#Hits = 21
+ GiGaUtil::DumpG4Event  Collection: ID = 8 	Name = 'CaloSPHits' 	SD = 'CaloSP' 	#Hits = 0
+ GiGaUtil::DumpG4Event  Collection: ID = 9 	Name = 'SpdHits' 	SD = 'Spd' 	#Hits = 334
+ GiGaUtil::DumpG4Event  Collection: ID = 10 	Name = 'PrsHits' 	SD = 'Prs' 	#Hits = 624
+ GiGaUtil::DumpG4Event  Collection: ID = 11 	Name = 'EcalHits' 	SD = 'Ecal' 	#Hits = 2371
+ GiGaUtil::DumpG4Event  Collection: ID = 12 	Name = 'HcalHits' 	SD = 'Hcal' 	#Hits = 300
+ GiGaUtil::DumpG4Event  Collection: ID = 13 	Name = 'Hits' 	SD = 'MuonSDet' 	#Hits = 574
  GiGaUtil::DumpG4Event  Collection: ID = 14 	Name = 'Hits' 	SD = 'ITSDet' 	#Hits = 650
  GiGaUtil::DumpG4Event  Collection: ID = 15 	Name = 'Hits' 	SD = 'OTSDet' 	#Hits = 1645
  GiGaUtil::DumpG4Event  GetDCofThisEvent       :  G4DCofThisEvent*          points to NULL
@@ -6455,15 +6453,6 @@ GiGaGeo.OTSDet            DEBUG Services to release :
 GiGaGeo.ITSDet            DEBUG  ==> Finalize the base class GaudiTool
 GiGaGeo.ITSDet            DEBUG Tools to release :
 GiGaGeo.ITSDet            DEBUG Services to release :
-GiGaGeo.BcmSDet           DEBUG  ==> Finalize the base class GaudiTool
-GiGaGeo.BcmSDet           DEBUG Tools to release :
-GiGaGeo.BcmSDet           DEBUG Services to release :
-GiGaGeo.HpdSiliconSen...  DEBUG  ==> Finalize the base class GaudiTool
-GiGaGeo.HpdSiliconSen...  DEBUG Tools to release :
-GiGaGeo.HpdSiliconSen...  DEBUG Services to release :
-GiGaGeo.TTSDet            DEBUG  ==> Finalize the base class GaudiTool
-GiGaGeo.TTSDet            DEBUG Tools to release :
-GiGaGeo.TTSDet            DEBUG Services to release :
 GiGaGeo.MuonSDet          DEBUG  ==> Finalize the base class GaudiTool
 GiGaGeo.MuonSDet          DEBUG Tools to release :
 GiGaGeo.MuonSDet          DEBUG Services to release :
@@ -6500,9 +6489,6 @@ GiGaGeo.Prs               DEBUG Tools to release :
 GiGaGeo.Prs               DEBUG Services to release : DetectorDataSvc HistogramDataSvc
 GiGaGeo.Prs               DEBUG Releasing service 'DetectorDataSvc'
 GiGaGeo.Prs               DEBUG Releasing service 'HistogramDataSvc'
-GiGaGeo.ZeroField         DEBUG  ==> Finalize the base class GaudiTool
-GiGaGeo.ZeroField         DEBUG Tools to release :
-GiGaGeo.ZeroField         DEBUG Services to release :
 GiGaGeo.Spd               DEBUG  ==> Finalize the base class GaudiTool
 GiGaGeo.Spd             SUCCESS Number of counters : 4
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
@@ -6518,6 +6504,18 @@ GiGaGeo.CaloSP            DEBUG  <#Hits>/Min/Max=(  0+-  0)/0/   0
 GiGaGeo.CaloSP            DEBUG  ==> Finalize the base class GaudiTool
 GiGaGeo.CaloSP            DEBUG Tools to release :
 GiGaGeo.CaloSP            DEBUG Services to release :
+GiGaGeo.BcmSDet           DEBUG  ==> Finalize the base class GaudiTool
+GiGaGeo.BcmSDet           DEBUG Tools to release :
+GiGaGeo.BcmSDet           DEBUG Services to release :
+GiGaGeo.ZeroField         DEBUG  ==> Finalize the base class GaudiTool
+GiGaGeo.ZeroField         DEBUG Tools to release :
+GiGaGeo.ZeroField         DEBUG Services to release :
+GiGaGeo.HpdSiliconSen...  DEBUG  ==> Finalize the base class GaudiTool
+GiGaGeo.HpdSiliconSen...  DEBUG Tools to release :
+GiGaGeo.HpdSiliconSen...  DEBUG Services to release :
+GiGaGeo.TTSDet            DEBUG  ==> Finalize the base class GaudiTool
+GiGaGeo.TTSDet            DEBUG Tools to release :
+GiGaGeo.TTSDet            DEBUG Services to release :
 GiGaGeo.VeloSDet          DEBUG  ==> Finalize the base class GaudiTool
 GiGaGeo.VeloSDet          DEBUG Tools to release :
 GiGaGeo.VeloSDet          DEBUG Services to release :
@@ -6534,7 +6532,7 @@ MainEventGaussSim.Mai...  DEBUG  ==> Finalize the base class GaudiTool
 MainEventGaussSim.Mai...SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "Delta Memory/MB"                               |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
- | "Total Memory/MB"                               |         1 |   1104.392 |     1104.4 | 7.9433e-06 |      1104.4 |      1104.4 |
+ | "Total Memory/MB"                               |         1 |   1104.412 |     1104.4 |     0.0000 |      1104.4 |      1104.4 |
 MainEventGaussSim.Mai...  DEBUG Tools to release :
 MainEventGaussSim.Mai...  DEBUG Services to release : HistogramDataSvc
 MainEventGaussSim.Mai...  DEBUG Releasing service 'HistogramDataSvc'
@@ -6568,12 +6566,12 @@ GaussGen.GaussGenMemory   DEBUG  ==> Finalize the base class GaudiTool
 GaussGen.GaussGenMemory SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "Delta Memory/MB"                               |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
- | "Total Memory/MB"                               |         1 |   1015.112 |     1015.1 |     0.0000 |      1015.1 |      1015.1 |
+ | "Total Memory/MB"                               |         1 |   1015.132 |     1015.1 | 5.4263e-06 |      1015.1 |      1015.1 |
 GaussGen.GaussGenMemory   DEBUG Tools to release :
 GaussGen.GaussGenMemory   DEBUG Services to release : HistogramDataSvc
 GaussGen.GaussGenMemory   DEBUG Releasing service 'HistogramDataSvc'
 ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTime...   INFO This machine has a speed about   1.98 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTime...   INFO This machine has a speed about   1.26 times the speed of a 2.8 GHz Xeon.
 ToolSvc.SequencerTime...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
 ToolSvc.SequencerTime...   INFO --------------------------------------------------------------------------------------------------
@@ -6595,111 +6593,111 @@ Generation.Inclusive....  DEBUG Tools to release :
 Generation.Inclusive....  DEBUG Services to release : EventDataSvc
 Generation.Inclusive....  DEBUG Releasing service 'EventDataSvc'
 TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO This machine has a speed about   1.94 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER        INFO This machine has a speed about   1.34 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.TIMER        INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER        INFO EVENT LOOP                    | 457400.465 | 493027.100 | 493027.100  493027.1 |       1 |   493.027 |
-TimingAuditor.TIMER        INFO  GaussSequencer               | 457397.465 | 493024.368 | 493024.368  493024.4 |       1 |   493.024 |
-TimingAuditor.TIMER        INFO   Generator                   |  1858.718 |  2052.168 | 2052.168    2052.2 |       1 |     2.052 |
-TimingAuditor.TIMER        INFO    GeneratorSlotMainSeq       |  1858.718 |  2052.132 | 2052.132    2052.1 |       1 |     2.052 |
-TimingAuditor.TIMER        INFO     GaussGen                  |     3.000 |     3.342 |    3.342       3.3 |       1 |     0.003 |
-TimingAuditor.TIMER        INFO     Generation                |  1853.718 |  2047.024 | 2047.024    2047.0 |       1 |     2.047 |
-TimingAuditor.TIMER        INFO     GenMonitor                |     2.000 |     1.708 |    1.708       1.7 |       1 |     0.002 |
-TimingAuditor.TIMER        INFO      GenMonitorAlg            |     1.000 |     1.606 |    1.606       1.6 |       1 |     0.002 |
-TimingAuditor.TIMER        INFO   Simulation                  | 455537.747 | 490972.131 | 490972.131  490972.1 |       1 |   490.972 |
-TimingAuditor.TIMER        INFO    GiGaStore                  |     0.000 |     0.058 |    0.058       0.1 |       1 |     0.000 |
-TimingAuditor.TIMER        INFO    Geo                        | 74391.690 | 74848.372 | 74848.372   74848.4 |       1 |    74.848 |
-TimingAuditor.TIMER        INFO    MainEventSeq               | 381146.057 | 416123.624 | 416123.624  416123.6 |       1 |   416.124 |
-TimingAuditor.TIMER        INFO     MainEventGaussSim         |     2.000 |     2.460 |    2.460       2.5 |       1 |     0.002 |
-TimingAuditor.TIMER        INFO     MainSimulation            | 381143.057 | 416120.995 | 416120.995  416121.0 |       1 |   416.121 |
-TimingAuditor.TIMER        INFO      MakeMainSim              | 380737.119 | 415713.869 | 415713.869  415713.9 |       1 |   415.714 |
-TimingAuditor.TIMER        INFO       GenToSim                | 75032.593 | 81484.353 | 81484.353   81484.4 |       1 |    81.484 |
-TimingAuditor.TIMER        INFO       GiGaFlush               | 305428.567 | 333950.844 | 333950.844  333950.8 |       1 |   333.951 |
-TimingAuditor.TIMER        INFO       GiGaCheckEvent          |     0.000 |     0.090 |    0.090       0.1 |       1 |     0.000 |
-TimingAuditor.TIMER        INFO       SimToMCTruth            |    21.998 |    21.809 |   21.809      21.8 |       1 |     0.022 |
-TimingAuditor.TIMER        INFO       DetectorsHits           |   220.966 |   223.734 |  223.734     223.7 |       1 |     0.224 |
-TimingAuditor.TIMER        INFO        GetPuVetoHits          |     3.999 |     3.968 |    3.968       4.0 |       1 |     0.004 |
-TimingAuditor.TIMER        INFO        GetVeloHits            |     6.999 |     7.169 |    7.169       7.2 |       1 |     0.007 |
-TimingAuditor.TIMER        INFO        GetTTHits              |     9.999 |     9.951 |    9.951      10.0 |       1 |     0.010 |
-TimingAuditor.TIMER        INFO        GetITHits              |     7.998 |     9.234 |    9.234       9.2 |       1 |     0.009 |
-TimingAuditor.TIMER        INFO        GetOTHits              |    18.998 |    19.195 |   19.195      19.2 |       1 |     0.019 |
-TimingAuditor.TIMER        INFO        RichHits               |   142.978 |   142.941 |  142.941     142.9 |       1 |     0.143 |
-TimingAuditor.TIMER        INFO         GetRichHits           |    70.990 |    71.276 |   71.276      71.3 |       1 |     0.071 |
-TimingAuditor.TIMER        INFO         GetRichPhotons        |    21.996 |    22.645 |   22.645      22.6 |       1 |     0.023 |
-TimingAuditor.TIMER        INFO         GetRichSegments       |    25.996 |    25.979 |   25.979      26.0 |       1 |     0.026 |
-TimingAuditor.TIMER        INFO         GetRichTracks         |     4.000 |     3.469 |    3.469       3.5 |       1 |     0.003 |
-TimingAuditor.TIMER        INFO         MCPartToMCRichTrack   |     0.999 |     1.220 |    1.220       1.2 |       1 |     0.001 |
-TimingAuditor.TIMER        INFO         MCRichHitToMCRichOpPho|    17.998 |    18.147 |   18.147      18.1 |       1 |     0.018 |
-TimingAuditor.TIMER        INFO        GetSpdHits             |     3.999 |     3.264 |    3.264       3.3 |       1 |     0.003 |
-TimingAuditor.TIMER        INFO        GetPrsHits             |     3.000 |     3.144 |    3.144       3.1 |       1 |     0.003 |
-TimingAuditor.TIMER        INFO        GetEcalHits            |     8.999 |     9.619 |    9.619       9.6 |       1 |     0.010 |
-TimingAuditor.TIMER        INFO        GetHcalHits            |     0.999 |     1.634 |    1.634       1.6 |       1 |     0.002 |
-TimingAuditor.TIMER        INFO        GetMuonHits            |    12.998 |    13.454 |   13.454      13.5 |       1 |     0.013 |
-TimingAuditor.TIMER        INFO       MainEventDataPacking    |    32.995 |    32.842 |   32.842      32.8 |       1 |     0.033 |
-TimingAuditor.TIMER        INFO        PackMCParticle         |     3.000 |     3.576 |    3.576       3.6 |       1 |     0.004 |
-TimingAuditor.TIMER        INFO        PackMCVertex           |     2.998 |     2.408 |    2.408       2.4 |       1 |     0.002 |
-TimingAuditor.TIMER        INFO        MCVeloHitPacker        |     1.000 |     1.245 |    1.245       1.2 |       1 |     0.001 |
-TimingAuditor.TIMER        INFO        MCPuVetoHitPacker      |     0.000 |     0.113 |    0.113       0.1 |       1 |     0.000 |
-TimingAuditor.TIMER        INFO        MCTTHitPacker          |     0.000 |     0.172 |    0.172       0.2 |       1 |     0.000 |
-TimingAuditor.TIMER        INFO        MCITHitPacker          |     1.000 |     0.221 |    0.221       0.2 |       1 |     0.000 |
-TimingAuditor.TIMER        INFO        MCOTHitPacker          |     0.000 |     0.338 |    0.338       0.3 |       1 |     0.000 |
-TimingAuditor.TIMER        INFO        MCMuonHitPacker        |     0.000 |     0.191 |    0.191       0.2 |       1 |     0.000 |
-TimingAuditor.TIMER        INFO        MCPrsHitPacker         |     1.000 |     0.929 |    0.929       0.9 |       1 |     0.001 |
-TimingAuditor.TIMER        INFO        MCSpdHitPacker         |     0.000 |     0.280 |    0.280       0.3 |       1 |     0.000 |
-TimingAuditor.TIMER        INFO        MCEcalHitPacker        |     1.000 |     0.491 |    0.491       0.5 |       1 |     0.000 |
-TimingAuditor.TIMER        INFO        MCHcalHitPacker        |     0.000 |     0.118 |    0.118       0.1 |       1 |     0.000 |
-TimingAuditor.TIMER        INFO        MCRichHitPacker        |     1.000 |     1.061 |    1.061       1.1 |       1 |     0.001 |
-TimingAuditor.TIMER        INFO        MCRichOpPhotPacker     |    17.997 |    18.003 |   18.003      18.0 |       1 |     0.018 |
-TimingAuditor.TIMER        INFO        MCRichSegmentPacker    |     2.000 |     2.318 |    2.318       2.3 |       1 |     0.002 |
-TimingAuditor.TIMER        INFO        MCRichTrackPacker      |     0.000 |     0.739 |    0.739       0.7 |       1 |     0.001 |
-TimingAuditor.TIMER        INFO      SimMonitor               |   405.938 |   407.075 |  407.075     407.1 |       1 |     0.407 |
-TimingAuditor.TIMER        INFO       GiGaGetMainEvent        |     0.000 |     0.755 |    0.755       0.8 |       1 |     0.001 |
-TimingAuditor.TIMER        INFO       MainMCTruthMonitor      |     1.999 |     1.774 |    1.774       1.8 |       1 |     0.002 |
-TimingAuditor.TIMER        INFO       GiGaGetHitsAlg          |     2.000 |     1.971 |    1.971       2.0 |       1 |     0.002 |
-TimingAuditor.TIMER        INFO       DetectorsMonitor        |    86.987 |    87.141 |   87.141      87.1 |       1 |     0.087 |
-TimingAuditor.TIMER        INFO        VeloGaussMoni          |    25.996 |    26.485 |   26.485      26.5 |       1 |     0.026 |
-TimingAuditor.TIMER        INFO        TTHitMonitor           |     4.999 |     4.175 |    4.175       4.2 |       1 |     0.004 |
-TimingAuditor.TIMER        INFO        ITHitMonitor           |     2.000 |     2.586 |    2.586       2.6 |       1 |     0.003 |
-TimingAuditor.TIMER        INFO        OTHitMonitor           |     6.999 |     7.231 |    7.231       7.2 |       1 |     0.007 |
-TimingAuditor.TIMER        INFO        SpdMonitor             |     5.999 |     5.290 |    5.290       5.3 |       1 |     0.005 |
-TimingAuditor.TIMER        INFO        PrsMonitor             |     6.999 |     7.379 |    7.379       7.4 |       1 |     0.007 |
-TimingAuditor.TIMER        INFO        EcalMonitor            |     8.998 |     8.787 |    8.787       8.8 |       1 |     0.009 |
-TimingAuditor.TIMER        INFO        HcalMonitor            |     2.000 |     2.420 |    2.420       2.4 |       1 |     0.002 |
-TimingAuditor.TIMER        INFO        MuonHitChecker         |     6.999 |     6.163 |    6.163       6.2 |       1 |     0.006 |
-TimingAuditor.TIMER        INFO        MuonMultipleScatteringC|    15.998 |    16.440 |   16.440      16.4 |       1 |     0.016 |
-TimingAuditor.TIMER        INFO       DataUnpackTest          |   313.952 |   315.296 |  315.296     315.3 |       1 |     0.315 |
-TimingAuditor.TIMER        INFO        UnpackMCVertex         |     3.999 |     3.974 |    3.974       4.0 |       1 |     0.004 |
-TimingAuditor.TIMER        INFO        UnpackMCParticle       |     4.000 |     3.909 |    3.909       3.9 |       1 |     0.004 |
-TimingAuditor.TIMER        INFO        CompareMCVertex        |     3.000 |     2.576 |    2.576       2.6 |       1 |     0.003 |
-TimingAuditor.TIMER        INFO        CompareMCParticle      |     1.999 |     2.457 |    2.457       2.5 |       1 |     0.002 |
-TimingAuditor.TIMER        INFO        UnpackPuVetoHits       |     1.000 |     0.812 |    0.812       0.8 |       1 |     0.001 |
-TimingAuditor.TIMER        INFO        CheckPuVetoHits        |     2.000 |     2.164 |    2.164       2.2 |       1 |     0.002 |
-TimingAuditor.TIMER        INFO        UnpackVeloHits         |     1.000 |     0.630 |    0.630       0.6 |       1 |     0.001 |
-TimingAuditor.TIMER        INFO        CheckVeloHits          |    25.996 |    25.962 |   25.962      26.0 |       1 |     0.026 |
-TimingAuditor.TIMER        INFO        UnpackTTHits           |     0.000 |     0.327 |    0.327       0.3 |       1 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckTTHits            |     8.998 |     8.457 |    8.457       8.5 |       1 |     0.008 |
-TimingAuditor.TIMER        INFO        UnpackITHits           |     0.000 |     0.226 |    0.226       0.2 |       1 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckITHits            |     5.999 |     6.389 |    6.389       6.4 |       1 |     0.006 |
-TimingAuditor.TIMER        INFO        UnpackOTHits           |     1.000 |     1.184 |    1.184       1.2 |       1 |     0.001 |
-TimingAuditor.TIMER        INFO        CheckOTHits            |    16.998 |    16.217 |   16.217      16.2 |       1 |     0.016 |
-TimingAuditor.TIMER        INFO        UnpackRichHits         |     0.999 |     1.522 |    1.522       1.5 |       1 |     0.002 |
-TimingAuditor.TIMER        INFO        UnpackRichOpPhot       |     3.999 |     3.601 |    3.601       3.6 |       1 |     0.004 |
-TimingAuditor.TIMER        INFO        UnpackRichSegments     |     2.000 |     1.978 |    1.978       2.0 |       1 |     0.002 |
-TimingAuditor.TIMER        INFO        UnpackRichTracks       |     0.000 |     0.498 |    0.498       0.5 |       1 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckRichHits          |    26.996 |    26.484 |   26.484      26.5 |       1 |     0.026 |
-TimingAuditor.TIMER        INFO        CheckRichOpPhot        |   153.977 |   155.169 |  155.169     155.2 |       1 |     0.155 |
-TimingAuditor.TIMER        INFO        CheckRichSegments      |    18.997 |    18.751 |   18.751      18.8 |       1 |     0.019 |
-TimingAuditor.TIMER        INFO        CheckRichTracks        |     0.000 |     0.476 |    0.476       0.5 |       1 |     0.000 |
-TimingAuditor.TIMER        INFO        UnpackSpdHits          |     1.000 |     0.638 |    0.638       0.6 |       1 |     0.001 |
-TimingAuditor.TIMER        INFO        CheckSpdHits           |     3.999 |     3.969 |    3.969       4.0 |       1 |     0.004 |
-TimingAuditor.TIMER        INFO        UnpackPrsHits          |     1.000 |     1.158 |    1.158       1.2 |       1 |     0.001 |
-TimingAuditor.TIMER        INFO        CheckPrsHits           |     7.999 |     8.285 |    8.285       8.3 |       1 |     0.008 |
-TimingAuditor.TIMER        INFO        UnpackEcalHits         |     1.000 |     0.485 |    0.485       0.5 |       1 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckEcalHits          |     8.998 |     9.326 |    9.326       9.3 |       1 |     0.009 |
-TimingAuditor.TIMER        INFO        UnpackHcalHits         |     0.000 |     0.117 |    0.117       0.1 |       1 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckHcalHits          |     2.000 |     1.191 |    1.191       1.2 |       1 |     0.001 |
-TimingAuditor.TIMER        INFO        UnpackMuonHits         |     0.000 |     0.172 |    0.172       0.2 |       1 |     0.000 |
-TimingAuditor.TIMER        INFO        CheckMuonHits          |     4.999 |     5.648 |    5.648       5.6 |       1 |     0.006 |
+TimingAuditor.TIMER        INFO EVENT LOOP                    | 416123.740 | 419811.770 | 419811.770  419811.8 |       1 |   419.812 |
+TimingAuditor.TIMER        INFO  GaussSequencer               | 416122.740 | 419810.118 | 419810.118  419810.1 |       1 |   419.810 |
+TimingAuditor.TIMER        INFO   Generator                   |  2443.629 |  2648.570 | 2648.570    2648.6 |       1 |     2.649 |
+TimingAuditor.TIMER        INFO    GeneratorSlotMainSeq       |  2443.629 |  2648.551 | 2648.551    2648.6 |       1 |     2.649 |
+TimingAuditor.TIMER        INFO     GaussGen                  |     2.000 |     2.682 |    2.682       2.7 |       1 |     0.003 |
+TimingAuditor.TIMER        INFO     Generation                |  2440.629 |  2644.361 | 2644.361    2644.4 |       1 |     2.644 |
+TimingAuditor.TIMER        INFO     GenMonitor                |     1.000 |     1.480 |    1.480       1.5 |       1 |     0.001 |
+TimingAuditor.TIMER        INFO      GenMonitorAlg            |     1.000 |     1.390 |    1.390       1.4 |       1 |     0.001 |
+TimingAuditor.TIMER        INFO   Simulation                  | 413678.111 | 417161.501 | 417161.501  417161.5 |       1 |   417.162 |
+TimingAuditor.TIMER        INFO    GiGaStore                  |     0.000 |     0.019 |    0.019       0.0 |       1 |     0.000 |
+TimingAuditor.TIMER        INFO    Geo                        | 89048.462 | 92057.084 | 92057.084   92057.1 |       1 |    92.057 |
+TimingAuditor.TIMER        INFO    MainEventSeq               | 324629.649 | 325104.348 | 325104.348  325104.3 |       1 |   325.104 |
+TimingAuditor.TIMER        INFO     MainEventGaussSim         |     2.000 |     2.297 |    2.297       2.3 |       1 |     0.002 |
+TimingAuditor.TIMER        INFO     MainSimulation            | 324626.649 | 325101.897 | 325101.897  325101.9 |       1 |   325.102 |
+TimingAuditor.TIMER        INFO      MakeMainSim              | 324052.737 | 324527.546 | 324527.546  324527.5 |       1 |   324.528 |
+TimingAuditor.TIMER        INFO       GenToSim                | 86801.804 | 86853.123 | 86853.123   86853.1 |       1 |    86.853 |
+TimingAuditor.TIMER        INFO       GiGaFlush               | 237037.965 | 237459.319 | 237459.319  237459.3 |       1 |   237.459 |
+TimingAuditor.TIMER        INFO       GiGaCheckEvent          |     0.000 |     0.031 |    0.031       0.0 |       1 |     0.000 |
+TimingAuditor.TIMER        INFO       SimToMCTruth            |    10.998 |    11.936 |   11.936      11.9 |       1 |     0.012 |
+TimingAuditor.TIMER        INFO       DetectorsHits           |   169.974 |   172.433 |  172.433     172.4 |       1 |     0.172 |
+TimingAuditor.TIMER        INFO        GetPuVetoHits          |     2.000 |     1.817 |    1.817       1.8 |       1 |     0.002 |
+TimingAuditor.TIMER        INFO        GetVeloHits            |     4.999 |     4.844 |    4.844       4.8 |       1 |     0.005 |
+TimingAuditor.TIMER        INFO        GetTTHits              |     4.000 |     4.684 |    4.684       4.7 |       1 |     0.005 |
+TimingAuditor.TIMER        INFO        GetITHits              |     2.999 |     3.497 |    3.497       3.5 |       1 |     0.003 |
+TimingAuditor.TIMER        INFO        GetOTHits              |     8.999 |     9.025 |    9.025       9.0 |       1 |     0.009 |
+TimingAuditor.TIMER        INFO        RichHits               |   121.981 |   122.104 |  122.104     122.1 |       1 |     0.122 |
+TimingAuditor.TIMER        INFO         GetRichHits           |    45.993 |    46.503 |   46.503      46.5 |       1 |     0.047 |
+TimingAuditor.TIMER        INFO         GetRichPhotons        |    23.996 |    24.339 |   24.339      24.3 |       1 |     0.024 |
+TimingAuditor.TIMER        INFO         GetRichSegments       |    26.996 |    27.351 |   27.351      27.4 |       1 |     0.027 |
+TimingAuditor.TIMER        INFO         GetRichTracks         |     2.999 |     3.002 |    3.002       3.0 |       1 |     0.003 |
+TimingAuditor.TIMER        INFO         MCPartToMCRichTrack   |     1.000 |     0.775 |    0.775       0.8 |       1 |     0.001 |
+TimingAuditor.TIMER        INFO         MCRichHitToMCRichOpPho|    19.997 |    19.933 |   19.933      19.9 |       1 |     0.020 |
+TimingAuditor.TIMER        INFO        GetSpdHits             |     2.999 |     2.705 |    2.705       2.7 |       1 |     0.003 |
+TimingAuditor.TIMER        INFO        GetPrsHits             |     3.000 |     3.289 |    3.289       3.3 |       1 |     0.003 |
+TimingAuditor.TIMER        INFO        GetEcalHits            |    10.999 |    11.033 |   11.033      11.0 |       1 |     0.011 |
+TimingAuditor.TIMER        INFO        GetHcalHits            |     1.000 |     1.787 |    1.787       1.8 |       1 |     0.002 |
+TimingAuditor.TIMER        INFO        GetMuonHits            |     6.998 |     7.544 |    7.544       7.5 |       1 |     0.008 |
+TimingAuditor.TIMER        INFO       MainEventDataPacking    |    30.996 |    30.623 |   30.623      30.6 |       1 |     0.031 |
+TimingAuditor.TIMER        INFO        PackMCParticle         |     2.000 |     2.771 |    2.771       2.8 |       1 |     0.003 |
+TimingAuditor.TIMER        INFO        PackMCVertex           |     2.000 |     1.744 |    1.744       1.7 |       1 |     0.002 |
+TimingAuditor.TIMER        INFO        MCVeloHitPacker        |     1.000 |     0.703 |    0.703       0.7 |       1 |     0.001 |
+TimingAuditor.TIMER        INFO        MCPuVetoHitPacker      |     0.000 |     0.056 |    0.056       0.1 |       1 |     0.000 |
+TimingAuditor.TIMER        INFO        MCTTHitPacker          |     0.000 |     0.096 |    0.096       0.1 |       1 |     0.000 |
+TimingAuditor.TIMER        INFO        MCITHitPacker          |     0.000 |     0.131 |    0.131       0.1 |       1 |     0.000 |
+TimingAuditor.TIMER        INFO        MCOTHitPacker          |     0.000 |     0.247 |    0.247       0.2 |       1 |     0.000 |
+TimingAuditor.TIMER        INFO        MCMuonHitPacker        |     0.000 |     0.128 |    0.128       0.1 |       1 |     0.000 |
+TimingAuditor.TIMER        INFO        MCPrsHitPacker         |     0.999 |     0.832 |    0.832       0.8 |       1 |     0.001 |
+TimingAuditor.TIMER        INFO        MCSpdHitPacker         |     0.000 |     0.108 |    0.108       0.1 |       1 |     0.000 |
+TimingAuditor.TIMER        INFO        MCEcalHitPacker        |     1.000 |     0.420 |    0.420       0.4 |       1 |     0.000 |
+TimingAuditor.TIMER        INFO        MCHcalHitPacker        |     0.000 |     0.065 |    0.065       0.1 |       1 |     0.000 |
+TimingAuditor.TIMER        INFO        MCRichHitPacker        |     1.000 |     0.883 |    0.883       0.9 |       1 |     0.001 |
+TimingAuditor.TIMER        INFO        MCRichOpPhotPacker     |    19.997 |    19.899 |   19.899      19.9 |       1 |     0.020 |
+TimingAuditor.TIMER        INFO        MCRichSegmentPacker    |     1.000 |     1.877 |    1.877       1.9 |       1 |     0.002 |
+TimingAuditor.TIMER        INFO        MCRichTrackPacker      |     1.000 |     0.561 |    0.561       0.6 |       1 |     0.001 |
+TimingAuditor.TIMER        INFO      SimMonitor               |   573.912 |   574.311 |  574.311     574.3 |       1 |     0.574 |
+TimingAuditor.TIMER        INFO       GiGaGetMainEvent        |     0.000 |     0.285 |    0.285       0.3 |       1 |     0.000 |
+TimingAuditor.TIMER        INFO       MainMCTruthMonitor      |     0.999 |     1.802 |    1.802       1.8 |       1 |     0.002 |
+TimingAuditor.TIMER        INFO       GiGaGetHitsAlg          |     1.000 |     1.151 |    1.151       1.2 |       1 |     0.001 |
+TimingAuditor.TIMER        INFO       DetectorsMonitor        |    55.991 |    55.502 |   55.502      55.5 |       1 |     0.056 |
+TimingAuditor.TIMER        INFO        VeloGaussMoni          |    18.997 |    18.406 |   18.406      18.4 |       1 |     0.018 |
+TimingAuditor.TIMER        INFO        TTHitMonitor           |     2.000 |     2.537 |    2.537       2.5 |       1 |     0.003 |
+TimingAuditor.TIMER        INFO        ITHitMonitor           |     1.999 |     1.720 |    1.720       1.7 |       1 |     0.002 |
+TimingAuditor.TIMER        INFO        OTHitMonitor           |     4.000 |     4.154 |    4.154       4.2 |       1 |     0.004 |
+TimingAuditor.TIMER        INFO        SpdMonitor             |     2.999 |     3.000 |    3.000       3.0 |       1 |     0.003 |
+TimingAuditor.TIMER        INFO        PrsMonitor             |     5.000 |     5.168 |    5.168       5.2 |       1 |     0.005 |
+TimingAuditor.TIMER        INFO        EcalMonitor            |     5.999 |     5.937 |    5.937       5.9 |       1 |     0.006 |
+TimingAuditor.TIMER        INFO        HcalMonitor            |     1.999 |     1.358 |    1.358       1.4 |       1 |     0.001 |
+TimingAuditor.TIMER        INFO        MuonHitChecker         |     3.000 |     3.431 |    3.431       3.4 |       1 |     0.003 |
+TimingAuditor.TIMER        INFO        MuonMultipleScatteringC|     9.998 |     9.652 |    9.652       9.7 |       1 |     0.010 |
+TimingAuditor.TIMER        INFO       DataUnpackTest          |   514.922 |   515.500 |  515.500     515.5 |       1 |     0.515 |
+TimingAuditor.TIMER        INFO        UnpackMCVertex         |     3.000 |     3.262 |    3.262       3.3 |       1 |     0.003 |
+TimingAuditor.TIMER        INFO        UnpackMCParticle       |     3.000 |     3.223 |    3.223       3.2 |       1 |     0.003 |
+TimingAuditor.TIMER        INFO        CompareMCVertex        |     2.999 |     2.339 |    2.339       2.3 |       1 |     0.002 |
+TimingAuditor.TIMER        INFO        CompareMCParticle      |     2.000 |     2.495 |    2.495       2.5 |       1 |     0.002 |
+TimingAuditor.TIMER        INFO        UnpackPuVetoHits       |     1.000 |     0.596 |    0.596       0.6 |       1 |     0.001 |
+TimingAuditor.TIMER        INFO        CheckPuVetoHits        |     1.999 |     1.907 |    1.907       1.9 |       1 |     0.002 |
+TimingAuditor.TIMER        INFO        UnpackVeloHits         |     0.000 |     0.385 |    0.385       0.4 |       1 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckVeloHits          |    27.996 |    27.749 |   27.749      27.7 |       1 |     0.028 |
+TimingAuditor.TIMER        INFO        UnpackTTHits           |     0.000 |     0.171 |    0.171       0.2 |       1 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckTTHits            |     9.999 |    10.294 |   10.294      10.3 |       1 |     0.010 |
+TimingAuditor.TIMER        INFO        UnpackITHits           |     0.999 |     0.224 |    0.224       0.2 |       1 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckITHits            |     9.999 |    10.755 |   10.755      10.8 |       1 |     0.011 |
+TimingAuditor.TIMER        INFO        UnpackOTHits           |     2.000 |     1.538 |    1.538       1.5 |       1 |     0.002 |
+TimingAuditor.TIMER        INFO        CheckOTHits            |    26.996 |    26.894 |   26.894      26.9 |       1 |     0.027 |
+TimingAuditor.TIMER        INFO        UnpackRichHits         |     1.999 |     2.020 |    2.020       2.0 |       1 |     0.002 |
+TimingAuditor.TIMER        INFO        UnpackRichOpPhot       |     4.000 |     4.567 |    4.567       4.6 |       1 |     0.005 |
+TimingAuditor.TIMER        INFO        UnpackRichSegments     |     3.000 |     2.642 |    2.642       2.6 |       1 |     0.003 |
+TimingAuditor.TIMER        INFO        UnpackRichTracks       |     1.000 |     0.660 |    0.660       0.7 |       1 |     0.001 |
+TimingAuditor.TIMER        INFO        CheckRichHits          |    47.992 |    47.990 |   47.990      48.0 |       1 |     0.048 |
+TimingAuditor.TIMER        INFO        CheckRichOpPhot        |   274.958 |   275.265 |  275.265     275.3 |       1 |     0.275 |
+TimingAuditor.TIMER        INFO        CheckRichSegments      |    31.996 |    32.396 |   32.396      32.4 |       1 |     0.032 |
+TimingAuditor.TIMER        INFO        CheckRichTracks        |     0.999 |     0.851 |    0.851       0.9 |       1 |     0.001 |
+TimingAuditor.TIMER        INFO        UnpackSpdHits          |     1.000 |     0.781 |    0.781       0.8 |       1 |     0.001 |
+TimingAuditor.TIMER        INFO        CheckSpdHits           |     7.999 |     7.823 |    7.823       7.8 |       1 |     0.008 |
+TimingAuditor.TIMER        INFO        UnpackPrsHits          |     1.999 |     1.890 |    1.890       1.9 |       1 |     0.002 |
+TimingAuditor.TIMER        INFO        CheckPrsHits           |    14.998 |    15.701 |   15.701      15.7 |       1 |     0.016 |
+TimingAuditor.TIMER        INFO        UnpackEcalHits         |     1.000 |     0.659 |    0.659       0.7 |       1 |     0.001 |
+TimingAuditor.TIMER        INFO        CheckEcalHits          |    17.997 |    17.942 |   17.942      17.9 |       1 |     0.018 |
+TimingAuditor.TIMER        INFO        UnpackHcalHits         |     0.000 |     0.179 |    0.179       0.2 |       1 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckHcalHits          |     2.000 |     2.113 |    2.113       2.1 |       1 |     0.002 |
+TimingAuditor.TIMER        INFO        UnpackMuonHits         |     0.000 |     0.177 |    0.177       0.2 |       1 |     0.000 |
+TimingAuditor.TIMER        INFO        CheckMuonHits          |     9.998 |     9.867 |    9.867       9.9 |       1 |     0.010 |
 TimingAuditor.TIMER        INFO --------------------------------------------------------------------------------------------------
 GiGa.TrackSeq.PostTrack SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 GiGa.TrackSeq.PostTrack SUCCESS  #WARNINGS   = 7172     Message = 'RichHpd/Pmt/Mcp PhotoelectricProcess  RichHpd/Pmt/Mcp SiEnergyLossProcess particles not kept'
@@ -6707,8 +6705,8 @@ GiGa.GiGaMgr               INFO GiGaRunManager:: GiGaRunManager Finalization
 *****Chrono*****           INFO ****************************************************************************************************
 *****Chrono*****           INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****           INFO ****************************************************************************************************
-GiGa.GiGaMgr::process...   INFO Time User   : Tot=  305  [s]                                             #=  1
-ChronoStatSvc              INFO Time User   : Tot= 9.63[min]                                             #=  1
+GiGa.GiGaMgr::process...   INFO Time User   : Tot=  237  [s]                                             #=  1
+ChronoStatSvc              INFO Time User   : Tot= 8.92[min]                                             #=  1
 *****Chrono*****           INFO ****************************************************************************************************
 ******Stat******           INFO ****************************************************************************************************
 ******Stat******           INFO  The Final stat Table (not ordered)
