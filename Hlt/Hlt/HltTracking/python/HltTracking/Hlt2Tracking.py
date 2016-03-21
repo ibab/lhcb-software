@@ -1260,7 +1260,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                     from Configurables import GaudiSequencer
                     v0Sequence = GaudiSequencer( self.getProp("Prefix") + "TrackV0FinderSeq")
                     v0Sequence.IgnoreFilterPassed = True
-                    trackV0Finder = TrackV0Finder( self.getProp("Prefix") +"TrackV0FinderLongLong")
+                    trackV0Finder = TrackV0Finder( self.getProp("Prefix") +"TrackV0Finder")
                     trackV0Finder.TrackContainers = [self.__trackLocationByType("Long"),self.__trackLocationByType("Downstream")]
                     trackV0Finder.PVContainer = pvs.output
                     trackV0Finder.V0Container = self.__trackLocationByType("Long")+"V0Vertices"
