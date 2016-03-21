@@ -71,7 +71,7 @@ namespace ROMon  {
     /// Initialize the object with all static information
     int init();
     /// Update changing object data items
-    int update();
+    int update(const std::vector<std::string>& dir_names);
   };
 }      // End namespace ROMon
 #endif /* ROMON_SYSINFO_H */

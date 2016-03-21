@@ -314,6 +314,8 @@ void NodeTaskMon::updateTaskInfo(const char* ptr, size_t /* len */) {
   m_numBadTasks   = bad;
   m_diskSize      = float(ns->localdisk.numBlocks)*float(ns->localdisk.blockSize)/float(1024*1024*1024);
   m_diskAvailible = float(ns->localdisk.freeBlocks)*float(ns->localdisk.blockSize)/float(1024*1024*1024);
+  m_numDisks      = ns->localdisk.numDevices;
+  m_goodDisks     = ns->localdisk.goodDevices;
   xml << "\t\t<System perc_cpu=\"" << cpu 
       << "\" perc_mem=\"" << mem 
       << "\" vsize=\"" << vsize 
@@ -324,6 +326,8 @@ void NodeTaskMon::updateTaskInfo(const char* ptr, size_t /* len */) {
   xml << "\t\t<Localdisk blk_size=\"" << ns->localdisk.blockSize
       << "\" total=\"" << ns->localdisk.numBlocks
       << "\" availible=\"" << ns->localdisk.freeBlocks
+      << "\" dev_num=\"" << ns->localdisk.numDevices
+      << "\" dev_good=\"" << ns->localdisk.goodDevices
       << "\"/>" << endl;
   xml << "\t\t<Tasks count=\"" << t.size() 
       << "\" ok=\"" << good 
@@ -626,6 +630,8 @@ int SubfarmTaskMon::publish() {
           (*ni).status = n->numBadTasks()>0 || n->numBadConnections()>0 ? NodeSummary::BAD : NodeSummary::OK;
           (*ni).diskSize = n->diskSize();
           (*ni).diskAvailible = n->diskAvailible();
+	  (*ni).numDisks = n->numberOfDisks();
+	  (*ni).goodDisks = n->numberOfGoodDisks();
         }
         else {
           (*ni).state = NodeSummary::DEAD;
@@ -634,6 +640,8 @@ int SubfarmTaskMon::publish() {
           (*ni).numBadConnections = 1;
           (*ni).diskSize = 0;
           (*ni).diskAvailible = 0;
+	  (*ni).numDisks = 0;
+	  (*ni).goodDisks = 0;
         }
         (*ni).time = (int)n->taskUpdate();
         xml << "\t</Node>\n";

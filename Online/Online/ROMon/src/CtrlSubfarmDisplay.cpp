@@ -96,13 +96,13 @@ void CtrlSubfarmDisplay::showNodes()  {
   MonitorDisplay* disp = m_nodes;
   size_t taskCount=0, missTaskCount=0;
   size_t connCount=0, missConnCount=0;
-  const char* fmt = " %-12s %3s %8s %5zd/%-4zd %5zd/%-5zd %4d %5d %5d %3.0f %3.0f %-19s %4.0f/%-4.0f %s";
+  const char* fmt = " %-12s %3s %8s %5zd/%-4zd %5zd/%-5zd %4d %5d %5d %3.0f %3.0f %-19s %4.0f/%4.0f/%1d/%1d %s";
 
   //disp->draw_line_reverse(" ----------------------------------   Cluster information   ----------------------------------");
-  disp->draw_line_bold(   " %-12s %3s %8s    Tasks   Connections %4s %5s %5s %3s %3s %-18s %10s %10s",
+  disp->draw_line_bold(   " %-12s %3s %8s    Tasks   Connections %4s %5s %5s %3s %3s %-19s %13s %10s",
                           "","","","RSS","Stack","VSize","CPU","MEM","","LocalDisk","Last");
-  disp->draw_line_bold(   " %-12s %3s %8s found/miss found/miss  %4s %5s %5s %3s %3s %-18s %10s %10s",
-                          "Node","","Status","[MB]","[MB]","[MB]","[%]","[%]","Boot time","[GB/GB] ","Reading");
+  disp->draw_line_bold(   " %-12s %3s %8s found/miss found/miss  %4s %5s %5s %3s %3s %-19s %13s %10s",
+                          "Node","","Status","[MB]","[MB]","[MB]","[%]","[%]","Boot time","[GB/GB/#Dev]","Reading");
   for(Cluster::Nodes::const_iterator i=c.nodes.begin(); i!=c.nodes.end();++i)    {
     const Cluster::Node& n = (*i).second;
     if ( n.status == "DEAD" ) {
@@ -120,6 +120,7 @@ void CtrlSubfarmDisplay::showNodes()  {
                              int(n.rss/1024),int(n.stack/1024),int(n.vsize/1024),
                              n.perc_cpu, n.perc_mem, n.boot.c_str(),
                              float(n.blk_availible)*blk_size,float(n.blk_total)*blk_size,
+			     n.dev_num, n.dev_good,
                              n.time.length()>10 ? n.time.c_str()+10 : n.time.c_str()
                              );
       //                             n.perc_cpu, n.perc_mem, n.boot.substr(4,12).c_str(),n.time.c_str());

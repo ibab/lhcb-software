@@ -80,7 +80,7 @@ namespace ROMon {
       size_t       taskCount, missTaskCount, totalTaskCount;
       size_t       connCount, missConnCount, totalConnCount;
       long         blk_size, blk_total, blk_availible;
-
+      int          dev_num, dev_good;
       void _cpy(const Node& n) {
         name = n.name;
         time = n.time;
@@ -102,11 +102,13 @@ namespace ROMon {
         blk_size = n.blk_size;
         blk_total = n.blk_total;
         blk_availible = n.blk_availible;
+	dev_good = n.dev_good;
+	dev_num = n.dev_num;
       }
       Node() : perc_cpu(0.), perc_mem(0.), vsize(0), rss(0), data(0), stack(0),
                taskCount(0), missTaskCount(0), totalTaskCount(0),
                connCount(0), missConnCount(0), totalConnCount(0),
-               blk_size(0), blk_total(0), blk_availible(0)
+	blk_size(0), blk_total(0), blk_availible(0), dev_num(0), dev_good(0)
       {}
       Node(const std::string& n,const std::string&s) : name(n), status(s) {}
       Node(const Node& n)  { _cpy(n); }
@@ -287,6 +289,10 @@ namespace ROMon {
     int                 m_numBadTasks;
     /// Number of bad tasks
     int                 m_numBadConnections;
+    /// Number of local disks availible
+    short               m_numDisks;
+    /// Number of 'good' local disks availible
+    short               m_goodDisks;
     /// Total number of MB of the local disk capacity
     float               m_diskSize;
     /// Total number of MB left of the local disk capacity
@@ -324,6 +330,10 @@ namespace ROMon {
     float diskSize()  const                    {  return m_diskSize;          }
     /// Total number of MB left of the local disk capacity
     float diskAvailible()  const               {  return m_diskAvailible;     }
+    /// Number of local disks availible
+    short numberOfDisks() const                {  return m_numDisks;          }
+    /// Number of 'good' local disks availible
+    short numberOfGoodDisks() const            {  return m_goodDisks;         }
 
     /// Access to node state
     State state() const                        {  return m_state;             }

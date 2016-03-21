@@ -176,18 +176,25 @@ int SysInfo::init() {
 }
 
 /// Update changing object data items
-int SysInfo::update() {
+int SysInfo::update(const std::vector<std::string>& dir_names) {
   unsigned long long blk_size=0,total_blk=0,availible_blk=0;
 
   newReading();
   read(m_mem);
-  ::lib_rtl_diskspace("/localdisk",&blk_size,&total_blk,&availible_blk);
-
-  statistics()->localdisk.blockSize  = blk_size;
-  statistics()->localdisk.numBlocks  = total_blk;
-  statistics()->localdisk.freeBlocks = availible_blk;
-
-  ::memcpy(&statistics()->memory,&m_mem,sizeof(Memory));
+  NodeStats* ns = statistics();
+  ns->localdisk.blockSize = 0;
+  ns->localdisk.numBlocks = 0;
+  ns->localdisk.freeBlocks = 0;
+  ns->localdisk.goodDevices = 0;
+  ns->localdisk.numDevices  = (short)dir_names.size();
+  for( const auto& dir_name : dir_names )  {
+    ::lib_rtl_diskspace(dir_name.c_str(),&blk_size,&total_blk,&availible_blk);
+    ns->localdisk.blockSize   = blk_size;
+    ns->localdisk.numBlocks  += total_blk;
+    ns->localdisk.freeBlocks += availible_blk;
+    ++ns->localdisk.goodDevices;
+  }
+  ::memcpy(&ns->memory,&m_mem,sizeof(Memory));
   read(*cpuNow()->reset(),CPUINFO_SIZE);
   //readStat(*cpuNow(), CPUINFO_SIZE, m_numCores);
   read(*procsNow()->reset(), PROCINFO_SIZE);
@@ -201,10 +208,11 @@ extern "C" int romon_sysinfo(int,char**)  {
   bool do_run = true;
   size_t cnt=0, len = CPUINFO_SIZE+PROCINFO_SIZE;
   char* buff = new char[len];
+  std::vector<std::string> hlt1_dirs = {"/localdisk1/hlt1","/localdisk2/hlt1"};
   SysInfo sys((NodeStats*)buff,len,2);
   sys.init();
   while(do_run) {
-    sys.update();
+    sys.update(hlt1_dirs);
     log() << "============================   " << ++cnt << "   ===========================" << endl;
     cout << *sys.statistics() << endl;
     log() << "===== DATA SIZE:" << sys.statistics()->length() << endl;

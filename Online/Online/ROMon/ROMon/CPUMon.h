@@ -50,7 +50,9 @@ namespace ROMon {
     long    blockSize;
     long    numBlocks;
     long    freeBlocks;
-
+    short   numDevices;
+    short   goodDevices;
+    int     _padding;
     /// Empty constructor
     Diskspace();
     /// Reset data content
@@ -372,6 +374,10 @@ namespace ROMon {
     int  numBadTasks;
     /// Number of bad connections from this node    
     int  numBadConnections;
+    /// Number of local disks availible
+    short numDisks;
+    /// Number of 'good' local disks availible
+    short goodDisks;
     /// Total number of MB of the local disk capacity
     float diskSize;
     /// Total number of MB left of the local disk capacity

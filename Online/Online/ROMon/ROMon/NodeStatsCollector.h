@@ -67,9 +67,9 @@ namespace ROMon  {
     /// Start monitoring activity
     virtual int monitor();
     /// Monitor Node statistics information
-    virtual int monitorStats();
+    virtual int monitorStats(const std::vector<std::string>& dir_names);
     /// Monitor deferred HLT statistics information
-    virtual int monitorHLT(char* buffer, const std::vector<std::string>& dir_name);
+    virtual int monitorHLT(char* buffer, const std::vector<std::string>& dir_names);
     /// Monitor task and MBM information
     virtual int monitorTasks();
     /// Feed data to disk monitor services

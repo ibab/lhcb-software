@@ -214,10 +214,10 @@ void NodeStatsCollector::feedHLT(char* data_buff, void** buff, int* size, int* )
 }
 
 /// Monitor Node statistics information
-int NodeStatsCollector::monitorStats() {
+int NodeStatsCollector::monitorStats(const std::vector<std::string>& dir_names) {
   CPUMonData buf(m_statBuffer);
   buf.node->type = NodeStats::TYPE;
-  m_sys->update();
+  m_sys->update(dir_names);
   if ( m_print ) {
     log() << "SysInfo: ========================" 
           << ::lib_rtl_timestr() 
@@ -243,6 +243,8 @@ int NodeStatsCollector::monitorHLT(char* buffer, const std::vector<std::string>&
   h->localdisk.blockSize  = 4096;
   h->localdisk.freeBlocks = 0;
   h->localdisk.numBlocks  = 0;
+  h->localdisk.goodDevices = 0;
+  h->localdisk.numDevices  = (short)dir_names.size();
   for( const auto& dir_name : dir_names )  {
     DIR* dir = ::opendir(dir_name.c_str());
     if ( dir ) {
@@ -251,6 +253,7 @@ int NodeStatsCollector::monitorHLT(char* buffer, const std::vector<std::string>&
       h->localdisk.blockSize   = blk_size;
       h->localdisk.numBlocks  += total_blk;
       h->localdisk.freeBlocks += availible_blk;
+      ++h->localdisk.goodDevices;
       while ( (entry=::readdir(dir)) != 0 ) {
 	int run=0,date;
 	int ret = ::sscanf(entry->d_name,"Run_%07d_%8d-",&run,&date);
@@ -333,6 +336,7 @@ int NodeStatsCollector::monitor() {
   m_sys = &sys;
   ::dim_unlock();
   int nclients, stat_delay = m_statDelay;
+  std::vector<std::string> hlt1_dirs = {"/localdisk1/hlt1","/localdisk2/hlt1"};
   while(exec)    {
     stat_delay -= m_mbmDelay;
     ::dim_lock();
@@ -341,8 +345,7 @@ int NodeStatsCollector::monitor() {
         monitorTasks();
       }
       if ( stat_delay<=0 ) {
-        monitorStats();
-	std::vector<std::string> hlt1_dirs = {"/localdisk/hlt1"};
+        monitorStats(hlt1_dirs);
         monitorHLT(m_hlt_1_Buffer,hlt1_dirs);
 	//std::vector<std::string> deferred_dirs = {"/localdisk/overflow"};
         //monitorHLT(m_hlt_2_Buffer,deferred_dirs);

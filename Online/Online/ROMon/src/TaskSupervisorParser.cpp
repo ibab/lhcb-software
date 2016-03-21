@@ -42,6 +42,8 @@ static const XMLTag Attr_perc_cpu     ( "perc_cpu");
 static const XMLTag Attr_blk_size     ( "blk_size");
 static const XMLTag Attr_blk_total    ( "total");
 static const XMLTag Attr_blk_availible( "availible");
+static const XMLTag Attr_dev_num      ( "numDevices");
+static const XMLTag Attr_dev_good     ( "goodDevices");
 #endif
 namespace {
   struct Constants  {
@@ -79,6 +81,8 @@ namespace {
     XMLTag Attr_blk_size     ; // ( "blk_size");
     XMLTag Attr_blk_total    ; // ( "total");
     XMLTag Attr_blk_availible; // ( "availible");
+    XMLTag Attr_dev_num      ; // ( "dev_num");
+    XMLTag Attr_dev_good     ; // ( "dev_good");
     Constants();
   };
 
@@ -115,7 +119,9 @@ namespace {
     Attr_perc_cpu     ( "perc_cpu"),
     Attr_blk_size     ( "blk_size"),
     Attr_blk_total    ( "total"),
-    Attr_blk_availible( "availible")
+    Attr_blk_availible( "availible"),
+    Attr_dev_num      ( "dev_num"),
+    Attr_dev_good     ( "dev_good")
   {}
 }
 
@@ -156,6 +162,8 @@ void TaskSupervisorParser::getNodes(DOMNode* fde, Cluster& cluster) const {
     node.blk_size = 0;
     node.blk_total = 0;
     node.blk_availible = 0;
+    node.dev_good = 0;
+    node.dev_num = 0;
     node.totalTaskCount = node.missTaskCount = node.taskCount = 0;
     node.totalConnCount = node.missConnCount = node.connCount = 0;
     node.rss = node.vsize = node.data = node.stack = 0;
@@ -168,7 +176,9 @@ void TaskSupervisorParser::getNodes(DOMNode* fde, Cluster& cluster) const {
       node.boot = buff;
     }
     if ( l ) {
-      node.blk_size = ::atol(l.attr(gc->Attr_blk_size).c_str());
+      node.dev_num   = ::atol(l.attr(gc->Attr_dev_num).c_str());
+      node.dev_good  = ::atol(l.attr(gc->Attr_dev_good).c_str());
+      node.blk_size  = ::atol(l.attr(gc->Attr_blk_size).c_str());
       node.blk_total = ::atol(l.attr(gc->Attr_blk_total).c_str());
       node.blk_availible = ::atol(l.attr(gc->Attr_blk_availible).c_str());
     }
