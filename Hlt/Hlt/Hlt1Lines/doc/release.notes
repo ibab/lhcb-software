@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2016-03-21 - Dan Johnson
+ - Fix to Hlt1LowMult logic for muons
+
 ! 2016-03-11 - Roel Aaij
  - Use L0_DECISION_PHYSICS in Bottomonium and CalibTracking lines.
 

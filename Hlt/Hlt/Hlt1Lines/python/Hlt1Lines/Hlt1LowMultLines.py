@@ -25,7 +25,7 @@ class Hlt1LowMultLinesConf( HltLinesConfigurableUser ):
         , 'TrChi2'                                  :     5.   # dimensionless, 
         , 'PT'                                      :   500.   # MeV
         , 'P'                                       :     0.   # MeV 
-        , 'LowMultLineL0Dependency'                 : "( L0_CHANNEL_RE('.*lowMult') & ~(L0_CHANNEL_RE('Photon,lowMult')) )"
+        , 'LowMultLineL0Dependency'                 : "( L0_CHANNEL_RE('.*(?<!Photon),lowMult') )"
         , 'LowMultVeloCut_HadronsLineL0Dependency'  : "( L0_CHANNEL_RE('DiHadron,lowMult') )"
         , 'LowMultVeloCut_LeptonsLineL0Dependency'  : "( L0_CHANNEL_RE('Muon,lowMult') | L0_CHANNEL_RE('DiMuon,lowMult') | L0_CHANNEL_RE('Electron,lowMult') )" 
         , 'LowMultMaxVeloCutLineL0Dependency'       : "( L0_CHANNEL_RE('Photon,lowMult') | L0_CHANNEL_RE('DiEM,lowMult') )"
