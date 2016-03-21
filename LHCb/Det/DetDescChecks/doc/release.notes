@@ -4,6 +4,8 @@
 ! Purpose     : Collection of useful components for checking of
 !               Detector Description, Material Budget etc
 ! ------------------------------------------------------------------------------
+! 2016-02-04 - Liang Sun
+ - Add loaddddb-sim-2016 test
 
 !========================= DetDescChecks v5r13 2016-03-16 =========================
 ! 2016-02-04 - Liang Sun
