@@ -257,7 +257,7 @@ HltBufferedIOReader::HltBufferedIOReader(const string& nam, ISvcLocator* svcLoc)
 {
   declareProperty("InputType",      m_inputType       = AUTO_INPUT_TYPE );
   declareProperty("Buffer",         m_buffer          = "Mep");
-  declareProperty("Directory",      m_directory       = "/localdisk");
+  declareProperty("Directory",      m_directory       = "");
   declareProperty("Directories",    m_dirList );
   declareProperty("FilePrefix",     m_filePrefix      = "Run_");
   declareProperty("BrokenHosts",    m_brokenHostsFile = "");
@@ -491,33 +491,35 @@ void HltBufferedIOReader::handle(const Incident& inc)
 
 /// Scan directory for matching files
 size_t HltBufferedIOReader::scanDirectory(const string& dir_name)   {
-  DIR* dir = opendir(dir_name.c_str());
-  if (dir)  {
-    struct dirent *entry;
-    bool take_all = (m_allowedRuns.size() > 0 && m_allowedRuns[0]=="*");
-    while ((entry = ::readdir(dir)) != 0)    {
-      //cout << "File:" << entry->d_name << endl;
-      if ( 0 != ::strncmp(entry->d_name,m_filePrefix.c_str(),m_filePrefix.length()) ) {
-	continue;
-      }
-      else if ( !take_all )  {
-	bool take_run = false;
-	for(vector<string>::const_iterator i=m_allowedRuns.begin(); i!=m_allowedRuns.end(); ++i) {
-	  if ( ::strstr(entry->d_name,(*i).c_str()) == entry->d_name ) {
-	    take_run = true;
-	    break;
-	  }
+  if ( !dir_name.empty() )   {
+    DIR* dir = opendir(dir_name.c_str());
+    if (dir)  {
+      struct dirent *entry;
+      bool take_all = (m_allowedRuns.size() > 0 && m_allowedRuns[0]=="*");
+      while ((entry = ::readdir(dir)) != 0)    {
+	//cout << "File:" << entry->d_name << endl;
+	if ( 0 != ::strncmp(entry->d_name,m_filePrefix.c_str(),m_filePrefix.length()) ) {
+	  continue;
 	}
-	if ( !take_run ) continue;
+	else if ( !take_all )  {
+	  bool take_run = false;
+	  for(vector<string>::const_iterator i=m_allowedRuns.begin(); i!=m_allowedRuns.end(); ++i) {
+	    if ( ::strstr(entry->d_name,(*i).c_str()) == entry->d_name ) {
+	      take_run = true;
+	      break;
+	    }
+	  }
+	  if ( !take_run ) continue;
+	}
+	m_files.insert(dir_name + "/" + entry->d_name);
       }
-      m_files.insert(dir_name + "/" + entry->d_name);
+      ::closedir(dir);
+      if ( !m_rescan ) m_disabled = true;
+      return m_files.size();
     }
-    ::closedir(dir);
-    if ( !m_rescan ) m_disabled = true;
-    return m_files.size();
+    const char* err = RTL::errorString();
+    info("Failed to open directory:" + string(err ? err : "????????"));
   }
-  const char* err = RTL::errorString();
-  info("Failed to open directory:" + string(err ? err : "????????"));
   return 0;
 }
 
