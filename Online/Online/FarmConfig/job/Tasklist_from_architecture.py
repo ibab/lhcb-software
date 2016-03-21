@@ -170,7 +170,7 @@ MonitorSvc.CounterUpdateInterval     = 5;
           if s in CounterDebugSvcs:
             f.write(svc+".DebugOn = true;\n")
         if pname == "LHCbA":
-          f.write(svc+".GotoPause = true;\n")
+          f.write(svc+".GotoPause = false;\n")
           f.write(svc+".ReceiveTimeout = 0;\n")
         if dohostdns:
             f.write(svc+".InDNS = "+InDns+";\n")

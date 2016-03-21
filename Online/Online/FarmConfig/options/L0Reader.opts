@@ -1,6 +1,7 @@
 #include "$FARMCONFIGROOT/options/BasicDiskReader.opts"
 MEPManager.Buffers                   = @OnlineEnv.L0Reader_Buffers;
 MEPManager.Buffers                   = @OnlineEnv.L0App_Buffers;
+Runable.Rescan                       = false;
 Runable.Directory                    = "/localdisk/Alignment/BWDivision";
 Runable.FilePrefix                   = "Run_";
 Runable.Buffer                       = @OnlineEnv.L0Reader_Output;

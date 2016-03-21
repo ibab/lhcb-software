@@ -2,7 +2,8 @@
 #include "$NODE_OPTIONS"
 MEPManager.Buffers                   = @OnlineEnv.Hlt2Reader_Buffers;
 MEPManager.Buffers                   = @OnlineEnv.Moore2_Buffers;
-Runable.Directory                    = "/localdisk/hlt1";
+Runable.Directory                    = "";
+Runable.Directories                  = {"/localdisk1/hlt1", "/localdisk2/hlt1"};
 Runable.FilePrefix                   = "Run_";
 Runable.Buffer                       = @OnlineEnv.Hlt2Reader_Output;
 Runable.DeleteFiles                  = true;

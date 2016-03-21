@@ -6,7 +6,7 @@ cmd=`python <<EOF
 import OnlineEnvBase as Online
 print 'export EVENTSELECTOR_REQ1="EvType=2;TriggerMask=0x0,0x2,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=%f"'%(Online.AcceptRate*100.,);
 EOF`
-source /group/online/dataflow/cmtuser/OnlineBrunel/setup.x86_64-slc6-gcc48-dbg.vars
+source /group/online/dataflow/cmtuser/OnlineBrunel/setup.x86_64-slc6-gcc49-dbg.vars
 echo [DEBUG] $cmd;
 eval $cmd;
 export TAN_PORT=YES;

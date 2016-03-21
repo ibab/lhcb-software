@@ -23,7 +23,7 @@ DskWriter.PrintFreq                 = 1.0;
 DskWriter.Requirements         = {
 "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
-DskWriter.DeviceList = {"/localdisk","/localdisk1","/localdisk2"};
+DskWriter.DeviceList = {"/localdisk1","/localdisk2"};
 DskWriter.MEPFilePrefix         = "/hlt1/Run_";
 DskWriter.EvtFilePrefix         = "/hlt1/Run_";
 MessageSvc.fifoPath              = "$LOGFIFO";
