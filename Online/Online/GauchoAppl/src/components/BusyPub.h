@@ -24,6 +24,8 @@ public:
 //  unsigned long long m_prevupdate;
   bool m_enableTrending;
   DimService *m_FarmLoad;
+  DimService *m_Cores;
+  DimService *m_Moores;
   float m_fLoad;
   std::string m_ForcePartition;
   bool m_GlobalPublisher;

@@ -12,7 +12,7 @@
 #include "GauchoAppl/AdderSys.h"
 #include "Gaucho/Utilities.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
-#include "AIDA/IHistogram.h"
+//#include "AIDA/IHistogram.h"
 #include "Gaucho/MonCounter.h"
 #include "Trending/ITrendingTool.h"
 #include "Trending/ISimpleTrendWriter.h"
@@ -39,8 +39,8 @@ public:
   void analyze(void *buff, int siz,MonMap* mmap);
 //  unsigned long long m_prevupdate;
   bool m_enableTrending;
-  DimService *m_FarmLoad;
-  float m_fLoad;
+  DimService *m_MooreSvc;
+  int m_NoMoores;
   std::string m_TrendName;
 //  ISimpleTrendWriter* m_trender;
 };
@@ -116,20 +116,19 @@ void MoorePub::analyze(void *, int ,MonMap* mmap)
 {
   MonMap::iterator i;
   i = mmap->find("UpdateAndReset/Tasks");
-  int tasks;
   CntrDescr* tsk_d;
 
   tsk_d = (CntrDescr*)MonCounter::de_serialize((*i).second);
-  tasks = tsk_d->i_data;
-//  if (m_FarmLoad == 0)
-//  {
-//    m_FarmLoad = new DimService(m_adder->m_ServiceDns,(char*)(m_PartitionName+"/FarmCPULoad").c_str(),m_fLoad);
-//  }
-//  m_FarmLoad->updateService(m_fLoad);
+  m_NoMoores = tsk_d->i_data;
+  if (m_MooreSvc == 0)
+  {
+    m_MooreSvc = new DimService(m_adder->m_ServiceDns,(char*)(m_PartitionName+"/"+m_TrendName).c_str(),m_NoMoores);
+  }
+  m_MooreSvc->updateService(m_NoMoores);
   if (m_enableTrending)
   {
     m_trender->startEvent();
-    double ftasks = tasks;
+    double ftasks = double(m_NoMoores);
     m_trender->addEntry(m_TrendName, ftasks);
     m_trender->saveEvent();
   }
@@ -140,9 +139,9 @@ MoorePub::MoorePub(const std::string& name, ISvcLocator* sl)
 {
   declareProperty("TrendingOn",  m_enableTrending);
   declareProperty("TrendName",m_TrendName="");
-  m_FarmLoad = 0;
+  m_MooreSvc = 0;
   m_trender = 0;
-  m_fLoad = 0.0;
+  m_NoMoores = 0;
 }
 
 MoorePub::~MoorePub()
