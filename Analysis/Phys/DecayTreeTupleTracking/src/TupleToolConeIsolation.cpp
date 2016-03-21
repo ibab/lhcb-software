@@ -723,7 +723,6 @@ StatusCode TupleToolConeIsolation::NeutralCone( const LHCb::Particle  *seed,
 
     // -- Get the momentum of the photon
     Gaudi::XYZVector photonMomentum = photon->momentum().Vect();
-    Gaudi::LorentzVector photon4Momentum = photon->momentum();
     // -- Calculate the difference in Eta and Phi between the seed particle and a photons
     double deltaPhi = fabs( seedMomentum.Phi() - photonMomentum.Phi() );
     if ( deltaPhi > M_PI )
