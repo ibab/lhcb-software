@@ -4,6 +4,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2016-03-21 - Roel Aaij
+ - Replace declareInput with declareInputSelection in Hlt algorithms.
+
 !========================= LoKiTrigger v15r9 2016-02-26 =========================
 
 ! 2016-02-10 - Roel Aaij

@@ -137,7 +137,7 @@ StatusCode LoKi::HltUnit::registerOutput
  *  @param client the client
  */
 // ========================================================================
-const Hlt::Selection* LoKi::HltUnit::declareInput
+const Hlt::Selection* LoKi::HltUnit::declareInputSelection
 ( const Key&       key       ,
   const Client& /* client */ ) const
 {
@@ -304,7 +304,7 @@ StatusCode LoKi::HltUnit::initialize ()
   decode();
   // We have a dummy that is equal to the default in case no PVs are needed
   if ( m_pvSelection != s_NOPVS ) {
-    declareInput( m_pvSelection, LoKi::Constant<void,bool>( true ) ) ;
+    declareInputSelection( m_pvSelection, LoKi::Constant<void,bool>( true ) ) ;
   }
   // register with the incident service
   SmartIF<IIncidentSvc> incSvc;

@@ -7,8 +7,8 @@
 #include "HltBase/HltAlgorithm.h"
 
 constexpr struct select2nd_t {
-    template <typename T, typename U> 
-    const U& operator()(const std::pair<T,U>& p) const 
+    template <typename T, typename U>
+    const U& operator()(const std::pair<T,U>& p) const
     { return p.second; }
 } select2nd {};
 
@@ -201,8 +201,8 @@ void HltAlgorithm::setDecision( bool accept )
 }
 
 // TODO: switch selection & declareInput around...
-const Hlt::Selection* HltAlgorithm::declareInput( const Gaudi::StringKey& key,
-                                                  const Hlt::IUnit::Client& ) const
+const Hlt::Selection* HltAlgorithm::declareInputSelection( const Gaudi::StringKey& key,
+                                                           const Hlt::IUnit::Client& ) const
 {
     return selection( key );
 }

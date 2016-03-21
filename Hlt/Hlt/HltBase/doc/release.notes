@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2016-03-21 - Roel Aaij
+ - Replace declareInput with declareInputSelection in Hlt algorithms.
+
 !========================= HltBase v15r8p1 2016-02-26 =========================
 
 ! 2016-02-03 - Rosen Matev

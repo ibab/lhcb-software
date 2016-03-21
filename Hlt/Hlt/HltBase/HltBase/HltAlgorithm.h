@@ -49,8 +49,8 @@ class HltAlgorithm : public HltBaseAlg, virtual public Hlt::IUnit
     const Hlt::Selection* selection( const Gaudi::StringKey& key ) const;
     const Hlt::Selection* selection( const Gaudi::StringKey& key,
                                      const Hlt::IUnit::Client& ) const;
-    const Hlt::Selection* declareInput( const Gaudi::StringKey&,
-                                        const Hlt::IUnit::Client& ) const;
+    const Hlt::Selection* declareInputSelection( const Gaudi::StringKey&,
+                                                 const Hlt::IUnit::Client& ) const;
     StatusCode registerTESInput( const Gaudi::StringKey&,
                                  const Hlt::IUnit::Client& ) const;
     StatusCode registerTESInput( const Gaudi::StringKey& ) const;

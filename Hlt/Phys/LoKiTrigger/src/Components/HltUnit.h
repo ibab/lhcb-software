@@ -102,7 +102,7 @@ namespace LoKi
      *  @param key the selection key
      *  @param client the client
      */
-    const Hlt::Selection* declareInput
+    const Hlt::Selection* declareInputSelection
     ( const Key&      key       ,
       const Client&   client    ) const override;
     // ========================================================================

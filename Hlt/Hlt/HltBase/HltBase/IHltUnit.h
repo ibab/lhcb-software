@@ -10,9 +10,9 @@
 #include <memory>
 #ifdef __GCCXML__
 // gccxml doesn't know about any C++11 constructions...  presumably it reads
-// from an older, pre-C++11 version of  <memory>. 
-// note: it's explicitly forbidden to fwd declare this in std.. but it is the 
-//       only way to use a unique_ptr as argument in a method seen by gccxml 
+// from an older, pre-C++11 version of  <memory>.
+// note: it's explicitly forbidden to fwd declare this in std.. but it is the
+//       only way to use a unique_ptr as argument in a method seen by gccxml
 namespace std { template <typename T> struct unique_ptr ; }
 #endif
 // ============================================================================
@@ -71,7 +71,7 @@ class IUnit : virtual public IInterface
     // ========================================================================
     /** register the selection
      *  @param selection the selection to be registered
-     *                   NOTE: assumes ownership 
+     *                   NOTE: assumes ownership
      *  @param client    the client
      *  @return status code
      */
@@ -82,8 +82,8 @@ class IUnit : virtual public IInterface
      *  @param key the selection key
      *  @param client the client
      */
-    virtual const Hlt::Selection* declareInput( const Key& key,
-                                                const Client& client ) const = 0;
+    virtual const Hlt::Selection* declareInputSelection( const Key& key,
+                                                         const Client& client ) const = 0;
     // ========================================================================
     /** register the query  to TES-selection
      *  @param location TES location to be registered
