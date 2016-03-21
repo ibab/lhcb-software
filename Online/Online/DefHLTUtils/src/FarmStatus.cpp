@@ -111,6 +111,7 @@ void FarmStatus::Analyze()
   dim_lock();
   osStatus.str("");
   osDetails.str("");
+  osStorage.str("");
   m_ConnDict->Update();
   m_TaskDict->Update();
   m_ProjDict->Update();
@@ -129,6 +130,8 @@ void FarmStatus::Analyze()
     {
       sprintf(Line,"%s %d/%d/%d|",nname.c_str(),nod->m_state,nod->m_badtasks,nod->m_badconns);
       osStatus << nname << " "<< nod->m_state << "/" << nod->m_badtasks << "/" << nod->m_badconns << "|";
+      osStorage << nname << " "<< nod->m_totDiskSpace << "/" << nod->m_freeDiskSpace
+          << "/" << nod->m_numDisks << "/" << nod->m_numgoodDisks << "|";
       Cluster *clu = this->m_TSInfoHandler->m_CluMap[nod->m_name];
       Cluster::Node &n = clu->nodes[nod->m_name];
       if (nod->m_badtasks+nod->m_badconns+n.projects.size() > 0)
@@ -207,12 +210,15 @@ void FarmStatus::Analyze()
   }
   osStatus << '\0';
   osDetails << '\0';
+  osStorage << '\0';
   m_StatusService->setData((void*)osStatus.str().c_str(),osStatus.str().size());
   m_StatusService->updateService();
   m_recvNodes.clear();
   m_Nodes.clear();
   m_DetailService->setData((void*)osDetails.str().c_str(),osDetails.str().size());
   m_DetailService->updateService();
+  m_StorageService->setData((void*)osStorage.str().c_str(),osStorage.str().size());
+  m_StorageService->updateService();
   dim_unlock();
 }
 StatusInfoHandler::StatusInfoHandler(FarmStatus *e):m_subfarm(0),m_sfstatus(0),m_bufsiz(0)
@@ -256,6 +262,10 @@ void StatusInfoHandler::infoHandler()
     nod->m_badconns = (*i).numBadConnections;
     nod->m_badtasks = (*i).numBadTasks;
     nod->m_subfarm = stats->name;
+    nod->m_numDisks = (*i).numDisks;
+    nod->m_numgoodDisks = (*i).goodDisks;
+    nod->m_totDiskSpace = (*i).diskSize;
+    nod->m_freeDiskSpace = (*i).diskAvailible;
     NodeSet::iterator en = m_Equalizer->m_exclNodes.find(nod->m_name);
     nod->m_excl = (en != m_Equalizer->m_exclNodes.end());
   }
@@ -357,6 +367,7 @@ int main(int /* argc   */, char** /* argv */)
   DimServer::autoStartOn();
   elz.m_StatusService = new DimService("FarmStatus/FarmStatus", "C",(void*)"\0",1);
   elz.m_DetailService = new DimService("FarmStatus/FarmStatusDetails", "C",(void*)"\0",1);
+  elz.m_StorageService = new DimService("FarmStatus/StorageStatus", "C",(void*)"\0",1);
   fflush(outf);
   while (1)
   {

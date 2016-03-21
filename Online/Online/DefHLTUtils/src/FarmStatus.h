@@ -73,6 +73,10 @@ class MyNode
     int m_state;
     int m_badtasks;
     int m_badconns;
+    int m_numDisks;
+    int m_numgoodDisks;
+    float m_totDiskSpace;
+    float m_freeDiskSpace;
     bool m_excl;
     MyNode(string n)
     {
@@ -80,6 +84,10 @@ class MyNode
       m_state = 0;
       m_badtasks = 0;
       m_badconns = 0;
+      m_numDisks = 0;
+      m_numgoodDisks = 0;
+      m_totDiskSpace = 0.0;
+      m_freeDiskSpace = 0.0;
       m_excl = false;
     };
 };
@@ -178,6 +186,7 @@ class FarmStatus
   public:
     ostringstream osStatus;
     ostringstream osDetails;
+    ostringstream osStorage;
     map<string,SFarm *> m_Farms;
     myNodeMap m_Nodes;
     myNodeMap m_AllNodes;
@@ -194,6 +203,7 @@ class FarmStatus
     DimInfo *m_DefStateInfo;
     DimService *m_StatusService;
     DimService *m_DetailService;
+    DimService *m_StorageService;
     NodeSet m_enabledFarm;
     NodeSet m_recvNodes;
     NodeSet m_everrecvd;

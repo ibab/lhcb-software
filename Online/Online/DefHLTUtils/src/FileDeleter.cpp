@@ -100,7 +100,11 @@ class DelCommandInfo : public DimUpdatedInfo
         for (i=0;i<splt2->size();i++)
         {
           if (splt2->at(i).size() == 0) continue;
-          shcomm = "sudo rm -rf /localdisk/hlt1/Run_*"+splt2->at(i)+"_*.mdf";
+          shcomm = "sudo rm -f /localdisk1/hlt1/Run_*"+splt2->at(i)+"_*.mdf";
+          fprintf(logf,"executing command %s\n",shcomm.c_str());
+          fflush(logf);
+          /* int status = */ ::system(shcomm.c_str());
+          shcomm = "sudo rm -f /localdisk2/hlt1/Run_*"+splt2->at(i)+"_*.mdf";
           fprintf(logf,"executing command %s\n",shcomm.c_str());
           fflush(logf);
           /* int status = */ ::system(shcomm.c_str());
