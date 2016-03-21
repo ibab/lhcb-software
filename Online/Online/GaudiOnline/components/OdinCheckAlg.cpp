@@ -91,7 +91,7 @@ namespace LHCb {
 	      << std::hex << bank->magic() << std::dec << endmsg;
 	  ok = false;
 	}
-	if ( ok && outputLevel() <= MSG::INFO )   {
+	if ( ok && msgLevel() <= MSG::INFO )   {
 	  MsgStream log(msgSvc(),name());
           const OnlineRunInfo* info = bank->begin<OnlineRunInfo>();
 	  log << MSG::INFO << "ODIN OK. Run:" << info->Run << " Event:" << info->L0ID
