@@ -4,8 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-03-22 - Dan Johnson & Alessandro Bertolin
+ - Timing and retention improvements to B2OC module
+ - Addition of new lines for S26
+
 ! 2016-03-22 - Ricardo Vazquez Gomez
- - Remove StrippingLb2pMuNuVub.py from the __init__.py file in StrippingSL 
+ - Remove StrippingLb2pMuNuVub.py from the __init__.py file in StrippingSL
 
 ! 2016-03-22 - Andrea Contu
  - Updated code for web documentation
@@ -37,7 +41,7 @@
 ! 2016-01-31 - Ramon Niet
  - changes in StrippingB2CC/StrippingBd2JpsieeKS.py:
    Introduced IPCHI2 cuts on K* daughters / K+ and tightened K+ PT
-   to reduce retention rate for: 
+   to reduce retention rate for:
     - StrippingBd2JpsieeKSBd2JpsieeKstarFromTracksDetachedLine
     - StrippingBd2JpsieeKSBu2JpsieeKFromTracksDetachedLine
 
@@ -48,7 +52,7 @@
  - Fix to documentation code
 
 ! 2016-01-22 - Andrea Contu
- - Added various tests for coordinators 
+ - Added various tests for coordinators
 
 ! 2015-12-18 -  Tim Williams
  - Added flavour tagging to StrippingBnoC/Stripping_Bu2hhh.py lines
@@ -66,7 +70,7 @@
  - Updated BDTs for B2LLXBDT lines, require the head of TMVAWeights
 
 ! 2015-12-10 - Marco Pappagallo
- - Added StrippingExcitedDsSpectroscopy line for S21p1  
+ - Added StrippingExcitedDsSpectroscopy line for S21p1
 
 !	2015-12-09 - Tim Williams
  - Changed name of Working group in B24p default_config to BnoC
@@ -91,7 +95,7 @@
   - First commit of StrippingB2LLXBDT lines
 
 ! 2015-12-07 - Oliver Gruenberg
-	-  Tuned B24pLine in StrippingB24pLines: 
+	-  Tuned B24pLine in StrippingB24pLines:
 	   softer PID selections, mass window from +/- 500MeV -> +/- 400MeV
 
 ! 2015-12-07 - Simone Bifani
@@ -136,22 +140,22 @@
   - Update QEE's __init__
 
 ! 2015-12-07 - Oliver Gruenberg
-  - move StrippingB24pLines from StrippingRD to StrippingBnoC 
+  - move StrippingB24pLines from StrippingRD to StrippingBnoC
     and updated module for linebuilders ( __init__.py )
 
 ! 2015-12-07 - Lucio Anderlini (for Andrea Bizzeti)
-  - Further tuning StrippingBandQ/StrippingCC2DD.py for Lambda_c+ and Xi_c0 
+  - Further tuning StrippingBandQ/StrippingCC2DD.py for Lambda_c+ and Xi_c0
 
 ! 2015-12-06 - Carlos Vazquez Sierra
  - Added B2JpsiPi0 line for S21p1
 
-! 2015-12-05 - Francesco Dettori 
-  - Lines added to StrippingRareStrange: 
-    - Sigma-> p e e and Sigma-> p mu mu detached 
-    - Sigma-> p e mu 
-    - Lambda-> p pi 
-    - Lambda-> p pi e e 
-    - Phi-> K mu 
+! 2015-12-05 - Francesco Dettori
+  - Lines added to StrippingRareStrange:
+    - Sigma-> p e e and Sigma-> p mu mu detached
+    - Sigma-> p e mu
+    - Lambda-> p pi
+    - Lambda-> p pi e e
+    - Phi-> K mu
 
 ! 2015-12-05 - Carlos Vazquez Sierra
   - Modified B2CC lines for s21p1
@@ -161,7 +165,7 @@
   - Added K*+ll, K1ll and Ltaumu
 
 ! 2015-12-04 - Marco Santimaria
-  - Added Bs2MuMuLinesBsstLine to Bs2MuMuLines.py 
+  - Added Bs2MuMuLinesBsstLine to Bs2MuMuLines.py
 
 ! 2015-12-03 - Jianchun Wang
   - Tighten selection criteria in Bs2st2KKMuX lines
@@ -171,7 +175,7 @@
 
 ! 2015-12-03 - Greg Ciezarek
 	-	Added StrippingLowPtMuID.py
-	
+
 ! 2015-12-03 - Tim Williams
 	-	Added missing import to TestMyWGfromSettings_Run1.py
 
@@ -184,7 +188,7 @@
 ! 2015-12-02 - Simone Stracka
   - bug fix in StrippingCharm/StrippingD2PiPi0.py
 
-! 2015-12-02 - Brais Sanmartin Sedes 
+! 2015-12-02 - Brais Sanmartin Sedes
   - added StrippingBnoC/StrippingBs2PhiKst0.py module
 
 ! 2015-12-02 - Chitsanu Khurewathanakul
@@ -199,7 +203,7 @@
   - Added LFVTau2MuEtaP2pipigLine and Tau2MuEtaP2pipipiLine in LFV lines, RD
 
 ! 2015-12-02 - Lucio Anderlini (for Andrea Bizzeti)
-  - Further tuning StrippingBandQ/StrippingCC2DD.py for Lambda_c+ and Xi_c0 
+  - Further tuning StrippingBandQ/StrippingCC2DD.py for Lambda_c+ and Xi_c0
 
 ! 2015-12-01 - Paula Alvarez Cartelle
   - Added Lb2dp and Lb2dppipi lines to StrippingQEE/StrippingLb2dp.py
@@ -214,7 +218,7 @@
 
 
 ! 2015-11-30 - Lucio Anderlini (for Andrea Bizzeti)
-  - Added baryons to StrippingBandQ/StrippingCC2DD.py. 
+  - Added baryons to StrippingBandQ/StrippingCC2DD.py.
     Possibly need further tuning.
 
 ! 2015-11-30 - Nicola Skidmore
@@ -229,11 +233,11 @@
 
 
 ! 2015-11-27 - Yasmine Amhis
- - Uncomment related info config. 
-   StrippingRD/StrippingBu2LLK 
+ - Uncomment related info config.
+   StrippingRD/StrippingBu2LLK
 
-! 2015-11-27 - Yasmine Amhis 
- - Update related info : 
+! 2015-11-27 - Yasmine Amhis
+ - Update related info :
    StrippingRD/StrippingBu2LLK
 
 !========================== StrippingSelections v4r9 2015-11-27 ===============
@@ -253,7 +257,7 @@
 	-Made defualt config of StrippingBnoC/StrippingB2KShh consistent with strippingsettings
 
 ! 2015-11-20 - Rafael Coutinho
- - Updated StrippingBnoC/StrippingB2KShh using the correct RelatedInfo tools framework 
+ - Updated StrippingBnoC/StrippingB2KShh using the correct RelatedInfo tools framework
 
 ! 2015-11-20 - Greg Ciezarek
  - fixed semileptonic __init__ to not look for previously removed lines
@@ -294,7 +298,7 @@
  - Update to StrippingTrackEffD0ToKPi
 
 ! 2015-11-17 - Ricardo Vazquez Gomez
- - Modify StrippingTaggedJets to use LoKi::BDTTag instead of LoKi__BDTTag 
+ - Modify StrippingTaggedJets to use LoKi::BDTTag instead of LoKi__BDTTag
 
 ! 2015-11-16 - Roberta Cardinale
  - Updated StrippingBandQ/StrippingLb2EtacKp.py
@@ -304,7 +308,7 @@
  - Removed WS decay mode "[Lambda_b0 -> Lambda_c+ pi+]cc" for ControlCh. in BLVLines
 
 ! 2015-11-16 - Alessandro Mord? - ZVTOP lines: changes in syntax for RelatedInfo
- 
+
 ! 201511-16 - Alessandro Mord? - B2KstTaTau: Changes in decay descriptors, new syntax for RelatedInfo, new cuts for candidate multiplicity
 
 ! 2015-11-16 - Carlos Vazquez Sierra

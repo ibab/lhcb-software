@@ -3,7 +3,7 @@
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-from PhysSelPython.Wrappers import DataOnDemand, Selection, MergedSelection
+from PhysSelPython.Wrappers import DataOnDemand, Selection, MergedSelection, VoidEventSelection
 from Beauty2Charm_LoKiCuts import LoKiCuts
 from Configurables import SubstitutePID
 from Configurables import ConeJetProxyFilter
@@ -284,9 +284,19 @@ def makeB2X(name,decay,inputs,config,useIP=True,resVert=True):
                hasTopoChildren(),LoKiCuts(flightCuts,config).code()]
     momCuts = LoKiCuts.combine(momCuts)
     b2x = CombineParticles(DecayDescriptors=decay,CombinationCut=comboCuts,
-                           MotherCut=momCuts)
-       
-    return Selection(name,Algorithm=b2x,RequiredSelections=inputs)
+                           MotherCut=momCuts, 
+                           StopAtMaxCombinations = True, 
+                           MaxCombinations = 10000000)
+
+    presels = []
+    for i in inputs : 
+        _code = "(CONTAINS('%s')<2000)" % i.outputLocation()
+        presels += [ VoidEventSelection(name + "CombCut" + i.name(),
+                                  Code=_code, 
+                                  RequiredSelection = i
+                                  ) ] 
+
+    return Selection(name,Algorithm=b2x,RequiredSelections=inputs + presels )
 
 def makeB2XSels(decays,xtag,inputs,config,useIP=True,resVert=True):
     '''Returns a list of the Hb->X selections.'''

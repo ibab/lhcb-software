@@ -62,7 +62,7 @@ def makeSel(parent,dec):
 class DBuilder(object):
      '''Produces all D mesons for the Beauty2Charm module.'''
 
-     def __init__(self,pions,kaons,ks,pi0,uppions,upkaons,muons,hh,config,config_pid,config_pi0):
+     def __init__(self,pions,kaons,ks,pi0,uppions,upkaons,muons,hh,config,config_for_ddx,config_pid,config_pi0):
 
           self.pions = pions
           self.kaons = kaons
@@ -73,6 +73,7 @@ class DBuilder(object):
           self.muons = muons
           self.hhBuilder = hh
           self.config = config
+          self.config_for_ddx = config_for_ddx
           self.config_pid = config_pid
           self.config_pi0 = config_pi0
           self.hh   = self._makeD2hh()
@@ -220,6 +221,12 @@ class DBuilder(object):
           self.pi0kpi_resolved = [filterSelection('D2Pi0KPi_Resolved',oneK,
                                                   self.pi0hh_resolved)]
           d_min,d_max,ds_min,ds_max = self._massWindowD2HHHCF()
+
+          #tighter D selections for DDX
+          #self.hh_ddx_pid   = [filterSelection('D2hh_for_DDX',LoKiCuts(['VCHI2DOF','BPVVDCHI2'],config_for_ddx).code(),self.hh_pid)]
+          #self.hhh_ddx_pid   = [filterSelection('D2hhh_for_DDX',LoKiCuts(['VCHI2DOF','BPVVDCHI2'],config_for_ddx).code(),self.hhh_pid)]
+          #self.hhhh_ddx_pid   = [filterSelection('D2hhhh_for_DDX',LoKiCuts(['VCHI2DOF','BPVVDCHI2'],config_for_ddx).code(),self.hhhh_pid)]
+          #self.k3pi_ddx_pid = [filterSelection('D2k3pi_for_DDX',LoKiCuts(['VCHI2DOF','BPVVDCHI2'],config_for_ddx).code(),self.k3pi_pid)]
 
           #use this below
           d_cf_noMassWin = d_cf

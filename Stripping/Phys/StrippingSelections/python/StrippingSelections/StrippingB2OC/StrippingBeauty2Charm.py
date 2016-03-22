@@ -49,6 +49,30 @@ default_config ={
     'MIPCHI2DV_MIN' : 4., 
     'TRGHP_MAX'     : 0.4
     },
+    "PIDPION" : {
+    'TRCHI2DOF_MAX' : 3.,
+    'PT_MIN'        : '100*MeV',
+    'P_MIN'         : '1000*MeV',
+    'MIPCHI2DV_MIN' : 4.,
+    'PIDK_MAX'      : 20.,
+    'TRGHP_MAX'     : 0.4
+    },
+    "PIDKAON" : {
+    'TRCHI2DOF_MAX' : 3.,
+    'PT_MIN'        : '100*MeV',
+    'P_MIN'         : '1000*MeV',
+    'MIPCHI2DV_MIN' : 4.,
+    'PIDK_MIN'      : -10.,
+    'TRGHP_MAX'     : 0.4
+    },
+    "PIDPROTON" : {
+    'TRCHI2DOF_MAX' : 3.,
+    'PT_MIN'        : '100*MeV',
+    'P_MIN'         : '1000*MeV',
+    'MIPCHI2DV_MIN' : 4.,
+    'PIDp_MIN'      : -10.,
+    'TRGHP_MAX'     : 0.4
+    },
     "UPSTREAM" : { # Cuts made on all upstream particles
     'TRCHI2DOF_MAX' : 4.,
     'PT_MIN'        : '100*MeV',
@@ -95,6 +119,23 @@ default_config ={
     'ADOCA45_MAX'   : '0.5*mm',
     'VCHI2DOF_MAX'  : 10,
     'BPVVDCHI2_MIN' : 36,
+    'BPVDIRA_MIN'   : 0, 
+    'MASS_WINDOW'   : '100*MeV'
+    },
+    "D2X_FOR_DDX" : { # Cuts made on all D's and Lc's used in B->DDX lines 
+    'ASUMPT_MIN'    : '1800*MeV',
+    'ADOCA12_MAX'   : '0.5*mm',
+    'ADOCA13_MAX'   : '0.5*mm',
+    'ADOCA23_MAX'   : '0.5*mm',
+    'ADOCA14_MAX'   : '0.5*mm',
+    'ADOCA24_MAX'   : '0.5*mm',
+    'ADOCA34_MAX'   : '0.5*mm',
+    'ADOCA15_MAX'   : '0.5*mm',
+    'ADOCA25_MAX'   : '0.5*mm',
+    'ADOCA35_MAX'   : '0.5*mm',
+    'ADOCA45_MAX'   : '0.5*mm',
+    'VCHI2DOF_MAX'  : 8,
+    'BPVVDCHI2_MIN' : 50,
     'BPVDIRA_MIN'   : 0, 
     'MASS_WINDOW'   : '100*MeV'
     },
@@ -462,11 +503,6 @@ default_config ={
       }, 
     ], 
     '2TOPO' : {'ANGLE_MIN': (2/57.),'M_MIN':19000,'DPHI_MIN':0},
-    'BB' : {'ADDSUMPT':0,'COSANGLE_MAX':0.99,
-            'COSDPHI_MAX':0,'M_MIN':0,'MAXPT_MIN': 4000,
-            'TOPOCONESIZE':0.5,'TOPOCONEPT_MIN':10000,
-            'TOPOCONETKCHI2NDOF_MAX':3.0,'TOPOCONETKGHOSTPROB_MAX':0.4,
-            'TOPOCONETKIPCHI2_MAX':16.0,'TOPOCONETKDOCA_MAX':1.0},
     'D0INC' : {'PT_MIN' : 1000, 'IPCHI2_MIN': 100},
     "Prescales" : { # Prescales for individual lines
     'RUN_BY_DEFAULT' : True, # False = lines off by default
@@ -480,16 +516,13 @@ default_config ={
     'B02DPiWSNoIPD2HHHCFPIDBeauty2CharmLine' : 1.0,
     'B02DPiWSNoIPDs2HHHPIDBeauty2CharmLine' : 1.0,
     'B02DPiPiPiWSD2HHHPIDBeauty2CharmLine': 1.0,
-    'B02DKPiPiWSD2HHHPIDBeauty2CharmLine' : 1.0,
-    'B02DsstarPiDsstar2DGammaD2HHHBeauty2CharmLine' : 0.5,
-    'B02DsstarKDsstar2DGammaD2HHHBeauty2CharmLine' : 0.
+    'B02DKPiPiWSD2HHHPIDBeauty2CharmLine' : 1.0
     },
     'GECNTrkMax'   : 500
   }, 
   'STREAMS' : { 
     'BhadronCompleteEvent' : [
     'StrippingDoubleTopoLine',
-    'StrippingPseudoDoubleTopoLine',
     'StrippingD02HHTopoTOSLine',
     'StrippingB02DKPiPiD2HHHPIDBeauty2CharmLine',
     'StrippingB02DPiPiPiD2HHHPIDBeauty2CharmLine',
@@ -511,6 +544,7 @@ default_config ={
     'StrippingB2D0PiPiPiD2HHTIGHTBeauty2CharmLine',
     'StrippingB2D0PiD2HHHHTIGHTBeauty2CharmLine',
     'StrippingB2D0D0KD02HHD02HHBeauty2CharmLine',
+    'StrippingB2D0D0PiD02HHD02HHBeauty2CharmLine',
 
     'StrippingB02DKWSD2HHHBeauty2CharmLine', ##Potentially DST move back to Bhadron if not
     'StrippingB02DPiWSD2HHHBeauty2CharmLine', ##Potentially DST 
@@ -602,33 +636,33 @@ default_config ={
     'StrippingB2D0KsPiLLD2HHBeauty2CharmLine', 
     'StrippingB2D0PiPi0ResolvedD2HHBeauty2CharmLine', 
 
-    #'StrippingB2D0KPi0MergedD2KSHHLLBeauty2CharmLine', 
-    #'StrippingB2D0PiPi0MergedD2KSHHLLBeauty2CharmLine', 
+    'StrippingB2D0KPi0MergedD2KSHHLLBeauty2CharmLine', 
+    'StrippingB2D0PiPi0MergedD2KSHHLLBeauty2CharmLine', 
     'StrippingB2D0KsPiDDD2KSHHLLBeauty2CharmLine', 
-    #'StrippingB2D0KPi0ResolvedD2KSHHLLBeauty2CharmLine', 
+    'StrippingB2D0KPi0ResolvedD2KSHHLLBeauty2CharmLine', 
     'StrippingB2D0KsPiLLD2KSHHLLBeauty2CharmLine', 
-    #'StrippingB2D0PiPi0ResolvedD2KSHHLLBeauty2CharmLine', 
+    'StrippingB2D0PiPi0ResolvedD2KSHHLLBeauty2CharmLine', 
 
-    #'StrippingB2D0KPi0MergedD2KSHHDDBeauty2CharmLine', 
-    #'StrippingB2D0PiPi0MergedD2KSHHDDBeauty2CharmLine', 
+    'StrippingB2D0KPi0MergedD2KSHHDDBeauty2CharmLine', 
+    'StrippingB2D0PiPi0MergedD2KSHHDDBeauty2CharmLine', 
     'StrippingB2D0KsPiDDD2KSHHDDBeauty2CharmLine', 
-    #'StrippingB2D0KPi0ResolvedD2KSHHDDBeauty2CharmLine', 
+    'StrippingB2D0KPi0ResolvedD2KSHHDDBeauty2CharmLine', 
     'StrippingB2D0KsPiLLD2KSHHDDBeauty2CharmLine', 
-    #'StrippingB2D0PiPi0ResolvedD2KSHHDDBeauty2CharmLine', 
+    'StrippingB2D0PiPi0ResolvedD2KSHHDDBeauty2CharmLine', 
 
-    #'StrippingB2D0KPi0MergedD2HHHHBeauty2CharmLine', 
-    #'StrippingB2D0PiPi0MergedD2HHHHBeauty2CharmLine', 
+    'StrippingB2D0KPi0MergedD2HHHHBeauty2CharmLine', 
+    'StrippingB2D0PiPi0MergedD2HHHHBeauty2CharmLine', 
     'StrippingB2D0KsPiDDD2HHHHBeauty2CharmLine', 
-    #'StrippingB2D0KPi0ResolvedD2HHHHBeauty2CharmLine', 
+    'StrippingB2D0KPi0ResolvedD2HHHHBeauty2CharmLine', 
     'StrippingB2D0KsPiLLD2HHHHBeauty2CharmLine', 
-    #'StrippingB2D0PiPi0ResolvedD2HHHHBeauty2CharmLine',
+    'StrippingB2D0PiPi0ResolvedD2HHHHBeauty2CharmLine',
 
-    #'StrippingB2D0KPi0MergedD2HHHHWSBeauty2CharmLine',
-    #'StrippingB2D0PiPi0MergedD2HHHHWSBeauty2CharmLine',
+    'StrippingB2D0KPi0MergedD2HHHHWSBeauty2CharmLine',
+    'StrippingB2D0PiPi0MergedD2HHHHWSBeauty2CharmLine',
     'StrippingB2D0KsPiDDD2HHHHWSBeauty2CharmLine',  
-    #'StrippingB2D0KPi0ResolvedD2HHHHWSBeauty2CharmLine',
+    'StrippingB2D0KPi0ResolvedD2HHHHWSBeauty2CharmLine',
     'StrippingB2D0KsPiLLD2HHHHWSBeauty2CharmLine',
-    #'StrippingB2D0PiPi0ResolvedD2HHHHWSBeauty2CharmLine',
+    'StrippingB2D0PiPi0ResolvedD2HHHHWSBeauty2CharmLine',
 
     'StrippingB02DKD2PhiMuNuBeauty2CharmLine', 
     'StrippingB02DPiD2PhiMuNuBeauty2CharmLine', 
@@ -643,16 +677,16 @@ default_config ={
     'StrippingB02DPiWSNoIPDs2HHHPIDBeauty2CharmLine', 
     'StrippingB02DKsKDDD2HHHCFPIDBeauty2CharmLine', 
     'StrippingB02DKsKLLD2HHHCFPIDBeauty2CharmLine', 
-    #'StrippingB02DKPi0ResolvedD2HHHCFPIDBeauty2CharmLine', 
+    'StrippingB02DKPi0ResolvedD2HHHCFPIDBeauty2CharmLine', 
     'StrippingB02DKsPiDDD2HHHCFPIDBeauty2CharmLine', 
-    #'StrippingB02DPiPi0MergedD2HHHCFPIDBeauty2CharmLine', 
-    #'StrippingB02DKPi0MergedD2HHHCFPIDBeauty2CharmLine', 
+    'StrippingB02DPiPi0MergedD2HHHCFPIDBeauty2CharmLine', 
+    'StrippingB02DKPi0MergedD2HHHCFPIDBeauty2CharmLine', 
     'StrippingB02DPiPi0ResolvedD2HHHCFPIDBeauty2CharmLine', 
     'StrippingB02DKsPiLLD2HHHCFPIDBeauty2CharmLine', 
-    #'StrippingB02DKPi0MergedWSD2HHHCFPIDBeauty2CharmLine', 
+    'StrippingB02DKPi0MergedWSD2HHHCFPIDBeauty2CharmLine', 
     'StrippingB02DKsPiDDWSD2HHHCFPIDBeauty2CharmLine', 
-    #'StrippingB02DKPi0ResolvedWSD2HHHCFPIDBeauty2CharmLine', 
-    #'StrippingB02DPiPi0MergedWSD2HHHCFPIDBeauty2CharmLine', 
+    'StrippingB02DKPi0ResolvedWSD2HHHCFPIDBeauty2CharmLine', 
+    'StrippingB02DPiPi0MergedWSD2HHHCFPIDBeauty2CharmLine', 
     'StrippingB02DKsPiLLWSD2HHHCFPIDBeauty2CharmLine', 
     'StrippingB02DPiPi0ResolvedWSD2HHHCFPIDBeauty2CharmLine', 
     'StrippingB02DKsKLLWSD2HHHCFPIDBeauty2CharmLine', 
@@ -682,20 +716,20 @@ default_config ={
     'StrippingB2D0PiD2KSHHDDBeauty2CharmLine', 
     'StrippingB2D0MuNuD2KSHHLLBeauty2CharmLine', 
     'StrippingB2D0MuNuD2KSHHDDBeauty2CharmLine', 
-    #'StrippingB02D0KKD2KSHHLLBeauty2CharmLine', 
-    #'StrippingB02D0PiPiD2KSHHLLBeauty2CharmLine', 
+    'StrippingB02D0KKD2KSHHLLBeauty2CharmLine', 
+    'StrippingB02D0PiPiD2KSHHLLBeauty2CharmLine', 
     'StrippingB02D0KPiD2KSHHLLBeauty2CharmLine', 
     'StrippingB02DHHWSD2KSHHLLBeauty2CharmLine', 
-    #'StrippingB02D0KKD2KSHHDDBeauty2CharmLine', 
-    #'StrippingB02D0PiPiD2KSHHDDBeauty2CharmLine', 
+    'StrippingB02D0KKD2KSHHDDBeauty2CharmLine', 
+    'StrippingB02D0PiPiD2KSHHDDBeauty2CharmLine', 
     'StrippingB02D0KPiD2KSHHDDBeauty2CharmLine', 
     'StrippingB02DHHWSD2KSHHDDBeauty2CharmLine', 
-    #'StrippingB02D0KKD2KSHHLLWSBeauty2CharmLine', 
-    #'StrippingB02D0PiPiD2KSHHLLWSBeauty2CharmLine', 
+    'StrippingB02D0KKD2KSHHLLWSBeauty2CharmLine', 
+    'StrippingB02D0PiPiD2KSHHLLWSBeauty2CharmLine', 
     'StrippingB02D0KPiD2KSHHLLWSBeauty2CharmLine', 
     'StrippingB02DHHWSD2KSHHLLWSBeauty2CharmLine', 
-    #'StrippingB02D0KKD2KSHHDDWSBeauty2CharmLine', 
-    #'StrippingB02D0PiPiD2KSHHDDWSBeauty2CharmLine', 
+    'StrippingB02D0KKD2KSHHDDWSBeauty2CharmLine', 
+    'StrippingB02D0PiPiD2KSHHDDWSBeauty2CharmLine', 
     'StrippingB02D0KPiD2KSHHDDWSBeauty2CharmLine', 
     'StrippingB02DHHWSD2KSHHDDWSBeauty2CharmLine', 
     'StrippingB2D0KD2KSHHLLWSBeauty2CharmLine', 
@@ -759,7 +793,7 @@ default_config ={
     'StrippingB2D0PiD2KSPi0HHDDMergedBeauty2CharmLine', 
     'StrippingB02D0KKD2Pi0HHResolvedBeauty2CharmLine', 
     'StrippingB02D0PiPiD2Pi0HHResolvedBeauty2CharmLine', 
-    #'StrippingB02D0KPiD2Pi0HHResolvedBeauty2CharmLine', 
+    'StrippingB02D0KPiD2Pi0HHResolvedBeauty2CharmLine', 
     'StrippingB02DHHWSD2Pi0HHResolvedBeauty2CharmLine', 
     'StrippingB02D0KKD2Pi0HHMergedBeauty2CharmLine', 
     'StrippingB02D0PiPiD2Pi0HHMergedBeauty2CharmLine', 
@@ -784,10 +818,10 @@ default_config ={
     'StrippingB02DKKPiWSD2HHHPIDBeauty2CharmLine', 
     'StrippingB02DKPiPiWSD2HHHPIDBeauty2CharmLine', 
     'StrippingB02DPiPiPiWSD2HHHPIDBeauty2CharmLine', 
-    #'StrippingB2D0ppbarKD2HHBeauty2CharmLine', 
-    #'StrippingB2D0ppbarPiD2HHBeauty2CharmLine', 
-    #'StrippingB02DppbarKD2HHHBeauty2CharmLine', 
-    #'StrippingB02DppbarPiD2HHHBeauty2CharmLine', 
+    'StrippingB2D0ppbarKD2HHBeauty2CharmLine', 
+    'StrippingB2D0ppbarPiD2HHBeauty2CharmLine', 
+    'StrippingB02DppbarKD2HHHBeauty2CharmLine', 
+    'StrippingB02DppbarPiD2HHHBeauty2CharmLine', 
     'StrippingB02DstKKPiDstar2D0PiPIDBeauty2CharmLine', 
     'StrippingB02DstKPiPiDstar2D0PiPIDBeauty2CharmLine', 
     'StrippingB02DstPiPiPiDstar2D0PiPIDBeauty2CharmLine', 
@@ -816,6 +850,11 @@ default_config ={
     'StrippingB2DstD0D02K3PiBeauty2CharmLine', 
     'StrippingB02DstDstBeauty2CharmLine', 
     'StrippingB02DstDstWSBeauty2CharmLine', 
+    
+    ######################
+    ###### DDX lines #####
+    ######################
+    #### DDK lines ###
     'StrippingB2DDKBeauty2CharmLine', 
     'StrippingB2DDKWSBeauty2CharmLine', 
     'StrippingB02D0DKBeauty2CharmLine', 
@@ -823,7 +862,7 @@ default_config ={
     'StrippingB02D0DKWSBeauty2CharmLine', 
     'StrippingB02D0DKWSD02K3PiBeauty2CharmLine', 
     'StrippingB2DstDKBeauty2CharmLine', 
-    #'StrippingB2DstDKDstarD02K3PiBeauty2CharmLine', 
+    'StrippingB2DstDKDstarD02K3PiBeauty2CharmLine', 
     'StrippingB2DstDKWSBeauty2CharmLine', 
     'StrippingB2DstDKWSDstarD02K3PiBeauty2CharmLine', 
     'StrippingB2D0D0KD02K3PiD02K3PiBeauty2CharmLine', 
@@ -831,7 +870,7 @@ default_config ={
     'StrippingB02DstD0KBeauty2CharmLine', 
     'StrippingB02DstD0KD02K3PiBeauty2CharmLine', 
     'StrippingB02DstD0KDstarD02K3PiBeauty2CharmLine', 
-    #'StrippingB02DstD0KDstarD02K3PiD02K3PiBeauty2CharmLine', 
+    'StrippingB02DstD0KDstarD02K3PiD02K3PiBeauty2CharmLine', 
     'StrippingB02DstD0KWSBeauty2CharmLine', 
     'StrippingB02DstD0KWSD02K3PiBeauty2CharmLine', 
     'StrippingB02DstD0KWSDstarD02K3PiBeauty2CharmLine', 
@@ -842,24 +881,10 @@ default_config ={
     'StrippingB2DstDstKWSBeauty2CharmLine', 
     'StrippingB2DstDstKWSDstarD02K3PiBeauty2CharmLine', 
     'StrippingB2DstDstKWSDstarD02K3PiDstarD02K3PiBeauty2CharmLine', 
-    #'StrippingB2Dst2460DKBeauty2CharmLine', 
-    #'StrippingB2Dst2460DKWSBeauty2CharmLine', 
-    #'StrippingB2D0st2460D0KBeauty2CharmLine', 
-    #'StrippingB02D0D0KstD02K3PiD02K3PiBeauty2CharmLine', 
-    'StrippingB02D0D0KstD02HHD02HHBeauty2CharmLine', 
-    #'StrippingB02D0D0KstD02HHD02K3PiBeauty2CharmLine', 
-    #'StrippingB02DDKstBeauty2CharmLine', 
-    #'StrippingB02DstDKstBeauty2CharmLine', 
-    #'StrippingB02DstDKstDstarD02K3PiBeauty2CharmLine', 
-    'StrippingB02DstDstKstBeauty2CharmLine', 
-    'StrippingB02DstDstKstDstarD02K3PiBeauty2CharmLine', 
-    'StrippingB02DstDstKstDstarD02K3PiDstarD02K3PiBeauty2CharmLine', 
-    #'StrippingB2DD0KstBeauty2CharmLine', 
-    #'StrippingB2DD0KstD02K3PiBeauty2CharmLine', 
-    'StrippingB2DstD0KstBeauty2CharmLine', 
-    'StrippingB2DstD0KstDstarD02K3PiBeauty2CharmLine', 
-    #'StrippingB2DstD0KstD02K3PiBeauty2CharmLine', 
-    #'StrippingB2DstD0KstDstarD02K3PiD02K3PiBeauty2CharmLine', 
+    'StrippingB2Dst2460DKBeauty2CharmLine', 
+    'StrippingB2Dst2460DKWSBeauty2CharmLine', 
+    'StrippingB2D0st2460D0KBeauty2CharmLine', 
+    #### DDKS lines ###
     'StrippingB02DDKSDDBeauty2CharmLine', 
     'StrippingB02DDKSWSDDBeauty2CharmLine', 
     'StrippingB2D0DKSDDBeauty2CharmLine', 
@@ -902,16 +927,67 @@ default_config ={
     'StrippingB02DstDstKSWSLLBeauty2CharmLine', 
     'StrippingB02DstDstKSWSLLDstarD02K3PiBeauty2CharmLine', 
     'StrippingB02DstDstKSWSLLDstarD02K3PiDstarD02K3PiBeauty2CharmLine', 
-    #'StrippingB2D0DKKBeauty2CharmLine', 
-    #'StrippingB2D0DKKD2K3PiBeauty2CharmLine', 
+    #### DDK* lines ###
+    'StrippingB02D0D0KstD02K3PiD02K3PiBeauty2CharmLine', 
+    'StrippingB02D0D0KstD02HHD02HHBeauty2CharmLine', 
+    'StrippingB02D0D0KstD02HHD02K3PiBeauty2CharmLine', 
+    'StrippingB02DDKstBeauty2CharmLine', 
+    'StrippingB02DstDKstBeauty2CharmLine', 
+    'StrippingB02DstDKstDstarD02K3PiBeauty2CharmLine', 
+    'StrippingB02DstDstKstBeauty2CharmLine', 
+    'StrippingB02DstDstKstDstarD02K3PiBeauty2CharmLine', 
+    'StrippingB02DstDstKstDstarD02K3PiDstarD02K3PiBeauty2CharmLine', 
+    'StrippingB2DD0KstBeauty2CharmLine', 
+    'StrippingB2DD0KstD02K3PiBeauty2CharmLine', 
+    'StrippingB2DstD0KstBeauty2CharmLine', 
+    'StrippingB2DstD0KstDstarD02K3PiBeauty2CharmLine', 
+    'StrippingB2DstD0KstD02K3PiBeauty2CharmLine', 
+    'StrippingB2DstD0KstDstarD02K3PiD02K3PiBeauty2CharmLine', 
     'StrippingB2D0DKPiBeauty2CharmLine', 
     'StrippingB2D0DKPiD02K3PiBeauty2CharmLine', 
+    #### DDPhi lines ###
+    'StrippingB2D0DKKBeauty2CharmLine', 
+    'StrippingB2D0DKKD2K3PiBeauty2CharmLine', 
     #'StrippingB02DDKKBeauty2CharmLine', 
     #'StrippingB02DstDKKBeauty2CharmLine', 
     #'StrippingB02DstDKKDstarD02K3PiBeauty2CharmLine', 
     'StrippingB02DstDstKKBeauty2CharmLine', 
     'StrippingB02DstDstKKDstarD02K3PiBeauty2CharmLine', 
     'StrippingB02DstDstKKDstarD02K3PiDstarD02K3PiBeauty2CharmLine', 
+    #### DDPi lines ###
+    'StrippingB2DDPiBeauty2CharmLine', 
+    'StrippingB2DDPiWSBeauty2CharmLine', 
+    'StrippingB02D0DPiBeauty2CharmLine', 
+    'StrippingB02D0DPiD02K3PiBeauty2CharmLine', 
+    'StrippingB02D0DPiWSBeauty2CharmLine', 
+    'StrippingB02D0DPiWSD02K3PiBeauty2CharmLine', 
+    'StrippingB2DstDPiBeauty2CharmLine', 
+    'StrippingB2DstDPiDstarD02K3PiBeauty2CharmLine', 
+    'StrippingB2DstDPiWSBeauty2CharmLine', 
+    'StrippingB2DstDPiWSDstarD02K3PiBeauty2CharmLine', 
+    'StrippingB2D0D0PiD02K3PiD02K3PiBeauty2CharmLine', 
+    'StrippingB2D0D0PiD02HHD02K3PiBeauty2CharmLine', 
+    'StrippingB02DstD0PiBeauty2CharmLine', 
+    'StrippingB02DstD0PiD02K3PiBeauty2CharmLine', 
+    'StrippingB02DstD0PiDstarD02K3PiBeauty2CharmLine', 
+    'StrippingB02DstD0PiDstarD02K3PiD02K3PiBeauty2CharmLine', 
+    'StrippingB02DstD0PiWSBeauty2CharmLine', 
+    'StrippingB02DstD0PiWSD02K3PiBeauty2CharmLine', 
+    'StrippingB02DstD0PiWSDstarD02K3PiBeauty2CharmLine', 
+    'StrippingB02DstD0PiWSDstarD02K3PiD02K3PiBeauty2CharmLine', 
+    'StrippingB2DstDstPiBeauty2CharmLine', 
+    'StrippingB2DstDstPiDstarD02K3PiBeauty2CharmLine', 
+    'StrippingB2DstDstPiDstarD02K3PiDstarD02K3PiBeauty2CharmLine', 
+    'StrippingB2DstDstPiWSBeauty2CharmLine', 
+    'StrippingB2DstDstPiWSDstarD02K3PiBeauty2CharmLine', 
+    'StrippingB2DstDstPiWSDstarD02K3PiDstarD02K3PiBeauty2CharmLine', 
+    'StrippingB2Dst2460DPiBeauty2CharmLine', 
+    'StrippingB2Dst2460DPiWSBeauty2CharmLine', 
+    'StrippingB2D0st2460D0PiBeauty2CharmLine', 
+    #########################
+    #### End of DDX lines ###
+    #########################
+
     'StrippingLb2LcKLc2PKPiBeauty2CharmLine', 
     'StrippingLb2LcPiLc2PKPiBeauty2CharmLine', 
     'StrippingLb2LcKWSLc2PKPiBeauty2CharmLine', 
@@ -940,16 +1016,16 @@ default_config ={
     'StrippingXib02XicPiPiPiXic2PKPiBeauty2CharmLine', 
     'StrippingXib02XicPiPiPiWSXic2PKPiBeauty2CharmLine', 
     'StrippingXib02XicKPiPiWSXic2PKPiBeauty2CharmLine', 
-    #'StrippingXib2Xic0KPiPiXic02PKKPiBeauty2CharmLine', 
-    #'StrippingXib2Xic0PiPiPiXic02PKKPiBeauty2CharmLine', 
-    #'StrippingXib2Xic0KPiPiWSXic02PKKPiBeauty2CharmLine', 
-    #'StrippingXib2Xic0PiPiPiWSXic02PKKPiBeauty2CharmLine', 
-    #'StrippingXib2LcDsKLc2PKPiDs2KKPiBeauty2CharmLine', 
-    #'StrippingXib2LcDsKWSLc2PKPiDs2KKPiBeauty2CharmLine', 
-    #'StrippingXib02LcDsKPiLc2PKPiDs2KKPiBeauty2CharmLine', 
-    #'StrippingXib02LcDsKPiWSLc2PKPiDs2KKPiBeauty2CharmLine', 
-    #'StrippingB2LcDspbarLc2PKPiDs2KKPiBeauty2CharmLine', 
-    #'StrippingB2LcDspbarWSLc2PKPiDs2KKPiBeauty2CharmLine', 
+    'StrippingXib2Xic0KPiPiXic02PKKPiBeauty2CharmLine', 
+    'StrippingXib2Xic0PiPiPiXic02PKKPiBeauty2CharmLine', 
+    'StrippingXib2Xic0KPiPiWSXic02PKKPiBeauty2CharmLine', 
+    'StrippingXib2Xic0PiPiPiWSXic02PKKPiBeauty2CharmLine', 
+    'StrippingXib2LcDsKLc2PKPiDs2KKPiBeauty2CharmLine', 
+    'StrippingXib2LcDsKWSLc2PKPiDs2KKPiBeauty2CharmLine', 
+    'StrippingXib02LcDsKPiLc2PKPiDs2KKPiBeauty2CharmLine', 
+    'StrippingXib02LcDsKPiWSLc2PKPiDs2KKPiBeauty2CharmLine', 
+    'StrippingB2LcDspbarLc2PKPiDs2KKPiBeauty2CharmLine', 
+    'StrippingB2LcDspbarWSLc2PKPiDs2KKPiBeauty2CharmLine', 
     'StrippingSb2D0PD2HHPIDBeauty2CharmLine', 
     'StrippingSb02DPD2HHHPIDBeauty2CharmLine', 
     'StrippingSb02DPWSD2HHHPIDBeauty2CharmLine', 
@@ -975,8 +1051,8 @@ default_config ={
     'StrippingB02LcpbarKPiWSLc2PKPiBeauty2CharmLine', 
     'StrippingLb2LcDD2HHHPIDBeauty2CharmLine', 
     'StrippingLb2LcDWSD2HHHPIDBeauty2CharmLine', 
-    #'StrippingLb2LcDKstBeauty2CharmLine', 
-    #'StrippingLb2LcDstKstBeauty2CharmLine', 
+    'StrippingLb2LcDKstBeauty2CharmLine', 
+    'StrippingLb2LcDstKstBeauty2CharmLine', 
     'StrippingX2LcD0D02KPiBeauty2CharmLine', 
     'StrippingX2LcD0PiD02KPiBeauty2CharmLine', 
     'StrippingX2LcD0KD02KPiBeauty2CharmLine', 
@@ -1012,7 +1088,7 @@ default_config ={
     'StrippingLb2LcDstWSDstar2D0PiPIDBeauty2CharmLine', 
     'StrippingX2LcLcBeauty2CharmLine', 
     'StrippingX2LcLcWSBeauty2CharmLine', 
-    #'StrippingLb2Lc5PiLc2PKPiPIDBeauty2CharmLine', 
+    'StrippingLb2Lc5PiLc2PKPiPIDBeauty2CharmLine', 
     'StrippingLb2D0Lambda0DDD02HHBeauty2CharmLine', 
     'StrippingLb2D0Lambda0LLD02HHBeauty2CharmLine', 
     'StrippingLb2DpKKD2HHHBeauty2CharmLine', 
@@ -1421,20 +1497,24 @@ default_config ={
 
 class Beauty2CharmConf(LineBuilder):
     
-    __configuration_keys__ = ('ALL','UPSTREAM','KS0','Lambda0','Pi0','gamma','D2X','B2X','Bc2DD','Bc2BX',
+    __configuration_keys__ = ('ALL','PIDPION','PIDKAON','PIDPROTON','UPSTREAM','KS0','Lambda0','Pi0','gamma',
+                              'D2X','D2X_FOR_DDX','B2X','Bc2DD','Bc2BX',
                               'Dstar','HH','HHH','PID','FlavourTagging','RelatedInfoTools',
-                              'RawEvents','MDSTChannels','2TOPO','BB','D0INC','Prescales','GECNTrkMax')
+                              'RawEvents','MDSTChannels','2TOPO','D0INC','Prescales','GECNTrkMax')
  
     def __init__(self, moduleName, config) :
         
         LineBuilder.__init__(self, moduleName, config)
 
         # pre-filter inputs
-        pions   = filterInputs('Pi',  [StdAllNoPIDsPions],config['ALL'])
-        uppions = filterInputs('PiUP',[StdNoPIDsUpPions], config['UPSTREAM'])
-        kaons   = filterInputs('K',   [StdAllNoPIDsKaons],config['ALL'])
-        upkaons = filterInputs('KaUP',[StdNoPIDsUpKaons], config['UPSTREAM'])
-        protons = filterInputs('P',   [StdAllNoPIDsProtons],config['ALL'])
+        pions = filterInputs('Pi',[StdAllNoPIDsPions],config['ALL'])
+        pions_pid = filterInputs('Pi_PID',[pions],config['PIDPION'])
+        uppions = filterInputs('PiUP',[StdNoPIDsUpPions],config['UPSTREAM'])
+        kaons = filterInputs('K',[StdAllNoPIDsKaons],config['ALL'])
+        kaons_pid = filterInputs('K_PID',[kaons],config['PIDKAON'])
+        upkaons = filterInputs('KaUP',[StdNoPIDsUpKaons],config['UPSTREAM'])
+        protons = filterInputs('P',[StdAllNoPIDsProtons],config['ALL'])
+        protons_pid = filterInputs('P_PID',[protons],config['PIDPROTON'])
         ks_dd = filterInputs('KS0_DD',[dataOnDemand("StdLooseKsDD")],
                                        config['KS0']) 
         ks_ll = filterInputs('KS0_LL',[dataOnDemand("StdLooseKsLL")],
@@ -1471,8 +1551,10 @@ class Beauty2CharmConf(LineBuilder):
 
         # pre-filter hard inputs (these could have been used in HLT2)
         topoPions = topoInputs('Pi',[pions])
+        topoPions_PID = topoInputs('Pi_PID',[pions_pid])
         topoPionsLoose = topoInputsLoose('PiLoose',[pions])
         topoKaons = topoInputs('K',[kaons])
+        topoKaons_PID = topoInputs('K_PID',[kaons_pid])
         topoKaonsLoose = topoInputsLoose('KLoose',[kaons])
         topoProtons = topoInputs('P',[protons])
 
@@ -1484,15 +1566,15 @@ class Beauty2CharmConf(LineBuilder):
         hhh = HHHBuilder(pions,kaons,protons,config['HHH'], config['PID'])
 
         # make D->X, etc. inputs
-        d = DBuilder(pions,kaons,ks,pi0,uppions,upkaons,muons,hh,config['D2X'],config['PID'],config['Pi0'])
+        d = DBuilder(pions,kaons,ks,pi0,uppions,upkaons,muons,hh,config['D2X'],config['D2X_FOR_DDX'],config['PID'],config['Pi0'])
         dst = DstarBuilder(d,pions,uppions,pi0,photons,vlaphotons,config['Dstar'],config['PID'])
 
         # Lc -> X
-        lc = LcBuilder(pions,kaons,protons,config['D2X'],config['PID'])
-        xicc = XiccBuilder(lc,pions,config['D2X'])
+        lc = LcBuilder(pions_pid,kaons_pid,protons_pid,config['D2X'])
+        xicc = XiccBuilder(lc,pions_pid,config['D2X'])
 
         # make B->DX
-        b2dx = B2DXBuilder(d,dst,topoPions,topoPionsLoose,topoKaons,muons,ks,pi0_fromB,hh,hhh,
+        b2dx = B2DXBuilder(d,dst,topoPions,topoPionsLoose,topoKaons,topoKaons_PID,topoPions_PID,muons,ks,pi0_fromB,hh,hhh,
                            config['B2X'])
         self._makeLines(b2dx.lines,config)
 
@@ -1540,12 +1622,6 @@ class Beauty2CharmConf(LineBuilder):
 
         hlt = "HLT_PASS_RE('Hlt2Topo.*Decision')"
         sline = StrippingLine('DoubleTopoLine',1.0,selection=sel,HLT2=hlt)
-        self.registerLine(sline)
-
-        # pseudo double topo line
-        sline = StrippingLine('PseudoDoubleTopoLine',1.0,
-                              selection=makeDoubleTopo(topoKaons,config['BB']),
-                              HLT2=hlt)
         self.registerLine(sline)
 
         # B->D0X inclusive line
