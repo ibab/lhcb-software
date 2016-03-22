@@ -455,22 +455,7 @@ ROOT.TH3D . __reversed__ = _h3_iter_reversed_
 ## C++ function for 1D-histogram interpolation
 #  @see Gaudi::Math::HistoInterpolation
 #  @see Gaudi::Math::HistoInterpolation::interpolate_1D
-_interpolate_1D_ = cpp.Gaudi.Math.HistoInterpolation.interpolate_1D
-try :
-    ##
-    h1 = ROOT.TH1D(hID(),'test',10,0,1)
-    v   = _interpolate_1D_ ( h1 , 0.5 , 2 , False )
-    logger.info ('1D-interpolation: everything is fine') 
-    ##
-except TypeError :
-    ##
-    _tmp_interp_tmp_ = cpp.Gaudi.Math.HistoInterpolation.interpolate_1D
-    ##
-    def _interpolate_1D_ ( histo , x , order = 1 , edges = True ) :
-        return  _tmp_interp_tmp_ ( h1 , x , order )
-    ##
-    logger.warning ('1D-interpolation: "edges" will be ignored ') 
-    
+_interpolate_1D_ = cpp.Gaudi.Math.HistoInterpolation.interpolate_1D    
 # =============================================================================
 ## C++ function for 2D-histogram interpolation
 #  @see Gaudi::Math::HistoInterpolation
@@ -2845,7 +2830,6 @@ ROOT.TH3.  chi2    = _h3_chi2_
 ROOT.TH3.  average = _h3_mean_
 
 
-
 # =============================================================================
 ## Update value of histogram from the function.
 #  For each bin the integral of the function within the bin is used.
@@ -3627,6 +3611,7 @@ def _h1_null_ ( h1 , draw = False , style = 1 ) :
 ROOT.TH1D.null = _h1_null_
 ROOT.TH1F.null = _h1_null_
 
+
 # =============================================================================
 ## get edges from the axis:
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -3644,8 +3629,6 @@ def _edges_ ( axis ) :
 
 # =============================================================================
 ROOT.TAxis.edges = _edges_
-
-
 
 
 
@@ -3818,7 +3801,6 @@ ROOT.TH2F.histoDiff = _h_diff_
 ROOT.TH2D.histoDiff = _h_diff_
 ROOT.TH3F.histoDiff = _h_diff_
 ROOT.TH3D.histoDiff = _h_diff_
-
 
 
 
@@ -4036,9 +4018,8 @@ ROOT.TH1 . scale      = _h_scale_
 
 
 
-
-
 HStats   = cpp.Gaudi.Utils.HStats
+
 
 # =============================================================================
 ## calculate bin-by-bin momenta 
@@ -4267,8 +4248,6 @@ ROOT.TH1D. level = _level_
 ROOT.TH1F. level = _level_
 ROOT.TH1D. null  = _null_
 ROOT.TH1F. null  = _null_
-
-
 
 # =============================================================================
 ## make the solution for equation   h(x)=v

@@ -8,6 +8,15 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2016-03-22 - Vanya Belyaev
+
+ - add possibility to load ROOT macros from command line
+    ostap  a.py  b.py c.C d.C+ e.C++ 
+ - add new command line option -l
+    ostap -l a.C++ b.C++ 
+ - remove temporary fix for 1D-interpolation
+ - TTree.withCuts : make default value of 'progress' argument to be false 
+ 
 ! 2016-03-16 - Vanya Belyaev
  - convert "--command" argument from the single command to the list of commands
 

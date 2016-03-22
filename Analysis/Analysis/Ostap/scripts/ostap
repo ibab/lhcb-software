@@ -171,6 +171,14 @@ def parse_args ( ) :
         help    = "ROOT/python modules to be imported [default: %(default)s]",
         default = []  )
     #
+    parser.add_argument ( 
+        "-l" , "--load"        ,
+        metavar = "LOAD"       ,
+        nargs   = '*'          ,
+        action  = Collect      , 
+        help    = "ROOT macros to be loaded [default: %(default)s]",
+        default = []  )
+    #
     parser.add_argument (
         '-w'                       ,
         '--with-context'           ,
@@ -370,7 +378,6 @@ for pattern in arguments.files :
             from Ostap.TFileDeco import ROOTCWD 
             try :
                 with ROOTCWD() :
-                    print 'HERE', _f 
                     f = ROOT.TFile.Open( _f , 'READ')
                     root_files [ name ] = f 
                     logger.info ("Open ROOT file '%s'" % _f )
@@ -403,6 +410,20 @@ for pattern in arguments.files :
                 # - Interactive mode: print traceback and continue 
                 logger.error ('Failure to execute "%s"'     % _f  , exc_info = True ) 
 
+        elif dot and ext in ( 'C'   , 'C+'   , 'C++'  ) :
+            
+            logger.info  ("Try to load macro '%s'" % _f )
+            sc   = ROOT.gROOT.LoadMacro ( _f )
+            if sc :
+                # - Interactive mode: print traceback and continue
+                if arguments.batch :
+                    raise RuntimeError, 'Failure to load macro "%s" code:%d' % ( _f , sc ) 
+                else :
+                    logger.error       ('Failure to load macro "%s" code:%d' % ( _f , sc ) )
+            else :
+                logger.debug ('Loaded macro "%s" code:%d' % ( _f , sc ) )
+            del sc 
+
         ## execute Ostap-script 
         elif fok and name and dot and ext in ( 'ost' , 'ostp' , 'ostap' ) :
 
@@ -429,8 +450,21 @@ for pattern in arguments.files :
 
             # - Interactive mode: print error message and continue 
             logger.error ("Unknown command line symbol/pattern '%s'/'%s'" % ( _f , pattern )  )
-            
 
+## load ROOT macros 
+for l in arguments.load :
+    logger.info  ("Try to load macro '%s'" % l )
+    sc   = ROOT.gROOT.LoadMacro ( l )
+    if sc :
+        # - Interactive mode: print traceback and continue
+        if arguments.batch :
+            raise RuntimeError, 'Failure to load macro "%s" code:%d' % ( l , sc ) 
+        else :
+            logger.error       ('Failure to load macro "%s" code:%d' % ( l , sc ) )
+    else :
+        logger.debug ('Loaded macro "%s" code:%d' % ( l , sc ) )
+    del sc 
+    
 
 ## list names of opened ROOT files 
 if root_files :
@@ -444,7 +478,7 @@ if root_files :
         okeys = rfile.keys ()
         okeys.sort()
         logger.info('%2d: %s #keys:%d: %s' % ( _n , k , len(okeys) , okeys ) )
-        
+
 # =============================================================================
 ## command to be executed:
 for cmd in arguments.Commands :

@@ -87,10 +87,14 @@ from Ostap.Core import ( cpp      ,
                          zechEff  , wilsonEff , agrestiCoullEff , 
                          iszero   , isequal   ,
                          isint    , islong    , natural_entry   ) 
-#
+## silently load RooFit library 
+from Ostap.Utils import mute
+with mute() : _tmp = ROOT.RooRealVar
+del mute
+
 iLevel = int( ROOT.gErrorIgnoreLevel ) 
 ROOT.gROOT.ProcessLine("gErrorIgnoreLevel = 2001; " ) 
-    
+
 
 # =============================================================================
 ## decorate histograms 

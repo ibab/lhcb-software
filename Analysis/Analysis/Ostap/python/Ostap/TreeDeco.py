@@ -47,7 +47,7 @@ _large = 2**64
 #  @see Analysis::Formula
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-05-06
-def _iter_cuts_ ( self , cuts , first = 0 , last = _large , progress = True ) :
+def _iter_cuts_ ( self , cuts , first = 0 , last = _large , progress = False ) :
     """
     Iterator over ``good events'' in TTree/TChain:
     
