@@ -227,7 +227,7 @@ StatusCode MatchVeloTTMuon::initialize()
       m_padSizeY[s * nRegions + r] = m_det->getPadSizeY( s, r );
     }
   }
-  
+
   return sc;
 }
 
@@ -325,7 +325,7 @@ void MatchVeloTTMuon::i_findSeeds( const LHCb::Track& seed,
 
   double xWindow = 0., yWindow = 0.;
   std::tie(xWindow, yWindow) = m_window.at(seedStation);
-  
+
   if (seed.hasTT()){
     //Use VeloTT info to get the charge of the seed.
     double tan = 0;
@@ -447,7 +447,7 @@ void MatchVeloTTMuon::i_addHits( Candidate& seed ) const
 
     double xWindow = 0., yWindow = 0.;
     std::tie(xWindow, yWindow) = m_window.at(s);
-    
+
     // Calculate window in x and y for this station
     double yMuon = 0., yRange = 0;
     seed.yStraight( zStation, yMuon, yRange );
@@ -574,6 +574,7 @@ void MatchVeloTTMuon::i_fitCandidate( Candidate& candidate ) const
   candidate.chi2() = std::get<2>(fitX) + std::get<2>(fitY);
   candidate.slope() = std::get<1>(fitX);
   candidate.p() = momentum(candidate.slope() - candidate.tx() );
+  candidate.fitted() = true;
 
   // Some plots for monitoring purposes
   if ( produceHistos() ) {

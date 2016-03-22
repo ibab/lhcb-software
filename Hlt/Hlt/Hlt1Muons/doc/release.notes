@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+! 2016-03-22 - Roel Aaij
+ - Mark a candidate fitted, once it has been fitted.
+
 ! 2016-03-17 - Roel Aaij
  - Add check on candidate fit status before using the chi^2
  - Add python scripts and algorithms that can be used to tune MatchVelo(TT)Muon
@@ -15,15 +18,15 @@
  - Adding IsMuonTightTool: like IsMuonTool but for the crossed hits.
 
 ! 2016-02-16 - Sascha Stahl
- - MatchVeloTTMuon: Fix search window, add upper momentum cut ("MaxPt" = 750 MeV). 
-   Added point in magnet as constraint in the fit. Cleaned code. 
+ - MatchVeloTTMuon: Fix search window, add upper momentum cut ("MaxPt" = 750 MeV).
+   Added point in magnet as constraint in the fit. Cleaned code.
 
 ! 2016-02-13 - Gerhard Raven
  - follow const-ification of Tr/TrackInterfaces
 
 ! 2016-02-10 - Jessica Prisciandaro
-- MatchVeloTTMuon is modified: same extrapolation and add_Hits of VeloMuonMatch. 
-  Use VeloTT infos to determine how the particle is bent. 
+- MatchVeloTTMuon is modified: same extrapolation and add_Hits of VeloMuonMatch.
+  Use VeloTT infos to determine how the particle is bent.
 
 !========================= Hlt1Muons v1r14p1 2015-07-23 =========================
 
@@ -37,7 +40,7 @@
  - Update default cut values.
 
 ! 2015-04-03 - Vasileios Syropoulos
- - When extrapolating from M3 to the next station, assume that y hit coordinates are on a 
+ - When extrapolating from M3 to the next station, assume that y hit coordinates are on a
    straight line originating from TT. Nothing changes for the x hit coordinates.
  - Fixed small error in the chi2 calculation.
 
@@ -51,14 +54,14 @@
      by instantiating MatchVeloMuon inside MatchVeloTTMuon.
   - MatchVeloTTMuon: Switch to MasterExtrapolator for now. To be revisited.
   - MatchVeloMuon: Updated configuables to according to HltTracking/HltRecoConf.py
- 
+
 ! 2015-03-20 - Vasileios Syropoulos
  - MatchVeloMuon, MatchVeloTTMuon, HltVeloIsMuon use the Common code base of Muon/MuonID.
- - In MatchVeloMuon.h, MatchVeloTTMuon.h: seeds() method return by reference and not by value. 
+ - In MatchVeloMuon.h, MatchVeloTTMuon.h: seeds() method return by reference and not by value.
  - In MatchVeloMuon, MatchVeloTTMuon:
    - Added foiInfo method, for visualising foi.
  - MatchVeloTTMuon: Different FoITolerance factor for x and y foi.
- 
+
 ! 2015-03-12 - Roel Aaij, Kevin Dungs
  - Add dependency on Muon/MuonID to CMakeLists.txt.
  - Fix several mistakes in the infrastructure as pointed out by Roel.
@@ -81,7 +84,7 @@
  - Modified MatchVeloTTMuon.{cpp,h}, to account for veloTT candidates w/o TT hits.
 
 ! 2014-12-18 - Vasileios Syropoulos
- - Added scripts MatchVeloTTMuon.{cpp,h}. Start from VeloTT tracks and 
+ - Added scripts MatchVeloTTMuon.{cpp,h}. Start from VeloTT tracks and
    propagate to M3 using Tr/ITrackExtrapolator/TrackMasterExtrapolator.
 
 !========================= Hlt1Muons v1r12 2015-01-20 =========================
@@ -130,7 +133,7 @@
  - add IMatchVeloMuon interface to MatchVeloMuon.
 
 ! 2014-10-10 - Gerhard Raven, Roel Aaij
- - add missing declareInterface<ITracksFromTrack> to MatchVeloMuon 
+ - add missing declareInterface<ITracksFromTrack> to MatchVeloMuon
 
 ! 2014-10-09 - Gerhard Raven
  - remove Hlt1MuonHit from the dictionary, as that requires the default c'tor
@@ -154,7 +157,7 @@
  - Hlt1MuonHit: replace individual doubles by std::array<double,6>
  - Candidate: remove unused constructor
  - MatchVeloMuon: remove unused singleton_pool of Candidates
- - Utilize move semantics to Keep the original Hlt1MuonHit-s by 
+ - Utilize move semantics to Keep the original Hlt1MuonHit-s by
    value in vector in HitManager & MuonStation for simpler/better
    memory managment / layout
 
@@ -173,7 +176,7 @@
 ! 2014-05-04 - Gerhard Raven
  - speed up hit partitioning and sorting in Hlt1MuonStation
  - replace unordered_multimap with array<std::vector ,5> in Hlt1MuonHitManager
- - optimize IsMuon 
+ - optimize IsMuon
 
 !========================= Hlt1Muons v1r7 2014-02-20 =========================
 ! 2014-01-28 - Gerhard Raven
@@ -181,8 +184,8 @@
  - move another compile-time constant class members out of class
 
 ! 2014-01-26 - Gerhard Raven
- - fix bug in HltVeloIsMuon: it 'clear's a vector, and subsequently writes beyond 
-    the (now zero!) size. It probably intended an 'assign(size(),0)', but that is 
+ - fix bug in HltVeloIsMuon: it 'clear's a vector, and subsequently writes beyond
+    the (now zero!) size. It probably intended an 'assign(size(),0)', but that is
     redundant, as new values gets assigned explictly to all entries
  - move class members which are compile time constants out of class
  - use std::array instead of std::vector where possible
@@ -196,7 +199,7 @@
  - run clang-format to unify code formatting
 
 ! 2014-01-22 - Gerhard Raven
- - more C++11 
+ - more C++11
  - use addSortedToLhcbIDs to add sorted list in one shot instead of addToLhcbIDs
    to add individual hits
  - make Hlt1MuonHit a concrete class, add 'final' specifier, do not copy stationid
@@ -292,4 +295,3 @@ HltTracking.
 
 ! 2011-02-02 - Roel Aaij
  - initial import
-
