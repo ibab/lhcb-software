@@ -166,6 +166,7 @@ def parse_args ( ) :
     parser.add_argument ( 
         "-m" , "--macros"      ,
         metavar = "MACROS"     ,
+        dest    = 'Macros'     ,
         nargs   = '*'          ,
         action  = Collect      , 
         help    = "ROOT macros to be loaded [default: %(default)s]",
@@ -423,7 +424,7 @@ for pattern in arguments.files :
             logger.error ("Unknown command line symbol/pattern '%s'/'%s'" % ( _f , pattern )  )
 
 ## load ROOT macros 
-for m in arguments.macros :
+for m in arguments.Macros :
     logger.info  ("Try to load macro '%s'" % m )
     sc   = ROOT.gROOT.LoadMacro ( m )
     if sc :

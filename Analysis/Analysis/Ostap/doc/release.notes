@@ -9,6 +9,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2016-03-22 - Vanya Belyaev
+ - rename "-l/--load" to "-m/--macros"
+
+! 2016-03-22 - Vanya Belyaev
 
  - add possibility to load ROOT macros from command line
     ostap  a.py  b.py c.C d.C+ e.C++ 
