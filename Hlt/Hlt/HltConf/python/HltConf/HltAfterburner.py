@@ -20,7 +20,7 @@ class HltAfterburnerConf(LHCbConfigurableUser):
                  "RecSummaryLocation"      : "Hlt2/RecSummary",
                  "AddAdditionalTrackInfos" : True,
                  "AddPIDToDownstream"      : True,
-                 "Hlt2DownstreamFilter"    : "HLT_TURBOPASS_RE('Hlt2.*DDTurbo.*Decision') | HLT_TURBOPASS_RE('Hlt2.*Spec.*LambdaTurbo.*Decision') | HLT_TURBOPASS_RE('Hlt2.*Lcp.*Lam.*Turbo.*Decision')",
+                 "Hlt2DownstreamFilter"    : "HLT_TURBOPASS_RE('^Hlt2CharmHad.*KS0DD.*Decision$') | HLT_TURBOPASS_RE('^Hlt2CharmHad.*LamDD.*Decision$') | HLT_TURBOPASS_RE('^Hlt2CharmHad.*_DD.*$') | HLT_TURBOPASS_RE('^Hlt2(CharmHadD02KmPipTurbo|CharmHadDstp2D0Pip_D02KmPipTurbo|CharmHadDpToKmPipPipTurbo|CharmHadDpToKmPipPip_ForKPiAsymTurbo|CharmHadDspToKmKpPipTurbo|CharmHadLcpToPpKmPipTurbo|CharmHadXic0ToPpKmKmPipTurbo|CharmHadXicpToPpKmPipTurbo|CharmHadDp2KS0KS0KpTurbo|CharmHadDp2KS0KS0PipTurbo|CharmHadLcp2LamKmKpPip_Lam2PpPimTurbo|CharmHadLcp2LamKmPipPip_Lam2PpPimTurbo|CharmHadDsp2KS0KS0KpTurbo|CharmHadDsp2KS0KS0PipTurbo)Decision$')",
                  "Hlt2Filter"              : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')"
                 }
 
@@ -36,14 +36,17 @@ class HltAfterburnerConf(LHCbConfigurableUser):
         Afterburner = self.getProp("Sequence") if self.isPropertySet("Sequence") else None
         if not Afterburner:
             return
+        AfterburnerFilterSeq = Sequence("HltAfterburnerFilterSequence" )
+        Afterburner.Members += [AfterburnerFilterSeq]
         if self.getProp("Hlt2Filter"):
             from DAQSys.Decoders import DecoderDB
             decoder = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
             from Configurables import LoKi__HDRFilter   as HDRFilter
             hlt2Filter = HDRFilter('HltAfterburnerHlt2Filter', Code = self.getProp("Hlt2Filter"),
                                    Location = decoder.listOutputs()[0])
-            Afterburner.Members += [hlt2Filter]
-
+            AfterburnerFilterSeq.Members += [hlt2Filter]
+        AfterburnerSeq = Sequence("HltAfterburnerSequence", IgnoreFilterPassed = True)
+        AfterburnerFilterSeq.Members += [ AfterburnerSeq ] 
         if self.getProp("EnableHltRecSummary"):
             from Configurables import RecSummaryAlg
             seq = Sequence("RecSummarySequence")
@@ -83,7 +86,7 @@ class HltAfterburnerConf(LHCbConfigurableUser):
                                     MuonCoordsLocation = decoders['Muon'][1],
                                     MuonTracksLocation = decoders['MuonTr'][1])
             seq.Members = [recSeq, summary]
-            Afterburner.Members += [seq]
+            AfterburnerSeq.Members += [seq]
 
         if self.getProp("AddAdditionalTrackInfos"):
             from GaudiKernel.SystemOfUnits import mm
@@ -115,7 +118,7 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             
             infoSeq.Members += [trackClones]
 
-            Afterburner.Members += [infoSeq]
+            AfterburnerSeq.Members += [infoSeq]
 
             # Add VeloCharge to protoparticles for dedx
             veloChargeSeq = Sequence("VeloChargeSequence")
@@ -126,7 +129,7 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             addVeloCharge.ProtoParticleLocation = protoLocation
             decodeVeloFullClusters = DecoderDB["DecodeVeloRawBuffer/createVeloClusters"].setup()
             veloChargeSeq.Members +=  [checkProto, decodeVeloFullClusters, addVeloCharge]
-            Afterburner.Members += [veloChargeSeq]
+            AfterburnerSeq.Members += [veloChargeSeq]
 
 
         if self.getProp("AddPIDToDownstream"):
@@ -180,4 +183,4 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             downstreamCombine.ProtoParticleLocation   = downstreamTracking.hlt2ChargedNoPIDsProtos().outputSelection()
             from Hlt2Lines.Utilities.Utilities import uniqueEverseen
             downstreamPIDSequence.Members += [ downstreamMuon,downstreamRichDLL,downstreamCombine ]
-            Afterburner.Members += [ downstreamPIDSequence ]
+            AfterburnerSeq.Members += [ downstreamPIDSequence ]

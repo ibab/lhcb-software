@@ -4,6 +4,10 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2016-03-22 - Sascha Stahl
+ - Update filter for Downstream RICH pid.
+ - Fix Hlt2 filter in AfterBurner. Required to add additional sequences.
+
 ! 2016-03-21 - Sascha Stahl
  - TrackCloneDistance: Use long and downstream tracks in a single instance.
 
