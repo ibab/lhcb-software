@@ -268,7 +268,7 @@ def xget( ids , cas = ConfigAccessSvc() ) :
     fetch = [ id for id in ids if id not in xget.forest.keys() ] 
     if fetch : 
         xget.forest.update( execInSandbox( _xget, fetch, cas ) ) 
-        
+	
     forest = dict() 
     for id in ids : forest[id] = xget.forest[id] 
     return forest 
@@ -902,32 +902,32 @@ def list_alg_properties(tree, algname='') :
     alg_dict = { 'MyTools' : {} }
 
     for i in tree :
-       if not i.leaf : continue
+        if not i.leaf : continue
 
-       tool = False
-       if i.leaf.fullyQualifiedName == algname : 
-           tool = False
-       else : 
-           stralgname = algname.split('/')[1]
-           if i.leaf.fullyQualifiedName.find('/' + stralgname + '.')>=0 : 
-              tool = True
-              toolname = i.leaf.fullyQualifiedName.split('.')[1]
-           else : 
-              continue
+        tool = False
+        if i.leaf.fullyQualifiedName == algname : 
+            tool = False
+        else : 
+            stralgname = algname.split('/')[1]
+            if i.leaf.fullyQualifiedName.find('/' + stralgname + '.')>=0 : 
+                tool = True
+                toolname = i.leaf.fullyQualifiedName.split('.')[1]
+            else : 
+                continue
 
-       if i.leaf.fullyQualifiedName in printed_algs : continue
-       printed_algs += [ i.leaf.fullyQualifiedName ] 
+        if i.leaf.fullyQualifiedName in printed_algs : continue
+        printed_algs += [ i.leaf.fullyQualifiedName ] 
 
 #       print '  ', i.leaf.fullyQualifiedName, tool
 
-       if not tool : 
-          for (k,v) in i.leaf.properties().iteritems() :
-             alg_dict[k] = v
-       else : 
-          if toolname not in alg_dict['MyTools'].keys() : 
-             alg_dict['MyTools'][toolname] = {}
-          for (k,v) in i.leaf.properties().iteritems() :
-             alg_dict['MyTools'][toolname][k] = v
+        if not tool :
+            for (k,v) in i.leaf.properties().iteritems() :
+                alg_dict[k] = v
+        else :
+            if toolname not in alg_dict['MyTools'].keys() : 
+                alg_dict['MyTools'][toolname] = {}
+            for (k,v) in i.leaf.properties().iteritems() :
+                alg_dict['MyTools'][toolname][k] = v
 
     return alg_dict
 
@@ -970,8 +970,7 @@ def make_html_summary(db, stripping, commonparts) :
                 prescale = '<font color="red"> %5.3f </font>' % float(prescale)
             else : 
                 prescale = '1.0'
-            htmlfile.write('<tr><td><a href="%s/%s.html"> %s </a></td><td> %s </td><td> %s </td></tr>\n' 
-	                   % (stream.lower(), line.lower(), line, db[stream][line]['Properties']['OutputLocation'], prescale))
+            htmlfile.write('<tr><td><a href="%s/%s.html"> %s </a></td><td> %s </td><td> %s </td></tr>\n'  % (stream.lower(), line.lower(), line, db[stream][line]['Properties']['OutputLocation'], prescale))
         htmlfile.write('</table>')
 
     htmlfile.write('<h2><a name="stdbasic">Standard basic particles:</a></h2>\n')
@@ -1064,11 +1063,11 @@ def make_members_line(line, stripping, streamname, linename, htmlfile, alg, part
         v = line['Algs'][alg][k]
 	
         if k == 'CombinationCut' or k == 'MotherCut' or k == 'Code' : 
-          v2 = lokiparse(v)
+            v2 = lokiparse(v)
 	  
-          if v != v2 : 
-            v = '<div id="indent%s_%d" class="hidden">%s</div><div id="unindent%s_%d" class="unhidden">%s</div>' % (n, nn, v2, n, nn, v)
-            k = k + '''<p align="right"><a href="javascript:showhide2('indent%s_%d');">Indent on/off</a></p>''' % (n, nn) 
+            if v != v2 : 
+                v = '<div id="indent%s_%d" class="hidden">%s</div><div id="unindent%s_%d" class="unhidden">%s</div>' % (n, nn, v2, n, nn, v)
+                k = k + '''<p align="right"><a href="javascript:showhide2('indent%s_%d');">Indent on/off</a></p>''' % (n, nn) 
 	
         if v == '' : v = 'None'
 

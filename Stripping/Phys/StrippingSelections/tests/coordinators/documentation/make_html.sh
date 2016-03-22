@@ -1,7 +1,7 @@
 #!/bin/sh
 
-export TCK='0x32211202'
-export STRIP='stripping23'
+export TCK='0x39102111'
+export STRIP='stripping21r1p1'
 
 python utils.py ${TCK}
 rm -f config.tar.lock

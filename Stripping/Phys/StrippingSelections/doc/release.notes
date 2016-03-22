@@ -4,7 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
-! 2016-03-17  Jon Harrison
+! 2016-03-22 - Andrea Contu
+ - Updated code for web documentation
+
+! 2016-03-17 - Jon Harrison
  - Optimised cuts in StrippingCharm/StrippingD2XMuMuSS
 
 !========================== StrippingSelections v4r10 2016-03-02 ===============
