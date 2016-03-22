@@ -164,16 +164,8 @@ def parse_args ( ) :
         default = []           )
     #
     parser.add_argument ( 
-        "-m" , "--modules"     ,
-        metavar = "MODULE"     ,
-        nargs   = '*'          ,
-        action  = Collect      , 
-        help    = "ROOT/python modules to be imported [default: %(default)s]",
-        default = []  )
-    #
-    parser.add_argument ( 
-        "-l" , "--load"        ,
-        metavar = "LOAD"       ,
+        "-m" , "--macros"      ,
+        metavar = "MACROS"     ,
         nargs   = '*'          ,
         action  = Collect      , 
         help    = "ROOT macros to be loaded [default: %(default)s]",
@@ -344,27 +336,6 @@ del with_ipython, parse_args, getLogger
 del _startups,_executed,_s,_ss 
 
 # =============================================================================
-## import modules
-# ============================================================================= 
-if arguments.modules :
-    import importlib 
-    for m in arguments.modules :
-        _m = importlib.import_module ( m )
-        logger.info ("Imported module '%s' from '%s' " % ( mod.__name__ , mod.__file__ ) )
-        ## play a bit with names 
-        p,s,r = m.partition('.')
-        if s : 
-            _m2 = importlib.import_module(p)
-            if not locals().has_key( p ) : 
-                locals()[p] = _m2
-                del _m2                ## avoid pollution of local namespace
-        else :
-            locals()[m] = _m
-            del _m                     ## avoid pollution of local namespace 
-        del p,s,r                      ## avodi pollution of local namesapce 
-    del importlib                      ## avoid pollution of local namespace
-    
-# =============================================================================
 ## execute the files, defined as arguments
 # =============================================================================
 root_files = {}
@@ -452,17 +423,17 @@ for pattern in arguments.files :
             logger.error ("Unknown command line symbol/pattern '%s'/'%s'" % ( _f , pattern )  )
 
 ## load ROOT macros 
-for l in arguments.load :
-    logger.info  ("Try to load macro '%s'" % l )
-    sc   = ROOT.gROOT.LoadMacro ( l )
+for m in arguments.macros :
+    logger.info  ("Try to load macro '%s'" % m )
+    sc   = ROOT.gROOT.LoadMacro ( m )
     if sc :
         # - Interactive mode: print traceback and continue
         if arguments.batch :
-            raise RuntimeError, 'Failure to load macro "%s" code:%d' % ( l , sc ) 
+            raise RuntimeError, 'Failure to load macro "%s" code:%d' % ( m , sc ) 
         else :
-            logger.error       ('Failure to load macro "%s" code:%d' % ( l , sc ) )
+            logger.error       ('Failure to load macro "%s" code:%d' % ( m , sc ) )
     else :
-        logger.debug ('Loaded macro "%s" code:%d' % ( l , sc ) )
+        logger.debug ('Loaded macro "%s" code:%d' % ( m , sc ) )
     del sc 
     
 
