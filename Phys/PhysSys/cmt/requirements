@@ -1,12 +1,7 @@
 package PhysSys
-version v21r1
+version v21r2
 
 branches doc cmt
-
-##################################################
-# Patched package just for this release !
-use  HltDAQ    v4r25p1    Hlt
-##################################################
 
 #===================================================================
 
@@ -16,7 +11,7 @@ use  DaVinciUtils               v1r1p1   Phys    # Current DV Maintainer
 use  DaVinciKernel              v12r4    Phys    # Current DV Maintainer
 use  SelectionLine              v1r7     Kernel  # Gerhard Raven
 use  SelPy                      v4r4     Phys    # Current DV Maintainer
-use  PhysSelPython              v9r9     PhysSel # Current DV Maintainer
+use  PhysSelPython              v9r10    PhysSel # Current DV Maintainer
 
 #===================================================================
 
@@ -25,7 +20,7 @@ use  ProtoParticleFilter        v1r9     Phys    # Current DV Maintainer
 use  DaVinciTransporter 	v3r14    Phys    # Current DV Maintainer
 use  ParticleMaker      	v6r17    Phys    # Current DV Maintainer
 use  VertexFit			v6r24    Phys    # Yuehong Xie
-use  LoKiFitters                v4r20    Phys    # Vanya Belyaev
+use  LoKiFitters                v4r21    Phys    # Vanya Belyaev
 use  DecayTreeFitter            v1r22    Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2p4   Phys    # Current DV Maintainer
 use  HighPtJets                 v1r9     Phys    # Marcin Kucharczyk
@@ -50,10 +45,10 @@ use  LoKiUtils                  v1r3p1   Phys    # Vanya Belyaev
 use  LoKiJets                   v6r15    Phys    # Vanya Belyaev, Victor Coco
 use  LoKiAlgo                   v9r11    Phys    # Vanya Belyaev
 use  LoKiArrayFunctors          v11r5    Phys    # Vanya Belyaev
-use  LoKiPhys                   v11r7    Phys    # Vanya Belyaev
+use  LoKiPhys                   v11r9    Phys    # Vanya Belyaev
 use  LoKiProtoParticles         v3r2     Phys    # Vanya Belyaev
 use  LoKi                       v9r0p1   Phys    # Vanya Belyaev
-use  LoKiTracks                 v3r6     Phys    # Vanya Belyaev
+use  LoKiTracks                 v3r7     Phys    # Vanya Belyaev
 use  KalmanFilter               v1r17    Phys    # Vanya Belyaev
 
 #===================================================================

@@ -3,7 +3,90 @@ Package             : PhysSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v21r2>2016-03-22 Phys v21r2</A></H1><PRE>
+
+Development release for 2016 data taking.
+It is based on Gaudi v27r1, LHCb v40r1 and Rec v19r1 and uses LCG_84 with ROOT 6.06.02.
+
+- Packages updated :
+  Phys/LoKiFitters v4r21, Phys/LoKiPhys v11r9, Phys/LoKiTracks v3r7, PhysSel/PhysSelPython v9r10.
+
+- In Phys/LoKiFitters v4r21 :
+  . Improved a bit the printout to for easier debugging.
+
+- In Phys/LoKiPhys v11r9 :
+  . Phys.py: add function for transverse kinetic energy.
+
+- In Phys/LoKiTracks v3r7 :
+  . Fix to clang problem.
+  . Added the functions for tracks and state to allow easy getting the values and uncertainties
+    >>> for t in tracks : print t.pt ()
+    >>> for s in states : print t.p  ()
+    functions:
+    p,pt,theta,phi,eta,tx,ty,x,y,qOverP, ....
+
+- In PhysSel/PhysSelPython v9r10 :
+  . Added 'TupleSelection'
+    #  charm    = .... ## some selectiton object
+    #  my_tuple = TupleSelection (
+    #     'charm'            , ## unique name
+    #      [ charm ]         , ## required selections
+    #      Decay             = '[ D+ -> ^K- ^pi+ ^pi+]CC' ,
+    #      ToolList          = [ ... ]
+    #      )
+    #  # get the congigurable (for subsequent modification, if needed)
+    #  algo = mu_tuple.algorithm()
+    #  # e.g. define the branches:
+    #  algo.addBranches ( ... )
+    #  # make use of nice decoration yb Rob Lambert
+    #  tool1 = algo.addTupleTool ( .....  )
+    #  ...
+  . Put all symbols into new file PhysSelPython/Selections.py
+  . Minor fix in CombineSelections.
+  . Added few more helper objects:
+    - CombineSelection
+    - Combine3BodySelection
+    - Combine4BodySelection
+    #  from StandardParticles import StdAllLoosePions   as pions
+    #  from StandardParticles import StdAllLooseKaons   as kaons
+    #  charm = CombineSelection (
+    #     'charm'            , ## unique name
+    #      [ pions , kaons ] , ## required selections
+    #      DecayDescriptor  = '[ D0 -> K- pi+]cc'    ,
+    #      CombinationCut   = 'in_range  (1.6 * GeV , AM , 2.0 * GeV) ' ,
+    #      MotherCut        = 'in_range  (1.6 * GeV ,  M , 2.0 * GeV) & ( CHI2VX < 10 ) ' ,
+    #      )
+
+    #  charm = Combine3BodySelection (
+    #     'charm'            , ## unique name
+    #      [ pions , kaons ] , ## required selections
+    #      DecayDescriptor  = '[ D+ -> K- pi+ pi+]cc'    ,
+    #      Combination12Cut = ' ( AM < 1.8 * GMeV ) & ( ACHI2DOCA(1,2)<10 ) ' ,
+    #      CombinationCut   = ''' in_range  (1.6 * GeV , AM , 2.0 * GeV)
+    #                         & ( ACHI2DOCA(1,3) < 10 )
+    #                         & ( ACHI2DOCA(2,3) < 10 )
+    #                         ''',
+    #      MotherCut        = 'in_range  (1.6 * GeV ,  M , 2.0 * GeV) & ( CHI2VX < 10 ) ' ,
+    #      )
+
+    #  charm = Combine4BodySelection (
+    #     'charm'            , ## unique name
+    #      [ pions , kaons ] , ## required selections
+    #      DecayDescriptor   = '[ D+ -> K- pi+ pi+ pi-]cc'    ,
+    #      Combination12Cut  = ' ( AM < 1.8 * GeV )  & ( ACHI2DOCA(1,2)<10 ) ' ,
+    #      Combination123Cut = '''( AM < 1.8 * GeV )
+    #                              & ( ACHI2DOCA(1,3)<10 )
+    #                              & ( ACHI2DOCA(2,4)<10 )
+    #                          ''',
+    #      CombinationCut    = ''' in_range  (1.6 * GeV , AM , 2.0 * GeV)
+    #                         & ( ACHI2DOCA(1,4) < 10 )
+    #                         & ( ACHI2DOCA(2,4) < 10 )
+    #                         & ( ACHI2DOCA(3,4) < 10 )
+    #                         ''',
+    #      MotherCut        = 'in_range  (1.6 * GeV ,  M , 2.0 * GeV) & ( CHI2VX < 10 ) ' ,
+
 </PRE><H1><A NAME=v21r1>2016-03-11 Phys v21r1</A></H1><PRE>
+
 Development release for 2016 data taking.
 Also needed for the stack for the run-I restripping.
 It is based on Gaudi v27r0, LHCb v40r0 and Rec v19r0 and uses LCG_83 with ROOT 6.06.00.
