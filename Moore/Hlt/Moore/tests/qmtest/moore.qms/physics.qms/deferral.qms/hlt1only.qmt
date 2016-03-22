@@ -21,7 +21,7 @@
   </argument>
   <argument name="args"><set>
     <text>../options/Moore_Hlt1And2.py</text>
-    <text>../options/Input_Default.py</text>
+    <text>../options/Input_2015_0x0050.py</text>
     <text>../options/default-threshold.py</text>
     <text>../options/Moore_Hlt1Only.py</text>
     <text>--option</text>
@@ -32,7 +32,7 @@ myname='moore.physics.deferral.hlt1only'
 
 from Moore.QMTest.MooreTests import compareTimingTableFiles
 
-compareTimingTableFiles(myname,result,causes,"deferral.hlt1only.csv","physics.2012.csv","Hlt1")
+compareTimingTableFiles(myname,result,causes,"deferral.hlt1only.csv","physics.2016_draft.csv","Hlt1")
 
 #count error lines, shouldn't be any warnings or errors, ideally
 
