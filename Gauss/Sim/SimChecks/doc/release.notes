@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2016-03-22 - Dmitry Popov
+ - Removed the settings which do not change the Gauss' defaults, replaced
+   the explicit tags with a $GAUSSROOT import.
+
 !========================== SimChecks v1r7 2016-03-07 ========================
 ! 2016-03-05 - Luca Pescatore
   - Minor bug fix in TargetSummary.py that caused plot creation to break

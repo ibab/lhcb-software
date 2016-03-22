@@ -5,38 +5,37 @@
 ## In order for this to work you also need Gauss-Job.py and MaterialEvalGun.py ##
 ##                                                                             ##
 ##  @author : L.Pescatore                                                      ##
-##  @date   : last modified on 2015-06-29                                      ##
+##  @date   : last modified on 2016-03-22                                      ##
 #################################################################################
 
 from Gaudi.Configuration import *
 from Gauss.Configuration import *
-from Configurables import CondDB, LHCbApp, CondDBAccessSvc
-from Configurables import DDDBConf
+from Configurables import CondDB, LHCbApp
 
+#from Configurables import DDDBConf, CondDBAccessSvc
 #DDDBConf(DbRoot = "myDDDB/lhcb.xml")
-LHCbApp().DDDBtag   = "dddb-20130929-1"
-LHCbApp().CondDBtag = "sim-20130522-1-vc-md100"
-CondDB.LocalTags = {"DDDB" : ["radlength-20141010", "radlength-20141003","radlength-20140908"] }
+
+importOptions("$GAUSSROOT/options/Gauss-2011.py")
+CondDB.LocalTags = { "DDDB" : [ "radlength-20141010", "radlength-20141003", "radlength-20140908" ] }
 
 from Configurables import Gauss
 from Gauss.Configuration import *
 import sys
 
 Gauss().Production = 'PGUN'
-Gauss().PhysicsList = {"Em":'NoCuts', "Hadron":'FTFP_BERT', "GeneralPhys":True, "LHCbPhys":True}
-
-
-Gauss().DetectorGeo = { "Detectors": ['PuVeto', 'Velo', 'Rich1', 'Rich2' ] } 
-Gauss().DetectorSim = { "Detectors": ['PuVeto', 'Velo', 'Rich1', 'Rich2' ] } 
-Gauss().DetectorMoni = { "Detectors": ['PuVeto', 'Velo', 'Rich1', 'Rich2' ] }
-importOptions ("$GAUSSOPTS/RICHesOff.py"  )
 Gauss().DeltaRays = False
+
+Gauss().DetectorGeo = { "Detectors": [ 'PuVeto', 'Velo', 'Rich1', 'Rich2' ] }
+Gauss().DetectorSim = { "Detectors": [ 'PuVeto', 'Velo', 'Rich1', 'Rich2' ] }
+Gauss().DetectorMoni = { "Detectors": [ 'PuVeto', 'Velo', 'Rich1', 'Rich2' ] }
+
+importOptions("$GAUSSOPTS/RICHesOff.py")
 
 def scoringGeo():
      from Configurables import GiGaInputStream
      geo = GiGaInputStream('Geo')
 
-     geo.StreamItems      += ["/dd/Structure/LHCb/BeforeMagnetRegion/Scoring_Plane1"]
+     geo.StreamItems += ["/dd/Structure/LHCb/BeforeMagnetRegion/Scoring_Plane1"]
     
 appendPostConfigAction(scoringGeo)
 
