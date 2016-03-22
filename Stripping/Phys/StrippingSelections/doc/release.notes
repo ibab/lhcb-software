@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-03-22 - Ricardo Vazquez Gomez
+ - Remove StrippingLb2pMuNuVub.py from the __init__.py file in StrippingSL 
+
 ! 2016-03-22 - Andrea Contu
  - Updated code for web documentation
 

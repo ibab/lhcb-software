@@ -10,14 +10,14 @@ _selections = ['StrippingB2DMuNuX',
                'StrippingB2DstMuNuIncl',
                'StrippingB2XTauNu',
                'StrippingB2XuMuNu',
-	       'StrippingB23MuNu',
-	       'StrippingBd2DstarMuNu',
-	       #'StrippingCharmFromBSemiForHadronAsy',
-	       #'StrippingD0ForBXX',
-	       'StrippingLb2pMuNuVub',
-	       'Strippingbhad2PMuX',
-	       #'StrippingTrackEffD0ToK3Pi
-	       ]
+	             'StrippingB23MuNu',
+	             'StrippingBd2DstarMuNu',
+	             #'StrippingCharmFromBSemiForHadronAsy',
+	             #'StrippingD0ForBXX',
+	             #'StrippingLb2pMuNuVub',
+	             'Strippingbhad2PMuX',
+	             #'StrippingTrackEffD0ToK3Pi
+	             ]
 
 for _sel in _selections :
     try :
