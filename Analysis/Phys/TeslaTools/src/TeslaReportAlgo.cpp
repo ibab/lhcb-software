@@ -32,6 +32,7 @@ TeslaReportAlgo::TeslaReportAlgo( const std::string& name,
   declareProperty( "OutputPrefix" ,         m_OutputPref   = "Tesla" );
   declareProperty( "PV" ,                   m_PV = "Offline" );
   declareProperty( "VertRepLoc" ,           m_VertRepLoc = "Hlt2/VertexReports" );
+  declareProperty( "SelRepLoc" ,            m_SelRepLoc = "Hlt2/SelReports" );
   declareProperty( "PVLoc" ,                m_PVLoc = "Turbo/Primary" );
 }
 
@@ -81,7 +82,7 @@ StatusCode TeslaReportAlgo::initialize()
 StatusCode TeslaReportAlgo::execute()
 {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-  
+
   // get string-to-dict Rel. info. locations map
   unsigned int tck = m_check->getTCK();
   if(tck!=m_lastTCK) m_RelInfoLocationsMap.clear();
@@ -97,8 +98,6 @@ StatusCode TeslaReportAlgo::execute()
       }
     }
   }
-  
-  std::string RepLoc = "Hlt2/SelReports";
 
   // For jobs with multiple versions, need to check bank header
   m_versionNum = m_check->checkBankVersion();
@@ -126,12 +125,12 @@ StatusCode TeslaReportAlgo::execute()
     //
     return StatusCode::SUCCESS;
   }
-  
+
   if ( !vtxRep ) m_PV3D=false;
   else m_PV3D=true;
   // Selection reports
-  if ( exist<LHCb::HltSelReports>( RepLoc.c_str() ) ) { // exist --> get content
-    selReports = get<LHCb::HltSelReports>( RepLoc.c_str() );
+  if ( exist<LHCb::HltSelReports>( m_SelRepLoc.c_str() ) ) { // exist --> get content
+    selReports = get<LHCb::HltSelReports>( m_SelRepLoc.c_str() );
     if ( msgLevel(MSG::DEBUG) ){
       std::vector<std::string> selnames = selReports->selectionNames();
       debug() << "Available reports:" << endmsg;
@@ -171,13 +170,13 @@ StatusCode TeslaReportAlgo::execute()
 
   // first create the shared containers
   std::stringstream ss_ProtoLoc;
-  ss_ProtoLoc << m_OutputPref << "Protos"; 
+  ss_ProtoLoc << m_OutputPref << "Protos";
   std::stringstream ss_TrackLoc;
   ss_TrackLoc << m_OutputPref << "Tracks";
   std::stringstream ss_RPIDLoc;
-  ss_RPIDLoc << m_OutputPref << "RichPIDs"; 
+  ss_RPIDLoc << m_OutputPref << "RichPIDs";
   std::stringstream ss_MPIDLoc;
-  ss_MPIDLoc << m_OutputPref << "MuonPIDs"; 
+  ss_MPIDLoc << m_OutputPref << "MuonPIDs";
   std::stringstream ss_CaloHyposLoc;
   ss_CaloHyposLoc << m_OutputPref << "CaloHypos";
   std::stringstream ss_CaloClustLoc;
@@ -212,7 +211,7 @@ StatusCode TeslaReportAlgo::execute()
     ss_PartLoc << m_OutputPref << m_inputName << "/Particles";
     //
     std::stringstream ss_VertLoc;
-    ss_VertLoc << m_OutputPref << m_inputName << "/Vertices"; 
+    ss_VertLoc << m_OutputPref << m_inputName << "/Vertices";
     //
     std::stringstream ss_P2PVLoc;
     ss_P2PVLoc << m_OutputPref << m_inputName << "/Particle2VertexRelations";
@@ -222,7 +221,7 @@ StatusCode TeslaReportAlgo::execute()
     //
     LHCb::Vertex::Container* cont_Vert = new LHCb::Vertex::Container() ;
     put( cont_Vert , ss_VertLoc.str().c_str() );
-    
+
     //
     // PV situation:
     // Need to detect if a refitted PV has been stored.
@@ -395,7 +394,7 @@ StatusCode TeslaReportAlgo::execute()
           //
 
           fillParticleInfo( newObjects_mother , Obj , motherBasic, cont_Track, &calo_mother, cont_CaloHypo, cont_CaloClust );
-          
+
           // check if we already have the protoparticle in the shared container,
           // if so use that one
           bool protoClone=false;
@@ -467,11 +466,12 @@ StatusCode TeslaReportAlgo::execute()
         }
 
         if( m_PV3D || m_refitted ) {
-          cont_P2PV->relate( Part , bestPV( Part, cont_PV ) );
+          LHCb::RecVertex* bpv = bestPV( Part, cont_PV );
+          cont_P2PV->relate( Part , bpv );
           if( msgLevel(MSG::DEBUG) ){
             debug() << "Finding related PV" << endmsg;
-            if(bestPV( Part, cont_PV )){
-              debug() << "Related PV has chi^2: " << bestPV( Part, cont_PV )->chi2() << endmsg;
+            if(bpv){
+              debug() << "Related PV has chi^2: " << bpv->chi2() << endmsg;
             }
           }
         }
@@ -497,8 +497,8 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, LHCb::Particle* Part, const LHC
     ){
 
   n+=1;
-  
-  
+
+
   LHCb::Vertex* vert_mother = new LHCb::Vertex();
   cont_Vert->insert( vert_mother );
 
@@ -511,7 +511,7 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, LHCb::Particle* Part, const LHC
       AddRelInfo(Obj_d,Part);
       continue;
     }
-    
+
     if( Obj_d->summarizedObjectCLID()==LHCb::RecVertex::classID() ) {
       if(n!=1) {
         warning() << "RecVertex found below the top level, probably indicates a shared stage refitted PVs and was then combined. The refitted PV will not be restored." << endmsg;
@@ -564,9 +564,9 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, LHCb::Particle* Part, const LHC
       newObjects_d.push_back(muon_d);
       //
       vert_mother->addToOutgoingParticles( Part_d );
-      
+
       fillParticleInfo( newObjects_d , Obj_d , d_Basic, cont_Track, &calo_daughter, cont_CaloHypo, cont_CaloClust);
-      
+
       // check if we already have the protoparticle in the shared container,
       // if so use that one
       bool protoClone=false;
@@ -608,7 +608,7 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, LHCb::Particle* Part, const LHC
         }
       }
       Part_d->setProto( proto_d );
-      
+
       if(!protoClone){
         cont_Proto->insert( proto_d );
         // Make sure we don't insert zombie objects
@@ -638,10 +638,11 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, LHCb::Particle* Part, const LHC
 
     if( m_PV3D || m_refitted ) {
       debug() << "Finding related PV" << endmsg;
-      cont_P2PV->relate( Part_d , bestPV( Part_d, cont_PV ) );
+      LHCb::RecVertex* bpv = bestPV( Part, cont_PV );
+      cont_P2PV->relate( Part_d , bpv );
       if( msgLevel(MSG::DEBUG) ){
-        if(bestPV( Part_d, cont_PV )){
-          debug() << "Related PV has chi^2: " << bestPV( Part_d, cont_PV )->chi2() << endmsg;
+        if(bpv){
+          debug() << "Related PV has chi^2: " << bpv->chi2() << endmsg;
         }
       }
     }
@@ -802,7 +803,7 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
             if ( msgLevel(MSG::DEBUG) ) debug() << "RichPID details added" << endmsg;
             break;
           }
-        
+
         case LHCb::CLID_CaloHypo:
           {
             LHCb::CaloHypo* hypotemp = new LHCb::CaloHypo();
@@ -1086,27 +1087,27 @@ void TeslaReportAlgo::AddRelInfo(const LHCb::HltObjectSummary* Obj_d, LHCb::Part
 
 LHCb::CaloCluster* TeslaReportAlgo::compareClusterPosition(LHCb::CaloCluster* calo, LHCb::CaloClusters* cont){
   auto found = std::find_if(cont->begin(),cont->end(),
-      [&calo](LHCb::CaloCluster* icalo){ return std::sqrt( pow(calo->position().x()-icalo->position().x(),2.0) 
-        + pow(calo->position().y()-icalo->position().y(),2.0) 
-        + pow(calo->position().z()-icalo->position().z(),2.0)  
+      [&calo](LHCb::CaloCluster* icalo){ return std::sqrt( pow(calo->position().x()-icalo->position().x(),2.0)
+        + pow(calo->position().y()-icalo->position().y(),2.0)
+        + pow(calo->position().z()-icalo->position().z(),2.0)
         + pow(calo->position().e()-icalo->position().e(),2.0) )<0.01; });
   if(found!=cont->end()) return *found;
   return calo;
 }
 LHCb::CaloHypo* TeslaReportAlgo::compareHypoPosition(LHCb::CaloHypo* calo, LHCb::CaloHypos* cont){
   auto found = std::find_if(cont->begin(),cont->end(),
-      [&calo](LHCb::CaloHypo* icalo){ return std::sqrt( pow(calo->position()->x()-icalo->position()->x(),2.0) 
-        + pow(calo->position()->y()-icalo->position()->y(),2.0) 
-        + pow(calo->position()->z()-icalo->position()->z(),2.0)  
+      [&calo](LHCb::CaloHypo* icalo){ return std::sqrt( pow(calo->position()->x()-icalo->position()->x(),2.0)
+        + pow(calo->position()->y()-icalo->position()->y(),2.0)
+        + pow(calo->position()->z()-icalo->position()->z(),2.0)
         + pow(calo->position()->e()-icalo->position()->e(),2.0) )<0.01; });
   if(found!=cont->end()) return *found;
   return calo;
 }
 LHCb::CaloHypo* TeslaReportAlgo::compareHypoPosition(LHCb::CaloHypo* calo, SmartRefVector<LHCb::CaloHypo> cont){
   auto found = std::find_if(cont.begin(),cont.end(),
-      [&calo](LHCb::CaloHypo* icalo){ return std::sqrt( pow(calo->position()->x()-icalo->position()->x(),2.0) 
-        + pow(calo->position()->y()-icalo->position()->y(),2.0) 
-        + pow(calo->position()->z()-icalo->position()->z(),2.0)  
+      [&calo](LHCb::CaloHypo* icalo){ return std::sqrt( pow(calo->position()->x()-icalo->position()->x(),2.0)
+        + pow(calo->position()->y()-icalo->position()->y(),2.0)
+        + pow(calo->position()->z()-icalo->position()->z(),2.0)
         + pow(calo->position()->e()-icalo->position()->e(),2.0) )<0.01; });
   if(found!=cont.end()) return *found;
   return calo;

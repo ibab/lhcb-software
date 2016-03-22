@@ -1,4 +1,4 @@
-#ifndef TESLAREPORTALGO_H 
+#ifndef TESLAREPORTALGO_H
 #define TESLAREPORTALGO_H 1
 
 // Include files
@@ -36,13 +36,13 @@
 #include "HltDAQ/ReportConvertTool.h"
 
 /** @class TeslaReportAlgo TeslaReportAlgo.h
- * 
+ *
  *
  */
-class TeslaReportAlgo : public GaudiAlgorithm 
+class TeslaReportAlgo : public GaudiAlgorithm
 {
 
-public: 
+public:
 
 	// Standard constructor
   	TeslaReportAlgo( const std::string& name, ISvcLocator* pSvcLocator );
@@ -88,12 +88,13 @@ protected:
 private:
         std::vector<std::string> m_inputNames;
         std::string m_inputName;
-	std::string m_PV;
-	std::string m_PVLoc;
-	std::string m_VertRepLoc;
-	std::string m_OutputPref;
+	      std::string m_PV;
+	      std::string m_PVLoc;
+	      std::string m_VertRepLoc;
+	      std::string m_SelRepLoc;
+	      std::string m_OutputPref;
         std::map<int,std::string> m_RelInfoLocationsMap;
-       
+
         bool turbo;
         bool m_PV3D;
         bool m_refitted;
