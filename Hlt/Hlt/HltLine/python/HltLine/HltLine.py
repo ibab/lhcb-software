@@ -1543,6 +1543,7 @@ class Hlt2Line(object):
                    priority    = None    ,   # hint for ordering lines
                    Turbo       = False   ,   # is the line intended for the Turbo stream
                    RelatedInfo = ([], []),   # Lists of related info locations and algorithms
+                   PersistReco = False   ,   # is the reconstruction to be persisted (only if Turbo==True)
                    **args                ) : # other configuration parameters
         """
         The constructor, which essentially defines the line
@@ -1557,6 +1558,7 @@ class Hlt2Line(object):
         - 'algos'     : the list of actual members
         - 'Turbo'     : flag for Turbo stream
         - 'postscale' : the postscale factor
+        - 'PersistReco' : whether to persist the reconstruction
 
         """
 
@@ -1584,6 +1586,16 @@ class Hlt2Line(object):
             code = self.getDefaultVoidFilter()
             if code : VoidFilter = code
 
+        # Check if Turbo lines set the flag and have Turbo in their name
+        if ('Turbo' in name) and not Turbo:
+            raise ValueError('You must set Turbo=True for Turbo lines ({}).'.format(name))
+        if Turbo and not ('Turbo' in name):
+            raise ValueError('You must have "Turbo" in the line name for Turbo lines ({}).'.format(name))
+
+        # Check that PersistReco is requested for a Turbo line
+        if PersistReco and not Turbo:
+            raise ValueError('PersistReco=True can only be used for Turbo lines ({}).'.format(name))
+
         ## 1) clone all arguments
         name  = deepcopy ( name  )
         ODIN  = deepcopy ( ODIN  )
@@ -1594,6 +1606,7 @@ class Hlt2Line(object):
         algos = deepcopy ( algos )
         Turbo = deepcopy ( Turbo )
         RelatedInfo = deepcopy ( RelatedInfo )
+        PersistReco = deepcopy ( PersistReco )
         args  = deepcopy ( args  )
 
         # 2) save all parameters (needed for the proper cloning)
@@ -1609,6 +1622,7 @@ class Hlt2Line(object):
         self._HLT2        = HLT2
         self._RelatedInfo = RelatedInfo
         self._Turbo       = Turbo
+        self._PersistReco = PersistReco
         self._VoidFilter  = VoidFilter
         self._algos       = algos
         self._args        = args
@@ -1765,6 +1779,10 @@ class Hlt2Line(object):
     def relatedInfoLocations(self):
         return self._RelatedInfo[0]
 
+    def persistReco(self):
+        """Return whether reconstruction should be persisted for this line."""
+        return self._PersistReco
+
     ## Clone the line
     def clone ( self , name , **args ) :
         """
@@ -1807,6 +1825,7 @@ class Hlt2Line(object):
         __relInfo    = deepcopy ( args.get ( 'RelatedInfo', self._RelatedInfo ) )
         __postscale  = deepcopy ( args.get ( 'postscale'  , self._postscale   ) )
         __Turbo      = deepcopy ( args.get ( 'Turbo'      , self._Turbo       ) )
+        __PersistReco= deepcopy ( args.get ( 'PersistReco', self._PersistReco ) )
         __priority   = deepcopy ( args.get ( 'priority '  , self._priority    ) )
         __algos      = deepcopy ( args.get ( 'algos'      , self._algos       ) )
         __args       = deepcopy ( self._args  )
@@ -1841,6 +1860,7 @@ class Hlt2Line(object):
                           priority    = __priority ,
                           Turbo       = __Turbo    ,
                           RelatedInfo = __relInfo  ,
+                          PersistReco = __PersistReco,
                           algos       = __algos    ,
                           **__args )
 

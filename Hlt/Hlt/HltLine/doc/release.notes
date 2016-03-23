@@ -5,6 +5,10 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2016-03-23 - Rosen Matev
+ - Add PersistReco to Hlt2Line python class
+ - Add a protection for Turbo lines (Turbo flag must be set)
+ 
 !========================= HltLine v7r14 2016-02-26 =========================
 
 ! 2016-02-12 - Roel Aaij
