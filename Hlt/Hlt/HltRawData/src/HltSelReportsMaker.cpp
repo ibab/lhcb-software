@@ -1145,7 +1145,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle& o
           }
         }
       }
-      hos->addToSubstructure( store_( *pp ) );
+      if( m_Turbo ) hos->addToSubstructure( store_( *pp ) );
       if ( msgLevel(MSG::DEBUG) ) debug() << "requesting proto-particle store" << endmsg;
       if( m_Turbo && pp->richPID() ) {
         hos->addToSubstructure( store_( *pp->richPID() ) );
