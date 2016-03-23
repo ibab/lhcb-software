@@ -4,6 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-03-23 - Francesco Dettori
+ - Updating settings for StrangeKPiPiPiTurboLine which is now in Turbo
 
 ! 2016-03-18 - Simone Stracka
  - Bottomonium folder added to Physics_pp_Draft2016.py

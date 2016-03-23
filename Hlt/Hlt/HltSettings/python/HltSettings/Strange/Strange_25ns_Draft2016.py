@@ -20,8 +20,8 @@ class Strange_25ns_Draft2016(object) :
         """
 
         lines = [
-            
-            'Hlt2StrangeKPiPiPi'
+      
+            'Hlt2StrangeKPiPiPiTurbo'
             ]
             
         return lines
@@ -40,7 +40,7 @@ class Strange_25ns_Draft2016(object) :
                       {'Common' : {'TrChi2' : 3,
                                    'TrGP' : 0.3
                                    },
-                       'KPiPiPi' : { 'piMinIpChi2' :  25. ,
+                       'KPiPiPiTurbo' : { 'piMinIpChi2' :  25. ,
                                      'KMassWin' : 100 * MeV ,
                                      'KMaxDOCA' : 2. * mm ,
                                      'KVtxChi2' : 25. ,  # adimensional
