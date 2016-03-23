@@ -8,10 +8,10 @@ branches cmt doc
 #==================================================================
 
 # Temporarily to pick up fix in DDDB warning
-#use DDDB                
+use DDDB                v1r84   Det 
 
 # Gauss application: the application is not built on Win32
-use Gauss               v48r3   Sim
+use Gauss               v49r0   Sim
 
 # LCG interfaces to generators, until available in LCGCMT
 use LCG_Settings        v79r0p1 
@@ -30,11 +30,11 @@ use powhegbox           v79r0p1 LCG_GeneratorsInterfaces
 # Generator packages: Basic configuration
 use GenCuts             v3r13   Gen
 use GENSER              v16r1   Gen
-use EvtGen              v14r5   Gen
+use EvtGen              v14r6   Gen
 use Mint                v4r0    Gen
 use EvtGenExtras        v3r12p1 Gen
-use Generators          v15r1   Gen
-use LbPythia8           v11r1   Gen
+use Generators          v16r0   Gen
+use LbPythia8           v12r0   Gen
 
 # Generators packages: alternative to Pythia8 for pp collisions
 use LbPythia            v15r0p1 Gen
@@ -78,7 +78,7 @@ use ClhepTools          v2r1p3    Tools
 use GaussKine           v7r0      Sim
 use GaussAlgs		v8r1      Sim
 use GaussTools          v20r1     Sim
-use GaussRICH		v14r3     Sim
+use GaussRICH		v14r3p1   Sim
 use GaussTracker	v7r0p1    Sim
 use GaussCalo		v10r1     Sim
 use GaussPhysics	v11r1p1   Sim
