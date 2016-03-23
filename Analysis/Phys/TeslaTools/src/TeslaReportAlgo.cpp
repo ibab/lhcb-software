@@ -198,7 +198,7 @@ StatusCode TeslaReportAlgo::execute()
     const LHCb::HltObjectSummary * MotherRep = selReports->selReport(HltLoc.str().c_str());
 
     if(MotherRep!=0) {if ( msgLevel(MSG::DEBUG) ) debug() << "Required line has been fired" << endmsg;}
-    else return StatusCode::SUCCESS;
+    else continue;
 
     // Check validity
     LHCb::HltObjectSummary firstCand = *(MotherRep->substructure()[0]->substructure()[0].target());
