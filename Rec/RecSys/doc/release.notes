@@ -5,7 +5,7 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
-</PRE><H1><A NAME=v19r1>2016-03-21 RecSys v19r1</A></H1><PRE>
+</PRE><H1><A NAME=v19r1>2016-03-23 RecSys v19r1</A></H1><PRE>
 This version uses Gaudi v27r1, LHCb v40r1 and Lbcom v18r1 (and ROOT 6.06.02)
 
 - Packages modified: Calo/CaloPIDs v5r22, Calo/CaloReco v5r28, 
@@ -195,6 +195,8 @@ This version uses Gaudi v27r1, LHCb v40r1 and Lbcom v18r1 (and ROOT 6.06.02)
     CK rings in MassHypothesisRingCreator.
 
 - In Rich/RichRecTrackTools v1r42
+  . Only set the average photon energy in SegmentCreator if the value determined
+    is valid (greater than 0).
   . Speed up the ExpectedTrackSignal::hasRichInfo by limiting it on only
     checking the lightest hypothesis (largest CK ring).
   . Adapt to removal of typedefs in RichDet.
