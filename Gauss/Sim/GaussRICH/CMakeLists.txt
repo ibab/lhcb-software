@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GaussRICH
 ################################################################################
-gaudi_subdir(GaussRICH v14r3)
+gaudi_subdir(GaussRICH v14r3p1)
 
 gaudi_depends_on_subdirs(Det/RichDet
                          Event/LinkerEvent

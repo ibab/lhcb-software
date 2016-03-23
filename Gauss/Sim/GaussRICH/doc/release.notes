@@ -4,6 +4,11 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 
+!======================== GaussRICH v14r3p1 2016-03-23 =======================
+! 2016-02-02 - Gloria Corti
+ - Return Warning instead of Error to allow Herschel to kill very forward 
+   protons resulting in empty events for elastic single interactions
+
 
 !========================= GaussRICH v14r3 2016-03-07 ========================
 ! 2016-02-02 - Sajan Easo

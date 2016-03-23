@@ -79,7 +79,7 @@ StatusCode GetMCRichTracksAlg::execute()
     G4TrajectoryContainer* trajectories = 0 ;
     // get trajectories from GiGa
     *gigaSvc() >> trajectories;
-    if ( 0 == trajectories ) { return Error("No G4TrajectoryContainer* object is found !"); }
+    if ( 0 == trajectories ) { return Warning("No G4TrajectoryContainer* object is found !"); }
 
     // get the references between MCParticles and Geant4 TrackIDs
     const GiGaKineRefTable & table = kineSvc()->table();
