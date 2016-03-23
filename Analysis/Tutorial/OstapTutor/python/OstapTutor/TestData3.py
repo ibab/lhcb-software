@@ -52,7 +52,8 @@ varset = ROOT.RooArgSet  ( m_phi )
 import  Ostap.FitModels as Models
 
 
-mK  = 0.49369 
+mK    = 0.49369 
+mPion = 0.1396
 
 bw = cpp.Gaudi.Math.Phi0 (  1.0195 , 0.0043 , mK  )
 
@@ -61,15 +62,27 @@ signal = Models.BreitWigner_pdf ( 'BW0' , bw , mass = m_phi ,
                                   mean        = 1.0195 ,
                                   convolution = 0.0015 )
 
-bkg    = Models.PSLeft_pdf  ( 'PSL0' , mass = m_phi , N=2 , left = 2*mK )
+## Phase space as background:
+ps  = cpp.Gaudi.Math.PhaseSpaceNL ( 2*mK  , 10.0 , 2 , 5 )
+bkg = Models.PSPol_pdf            ( 'PS0' , mass = m_phi , phasespace = ps , power = 1 )
+
+
+f2     = cpp.Gaudi.Math.Flatte2( 0.980 ,
+                                 165   ,
+                                 4.21  ,
+                                 mPion ,
+                                 mPion ,
+                                 mK    ,
+                                 mK    )
 
 flatte = Models.Flatte2_pdf ( 'F20'           ,
+                              f2              ,
                               mass   = m_phi  ,
                               m0_980 = 1.000  ,
-                              m0g1   = 0.165  , 
-                              mKaon  = mK     ,
-                              mPion  = 0.1396 )
+                              m0g1   = 0.165  )
+
 flatte.mean.fix(0.980)
+
                 
 model = Models.Fit1D( signal       =   signal   ,
                       othersignals = [ flatte ] , 
