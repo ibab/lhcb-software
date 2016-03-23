@@ -66,8 +66,8 @@ namespace std {
   ostream& operator<<(ostream& s, const CorrectMap& m) {
     bool first = true;
     s << '{';
-    // this is not strictly needed, but it makes the output sorted, which is
-    // always nice (in particular for tests)
+    // this is needed to make a TCK, because it ensures the output is sorted
+    // and fromString followed by toString gives the same result
     const map<std::string, std::vector<double>> m1(m.begin(), m.end());
     for(const auto& i: m1) {
       if (first) first = false;
@@ -78,12 +78,13 @@ namespace std {
     s << '}';
     return s;
   }
-  ostream& operator<<(ostream& s, const std::unordered_map<unsigned int, std::pair<double,double> >& m) {
+  ostream& operator<<(ostream& s, const WindowMap& m) {
     bool first = true;
     s << '{';
-    // this is not strictly needed, but it makes the output sorted, which is
-    // always nice (in particular for tests)
-    for (const auto& i : m) {
+    // this is needed to make a TCK, because it ensures the output is sorted
+    // and fromString followed by toString gives the same result
+    const map<unsigned int, std::pair<double, double>> m1(m.begin(), m.end());
+    for (auto& i : m1) {
       if (first) first = false;
       else s << ", ";
       Gaudi::Utils::toStream(i.first, s) << ": ";
