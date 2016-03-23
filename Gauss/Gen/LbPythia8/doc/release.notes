@@ -5,9 +5,15 @@
 !-----------------------------------------------------------------------------
 
 ! 2016-03-22 - Gloria Corti
- - Rename the commeand file = LHCbDefault_CT09MCS.cmd as LHCbDefault.cmd 
-   and remove from svn the CT09MCS file to avoid confusion.
- - Remove also obsolete command file LHCbPt0Ref2.6_CT09MCS.cmd
+ - Modify LHCbDefault.cmd to contain the same content as the last commit of
+   LHCbDefault_CT09MCS.cmd, i.e. to use CT09MCS PDF and LHCb Tune1
+ - Remove obsolete command files:
+   . options/LHCbPt0Ref2.6_CT09MCS.cmd (very old trial for tuning)
+   . options/LHCbDefault_CT09MCS.cmd , to avoid confusion since content is 
+     identical to LHCbDefault
+ - Remove obsolete options for Pythia8, since commands have been removed 
+   . options/Pythia8_CT09MCS.py
+   . options/Pythia8_Pt0Ref2.6_CT09MCS.py
 
 ! 2016-03-18 - Gloria Corti
  - Put Tune 1 parameters for CT09MCS that will be the default for production.
