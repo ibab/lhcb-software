@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2016-03-23 - Rosen Matev
+ - Fix HltTracking.instantiate test
+
 ! 2016-03-21 - Sascha Stahl
  - Hlt2Tracking: Add V0 finder to remove differences between online and offline.
 

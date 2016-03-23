@@ -17,6 +17,11 @@ for name,conf in cfgDb.iteritems():
         print >> sys.stderr, 'ERROR, cannot import/instantiate configurable', name, '\n-------\n', e.__class__, '\n-------'
         traceback.print_exc()
 
+# Remove instantiated configurables from above as some code below
+# expects them not to exist
+from Gaudi.Configuration import allConfigurables
+allConfigurables.clear()
+
 # =========== Auto-generated, import all python modules ====
 import glob, os, sys, traceback
 modules=glob.glob('../../python/HltTracking/*.py')
