@@ -107,13 +107,7 @@ __all__ = (
 'SelectorWithVarsCached'    ## Generic selector with cache   
 )
 # =============================================================================
-import os
-import hashlib
-
-import ROOT, cppyy
-
-from . import workdir
-from .ZipShelve import ZipShelf
+import ROOT, cppyy, math
 # construct the global C++ namespace 
 cpp       = cppyy.makeNamespace('')
 Analysis  = cpp.Analysis
@@ -669,6 +663,14 @@ class SelectorWithVars(SelectorWithCuts) :
             self._progress.update_amount ( self.event () )
         #
  
+
+
+# =============================================================================
+import os
+import hashlib
+from . import workdir
+from .ZipShelve import ZipShelf
+# =============================================================================
 
 # ==============================================================================
 ## Generic selector which loads already loaded datasets from cache
