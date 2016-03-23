@@ -4,6 +4,10 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2016-03-23 - Sascha Stahl
+ - Fix Hlt2 filter in AfterBurner. Changed filter back to accept all Physics
+   events as the SelReports by default safe the RecSummary in every accepted event.
+
 ! 2016-03-22 - Sascha Stahl
  - Update filter for Downstream RICH pid.
  - Fix Hlt2 filter in AfterBurner. Required to add additional sequences.

@@ -21,7 +21,7 @@ class HltAfterburnerConf(LHCbConfigurableUser):
                  "AddAdditionalTrackInfos" : True,
                  "AddPIDToDownstream"      : True,
                  "Hlt2DownstreamFilter"    : "HLT_TURBOPASS_RE('^Hlt2CharmHad.*KS0DD.*Decision$') | HLT_TURBOPASS_RE('^Hlt2CharmHad.*LamDD.*Decision$') | HLT_TURBOPASS_RE('^Hlt2CharmHad.*_DD.*$') | HLT_TURBOPASS_RE('^Hlt2(CharmHadD02KmPipTurbo|CharmHadDstp2D0Pip_D02KmPipTurbo|CharmHadDpToKmPipPipTurbo|CharmHadDpToKmPipPip_ForKPiAsymTurbo|CharmHadDspToKmKpPipTurbo|CharmHadLcpToPpKmPipTurbo|CharmHadXic0ToPpKmKmPipTurbo|CharmHadXicpToPpKmPipTurbo|CharmHadDp2KS0KS0KpTurbo|CharmHadDp2KS0KS0PipTurbo|CharmHadLcp2LamKmKpPip_Lam2PpPimTurbo|CharmHadLcp2LamKmPipPip_Lam2PpPimTurbo|CharmHadDsp2KS0KS0KpTurbo|CharmHadDsp2KS0KS0PipTurbo)Decision$')",
-                 "Hlt2Filter"              : "HLT_TURBOPASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')"
+                 "Hlt2Filter"              : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')"
                 }
 
 ###################################################################################
