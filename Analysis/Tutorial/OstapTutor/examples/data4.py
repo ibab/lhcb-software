@@ -12,10 +12,13 @@ else                      : logger = getLogger( __name__          )
 logger.info('Build datasets for Y+Charm analysis')
 # ==========================================================================================
 
-
 from OstapTutor.TestVars1  import m_D0 , m_Dp , m_Ds , m_Lc , m_ups
 from ccuts   import cuts, pileup
-from math    import log10 
+from math    import log10, sin  
+
+def pileup_fun( s ) :
+    import math 
+    return math.log10( s.c2dtf )
 
 ## import trees
 from data3 import tD0Y, tDpY, tDsY, tLcY  
@@ -32,9 +35,8 @@ variables = [
     ( 'annK'    , 'min(PROBNNk (kaons))'       , -1   ,    3 , lambda s : s.minann_K      ) ,
     ( 'annPi'   , 'min(PROBNNpi(pions))'       , -1   ,    3 , lambda s : s.minann_pi     ) ,
     ( 'year'    , 'year'                       , 2000 , 2020 , lambda s : s.year          ) ,
-    ( pileup    ,  lambda s : log10(s.c2dtf) ) ,   
+    ( pileup    ,  pileup_fun ) , 
     ]
-
 
 
 sel_D0 = SelectorWithVars (
