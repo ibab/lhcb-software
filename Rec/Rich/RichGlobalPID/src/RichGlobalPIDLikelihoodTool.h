@@ -75,19 +75,19 @@ namespace Rich
       public: // IRichPID
 
         // Access the RichPID associated to the given Track
-        virtual const LHCb::RichPID * pid( const LHCb::Track * track ) const;
+        virtual const LHCb::RichPID * pid( const LHCb::Track * track ) const override;
 
         // Access the RichPID data objects for the given Tracks
         virtual void pids( const LHCb::Track::ConstVector & tracks,
-                           LHCb::RichPID::ConstVector & richpids ) const;
+                           LHCb::RichPID::ConstVector & richpids ) const override;
 
       public: // IRichGlobalPID
 
         // Access the RichGlobalPID associated to the given Track
-        virtual LHCb::RichGlobalPID * pid( LHCb::RichGlobalPIDTrack * track ) const;
+        virtual LHCb::RichGlobalPID * pid( LHCb::RichGlobalPIDTrack * track ) const override;
 
         // Create the RichGlobalPID data objects for the given Tracks
-        virtual void pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) const;
+        virtual void pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) const override;
 
       private: // typedefs
 

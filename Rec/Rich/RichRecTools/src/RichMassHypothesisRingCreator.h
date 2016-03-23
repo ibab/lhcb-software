@@ -110,7 +110,7 @@ namespace Rich
         if ( m_nPointScale[rad] < 0 )
         {
           const auto satCKang = m_ckAngle->nominalSaturatedCherenkovTheta(rad);
-          m_nPointScale[rad] = fabs( m_maxPoint[rad] - m_minPoint[rad] ) / satCKang;
+          m_nPointScale[rad] = ( m_maxPoint[rad] - m_minPoint[rad] ) / satCKang;
         }
         return m_nPointScale[rad];
       }

@@ -85,17 +85,17 @@ namespace Rich
                         const IInterface* parent );
 
       /// Destructor
-      virtual ~PixelCreatorBase( ) {};
+      virtual ~PixelCreatorBase( ) { }
 
       // Initialize method
-      virtual StatusCode initialize();
+      virtual StatusCode initialize() override;
 
       // Finalize method
-      virtual StatusCode finalize();
+      virtual StatusCode finalize() override;
 
       // Implement the handle method for the Incident service.
       // This is used to inform the tool of software incidents.
-      virtual void handle( const Incident& incident );
+      virtual void handle( const Incident& incident ) override;
 
     public: // methods from interface
 

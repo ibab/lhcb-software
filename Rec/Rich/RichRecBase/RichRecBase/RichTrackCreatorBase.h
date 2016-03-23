@@ -73,12 +73,12 @@ namespace Rich
       virtual StatusCode finalize() override;
 
       // Implement the handle method for the Incident service.
-      virtual void handle( const Incident& incident );
+      virtual void handle( const Incident& incident ) override;
 
     public: // methods from interface
 
       // Return a pointer to the container of RichRecTracks
-      LHCb::RichRecTracks * richTracks() const;
+      LHCb::RichRecTracks * richTracks() const override;
 
       // Clear the current transient event data
       void clear() const override;

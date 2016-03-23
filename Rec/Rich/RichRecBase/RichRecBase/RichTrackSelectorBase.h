@@ -73,93 +73,93 @@ namespace Rich
     public: // interface methods
 
       /// Test if the given Track is selected
-      virtual bool trackSelected( const LHCb::Track * track ) const;
+      virtual bool trackSelected( const LHCb::Track * track ) const override;
 
       /// Test it the given RichRecTrack is selected
-      virtual bool trackSelected( const LHCb::RichRecTrack * track ) const;
+      virtual bool trackSelected( const LHCb::RichRecTrack * track ) const override;
 
       /// Returns the list of selected track types
-      virtual const std::vector<std::string> & selectedTracks() const;
+      virtual const std::vector<std::string> & selectedTracks() const override;
 
       /// Returns the overall minimum momentum cut value
-      virtual double minPCut() const;
+      virtual double minPCut() const override;
 
       /// Returns the overall maximum momentum cut value
-      virtual double maxPCut() const;
+      virtual double maxPCut() const override;
 
       /// Returns the overall minimum pt cut value
-      virtual double minPtCut() const;
+      virtual double minPtCut() const override;
 
       /// Returns the overall maximum pt cut value
-      virtual double maxPtCut() const;
+      virtual double maxPtCut() const override;
 
       /// Returns the overall minimum chi^2 cut
-      virtual double minChi2Cut() const;
+      virtual double minChi2Cut() const override;
 
       /// Returns the overall maximum chi^2 cut
-      virtual double maxChi2Cut() const;
+      virtual double maxChi2Cut() const override;
 
       /// Returns the charge selection
-      virtual int chargeSel() const;
+      virtual int chargeSel() const override;
 
       /// Returns the minimum clone rejection cut
-      virtual double minCloneDistCut() const ;
+      virtual double minCloneDistCut() const override;
 
       /// Returns the maximum clone rejection cut
-      virtual double maxCloneDistCut() const ;
+      virtual double maxCloneDistCut() const override;
 
       /// Returns the minimum likelihood cut
-      virtual double minLikelihoodCut() const;
+      virtual double minLikelihoodCut() const override;
 
       /// Returns the maximum likelihood cut
-      virtual double maxLikelihoodCut() const;
+      virtual double maxLikelihoodCut() const override;
 
       /// Returns the minimum ghost probaility cut
-      virtual double minGhostProbCut() const;
+      virtual double minGhostProbCut() const override;
 
       /// Returns the maximum ghost probaility cut
-      virtual double maxGhostProbCut() const;
+      virtual double maxGhostProbCut() const override;
 
     public:
 
       /// Returns the overall minimum momentum cut value for the given track type
-      virtual double minPCut( const Rich::Rec::Track::Type type ) const;
+      virtual double minPCut( const Rich::Rec::Track::Type type ) const override;
 
       /// Returns the overall maximum momentum cut value for the given track type
-      virtual double maxPCut( const Rich::Rec::Track::Type type ) const;
+      virtual double maxPCut( const Rich::Rec::Track::Type type ) const override;
 
       /// Returns the overall minimum momentum cut value for the given track type
-      virtual double minPtCut( const Rich::Rec::Track::Type type ) const;
+      virtual double minPtCut( const Rich::Rec::Track::Type type ) const override;
 
       /// Returns the overall maximum momentum cut value for the given track type
-      virtual double maxPtCut( const Rich::Rec::Track::Type type ) const;
+      virtual double maxPtCut( const Rich::Rec::Track::Type type ) const override;
 
       /// Returns the overall minimum chi^2 cut for the given track type
-      virtual double minChi2Cut( const Rich::Rec::Track::Type type ) const;
+      virtual double minChi2Cut( const Rich::Rec::Track::Type type ) const override;
 
       /// Returns the overall maximum chi^2 cut for the given track type
-      virtual double maxChi2Cut( const Rich::Rec::Track::Type type ) const;
+      virtual double maxChi2Cut( const Rich::Rec::Track::Type type ) const override;
 
       /// Returns the charge selection for the given track type
-      virtual int chargeSel( const Rich::Rec::Track::Type type ) const;
+      virtual int chargeSel( const Rich::Rec::Track::Type type ) const override;
 
       /// Returns the minimum clone rejection cut for the given track type
-      virtual double minCloneDistCut( const Rich::Rec::Track::Type type ) const;
+      virtual double minCloneDistCut( const Rich::Rec::Track::Type type ) const override;
 
       /// Returns the minimum clone rejection cut for the given track type
-      virtual double maxCloneDistCut( const Rich::Rec::Track::Type type ) const;
+      virtual double maxCloneDistCut( const Rich::Rec::Track::Type type ) const override;
 
       /// Returns the minimum likelihood cut for the given track type
-      virtual double minLikelihoodCut( const Rich::Rec::Track::Type type ) const;
+      virtual double minLikelihoodCut( const Rich::Rec::Track::Type type ) const override;
 
       /// Returns the maximum likelihood cut for the given track type
-      virtual double maxLikelihoodCut( const Rich::Rec::Track::Type type ) const;
+      virtual double maxLikelihoodCut( const Rich::Rec::Track::Type type ) const override;
 
       /// Returns the minimum ghost probability cut for the given track type
-      virtual double minGhostProbCut( const Rich::Rec::Track::Type type ) const;
+      virtual double minGhostProbCut( const Rich::Rec::Track::Type type ) const override;
 
       /// Returns the maximum ghost probability cut for the given track type
-      virtual double maxGhostProbCut( const Rich::Rec::Track::Type type ) const;
+      virtual double maxGhostProbCut( const Rich::Rec::Track::Type type ) const override;
 
     private: // defintions
 

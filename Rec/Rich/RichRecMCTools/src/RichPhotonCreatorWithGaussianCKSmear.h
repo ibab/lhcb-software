@@ -64,13 +64,13 @@ namespace Rich
                                           const IInterface* parent );
 
         /// Destructor
-        virtual ~PhotonCreatorWithGaussianCKSmear(){}
+        virtual ~PhotonCreatorWithGaussianCKSmear() {}
 
         // Initialize method
-        StatusCode initialize();
+        StatusCode initialize() override;
 
         // Finalize method
-        StatusCode finalize();
+        StatusCode finalize() override;
 
       protected: // methods
 
@@ -82,7 +82,7 @@ namespace Rich
         /// Form a Photon candidate from a Segment and a pixel.
         virtual LHCb::RichRecPhoton * buildPhoton( LHCb::RichRecSegment * segment,
                                                    LHCb::RichRecPixel * pixel,
-                                                   const Rich::Rec::PhotonKey key ) const;
+                                                   const Rich::Rec::PhotonKey key ) const override;
 
         /// Access RICH MC reconstruction tool on demand
         inline const Rich::Rec::MC::IMCTruthTool * richMCRecTool() const

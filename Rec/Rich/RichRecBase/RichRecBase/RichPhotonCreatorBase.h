@@ -75,7 +75,7 @@ namespace Rich
       virtual StatusCode finalize() override;
 
       // Implement the handle method for the Incident service.
-      virtual void handle( const Incident& incident );
+      virtual void handle( const Incident& incident ) override;
 
     public: // methods from interface
 

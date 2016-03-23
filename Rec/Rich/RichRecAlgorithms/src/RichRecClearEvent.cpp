@@ -28,14 +28,15 @@ ClearEvent::~ClearEvent() { }
 StatusCode ClearEvent::execute()
 {
   // Event Status
-  if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
-
-  // Clear the transient event objects
-  massHypoRingCreator()->clear();
-  photonCreator()->clear();
-  trackCreator()->clear();
-  segmentCreator()->clear();
-  pixelCreator()->clear();
+  if ( richStatus()->eventOK() ) 
+  {
+    // Clear the transient event objects
+    massHypoRingCreator()->clear();
+    photonCreator()->clear();
+    trackCreator()->clear();
+    segmentCreator()->clear();
+    pixelCreator()->clear();
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -44,3 +45,5 @@ StatusCode ClearEvent::execute()
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( ClearEvent )
+
+//--------------------------------------------------------------------------

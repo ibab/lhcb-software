@@ -82,14 +82,14 @@ namespace Rich
                             const Rich::ParticleIDType id,
                             std::vector<Gaudi::XYZPoint> & points,
                             const unsigned int nPoints,
-                            const LHCb::RichTraceMode mode = LHCb::RichTraceMode() ) const;
+                            const LHCb::RichTraceMode mode = LHCb::RichTraceMode() ) const override;
 
       // Ray trace the Cherenkov cone for the given segment and cherenkov angle to the detector plane
       StatusCode rayTrace ( LHCb::RichRecSegment * segment,
                             const double ckTheta,
                             std::vector<Gaudi::XYZPoint> & points,
                             const unsigned int nPoints,
-                            const LHCb::RichTraceMode mode = LHCb::RichTraceMode() ) const;
+                            const LHCb::RichTraceMode mode = LHCb::RichTraceMode() ) const override;
 
       // Ray trace the Cherenkov cone using the given emission point, direction and Cherenkov angle
       StatusCode rayTrace ( const Rich::DetectorType rich,
@@ -98,13 +98,13 @@ namespace Rich
                             const double ckTheta,
                             std::vector<Gaudi::XYZPoint> & points,
                             const unsigned int nPoints,
-                            const LHCb::RichTraceMode mode = LHCb::RichTraceMode() ) const;
+                            const LHCb::RichTraceMode mode = LHCb::RichTraceMode() ) const override;
 
       // Ray trace the Cherenkov cone for the given ring to the detector plane
       StatusCode rayTrace ( LHCb::RichRecRing * ring,
                             const unsigned int nPoints,
                             const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
-                            const bool forceTracing = false ) const;
+                            const bool forceTracing = false ) const override;
 
       // Ray trace the Cherenkov cone for the given ring to the detector plane
       StatusCode rayTrace ( const Rich::DetectorType rich,
@@ -114,7 +114,7 @@ namespace Rich
                             LHCb::RichRecRing * ring,
                             const unsigned int nPoints,
                             const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
-                            const bool forceTracing = false ) const;
+                            const bool forceTracing = false ) const override;
 
     private: // helper classes
 

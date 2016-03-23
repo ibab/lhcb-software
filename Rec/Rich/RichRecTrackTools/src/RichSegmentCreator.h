@@ -64,15 +64,15 @@ namespace Rich
       virtual ~SegmentCreator() {}
 
       /// Initialize method
-      StatusCode initialize();
+      StatusCode initialize() override;
 
       /// Finalize method
-      StatusCode finalize();
+      StatusCode finalize() override;
 
       /// Implement the handle method for the Incident service.
       /// This is used by the tool at the beginning of events to initialise
       /// a new container for the RichRecTracks
-      void handle( const Incident& incident );
+      void handle( const Incident& incident ) override;
 
     public: // methods (and doxygen comments) inherited from public interface
 
