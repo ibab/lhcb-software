@@ -339,21 +339,25 @@ del _startups,_executed,_s,_ss
 # =============================================================================
 ## execute the files, defined as arguments
 # =============================================================================
-root_files = {}
-PARAMETERS = [] 
+root_files     = {}
+root_macros    = []
+python_scripts = []
+PARAMETERS     = []
 ## perform treatment of the file 
 def treat_file ( f ) :
     
     fok = os.path.exists ( f ) and os.path.isfile ( f ) 
     name,dot,ext  = f.rpartition('.')
     if  name and dot and ext in ('root', 'ROOT' ) :
+        
+        logger.debug  ("Try  to open file '%s'" % f )
         try :
             from Ostap.TFileDeco import ROOTCWD 
             with ROOTCWD() :
                 _f = ROOT.TFile.Open(  f , 'READ')
                 root_files [ name ] = _f 
                 logger.info ("Open ROOT file '%s'" % f )
-                f.ls()
+                _f.ls()
         except :
             
             # - Batch mode:       just re-raise exception
@@ -365,13 +369,16 @@ def treat_file ( f ) :
     ## execute python file 
     elif fok and name and dot and 'py' == ext  :  
         
-        logger.info  ("Try    to execute '%s'" % f )
+        logger.debug  ("Try    to execute '%s'" % f )
         
         try :
             
             if arguments.WithContext :  execfile ( f , globals() ) ## with context 
             else                     :  execfile ( f )             ## plain  
 
+            logger.info  ("Executed       '%s'" % f )
+            python_scripts.append ( f )
+            
         except :
             
             # - Batch mode:       just re-raise exception
@@ -382,7 +389,7 @@ def treat_file ( f ) :
             
     elif name and dot and ext in ( 'C'   , 'C+'   , 'C++'  ) :
             
-        logger.info  ("Try to load macro '%s'" % f )
+        logger.debug ("Try to load macro '%s'" % f )
         sc   = ROOT.gROOT.LoadMacro ( f )
         if sc :
             # - Interactive mode: print traceback and continue
@@ -391,18 +398,23 @@ def treat_file ( f ) :
             else :
                 logger.error       ('Failure to load macro "%s" code:%d' % ( f , sc ) )
         else :
-            logger.debug ('Loaded macro "%s" code:%d' % ( f , sc ) )
+            
+            root_macros.append ( f )
+            logger.info  ("Loaded macro   '%s'" % f )
             del sc 
 
     ## execute Ostap-script 
     elif fok and name and dot and ext in ( 'ost' , 'ostp' , 'ostap' ) :
         
-        logger.info  ("Try    to execute '%s'" % f )
+        logger.debug  ("Try    to execute '%s'" % f )
         
         try :
             
             ## this one is always executed with the context!!!
-            execfile ( f , globals() ) ## with context 
+            execfile ( f , globals() ) ## with context
+            
+            python_scripts.append ( f )
+            logger.info  ("Executed       '%s'" % f )
             
         except :
                 
@@ -431,14 +443,9 @@ for pattern in arguments.files :
 del treat_file
 
 # =============================================================================
-## dump alloaded 'parameters'
-if PARAMETERS : 
-    logger.info ('PARAMETERS: %s' % PARAMETERS )
-    
-# =============================================================================
 ## load ROOT macros 
 for m in arguments.Macros :
-    logger.info  ("Try to load macro '%s'" % m )
+    logger.debug  ("Try to load macro '%s'" % m )
     sc   = ROOT.gROOT.LoadMacro ( m )
     if sc :
         # - Interactive mode: print traceback and continue
@@ -447,13 +454,14 @@ for m in arguments.Macros :
         else :
             logger.error       ('Failure to load macro "%s" code:%d' % ( m , sc ) )
     else :
-        logger.debug ('Loaded macro "%s" code:%d' % ( m , sc ) )
+        root_macros.append ( f )
+        logger.info  ("Loaded macro   '%s'" % f )
     del sc 
     
 # =============================================================================
 ## list names of opened ROOT files 
 if root_files :
-    logger.info("Opened ROOT files: %d (with '.root' extension)" % len ( root_files ) )
+    logger.info("ROOT FILES    : %d (with '.root' extension)" % len ( root_files ) )
     keys = root_files.keys()
     keys.sort()
     _n = 0  
@@ -462,8 +470,22 @@ if root_files :
         rfile = root_files [k]
         okeys = rfile.keys ()
         okeys.sort()
-        logger.info('%2d: %s #keys:%d: %s' % ( _n , k , len(okeys) , okeys ) )
+        logger.info('%2d: %s #keys: %d: %s' % ( _n , k , len(okeys) , okeys ) )
 
+# =============================================================================
+## list all loaded root macros
+if root_macros    : 
+    logger.info ('ROOT MACROS   : %s' % root_macros    )
+# =============================================================================
+## list all executed ostap/python scripts 
+if python_scripts :
+    logger.info ('OSTAP SCRIPTS : %s' % python_scripts )
+    
+# =============================================================================
+## dump all loaded 'parameters'
+if PARAMETERS : 
+    logger.info ('PARAMETERS    : %s' % PARAMETERS )
+    
 # =============================================================================
 ## command to be executed:
 for cmd in arguments.Commands :

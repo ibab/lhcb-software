@@ -8,6 +8,17 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2016-03-23 - Vanya Belyaev
+ - better printout of arguments 
+
+! 2016-03-23 - Vanya Belyaev
+ - reshuffle treatment of positional arguments
+   everything that is not opened/loaded/executes goes to 
+   PARAMETERS list that can be used e.g. to propagate configuration 
+   parameters:  
+
+        ostap a.py b.C  1 2 c.C++ 3 4 
+
 ! 2016-03-22 - Vanya Belyaev
  - rename "-l/--load" to "-m/--macros"
 
