@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2016-03-23 - Roel Aaij
+ - Add some old-school poor-man's caching to speed up configuration of
+   Hlt2Tracking.
+
 ! 2016-03-23 - Rosen Matev
  - Fix HltTracking.instantiate test
 
