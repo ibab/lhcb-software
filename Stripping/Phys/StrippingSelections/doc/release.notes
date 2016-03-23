@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-03-23 - Pablo Ruiz Valls
+ - Added /tests/liaisons/overlap/
+ - Added /tests/liaisons/overlap/WGs_lines_overlap.py, a tool to analyze lines' overlap data
+ - Added /tests/liaisons/overlap/lines_intersections_23r1.dat a file with all the 23r1 intersections
+
 ! 2016-03-23 - Andrea Contu
  - Modify liaisons test scripts for S26
 
