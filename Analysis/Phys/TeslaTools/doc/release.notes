@@ -5,6 +5,7 @@
 
 ! 2015-03-23 - Sean Benson
  - Fix to the major change to deal with multiple lines in the same algorithm.
+ - Add tweak for alignment usage.
 
 !========================= TeslaTools v2r0 2016-03-22 ========================
 

@@ -440,7 +440,7 @@ StatusCode TeslaReportAlgo::execute()
           if(!protoClone){
             cont_Proto->insert( proto );
             // Make sure we don't insert zombie objects
-            if(track->type()!=LHCb::Track::Types::TypeUnknown) {
+            if(track->type()!=LHCb::Track::Types::TypeUnknown || m_SelRepLoc=="Hlt1/SelReports") { // Hlt1 is alignment usage, no zombies
               cont_Track->insert( track );
               cont_MPID->insert( muon );
               cont_RPID->insert( rich );
@@ -612,7 +612,7 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, LHCb::Particle* Part, const LHC
       if(!protoClone){
         cont_Proto->insert( proto_d );
         // Make sure we don't insert zombie objects
-        if(track_d->type()!=LHCb::Track::Types::TypeUnknown) {
+        if(track_d->type()!=LHCb::Track::Types::TypeUnknown || m_SelRepLoc=="Hlt1/SelReports") { // Hlt1 is alignment usage, no zombies
           cont_Track->insert( track_d );
           cont_MPID->insert( muon_d );
           cont_RPID->insert( rich_d );
