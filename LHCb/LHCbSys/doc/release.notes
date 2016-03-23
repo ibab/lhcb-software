@@ -5,7 +5,7 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v40r1>2016-03-21 LHCbSys v40r1</A></H1><PRE>
+</PRE><H1><A NAME=v40r1>2016-03-23 LHCbSys v40r1</A></H1><PRE>
 This version uses Gaudi v27r1 and LCG_84 with ROOT 6.06.02.
 
 - Packages modified: Det/DDDB v1r84, Det/DetCond v12r47, Det/DetDesc v19r1,
@@ -235,6 +235,8 @@ This version uses Gaudi v27r1 and LCG_84 with ROOT 6.06.02.
   . Add print functions to smart refs 
 
 - In Rich/RichKernel v7r63
+  . Update RichTrackSegment to set the default photon energy to the average
+    for RICH1 and RICH2 gas radiators, instead of 0.
   . Small improvement to the flat mirror reflection method, to avoid an
     unneccesary dot product.
   . Add a new header file, RichRayTracingUtils.h, that contains some basic
