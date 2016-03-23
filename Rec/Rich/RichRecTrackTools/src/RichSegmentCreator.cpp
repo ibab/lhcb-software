@@ -117,8 +117,9 @@ SegmentCreator::newSegment( LHCb::RichTrackSegment* segment,
         (LHCb::RichRecSegment::FloatType)(m_detParams->minPhotonEnergy(segment->radiator())),
         (LHCb::RichRecSegment::FloatType)(m_detParams->maxPhotonEnergy(segment->radiator())) 
         );
-    // Set the average photon energy
-    segment->setAvPhotonEnergy( m_signal->avgSignalPhotEnergy(seg) );
+    // Set the average photon energy (if meaningful)
+    const auto avPhotEn = m_signal->avgSignalPhotEnergy(seg);
+    if ( avPhotEn > 0 ) { segment->setAvPhotonEnergy(avPhotEn); }
   }
   return seg;
 }

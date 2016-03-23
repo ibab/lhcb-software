@@ -147,7 +147,8 @@ namespace Rich
                   << " RichRecSegments : Aerogel="
                   << m_segCount[Rich::Aerogel]-m_segCountLast[Rich::Aerogel]
                   << " Rich1Gas=" << m_segCount[Rich::Rich1Gas]-m_segCountLast[Rich::Rich1Gas]
-                  << " Rich2Gas=" << m_segCount[Rich::Rich2Gas]-m_segCountLast[Rich::Rich2Gas] << endmsg;
+                  << " Rich2Gas=" << m_segCount[Rich::Rich2Gas]-m_segCountLast[Rich::Rich2Gas]
+                  << endmsg;
         }
       }
     }
