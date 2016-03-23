@@ -5,6 +5,11 @@
 #  Please contact the abovementioned responsibles before editing this file
 #
 ##
+""" Lines for the study of the physics of strange hadrons. 
+"""
+
+__version__ = "$Revision: $"
+__author__  = "Francesco Dettori francesco.dettori@cern.ch"
 
 
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
@@ -16,7 +21,7 @@ class StrangeLines(Hlt2LinesConfigurableUser):
                  'Common' : {'TrChi2' : 3,
                              'TrGP' : 0.3
                              },
-                 'KPiPiPi' : { 'piMinIpChi2' :  25. ,
+                 'KPiPiPiTurbo' : { 'piMinIpChi2' :  25. ,
                                'KMassWin' : 100 * MeV ,
                               'KMaxDOCA' : 2. * mm ,
                               'KVtxChi2' : 25. ,  # adimensional
@@ -39,7 +44,7 @@ class StrangeLines(Hlt2LinesConfigurableUser):
         from Stages import KPiPiPiCombiner
 
         self._stages = {
-                         'KPiPiPi'      : [ KPiPiPiCombiner('KPiPiPi')]
+                         'KPiPiPiTurbo'      : [ KPiPiPiCombiner('KPiPiPiTurbo')]
                   }
 
         if nickname:
@@ -54,7 +59,13 @@ class StrangeLines(Hlt2LinesConfigurableUser):
 
         for (nickname, algos) in self.algorithms(stages):
             linename ='Strange'+nickname
-            Hlt2Line(linename,
-                     prescale = self.prescale,
-                     algos = algos,
-                     postscale = self.postscale)
+            if "Turbo" in nickname : 
+                Hlt2Line(linename,
+                         prescale = self.prescale,
+                         algos = algos,
+                         postscale = self.postscale, Turbo = True)
+            else: 
+                Hlt2Line(linename,
+                         prescale = self.prescale,
+                         algos = algos,
+                         postscale = self.postscale)

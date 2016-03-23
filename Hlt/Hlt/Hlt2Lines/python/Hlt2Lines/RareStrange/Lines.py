@@ -5,7 +5,11 @@
 #  Please contact the abovementioned responsibles before editing this file
 #
 ##
-
+__version__ = "$Revision: $"
+__author__  = "Francesco Dettori francesco.dettori@cern.ch"
+"""
+Set of lines for the study of rare strange decays (RD WG). 
+"""
 
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser

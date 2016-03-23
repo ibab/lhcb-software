@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-03-23 - Francesco Dettori
+ - Adding Turbo flag which was missing from Turbo HLT DiMuon lines
+ - Adding Turbo flag and name in Hlt2StrangeKPiPiPiLine 
+ - Adding description and author in several modules
+
 ! 2016-03-17 - Francesco Dettori
  - Bug fix to RareStrange lines to include also same sign muons for LFV  K-> pi mu mu 
 

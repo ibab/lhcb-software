@@ -1,3 +1,12 @@
+#
+# Do not edit without permission of the HLT Muon responsible.
+#
+""" Module for the selection of inclusive DiMuons. This is the base of a wide range of analyses in various WG.
+These are managed by the HLT Muon responsible. 
+"""
+__version__ = "$Revision: $"
+__author__  = "Francesco Dettori francesco.dettori@cern.ch"
+
 from GaudiKernel.SystemOfUnits import GeV, MeV, mm
 
 from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
@@ -136,8 +145,14 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
         stages = self.stages()
         for (nickname, algos) in self.algorithms(stages):
             linename = 'DiMuon' + nickname if nickname != 'DiMuon' else nickname
-            Hlt2Line(linename, prescale = self.prescale,
-                     algos = algos, postscale = self.postscale)
+            if "Turbo" in nickname : 
+                Hlt2Line(linename, prescale = self.prescale,
+                         algos = algos, postscale = self.postscale, Turbo = True)
+            else:
+                Hlt2Line(linename, prescale = self.prescale,
+                         algos = algos, postscale = self.postscale)
+
+                
             if nickname is 'JPsi':
                 HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonJPsiDecision":  50201 } )
             if nickname is 'JPsiTurbo':
