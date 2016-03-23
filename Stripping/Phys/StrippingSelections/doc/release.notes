@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-03-23 - Simone Stracka
+ - added StrippingBandQ/StrippingBbbar2PhiPhi.py (and __init__.py modified accordingly)
+
 ! 2016-03-23 - Pablo Ruiz Valls
  - Added /tests/liaisons/overlap/
  - Added /tests/liaisons/overlap/WGs_lines_overlap.py, a tool to analyze lines' overlap data
