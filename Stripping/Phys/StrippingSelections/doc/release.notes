@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-03-23 - Andrea Contu
+ - Modify liaisons test scripts for S26
+
 ! 2016-03-22 - Dan Johnson & Alessandro Bertolin
  - Timing and retention improvements to B2OC module
  - Addition of new lines for S26
