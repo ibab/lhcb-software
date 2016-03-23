@@ -660,11 +660,12 @@ namespace LHCb
     StateErrors m_errorsMiddle;    ///< Errors for the middle state
     StateErrors m_errorsExit;      ///< Errors for the exit state
 
-    /** The average observable photon energy for this segment
+    /** The average observable photon energy for this segment.
+     *  Set to the average for Rich1 and Rich2 gas radiators...
      *  @todo Quick fix. Need to review to if this can be done in a better way
      *        without the need for this variable.
      */
-    double m_avPhotonEnergy = 0;
+    double m_avPhotonEnergy = 4.325;
 
     // Some variables for internal caching of information for speed
 

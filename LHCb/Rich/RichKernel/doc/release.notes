@@ -4,6 +4,10 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+! 2016-03-23 - Chris Jones
+ - Update RichTrackSegment to set the default photon energy to the average
+   for RICH1 and RICH2 gas radiators, instead of 0.
+
 !========================= RichKernel v7r63 2016-03-16 =========================
 ! 2016-03-10 - Chris Jones
  - Small improvement to the flat mirror reflection method, to avoid an
