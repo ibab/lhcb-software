@@ -1,8 +1,8 @@
 ################################################################################
-##                          S T R I P P I N G  2 3                            ##
+##                          S T R I P P I N G  2 6                            ##
 ##                                                                            ##
 ##  Configuration for B&Q WG                                                  ##
-##  Contact person: Roberta.Cardinale@cern.ch                                   ##
+##  Contact person: Roberta.Cardinale@cern.ch                                 ##
 ################################################################################
 
 from GaudiKernel.SystemOfUnits import *

@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-03-23 - Ricardo Vazquez Gomez
+ - Remove LbpMuNuVub from the LineConfig of semileptonic
+ - Update the calib lines to remove everything. Should be included from scratch
+ - Add the dbase for stripping26
+
 ! 2016-03-23 - Andrea Contu
  - Creating folder for S26
 

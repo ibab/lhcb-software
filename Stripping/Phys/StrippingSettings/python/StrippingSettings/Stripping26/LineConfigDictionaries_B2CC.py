@@ -1,5 +1,5 @@
 ################################################################################
-##                          S T R I P P I N G  2 3                            ##
+##                          S T R I P P I N G  2 6                            ##
 ##                                                                            ##
 ##  Configuration for B2CC WG                                                 ##
 ##  Contact person: Carlos Vazquez Sierra (carlos.vazquez@cern.ch)            ##

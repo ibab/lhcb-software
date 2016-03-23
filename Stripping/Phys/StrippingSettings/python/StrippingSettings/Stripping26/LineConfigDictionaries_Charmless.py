@@ -1,5 +1,5 @@
 ################################################################################
-##                          S T R I P P I N G  2 4                            ##
+##                          S T R I P P I N G  2 6                            ##
 ##                                                                            ##
 ##  Configuration for B2noC WG                                                ##
 ##  Contact person: Stefano Perazzini (Stefano.Perazzini@cern.ch)             ##

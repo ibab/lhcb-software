@@ -1,5 +1,5 @@
 ##################################################################################
-##                          S T R I P P I N G  2 4                              ##
+##                          S T R I P P I N G  2 6                              ##
 ##                                                                              ##
 ##  Configuration for QEE WG                                                    ##
 ##  Contact person: Chitsanu Khurewathanakul (chitsanu.khurewathanakul@cern.ch) ##

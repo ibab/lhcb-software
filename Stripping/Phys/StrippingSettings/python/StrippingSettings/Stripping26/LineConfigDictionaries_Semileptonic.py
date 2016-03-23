@@ -1,5 +1,5 @@
 ################################################################################
-##                          S T R I P P I N G  2 4                            ##
+##                          S T R I P P I N G  2 6                            ##
 ##                                                                            ##
 ##  Configuration for SL WG                                                   ##
 ##  Contact person: Greg Ciezarek (gregory.max.ciezarek@cern.ch)              ##
@@ -406,30 +406,3 @@ D2HMuNu = {
         "Charm"
     ]
 }
-
-Lb2pMuNuVub = {
-    "BUILDERTYPE": "Lb2pMuNuVubBuilder", 
-    "CONFIG": {
-        "BDIRA": 0.9994, 
-        "BFDCHI2HIGH": 150.0, 
-        "BVCHI2DOF": 4.0, 
-        "GEC_nLongTrk": 250.0, 
-        "MuonGHOSTPROB": 0.35, 
-        "MuonMINIPCHI2": 16.0, 
-        "MuonP": 3000.0, 
-        "MuonPT": 1500.0, 
-        "MuonTRCHI2": 4.0, 
-        "ProtonMINIPCHI2": 16.0, 
-        "ProtonP": 15000.0, 
-        "ProtonPIDK": 10.0, 
-        "ProtonPIDp": 10.0, 
-        "ProtonPT": 1000.0, 
-        "ProtonTRCHI2": 6.0, 
-        "TRGHOSTPROB": 0.35, 
-        "pMuMassLower": 1000.0, 
-        "pMuPT": 1500.0
-    }, 
-    "STREAMS": [ "Semileptonic" ], 
-    "WGs": [ "Semileptonic" ]
-}
-
