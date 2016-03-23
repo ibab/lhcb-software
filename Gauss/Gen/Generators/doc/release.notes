@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+!======================= Generators v16r0 2016-03-23 =========================
 ! 2016-02-03 - Gloria Corti
  - Changed the default production tool from Pythia6 to Pythia8.
    . src/Lib/ExternalGenerators.cpp, changed value of property ProductionTool
