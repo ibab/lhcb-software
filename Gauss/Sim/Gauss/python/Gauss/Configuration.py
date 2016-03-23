@@ -71,7 +71,7 @@ class Gauss(LHCbConfigurableUser):
         'muon' ,
         'magnet',
         'rich1pmt', 'rich2pmt',
-        'hc' 
+        'hc'
 #        'bcm', 'bls'
         ]
 
@@ -1912,8 +1912,9 @@ class Gauss(LHCbConfigurableUser):
         if 'Ecal'    in self.getProp('DetectorSim')['Detectors'] : detlist += ['Ecal']
         if 'Hcal'    in self.getProp('DetectorSim')['Detectors'] : detlist += ['Hcal']
         if 'HC'      in self.getProp('DetectorSim')['Detectors'] : detlist += ['HC']
-        if 'Bcm'     in self.getProp('DetectorSim')['Detectors'] : detlist += ['Bcm']
-        if 'Bls'     in self.getProp('DetectorSim')['Detectors'] : detlist += ['Bls']
+        # GC - 20160323 Bmc and Bls Off for now
+        ## if 'Bcm'     in self.getProp('DetectorSim')['Detectors'] : detlist += ['Bcm']
+        ## if 'Bls'     in self.getProp('DetectorSim')['Detectors'] : detlist += ['Bls']
         # PSZ - add upgrade detectors here
         if 'VP'      in self.getProp('DetectorSim')['Detectors'] : detlist += ['VP']
         if 'UT'      in self.getProp('DetectorSim')['Detectors'] : detlist += ['UT']
@@ -2049,7 +2050,7 @@ class Gauss(LHCbConfigurableUser):
         EvtGenDecay().DecayFile = "$DECFILESROOT/dkfiles/DECAY.DEC"
 
 
-        from Configurables import ( GenInit, Generation )
+        from Configurables import ( GenInit, Generation, MaskParticles )
         for slot in SpillOverSlots:
             genSequence = GaudiSequencer("GeneratorSlot"+self.slotName(slot)+"Seq" )
             gaussGeneratorSeq.Members += [ genSequence ]
@@ -2087,6 +2088,14 @@ class Gauss(LHCbConfigurableUser):
                 genProc.PileUpTool = 'FixedLuminosityForSpillOver' 
 
             genSequence.Members += [ genInit , genProc ]
+            # When HC simulation is switched on the very forward protons must be
+            # removed from the HepMC record since they cause showers in it
+            if 'HC' in self.getProp('DetectorSim')['Detectors']:
+                genMask = MaskParticles("MaskDiffractiveProton"+slot,
+                                        HepMCEventLocation = TESNode+"Gen/HepMCEvents")
+                genSequence.Members += [genMask]
+                
+            
     ## end of Gen configuration
     ##########################################################################
 
@@ -2361,10 +2370,11 @@ class Gauss(LHCbConfigurableUser):
             self.defineHcalGeo( detPieces )
         elif lDet == "hc":
             self.defineHCGeo(detPieces)
-        elif lDet == "bcm":
-            self.defineBcmGeo(detPieces)
-        elif lDet == "bls":
-            self.defineBlsGeo(detPieces)
+        # GC - 20160323 Bcm and Bls off for now
+        ## elif lDet == "bcm":
+        ##     self.defineBcmGeo(detPieces)
+        ## elif lDet == "bls":
+        ##     self.defineBlsGeo(detPieces)
         # Upgrade detectors below
         elif lDet == "vp":
             self.defineVPGeo( detPieces )
@@ -2545,10 +2555,11 @@ class Gauss(LHCbConfigurableUser):
             self.configureHcalSim( slot, detHits )
         elif det == "hc":
             self.configureHCSim(slot, detHits)
-        elif det == "bcm":
-            self.configureBcmSim(slot, detHits)
-        elif det == "bls":
-            self.configureBlsSim(slot, detHits)
+        # GC - 20160323 Bcm and Bls off for now    
+        ## elif det == "bcm":
+        ##    self.configureBcmSim(slot, detHits)
+        ## elif det == "bls":
+        ##    self.configureBlsSim(slot, detHits)
         # Upgrade detectors below
         elif det == "vp":
             self.configureVPSim( slot, detHits )
@@ -2734,10 +2745,11 @@ class Gauss(LHCbConfigurableUser):
             self.configureHcalMoni( slot, packCheckSeq, detMoniSeq, checkHits )
         elif det == "hc":
             self.configureHCMoni(slot, packCheckSeq, detMoniSeq, checkHits)
-        elif det == "bcm":
-            self.configureBcmMoni(slot, packCheckSeq, detMoniSeq, checkHits)
-        elif det == "bls":
-            self.configureBlsMoni(slot, packCheckSeq, detMoniSeq, checkHits)
+        # GC - 20160323 Bls and Bc off for now    
+        ## elif det == "bcm":
+        ##     self.configureBcmMoni(slot, packCheckSeq, detMoniSeq, checkHits)
+        ## elif det == "bls":
+        ##     self.configureBlsMoni(slot, packCheckSeq, detMoniSeq, checkHits)
         # Upgrade detectors below
         elif det == "vp":
             self.configureVPMoni( slot, packCheckSeq, detMoniSeq, checkHits )
@@ -2975,8 +2987,9 @@ class Gauss(LHCbConfigurableUser):
              if 'HC' in self.getProp('DetectorSim')['Detectors']:
                giga.RunSeq.TrCuts.MinZ = -125.0 * SystemOfUnits.m
                giga.RunSeq.TrCuts.MaxZ =  125.0 * SystemOfUnits.m
-             elif 'Bcm' in self.getProp('DetectorSim')['Detectors']:
-               giga.RunSeq.TrCuts.MinZ = -25.0 * SystemOfUnits.m
+             # GC - 20160323 Bcm off for now  
+             ## elif 'Bcm' in self.getProp('DetectorSim')['Detectors']:
+             ##   giga.RunSeq.TrCuts.MinZ = -25.0 * SystemOfUnits.m
              giga.RunSeq.Members += [ "TrCutsRunAction/TrCuts" ] 
              giga.RunSeq.addTool( GiGaRunActionCommand("RunCommand") , name = "RunCommand" ) 
              giga.RunSeq.Members += [ "GiGaRunActionCommand/RunCommand" ]

@@ -19,3 +19,7 @@ LHCbApp().CondDBtag = "sim-20150522-1-vc-md100"
 from Configurables import CondDB
 CondDB().LocalTags = { "DDDB":["particles-20150720"] }
 
+#--Set datatype
+from Configurables import Gauss
+Gauss().DataType  = "2011"
+

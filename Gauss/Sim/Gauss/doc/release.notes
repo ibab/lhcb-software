@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2016-03-23 - Gloria Corti
+ - Really switch off all code for simulation of BCM and BLS
+ - Add Masking of high nergy very forward proton when Herschel is simulated
+   as they are not correctly transported and cause problems
+
 ! 2016-03-15 - Gloria Corti
  - Update reference due to expected differences, i.e. 
    . default for pileup when not set explicitly is Pythia8
@@ -15,7 +20,7 @@
  - Introduce protection to prevent simulation of Hereschel if not Run2DataType
    (i.e. 2015 and 2016)
  - Switch off simulation of BCM and BLS for the moment since cannot write their
-   hits
+   hitssvn 
 ! 2016-03-14 - Gloria Corti
  - Modified Gauss() configurable to allow simulating Herschel (HC), BCM and BLS
    Note that for the last two the hist are not saved and these three detectors
