@@ -605,7 +605,7 @@ StatusCode LoKi::DecayTreeFit::fit                     // fit the decay tree
   if ( Fitter::Success != status ) 
   { 
     m_fitter.reset () ;
-    return Warning ( "Fitter failed status" , 110 + status, 1 ) ; 
+    return Warning ( "Fitter failed status" , 110 + status, 0 ) ; 
   }
   //
   return StatusCode::SUCCESS ;
