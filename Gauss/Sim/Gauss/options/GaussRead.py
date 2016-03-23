@@ -48,7 +48,7 @@ appendPostConfigAction ( readOnly )
 #--General Gauss setting and sequence
 #
 Gauss().Phases = []
-Gauss().Output = 'NONE'
+Gauss().OutputType = 'NONE'
 
 #-- Unpack all data
 DataOnDemandSvc().AlgMap =  {'/Event/MC/Particles': 'UnpackMCParticle/UnpackMCParticle',
@@ -91,9 +91,8 @@ EventSelector().Input   += [
 ]
 
 #-- Do not need them here, can use #importOptions($APPCONFIGOPTS/Conditions...)
-LHCbApp( DataType = "2010", Simulation = True )
+LHCbApp( DataType = "2011", Simulation = True )
 LHCbApp().DDDBtag = "head-20100504"
 LHCbApp().CondDBtag = "sim-20100510-vc-md100"
 
-importOptions("$APPCONFIGOPTS/Gauss/Beam3500GeV-md100-nu1.py")
 LHCbApp().EvtMax = 100

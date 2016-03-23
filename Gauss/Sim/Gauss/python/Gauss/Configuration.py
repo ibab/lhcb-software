@@ -1235,9 +1235,10 @@ class Gauss(LHCbConfigurableUser):
         
         detMoniSeq.Members += [ MuonHitChecker( det + "HitChecker" + slot,
                                                 FullDetail = True )]
-        from Configurables import MuonMultipleScatteringChecker
-        detMoniSeq.Members += [
-            MuonMultipleScatteringChecker( "MuonMultipleScatteringChecker"+ slot )]
+## The following should only be done in expert checks        
+#        from Configurables import MuonMultipleScatteringChecker
+#        detMoniSeq.Members += [
+#            MuonMultipleScatteringChecker( "MuonMultipleScatteringChecker"+ slot )]
 
         if self.getProp("EnablePack") and self.getProp("DataPackingChecks") :
             
