@@ -4,8 +4,15 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2016-03-22 - Gloria Corti
+ - Rename the commeand file = LHCbDefault_CT09MCS.cmd as LHCbDefault.cmd 
+   and remove from svn the CT09MCS file to avoid confusion.
+ - Remove also obsolete command file LHCbPt0Ref2.6_CT09MCS.cmd
+
 ! 2016-03-18 - Gloria Corti
- - Put Tune 1 parameters for CT09MCS that will be the default for production
+ - Put Tune 1 parameters for CT09MCS that will be the default for production.
+   They are those used in Sim09 validation via
+   AppConfig/vXrY/options/Gauss/Pythia8_CT09MCS_Tune1_v48r3.py
    . options/LHCbDefault_CT09MCS.cmd
 
 ! 2016-03-18 - Philip Ilten

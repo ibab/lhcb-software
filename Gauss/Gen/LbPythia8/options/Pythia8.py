@@ -4,7 +4,8 @@ from Configurables import Special
 
 Pythia8TurnOffFragmentation = [ "HadronLevel:all = off" ]
 
-gen = Generation()
+gen = Generation("Generation")
+
 gen.addTool( MinimumBias , name = "MinimumBias" )
 gen.MinimumBias.ProductionTool = "Pythia8Production"
 gen.MinimumBias.addTool( Pythia8Production , name = "Pythia8Production" )
