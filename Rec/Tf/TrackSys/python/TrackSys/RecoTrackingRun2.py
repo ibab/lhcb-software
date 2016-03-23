@@ -52,7 +52,6 @@ def DecodeTracking(trackAlgs, ExcludedLayers = []):
       d.Properties["TimeWindow"] = ( -999.0*ns, 999.0*ns )
    #ensure the public tool is configured and marked as used
    d.setup()
-         
 
 def RecoTrackingHLT1(exclude=[], simplifiedGeometryFit = True, liteClustersFit = True):
    '''Function that defines the pattern recognition algorithms for the HLT1 sequence of the Run 2 offline tracking'''
@@ -82,38 +81,40 @@ def RecoTrackingHLT1(exclude=[], simplifiedGeometryFit = True, liteClustersFit =
    from STTools import STOfflineConf
    STOfflineConf.DefaultConf().configureTools()
 
+
    ## Make sure the default extrapolator and interpolator use simplified material
+   from Configurables import TrackMasterExtrapolator, TrackInterpolator, SimplifiedMaterialLocator, DetailedMaterialLocator
    if TrackSys().simplifiedGeometry() and ('SimpleGeom' not in exclude):
-      from Configurables import TrackMasterExtrapolator, TrackInterpolator
       TrackMasterExtrapolator().MaterialLocator = 'SimplifiedMaterialLocator'
       TrackInterpolator().addTool( TrackMasterExtrapolator( MaterialLocator = 'SimplifiedMaterialLocator' ), name='Extrapolator')
-      
-
+            
    ### This configures public tools to use the new multiple scattering description without the log term
-   from Configurables import TrackMasterExtrapolator, DetailedMaterialLocator, StateThickMSCorrectionTool
+   from Configurables import StateThickMSCorrectionTool
    me = TrackMasterExtrapolator()
    me.addTool(DetailedMaterialLocator(), name="MaterialLocator")
    me.MaterialLocator.addTool( StateThickMSCorrectionTool, name= "StateMSCorrectionTool")
    me.MaterialLocator.StateMSCorrectionTool.UseRossiAndGreisen = True
 
-   from Configurables import TrackInterpolator
    ti = TrackInterpolator()
    ti.addTool( me )
 
    from Configurables import TrackStateProvider
    tsp = TrackStateProvider()
-   tsp.addTool( TrackInterpolator, name = "TrackInterpolator" )
-   tsp.TrackInterpolator.addTool( TrackMasterExtrapolator, name='TrackMasterExtrapolator')
-   tsp.TrackInterpolator.TrackMasterExtrapolator.addTool(DetailedMaterialLocator, name = "MaterialLocator" ) 
-   tsp.TrackInterpolator.TrackMasterExtrapolator.MaterialLocator.addTool( StateThickMSCorrectionTool, name= "StateMSCorrectionTool")
-   tsp.TrackInterpolator.TrackMasterExtrapolator.MaterialLocator.StateMSCorrectionTool.UseRossiAndGreisen = True
+   tsp.addTool(TrackInterpolator, name = "Interpolator" )
+   tsp.addTool(TrackMasterExtrapolator,name="Extrapolator")
+   tsp.Interpolator.addTool( TrackMasterExtrapolator, name='Extrapolator')
+   if simplifiedGeometryFit or ( TrackSys().simplifiedGeometry() and ('SimpleGeom' not in exclude)):
+      tsp.Extrapolator.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
+      tsp.Interpolator.Extrapolator.addTool(SimplifiedMaterialLocator, name = "MaterialLocator" )
+   else:
+      tsp.Extrapolator.addTool(DetailedMaterialLocator, name="MaterialLocator")
+      tsp.Interpolator.Extrapolator.addTool(DetailedMaterialLocator, name = "MaterialLocator" ) 
+   tsp.Extrapolator.MaterialLocator.addTool( StateThickMSCorrectionTool, name= "StateMSCorrectionTool" )
+   tsp.Extrapolator.MaterialLocator.StateMSCorrectionTool.UseRossiAndGreisen = True
+   tsp.Interpolator.Extrapolator.MaterialLocator.addTool( StateThickMSCorrectionTool, name= "StateMSCorrectionTool")
+   tsp.Interpolator.Extrapolator.MaterialLocator.StateMSCorrectionTool.UseRossiAndGreisen = True
    ###
-      
 
-
-
-
-   
    ## Velo tracking
    ## Why is Velo not in the tracking sequence?
    if "FastVelo" in trackAlgs :

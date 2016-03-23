@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2016-03-23 - Sascha Stahl
+ - RecoTrackingRun2: Activate SimplifiedGeometry in TrackStateProvider by default.
+   Can be overwritten by ExpertOptions.
+
 !========================= TrackSys v9r13 2016-03-17 =========================
 ! 2016-03-03 - Michel De Cian
  - Remove calculation of TrackLikelihood from 2016 on per default (in Configuration.py).
