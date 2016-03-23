@@ -340,89 +340,102 @@ del _startups,_executed,_s,_ss
 ## execute the files, defined as arguments
 # =============================================================================
 root_files = {}
-for pattern in arguments.files :
-    import glob 
-    for _f in glob.iglob ( pattern ) :
-        
-        fok = os.path.exists ( _f ) and os.path.isfile ( _f ) 
-        name,dot,ext  = _f.rpartition('.')
-        if  ext in ('root', 'ROOT' ) :
+PARAMETERS = [] 
+## perform treatment of the file 
+def treat_file ( f ) :
+    
+    fok = os.path.exists ( f ) and os.path.isfile ( f ) 
+    name,dot,ext  = f.rpartition('.')
+    if  name and dot and ext in ('root', 'ROOT' ) :
+        try :
             from Ostap.TFileDeco import ROOTCWD 
-            try :
-                with ROOTCWD() :
-                    f = ROOT.TFile.Open( _f , 'READ')
-                    root_files [ name ] = f 
-                    logger.info ("Open ROOT file '%s'" % _f )
-                    f.ls()
-                    continue
-                
-            except :
-                
-                # - Batch mode:       just re-raise exception
-                if arguments.batch :  raise
-                
-                # - Interactive mode: print traceback and continue 
-                logger.error ('Failure to open ROOT file "%s"'  % _f  , exc_info = True ) 
-
-        ## execute python file 
-        elif fok and 'py' == ext  :  
-
-            logger.info  ("Try    to execute '%s'" % _f )
+            with ROOTCWD() :
+                _f = ROOT.TFile.Open(  f , 'READ')
+                root_files [ name ] = _f 
+                logger.info ("Open ROOT file '%s'" % f )
+                f.ls()
+        except :
             
-            try :
-
-                if arguments.WithContext :  execfile ( _f , globals() ) ## with context 
-                else                     :  execfile ( _f )             ## plain  
-                    
-            except :
-                
-                # - Batch mode:       just re-raise exception
-                if arguments.batch :  raise
-                
-                # - Interactive mode: print traceback and continue 
-                logger.error ('Failure to execute "%s"'     % _f  , exc_info = True ) 
-
-        elif dot and ext in ( 'C'   , 'C+'   , 'C++'  ) :
+            # - Batch mode:       just re-raise exception
+            if arguments.batch :  raise
             
-            logger.info  ("Try to load macro '%s'" % _f )
-            sc   = ROOT.gROOT.LoadMacro ( _f )
-            if sc :
-                # - Interactive mode: print traceback and continue
-                if arguments.batch :
-                    raise RuntimeError, 'Failure to load macro "%s" code:%d' % ( _f , sc ) 
-                else :
-                    logger.error       ('Failure to load macro "%s" code:%d' % ( _f , sc ) )
+            # - Interactive mode: print traceback and continue 
+            logger.error ('Failure to open ROOT file "%s"'  % f  , exc_info = True ) 
+            
+    ## execute python file 
+    elif fok and name and dot and 'py' == ext  :  
+        
+        logger.info  ("Try    to execute '%s'" % f )
+        
+        try :
+            
+            if arguments.WithContext :  execfile ( f , globals() ) ## with context 
+            else                     :  execfile ( f )             ## plain  
+
+        except :
+            
+            # - Batch mode:       just re-raise exception
+            if arguments.batch :  raise
+            
+            # - Interactive mode: print traceback and continue 
+            logger.error ('Failure to execute "%s"'     % f  , exc_info = True ) 
+            
+    elif name and dot and ext in ( 'C'   , 'C+'   , 'C++'  ) :
+            
+        logger.info  ("Try to load macro '%s'" % f )
+        sc   = ROOT.gROOT.LoadMacro ( f )
+        if sc :
+            # - Interactive mode: print traceback and continue
+            if arguments.batch :
+                raise RuntimeError, 'Failure to load macro "%s" code:%d' % ( f , sc ) 
             else :
-                logger.debug ('Loaded macro "%s" code:%d' % ( _f , sc ) )
+                logger.error       ('Failure to load macro "%s" code:%d' % ( f , sc ) )
+        else :
+            logger.debug ('Loaded macro "%s" code:%d' % ( f , sc ) )
             del sc 
 
-        ## execute Ostap-script 
-        elif fok and name and dot and ext in ( 'ost' , 'ostp' , 'ostap' ) :
-
-            logger.info  ("Try    to execute '%s'" % _f )
-
-            try :
-                
-                ## this one is always executed with the context!!!
-                execfile ( _f , globals() ) ## with context 
-                
-            except :
-                
-                # - Batch mode:       just re-raise exception
-                if arguments.batch :  raise
-                
-                # - Interactive mode: print traceback and continue 
-                logger.error ('Failure to execute "%s"'     % _f  , exc_info = True ) 
-                                        
-        else :
+    ## execute Ostap-script 
+    elif fok and name and dot and ext in ( 'ost' , 'ostp' , 'ostap' ) :
+        
+        logger.info  ("Try    to execute '%s'" % f )
+        
+        try :
             
-            # - Batch mode: just raise exception
-            if arguments.batch :
-                raise NameError( "Unknown command line symbol/pattern '%s'/'%s'" % ( _f , pattern )  )
+            ## this one is always executed with the context!!!
+            execfile ( f , globals() ) ## with context 
+            
+        except :
+                
+            # - Batch mode:       just re-raise exception
+            if arguments.batch :  raise
+            
+            # - Interactive mode: print traceback and continue 
+            logger.error ('Failure to execute "%s"'     % f  , exc_info = True ) 
+            
+    else :
+                
+        ## collect the argument as parameters
+        PARAMETERS.append ( f )
+        logger.debug ( 'Add argument %s to PARAMETERS' % f )
 
-            # - Interactive mode: print error message and continue 
-            logger.error ("Unknown command line symbol/pattern '%s'/'%s'" % ( _f , pattern )  )
+# =============================================================================
+## treat all input arguments/files 
+for pattern in arguments.files :
+    import glob
+    _glob = False 
+    for _f in glob.iglob ( pattern ) :
+        _glob = True
+        treat_file ( _f      )
+    if not _glob :
+        treat_file ( pattern )
+del treat_file
 
+# =============================================================================
+## dump alloaded 'parameters'
+if PARAMETERS : 
+    logger.info ('PARAMETERS: %s' % PARAMETERS )
+    
+# =============================================================================
 ## load ROOT macros 
 for m in arguments.Macros :
     logger.info  ("Try to load macro '%s'" % m )
@@ -437,7 +450,7 @@ for m in arguments.Macros :
         logger.debug ('Loaded macro "%s" code:%d' % ( m , sc ) )
     del sc 
     
-
+# =============================================================================
 ## list names of opened ROOT files 
 if root_files :
     logger.info("Opened ROOT files: %d (with '.root' extension)" % len ( root_files ) )
