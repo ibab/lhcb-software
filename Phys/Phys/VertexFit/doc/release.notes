@@ -4,6 +4,8 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+!========================= VertexFit v6r25 2016-03-24 =========================
+
 ! 2016-03-24 - Rosen Matev
  - Demote warning to info in MomentumCombiner when no transporter is specified
 
