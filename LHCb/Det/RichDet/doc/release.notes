@@ -4,12 +4,12 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v17r7 2016-03-24 =========================
 ! 2016-03-24 - Chris Jones
  - Extend the range of data passed to the magnification interpolators in
    DeRichHPD to avoid subsequent attempts to interpolate outside the valid
    range, which causes problems with GSL 2.x.
 
-!========================= RichDet v17r7 2016-03-16 =========================
 ! 2016-03-04 - Chris Jones
  - More improvements to DeRichBeamPipe. Change the API to take a start and end
    point for the direction to be tested, rather than a point and direction.
