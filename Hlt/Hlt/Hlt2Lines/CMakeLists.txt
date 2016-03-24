@@ -4,6 +4,7 @@
 gaudi_subdir(Hlt2Lines v10r7)
 
 gaudi_depends_on_subdirs(Hlt/Hlt2SharedParticles
+                         Hlt/HltTracking
                          Hlt/HltJets
                          Hlt/HltLine
                          )

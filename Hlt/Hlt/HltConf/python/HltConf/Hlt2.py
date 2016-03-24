@@ -24,7 +24,6 @@ globals().update( ( cfg.__name__, cfg ) for cfg in _hlt2linesconfs )
 # The tracking configurations
 #
 from HltTracking.Hlt2Tracking import Hlt2Tracking
-from HltJets.Configuration import HltJetConf
 from HltTracking.Hlt2ProbeTracking import Hlt2ProbeTracking
 #
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
@@ -40,7 +39,6 @@ class Hlt2Conf(LHCbConfigurableUser):
                                (Hlt2ProbeTracking, "Hlt2MuonTTTracking"),
                                (Hlt2ProbeTracking, "Hlt2VeloMuonTracking"),
                                (Hlt2ProbeTracking, "Hlt2FullDownstreamTracking"),
-                               HltJetConf
                                ] + _hlt2linesconfs
 
     __slots__ = { "DataType"                   : '2010'    # datatype is one of 2009, MC09, DC06...
@@ -106,10 +104,6 @@ class Hlt2Conf(LHCbConfigurableUser):
             setDataTypeForTracking(thistracking,self.getProp("DataType"))
             if self.getProp('Hlt2ForwardMaxVelo') and hasattr(thistracking, 'Hlt2ForwardMaxVelo'):
                  thistracking.Hlt2ForwardMaxVelo = self.getProp("Hlt2ForwardMaxVelo")
-
-        # Have to instantiate the jet configurable here to make sure the order of
-        # configuration is correct.
-        jetConf = HltJetConf()
 
 ###################################################################################
 #

@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2016-03-24 - Rosen Matev
+ - Fix dependencies between configurables.
+
 ! 2016-03-23 - Sascha Stahl
  - Fix Hlt2 filter in AfterBurner. Changed filter back to accept all Physics
    events as the SelReports by default safe the RecSummary in every accepted event.

@@ -4,6 +4,13 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2016-03-24 - Rosen Matev
+ - Fix dependencies between configurables.
+   The interface functions to the Hlt2 tracking configurables should now be
+   used in __queried_configurables__ wherever appropiate, e.g.
+   Hlt2LinesConfigurableUser, Hlt2JetConf, etc.
+ - Some cosmetic changes.
+
 ! 2016-03-23 - Roel Aaij
  - Add some old-school poor-man's caching to speed up configuration of
    Hlt2Tracking.

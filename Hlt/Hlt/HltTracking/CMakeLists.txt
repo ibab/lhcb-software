@@ -11,7 +11,6 @@ gaudi_depends_on_subdirs(Event/HltEvent
                          Hlt/HltBase
                          Hlt/HltCommon
                          Hlt/HltLine
-                         Hlt/HltJets
                          Tr/TrackInterfaces)
 
 gaudi_add_module(HltTracking

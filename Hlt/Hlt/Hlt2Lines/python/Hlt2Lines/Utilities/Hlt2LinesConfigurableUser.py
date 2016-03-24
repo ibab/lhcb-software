@@ -3,17 +3,30 @@ from itertools import izip
 from Utilities import allCuts, makeStages
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
+from HltTracking.Hlt2TrackingConfigurations import (
+    Hlt2BiKalmanFittedDownstreamTracking, Hlt2BiKalmanFittedForwardTracking)
+from HltTracking.Hlt2ProbeTrackingConfigurations import (
+    Hlt2MuonTTTracking, Hlt2VeloMuonTracking, Hlt2FullDownstreamTracking)
 from Configurables import HltJetConf
 
+
 class Hlt2LinesConfigurableUser(HltLinesConfigurableUser):
-    # configurables that need to be configured before me
+    # python configurables to be applied before me
     __queried_configurables__ = [
-        HltJetConf
+        Hlt2BiKalmanFittedForwardTracking,
+        Hlt2BiKalmanFittedDownstreamTracking,
+        Hlt2MuonTTTracking,
+        Hlt2VeloMuonTracking,
+        Hlt2FullDownstreamTracking,
+        HltJetConf,
     ]
-    __slots__ = {'_stages' : {},
-                 '_relatedInfo' : {},
-                 'Prescale'  : {},
-                 'Postscale' : {}}
+
+    __slots__ = {
+        '_stages': {},
+        '_relatedInfo': {},
+        'Prescale': {},
+        'Postscale': {},
+    }
 
     def __stages(self, source):
         # External stage sets the configurable to something that is not self.
@@ -48,13 +61,13 @@ class Hlt2LinesConfigurableUser(HltLinesConfigurableUser):
             members.append(infoStage)
             locations.extend(locs)
 
-        ## Consistency check
+        # Consistency check
         if len(locations) != len(set(locations)):
             raise Exception('At least one location in %s appears twice, this will not work!' % locations)
 
         from HltLine.HltLine import Hlt2SubSequence
         return (locations, [Hlt2SubSequence("RelatedInfoSequence", members,
-                                            ModeOR = True, ShortCircuit = False)])
+                                            ModeOR=True, ShortCircuit=False)])
 
     def algorithms(self, stages):
         from HltLine.HltLine import bindMembers
@@ -62,7 +75,8 @@ class Hlt2LinesConfigurableUser(HltLinesConfigurableUser):
         def __flatten(l):
             for i in l:
                 if isinstance(i, bindMembers):
-                    for j in __flatten(i.members()): yield j
+                    for j in __flatten(i.members()):
+                        yield j
                 else:
                     yield i
 

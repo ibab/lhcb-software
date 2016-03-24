@@ -15,10 +15,18 @@ from Configurables import (GaudiSequencer,
                            CaloPhotonMatch,
                            InHcalAcceptanceAlg,
                            PhotonMatchAlg)
+from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
+from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
 
 import GaudiKernel.ProcessJobOptions
 
 class HltJetConf(LHCbConfigurableUser):
+    # python configurables to be applied before me
+    __queried_configurables__ = [
+        Hlt2BiKalmanFittedForwardTracking,
+        Hlt2BiKalmanFittedDownstreamTracking,
+    ]
+    
     __slots__ = {'ParticleFlowOptions' : {},
                  '__particleFlow'  : 0,
                  '__caloProcessor' : 0}

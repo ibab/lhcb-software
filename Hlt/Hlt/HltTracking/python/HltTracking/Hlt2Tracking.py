@@ -1,18 +1,8 @@
-### @file
-#
-#  Hlt2 Tracking and PID
-#
-#  @author V. Gligorov   Vladimir.Gligorov@cern.ch
-#
-#  Based on code by P. Koppenburg
-#
-#  @date 2010-02-21
-#
-##
-# =============================================================================
-__author__  = "V. Gligorov vladimir.gligorov@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.25 $"
-# =============================================================================
+"""Hlt2 Tracking and PID.
+
+Based on code by P. Koppenburg.
+"""
+
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from HltTrackNames import TrackName, Hlt2TrackRoot, Hlt2TrackLoc, Hlt1TrackLoc, HltSharedTrackLoc
@@ -23,7 +13,7 @@ from HltTrackNames import _baseTrackLocation, _baseProtoPLocation
 from HltTrackNames import HltMuonTracksName, HltAllMuonTracksName
 from HltTrackNames import HltMuonIDSuffix, HltRICHIDSuffix, HltCALOIDSuffix, HltSharedPIDPrefix
 from HltTrackNames import (HltNoPIDSuffix, HltAllPIDsSuffix, HltCaloProtosSuffix, HltMuonProtosSuffix,
-                           HltRichProtosSuffix, HltAllPIDsProtosSuffix, HltCaloAndMuonProtosSuffix )
+                           HltRichProtosSuffix, HltAllPIDsProtosSuffix, HltCaloAndMuonProtosSuffix)
 
 from HltTrackNames import HltDefaultFitSuffix
 from HltTrackNames import HltGlobalTrackLocation
@@ -33,42 +23,24 @@ from HltTrackNames import Hlt2TrackingRecognizedFitTypesForRichID
 from HltRecoConf import HltRichDefaultHypos, HltRichDefaultRadiators
 from HltRecoConf import HltRichDefaultTrackCuts
 from HltRecoConf import OfflineRichDefaultHypos, OfflineRichDefaultRadiators
-from HltRecoConf import OfflineRichDefaultTrackCuts,OfflineRichDefaultDownTrackCuts
+from HltRecoConf import OfflineRichDefaultTrackCuts, OfflineRichDefaultDownTrackCuts
 
-from Configurables import CaloProcessor, RichRecSysConf, TrackSelector, TrackSys, HltJetConf
-
-#import all Hlt2 lines configurables in our scope so that genConfUser can find it... (i.e. make sure it is in 'dir()')
-from HltConf.ThresholdUtils import importLineConfigurables
-from HltConf.HltAfterburner import HltAfterburnerConf
-from HltConf.HltPersistReco import HltPersistRecoConf
-
+from Configurables import CaloProcessor, RichRecSysConf, TrackSelector, TrackSys
 from Configurables import ChargedProtoANNPIDConf
 
-import Hlt2Lines
-_hlt2linesconfs = importLineConfigurables( Hlt2Lines )
 
-#################################################################################################
-#
-# Hlt2 Tracking
-#
+__author__ = "V. Gligorov (vladimir.gligorov@cern.ch), S. Stahl (sascha.stahl@cern.ch)"
+
+
 class Hlt2Tracking(LHCbConfigurableUser):
-    #############################################################################################
-    #
-    # First of all the dependencies and the slots
-    #
-    #############################################################################################
-    __used_configurables__ = [ (CaloProcessor, None),
-                               (RichRecSysConf, None),
-                               TrackSys,
-                               HltAfterburnerConf,
-                               HltPersistRecoConf,
-                               (ChargedProtoANNPIDConf,None),
-                               HltJetConf ]
-                             # This above hlt2linesconf defines all the Hlt2 Lines since they
-                             # configured after the tracking. This means that each
-                             # Hlt2Lines configurable MUST be a singleton AND this
-                             # list must be EXACTLY the same as the one in
-                             # $HLTCONFROOT/python/HltConf/Hlt2.py
+    # python configurables that I configure
+    __used_configurables__ = [
+        (CaloProcessor, None),
+        (RichRecSysConf, None),
+        TrackSys,
+        (ChargedProtoANNPIDConf, None),
+    ]
+
     __slots__ = { "DataType"                        : '2012' # datatype  2009, MC09, DC06...
                 , "EarlyDataTracking"               : False
                 , "Hlt2Tracks"                      : "Long" # type of HLT2 tracks
@@ -119,6 +91,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
                 , "__caloProcessor"                 : 0
                 , "__allTracks"                     : 0
                 }
+                
+
     #############################################################################################
     #############################################################################################
     #
@@ -1672,7 +1646,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
         neutralProtosOutputLocation = self.__protosLocation(Hlt2NeutralProtoParticleSuffix)
         outputCALOPID            = self.__caloIDLocation()
 
-        from Configurables    import CaloProcessor
         from HltLine.HltLine    import bindMembers
 
         # One single CaloProcessor for all Hlt2Tracking instances

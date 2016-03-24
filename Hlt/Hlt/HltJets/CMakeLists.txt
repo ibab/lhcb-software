@@ -5,6 +5,7 @@ gaudi_subdir(HltJets v1r0)
 
 gaudi_depends_on_subdirs(Event/HltEvent
                          Hlt/HltCommon
+                         Hlt/HltTracking
                          Phys/JetAccessories
                          GaudiKernel)
 

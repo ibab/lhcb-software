@@ -12,7 +12,17 @@ from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import GaudiSequencer as Sequence
 
+from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
+from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
+
+
 class HltAfterburnerConf(LHCbConfigurableUser):
+    # python configurables to be applied before me
+    __queried_configurables__ = [
+        Hlt2BiKalmanFittedForwardTracking,
+        Hlt2BiKalmanFittedDownstreamTracking,
+    ]
+    # python configurables that I configure
     __used_configurables__ = []
 
     __slots__ = {"Sequence"                : None,
@@ -51,8 +61,6 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             from Configurables import RecSummaryAlg
             seq = Sequence("RecSummarySequence")
 
-            from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
-            from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
             tracks = Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks()
             tracksDown = Hlt2BiKalmanFittedDownstreamTracking().hlt2PrepareTracks()
             muonID = Hlt2BiKalmanFittedForwardTracking().hlt2MuonID()
@@ -90,8 +98,6 @@ class HltAfterburnerConf(LHCbConfigurableUser):
 
         if self.getProp("AddAdditionalTrackInfos"):
             from GaudiKernel.SystemOfUnits import mm
-            from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
-            from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
             from Configurables import LoKi__VoidFilter as Filter
             trackLocations = [ Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks().outputSelection(),
                                Hlt2BiKalmanFittedDownstreamTracking().hlt2PrepareTracks().outputSelection() ]
@@ -138,7 +144,6 @@ class HltAfterburnerConf(LHCbConfigurableUser):
                                    Location = decoder.listOutputs()[0])
             downstreamPIDSequence = Sequence( "Hlt2AfterburnerDownstreamPIDSeq")
             downstreamPIDSequence.Members += [ hlt2DownstreamFilter ]
-            from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
             downstreamTracking = Hlt2BiKalmanFittedDownstreamTracking()
             tracksDown = downstreamTracking.hlt2PrepareTracks()
             chargedProtosOutputLocation =  downstreamTracking.hlt2ChargedNoPIDsProtos().outputSelection()

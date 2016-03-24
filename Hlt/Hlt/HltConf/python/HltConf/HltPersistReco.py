@@ -11,7 +11,17 @@ from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import GaudiSequencer as Sequence
 
+from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
+from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
+
+
 class HltPersistRecoConf(LHCbConfigurableUser):
+    # python configurables to be applied before me
+    __queried_configurables__ = [
+        Hlt2BiKalmanFittedForwardTracking,
+        Hlt2BiKalmanFittedDownstreamTracking,
+    ]
+    # python configurables that I configure
     __used_configurables__ = []
 
     __slots__ = {"WriterName"              : "Writer",
@@ -62,8 +72,6 @@ class HltPersistRecoConf(LHCbConfigurableUser):
 
         debugLevel=4
 
-        from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
-        from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
         tracks = Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks()
         tracksDown = Hlt2BiKalmanFittedDownstreamTracking().hlt2PrepareTracks()
         from HltTracking.HltTrackNames import Hlt2NeutralProtoParticleSuffix

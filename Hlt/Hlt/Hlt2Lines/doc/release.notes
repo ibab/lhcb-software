@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-03-24 - Rosen Matev
+ - Fix dependencies between configurables.
+
 ! 2016-03-23 - Francesco Dettori
  - Adding Turbo flag which was missing from Turbo HLT DiMuon lines
  - Adding Turbo flag and name in Hlt2StrangeKPiPiPiLine 
