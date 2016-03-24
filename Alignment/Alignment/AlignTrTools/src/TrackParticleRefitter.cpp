@@ -23,6 +23,9 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "Event/Track.h"
 #include "Event/Particle.h"
+#include "Kernel/ParticleID.h"
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 #include "Event/Vertex.h"
 #include "Event/KalmanFitResult.h"
 #include "TrackKernel/TrackStateVertex.h"
@@ -43,6 +46,8 @@ public:
 
 private:
   std::string m_inputLocation ;
+  std::string m_particleName;
+  int m_pid;
   ToolHandle<ITrackFitter> m_trackfitter ;
   ToolHandle<ITrackStateProvider> m_stateprovider ;
 };
@@ -57,6 +62,7 @@ TrackParticleRefitter::TrackParticleRefitter(const std::string& name,
   m_stateprovider("TrackStateProvider")
 {
   // constructor
+  declareProperty( "ParticleName",  m_particleName="" ) ;
   declareProperty( "ParticleLocation",  m_inputLocation ) ;
   declareProperty( "TrackFitter", m_trackfitter ) ;
 }
@@ -68,6 +74,11 @@ StatusCode TrackParticleRefitter::initialize()
     sc = m_trackfitter.retrieve() ;
   if(sc.isSuccess())
     sc = m_stateprovider.retrieve() ;
+  if(sc.isSuccess()) {
+    LHCb::IParticlePropertySvc* propertysvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc",true) ;
+    const LHCb::ParticleProperty* prop = propertysvc->find( m_particleName);
+    if (prop != 0) m_pid = prop->particleID().pid();
+  }
   return sc ;
 }
 
@@ -131,6 +142,7 @@ StatusCode TrackParticleRefitter::execute()
       vertex.fit() ;
       // now copy everything
       LHCb::Particle* ncp = const_cast<LHCb::Particle*>(p) ;
+      if (m_pid) ncp->setParticleID(LHCb::ParticleID(m_pid));
       ncp->setMomentum(  vertex.p4(masshypos) ) ;
       ncp->setReferencePoint( vertex.position() ) ;
       Gaudi::SymMatrix7x7 cov7x7 = vertex.covMatrix7x7(masshypos) ;
