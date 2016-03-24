@@ -45,6 +45,9 @@ This version uses Gaudi v27r1 and LCG_84 with ROOT 6.06.02.
   . Optimized the temporary hack in DeFTDetector::findFibreMat
 
 - In Det/RichDet v17r7
+  . Extend the range of data passed to the magnification interpolators in
+    DeRichHPD to avoid subsequent attempts to interpolate outside the valid
+    range, which causes problems with GSL 2.x.
   . Improvements to DeRichBeamPipe:
     o Change the API to take a start and end point for the direction to be tested,
       rather than a point and direction.
