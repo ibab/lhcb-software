@@ -79,7 +79,7 @@ public:
     if ( !m_transporterName.empty() )
     { m_transporter = tool<IParticleTransporter> ( m_transporterName , this ) ; }
     if ( NULL == m_transporter )
-    { _Warning(" Only 4-momenta sum will be used (no ParticleTransporter specified)").ignore() ; }
+    { info() << "Only 4-momenta sum will be used (no ParticleTransporter specified)" << endmsg; }
     //
     return StatusCode::SUCCESS ;
   }
