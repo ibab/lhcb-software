@@ -256,6 +256,8 @@ This version uses Gaudi v27r1, LHCb v40r1 and Lbcom v18r1 (and ROOT 6.06.02)
   . Add a missing override qualifier
 
 - In Tf/TrackSys v9r13
+  . RecoTrackingRun2: Activate SimplifiedGeometry in TrackStateProvider by default.
+    Can be overwritten by ExpertOptions. See https://its.cern.ch/jira/browse/LHCBPS-1499
   . Remove calculation of TrackLikelihood from 2016 on per default
 
 - In Tr/TrackExtrapolators v2r41
