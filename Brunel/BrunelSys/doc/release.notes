@@ -3,6 +3,89 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v50r0>2016-03-24 Brunel v50r0</A></H1><PRE>
+This version uses projects LHCb v40r1, Lbcom v18r1, Rec v19r1, Gaudi v27r1, LCG_84
+ (Root 6.06.02) and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Production candidate for 2016 data-taking
+
+- Configuration changes
+  . Extend DataType support to all Run 2 DataTypes (2015,2016,2017,2018).
+    (MuonTrackMonitor v2r10, RecConf v2r24, TrackSys v9r13)
+
+- New functionality
+  . Add support for L0TCKs that use previous BX in trigger decision (L0DU v10r35,
+    L0Event v19r10, L0Interfaces v2r4, update L0TCK dependency to v5r*)
+  . Add possibility to select track types for CaloPID. Use same default online
+    and offline (CaloPIDs v5r22, CaloReco v5r28)
+  . Add new option to the RICH configurable to turn on the clearing of the
+    transient event information at the end of the reconstruction sequence. Useful
+    for reducing memory footprint in HLT, but disabled by default in Brunel since
+    information needed for monitoring (RichRecSys v5r10)
+  . TrackMasterFitter: Implement property MaxUpdateTransports to restrict maximum
+    number of transport updates. Default is the same as number of iterations
+    to not change fitter behaviour by default (TrackFitter v5r8)
+  . Add platform support for CentOS7 [GAUDI-1196]
+
+- Persistency changes
+  . Remove Velo tracks in FittedHLT1VeloTracks container that don't belong to a
+    PV, for all Run 2 DataTypes (RecConf v2r24)
+  . Update RichPID version number from 1 to 2, to reflect the fact the data
+    objects have changed in structure (an additional float in the DLL vector
+    for the Deuteron hypothesis) (RichRecSys v5r10)
+  . Remove calculation of TrackLikelihood (removed by default from 2016)
+    (TrackSys v9r13)
+
+- New reconstruction tuning
+  . Introduce Deuteron particle hypothesis (multiple packages)
+  . PatLongLivedTracking: Use new chi2-cut in x-layer fit (PatAlgorithms v5r0)
+  . New tuning for forward tracks to remove ghosts (PatAlgorithms v5r0)
+  . PatVeloTTHybridTool: Some efficiency improvements (PatVeloTT v4r9)
+  . Add double threshold for radial cut in PV reconstruction
+    (PatPV v3r31, RecConf v2r24)
+  . Add new default tuning for Run 2 data, "MC15TuneV1" (ChargedProtoANNPID v2r15)
+  . Add a new Run 1 tuning based on MC12 samples. Called "MC12TuneV4", not
+    used by default (ChargedProtoANNPID v2r15) 
+  . Multiple improvements to Rich reconstruction
+    (see RecSys v19r1, LbcomSys v2r53 release notes)
+
+- New CPU optimisations
+  . Only rebuild Bdl tables on magnet polarity or current change (PatVeloTT v4r9)
+  . Speed improvements of PatVeloTTHybridTool (PatVeloTT v4r9)
+  . Timing improvements for the Hybrid Seeding (PrAlgorithms v1r18)
+  . Vectorise TrackRungeKuttaExtrapolator using the Eigen Math library.
+    Leads to a 25% improvement in extrapolation speed (TrackExtrapolators v2r41)
+  . Multiple improvements to Rich reconstruction
+    (see RecSys v19r1, LbcomSys v2r53, LHCbSys v40r1 release notes)
+
+- Code modernisations
+  . Multiple improvements. 
+    See RecSys v19r1, LbcomSys v18r1, LHCb v40r1, Gaudi v27r1 release notes
+
+- Bug fixes
+  . Fix two bugs in PatLongLivedTracking (PatAlgorithms v5r0)
+  . Revert exception handling change done in v49r2 (CaloReco v5r28)
+  . Fix many unprotected DEBUG messages introduced in Gaudi v27r0 [GAUDI-1174]
+
+- Monitoring changes
+  . Change histogram range in TrackVertexMonitor and TrackPV2HalfMonitor
+    (TrackMonitors v2r13)
+
+- Changes to tests
+  . Remove temporary RegexpReplacer that was introduced in v49r2 to deal with the
+    name change of the HltError sequence
+  . Remove MC09 tests and options
+  . Add brunel-mc10-notruth to replace brunel-mc09-notruth
+  . Modify brunel-mc10-withtruth to test some of the options that were tested by
+    brunel-mc09-withtruth
+  . Modify brunel-mc11-xdst to test Brunel().Histograms="Expert".
+  . Add sim08-invfield-up and sim08-invfield-down tests to replace
+    brunel-mc09-withtruth-invfield
+    TODO: understand field up/down differences....
+  . Remove setting of InitialTime in 2015magdown test, no longer needed
+  . Add a placeholder for 2016magdown test. Currently a copy of 2015magdown but 
+    with DataType=2016
+
 </PRE><H1><A NAME=v49r2>2016-01-29 Brunel v49r2</A></H1><PRE>
 This version uses projects LHCb v40r0, Lbcom v18r0, Rec v19r0, Gaudi v27r0
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
