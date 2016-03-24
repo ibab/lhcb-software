@@ -3,9 +3,12 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v50r0>2016-03-24 Brunel v50r0</A></H1><PRE>
+This version uses projects LHCb v40r1, Lbcom v18r1, Rec v19r1, Gaudi v27r1
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
 - Changes to configuration
   . Extend DataType support to all Run 2 DataTypes (2015,2016,2017,2018).
-    Currently all Run 2 years treated like 2015
 
 - Changes to references to reflect changes since v49r2
   . Follow introduction of Deuteron particle hypothesis
@@ -28,14 +31,13 @@ Purpose: LHCb reconstruction program
   . Add brunel-mc10-notruth to replace brunel-mc09-notruth
   . Modify brunel-mc10-withtruth to test some of the options that were tested by
     brunel-mc09-withtruth
-  . Modify brunel-mc11-xdst to test Brunel().Histograms="Expert". Exposes an FPE
-    in TrackPacker::check()...
+  . Modify brunel-mc11-xdst to test Brunel().Histograms="Expert".
   . Add sim08-invfield-up and sim08-invfield-down tests to replace
     brunel-mc09-withtruth-invfield
     TODO: understand field up/down differences....
   . Remove setting of InitialTime in 2015magdown test, no longer needed
   . Add a placeholder for 2016magdown test. Currently a copy of 2015magdown but 
-    with DataType=2015
+    with DataType=2016
 
 </PRE><H1><A NAME=v49r2>2016-02-05 Brunel v49r2</A></H1><PRE>
 This version uses projects LHCb v40r0, Lbcom v18r0, Rec v19r0, Gaudi v27r0
