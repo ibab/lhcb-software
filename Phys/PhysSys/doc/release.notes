@@ -9,7 +9,8 @@ Development release for 2016 data taking.
 It is based on Gaudi v27r1, LHCb v40r1 and Rec v19r1 and uses LCG_84 with ROOT 6.06.02.
 
 - Packages updated :
-  Phys/LoKiFitters v4r21, Phys/LoKiPhys v11r9, Phys/LoKiTracks v3r7, PhysSel/PhysSelPython v9r10.
+  Phys/LoKiFitters v4r21, Phys/LoKiPhys v11r9, Phys/LoKiTracks v3r7, PhysSel/PhysSelPython v9r10,
+  Phys/VertexFit v6r25.
 
 - In Phys/LoKiFitters v4r21 :
   . Improved a bit the printout to for easier debugging.
@@ -84,6 +85,9 @@ It is based on Gaudi v27r1, LHCb v40r1 and Rec v19r1 and uses LCG_84 with ROOT 6
     #                         & ( ACHI2DOCA(3,4) < 10 )
     #                         ''',
     #      MotherCut        = 'in_range  (1.6 * GeV ,  M , 2.0 * GeV) & ( CHI2VX < 10 ) ' ,
+
+- In Phys/VertexFit v6r25 :
+  . Demote warning to info in MomentumCombiner when no transporter is specified
 
 </PRE><H1><A NAME=v21r1>2016-03-11 Phys v21r1</A></H1><PRE>
 
