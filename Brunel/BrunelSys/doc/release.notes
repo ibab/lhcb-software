@@ -41,6 +41,9 @@ Production candidate for 2016 data-taking
   . PatLongLivedTracking: Use new chi2-cut in x-layer fit (PatAlgorithms v5r0)
   . New tuning for forward tracks to remove ghosts (PatAlgorithms v5r0)
   . PatVeloTTHybridTool: Some efficiency improvements (PatVeloTT v4r9)
+  . RecoTrackingRun2: Activate SimplifiedGeometry in TrackStateProvider by
+    default. Fixes online/offline differences in V0 finder. See
+    https://its.cern.ch/jira/browse/LHCBPS-1499 (TrackSys v9r13)
   . Add double threshold for radial cut in PV reconstruction
     (PatPV v3r31, RecConf v2r24)
   . Add new default tuning for Run 2 data, "MC15TuneV1" (ChargedProtoANNPID v2r15)
@@ -66,6 +69,9 @@ Production candidate for 2016 data-taking
   . Fix two bugs in PatLongLivedTracking (PatAlgorithms v5r0)
   . Revert exception handling change done in v49r2 (CaloReco v5r28)
   . Fix many unprotected DEBUG messages introduced in Gaudi v27r0 [GAUDI-1174]
+  . Extend the range of data passed to the magnification interpolators in
+    DeRichHPD to avoid subsequent attempts to interpolate outside the valid
+    range, which causes problems with GSL 2.x (RichDet v17r7)
 
 - Monitoring changes
   . Change histogram range in TrackVertexMonitor and TrackPV2HalfMonitor
