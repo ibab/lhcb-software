@@ -20,7 +20,7 @@
     <text>../options/TeslaRawReprocess.py</text>
   </set></argument>
   <argument name="validator"><text>
-countErrorLines({"FATAL":0, "ERROR":2, "WARNING" :0})
+countErrorLines({"FATAL":0, "ERROR":1597, "WARNING" :0})
   </text></argument>
 </extension>
 

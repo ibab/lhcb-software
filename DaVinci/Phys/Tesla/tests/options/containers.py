@@ -25,8 +25,6 @@ HltANNSvc().InfoID = {
         'Hlt2Topo4BodyBBDTResponse'                  : 6304
         }
 
-prefix = "Hlt2IncPhi"
-
 Tesla().TriggerLines = ["Hlt2IncPhi"]
 Tesla().OutputLevel = 2
 Tesla().EvtMax = -1
@@ -50,16 +48,17 @@ if ROOT6WorkAroundEnabled('ROOT-7492'):
 gaudi = GaudiPython.AppMgr()
 gaudi.initialize()
 
-gaudi.algorithm("TeslaReportAlgo"+prefix).Enable = False
+gaudi.algorithm("TeslaReportAlgo").Enable = False
 gaudi.algorithm("DstWriter").Enable = False
 
 tes = gaudi.evtsvc()
 
 selRepLoc = "Hlt2/SelReports"
 
+prefix = "Hlt2IncPhi"
 partLoc ="/Event/Turbo/" + prefix + "/Particles"
-protoLoc ="/Event/Turbo/" + prefix + "/Protos"
-trackLoc ="/Event/Turbo/" + prefix + "/Tracks"
+protoLoc ="/Event/Turbo/Protos"
+trackLoc ="/Event/Turbo/Tracks"
 vertLoc ="/Event/Turbo/" + prefix + "/Vertices"
 
 i_partTot=0.0
@@ -91,7 +90,7 @@ while n<1000:
         break
     #
     gaudi.executeEvent()
-    gaudi.algorithm("TeslaReportAlgo"+prefix).execute()
+    gaudi.algorithm("TeslaReportAlgo").execute()
 
 
     parts   = tes[partLoc]
