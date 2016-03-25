@@ -4,7 +4,12 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
-!======================== LbPythia8 v12r0 2016-03-23 =========================
+!======================== LbPythia8 v12r0 2016-03-25 =========================
+! 2016-03-25 - Gloria Corti
+ - Fix default settings in command file, since some value for Tune1 were
+   overridden with older setting later in the file.
+   . options/LHCbDefault.cmd
+
 ! 2016-03-23 - Gloria Corti
  - Modify LHCbDefault.cmd to contain the same content as the last commit of
    LHCbDefault_CT09MCS.cmd, i.e. to use CT09MCS PDF and LHCb Tune1

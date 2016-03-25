@@ -59,22 +59,20 @@ SpaceShower:rapidityOrder = off      # General
 MultipartonInteractions:bProfile = 1 # reset the default bProfile
 SpaceShower:alphaSvalue             = 0.130
 MultipartonInteractions:alphaSvalue = 0.130
-StringFlav:mesonSvector             = 7.474387e-01 # Flavour selection
-StringFlav:probQQtoQ                = 1.615701e-01
-StringFlav:probStoUD                = 3.501613e-01
 MultipartonInteractions:ecmRef      = 7000
 MultipartonInteractions:pT0Ref      = 2.742289e+00' # Multiparton interactions
 MultipartonInteractions:ecmPow      = 0.238
 # -------------------------------
 # flavour selection and excited states
-# tuning adapted from pythia6)
+# with seeting for light flavour as determined in LHCb Tune1:
+# mesonSvector, probQQtoQ, probStoUD
 # -------------------------------
 StringFlav:mesonUDvector = 0.6
-StringFlav:mesonSvector = 0.6
+StringFlav:mesonSvector = 7.474387e-01
 StringFlav:mesonCvector = 3.0
 StringFlav:mesonBvector = 3.0
-StringFlav:probStoUD = 0.30
-StringFlav:probQQtoQ = 0.10
+StringFlav:probQQtoQ    = 1.615701e-01
+StringFlav:probStoUD    = 3.501613e-01
 StringFlav:probSQtoQQ = 0.4
 StringFlav:probQQ1toQQ0 = 0.05
 StringFlav:mesonUDL1S0J1 = 0.0989
