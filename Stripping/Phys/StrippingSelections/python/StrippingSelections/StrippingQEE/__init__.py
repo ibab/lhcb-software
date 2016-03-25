@@ -3,6 +3,10 @@ Module importing stripping selection line builder modules
 for QEE WG.
 """
 
+list_S26 = [
+  'StrippingExotica',
+]
+
 ## For autumn-2015 Run-II End-of-2015 restripping (S24)
 ## https://twiki.cern.ch/twiki/bin/view/LHCb/LHCbStripping24
 list_S24 = (
@@ -50,7 +54,7 @@ list_S21rXp1 = (
 )
 
 ## Choose the list to use here
-_selections = list_S21rXp1
+_selections = list_S26
 
 
 ## Boilerplate codes

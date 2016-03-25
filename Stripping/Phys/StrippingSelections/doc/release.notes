@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-03-25 - Chitsanu Khurewathanakul
+ - added QEE/StrippingExotica.py, for testing new Hlt2Exotica triggers.
+
 ! 2016-03-23 - Simone Stracka
  - added StrippingBandQ/StrippingBbbar2PhiPhi.py (and __init__.py modified accordingly)
 
