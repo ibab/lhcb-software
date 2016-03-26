@@ -31,7 +31,7 @@ Vertex Check *************************************
 Average chi2 = 1.613
 Average container size = 1.2
 Proto Check **************************************
-Average DLLK = 31.237
+Average DLLK = 31.318
 Average container size = 2.4
 """
 findReferenceBlock(block, signature_offset = 3)
