@@ -29,8 +29,7 @@
 # Last modification $Date$
 #                by $Author$
 # =============================================================================
-"""
-This a template file for the Bender-based module
+""" This a template file for the Bender-based module
 
 This file is a part of BENDER project:
 ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
@@ -51,7 +50,7 @@ Last modification $Date$
 # =============================================================================
 __author__  = " Do not forget your name here "
 __date__    = " 20??-??-?? " 
-__version__ = " Version $Revision$ "
+__version__ = " $Revision$ "
 # =============================================================================
 ## import all nesessary stuff from Bender
 from Bender.Main import * 
@@ -61,15 +60,13 @@ class Template(Algo) :
     """
     This is the template algorithm 
     """        
-    
-   ## standard mehtod for analyses
+    ## standard mehtod for analyses
     def analyse( self ) :
         """
         Standard method for analysis
         """
-        
         return SUCCESS
-
+    
 # =============================================================================
 ## job configuration:
 #  @attention the function with such signature is required
@@ -85,7 +82,7 @@ def configure ( datafiles        ,
     ##
     ## 1. Static configuration using "Configurables"
     ##
-
+    
     the_year = '2012'
     from Configurables import DaVinci
     dv = DaVinci (
@@ -107,7 +104,6 @@ def configure ( datafiles        ,
     ## define/set the input data 
     setData ( datafiles , catalogs )
     
-
     
     ##
     ## jump into the wonderful world of the actual Gaudi components!
@@ -121,7 +117,6 @@ def configure ( datafiles        ,
     alg = Template(
         alg_name          ## algorithm instance name 
         )
-
     
     return SUCCESS
 

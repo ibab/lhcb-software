@@ -4,6 +4,11 @@
 ! Responsible : Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
 ! Purpose     : Template Package for Bender-based analysis algorithms 
 ! -----------------------------------------------------------------------------
+
+
+! 2016-03-26 - Vanya Belyaev
+ - add examples of scrips for Ganga 
+
 	
 !	====================== Phys/BenderUser v26r3 2015-08-25 =====================
 !	====================== Phys/BenderUser v25r5 2015-03-19 =====================
@@ -13,6 +18,7 @@
 			
 ! 2014-01-21 - Marco Clemencic
  - Added CMake configuration file.
+
 
 
 ! ====================== Phys/BenderUser v20r0 2012-07-10 =====================
