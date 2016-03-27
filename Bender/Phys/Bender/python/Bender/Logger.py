@@ -70,7 +70,8 @@ __all__     = (
     'logError'       , ## helper function to control output level
     'logColor'       , ## context manager to switch on  color logging locally  
     'logNoColor'     , ## context manager to switch off color logging locally  
-    'noColor'        , ## context manager to switch off color logging locally  
+    'noColor'        , ## context manager to switch off color logging locally
+    'colored_string' , ## helper function to colorize the string
     )
 # =============================================================================
 ## import actual logger 
