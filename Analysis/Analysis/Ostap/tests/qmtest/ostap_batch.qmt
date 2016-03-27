@@ -4,6 +4,7 @@
   <argument name="program">   <text>ostap</text></argument>
   <argument name="args"><set>
       <text>-b</text>	      
+      <text>-w</text>	      
       <text>--verbose</text>	      
       <text>../batch.py</text>	
   </set></argument>

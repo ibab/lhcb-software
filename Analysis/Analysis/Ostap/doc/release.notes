@@ -9,8 +9,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2016-03-27 - Vanya Belyaev
- - replace execfile with runpy.run_path 
+ - fix the test...
 
+! 2016-03-27 - Vanya Belyaev
+ - replace execfile with runpy.run_path 
 
 ! 2016-03-27 - Vanya Belyaev
  - tweak  a bit converison fo TF2 to TF2
@@ -59,7 +61,7 @@
    to allow release of Analysis with OLD LHCbMath 
 
 ! 2016-03-02 - Vanya Belyaev
- - improve interpolation (mak euse of updated Gaudi::Math::HistoInterpolation
+ - improve interpolation (make use of updated Gaudi::Math::HistoInterpolation
  - improve history 
  - add command line "-c/--command" to execute the specified command 
  
