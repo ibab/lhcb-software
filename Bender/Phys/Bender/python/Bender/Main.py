@@ -89,7 +89,11 @@ for _s in _startups :
     if _ss in _executed           : continue
     ## execute it! 
     try :
-        execfile      ( _ss , globals() ) 
+        import runpy
+        globs = runpy.run_path ( _ss , globals() )
+        globals().update ( globs )
+        del globs
+        ##
         _executed.add ( _ss )
         logger.info   ( "Startup file '%s' is executed"      % _s )
     except:

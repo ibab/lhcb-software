@@ -345,8 +345,16 @@ for _f in pyfiles :
         
         logger.info ('Executing "%s"'     % _f    )
         
-        if arguments.WithContext : execfile ( _ff , globals() ) ## with context 
-        else                     : execfile ( _ff )             ## plain 
+        ## if arguments.WithContext : execfile ( _ff , globals() ) ## with context 
+        ## else                     : execfile ( _ff )             ## plain
+        
+        import runpy
+        if arguments.WithContext :
+            globs = runpy.run_path ( _ff , globals() ) ## with context
+            globals().update( globs )
+            del globs 
+        else                     :
+            runpy.run_path         ( _ff )             ## with context
         
     except :
         #
