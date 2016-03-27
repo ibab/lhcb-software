@@ -1035,9 +1035,10 @@ class H2Func(object) :
     """
     Helper class to Wrap 2D-histogram as function 
     """
-    def __init__ ( self , histo , func = lambda s : s.value() ) :
-        self._histo = histo    
-        self._func  = func
+    def __init__ ( self , histo , func = lambda s : s.value() , interpolate = True ) :
+        self._histo  = histo    
+        self._func   = func
+        self._interp = interpolate 
         
     ## evaluate the function 
     def __call__ ( self , x ) :
@@ -1046,39 +1047,41 @@ class H2Func(object) :
         """
         x0 = x[0]
         y0 = x[1]
-        return self._func ( self._histo ( x0 , y0 , interpolate = True ) )
+        return self._func ( self._histo ( x0 , y0 , interpolate = self._interp ) )
 
 # =============================================================================
 ## construct helper class 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
-def _h1_as_fun_ ( self , func = lambda s : s.value () , *args ) :
+def _h1_as_fun_ ( self , func = lambda s : s.value () , *args , **kwargs ) :
     """Construct the function from the histogram
     """
-    return H1Func ( self , func , *args )
+    return H1Func ( self , func , *args , **kwargs )
 
 # =============================================================================
 ## construct helper class 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-03-27
-def _h1_as_spline_ ( self , func = lambda s : s.value () , *args ) :
+def _h1_as_spline_ ( self , func = lambda s : s.value () , *args , **kwargs ) :
     """Construct the function/spline from the histogram 
     """
-    return H1Spline ( self , func , *args )
+    return H1Spline ( self , func , *args , **kwargs )
 
 # =============================================================================
 ## construct helper class 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
-def _h2_as_fun_ ( self , func = lambda s : s.value () ) :
+def _h2_as_fun_ ( self , func = lambda s : s.value () , *args , **kwargs ) :
     """Construct the function from the histogram 
     """
-    return H2Func ( self , func )
+    return H2Func ( self , func , *args , **kwargs )
 # =============================================================================
 ## construct function 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
-def _h1_as_tf1_ ( self , func = lambda s : s.value () , spline = False , *args ) :
+def _h1_as_tf1_ ( self                           ,
+                  func   = lambda s : s.value () ,
+                  spline = False , *args , **kwargs ) :
     """Construct the function from the 1D-histogram
 
     >>> histo = ...
@@ -1086,8 +1089,8 @@ def _h1_as_tf1_ ( self , func = lambda s : s.value () , spline = False , *args )
     >>> fun2  = histo.asTF1 ( spline = True  ) 
     """
     #
-    if spline : fun = _h1_as_spline_ ( self , func , *args )
-    else      : fun = _h1_as_fun_    ( self , func , *args )
+    if spline : fun = _h1_as_spline_ ( self , func , *args , **kwargs )
+    else      : fun = _h1_as_fun_    ( self , func , *args , **kwargs )
     #
     f1 = fun .tf1  ()
     nb = self.nbins()
@@ -1119,7 +1122,7 @@ def _h1_integral_ ( histo , xlow , xhigh ) :
 ## construct function 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
-def _h2_as_tf2_ ( self , func = lambda s : s.value () ) :
+def _h2_as_tf2_ ( self , func = lambda s : s.value () , *args , **kwargs ) :
     """Construct the function from the histogram
 
     >>> fun = h2.asFunc()
@@ -1128,7 +1131,7 @@ def _h2_as_tf2_ ( self , func = lambda s : s.value () ) :
     ax  = self.GetXaxis()
     ay  = self.GetYaxis()
     #
-    fun = _h2_as_fun_ ( self , func )
+    fun = _h2_as_fun_ ( self , func , *args , **kwargs )
     #
     f2  = ROOT.TF2  ( funID()       ,
                       fun           ,
@@ -1154,12 +1157,12 @@ def _h2_as_tf2_ ( self , func = lambda s : s.value () ) :
 #  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2015-08-31
-def _h2_integral_ ( histo , xlow , xhigh , ylow , yhigh ) :
+def _h2_integral_ ( histo , xlow , xhigh , ylow , yhigh , *args , **kwargs ) :
     """Calculate the integral of TH2
     >>> histo = ...
     >>> i     = histo.integral ( 0.2 , 0.16 , 0.1 , 1.0 ) 
     """
-    f2  = _h2_as_tf2_  ( histo )
+    f2  = _h2_as_tf2_  ( histo , *args , **kwargs )
     return f2.Integral ( xlow , xhigh , ylow , yhigh )
 
 # =============================================================================
@@ -1184,6 +1187,25 @@ ROOT.TH1D . integral = _h1_integral_
 ROOT.TH2F . integral = _h2_integral_ 
 ROOT.TH2D . integral = _h2_integral_
 
+
+# =============================================================================
+## Generate random tuple accordnig to TF2
+#  @code
+#  f2 = ...          ## ROOT TF2
+#  x,y = f2.random() ## get random number 
+#  @endcode
+def _f2_random_ ( f2 ) :
+    """Generate random tuple accordnig to TF2
+    >>> f2  = ...          ## ROOT TF2
+    >>> x,y = f2.random() ## get random number 
+    """
+    _x = ROOT.Double(0.0)
+    _y = ROOT.Double(0.0)
+    f2.GetRandom2( _x , _y )
+    return float(_x) , float(_y)
+
+ROOT.TF2.random = _f2_random_
+    
 # ============================================================================
 def _h1_data_ ( h ) :
     """Get histogram/graph as vector of pairs (x,y)
