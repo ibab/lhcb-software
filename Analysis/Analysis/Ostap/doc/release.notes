@@ -9,6 +9,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2016-03-27 - Vanya Belyaev
+ - replace execfile with runpy.run_path 
+
+
+! 2016-03-27 - Vanya Belyaev
  - tweak  a bit converison fo TF2 to TF2
 
 ! 2016-03-23 - Vanya Belyaev

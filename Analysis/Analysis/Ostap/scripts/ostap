@@ -323,7 +323,12 @@ for _s in _startups :
     if _ss in _executed           : continue
     ## execute it! 
     try :
-        execfile      ( _ss , globals() ) 
+
+        import runpy
+        globs = runpy.run_path ( _ss , globals() )
+        globals().update( globs )
+        del globs
+        
         _executed.add ( _ss )
         logger.info   ( "Startup file '%s' is executed"      % _s )
     except:
@@ -372,9 +377,14 @@ def treat_file ( f ) :
         logger.debug  ("Try    to execute '%s'" % f )
         
         try :
-            
-            if arguments.WithContext :  execfile ( f , globals() ) ## with context 
-            else                     :  execfile ( f )             ## plain  
+
+            import runpy 
+            if arguments.WithContext :
+                globs = runpy.run_path ( f , globals() ) ## with context
+                globals().update ( globs )
+                del globs 
+            else                     :
+                runpy.run_path ( f )                     ## plain
 
             logger.info  ("Executed       '%s'" % f )
             python_scripts.append ( f )
@@ -411,7 +421,10 @@ def treat_file ( f ) :
         try :
             
             ## this one is always executed with the context!!!
-            execfile ( f , globals() ) ## with context
+            import runpy
+            globs = runpy.run_path ( f , globals() )
+            globals().update ( globs )
+            del globs 
             
             python_scripts.append ( f )
             logger.info  ("Executed       '%s'" % f )
@@ -492,7 +505,7 @@ for cmd in arguments.Commands :
     command = cmd.strip()
     if not command : continue 
     logger.debug   ("Try to exec command:\n%s" % command )
-    exec ( command ) 
+    exec ( command , globals() , locals() ) 
     logger.verbose ("After exec...") 
 
 # =============================================================================
