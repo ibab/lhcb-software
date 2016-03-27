@@ -12,7 +12,7 @@ __all__ = ( 'MinimalVelo'
           , 'RevivedForward'
           , 'Hlt1Seeding'
           , 'HltHPTTracking'
-          , 'VeloTTTracking'  
+          , 'VeloTTTracking'
           )
 
 ############################################################################################
@@ -57,7 +57,7 @@ ToolSvc().TrackStateProvider.Interpolator.Extrapolator.addTool(SimplifiedMateria
 
 # the full Velo reconstruction
 def recoVelo(OutputTracksName=HltSharedTrackLoc["Velo"]):
-    recoVelo = FastVeloTracking( 'FastVeloHlt', OutputTracksName = OutputTracksName) 
+    recoVelo = FastVeloTracking( 'FastVeloHlt', OutputTracksName = OutputTracksName)
     recoVelo.StatPrint = True
     extendVelo = HltRecoConf().getProp("BeamGasMode")
     if extendVelo:
@@ -65,7 +65,7 @@ def recoVelo(OutputTracksName=HltSharedTrackLoc["Velo"]):
         recoVelo.ZVertexMax = HltRecoConf().getProp("VeloTrackingZMax")
     recoVelo.VetoObjects = [ OutputTracksName ]
     return recoVelo
- 
+
 
 #### filter the Velo output
 from Configurables import TrackListRefiner, HltRecoConf
@@ -82,7 +82,7 @@ veloSelector.StatPrint = True
 #### VeloTT Tracking
 from HltRecoConf import VeloTTOptions, VeloTTToolOptions
 from Configurables import PatVeloTTHybrid, PatVeloTTHybridTool
-recoVeloTT = PatVeloTTHybrid( 'PatVeloTTHybridHlt', 
+recoVeloTT = PatVeloTTHybrid( 'PatVeloTTHybridHlt',
                         InputTracksName = HltSharedTrackLoc["VeloSelection"],
                         OutputTracksName = HltSharedTrackLoc["VeloTTHPT"],
                         **VeloTTOptions )
@@ -95,7 +95,7 @@ from Configurables import PatForward, PatForwardTool
 from Configurables import HltRecoConf
 from HltRecoConf import CommonForwardOptions
 recoForwardHPT = PatForward( 'Hlt1ForwardHPT'
-                             , InputTracksName  = recoVeloTT.OutputTracksName 
+                             , InputTracksName  = recoVeloTT.OutputTracksName
                              , OutputTracksName = HltSharedTrackLoc["ForwardHPT"]
                              , maxOTHits = HltRecoConf().getProp("Forward_MaxOTHits")
                              , maxITHits = CommonForwardOptions["MaxITHits"]
@@ -119,7 +119,7 @@ from Configurables import Hlt__TrackFilter as HltTrackFilter
 prepare3DVelo = HltTrackFilter( 'Hlt1Prepare3DVelo'
                               , InputSelection   = "TES:" + HltSharedTrackLoc["Velo"]
                               , RequirePositiveInputs = False
-                              , Code = [ '~TrBACKWARD' ] 
+                              , Code = [ '~TrBACKWARD' ]
                               , OutputSelection     = "Velo" )
 
 def fittedVelo(inputTracks, outputTracks, name='VeloOnlyFitterAlg'):
@@ -163,7 +163,7 @@ def fittedVelo(inputTracks, outputTracks, name='VeloOnlyFitterAlg'):
 #############################################################################################
 # HLT2 tracking codes
 #############################################################################################
-def ConfiguredForwardComplement(name 
+def ConfiguredForwardComplement(name
                                 , InputTracksName #= HltSharedTrackLoc["Velo"]
                                 , OutputTracksName #= Hlt2TrackLoc["ForwardComp"]
                                 , VetoSeedLocations #= [ HltSharedTrackLoc["ForwardHPT"] ]
@@ -179,14 +179,14 @@ def ConfiguredForwardComplement(name
                           , InputTracksName  = InputTracksName
                           , OutputTracksName = OutputTracksName
                           )
-    
+
     #Sascha Stahl: We should get rid of GECs in the pattern reco, do it centrally
     from HltRecoConf import CommonForwardOptions
     from Configurables import HltRecoConf
     forward.maxOTHits = HltRecoConf().getProp("Forward_MaxOTHits")
-    forward.maxITHits = CommonForwardOptions["MaxITHits"] 
-    forward.MaxNVelo = CommonForwardOptions["MaxNVelo"] 
-        
+    forward.maxITHits = CommonForwardOptions["MaxITHits"]
+    forward.MaxNVelo = CommonForwardOptions["MaxNVelo"]
+
     from HltRecoConf import CommonForwardTrackingOptions, ComplementForwardToolOptions
     opts = CommonForwardTrackingOptions.copy()
     opts.update(ComplementForwardToolOptions)
@@ -206,7 +206,7 @@ def ConfiguredForwardComplement(name
     return forward
 
 def ConfiguredPatSeeding(name
-                         , OutputTracksName 
+                         , OutputTracksName
                          , VetoTrackLocations = None):
     if name == None:
         log.fatal( '##################################################################################')
@@ -235,7 +235,7 @@ def ConfiguredPatSeeding(name
     from Configurables import HltRecoConf
     from HltTracking.HltRecoConf import CommonForwardOptions
     recoSeeding.PatSeedingTool.MaxOTHits = HltRecoConf().getProp("Forward_MaxOTHits")
-    recoSeeding.PatSeedingTool.MaxITHits = CommonForwardOptions["MaxITHits"] 
+    recoSeeding.PatSeedingTool.MaxITHits = CommonForwardOptions["MaxITHits"]
     return recoSeeding
 
 #TODO: Move this to TrackFitter package?
@@ -275,7 +275,7 @@ def ConfiguredHltEventFitter( name,
                               TracksOutContainer = None):
     # create the event fitter
     from Configurables import ( TrackEventFitter, TrackMasterFitter, TrackInitFit, TrackStateInitTool )
-    
+
     eventfitter = TrackEventFitter(name)
     eventfitter.TracksInContainer = TracksInContainer
     if TracksOutContainer != None:
@@ -304,17 +304,16 @@ def ConfiguredGoodTrackFilter (name,
     return filterTracks
 
 #############################################################################################
-# Define modules for the reconstruction sequence 
+# Define modules for the reconstruction sequence
 #############################################################################################
 from HltLine.HltDecodeRaw import DecodeVELO, DecodeTRACK, DecodeTT, DecodeIT
-from Configurables import HltConf, Hlt2Conf
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 #This is the part which is shared between Hlt1 and Hlt2
 MinimalVelo = bindMembers( None, [DecodeVELO, recoVelo( OutputTracksName=HltSharedTrackLoc["Velo"] ) ] ).setOutputSelection( HltSharedTrackLoc["Velo"] )
 # We have to remove the decoder from the sequence if disabled otherwise the PV unit complains and does not run.
 veloAlgs = [DecodeTRACK, DecodeVELO, recoVelo( OutputTracksName=HltSharedTrackLoc["Velo"] )]
-if Hlt2Conf().getProp('Hlt1TrackOption') == "Rerun":
+if HltRecoConf().getProp('Hlt1TrackOption') == "Rerun":
     veloAlgs.remove(DecodeTRACK)
 RevivedVelo = bindMembers( None, veloAlgs ).setOutputSelection( HltSharedTrackLoc["Velo"] )
 FittedVelo  = bindMembers( None, RevivedVelo.members() + fittedVelo(RevivedVelo.outputSelection(), Hlt1TrackLoc["FittedVelo"])).setOutputSelection(Hlt1TrackLoc["FittedVelo"])
@@ -322,8 +321,8 @@ FittedVelo  = bindMembers( None, RevivedVelo.members() + fittedVelo(RevivedVelo.
 
 # TODO: put selection revive/redo here (ask Sebastian)
 # for now always redo:
-bm_members =  DecodeVELO.members() + [recoVelo(), filterVelo ] 
-bm_members += DecodeTT.members() + [recoVeloTT] 
+bm_members =  DecodeVELO.members() + [recoVelo(), filterVelo ]
+bm_members += DecodeTT.members() + [recoVeloTT]
 bm_members += DecodeIT.members() + [recoForwardHPT]
 
 HltHPTTracking = bindMembers(None, bm_members).setOutputSelection( recoForwardHPT.OutputTracksName )
@@ -333,7 +332,7 @@ RevivedForward = bindMembers(None, [ DecodeTRACK ] + DecodeTT.members() + Decode
 #VeloTT tracking
 vt_members = DecodeVELO.members() + [ recoVelo(), filterVelo ]
 vt_members += DecodeTT.members()  + [ recoVeloTT ]
-VeloTTTracking = bindMembers(None, vt_members).setOutputSelection( recoVeloTT.OutputTracksName ) 
+VeloTTTracking = bindMembers(None, vt_members).setOutputSelection( recoVeloTT.OutputTracksName )
 
 # ==============================================================================
 # Hlt1Seeding, used by MicroBias

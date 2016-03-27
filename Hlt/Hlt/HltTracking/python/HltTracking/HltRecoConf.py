@@ -27,55 +27,63 @@ from LHCbKernel.Configuration import *
 from GaudiKernel.SystemOfUnits import MeV, mm, m
 
 class HltRecoConf(LHCbConfigurableUser):
-   __slots__ = { "Forward_HPT_MinPt"           :  500. * MeV
-               , "Forward_HPT_MinP"            : 3000. * MeV
-               , "Forward_LPT_Muon_MinPt"      :  300. * MeV
-               , "Forward_LPT_Muon_MinP"       : 3000. * MeV
-               , "Forward_ULPT_Muon_MinPt"     :  80. * MeV
-               , "Forward_ULPT_Muon_MinP"      : 3000. * MeV
-               , "Forward_LPT_MinPt"           :   80. * MeV  # was 200
-               , "Forward_LPT_MinP"            : 1000. * MeV # was 3000
-               , "Forward_MaxOTHits"           : 15000
-               , "MatchVeloMuon_MinP"          : 4000. * MeV
-               , "GoodTrCHI2PDOF"              : 4.0  # This TrCHI2PDOF is used in the sequence to mark hits of good tracks.
-               , "MaxTrCHI2PDOF"               : 4.0  # This TrCHI2PDOF is used in the making of fitted tracks.
-               , "ApplyGHOSTPROBCut"           : False  # Enable cut on ghost probability in the making of protoparticles.
-               , "ApplyGHOSTPROBCutInTBTC"     : True  # Enable cut on ghost probability in the creation of fitted tracks.
-               , "ApplyGHOSTPROBCutInHLT1"     : True  # Enable cut on ghost probability in the fitting of Hlt1 tracks
-               , "MaxTrGHOSTPROB"              : 0.4  # Cut value of ghost probability for above options.
-               , "VeloSelectionCut"            : "(~TrBACKWARD) & ( TrNVELOMISS < 100 )"
-               , "FitVelo"                     : True
-               , "FastFitVelo"                 : True
-               , "OfflineSeeding"              : True
-               , "OfflineRich"                 : True
-               , "CalculateProbNN"             : True
-               , "AddGhostProb"                : True
-               , "InitFits"                    : True
-               , "BeamGasMode"                 : False
-               , "VeloTrackingZMin"            : -2000.   #minimum velo tracking range
-               , "VeloTrackingZMax"            : +2000.   #maximum velo tracking range
-               , "MoreOfflineLikeFit"          : True   # This runs a fit in HLT1 and HLT2 which uses the default offline fit
-                                                        # with a simplified material description
-               , "FitIterationsInHltFit"       : 1      # Increases the number of fit iterations in the current Hlt fit.
-               , "NewMSinFit"                  : True   # Use the new description of the multiple scattering term
-               , "PVOptions"                   : { "UseBeamSpotRCut"       : True,
-                                                   "BeamSpotRCut"          : 0.2 * mm,
-                                                   "TrackErrorScaleFactor" : 1.,
-                                                   "ResolverBound"         : 5 * mm,
-                                                   "MinTracks"             : 4.,
-                                                   "trackMaxChi2"          : 12.,
-                                                   "BeamSpotRHighMultiplicityCut": 0.4*mm,
-                                                   "BeamSpotRMultiplicityTreshold": 10}
-               }
+    __slots__ = { "Forward_HPT_MinPt"           :  500. * MeV
+                , "Forward_HPT_MinP"            : 3000. * MeV
+                , "Forward_LPT_Muon_MinPt"      :  300. * MeV
+                , "Forward_LPT_Muon_MinP"       : 3000. * MeV
+                , "Forward_ULPT_Muon_MinPt"     :  80. * MeV
+                , "Forward_ULPT_Muon_MinP"      : 3000. * MeV
+                , "Forward_LPT_MinPt"           :   80. * MeV  # was 200
+                , "Forward_LPT_MinP"            : 1000. * MeV # was 3000
+                , "Forward_MaxOTHits"           : 15000
+                , "MatchVeloMuon_MinP"          : 4000. * MeV
+                , "GoodTrCHI2PDOF"              : 4.0  # This TrCHI2PDOF is used in the sequence to mark hits of good tracks.
+                , "MaxTrCHI2PDOF"               : 4.0  # This TrCHI2PDOF is used in the making of fitted tracks.
+                , "ApplyGHOSTPROBCut"           : False  # Enable cut on ghost probability in the making of protoparticles.
+                , "ApplyGHOSTPROBCutInTBTC"     : True  # Enable cut on ghost probability in the creation of fitted tracks.
+                , "ApplyGHOSTPROBCutInHLT1"     : True  # Enable cut on ghost probability in the fitting of Hlt1 tracks
+                , "MaxTrGHOSTPROB"              : 0.4  # Cut value of ghost probability for above options.
+                , "VeloSelectionCut"            : "(~TrBACKWARD) & ( TrNVELOMISS < 100 )"
+                , "FitVelo"                     : True
+                , "FastFitVelo"                 : True
+                , "OfflineSeeding"              : True
+                , "OfflineRich"                 : True
+                , "CalculateProbNN"             : True
+                , "AddGhostProb"                : True
+                , "InitFits"                    : True
+                , "BeamGasMode"                 : False
+                , "VeloTrackingZMin"            : -2000.   #minimum velo tracking range
+                , "VeloTrackingZMax"            : +2000.   #maximum velo tracking range
+                , "MoreOfflineLikeFit"          : True   # This runs a fit in HLT1 and HLT2 which uses the default offline fit
+                                                         # with a simplified material description
+                , "FitIterationsInHltFit"       : 1      # Increases the number of fit iterations in the current Hlt fit.
+                , "NewMSinFit"                  : True   # Use the new description of the multiple scattering term
+                , "PVOptions"                   : { "UseBeamSpotRCut"       : True,
+                                                    "BeamSpotRCut"          : 0.2 * mm,
+                                                    "TrackErrorScaleFactor" : 1.,
+                                                    "ResolverBound"         : 5 * mm,
+                                                    "MinTracks"             : 4.,
+                                                    "trackMaxChi2"          : 12.,
+                                                    "BeamSpotRHighMultiplicityCut": 0.4*mm,
+                                                    "BeamSpotRMultiplicityTreshold": 10}
+                , 'Hlt1TrackOption'             : 'Rerun'
+                }
 
-   def getConfiguredForward(Name) :
-       pass
+    # Options for dealing with HLT1 reconstructed objects
+    __known_hlt1trackoptions__ = ["Decode", "Rerun"]
+    #                             ^ take from HLT1Track raw banks
+    #                                       ^ Recreate tracks from scratch
 
-   def __apply_configuration__(self):
+    def getConfiguredForward(Name) :
+        pass
+
+    def __apply_configuration__(self):
         """
         Apply Hlt configuration
         """
-        log.debug("Hlt configuration")
+        if self.getProp("Hlt1TrackOption") not in self.__known_hlt1trackoptions__:
+            raise ValueError("You must choose a valid Hlt1TrackOption for the input of Hlt2, you chose "+self.getProp("Hlt1TrackOption")+" which is not one of: "+self.__known_hlt1trackoptions__.__str__())
+        log.debug("HltReco configuration")
         import GaudiKernel.ProcessJobOptions
         GaudiKernel.ProcessJobOptions.PrintOff()
         # Configure the PV refitting correctly
