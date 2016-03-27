@@ -155,6 +155,61 @@ del decorateFill, decorateTisTos
 ## Welcome message:
 Bender.Welcome.instance()
 
+def with_ipython() :
+    try :
+        return __IPYTHON__
+    except NameError:
+        return False 
+# =============================================================================
+## start (interactive) python session
+#  @code
+#  ...
+#  run(100)
+#  bender_start( globals() )
+#  @endcode
+def bender_start  ( names = {}    ,
+                    batch = False ,
+                    embed = False ,
+                    plain = False ) :
+    """
+    Start (interactive) Bender session
+    >>> ...
+    >>> run(100)
+    >>> bender_start ( globals() )
+    """
+    if    batch :
+        
+        logger.info ('Batch... ') 
+        
+    elif  embed and not with_ipython () :
+
+        
+        logger.info ('Start embedded interactive shell') 
+        import IPython
+        IPython.embed ()
+        
+    elif plain and not with_ipython() :
+        
+        __vars = names.copy()
+        
+        import readline
+        import code        
+        logger.info ('Start plain interactive shell') 
+        
+        shell = code.InteractiveConsole(__vars)
+        shell.interact()
+        
+    elif not with_ipython()  :
+        
+        __vars = names.copy()        
+        logger.info ('Start interactive shell')     
+        import IPython
+        IPython.start_ipython ( argv = [] , user_ns = __vars )
+
+    else :
+
+        logger.warning('Session is runnig!')
+    
 # =============================================================================
 if __name__ == '__main__' :
 

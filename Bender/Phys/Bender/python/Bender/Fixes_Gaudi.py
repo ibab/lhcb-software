@@ -63,7 +63,8 @@ else                      : logger = getLogger ( __name__ )
 # =============================================================================
 logger.info ( '*** Fix some Gaudi features' ) 
 # =============================================================================
-from LoKiCore.basic import cpp 
+from LoKiCore.basic import cpp
+IStateful    = cpp.IStateful 
 StateMachine = cpp.Gaudi.StateMachine
 # =============================================================================
 import GaudiPython.Bindings
