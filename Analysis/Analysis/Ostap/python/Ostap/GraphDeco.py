@@ -743,7 +743,7 @@ def _gr_setitem_ ( graph , ipoint , point )  :
     x = float ( point[0] )
     y = float ( point[1] )
     
-    graph.SetPoint      ( ipoint , x , v )
+    graph.SetPoint      ( ipoint , x , y )
 
 
 # =============================================================================
@@ -1213,6 +1213,249 @@ def _gr_yminmax_ ( graph ) :
     return ymn , ymx 
 
 # =============================================================================
+## get "slice" for graph 
+#  @code     
+#    >>> graph = ...
+#    >>> gr1   = graph[2:10] 
+#  @endcode     
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2016-03-28 
+def _gr0_getslice_ ( graph , i , j ) :
+    """Get the ``slice'' for TGraph:
+    >>> graph = ...
+    >>> gr1   = graph[2:10]
+    """
+    np = len ( graph ) 
+    
+    while i < 0 : i += nb
+    while j < 0 : j += nb
+
+    new_graph = ROOT.TGraph( j - i ) if  i < j else  ROOT.TGraph()
+    copy_graph_attributes ( graph , new_graph )
+
+    ii = 0 
+    while i < j :
+        new_graph[ ii ] = graph[i]
+        ii +=1 
+        i  +=1 
+        
+    return new_graph 
+
+# =============================================================================
+## get "slice" for graph 
+#  @code     
+#    >>> graph = ...
+#    >>> gr1   = graph[2:10] 
+#  @endcode     
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2016-03-28 
+def _gr1_getslice_ ( graph , i , j ) :
+    """Get the ``slice'' for TGraphErrors:
+    >>> graph = ...
+    >>> gr1   = graph[2:10]
+    """
+    np = len ( graph ) 
+    
+    while i < 0 : i += nb
+    while j < 0 : j += nb
+    
+    new_graph = ROOT.TGraphErrors( j - i ) if  i < j else  ROOT.TGraphErrors ()
+    copy_graph_attributes ( graph , new_graph )
+    
+    ii = 0 
+    while i < j :
+        new_graph[ ii ] = graph[i]
+        ii += 1
+        i  += 1 
+        
+    return new_graph 
+
+
+# =============================================================================
+## get "slice" for graph 
+#  @code     
+#    >>> graph = ...
+#    >>> gr1   = graph[2:10] 
+#  @endcode     
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2016-03-28 
+def _gr2_getslice_ ( graph , i , j ) :
+    """Get the ``slice'' for TGraphAsymmErrors:
+    >>> graph = ...
+    >>> gr1   = graph[2:10]
+    """
+    np = len ( graph ) 
+    
+    while i < 0 : i += nb
+    while j < 0 : j += nb
+    
+    new_graph = ROOT.TGraphAsymmErrors( j - i ) if  i < j else  ROOT.TGraphAsymmErrors ()
+    copy_graph_attributes ( graph , new_graph )
+    
+    ii = 0 
+    while i < j :
+        new_graph[ ii ] = graph[i]
+        ii += 1
+        i  += 1 
+        
+    return new_graph 
+
+# ============================================================================
+## make sorted graph
+#  @code
+#  graph = ...
+#  s     = graph.sorted() 
+#  @endcode
+#  @date   2016-03-28 
+def _gr0_sorted_ ( graph , reverse = False ) :
+    """Make sorted graph
+    >>> graph = ...
+    >>> s     = graph.sorted() 
+    """
+    
+    oitems =        ( i for i in graph.iteritems() ) 
+    sitems = sorted ( oitems , key = lambda s :s[1] , reverse = reverse )
+    
+    new_graph = ROOT.TGraph ( len( graph ) )
+    copy_graph_attributes ( graph , new_graph )
+
+    ip = 0 
+    for item in sitems :
+        new_graph[ip] = item[1:]
+        ip += 1
+
+    return new_graph 
+
+# ============================================================================
+## make sorted graph
+#  @code
+#  graph = ...
+#  s     = graph.sorted() 
+#  @endcode
+#  @date   2016-03-28 
+def _gr1_sorted_ ( graph , reverse = False ) :
+    """Make sorted graph
+    >>> graph = ...
+    >>> s     = graph.sorted() 
+    """
+    
+    oitems =        ( i for i in graph.iteritems() ) 
+    sitems = sorted ( oitems , key = lambda s :s[1].value() , reverse = reverse )
+    
+    new_graph = ROOT.TGraphErrors ( len( graph ) )
+    copy_graph_attributes ( graph , new_graph )
+
+    ip = 0 
+    for item in sitems :
+        new_graph[ip] = item[1:]
+        ip += 1
+
+    return new_graph 
+
+# ============================================================================
+## make sorted graph
+#  @code
+#  graph = ...
+#  s     = graph.sorted() 
+#  @endcode
+#  @date   2016-03-28 
+def _gr2_sorted_ ( graph , reverse = False ) :
+    """Make sorted graph
+    >>> graph = ...
+    >>> s     = graph.sorted() 
+    """
+    
+    oitems =        ( i for i in graph.iteritems() ) 
+    sitems = sorted ( oitems , key = lambda s :s[1] , reverse = reverse )
+    
+    new_graph = ROOT.TGraphAsymmErrors ( len( graph ) )
+    copy_graph_attributes ( graph , new_graph )
+
+    ip = 0 
+    for item in sitems :
+        new_graph[ip] = item[1:]
+        ip += 1
+
+    return new_graph 
+
+# =============================================================================
+## filter points from the graph
+#  @code
+#  graph = ...
+#  f     = graph.filter( lambda s : s[1]>0 ) 
+#  @endcode
+#  @date   2016-03-28 
+def _gr0_filter_ ( graph , accept ):
+    """Filter points from the graph
+    >>> graph = ...
+    >>> f     = graph.filter( lambda s : s[1]>0 ) 
+    """
+    oitems =        ( i for i in graph.iteritems() ) 
+    fitems = filter ( accept , oitems ) 
+    
+    new_graph = ROOT.TGraph ( len( fitems ) )
+    copy_graph_attributes ( graph , new_graph )
+    
+    ip = 0 
+    for item in fitems :
+        new_graph[ip] = item[1:]
+        ip += 1
+
+    return new_graph
+
+# =============================================================================
+## filter points from the graph
+#  @code
+#  graph = ...
+#  f     = graph.filter( lambda s : s[1]>0 ) 
+#  @endcode
+#  @date   2016-03-28 
+def _gr1_filter_ ( graph , accept ):
+    """Filter points from the graph
+    >>> graph = ...
+    >>> f     = graph.filter( lambda s : s[1]>0 ) 
+    """
+    oitems =        ( i for i in graph.iteritems() ) 
+    fitems = filter ( accept , oitems ) 
+    
+    new_graph = ROOT.TGraphErrors ( len( fitems ) )
+    copy_graph_attributes ( graph , new_graph )
+    
+    ip = 0 
+    for item in fitems :
+        new_graph[ip] = item[1:]
+        ip += 1
+
+    return new_graph
+
+
+# =============================================================================
+## filter points from the graph
+#  @code
+#  graph = ...
+#  f     = graph.filter( lambda s : s[1]>0 ) 
+#  @endcode
+#  @date   2016-03-28 
+def _gr2_filter_ ( graph , accept ):
+    """Filter points from the graph
+    >>> graph = ...
+    >>> f     = graph.filter( lambda s : s[1]>0 ) 
+    """
+    
+    oitems =        ( i for i in graph.iteritems() ) 
+    fitems = filter ( accept , oitems ) 
+    
+    new_graph = ROOT.TGraphAsymmErrors ( len( fitems ) )
+    copy_graph_attributes ( graph , new_graph )
+    
+    ip = 0 
+    for item in fitems :
+        new_graph[ip] = item[1:]
+        ip += 1
+        
+    return new_graph
+
+# =============================================================================
 ROOT.TGraph       . __len__       = ROOT.TGraphErrors . GetN 
 ROOT.TGraph       . __contains__  = lambda s,i : i in range(0,len(s))
 ROOT.TGraph       . __iter__      = _gr_iter_ 
@@ -1263,6 +1506,22 @@ ROOT.TGraphAsymmErrors . ymax        = _grae_ymax_
 
 ROOT.TGraph       . integral         = _gr_integral_
 ROOT.TGraph       . asTF1            = _gr_as_TF1_
+
+
+ROOT.TGraph            .__getslice__  = _gr0_getslice_
+ROOT.TGraphErrors      .__getslice__  = _gr1_getslice_
+ROOT.TGraphAsymmErrors .__getslice__  = _gr2_getslice_
+
+ROOT.TGraph            .sorted        = _gr0_sorted_
+ROOT.TGraphErrors      .sorted        = _gr1_sorted_
+ROOT.TGraphAsymmErrors .sorted        = _gr2_sorted_ 
+
+
+ROOT.TGraph            .filter        = _gr0_filter_
+ROOT.TGraphErrors      .filter        = _gr1_filter_ 
+ROOT.TGraphAsymmErrors .filter        = _gr2_filter_ 
+
+
 # =============================================================================
 ## set color attributes  
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
