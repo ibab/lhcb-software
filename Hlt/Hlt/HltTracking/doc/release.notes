@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2016-03-28 - Roel Aaij
+ - Hard code the instance names of the Rich configurables. Otherwise, for some
+   obscure reason, the downstream rich does not get configured properly...
+
 ! 2016-03-24 - Rosen Matev
  - Fix dependencies between configurables.
    The interface functions to the Hlt2 tracking configurables should now be
@@ -38,13 +42,13 @@
    This information is used nowhere.
 
 ! 2016-03-10 - Agnieszka Dziurda
- - new tuning for PVs, double threshold for radial cut 
+ - new tuning for PVs, double threshold for radial cut
 
 ! 2016-03-05 - Sascha Stahl
  - Fixed bug when switching off fitting of TTracks.
 
 ! 2016-02-23 - Francesco Dettori
- - Adding configuration information for IsMuonTight in: 
+ - Adding configuration information for IsMuonTight in:
     python/HltTracking/Hlt1Tracking.py
 		python/HltTracking/Hlt1TrackNames.py
 		python/HltTracking/Hlt1StreamerConf.py
@@ -59,7 +63,7 @@
  - Added LooseComplementForward for very low pt tracking. Pt thresholds can be configured
    in HltRecoConf (Forward_ULPT_Muon_MinPt and Forward_ULPT_Muon_MinP).
  - Switched on deuteron hypothesis in RICH reconstruction.
- 
+
 ! 2016-02-14 - Roel Aaij
  - Further update of used_configurables to work with Hlt/HltJets.
 

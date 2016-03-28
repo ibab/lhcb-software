@@ -1,11 +1,10 @@
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm, mrad
-from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
 ## Temporary local definition of particle masses.  Used to adapt TagDecay cut
 ## variables from from Delta M to Q.
 _local_m_pip = 139.57018 * MeV
 
-class CharmHadD2HHKshLines(Hlt2LinesConfigurableUser):
+class CharmHadD2HHKshLines(object):
     def localcuts(self) :
         return {
                  # generic D0 --> HHKs cuts
@@ -76,7 +75,7 @@ class CharmHadD2HHKshLines(Hlt2LinesConfigurableUser):
                                         'Q_M_MAX'          : 165 * MeV - _local_m_pip,
                                         'TagVCHI2PDOF_MAX' : 10.0,
                                        }
-                            
+
         }
 
     def locallines(self):
@@ -107,11 +106,11 @@ class CharmHadD2HHKshLines(Hlt2LinesConfigurableUser):
 
         ## We can probably use only D*-tagged HHKs candidates, so let's make
         ## the corresponding D*-tagged lines.
-        ##  
+        ##
         ## Recall that the first argument of Dst2D0pi is the "name" used in
         ## the dictionary of cuts and the second argument is the "d0" list to
         ## be used.
-        ##  
+        ##
         ## All of the following lines use a common dictionary
         ## "name":  Dst2D0pi_D02HHKsh
         ## as the channels should be sufficiently similar to use common cuts.
@@ -124,7 +123,7 @@ class CharmHadD2HHKshLines(Hlt2LinesConfigurableUser):
                 , inputs = [Filtered_D02KsPiPi_DD, SharedSoftTagChild_pi])
 
         ## These lines will produce
-        ## D*+ --> D0,pi+; D0 --> D0 --> K-,pi+,Kshort candidates 
+        ## D*+ --> D0,pi+; D0 --> D0 --> K-,pi+,Kshort candidates
         ## and also D*- --> D0bar,pi-;  D0bar --> K+,pi-,Kshort candidates;
         ## Ignoring CPV in K0 and K0bar decays to Kshort, these are CP
         ## conjugate decays.
@@ -163,7 +162,7 @@ class CharmHadD2HHKshLines(Hlt2LinesConfigurableUser):
         Dstp2D0Pip_D02KS0KmKp_KS0DD  = TagDecay('Dst2D0pi_D02HHKsh'
                 , decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"]
                 , inputs = [Filtered_D02KsKK_DD, SharedSoftTagChild_pi])
-##  
+##
 ##  create the LTUNB version of these D* combiners
 
         Dstp2D0Pip_D02KS0PimPip_KS0LL_LTUNB = TagDecay('Dst2D0pi_D02HHKsh'
@@ -197,7 +196,7 @@ class CharmHadD2HHKshLines(Hlt2LinesConfigurableUser):
         Dstp2D0Pip_D02KS0KmKp_KS0DD_LTUNB  = TagDecay('Dst2D0pi_D02HHKsh'
                 , decay = ["D*(2010)+ -> D0 pi+", "D*(2010)- -> D0 pi-"]
                 , inputs = [Filtered_D02KsKK_DD_LTUNB, SharedSoftTagChild_pi])
-##  
+##
 
         ## The stages dictionary should be a clear two-column list from
         ##   which the lines defined in this module can be directly read.
@@ -234,6 +233,6 @@ class CharmHadD2HHKshLines(Hlt2LinesConfigurableUser):
                   'Dstp2D0Pip_D02KS0KmKp_KS0DD_LTUNBTurbo'   : [Dstp2D0Pip_D02KS0KmKp_KS0DD_LTUNB]
 
                  }
-        
+
 
         return stages

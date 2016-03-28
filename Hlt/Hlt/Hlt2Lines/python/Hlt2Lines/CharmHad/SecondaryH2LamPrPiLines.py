@@ -1,8 +1,6 @@
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm
-from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
-
-class SecondaryH2LamPrPiLines(Hlt2LinesConfigurableUser):
+class SecondaryH2LamPrPiLines(object):
     def localcuts(self) :
         return {
                  # cuts for the mass filters
@@ -52,6 +50,6 @@ class SecondaryH2LamPrPiLines(Hlt2LinesConfigurableUser):
                   'SecondaryH2LamPipPmDDLLTurbo'  :  [Filtered_LamPiPr_DDLL],
                   'SecondaryH2LamPipPmDDDDTurbo'  :  [Filtered_LamPiPr_DDDD],
                  }
-        
+
 
         return stages

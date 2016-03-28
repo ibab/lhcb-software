@@ -36,11 +36,12 @@ __author__ = "V. Gligorov (vladimir.gligorov@cern.ch), S. Stahl (sascha.stahl@ce
 class Hlt2Tracking(LHCbConfigurableUser):
     # python configurables that I configure
     __used_configurables__ = [
-        (CaloProcessor, None),
-        (RichRecSysConf, None),
         TrackSys,
-        (ChargedProtoANNPIDConf, None),
-    ]
+        (CaloProcessor, "SharedCaloProcessor"),
+        (RichRecSysConf, "Hlt2LongTracking_RichRecSysConf"),
+        (RichRecSysConf, "Hlt2DownstreamTracking_RichRecSysConf"),
+        (ChargedProtoANNPIDConf, None)
+        ]
 
     __slots__ = { "DataType"                        : '2012' # datatype  2009, MC09, DC06...
                 , "EarlyDataTracking"               : False
@@ -1029,10 +1030,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
         # The input location of the tracks
         tracks                      = self.hlt2StagedFastFit()
         richConf.trackConfig().InputTracksLocation = tracks.outputSelection()
-
-        # Workaround for Rich dictionary loading.
-        #import cppyy
-        #cppyy.gbl.LHCb.RichRecSegment
 
         from HltLine.HltLine import bindMembers
         # Build the bindMembers

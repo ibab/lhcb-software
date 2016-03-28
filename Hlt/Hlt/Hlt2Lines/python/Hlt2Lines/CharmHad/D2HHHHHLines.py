@@ -1,7 +1,6 @@
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm, mrad
-from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 
-class CharmHadD2HHHHHLines(Hlt2LinesConfigurableUser):
+class CharmHadD2HHHHHLines(object):
     def localcuts(self) :
         return {
                  ##  dictionary entries for decays instantiated in Stages.py
@@ -40,7 +39,7 @@ class CharmHadD2HHHHHLines(Hlt2LinesConfigurableUser):
                              'PT_MIN'                   :  2500 * MeV,
                              'IPCHI2_MAX'               : 15.0
                                           }
-                            
+
                 ,'Dch2KmKmKpPipPip' : {
                              'TisTosSpec'               : "Hlt1.*MVA.*Decision%TOS",
                              'Trk_ALL_PT_MIN'           :  250 * MeV,
@@ -195,7 +194,7 @@ class CharmHadD2HHHHHLines(Hlt2LinesConfigurableUser):
         from Stages import LcpToPpKmKpPimPip, LcpToPpKmPimPipPip
         from Stages import LcpToPpPimPimPipPip, LcpToPpKpPimPimPip
         from Stages import LcpToPpKpKpPimPim, LcpToPpKmKmPipPip
-        
+
 
         stages = { 'Dp2KmPimPipPipPipTurbo'   :  [DplusFilter('Dp2KmPimPipPipPip',
                                                   inputs=[Dch2KmPimPipPipPip],
@@ -234,6 +233,6 @@ class CharmHadD2HHHHHLines(Hlt2LinesConfigurableUser):
                                                   inputs=[LcpToPpKmKmPipPip],
                                                   nickname='Lcp')],
                  }
-        
+
 
         return stages

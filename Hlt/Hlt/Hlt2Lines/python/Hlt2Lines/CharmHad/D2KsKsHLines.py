@@ -11,10 +11,9 @@
 #=============================================================================
 __author__  = "Maurizio MARTINELLI maurizio.martinelli@cern.ch"
 from GaudiKernel.SystemOfUnits import GeV, MeV, picosecond, mm, mrad
-from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableUser
 import copy
 
-class CharmHadD2KsKsHLines(Hlt2LinesConfigurableUser):
+class CharmHadD2KsKsHLines(object):
     def localcuts(self) :
         CommonKsKsH = {
         'KS0LL_ALL_PT_MIN'        : 500.0 * MeV,

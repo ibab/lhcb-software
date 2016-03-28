@@ -13,8 +13,6 @@ from Configurables import HltJetConf
 class Hlt2LinesConfigurableUser(HltLinesConfigurableUser):
     # python configurables to be applied before me
     __queried_configurables__ = [
-        Hlt2BiKalmanFittedForwardTracking,
-        Hlt2BiKalmanFittedDownstreamTracking,
         Hlt2MuonTTTracking,
         Hlt2VeloMuonTracking,
         Hlt2FullDownstreamTracking,
