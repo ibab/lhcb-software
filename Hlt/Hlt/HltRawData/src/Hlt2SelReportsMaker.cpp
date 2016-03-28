@@ -59,7 +59,7 @@ StatusCode Hlt2SelReportsMaker::postExecute(LHCb::HltSelReports* outputSummary,
      const LHCb::HltDecReport* report = decReports->decReport(name);
      if(report){
        if(report->numberOfCandidates()>14) Warning( name+" selects 15 or more candidates. If you see this a lot there is a problem." ,
-           StatusCode::SUCCESS, 10 );
+           StatusCode::SUCCESS, 0 );
      }
    }
    

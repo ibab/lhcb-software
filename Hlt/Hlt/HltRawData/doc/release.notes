@@ -5,6 +5,11 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+! 2015-3-28 - Rosen Matev
+ - Silence warning for too many candidates.
+   Hlt::Line will produce a histogram of number of candidates, which can be
+   used for monitoring.
+
 ! 2015-3-23 - Sean Benson
  - Ensure protos only saved when not Turbo.
 
