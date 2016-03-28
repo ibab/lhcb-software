@@ -14,7 +14,7 @@
 <argument name="args"><set>
 	<text>$GAUSSOPTS/Gauss-DEV.py</text>
 	<text>$DECFILESROOT/options/30000000.py</text>
-	<text>$LBPYTHIAROOT/options/Pythia.py</text>
+	<text>$LBPYTHIA8ROOT/options/Pythia8.py</text>
 	<text>$GAUSSOPTS/Gauss-Job.py</text>
         <text>$GAUSSROOT/tests/options/testGauss-QMTests.py</text>
 </set>

@@ -13,10 +13,10 @@
 <argument name="prerequisites"><set/></argument>
 <argument name="args"><set>
 	<text>$GAUSSOPTS/Gauss-DEV.py</text>
+        <text>$GAUSSOPTS/SpillOver-50ns.py</text>
 	<text>$DECFILESROOT/options/30000000.py</text>
 	<text>$LBPYTHIAROOT/options/Pythia.py</text>
 	<text>$GAUSSOPTS/Gauss-Job.py</text>
-	<text>$GAUSSOPTS/SpillOver-50ns.py</text>
         <text>$GAUSSROOT/tests/options/testGauss-QMTests.py</text>
 </set></argument>
 <argument name="exit_code"><integer>0</integer></argument>
