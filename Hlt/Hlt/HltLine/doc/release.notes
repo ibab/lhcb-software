@@ -5,6 +5,13 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2016-03-28 - Rosen Matev
+ - Fix Hlt::Line::numberOfCandidates(const Algorithm*) to work early enough.
+   It is being called in Selection::Line::initialize(), at a point where
+   Hlt::Line is not yet initialized and even more Selection::Line::algorithms()
+   cannot be used.
+ - Remove some warnings from python configuration
+ 
 ! 2016-03-23 - Rosen Matev
  - Add PersistReco to Hlt2Line python class
  - Add a protection for Turbo lines (Turbo flag must be set)

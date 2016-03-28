@@ -1036,7 +1036,6 @@ class Hlt1Line(object):
                     _add_to_hlt1_output_selections_ ( _m.name() )
             elif type(_m) is LoKi__HltUnit and (hasattr( _m, 'Code') or hasattr( _m, 'Preambulo')):
                 ex = r"SINK\s*\(\s*'(\w+Decision)'\s*\)"
-                import re
                 from itertools import chain
                 for s in chain.from_iterable((re.finditer(ex, line) for line in [getattr(_m, 'Code', '')] + getattr(_m, 'Preambulo', []))):
                     self._outputSelections.append(s.group(1))
@@ -1048,8 +1047,11 @@ class Hlt1Line(object):
         if self._outputsel and self._outputSelections and self._outputsel != self._outputSelections[-1] :
             log.warning(" Line '%s' has outputsel = '%s' and inconsistent selections = '%s' "%(line,self._outputsel,self._outputSelections ) )
 
-        if self._outputsel is not None and self._outputsel!= decisionName( line ) and not line.startswith('Lumi') :
-            log.warning( "Line '%s' has a final output selection named '%s' -- this does not match the rules, TISTOS will not work for this line"%(line,self._outputsel) )
+        if self._outputsel and self._outputsel != decisionName(line) and \
+           not re.match('Lumi.*|Global|ErrorEvent', line):
+            log.warning("Line '{}' has a final output selection named '{}'" +
+                        " -- this does not match the rules, " +
+                        "TISTOS will not work for this line!".format(line, self._outputsel))
 
         # create the line configurable
         # NOTE: even if pre/postscale = 1, we want the scaler, as we may want to clone configurations

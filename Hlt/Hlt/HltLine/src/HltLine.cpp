@@ -40,9 +40,6 @@ class Line : public ::Selection::Line
     const Hlt::Selection* m_selection;
 
     std::pair<std::string, unsigned> m_id;
-    // TODO: instead of map, create one entry for each algorithm, and go by 'index'
-    //       unsupported algorithms get a nullptr to a selection instead of 'no entry'
-    GaudiUtils::VectorMap<const Algorithm*, const Hlt::Selection*> m_selections;
 };
 
 }
@@ -103,8 +100,17 @@ int Hlt::Line::numberOfCandidates() const
 
 std::unique_ptr<std::function<unsigned int()>> Hlt::Line::numberOfCandidates( const Algorithm* algorithm ) const
 {
-    auto i = m_selections.find( algorithm );
-    if ( i != m_selections.end() ) return  std::unique_ptr<std::function<unsigned int()>>{ new std::function<unsigned int()>{ [&](){ return i->second->size() ; } } } ;
+    // This method is called in Selection::Line::initialize() at a point where
+    // algorithms() would return an empty vector, so we can't use it here.
+    // In fact, anything initialized in Hlt::Line::initialize() cannot be used here
+    Hlt::IInspector::SelList selections;
+    if (inspectionSvc().outputs(algorithm, selections)) {
+        // just pick up the last one (don't know what to do if more than one anyway!)
+        const auto* sel = selections.back();
+        return std::unique_ptr<std::function<unsigned int()>>{
+            new std::function<unsigned int()>{ [sel](){ return sel->size(); } }
+        };
+    }
     return std::unique_ptr<std::function<unsigned int()>>{ nullptr };
 }
 
@@ -116,12 +122,6 @@ void Hlt::Line::SetupSelections()
     if ( inspectionSvc().hasSelection( key ) ) {
         lock->registerInput( key, this );
         m_selection = dataSvc().selection( key, this );
-    }
-    for ( const Algorithm* i : algorithms() ) {
-        Hlt::IInspector::SelList selections;
-        if ( !inspectionSvc().outputs( i, selections ) ) continue;
-        // just pick up the last one (don't know what to do if more than one anyway!)
-        m_selections.insert(  { i , selections.back() } );
     }
 }
 
