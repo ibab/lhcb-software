@@ -14,6 +14,8 @@ commandsTuning_XST_7TeV = [
     'SigmaDiffractive:dampen   = off',
     ]
 
+Pythia8TurnOffFragmentation = [ "HadronLevel:all = off" ]
+
 gen = Generation("Generation")
 
 gen.addTool( MinimumBias , name = "MinimumBias" )

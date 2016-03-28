@@ -4,7 +4,11 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
-!======================== LbPythia8 v12r0 2016-03-25 =========================
+!======================== LbPythia8 v12r0 2016-03-28 =========================
+! 2016-03-28 - Gloria Corti
+ - Fix options for spill-over where the wrong argument was passed
+   . options/Pythia8.py
+
 ! 2016-03-25 - Gloria Corti
  - Fix default settings in command file, since some value for Tune1 were
    overridden with older setting later in the file.

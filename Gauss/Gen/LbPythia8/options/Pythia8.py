@@ -31,7 +31,6 @@ gen.addTool( Special , name = "Special" )
 gen.Special.ProductionTool = "Pythia8Production"
 gen.Special.addTool( Pythia8Production , name = "Pythia8Production" )
 gen.Special.Pythia8Production.Tuning = "LHCbDefault.cmd"
-gen.addTool( Special , name = "Special" )
 gen.Special.PileUpProductionTool = "Pythia8Production/Pythia8PileUp"
 gen.Special.addTool(Pythia8Production, name = "Pythia8PileUp")
 gen.Special.Pythia8PileUp.Tuning = "LHCbDefault.cmd"
@@ -45,6 +44,6 @@ for slot in spillOverList:
     genSlot.addTool(MinimumBias, name = "MinimumBias")
     genSlot.MinimumBias.ProductionTool = "Pythia8Production"
     genSlot.MinimumBias.addTool(Pythia8Production, name = "Pythia8Production")
-    genSlot.MinimumBias.Pythia8Production.Tuning = command
+    genSlot.MinimumBias.Pythia8Production.Tuning = "LHCbDefault.cmd"
 
 
