@@ -5,6 +5,8 @@
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================= SelectionLine v1r8 2016-03-28 =========================
+
 ! 2015-03-28 - Rosen Matev
  - Produce a histogram in Selection::Line with log2(number of candidates).
    To be used for monitoring, and especially for detecting excessive selections.
