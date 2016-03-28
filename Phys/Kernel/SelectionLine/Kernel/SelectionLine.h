@@ -143,6 +143,7 @@ namespace Selection {
       IAlgManager* m_algMgr;                 ///< Pointer to algorithm manager
       AIDA::IHistogram1D* m_errorHisto;
       AIDA::IHistogram1D *m_timeHisto;
+      AIDA::IHistogram1D *m_ncandHisto;
       AIDA::IHistogram1D *m_stepHisto;
       AIDA::IProfile1D *m_candHisto;
       mutable IANNSvc *m_hltANNSvc;

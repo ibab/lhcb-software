@@ -310,6 +310,8 @@ StatusCode Selection::Line::initialize()
   //== Create the monitoring histograms
   m_errorHisto = book1D("error",name()+" error",-0.5,7.5,8);
   m_timeHisto  = book1D("walltime",name()+" log(wall time/ms)",timeHistoLowBound,6);
+  m_ncandHisto = book1D("number of candidates", name() + " log2(number of candidates)",
+                        0, 16, 16);
   m_stepHisto  = book1D("rejection stage", name()+ " rejection stage",
                         -0.5,m_subAlgo.size()-0.5,m_subAlgo.size() );
   m_candHisto  = bookProfile1D("candidates accepted", name()+" candidates accepted",
@@ -425,8 +427,10 @@ StatusCode Selection::Line::execute()
     if (accept) ++m_nAcceptOnError;
   }
 
+  auto nCandidates = numberOfCandidates();
+
   report.setDecision(accept ? 1u : 0u);
-  report.setNumberOfCandidates( numberOfCandidates() );
+  report.setNumberOfCandidates( nCandidates );
   if ( !m_ignoreFilter ) setFilterPassed( accept );
   setExecuted( true );
 
@@ -450,6 +454,9 @@ StatusCode Selection::Line::execute()
   // don't flag slow events as error, so mask the bit
   *m_errorCounter  += ( (report.errorBits()&~0x4)!=0 ) ;
   *m_slowCounter   += ( (report.errorBits()& 0x4)!=0 ) ;
+  if (accept && nCandidates > 0) {
+    fill(m_ncandHisto, std::log2(nCandidates), 1.0);
+  }
 
   fill( m_errorHisto, report.errorBits(), 1.0);
   // make stair plot
