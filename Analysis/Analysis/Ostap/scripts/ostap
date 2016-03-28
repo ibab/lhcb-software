@@ -325,7 +325,7 @@ for _s in _startups :
     try :
 
         import runpy
-        globs = runpy.run_path ( _ss , globals() )
+        globs = runpy.run_path ( _ss , globals() , run_name = '__main__')
         globals().update( globs )
         del globs
         
@@ -380,11 +380,11 @@ def treat_file ( f ) :
 
             import runpy 
             if arguments.WithContext :
-                globs = runpy.run_path ( f , globals() ) ## with context
+                globs = runpy.run_path ( f , globals() , rnu_name = '__main__') ## with context
                 globals().update ( globs )
                 del globs 
             else                     :
-                runpy.run_path ( f )                     ## plain
+                runpy.run_path ( f , run_name = '__main__')          ## plain
 
             logger.info  ("Executed       '%s'" % f )
             python_scripts.append ( f )
@@ -422,11 +422,11 @@ def treat_file ( f ) :
             
             ## this one is always executed with the context!!!
             import runpy
-            globs = runpy.run_path ( f , globals() )
+            globs = runpy.run_path ( f , globals() , run_name = '__main__')
             globals().update ( globs )
             del globs 
             
-            python_scripts.append ( f )
+            python_scripts.append ( f , run_name = '__main__' )
             logger.info  ("Executed       '%s'" % f )
             
         except :
