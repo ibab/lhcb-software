@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-03-28 - Mika Vesterinen
+ - Move the TrackEff lines to Turbo+PersistReco
+
 ! 2016-03-28 - Roel Aaij
  - Several sub-modules in CharmHad lines were wrongly inheriting from
    Hlt2LinesConfigurableUser.

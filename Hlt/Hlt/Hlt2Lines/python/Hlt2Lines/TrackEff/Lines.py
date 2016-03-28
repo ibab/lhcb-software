@@ -40,5 +40,9 @@ class TrackEffLines(Hlt2LinesConfigurableUser):
 
         from HltLine.HltLine import Hlt2Line
         for (nickname, algos) in self.algorithms(stages):
-            Hlt2Line('TrackEff_D0ToKpi' + nickname, prescale = self.prescale,
-                     algos = algos, postscale = self.postscale)
+            Hlt2Line('TrackEff_D0ToKpi' + nickname+'Turbo', prescale = self.prescale,
+                     algos = algos, postscale = self.postscale,
+                     Turbo=True,
+                     PersistReco=True)
+            
+            
