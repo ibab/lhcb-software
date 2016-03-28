@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-03-28 - Mika Vesterinen
+ - Move the TrackEff lines to Turbo+PR
+
 ! 2016-03-23 - Francesco Dettori
  - Updating settings for StrangeKPiPiPiTurboLine which is now in Turbo
 

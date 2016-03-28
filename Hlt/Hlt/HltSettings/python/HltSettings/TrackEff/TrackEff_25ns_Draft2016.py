@@ -19,8 +19,8 @@ class TrackEff_25ns_Draft2016 :
         """
 
         lines = [
-            'Hlt2TrackEff_D0ToKpiPionProbe',
-            'Hlt2TrackEff_D0ToKpiKaonProbe'
+            'Hlt2TrackEff_D0ToKpiPionProbeTurbo',
+            'Hlt2TrackEff_D0ToKpiKaonProbeTurbo'
         ]
 
 
