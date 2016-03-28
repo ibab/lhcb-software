@@ -380,7 +380,7 @@ def treat_file ( f ) :
 
             import runpy 
             if arguments.WithContext :
-                globs = runpy.run_path ( f , globals() , rnu_name = '__main__') ## with context
+                globs = runpy.run_path ( f , globals() , run_name = '__main__') ## with context
                 globals().update ( globs )
                 del globs 
             else                     :
