@@ -3,14 +3,14 @@ Package             : PhysSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb physics packages
 
-</PRE><H1><A NAME=v21r2>2016-03-22 Phys v21r2</A></H1><PRE>
+</PRE><H1><A NAME=v21r2>2016-03-28 Phys v21r2</A></H1><PRE>
 
 Development release for 2016 data taking.
 It is based on Gaudi v27r1, LHCb v40r1 and Rec v19r1 and uses LCG_84 with ROOT 6.06.02.
 
 - Packages updated :
   Phys/LoKiFitters v4r21, Phys/LoKiPhys v11r9, Phys/LoKiTracks v3r7, PhysSel/PhysSelPython v9r10,
-  Phys/VertexFit v6r25.
+  Phys/VertexFit v6r25, Kernel/SelectionLine v1r8.
 
 - In Phys/LoKiFitters v4r21 :
   . Improved a bit the printout to for easier debugging.
@@ -88,6 +88,11 @@ It is based on Gaudi v27r1, LHCb v40r1 and Rec v19r1 and uses LCG_84 with ROOT 6
 
 - In Phys/VertexFit v6r25 :
   . Demote warning to info in MomentumCombiner when no transporter is specified
+
+- Kernel/SelectionLine v1r8 :
+  . Produce a histogram in Selection::Line with log2(number of candidates).
+    To be used for monitoring, and especially for detecting excessive selections.
+
 
 </PRE><H1><A NAME=v21r1>2016-03-11 Phys v21r1</A></H1><PRE>
 
