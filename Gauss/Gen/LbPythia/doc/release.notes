@@ -4,6 +4,13 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia v15r1 2016-03-28 =========================
+! 2016-03-28 - Gloria Corti
+ - Remove obsolete options files
+   . options/Pythia.opts, JetGuns.opts, Pythia64.opts
+ - Add settings to pick up Pythia6 as pileup when Pythia6 is used for the main
+  event
+
 !======================== LbPythia v15r0p1 2016-03-03 ========================
 ! 2015-11-18 - Marco Clemencic
  - Disabled warnings for FORTRAN code.

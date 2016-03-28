@@ -104,6 +104,15 @@ gen.Inclusive.ProductionTool = "PythiaProduction"
 gen.SignalPlain.ProductionTool = "PythiaProduction"
 gen.SignalRepeatedHadronization.ProductionTool = "PythiaProduction"
 
+# Use same generator and configuration for spillover
+from Configurables import Gauss
+spillOverList = Gauss().getProp("SpilloverPaths")
+for slot in spillOverList:
+    genSlot = Generation("Generation"+slot)
+    genSlot.addTool(MinimumBias, name = "MinimumBias")
+    genSlot.MinimumBias.ProductionTool = "PythiaProduction"
+
+
 # Do not set the default setting here yet as they already are in the code and
 # may be reset by the event type which options are called before in production
 ## gen.Special.addTool( PythiaProduction )
