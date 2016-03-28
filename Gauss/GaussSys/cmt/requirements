@@ -40,7 +40,7 @@ use Generators          v16r0   Gen
 use LbPythia8           v12r0   Gen
 
 # Generators packages: alternative to Pythia8 for pp collisions
-use LbPythia            v15r0p1 Gen
+use LbPythia            v15r1   Gen
 use LbHerwigpp          v3r1    Gen
 
 # Generators packages: extensions to Pythia6 .or. Pythia8
