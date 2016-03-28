@@ -4,7 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!========================== Gauss v49r0 2016-03-23 ===========================
+!========================== Gauss v49r0 2016-03-28 ===========================
+! 2016-03-28 - Gloria Corti
+ - Update some of the references
+
 ! 2016-03-23 - Gloria Corti
  - Really switch off all code for simulation of BCM and BLS
  - Add Masking of high nergy very forward proton when Herschel is simulated
