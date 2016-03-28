@@ -38,7 +38,8 @@ _selections = [
     'StrippingBs2st2KKMuX',
     'StrippingPhiToKSKS',
     'StrippingB2XLL',
-    'StrippingB2LLXBDT'
+    'StrippingB2LLXBDT',
+    'StrippingB2MuMuMuMuLines',
     ]
 
 for _sel in _selections :
