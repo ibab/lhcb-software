@@ -3,6 +3,12 @@
 ! Responsible : Sascha Stahl, Vladimir Gligorov
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2016-03-29 - Sascha Stahl
+ - HltSharedTracking: Configure public StateThickMSCorrectionTool instances
+   to be the same as used in Brunel.
+ - HltSharedTracking: Switch off cache for states.
+
 ! 2016-03-29 - Jessica Prisciandaro
  - HltRecoConf.py: VeloTTMuonMatch Chi2 cut has been tightened
 

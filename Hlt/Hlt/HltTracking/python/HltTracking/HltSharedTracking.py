@@ -41,18 +41,30 @@ STOfflineConf.DefaultConf().configureTools()
 from HltTrackNames import Hlt1TrackLoc, HltSharedTrackLoc, Hlt2TrackLoc
 
 from Configurables import TrackStateInitAlg, TrackStateInitTool
-from Configurables import ToolSvc, TrackMasterExtrapolator, TrackStateProvider,TrackInterpolator
+from Configurables import ToolSvc, TrackMasterExtrapolator, TrackStateProvider, TrackInterpolator, StateThickMSCorrectionTool
 from Configurables import SimplifiedMaterialLocator
+from Configurables import HltRecoConf
 
 ## Simplified Material for public MasterExtrapolator and TrackStateProvider
 ToolSvc().addTool(TrackMasterExtrapolator, "TrackMasterExtrapolator")
 ToolSvc().TrackMasterExtrapolator.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
+ToolSvc().TrackMasterExtrapolator.MaterialLocator.addTool( StateThickMSCorrectionTool, name= "StateMSCorrectionTool" )
 ToolSvc().addTool(TrackStateProvider, "TrackStateProvider")
+ToolSvc().TrackStateProvider.addTool(TrackMasterExtrapolator,name="Extrapolator")
 ToolSvc().TrackStateProvider.Extrapolator.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
-#ToolSvc().TrackStateProvider.CacheStatesOnDemand = False
+ToolSvc().TrackStateProvider.Extrapolator.MaterialLocator.addTool( StateThickMSCorrectionTool, name= "StateMSCorrectionTool" )
+ToolSvc().TrackStateProvider.addTool(TrackInterpolator,"Interpolator")
 ToolSvc().TrackStateProvider.Interpolator.addTool(TrackMasterExtrapolator,name="Extrapolator")
 ToolSvc().TrackStateProvider.addTool(TrackInterpolator,"Interpolator")
 ToolSvc().TrackStateProvider.Interpolator.Extrapolator.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
+ToolSvc().TrackStateProvider.Interpolator.Extrapolator.MaterialLocator.addTool( StateThickMSCorrectionTool, name= "StateMSCorrectionTool")
+if HltRecoConf().getProp("NewMSinFit"):
+    ToolSvc().TrackMasterExtrapolator.MaterialLocator.StateMSCorrectionTool.UseRossiAndGreisen = True
+    ToolSvc().TrackStateProvider.Extrapolator.MaterialLocator.StateMSCorrectionTool.UseRossiAndGreisen = True
+    ToolSvc().TrackStateProvider.Interpolator.Extrapolator.MaterialLocator.StateMSCorrectionTool.UseRossiAndGreisen = True
+if HltRecoConf().getProp("CacheStatesInStateProvider"):
+    ToolSvc().TrackStateProvider.CacheStatesOnDemand = False
+
 #### Velo Tracking
 
 # the full Velo reconstruction
@@ -68,7 +80,7 @@ def recoVelo(OutputTracksName=HltSharedTrackLoc["Velo"]):
 
 
 #### filter the Velo output
-from Configurables import TrackListRefiner, HltRecoConf
+from Configurables import TrackListRefiner
 filterVelo = TrackListRefiner('VeloFilter',
                               inputLocation = HltSharedTrackLoc["Velo"],
                               outputLocation = HltSharedTrackLoc["VeloSelection"])

@@ -51,6 +51,7 @@ class HltRecoConf(LHCbConfigurableUser):
                 , "CalculateProbNN"             : True
                 , "AddGhostProb"                : True
                 , "InitFits"                    : True
+                , "CacheStatesInStateProvider"  : False
                 , "BeamGasMode"                 : False
                 , "VeloTrackingZMin"            : -2000.   #minimum velo tracking range
                 , "VeloTrackingZMax"            : +2000.   #maximum velo tracking range
