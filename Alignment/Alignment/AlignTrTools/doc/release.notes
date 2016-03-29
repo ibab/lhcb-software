@@ -4,6 +4,10 @@ Package Coordinator : Wouter Hulsbergen
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+! 2016-03-29 - Antonis Papanestis
+ - Added method writeInactiveHPDs() to WriteRichCalibrationsTool
+   to use the automatic creation of the InactiveHPDList Condition
+
 !2016-03-24 - Maurizio Martinelli
 - Added an option to specify the particleID in TrackParticleRefitter
 
