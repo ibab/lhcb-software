@@ -651,7 +651,7 @@ for dataset in datasets :
 
                     if len(datalfns) > 0 :
 
-                        j = Job( name = jname, application = DaVinci( version = 'v34r0' ) )
+                        j = Job( name = jname, application = DaVinci( version = 'v38r1' ) )
 
                         # Main options
                         j.application.optsfile = [ File('options-MC'+year+'.py') ]

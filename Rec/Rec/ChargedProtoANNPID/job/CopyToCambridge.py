@@ -18,10 +18,12 @@ def moveCalibrationFiles():
     
     gangaDir = "/usera/jonesc/gangadir/workspace/jonesc/LocalXML"
 
-    outputRoot = "/r03/lhcb/jonesc/ANNPID/ProtoParticlePIDtuples/MC/Sim08x/Digi13/Reco14a/"
+    outputRoot = "/r02/lhcb/jonesc/ANNPID/ProtoParticlePIDtuples/MC/Sim08xem/Reco15em/"
 
     mergeJobs = [
 
+        # Run1
+        
         ## { "Name" : "Incb",   "Regex" : "Incb-MC20*-ANNPID-*",   "FirstID" : 1 },
         ## { "Name" : "Incc-X", "Regex" : "Incc-*-MC20*-ANNPID-*", "FirstID" : 1 },
         ## { "Name" : "Incb-X", "Regex" : "Incb-*-MC20*-ANNPID-*", "FirstID" : 1 },
@@ -61,13 +63,19 @@ def moveCalibrationFiles():
         ## { "Name" : "Pr-LbPKaMuMu", "Regex" : "LbPKaMuMu-*-ANNPID-*", "FirstID" : 1 },
         ## { "Name" : "Pr-LbLcKa", "Regex" : "LbLcKa-*-ANNPID-*", "FirstID" : 1 },
 
-        { "Name" : "Ka-BdKK", "Regex" : "BdKK-*-ANNPID-*", "FirstID" : 1 },
-        { "Name" : "Ka-BdKKPi0", "Regex" : "BdKKPi0-*-ANNPID-*", "FirstID" : 1 },
-        { "Name" : "Ka-BdD0KstarKpi", "Regex" : "BdD0KstarKpi-*-ANNPID-*", "FirstID" : 1 },
-        { "Name" : "Ka-BdD-K-KKPi", "Regex" : "BdD-K-KKPi-*-ANNPID-*", "FirstID" : 1 },
-        { "Name" : "Ka-BuKKK", "Regex" : "BuKKK-*-ANNPID-*", "FirstID" : 1 },
-        { "Name" : "Ka-BsD0PhiKpi", "Regex" : "BsD0PhiKpi-*-ANNPID-*", "FirstID" : 1 }
+        ## { "Name" : "Ka-BdKK", "Regex" : "BdKK-*-ANNPID-*", "FirstID" : 1 },
+        ## { "Name" : "Ka-BdKKPi0", "Regex" : "BdKKPi0-*-ANNPID-*", "FirstID" : 1 },
+        ## { "Name" : "Ka-BdD0KstarKpi", "Regex" : "BdD0KstarKpi-*-ANNPID-*", "FirstID" : 1 },
+        ## { "Name" : "Ka-BdD-K-KKPi", "Regex" : "BdD-K-KKPi-*-ANNPID-*", "FirstID" : 1 },
+        ## { "Name" : "Ka-BuKKK", "Regex" : "BuKKK-*-ANNPID-*", "FirstID" : 1 },
+        ## { "Name" : "Ka-BsD0PhiKpi", "Regex" : "BsD0PhiKpi-*-ANNPID-*", "FirstID" : 1 }
 
+        # Run 2
+        #{ "Name" : "Dev03", "Regex" : "*-ANNPID-*Sim09*Reco15Turbo01a*", "FirstID" : 1 },
+        #{ "Name" : "Dev02", "Regex" : "*-ANNPID-*Sim09*Reco15emTurbo01*", "FirstID" : 1 }
+        
+        { "Name" : "Sim08EM", "Regex" : "*-ANNPID-*Sim08*Reco15emTurbo01*", "FirstID" : 1 }
+        
         ]
 
     for mergeJob in mergeJobs :
@@ -92,9 +100,9 @@ def moveCalibrationFiles():
         i = mergeJob["FirstID"]
         for rootfile in rootfiles :
             target = outPath + "/ANNPID." + str(i) + ".root"
-            #print "Moving", rootfile, "to", target
-            os.rename(rootfile,target)
-            file.write(target+"\n")
+            print "Moving", rootfile, "to", target
+            shutil.move(rootfile,target)
+            file.write(target+":ANNPID/DecayTree\n")
             i = i + 1
 
         file.close()
