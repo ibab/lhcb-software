@@ -19,6 +19,7 @@
 #include <algorithm>
 #include <functional>
 #include <vector>
+#include <array>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -822,6 +823,64 @@ namespace Gaudi
   } //                                             end of namespace Gaudi::Math
   // ==========================================================================
 } //                                                     end of namespace Gaudi
+// ============================================================================
+namespace Gaudi
+{
+  // ==========================================================================
+  namespace Math
+  {
+    // ========================================================================
+    /** make dot-multiplication of two sequences using std::fma 
+     *  \f$ r = \sum_i  x_i y_i \f$
+     *  @param begin  (INPUT) start of the first sequence 
+     *  @param end    (INPUT) end   of the first sequence 
+     *  @param begin2 (INPUT) start iterator of the second sequence
+     *  @return   "dot" product of two sequences 
+     *
+     *  @see http://en.cppreference.com/w/cpp/numeric/math/fma
+     *  "...the function std::fma evaluates faster 
+     *   (in addition to being more precise) than the expression x*y+z for 
+     *   float, double, and long double arguments, respectively. "
+     */
+    template <class ITERATOR1, class ITERATOR2>
+    inline double dot_fma
+    ( ITERATOR1 begin  , 
+      ITERATOR1 end    ,
+      ITERATOR2 begin2 ) 
+    {
+      long double dot = 0 ;
+      for ( ; begin != end ; ++begin, ++begin2 ) 
+      { dot = std::fma ( *begin , *begin2 , dot ) ; }
+      return dot  ;  
+    }
+    // ========================================================================
+    /** make dot-multiplication of two sequences using std::fma 
+     *  \f$ r = \sum_i  x_i y_i \f$
+     *  @param x     (INPUT) the first sequence 
+     *  @param begin (INPUT) start iterator of the second sequence
+     *  @return   "dot" product of two sequences 
+     */
+    template <unsigned int N, class TYPE, class ITERATOR>
+    inline double dot_fma
+    ( const std::array<TYPE,N>& x     , 
+      ITERATOR                  begin )  
+    { return dot_fma ( x.begin() , x.end() , begin ) ; }
+    // ========================================================================
+    /** make dot-multiplication of two sequences using std::fma 
+     *  \f$ r = \sum_i  x_i y_i \f$
+     *  @param x     (INPUT) the first sequence 
+     *  @param begin (INPUT) start iterator of the second sequence
+     *  @return   "dot" product of two sequences 
+     */
+    template <unsigned int N, class TYPE1, class TYPE2>
+    inline double dot_fma
+    ( const std::array<TYPE1,N>& x , 
+      const std::array<TYPE2,N>& y )  
+    { return dot_fma ( x.begin() , x.end() , y.begin() ) ; }
+    // ========================================================================
+  } //                                             end of namespace Gaudi::Math
+  // ==========================================================================
+}
 // ============================================================================
 // The END 
 // ============================================================================

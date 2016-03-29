@@ -99,52 +99,66 @@ is_zero        = cpp.LHCb.Math.Zero     ('double')()
 ## are two floating point number close enough?
 is_equal       = cpp.LHCb.Math.Equal_To ('double')()
 
+
 # =============================================================================
 ## calculate 1st (and optionally 3rd)  derivative with the given step
-#  f'      is calculated as O(h**2)
-#  f^(III) is calculated as O(h**2)
+#  - f'      is calculated as O(h**2)
+#  - f^(III) is calculated as O(h**2)
 def _h2_ ( func , x , h , der = False ) :
-    """Calculate 1st (and optionally 3rd) derivative  with O(h*h) precision
+    """Calculate 1st (and optionally 3rd) derivative 
+    - f'      is calculated as O(h**2)
+    - f^(III) is calculated as O(h**2)
     """
     fm1 = func ( x - 1 * h )
     fp1 = func ( x + 1 * h )
 
-    d1   = (         -fm1 +  fp1        ) / (2 * h    )
+    d1   = 1.0 * ( fp1 - fm1  ) / (2 * h    )
     if not der : return d1 
     
     fm2 = func ( x - 2 * h )    
     fp2 = func ( x + 2 * h )
-    d3   = ( -fm2 + 2*fm1 -2*fp1 + fp2  ) / (2 * h*h*h)
+
+    d3  = -2.0 * ( fp1 - fm1 ) + ( fm2 - fm2 )   
+    d3 /= (2 * h*h*h)
 
     return d1,d3
 
 # =============================================================================
 ## calculate 1st (and optionally 5th) derivative with the given step
-#  f'     is calculated as O(h**4)
-#  f^(V)  is calculated as O(h**2)
+#  - f'     is calculated as O(h**4)
+#  - f^(V)  is calculated as O(h**2)
 def _h4_ ( func , x , h , der = False ) :
     """Calculate 1st (and optionally 5th) derivative  with O(h*h) precision
+    - f'     is calculated as O(h**4)
+    - f^(V)  is calculated as O(h**2)
     """    
     fm2 = func ( x - 2 * h )    
     fm1 = func ( x - 1 * h )
     fp1 = func ( x + 1 * h )
     fp2 = func ( x + 2 * h )
     
-    d1  = (         fm2 -8*fm1 +8*fp1 -  fp2       )/(12 * h   )
+    d1  = 8.0 * ( fp1 - fm1 ) - ( fp2 - fm2 )
+    d1 /= 12 * h 
+    
     if not der : return d1 
     
     fm3 = func ( x - 3 * h )    
     fp3 = func ( x + 3 * h )
-    d5  = ( -fm3 +4*fm2 -5*fm1 +5*fp1 -4*fp2 + fp3 )/( 2 * h**5)
+    
+    d5  =  5.0 * ( fp1 - fm1 ) - 4 * ( fp2 - fm2 ) + ( fp3 - fm3 )
+    d5 /= 2 * h**5 
     
     return d1,d5
 
+
 # =============================================================================
 ## calculate 1st (and optionally 7th) derivative with the given step
-#  f'      is calculated as O(h**6)
-#  f^(VII) is calculated as O(h**2)
+#  - f'      is calculated as O(h**6)
+#  - f^(VII) is calculated as O(h**2)
 def _h6_ ( func , x , h , der = False ) :
-    """Calculate 1st (and optionally 7th) derivative  with O(h*h) precision
+    """Calculate 1st (and optionally 7th) derivative
+    - f'      is calculated as O(h**6)
+    - f^(VII) is calculated as O(h**2)
     """        
     fm3 = func ( x - 3 * h )    
     fm2 = func ( x - 2 * h )    
@@ -153,22 +167,28 @@ def _h6_ ( func , x , h , der = False ) :
     fp2 = func ( x + 2 * h )
     fp3 = func ( x + 3 * h )
     
-    d1  = (         -fm3 + 9*fm2 -45*fm1 +45*fp1 - 9*fp2 +  fp3       )/(60 * h   )
+    d1  = 45.0 * ( fp1 - fm1 ) - 9 * ( fp2 - fm2 ) + 1 * ( fp3 - fm3 )
+    d1 /=  60*h
 
     if not der : return d1
     
     fm4 = func ( x - 4 * h )    
     fp4 = func ( x + 4 * h )
-    d7  = ( -fm4 + 6*fm3 -14*fm2 +14*fm1 -14*fp1 +14*fp2 -6*fp3 + fp4 )/( 2 * h**7)
+    
+    d7  = -14.0 * ( fp1 - fm1 ) + 14 * ( fp2 - fm2 ) - 6 * ( fp3 - fm3 ) + ( fp4 - fm4 )
+    d7 /= 2* h**7
     
     return d1,d7
 
+
 # =============================================================================
 ## calculate 1st (and optionally 9th) derivative with the given step
-#  f'     is calculated as O(h**8)
-#  f^(IX) is calculated as O(h**2)
+#  - f'     is calculated as O(h**8)
+#  - f^(IX) is calculated as O(h**2)
 def _h8_ ( func , x , h , der = False ) :
-    """Calculate 1st (and optionally 9th) derivative  with O(h*h) precision
+    """Calculate 1st (and optionally 9th) derivative
+    - f'     is calculated as O(h**8)
+    - f^(IX) is calculated as O(h**2)
     """            
     fm4 = func ( x - 4 * h )    
     fm3 = func ( x - 3 * h )    
@@ -179,24 +199,29 @@ def _h8_ ( func , x , h , der = False ) :
     fp3 = func ( x + 3 * h )
     fp4 = func ( x + 4 * h )
     
-    d1  = (       3*fm4 -32*fm3 +168*fm2 -672*fm1 +672*fp1 -168*fp2 +32*fp3 -3*fp4       )/(840 * h   )
-
+    d1  = 672.0 * ( fp1 - fm1 ) - 168 * ( fp2 - fm2  ) + 32 * ( fp3 - fm3 ) - 3  * ( fp4 - fm4 )
+    d1 /= 840 * h  
+    
     if not der : return d1 
     
     fm5 = func ( x - 5 * h )    
     fp5 = func ( x + 5 * h )
     d9  = ( -fm5 +8*fm4 -27*fm3 + 48*fm2 - 42*fm1 + 42*fp1 - 48*fp2 +27*fp3 -8*fp4 + fp5 )/(  2 * h**9)
+
+    d9  = 42.0 * ( fp1  - fm1 ) - 48 * ( fp2  - fm2  ) + 27 * ( fp3 - fm3 ) - 8 * ( fp4  - fm4 ) + ( fp5 - fm5  )  
+    d9 /=  2 * h**9
     
     return d1,d9
 
 # =============================================================================
 ## calculate 1st (and optionally 11th) derivative with the given step
-#  f'     is calculated as O(h**10)
-#  f^(XI) is calculated as O(h**2)
+#  - f'     is calculated as O(h**10)
+#  - f^(XI) is calculated as O(h**2)
 def _h10_ ( func , x , h , der = False ) :
-    """Calculate 1st (and optionally 11th) derivative  with O(h*h) precision
+    """Calculate 1st (and optionally 11th) derivative
+    - f'     is calculated as O(h**10)
+    - f^(XI) is calculated as O(h**2)
     """
-    
     fm5 = func ( x - 5 * h )    
     fm4 = func ( x - 4 * h )    
     fm3 = func ( x - 3 * h )    
@@ -208,26 +233,147 @@ def _h10_ ( func , x , h , der = False ) :
     fp4 = func ( x + 4 * h )
     fp5 = func ( x + 5 * h )
     
-    d1  = (       -2*fm5 +25*fm4 -150*fm3 +600*fm2 -2100*fm1 +2100*fp1 -600*fp2 +150*fp3 -25*fp4 + 2*fp5       )/(2520 * h    )
+    d1  =  2100.0 * ( fp1 - fm1 ) -  600 * ( fp2 - fm2 ) + 150 * ( fp3 - fm3 ) - 25 * ( fp4 - fm4 ) + 2 * ( fp5 - fm5 )
+    d1 /=  2520.0 * h 
+    
 
     if not der : return d1
     
-    fm6 = func ( x - 6 * h )    
-    fp6 = func ( x + 6 * h )
-    d11 = ( -fm6 +10*fm5 -44*fm4 +110*fm3 -165*fm2 + 132*fm1 - 132*fp1 +165*fp2 -110*fp3 +44*fp4 -10*fp5 + fp6 )/(   2 * h**11)
+    fm6  =  func ( x - 6 * h )    
+    fp6  =  func ( x + 6 * h )
+    
+    d11  = -132.0 * ( fp1 - fm1 ) + 165 * ( fp2 - fm2 ) - 110 * ( fp3 - fm3 ) + 44 * ( fp4 - fm4 ) - 10 * ( fp5 - fm5 ) + ( fp6 - fm6 ) 
+    d11 /= 2*h**11
     
     return d1,d11
+
+# =============================================================================
+## calculate 1st (and optionally 13th) derivative with the given step
+#  - f'     is calculated as O(h**12)
+#  - f^(XIII) is calculated as O(h**2)
+def _h12_ ( func , x , h , der = False ) :
+    """Calculate 1st (and optionally 13th) derivative
+    - f'     is calculated as O(h**12)
+    - f^(XIII) is calculated as O(h**2)
+    """
+    
+    fm6 = func ( x - 6 * h )    
+    fm5 = func ( x - 5 * h )    
+    fm4 = func ( x - 4 * h )    
+    fm3 = func ( x - 3 * h )    
+    fm2 = func ( x - 2 * h )    
+    fm1 = func ( x - 1 * h )
+    fp1 = func ( x + 1 * h )
+    fp2 = func ( x + 2 * h )
+    fp3 = func ( x + 3 * h )
+    fp4 = func ( x + 4 * h )
+    fp5 = func ( x + 5 * h )
+    fp6 = func ( x + 6 * h )
+    
+    d1  =  23760.0 * ( fp1 - fm1 ) - 7425 * ( fp2 - fm2 ) + 2200 * ( fp3 - fm3 ) - 495 * ( fp4 - fm4 ) + 72 * ( fp5 - fm5 ) - 5 * ( fp6 - fm6 )
+    d1 /=  27720.0 * h 
+    
+    if not der : return d1
+    
+    fm7  =  func ( x - 7 * h )    
+    fp7  =  func ( x + 7 * h )
+
+    d13  = 429.0 * ( fp1 - fm1 ) - 572 * ( fp2 - fm2 ) + 429 * ( fp3 - fm3 ) - 208 * ( fp4 - fm4 ) + 65 * ( fp5 - fm5 ) - 12 * ( fp6 - fm6 ) + ( fp7 - fm7 ) 
+    d13 /= 2*h**13
+    
+    return d1,d13
+
+# =============================================================================
+## calculate 1st (and optionally 15th) derivative with the given step
+#  - f'     is calculated as O(h**14)
+#  - f^(XV) is calculated as O(h**2)
+def _h14_ ( func , x , h , der = False ) :
+    """Calculate 1st (and optionally 15th) derivative
+    - f'     is calculated as O(h**12)
+    - f^(XV) is calculated as O(h**2)
+    """
+    
+    fm7 = func ( x - 7 * h )    
+    fm6 = func ( x - 6 * h )    
+    fm5 = func ( x - 5 * h )    
+    fm4 = func ( x - 4 * h )    
+    fm3 = func ( x - 3 * h )    
+    fm2 = func ( x - 2 * h )    
+    fm1 = func ( x - 1 * h )
+    fp1 = func ( x + 1 * h )
+    fp2 = func ( x + 2 * h )
+    fp3 = func ( x + 3 * h )
+    fp4 = func ( x + 4 * h )
+    fp5 = func ( x + 5 * h )
+    fp6 = func ( x + 6 * h )
+    fp7 = func ( x + 7 * h )
+    
+    d1  = 315315.0 * ( fp1 - fm1 ) - 105105 * ( fp2 - fm2 ) + 35035 * ( fp3 - fm3 ) - 9555 * ( fp4 - fm4 ) + 1911 * ( fp5 - fm5 ) - 245 * ( fp6 - fm6 ) + 15 * ( fp7 - fm7 ) 
+    d1 /= 360360.0 * h 
+    
+    if not der : return d1
+    
+    fm8  =  func ( x - 8 * h )    
+    fp8  =  func ( x + 8 * h )
+
+    d15  = -1430.0 * ( fp1 - fm1 ) + 2002 * ( fp2 - fm2 ) - 1638 * ( fp3 - fm3 ) + 910 * ( fp4 - fm4 ) - 350 * ( fp5 - fm5 ) + 90 * ( fp6 - fm6 ) - 14 * ( fp7 - fm7 ) + ( fp8 - fm8 ) 
+    d15 /= 2*h**15
+    
+    return d1,d15
+
+# =============================================================================
+## calculate 1st (and optionally 17th) derivative with the given step
+#  - f'     is calculated as O(h**16)
+#  - f^(XVII) is calculated as O(h**2)
+def _h16_ ( func , x , h , der = False ) :
+    """Calculate 1st (and optionally 17th) derivative
+    - f'       is calculated as O(h**16)
+    - f^(XVII) is calculated as O(h**2)
+    """
+    
+    fm8 = func ( x - 8 * h )    
+    fm7 = func ( x - 7 * h )    
+    fm6 = func ( x - 6 * h )    
+    fm5 = func ( x - 5 * h )    
+    fm4 = func ( x - 4 * h )    
+    fm3 = func ( x - 3 * h )    
+    fm2 = func ( x - 2 * h )    
+    fm1 = func ( x - 1 * h )
+    fp1 = func ( x + 1 * h )
+    fp2 = func ( x + 2 * h )
+    fp3 = func ( x + 3 * h )
+    fp4 = func ( x + 4 * h )
+    fp5 = func ( x + 5 * h )
+    fp6 = func ( x + 6 * h )
+    fp7 = func ( x + 7 * h )
+    fp8 = func ( x + 8 * h )
+    
+    d1  = 640640.0 * ( fp1 - fm1 ) - 224224 * ( fp2 - fm2 ) + 81536 * ( fp3 - fm3 ) - 25480 * ( fp4 - fm4 ) + 6272 * ( fp5 - fm5 ) - 1120 * ( fp6 - fm6 ) + 128 * ( fp7 - fm7 ) - 7 * ( fp8 - fm8 ) 
+    d1 /= 720720.0 * h 
+    
+    if not der : return d1
+    
+    fm9  =  func ( x - 9 * h )    
+    fp9  =  func ( x + 9 * h )
+
+    d17  = 4862.0 * ( fp1 - fm1 ) - 7072 * ( fp2 - fm2 ) + 6188 * ( fp3 - fm3 ) - 3808 * ( fp4 - fm4 ) + 1700 * ( fp5 - fm5 ) - 544 * ( fp6 - fm6 ) + 119 * ( fp7 - fm7 ) - 16 * ( fp8 - fm8 ) + ( fp9 - fm9 )  
+    d17 /= 2*h**17
+    
+    return d1,d17
 
 # =============================================================================
 # The actual setup for
 # =============================================================================
 _funcs_ = (
-    _h2_   ,
-    _h2_   ,
-    _h4_   ,
-    _h6_   ,
-    _h8_   ,
-    _h10_ 
+    _h2_   ,  ## 0 == 1 
+    _h2_   ,  ## 1 
+    _h4_   ,  ## 2 
+    _h6_   ,  ## 3
+    _h8_   ,  ## 4 
+    _h10_  ,  ## 5 
+    _h12_  ,  ## 6
+    _h14_  ,  ## 7
+    _h16_     ## 8
     )
 _numbers_ = (
     ( 0.5*10**(-10./ 3) ,
@@ -235,12 +381,18 @@ _numbers_ = (
       0.5*10**(-10./ 5) ,
       0.5*10**(-10./ 7) ,
       0.5*10**(-10./ 9) ,
-      0.5*10**(-10./11) ) , 
-    (    6 , 4.5324e-17 , 5.1422e-6 , 6.0554e-6 ) , ## I=1, J= 3  3-point rule 
-    (   30 , 6.0903e-17 , 8.5495e-4 , 7.4009e-4 ) , ## I=2, J= 5  5-point rule 
-    (  140 , 6.9349e-17 , 7.7091e-3 , 5.8046e-4 ) , ## I=3, J= 7  7-point rule 
-    (  630 , 7.4832e-17 , 2.6237e-2 , 1.8227e-2 ) , ## I=4, J= 9  9-point rule 
-    ( 2772 , 7.8754e-17 , 5.7292e-2 , 3.7753e-2 ) , ## I=5, J=11 11-point rule 
+      0.5*10**(-10./11) , 
+      0.5*10**(-10./13) , 
+      0.5*10**(-10./15) , 
+      0.5*10**(-10./17) ) , 
+    (      6 , 4.5324e-17 , 5.1422e-6 , 6.0554e-6 ) , ## I=1, J= 3  3-point rule 
+    (     30 , 6.0903e-17 , 8.5495e-4 , 7.4009e-4 ) , ## I=2, J= 5  5-point rule 
+    (    140 , 6.9349e-17 , 7.7091e-3 , 5.8046e-4 ) , ## I=3, J= 7  7-point rule 
+    (    630 , 7.4832e-17 , 2.6237e-2 , 1.8227e-2 ) , ## I=4, J= 9  9-point rule 
+    (   2772 , 7.8754e-17 , 5.7292e-2 , 3.7753e-2 ) , ## I=5, J=11 11-point rule 
+    (  12012 , 8.1738e-17 , 9.8468e-2 , 6.2500e-2 ) , ## I=6, J=13 13-point rule 
+    (  51480 , 8.4108e-17 , 1.4656e-1 , 9.0454e-1 ) , ## I=7, J=15 15-point rule 
+    ( 218790 , 8.6047e-17 , 1.9873e-1 , 1.2000e-1 ) , ## I=8, J=17 17-point rule 
     )
 # =============================================================================
 ## Calculate the first derivative for the function
@@ -270,7 +422,7 @@ def derivative ( fun , x , h = 0  , I = 2 , err = False ) :
     f0 = func(x)
 
     ## adjust the rule 
-    I  = min ( max ( I , 1 ) , 5 )
+    I  = min ( max ( I , 1 ) , 8 )
     J  = 2 * I + 1
     
     _dfun_ = _funcs_[I]

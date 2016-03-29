@@ -289,7 +289,6 @@
   
   <class name = "Gaudi::Math::Chi2Fit"   />
 
-
   <function name = "Gaudi::Math::combine"            />
   <function name = "Gaudi::Math::HistoInterpolation" />
 
