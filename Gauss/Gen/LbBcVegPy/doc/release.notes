@@ -2,6 +2,10 @@
 ! Responsible : Patrick ROBBE
 !=============================================================================
 
+!======================== LbBcVegPy v6r1p1 2016-03-29 ========================
+! 2016-03-29 - Gloria Corti
+ - Add option not to reinitialize pileup when it is with Pythia8
+
 !========================= LbBcVegPy v6r1 2016-03-03 =========================
 ! 2016-02-23 - Phil Ilten
  - Fixed weight from BcVegPy? always being set to 1, independent of IDWGTUP 
