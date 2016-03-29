@@ -3,6 +3,8 @@
 ! Responsible : Sascha Stahl, Vladimir Gligorov
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2016-03-29 - Jessica Prisciandaro
+ - HltRecoConf.py: VeloTTMuonMatch Chi2 cut has been tightened
 
 ! 2016-03-28 - Roel Aaij
  - Hard code the instance names of the Rich configurables. Otherwise, for some
