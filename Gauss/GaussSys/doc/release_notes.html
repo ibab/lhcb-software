@@ -3,10 +3,474 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+</PRE><H1><A NAME="v49r0">2016-03-29 - GaussSys v49r0</A></H1><PRE>
+<H2><A NAME="Note"Release for Sim09 final tests and productions. 
+   Based on LCG_79.
+   Default Tune1 for Pythia8 and J/Psi with data.
+</A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v39r1 (and Gaudi v26r4)</b>
+   AppConfig v3r*,
+   <b>DecFiles v28r*</b>, 
+   ParamFiles v8r*, 
+   SQLDDDB v7r*, FieldMap v5r*,
+   GDMLData v1r*,
+   PGunsData v1r*
+   pythia8 186, lhapdf 6.1.4, 
+   photos++ 3.56 and tauola++ 1.1.4, 
+   <b>pythia 6.427.2</b> (via LCG_GeneratorsInterfaces),
+   <b>HepMC 2.06.09</b> (via LCG_Interfaces),
+   LHAPDFSets v2r* (private LHCb version)
+   <b>Geant4 v96r4p3</b> (based on geant4.9.6.p04 + patches for LHCb) and 
+   Geant4Files v96r0, 
+   <b>XmlVis v1r23</b>,
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   alpgen 2.1.4 and powhegbox r2092 (via LCG_GeneratorsInterfaces),
+   herwig++ 2.7.1 and thepeg 1.9.2p1 (via LCG_GeneratorsInterfaces),
+   rivet 1.9.0 (via LCG_GeneratorsInterfaces),
+   <b>EvtGen v14r6, EvtGenExtras v3r12p1 and Mint v4r0</b>
+   (private LHCb version),
+   <b>BcVegPy v4r0p1</b> + BcVegPyData v2r*, <b>GenXicc v2r2</b> + GenXiccData v3r* and 
+   <b>HidValley v4r1</b> (private LHCb versions)
+</A></H3>
+
+! 2016-03-29 - Gloria Corti
+ - Add temporary use of Det/DDDB to pick up fixes for automatic tags for 
+   simulation (LHCBGAUSS-625) and GaudiPolicy needed by it
+ - Use new version of LCG_Settings to match LCG_79. New tags for all 
+   LCG_GeneratorsInterfaces to indicate they are for LCG_79 but they are
+   identical to previous versions
+
 ! 2016-01-07 - Gloria Corti
  - Remove temporary use of Kernel/MCInterfaces and Sim/SimComponents since 
    new version is build against LHCb v39r1.
 
+!========================== Gauss v49r0 2016-03-29 ===========================
+! 2016-03-29 - Gloria Corti
+ - Update references for tests
+
+! 2016-03-28 - Gloria Corti
+ - Update some of the references
+ - Change gaussDev test to use Pythia8 instead of Pythia6
+
+! 2016-03-23 - Gloria Corti
+ - Really switch off all code for simulation of BCM and BLS
+ - Add Masking of high nergy very forward proton when Herschel is simulated
+   as they are not correctly transported and cause problems
+ - Add setting of DataType in example options for 2010, 2011 and 2012
+
+! 2016-03-15 - Gloria Corti
+ - Update reference due to expected differences, i.e. 
+   . default for pileup when not set explicitly is Pythia8
+   . geometry list order is different in Geo.InputStream, 
+     (Spd, Converter, Prs, Ecal, Hcal, Muon) is now after 
+     (TT, Rich1, Magnet,BcmDown)
+
+! 2016-03-15 - Gloria Corti
+ - Introduce protection to prevent simulation of Hereschel if not Run2DataType
+   (i.e. 2015 and 2016)
+ - Switch off simulation of BCM and BLS for the moment since cannot write their
+   hitssvn 
+! 2016-03-14 - Gloria Corti
+ - Modified Gauss() configurable to allow simulating Herschel (HC), BCM and BLS
+   Note that for the last two the hist are not saved and these three detectors
+   can only be simulated one-by-one (some conflict with the geometry)
+ - Fixed warning for unknown Magnet in SimDetector and MoniDetector, details
+   at https://its.cern.ch/jira/browse/LHCBGAUSS-624 
+
+! 2016-03-13 - Gloria Corti
+ - Updated qmtests for current detector
+
+! 2015-09-03 - Dmitry Popov
+ - Updated the upgrade tests to skip some messages in the output.
+
+! 2015-09-01 - Dmitry Popov
+ - Updated references for the upgrade baseline tests.
+
+! 2015-08-31 - Dmitry Popov
+ - Removed deprecated upgrade tests and updated the actual ones.
+
+! 2015-08-06 - Dmitry Popov
+ - Updated tests for baseline upgrade configuration and upgrade dbtags.
+
+!========================== GenCuts v3r13 2016-03-02 =========================
+! 2016-01-14 - Guy Wormser                                                                               
+ - DaughtersInLHCbAndCutsDstarD.h added 
+   
+! 2016-01-12 - Guy Wormser                                                                               
+ - Add new tool: DaughtersInLHCbAndCutsDstarD                                                 
+   to select B particles going to D* + another D meson in inclusive events
+   from B decays
+ 
+! 2016-01-11 - Victor Renaudin
+ - Add new tool: DaughtersInLHCbAndCutsForLc3pi to select Lc3pi
+ 	 inclusive events from B decays
+
+!========================== GENSER v16r1 2016-03-02 ==========================
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
+
+! 2015-10-08 - Gloria Corti
+ - Revert back to use Pythia 6.427.2 due to problem with FS, see
+   https://its.cern.ch/jira/browse/LHCBGAUSS-534
+
+!========================== EvtGen v14r6 2016-03-18 ==========================
+! 2016-03-17 - John Back
+  - Fixed incorrect spinor algebra used in S1 -> 1/2 S2, 1/2 -> S3 S4 decays
+    in EvtDiracParticle::rotateToHelicityBasis() functions, courtesy of 
+    Luis Miguel Garcia Martin and the IFIC Valencia group. For details, see
+    https://its.cern.ch/jira/browse/LHCBGAUSS-688.
+
+!========================== EvtGen v14r5 2016-02-26 ==========================
+
+! 2016-02-18 - Tom Blake
+  - Fixed bug in EvtRareLbToLll model (definition of Sinit in HadronicAmpRS).
+
+! 2016-02-12 - John Back
+  - Added extensions to the EvtHQET2(FF) model for semitauonic decays from
+    Brian Hamilton. See https://its.cern.ch/jira/browse/LHCBGAUSS-636.
+
+! 2015-12-22 - Jack Wimberley
+  - Semileptonic decays have a minimum q^2 value equal to the lepton mass 
+    squared; for semitauonic decays this is non-negligible. Moreover, 
+    extrapolating form factors to the unphysical q^2 range often leads to 
+    very high fake decay probabilities in this region, which artificially 
+    increases the maximum probability used during Monte Carlo generation and 
+    hurts efficiency. This patch modifies the q^2 range in EvtSemiLeptonicAmp 
+    to its physical range.
+
+!========================== EvtGen v14r4 2015-12-18 ==========================
+
+! 2015-12-02 - John Back
+ - Added EvtKStopizmumu model for KS -> pi0 mu mu decays based on 
+   JHEP08(1998)004, courtesy of Veronika Chobanova, Diego Martinez Santos
+   and Jeremy Dalseno. Added EvtConst::Fermi for Fermi coupling constant.
+
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
+
+!========================== EvtGen v14r3 2015-10-21 ==========================
+
+! 2015-10-07 - John Back
+  - Updated EvtPhotosEngine to check that additional particles from the
+    outgoing vertex are indeed (FSR) photons, since later versions of Photos++
+    introduce pair emission, where particles may not always be photons.
+
+  - Added the ability to store named attributes for EvtParticles in the
+    form of a map<string, int>. The setAttribute(name, value) stores the
+    required value, while getAttribute(name) retrieves the integer value.
+    This is used in EvtPhotosEngine to specify the final-state radiation
+    "FSR" attribute to 1 for any additional photons (EvtPhotonParticles)
+    created by Photos++. It also stores the "ISR" attribute, but this
+    is always set to zero, since only FSR photons are created.
+    If the named attribute doesn't exist, then getAttribute() returns zero.
+
+! 2015-10-05 - John Back
+  - Fixed accessed uninitialised memory in EvtPDL.cpp:213.
+
+! 2015-10-01 - John Back
+  - Updated EvtSVPHelAmp and added new EvtSVPHelCPMix model from Clara Remon,
+    implementing the complete mixing phenomenology of Bs to vector gamma decays.
+  - Resolved some compiler warnings, and removed obsolete Windows #pragma usage.
+
+! 2015-09-23 - Michal Kreps
+  - Reimplement real Spence function in C++ and remove EvtLi2Spence.F.
+
+! 2015-09-10 - Christoph Langenbruch
+  - Fixed form-factor calculations for the BTOSLLBALL model 6 used to generate
+    b->sll decays. Affects B->K*ll, B->rholl and B->omegall, particularly the
+    electron modes
+
+!======================= EvtGenExtras v3r12p1 2015-11-04 =====================
+! 2015-10-23 - John Back
+  - Corrected kaon mass used in EvtXLL.
+
+!======================= EvtGenExtras v3r12 2015-10-21 =======================
+! 2015-10-21 - John Back
+ - Correction to form factor in EvtB2MuMuMuNuAmp.cpp (line 569). New tag.
+
+! 2015-10-14 - John Back
+ - Added new EvtXLL model from Biplab Dey, which implements an optimised MC
+   generator for b -> h h mu mu decays (momentum and angular distributions).
+
+! 2015-10-06 - Nikolai Nikitin
+ - Added new model BUTOMMMN for the rare leptonic B-decays Bu -> Mu Mu Nu_{Mu} Mu.
+   Listing of the new files:
+      EvtB2MuMuMuNu.cpp
+      EvtB2MuMuMuNuAmp.cpp
+      EvtB2MuMuMuNu.hh
+      EvtB2MuMuMuNuAmp.hh.
+   File EvtModelRegExtras.cpp has been changed.
+
+!=========================== Mint v4r0 2016-03-04 ============================
+! 2015-03-04 - Gloria Corti
+ - Increase major version to highligth that behavioru may be different
+   Add release notes for all commits.
+
+! 2016-01-21 - Jonas Rademacker
+ - Important bug fix SymmLorentzMatrix.h (line 63 p.T() -> p.Z()). 
+   This will affect many D-wave spin factors (all those that use ZTspin2).
+   Since many (but probably not all) spin factors, including D-wave spin 
+   factors, were tested and compared to other methods, and no large differences
+   were seen, we might be lucky and the impact is in practice minor. 
+   But in principle there is not a-priory reason why it should not be a big 
+   effect.
+
+! 2016-01-05 - Maxime Schubiger
+ - Reversed 3-momenta of D0bar in D_hhhh.cpp for generation in Gauss
+
+! 2015-07-21 - Jonas Rademacker
+ - getting KKpipiDataFile_eff to compile
+
+! 2015-04-29 - Jonas Rademacker
+ - a bit more flexibility in DalitzEvents? (added possibility to add additional
+   values/parameters
+
+!======================= Generators v16r0 2016-03-23 =========================
+! 2016-02-03 - Gloria Corti
+ - Changed the default production tool from Pythia6 to Pythia8.
+   . src/Lib/ExternalGenerators.cpp, changed value of property ProductionTool
+   . src/component/Special.cpp, changed value of property PileUpTool
+
+!======================= Generators v15r1 2016-03-02 =========================
+! 2016-02-03 - John Back
+ - src/component/EvtGenDecay.cpp: Corrected the name of the m_imHelZero double
+   property from ImHelOne to ImHelZero, which specifies the imaginary part of
+   the helicity 0 spin density matrix element for polarised J/psi and chi_c1.
+   See: https://its.cern.ch/jira/browse/LHCBGAUSS-628.
+
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
+
+! 2015-11-15 - Marco Clemencic
+ - Fixed compilation with CLHEP 2.
+
+! 2015-09-29 - Gerhard Raven
+ - add missing #include <algorithm>
+
+!======================== LbPythia8 v12r0 2016-03-28 =========================
+! 2016-03-28 - Gloria Corti
+ - Fix options for spill-over where the wrong argument was passed
+   . options/Pythia8.py
+
+! 2016-03-25 - Gloria Corti
+ - Fix default settings in command file, since some value for Tune1 were
+   overridden with older setting later in the file.
+   . options/LHCbDefault.cmd
+
+! 2016-03-23 - Gloria Corti
+ - Modify LHCbDefault.cmd to contain the same content as the last commit of
+   LHCbDefault_CT09MCS.cmd, i.e. to use CT09MCS PDF and LHCb Tune1
+ - Remove obsolete command files:
+   . options/LHCbPt0Ref2.6_CT09MCS.cmd (very old trial for tuning)
+   . options/LHCbDefault_CT09MCS.cmd , to avoid confusion since content is 
+     identical to LHCbDefault
+ - Remove obsolete options for Pythia8, since commands have been removed 
+   . options/Pythia8_CT09MCS.py
+   . options/Pythia8_Pt0Ref2.6_CT09MCS.py
+ - Update options for new fragmentation to use LHCbDefault.cmd
+   . options/Pythia8_newFrag.py
+ - Add options for 7TeV collisions where the tuning of the cross section is
+   also done (may find a better way from the configurable)
+   . options/Pythia8_7TeV.py
+ - Include configuration for pileup of special generators and spill-over in 
+   all options
+   . options/Pythia8{,_7TeV,newFrag}.py
+
+! 2016-03-18 - Gloria Corti
+ - Put Tune 1 parameters for CT09MCS that will be the default for production.
+   They are those used in Sim09 validation via
+   AppConfig/vXrY/options/Gauss/Pythia8_CT09MCS_Tune1_v48r3.py
+   . options/LHCbDefault_CT09MCS.cmd
+
+! 2016-03-18 - Philip Ilten
+ - Added in the quarkonia tune parameters and updated LhcbHooks to handle 
+   these settings
+
+!========================= LbPythia v15r1 2016-03-28 =========================
+! 2016-03-28 - Gloria Corti
+ - Remove obsolete options files
+   . options/Pythia.opts, JetGuns.opts, Pythia64.opts
+ - Add settings to pick up Pythia6 as pileup when Pythia6 is used for the main
+  event
+
+!======================== LbPythia v15r0p1 2016-03-03 ========================
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
+
+!========================= LbHard v1r0p1 2016-03-03 ==========================
+! 2015-11-15 - Marco Clemencic
+ - Fixed CMake configuration.
+
+!========================== LbAlpGen v6r2 2016-03-03 ==========================
+! 2016-01-07 - Marco Clemencic
+ - Work-around for a problem with builds of LHAPDF without -std=c++11
+   Changed link order such that lhapdf is picked up before LHCbMath.
+
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
+
+!======================== BcVegPy v4r0p1 2016-03-01 ==========================
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
+
+!========================= GenXicc v2r2 2016-03-02 ===========================
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
+
+! 2015-11-05 - Giacomo Graziani
+ - option iconsbarnum added (subopen block) to switch on/off creation of 
+   light baryon
+   in the output to conserve baryon number (needed in Pythia6, but not in 
+   Pythia8)
+   Default behaviour is unchanged
+ - genxicc_upinit: added initialization of some output variables in hepup block
+   that are not explicitly set in the code
+
+!======================== LbBcVegPy v6r1p1 2016-03-29 ========================
+! 2016-03-29 - Gloria Corti
+ - Add option not to reinitialize pileup when it is with Pythia8
+
+!========================= LbBcVegPy v6r1 2016-03-03 =========================
+! 2016-02-23 - Phil Ilten
+ - Fixed weight from BcVegPy? always being set to 1, independent of IDWGTUP 
+   scheme.
+
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
+
+!======================== LbGenXicc v5r1p1 2016-03-29 ========================
+! 2016-03-29 - Gloria Corti
+ - Add option not to reinitialize pileup when it is with Pythia8
+
+!========================= LbGenXicc v5r1 2016-03-03 =========================
+! 2016-01-26 - Giacomo Graziani
+ - removed option GenXiccProduction.AllowBaryonNumberViolation (for not duplicating 
+   functionality with the Commands option) 
+
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
+
+! 2015-11-05 - Giacomo Graziani
+ - option GenXiccProduction.AllowBaryonNumberViolation added to switch on/off creation of 
+   light baryon
+   in GenXicc output to conserve baryon number (dafault is False, needed by Pythia6, can be set to
+   True for Pythia8)
+
+!========================== LbHidValley v4r1 2016-03-03 =======================
+! 2016-01-07 - Marco Clemencic
+ - Work-around for a problem with builds of LHAPDF without -std=c++11
+   Changed link order such that lhapdf is picked up before LHCbMath.
+
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
+
+!======================= LbOniaPairs v2r1p2 2016-03-03 ========================
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
+
+!========================== LbPowheg v4r0 2016-03-03 =========================
+! 2015-11-15 - Marco Clemencic
+ - Fixed CMake configuration.
+
+! 2015-06-22 - Philip Ilten
+ - Complete re-write to use Pythia 8 showering and proper matching.
+
+!======================= LbHijing v10r0p2 2016-03-03 =========================
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
+
+!========================== LbPGuns v6r1 2016-03-04 ==========================
+! 2016-03-01 - Dan Johnson
+ - Add FlatPtRapidity particle-gun, allowing also for mass-sampling of a 
+   composite particle.
+
+!========================= SuperChic v1r0p1 2016-03-04 =======================
+! 2015-11-18 - Marco Clemencic
+ - Disabled warnings for FORTRAN code.
+
+! 2015-11-15 - Marco Clemencic
+ - Fixed CMake configuration.
+
+!======================== LbSuperChic v1r0p1 2015-03-04 ======================
+! 2015-11-15 - Marco Clemencic
+ - Fixed CMake configuration.
+
+!=========================== LPair v1r0 2016-03-04 ===========================
+! 2015-11-15 - Marco Clemencic
+ - Fixed CMake configuration.
+
+! 2015-08-03 - Philip Ilten
+ - Initial version created
+
+!========================== LbLPair v1r0 2016-03-03 ==========================
+! 2015-11-15 - Marco Clemencic
+ - Fixed CMake configuration.
+
+! 2015-08-03 - Philip Ilten
+ - Initial version created
+
+!========================= GiGa v21r1 2016-03-07 =============================
+! 2015-11-15 - Marco Clemencic
+ - Fixed compilation with CLHEP 2.
+
+!========================= GiGaCnv v21r0 2016-03-07 ==========================
+! 2015-11-15 - Marco Clemencic
+ - Fixed compilation with CLHEP 2.
+
+!======================== VisSvc v5r8 ===========================
+! 2016-01-19 - Thomas Ruf
+
+!======================== GaussTools v20r1 2016-03-07 ========================
+! 2015-11-15 - Marco Clemencic
+ - Fixed compilation with CLHEP 2.
+
+!======================== GaussRICH v14r3p1 2016-03-23 =======================
+! 2016-02-02 - Gloria Corti
+ - Return Warning instead of Error to allow Herschel to kill very forward 
+   protons resulting in empty events for elastic single interactions
+
+
+!========================= GaussRICH v14r3 2016-03-07 ========================
+! 2016-02-02 - Sajan Easo
+ - Modified the way the Random hits are created in RICH2 so that 
+   cpu time is improved.
+
+! 2015-11-15 - Marco Clemencic
+ - Fixed compilation with CLHEP 2.
+
+!========================= GaussCalo v10r1 2016-03-07 =========================
+! 2015-11-15 - Marco Clemencic
+ - Fixed compilation with CLHEP 2.
+
+!========================== XmlVis v1r23 2016-03-07 ==========================
+! 2016-02-26 - Gloria Corti
+ - add use of GaudiPolicy to enable nightly tests
+
+!========================== XmlVis v1r22  ==========================
+! 2016-01-20 - Thomas Ruf
+ - added Herschel
+
+!========================== SimChecks v1r7 2016-03-07 ========================
+! 2016-03-05 - Luca Pescatore
+  - Minor bug fix in TargetSummary.py that caused plot creation to break
+
+!========================= SimChecks v1r6p1 2015-11-21 =======================
+
+! 2015-11-18 - Luca Pescatore
+  - The line added to bix the CALIBOFF bug breaks and is not needed in v45.
+    Version check added to adapt the setup.  
+
+! 2015-11-13 - Luca Pescatore
+ - Bug fix due to database CALIBOFF problem
+
+! 2015-10-30 - Benedikt Hegner
+- Fixing syntax error in TargetSummary.py
+
+! 2015-09-04 - Luca Pescatore
+ - Minor fixes to make scripts compatible with older versions of python.
+   Tested with Gauss v48r1, v48r3, v45r10p1 and v46r7p2
+ 
 !=============================================================================
 </PRE><H1><A NAME="v48r3">2015-08-06 - GaussSys v48r3</A></H1><PRE>
 <H2><A NAME="Note"Prerelease of Sim09 for production tests. 
