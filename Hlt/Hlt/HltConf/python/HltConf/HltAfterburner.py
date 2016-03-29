@@ -40,10 +40,14 @@ class HltAfterburnerConf(LHCbConfigurableUser):
 
     def _persistRecoLineFilter(self):
         from HltLine.HltLine import hlt2Lines
-        decisions = [line.decision() for line in hlt2Lines() if line.persistReco()]
-        if not decisions:
+        lines = [line for line in hlt2Lines() if line.persistReco()]
+        if not lines:
             log.warning('No PersistReco lines were registered!')
-        
+        else:
+            print '# List of requested PersistReco lines: {}'.format(
+                [line.name() for line in lines])
+
+        decisions = [line.decision() for line in lines]
         # code = ' | '.join(["HLT_TURBOPASS('{}')".format(i) for i in decisions])
         # if not code: code = 'HLT_NONE'
         # There is no HLT_TURBOPASS functor, so need to use regexps:
