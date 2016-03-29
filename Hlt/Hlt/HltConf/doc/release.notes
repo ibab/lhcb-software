@@ -4,6 +4,13 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2016-03-29 - Rosen Matev
+ - Rework persist reco configuration
+  - Construct a filter from the registered persist reco lines
+  - Cut down track states before packing
+  - Use HltPackedDataWriter for writing to the raw event
+  - Remove properties from HltConf
+
 ! 2016-03-24 - Rosen Matev
  - Fix dependencies between configurables.
 

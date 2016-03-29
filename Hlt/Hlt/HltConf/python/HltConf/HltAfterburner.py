@@ -1,12 +1,4 @@
-"""
- script to configure HLT Afterburner
-
- @author R. Aaij
- @date 13-05-2015
-"""
-# =============================================================================
-__author__  = "R. Aaij roel.aaij@cern.ch"
-# =============================================================================
+"""HLT Afterburner configuration."""
 import types
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -15,15 +7,27 @@ from Configurables import GaudiSequencer as Sequence
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
 
+from HltPersistReco import HltPersistRecoConf
+
+from ThresholdUtils import importLineConfigurables
+import Hlt2Lines
+
+__author__ = "R. Aaij roel.aaij@cern.ch"
+
 
 class HltAfterburnerConf(LHCbConfigurableUser):
     # python configurables to be applied before me
     __queried_configurables__ = [
         Hlt2BiKalmanFittedForwardTracking,
         Hlt2BiKalmanFittedDownstreamTracking,
-    ]
+    ] + importLineConfigurables(Hlt2Lines)
+    # We need the dependency on the Hlt2 lines above as we need to inspect
+    # all of them for the PersistReco flag in order to create the filter
+
     # python configurables that I configure
-    __used_configurables__ = []
+    __used_configurables__ = [
+        HltPersistRecoConf,
+    ]
 
     __slots__ = {"Sequence"                : None,
                  "EnableHltRecSummary"     : True,
@@ -33,6 +37,34 @@ class HltAfterburnerConf(LHCbConfigurableUser):
                  "Hlt2DownstreamFilter"    : "HLT_TURBOPASS_RE('^Hlt2CharmHad.*KS0DD.*Decision$') | HLT_TURBOPASS_RE('^Hlt2CharmHad.*LamDD.*Decision$') | HLT_TURBOPASS_RE('^Hlt2CharmHad.*_DD.*$') | HLT_TURBOPASS_RE('^Hlt2(CharmHadD02KmPipTurbo|CharmHadDstp2D0Pip_D02KmPipTurbo|CharmHadDpToKmPipPipTurbo|CharmHadDpToKmPipPip_ForKPiAsymTurbo|CharmHadDspToKmKpPipTurbo|CharmHadLcpToPpKmPipTurbo|CharmHadXic0ToPpKmKmPipTurbo|CharmHadXicpToPpKmPipTurbo|CharmHadDp2KS0KS0KpTurbo|CharmHadDp2KS0KS0PipTurbo|CharmHadLcp2LamKmKpPip_Lam2PpPimTurbo|CharmHadLcp2LamKmPipPip_Lam2PpPimTurbo|CharmHadDsp2KS0KS0KpTurbo|CharmHadDsp2KS0KS0PipTurbo)Decision$')",
                  "Hlt2Filter"              : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')"
                 }
+
+    def _persistRecoLineFilter(self):
+        from HltLine.HltLine import hlt2Lines
+        decisions = [line.decision() for line in hlt2Lines() if line.persistReco()]
+        if not decisions:
+            log.warning('No PersistReco lines were registered!')
+        
+        # code = ' | '.join(["HLT_TURBOPASS('{}')".format(i) for i in decisions])
+        # if not code: code = 'HLT_NONE'
+        # There is no HLT_TURBOPASS functor, so need to use regexps:
+        code = "HLT_TURBOPASS_RE('^({})$')".format('|'.join(decisions))
+
+        from DAQSys.Decoders import DecoderDB
+        decoder = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
+
+        from Configurables import LoKi__HDRFilter as HltFilter
+        return HltFilter(
+            "PersistRecoLineFilter",
+            Code=code,
+            Location=decoder.listOutputs()[0]
+        )
+
+    def _persistRecoSeq(self):
+        lineFilter = self._persistRecoLineFilter()
+        # log.warning('Persist Reco filter is ' + lineFilter.Code)
+        seq = Sequence("HltPersistReco")
+        HltPersistRecoConf().Sequence = seq
+        return Sequence("HltPersistRecoFilterSequence", Members=[lineFilter, seq])
 
 ###################################################################################
 #
@@ -189,3 +221,6 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             from Hlt2Lines.Utilities.Utilities import uniqueEverseen
             downstreamPIDSequence.Members += [ downstreamMuon,downstreamRichDLL,downstreamCombine ]
             AfterburnerSeq.Members += [ downstreamPIDSequence ]
+
+        # Configure and add the persist reco
+        AfterburnerSeq.Members += [self._persistRecoSeq()]

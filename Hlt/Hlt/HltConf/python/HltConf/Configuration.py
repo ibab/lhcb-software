@@ -11,7 +11,6 @@ from Configurables       import GaudiSequencer as Sequence
 from Hlt1                import Hlt1Conf
 from Hlt2                import Hlt2Conf
 from HltAfterburner      import HltAfterburnerConf
-from HltPersistReco      import HltPersistRecoConf
 from HltMonitoring       import HltMonitoringConf
 from ThresholdUtils import overwriteThresholds, Name2Threshold
 
@@ -66,11 +65,14 @@ class HltConf(LHCbConfigurableUser):
                    "NOBIAS"      : (91, False),
                    "SMOGPHYS"    : (93, False)}
 
-    __used_configurables__ = [ Hlt1Conf
-                             , Hlt2Conf
-                             , HltMonitoringConf
-                             , HltAfterburnerConf
-                             , HltPersistRecoConf ]
+    # python configurables that I configure
+    __used_configurables__ = [
+        Hlt1Conf,
+        Hlt2Conf,
+        HltMonitoringConf,
+        HltAfterburnerConf,
+    ]
+
     __slots__ = { "L0TCK"                          : None
                 , 'ForceSingleL0Configuration'     : True
                 , 'SkipDisabledL0Channels'         : False
@@ -104,9 +106,6 @@ class HltConf(LHCbConfigurableUser):
                                                       "PIDDetJPsiMuMuNegTaggedTurboCalib", "PIDLambda2PPiLLhighPTTurboCalib", "PIDLambda2PPiLLveryhighPTTurboCalib",
                                                       "DiMuonDetachedJPsi"]
                 , "NanoBanks"                      : ['ODIN','HltLumiSummary','HltRoutingBits','DAQ']
-                , "PruneHltANNSvc"                 : True
-                , "PersistReco"                    : False
-                , "CustomPersistRecoFilter"        : ""
                 , "PruneHltANNSvc"                 : True
                 , "EnabledStreams"                 : {"LUMI" : None, "BEAMGAS" : None, "FULL" : None, "TURBO" : None, "TURCAL" : None, "VELOCLOSING" : None}
                 , "OverwriteSettings"              : {}  # a dictionary with settings to overwrite
@@ -271,12 +270,7 @@ class HltConf(LHCbConfigurableUser):
                 seq = Sequence("HltAfterburner", IgnoreFilterPassed = True)
                 Dec.Members.append(seq)
                 HltAfterburnerConf().Sequence = seq
-                # Have we been asked to persist the Hlt reco
-                if self.getProp("PersistReco"):
-                    PRseq = Sequence("HltPersistReco", IgnoreFilterPassed = True)
-                    HltPersistRecoConf().Sequence = PRseq
-                    if self.getProp("CustomPersistRecoFilter"):
-                        HltPersistRecoConf().PreFilter=self.getProp("CustomPersistRecoFilter")
+
             Dec.Members.append(Sequence("Hlt2Postamble"))
             Hlt2Conf()
             self.setOtherProps(Hlt2Conf(),[ "DataType" ])
