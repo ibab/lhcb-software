@@ -1,9 +1,9 @@
-###########################################################################################
-##                          S T R I P P I N G  2 6                                       ##
-##                                                                                       ##
-##  Configuration for Charm WG                                                           ##
-##  Contact person: Eva Gersabeck & Jinlin Fu (evelina.gersabeck@cern.ch & j.fu@cern.ch) ##
-###########################################################################################
+#############################################################################################
+##                          S T R I P P I N G  2 6                                         ##
+##                                                                                         ##
+##  Configuration for Charm WG                                                             ##
+##  Contact person: Jinlin Fu & Maxime Schubiger (j.fu@cern.ch & maxime.schubiger@cern.ch) ##
+#############################################################################################
 
 from GaudiKernel.SystemOfUnits import *
 
@@ -625,6 +625,45 @@ D2HHHPi0 = {
     "WGs": [ "Charm" ]
 }
 
+#StrippingD2HMuNu.py
+D2HMuNu = {
+    "BUILDERTYPE": "D2HLepNuBuilder", 
+    "CONFIG": {
+        "BDIRA": 0.999, 
+        "BFDCHI2HIGH": 100.0, 
+        "BPVVDZcut": 0.0, 
+        "BVCHI2DOF": 20, 
+        "DELTA_MASS_MAX": 400, 
+        "ElectronPIDe": 0.0, 
+        "ElectronPT": 500, 
+        "GEC_nLongTrk": 160.0, 
+        "KLepMassHigh": 2000, 
+        "KLepMassLow": 500, 
+        "KaonMINIPCHI2": 9, 
+        "KaonP": 3000.0, 
+        "KaonPIDK": 5.0, 
+        "KaonPIDmu": 5.0, 
+        "KaonPIDp": 5.0, 
+        "KaonPT": 800.0, 
+        "MuonGHOSTPROB": 0.35, 
+        "MuonPIDK": 0.0, 
+        "MuonPIDmu": 3.0, 
+        "MuonPIDp": 0.0, 
+        "MuonPT": 500.0, 
+        "Slowpion_P": 1000, 
+        "Slowpion_PIDe": 5, 
+        "Slowpion_PT": 300, 
+        "Slowpion_TRGHOSTPROB": 0.35, 
+        "TOSFilter": {
+            "Hlt2CharmHad.*HHX.*Decision%TOS": 0
+        }, 
+        "TRGHOSTPROB": 0.35, 
+        "useTOS": True
+    }, 
+    "STREAMS": [ "Charm" ], 
+    "WGs": [ "Charm" ]
+}
+
 #StrippingD2KS0H_conf.py
 D2KS0H = {
     "BUILDERTYPE": "StrippingD2KS0HConf", 
@@ -758,7 +797,6 @@ D2PhiH = {
     "STREAMS": [ "Charm" ], 
     "WGs": [ "Charm" ]
 }
-
 
 #StrippingD2PiPi0.py
 D2Pi0H = {
@@ -1188,7 +1226,6 @@ D2hhhLines = {
     "STREAMS": [ "Charm" ], 
     "WGs": [ "Charm" ]
 }
-
 
 #StrippingD2PiPi0.py
 Dst2PiD0EEG = {
@@ -1649,6 +1686,41 @@ DstarPromptWithD02HHMuMuControl = {
     "WGs": [ "Charm" ]
 }
 
+#StrippingExcitedDsSpectroscopy.py
+ExcitedDsSpectroscopy = {
+    "BUILDERTYPE": "ExcitedDsSpectroscopyConf", 
+    "CONFIG": {
+        "Daughter2IPChi2": 10.0, 
+        "DeltaMassDsg": 1300.0, 
+        "DeltaMassDsgg": 1300.0, 
+        "DeltaMassDsstar": 450.0, 
+        "DsDIRA": 0.0, 
+        "DsGammaLinePostscale": 1.0, 
+        "DsGammaLinePrescale": 1.0, 
+        "DsIPChi2": 9.0, 
+        "DsPt": 1000.0, 
+        "DsVXChi2NDOF": 10.0, 
+        "DsstGammaLinePostscale": 1.0, 
+        "DsstGammaLinePrescale": 1.0, 
+        "Gamma2CL": 0.1, 
+        "Gamma2PT": 0.0, 
+        "GammaCL": 0.1, 
+        "GammaPT": 400.0, 
+        "KPIDK": 7.0, 
+        "MaxMassDsst": 2300.0, 
+        "MaxMassKstar": 956.0, 
+        "MaxMassPhi": 1030.0, 
+        "MaxTracksInEvent": 500, 
+        "MinCosHelAngleKstar": 0.4, 
+        "MinMassKstar": 836.0, 
+        "MinMassPhi": 1010.0, 
+        "PTSum": 2800.0, 
+        "piPIDK": 3.0
+    }, 
+    "STREAMS": [ "Charm" ], 
+    "WGs": [ "Charm" ]
+}
+
 #StrippingLambdac2V0H.py
 Lambdac2V0H = {
     "BUILDERTYPE": "StrippingLambdac2V0HConf", 
@@ -1691,47 +1763,6 @@ Lambdac2V0H = {
         "PrescaleLambdac2pKS0LL": 1.0, 
         "Proton_PIDpPIDK_MIN": 2.0, 
         "Proton_PIDpPIDpi_MIN": 7.0
-    }, 
-    "STREAMS": [ "Charm" ], 
-    "WGs": [ "Charm" ]
-}
-
-#StrippingXicc.py
-Xicc = {
-    "BUILDERTYPE": "XiccBuilder", 
-    "CONFIG": {
-        "DpHlt2TisTosSpec": {
-            "Hlt2CharmHadDpToKmPipPip.*Decision%TOS": 0, 
-            "Hlt2Global%TIS": 0
-        }, 
-        "DzHlt2TisTosSpec": {
-            "Hlt2CharmHad.*Decision%TOS": 0, 
-            "Hlt2Global.*%TIS": 0
-        }, 
-        "LcHlt2TisTosSpec": {
-            "Hlt2CharmHadLcpToPpKmPip.*Decision%TOS": 0, 
-            "Hlt2Global%TIS": 0
-        }, 
-        "LongTrackGEC": 150, 
-        "XiHlt2TisTosSpec": {
-            "Hlt2CharmHadXim2LamPim.*Decision%TOS": 0, 
-            "Hlt2Global%TIS": 0
-        }, 
-        "controlPrescaleD0": 0.01, 
-        "controlPrescaleDp": 0.01, 
-        "controlPrescaleDsp": 0.01, 
-        "controlPrescaleLc": 0.05, 
-        "controlPrescaleXic": 0.05, 
-        "signalPrescaleViaD0": 1.0, 
-        "signalPrescaleViaD0DCS": 1.0, 
-        "signalPrescaleViaD0WC": 1.0, 
-        "signalPrescaleViaDp": 1.0, 
-        "signalPrescaleViaDpWC": 1.0, 
-        "signalPrescaleViaLc": 1.0, 
-        "signalPrescaleViaLcDCS": 1.0, 
-        "signalPrescaleViaLcWC": 1.0, 
-        "signalPrescaleViaXic": 1.0, 
-        "signalPrescaleViaXicWC": 1.0
     }, 
     "STREAMS": [ "Charm" ], 
     "WGs": [ "Charm" ]

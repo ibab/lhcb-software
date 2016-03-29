@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-03-29 - Maxime Schubiger
+ - Updated LineConfigDictionaries_Charm for S26 (removed Xicc lines and added D2HMuNu and ExcitedDsSpectroscopy lines)
+ 
 ! 2016-03-23 - Ricardo Vazquez Gomez
  - Remove LbpMuNuVub from the LineConfig of semileptonic
  - Update the calib lines to remove everything. Should be included from scratch
