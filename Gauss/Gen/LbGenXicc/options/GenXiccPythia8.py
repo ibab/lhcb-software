@@ -12,3 +12,6 @@ Generation().addTool(Special)
 Generation().Special.ProductionTool = "GenXiccProduction"
 Generation().Special.addTool(GenXiccProduction)
 Generation().Special.GenXiccProduction.ShowerToolName = "Pythia8Production"
+Generation().Special.PileUpProductionTool = "Pythia8Production/Pythia8PileUp"
+Generation().Special.ReinitializePileUpGenerator  = False
+

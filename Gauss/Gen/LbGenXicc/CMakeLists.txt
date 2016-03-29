@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LbGenXicc
 ################################################################################
-gaudi_subdir(LbGenXicc v5r1)
+gaudi_subdir(LbGenXicc v5r1p1)
 
 gaudi_depends_on_subdirs(Gen/GenXicc
                          Gen/LbHard)

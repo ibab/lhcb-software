@@ -2,6 +2,10 @@
 ! Responsible : F. Zhang
 !=============================================================================
 
+!======================== LbGenXicc v5r1p1 2016-03-29 ========================
+! 2016-03-29 - Gloria Corti
+ - Add option not to reinitialize pileup when it is with Pythia8
+
 !========================= LbGenXicc v5r1 2016-03-03 =========================
 ! 2016-01-26 - Giacomo Graziani
  - removed option GenXiccProduction.AllowBaryonNumberViolation (for not duplicating 
