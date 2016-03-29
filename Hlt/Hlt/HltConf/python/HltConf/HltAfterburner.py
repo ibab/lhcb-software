@@ -3,7 +3,7 @@ import types
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import GaudiSequencer as Sequence
-
+from Configurables import ChargedProtoANNPIDConf
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
 
@@ -27,6 +27,7 @@ class HltAfterburnerConf(LHCbConfigurableUser):
     # python configurables that I configure
     __used_configurables__ = [
         HltPersistRecoConf,
+        ( ChargedProtoANNPIDConf, None )
     ]
 
     __slots__ = {"Sequence"                : None,
@@ -34,7 +35,7 @@ class HltAfterburnerConf(LHCbConfigurableUser):
                  "RecSummaryLocation"      : "Hlt2/RecSummary",
                  "AddAdditionalTrackInfos" : True,
                  "AddPIDToDownstream"      : True,
-                 "Hlt2DownstreamFilter"    : "HLT_TURBOPASS_RE('^Hlt2CharmHad.*KS0DD.*Decision$') | HLT_TURBOPASS_RE('^Hlt2CharmHad.*LamDD.*Decision$') | HLT_TURBOPASS_RE('^Hlt2CharmHad.*_DD.*$') | HLT_TURBOPASS_RE('^Hlt2(CharmHadD02KmPipTurbo|CharmHadDstp2D0Pip_D02KmPipTurbo|CharmHadDpToKmPipPipTurbo|CharmHadDpToKmPipPip_ForKPiAsymTurbo|CharmHadDspToKmKpPipTurbo|CharmHadLcpToPpKmPipTurbo|CharmHadXic0ToPpKmKmPipTurbo|CharmHadXicpToPpKmPipTurbo|CharmHadDp2KS0KS0KpTurbo|CharmHadDp2KS0KS0PipTurbo|CharmHadLcp2LamKmKpPip_Lam2PpPimTurbo|CharmHadLcp2LamKmPipPip_Lam2PpPimTurbo|CharmHadDsp2KS0KS0KpTurbo|CharmHadDsp2KS0KS0PipTurbo)Decision$')",
+                 "Hlt2DownstreamFilter"    : "HLT_TURBOPASS_RE('^Hlt2CharmHad.*KS0KS0.*Decision$') | HLT_TURBOPASS_RE('^Hlt2CharmHad.*KS0DD.*Decision$') | HLT_TURBOPASS_RE('^Hlt2CharmHad.*LamDD.*Decision$') | HLT_TURBOPASS_RE('^Hlt2CharmHad.*_DD.*$') | HLT_TURBOPASS_RE('^Hlt2CharmHad.*Lam2PpPim.*Decision$')",
                  "Hlt2Filter"              : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')"
                 }
 
@@ -94,7 +95,7 @@ class HltAfterburnerConf(LHCbConfigurableUser):
         if self.getProp("EnableHltRecSummary"):
             from Configurables import RecSummaryAlg
             seq = Sequence("RecSummarySequence")
-
+            
             tracks = Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks()
             tracksDown = Hlt2BiKalmanFittedDownstreamTracking().hlt2PrepareTracks()
             muonID = Hlt2BiKalmanFittedForwardTracking().hlt2MuonID()
@@ -174,15 +175,18 @@ class HltAfterburnerConf(LHCbConfigurableUser):
 
         if self.getProp("AddPIDToDownstream"):
             from Configurables import LoKi__HDRFilter   as HDRFilter
-            hlt2DownstreamFilter = HDRFilter('DownstreamHlt2Filter', Code = self.getProp("Hlt2DownstreamFilter"),
+            lines = self._persistRecoLines()
+            code = self._persistRecoFilterCode(lines)
+            # Activate Downstream RICH for all PersistReco lines
+            hlt2DownstreamFilter = HDRFilter('DownstreamHlt2Filter', Code =  code +" | "+self.getProp("Hlt2DownstreamFilter") if len(lines)>0 else self.getProp("Hlt2DownstreamFilter"),
                                    Location = decoder.listOutputs()[0])
+            from DAQSys.Decoders import DecoderDB
+            decoder = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
             downstreamPIDSequence = Sequence( "Hlt2AfterburnerDownstreamPIDSeq")
             downstreamPIDSequence.Members += [ hlt2DownstreamFilter ]
             downstreamTracking = Hlt2BiKalmanFittedDownstreamTracking()
             tracksDown = downstreamTracking.hlt2PrepareTracks()
             chargedProtosOutputLocation =  downstreamTracking.hlt2ChargedNoPIDsProtos().outputSelection()
-            from DAQSys.Decoders import DecoderDB
-            decoder = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
             richPid = downstreamTracking.hlt2RICHID()
 
             downstreamPIDSequence.Members += list(uniqueEverseen(chain.from_iterable([ tracksDown, richPid ])))
@@ -216,12 +220,21 @@ class HltAfterburnerConf(LHCbConfigurableUser):
                 downstreamPIDSequence.Members += [ alg  ]
 
 
-            from Configurables import ChargedProtoCombineDLLsAlg
+            from Configurables import ChargedProtoCombineDLLsAlg, ChargedProtoANNPIDConf
             downstreamCombine_name                    = "Hlt2AfterburnerDownstreamRichCombDLLs"
             downstreamCombine                         = ChargedProtoCombineDLLsAlg(downstreamCombine_name)
             downstreamCombine.ProtoParticleLocation   = downstreamTracking.hlt2ChargedNoPIDsProtos().outputSelection()
             from Hlt2Lines.Utilities.Utilities import uniqueEverseen
             downstreamPIDSequence.Members += [ downstreamMuon,downstreamRichDLL,downstreamCombine ]
+            probNNDownSeqName = self._instanceName(ChargedProtoANNPIDConf)
+
+            probNNDownSeq             = GaudiSequencer(probNNDownSeqName+"Seq")
+            annconfDown = ChargedProtoANNPIDConf(probNNDownSeqName)
+            annconfDown.DataType = downstreamTracking.DataType
+            annconfDown.TrackTypes = [ "Downstream" ]
+            annconfDown.RecoSequencer = probNNDownSeq
+            annconfDown.ProtoParticlesLocation = downstreamTracking.hlt2ChargedNoPIDsProtos().outputSelection()
+            downstreamPIDSequence.Members += [ probNNDownSeq ]
             AfterburnerSeq.Members += [ downstreamPIDSequence ]
 
         # Configure and add the persist reco

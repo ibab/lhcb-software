@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2016-03-29 - Sascha Stahl
+ - HltAfterburner: Adjust downstream filter for RICH pid, add calculation of ProbNN variables.
+
 ! 2016-03-29 - Rosen Matev
  - Rework persist reco configuration
   - Construct a filter from the registered persist reco lines
