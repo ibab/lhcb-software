@@ -26,4 +26,12 @@ gaudi_add_module(MuonID
                  INCLUDE_DIRS ROOT Tr/TrackInterfaces VDT
                  LINK_LIBRARIES ROOT MuonDetLib RecEvent TrackEvent MuonInterfacesLib TrackFitEvent GaudiAlgLib MuonIDLib)
 
+gaudi_add_dictionary(MuonID
+                     dict/MuonIDDict.h
+                     dict/MuonID.xml
+                     INCLUDE_DIRS ROOT AIDA Boost RELAX ROOT PythonLibs
+                     LINK_LIBRARIES ROOT Boost RELAX ROOT PythonLibs GaudiAlgLib LHCbKernel LHCbMathLib PartPropLib LoKiCoreLib
+                     OPTIONS " -U__MINGW32__ ")
+
+
 gaudi_install_python_modules()
