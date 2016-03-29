@@ -48,8 +48,8 @@ use LbHard              v1r0p1  Gen
 use LbAlpGen            v6r2    Gen 
 use BcVegPy             v4r0p1  Gen
 use GenXicc             v2r2    Gen
-use LbBcVegPy           v6r1    Gen
-use LbGenXicc           v5r1    Gen
+use LbBcVegPy           v6r1p1  Gen
+use LbGenXicc           v5r1p1  Gen
 use LbHidValley         v4r1    Gen
 use LbOniaPairs         v2r1p2  Gen
 use LbPowheg            v4r0    Gen
