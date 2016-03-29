@@ -60,7 +60,7 @@ class HltAfterburnerConf(LHCbConfigurableUser):
         decoder = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
         from Configurables import LoKi__HDRFilter as HltFilter
         lineFilter = HltFilter(
-            "PersistRecoLineFilter",
+            "Hlt2PersistRecoLineFilter",
             Code=code,
             Location=decoder.listOutputs()[0]
         )
