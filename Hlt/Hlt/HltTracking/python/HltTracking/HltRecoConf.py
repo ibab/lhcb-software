@@ -96,7 +96,7 @@ MatchVeloMuonOptions = {"MaxChi2DoFX" : 10.,
                         "YWindow" : 400.
                         }
 
-MatchVeloTTMuonOptions = {"MaxChi2DoFX" : 3.,
+MatchVeloTTMuonOptions = {"MaxChi2DoFX" : 2.,
                           "HistoProduce" : False,
                           "Window" : {1 : (100, 200),
                                       2 : (200, 400),
