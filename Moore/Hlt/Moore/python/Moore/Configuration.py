@@ -85,8 +85,6 @@ class Moore(LHCbConfigurableUser):
         , "inputFiles" :       [ ] # input
         , "EnableTimer" :       None
         , "TimingTableWidth" :   90
-        , "PersistReco" :   False
-        , "PersistRecoFilter" :   ""
         , "EnableDataOnDemand": False
         , "OutputLevel" : WARNING #if this is set to WARNING (or higher) Moore will become almost silent.
                              #if this is set to DEBUG or VERBOSE, this mimics the previous verbose setting
@@ -194,8 +192,6 @@ class Moore(LHCbConfigurableUser):
         #######################################
         # Options for offline running
         #######################################
-        , "PersistReco" : "Do we want toe persist Moore reconstruction containers (if writing DST)"
-        , "PersistRecoFilter" : "Filter code to control which events get the full reco added to the writer"
         #########################################
         # Deprecated former options
         #########################################
@@ -729,18 +725,11 @@ class Moore(LHCbConfigurableUser):
         from Configurables import LHCb__ParticlePropertySvc
         LHCb__ParticlePropertySvc().ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt';
 
-
     def _definePersistency(self):
 
         #online, do the minimum possible, of only setting up MDF
         if self.getProp("RunOnline") :
             LHCbApp().setProp("Persistency","MDF")
-    
-    def _configRecoPersist(self):
-        if self.getProp("PersistReco"):
-            HltConf().PersistReco=True
-            if self.getProp("PersistRecoFilter"):
-                HltConf().CustomPersistRecoFilter=self.getProp("PersistRecoFilter")
 
     def _split(self, useTCK ):
         split=self.getProp("Split")
@@ -870,7 +859,6 @@ class Moore(LHCbConfigurableUser):
         if self.getProp("Simulation") or MooreExpert().getProp("DisableMonitors"):
             self._suppressMonitoring()
 
-        self._configRecoPersist()
         if not self.getProp("RunOnline") :
             self._profile()
             if self.getProp("generateConfig") : self._generateConfig()

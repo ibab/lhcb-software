@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2016-03-29 - Rosen Matev
+ - Remove options for PersistReco from the Moore configurable
+
 ! 2016-03-22 - Roel Aaij
  - Remove transforms that fixup HLT1+HLT2 TCKs to be either HLT1 or HLT2.
    Split TCKs should be used, so running from a joint (non-technical) TCK
