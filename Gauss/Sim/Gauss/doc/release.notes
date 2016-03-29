@@ -4,7 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!========================== Gauss v49r0 2016-03-28 ===========================
+!========================== Gauss v49r0 2016-03-29 ===========================
+! 2016-03-29 - Gloria Corti
+ - Update references for tests
+
 ! 2016-03-28 - Gloria Corti
  - Update some of the references
  - Change gaussDev test to use Pythia8 instead of Pythia6
