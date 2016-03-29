@@ -8,7 +8,7 @@
 
 ! 2016-03-29 - Vanya Belyaev
  1. python/LHCbMath/deriv.py
-   - improve a little bit calculations (moderate gain)
+   - improve a little bit current calculations (moderate gain)
    - add methods of 12, 14 and 16th orders 
  2. LHCbMath/LHCbMath.h
    - add dot_fma algorithm
