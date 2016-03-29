@@ -38,34 +38,32 @@ class HltAfterburnerConf(LHCbConfigurableUser):
                  "Hlt2Filter"              : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')"
                 }
 
-    def _persistRecoLineFilter(self):
+    def _persistRecoLines(self):
         from HltLine.HltLine import hlt2Lines
-        lines = [line for line in hlt2Lines() if line.persistReco()]
-        if not lines:
-            log.warning('No PersistReco lines were registered!')
-        else:
-            print '# List of requested PersistReco lines: {}'.format(
-                [line.name() for line in lines])
+        return [line for line in hlt2Lines() if line.persistReco()]
 
+    def _persistRecoFilterCode(self, lines):
         decisions = [line.decision() for line in lines]
         # code = ' | '.join(["HLT_TURBOPASS('{}')".format(i) for i in decisions])
         # if not code: code = 'HLT_NONE'
         # There is no HLT_TURBOPASS functor, so need to use regexps:
         code = "HLT_TURBOPASS_RE('^({})$')".format('|'.join(decisions))
+        return code
+
+    def _persistRecoSeq(self):
+        lines = self._persistRecoLines()
+        code = self._persistRecoFilterCode(lines)
+        print '# List of requested PersistReco lines: {}'.format(
+            [line.name() for line in lines])
 
         from DAQSys.Decoders import DecoderDB
         decoder = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
-
         from Configurables import LoKi__HDRFilter as HltFilter
-        return HltFilter(
+        lineFilter = HltFilter(
             "PersistRecoLineFilter",
             Code=code,
             Location=decoder.listOutputs()[0]
         )
-
-    def _persistRecoSeq(self):
-        lineFilter = self._persistRecoLineFilter()
-        # log.warning('Persist Reco filter is ' + lineFilter.Code)
         seq = Sequence("HltPersistReco")
         HltPersistRecoConf().Sequence = seq
         return Sequence("HltPersistRecoFilterSequence", Members=[lineFilter, seq])
