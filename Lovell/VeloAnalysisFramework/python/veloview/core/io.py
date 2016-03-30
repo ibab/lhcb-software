@@ -69,7 +69,8 @@ class DQDB(object):
                 existing.append(var)
         self.__commit()
 
-        c.executemany('INSERT INTO entries VALUES(?, ?{})'.format(',?' * len(existing)), [(now, runnr) + tuple(dqflat.get(value, 'NULL') for value in existing)])
+        c.executemany('INSERT INTO entries(timestamp, runnr, `{}`) VALUES(?, ?{})'.format('`,`'.join(existing), ',?' * len(existing)),\
+                [(now, runnr) + tuple(dqflat.get(value, 'NULL') for value in existing)])
         c.execute('INSERT INTO runs(runnr, timestamp, runendtimestamp) VALUES(?, ?, ?)', (runnr, now, runendtimestamp))
         self.__commit()
     
@@ -86,7 +87,7 @@ class DQDB(object):
     def get_comment(self, runnr):
         c = self.__get_cursor()
         result = c.execute('SELECT comment FROM runs WHERE runnr = ?', (runnr,))
-        return str(result)
+        return str(result.fetchone()[0])
 
     def set_comment(self, runnr, comment):
         c = self.__get_cursor()

@@ -14,6 +14,7 @@ class AnalysisConfigWrapper(object):
     """
     TELL1_NUMBERS_R   = range(42)
     TELL1_NUMBERS_PHI = range(64, 106)
+    TELL1_NUMBERS_ALL = TELL1_NUMBERS_R + TELL1_NUMBERS_PHI
 
     def __init__(self, config):
         """
@@ -95,45 +96,47 @@ class AnalysisConfigWrapper(object):
 
         @type  leafDict: dictionary
         @param leafDict: Leaf description dictionary, containing at least the
-                         keys "weight", "input", "errThreshold",
-                         "warnThreshold", "function", and "functionarg"
+                         key "name" and "function" and one or more of the keys
+                         "errThreshold", "warnThreshold", "params",
+                         "sensor_dependent", and "trending".
         @return          A list of tuples.
         """
-        path       = leafDict["input"]
+        path       = leafDict["name"]
         maxError   = leafDict.get("errThreshold",  50)
         maxWarning = leafDict.get("warnThreshold", 80)
-        function   = self.__class__._getCompFunction(leafDict["function"])
-        arg        = leafDict.get("functionarg", None)
-
-        rOrPhi = leafDict.get('tell1', None)
-        tell1s = []
-        if rOrPhi == "R"   or rOrPhi == "Both":
-            tell1s += self.TELL1_NUMBERS_R
-        if rOrPhi == "Phi" or rOrPhi == "Both":
-            tell1s += self.TELL1_NUMBERS_PHI
+        function   = self.__findAnalysisClass(leafDict["comparison"])
+        arg        = leafDict.get("params", None)
+        sensor_dep = leafDict.get("sensor_dependent", False)
+        trending = []
+        for trend in leafDict.get("trending", []):
+            if isinstance(trend, tuple):
+                trending.append((self.__findAnalysisClass(trend[0]),) + trend[1:])
+            else:
+                trending.append(self.__findAnalysisClass(trend))
 
         results = []
-        children = []
-        for tell1 in tell1s:
-            name   = leafName + "_" + self.tell1_formatting(tell1)
-            myPath = path.format(self.tell1_formatting(tell1))
-            results.append((\
-                {\
-                    "name":       name      ,\
-                    #Tell1 child nodes all have same weight
-                    "weight":     1.        ,\
-                    "path":       myPath    ,\
-                    "maxError":   maxError  ,\
-                    "maxWarning": maxWarning,\
-                },\
-                {\
-                    "Function":   function  ,\
-                    "Argument":   arg       ,\
-                }\
-            ))
-            children.append(name)
+        if sensor_dep:
+            children = []
+            for tell1 in self.TELL1_NUMBERS_ALL:
+                name   = "{}_{:03d}".format(leafName, tell1)
+                myPath = path.format(tell1)
+                results.append((\
+                    {\
+                        "name":       name      ,\
+                        #Tell1 child nodes all have same weight
+                        "weight":     1.        ,\
+                        "path":       myPath    ,\
+                        "maxError":   maxError  ,\
+                        "maxWarning": maxWarning,\
+                    },\
+                    {\
+                        "Function":   function  ,\
+                        "Argument":   arg       ,\
+                        "trending":   trending  ,\
+                    }\
+                ))
+                children.append(name)
 
-        if tell1s:
             # Add master branch containing all the above leaves
             masterBranch = self._parseBranch(leafDict)
             masterBranch["name"]     = leafName
@@ -152,6 +155,7 @@ class AnalysisConfigWrapper(object):
                 {\
                     "Function":   function                  ,\
                     "Argument":   arg                       ,\
+                    "trending":   trending                  ,\
                 }\
             ))
 
@@ -166,9 +170,9 @@ class AnalysisConfigWrapper(object):
         formatting read by the Combiner class.
 
         @type  branchDict: dictionary
-        @param branchDict: Branch description dictionary, containing the keys
-                           "weight", "input", "errThreshold", "warnThreshold",
-                           "function", and "functionarg"
+        @param branchDict: Branch description dictionary, containing one or
+                           more of the keys "weight", "children", "minWW",
+                           "minWE", "minEW", "minEE"
         """
         return\
             {\
@@ -180,8 +184,8 @@ class AnalysisConfigWrapper(object):
                 "minEE":    branchDict.get("minEE",    2 ),\
             }
 
-    @staticmethod
-    def _getCompFunction(className):
+    @classmethod
+    def __findAnalysisClass(cls, className):
         """
         Find a class in the package "veloview.analysis". Throws an exception if
         the class doesn't exist, or if it doesn't inherit from
@@ -201,14 +205,3 @@ class AnalysisConfigWrapper(object):
             raise ValueError("Class {} should inherit from ComparisonFunction or ValueFunction".format(className))
         return value
 
-    @staticmethod
-    def tell1_formatting(tell1_number):
-        """Adds an appropriate number of 0s before tell1 number"""
-        if tell1_number < 10:
-            tell1_name = "00{}".format(tell1_number)
-        elif 10 <= tell1_number < 100:
-            tell1_name = "0{}".format(tell1_number)
-        else:
-            tell1_name = str(tell1_number)
-
-        return "TELL1_{}".format(tell1_name)

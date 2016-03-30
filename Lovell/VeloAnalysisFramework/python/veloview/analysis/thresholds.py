@@ -1,58 +1,141 @@
 # coding=utf-8
 """This module will hold complex comparison functions"""
 
+import operator
+
 from ..core.interface import ComparisonFunction, check_hists1, check_hists2
-from ..core.score_manipulation import ERROR_LEVELS, Score
+from ..core.score_manipulation import Score
 from ..utils.rootutils import maximum, min_skip_empty, frac_above_threshold, frac_below_threshold
 from logging import debug, getLogger
 logger = getLogger(__name__)
 
+def calc_score(value, minimum, maximum, tolerance):
+    """Calculate a score smoothed using a certain tolerance."""
+    # For now this is linear, maybe really smoothe out in the future
+    if minimum is None and maximum is None:
+        return Score.MAX
+    if value < minimum:
+        return max(Score.MIN, (Score.MAX - Score.MIN) * (-minimum + tolerance + value) / tolerance)
+    elif value > maximum:
+        return max(Score.MIN, (Score.MAX - Score.MIN) * ( maximum + tolerance - value) / tolerance)
+    return Score.MAX
 
-class FloorThreshold(ComparisonFunction):
-    """Check if any bin is below threshold.
-
-    """
-
+class MeanRmsThreshold(ComparisonFunction):
     @classmethod
-    @check_hists1
-    def compare(cls, data_hist, ref_hist, floor):
-        """Reference histogram is ignored.
+    @check_hists2
+    def compare(cls, data_hist, ref_hist, params):
+        mode, axis, minMean, maxMean, minRms, maxRms, tolerance = params
+        assert(mode in (0,1))
 
-        data_hist -- data histogram
-        ref_hist  -- reference histogram (ignored)
-        floor     -- floor threshold
+        meanValue = data_hist.GetMean(axis)
+        rmsValue = data_hist.GetRMS(axis)
+        if mode == 1:
+            meanValue -= ref_hist.GetMean(axis)
+            rmsValue -= ref_hist.GetRMS(axis)
 
-        """
+        meanScore = calc_score(meanValue, minMean, maxMean, tolerance)
+        rmsScore  = calc_score(rmsValue,  minRms,  maxRms,  tolerance)
+        return Score(min(meanScore, rmsScore))
 
-        debug('Min: {}'.format(min_skip_empty(data_hist)))
-        if min_skip_empty(data_hist) > floor:
-            return cls.create_final_dict(Score(100), ERROR_LEVELS.OK)
-        else:
-            return cls.create_final_dict(Score(0), ERROR_LEVELS.ERROR)
-
-
-class CeilingThreshold(ComparisonFunction):
-    """Check if any bin is above threshold.
-
-    """
-
+class MeanThresholdRPhi(ComparisonFunction):
+    """Mean calculation for R or Phi only"""
     @classmethod
-    @check_hists1
-    def compare(cls, data_hist, ref_hist, ceiling):
-        """Reference histogram is ignored.
+    @check_hists2
+    def compare(cls, data_hist, ref_hist, params):
+        mode, rPhi, minMean, maxMean, tolerance = params
+        assert(mode in (0, 1) and rPhi in ('R', 'Phi'))
+        sum = n = 0
+        for bin in xrange(data_hist.GetSize()):
+            if data_hist.IsBinOverflow(bin) or data_hist.IsBinUnderflow(bin):
+                continue
+            center = data_hist.GetBinCenter(bin)
+            if (rPhi == 'R' and 0 < center < 42) or (rPhi == 'Phi' and 63 < center < 106):
+                sum += data_hist.GetBinContent(bin)
+                if mode == 1:
+                    sum -= ref_hist.GetBinContent(bin)
+                n += 1
+        return Score(calc_score(1. * sum / n, minMean, maxMean, tolerance))
 
-        data_hist -- data histogram
-        ref_hist  -- reference histogram (ignored)
-        ceiling   -- ceiling threshold
+class MeanThresholdAC(ComparisonFunction):
+    """Separate calculations for A and C side"""
+    @classmethod
+    @check_hists2
+    def compare(cls, data_hist, ref_hist, params):
+        delta = .0000001
+        minMean, maxMean = params
+        sumA = nA = sumC = nC = 0
+        for bin in xrange(data_hist.GetSize()):
+            value = data_hist.GetBinContent(bin)
+            if data_hist.IsBinOverflow(bin) or data_hist.IsBinUnderflow(bin):
+                continue
+            if value < -delta:
+                sumC += value
+                nC += 1
+            elif value > delta:
+                sumA += value
+                nA += 1
+        scoreA = calc_score(1. * sumA / nA, minMean, maxMean, tolerance)
+        scoreC = calc_score(1. * sumC / nC, minMean, maxMean, tolerance)
+        return Score(min(scoreA, scoreC))
 
-        """
+class CountThreshold(ComparisonFunction):
+    """Check how many bins fulfill a criterium.
+    mode can be 0 (check data) or 1 (check data - ref)
+    """
+    @classmethod
+    @check_hists2
+    def compare(cls, data_hist, ref_hist, params):
+        operator, minimum, maximum, tolerance, mode = params
+        assert(mode in (0, 1))
+        n = 0
+        for bin in xrange(data_hist.GetSize()):
+            dataValue = data_hist.GetBinContent(bin)
+            if mode == 0:
+                value = dataValue
+            else:
+                value = dataValue - ref_hist.GetBinContent(bin)
 
-        debug('Max: {}'.format(maximum(data_hist)))
-        if maximum(data_hist) < ceiling:
-            return cls.create_final_dict(Score(100), ERROR_LEVELS.OK)
+            if data_hist.IsBinOverflow(bin) or data_hist.IsBinUnderflow(bin):
+                continue
+            if operator(value):
+                n += 1
+
+        return Score(calc_score(n, minimum, maximum, tolerance))
+
+class FractionThreshold(ComparisonFunction):
+    """Check which fraction of bins fall outside a band.
+    mode can be 0 (check data) or 1 (check data - ref)
+    """
+    @classmethod
+    @check_hists2
+    def compare(cls, data_hist, ref_hist, params):
+        mode, minimum, maximum, minFraction, maxFraction, tolerance = params
+        n = 0
+        frac_above = frac_below = 0.
+        if maximum is not None:
+            frac_above = frac_above_threshold(data_hist, maximum)
+        if minimum is not None:
+            frac_below = frac_below_threshold(data_hist, minimum)
+
+        if mode == 1:
+            if maximum is not None:
+                frac_above -= frac_above_threshold(ref_hist, maximum)
+            if minimum is not None:
+                frac_below -= frac_below_threshold(ref_hist, minimum)
+
+        return Score(calc_score(frac_below + frac_above, minFraction, maxFraction, tolerance))
+
+class IntegralThreshold(ComparisonFunction):
+    @classmethod
+    @check_hists2
+    def compare(cls, data_hist, ref_hist, params):
+        minimum, maximum, tolerance, mode = params
+        assert(mode in (0, 1))
+        if mode == 0:
+            integral = data_hist.Integral()
         else:
-            return cls.create_final_dict(Score(0), ERROR_LEVELS.ERROR)
-
+            integral = data_hist.Integral() - ref_hist.Integral()
+        return Score(calc_score(integral, minimum, maximum, tolerance))
 
 class MeanWidthDiffRef(ComparisonFunction):
     """Check the mean and width w.r.t. reference.
@@ -62,72 +145,37 @@ class MeanWidthDiffRef(ComparisonFunction):
     the width (RMS) a fluctuation of tolerance*RMS is acceptable.
     Tolerance is a fraction smaller than unity.
 
-    Results of each comparison is treated as a boolean.  They are
-    weighted and combined to give the final DQ score.  The weights
-    are: mean - 70%, width - 30%.  A score > 70 is OK, >= 30 & < 70 is
-    a WARNING, and anything else is an ERROR.  This scheme corresponds
-    to passing both comparisons, one of the two, or none.
-
+    Results of each comparison is treated as a boolean. They are weighted and
+    combined to give the final DQ score. The weights are: mean - 70%, width -
+    30%. This scheme corresponds to passing both comparisons, one of the two,
+    or none.
     """
 
     @classmethod
     @check_hists2
-    def compare(cls, data_hist, ref_hist, tolerance):
+    def compare(cls, data_hist, ref_hist, params):
         """
         data_hist -- data histogram
         ref_hist  -- reference histogram
-        tolerance -- tolerance (in fraction)
-
+        params    -- [tolerance (between 0 and 1)]
         """
+        tolerance = params[0]
         dmean = abs(data_hist.GetMean() - ref_hist.GetMean())
         dwidth = abs(data_hist.GetRMS() - ref_hist.GetRMS())
         score = 70.0 * (dmean < abs(0.3*ref_hist.GetRMS()))
         score += 30.0 * (dwidth < abs(tolerance*ref_hist.GetRMS()))
-        if score > 70.0:        # both passes: 100
-            level = ERROR_LEVELS.OK
-        elif score >= 30.0:      # only one passes: 70 or 30
-            level = ERROR_LEVELS.WARNING
-        else:                   # both fails: 0
-            level = ERROR_LEVELS.ERROR
-        debug('score: {}, level: {}'.format(score, level))
-        return cls.create_final_dict(Score(score), level)
+        debug('score: {}'.format(score))
+        return Score(score)
 
-
-class AbsoluteBandRef(ComparisonFunction):
-    """Check if absolute values inside band.
-
-    """
-    pass
-
-
-class ZeroCentredBandRef(ComparisonFunction):
-    """Check fraction outside 0-centred band.
-
-    Pass when more than 99% is inside tolerance band.  When comparing
-    with reference histogram, use a 3 sigma tolerance band.
-
-    """
+class DifferenceRms(ComparisonFunction):
+    """Calculate the RMS of the difference between data and ref"""
 
     @classmethod
     @check_hists2
-    def compare(cls, data_hist, ref_hist, abs_band):
-        """If abs_band is evaluates to True, reference histogram is ignored.
+    def compare(cls, data_hist, ref_hist, params):
+        axis, minimum, maximum, tolerance = params
 
-        data_hist -- data histogram
-        ref_hist  -- reference histogram (ignored when abs_band present)
-        abs_band  -- one-sided tolerance band width (sigma/RMS)
-
-        """
-
-        if not abs_band:            # 3*sigma tolerance band from reference
-            abs_band = 3*ref_hist.GetRMS()
-        abs_band = abs(abs_band)    # force +ve definite band
-        frac_above = frac_above_threshold(data_hist, abs_band)
-        frac_below = frac_below_threshold(data_hist, -abs_band)
-        frac_outside = frac_above + frac_below
-        debug('Fraction outside: {}, above: {}, below: {}'.
-              format(frac_outside, frac_above, frac_below))
-        if frac_outside > 0.01:
-            return cls.create_final_dict(Score(0), ERROR_LEVELS.ERROR)
-        else:
-            return cls.create_final_dict(Score(100), ERROR_LEVELS.OK)
+        data_copy = data_hist.Clone()
+        data_copy.Add(ref_hist, -1.)
+        rms = data_copy.GetRMS(axis) #TODO not ok! needs to be compared in each dimension
+        return Score(calc_score(rms, minimum, maximum, tolerance))

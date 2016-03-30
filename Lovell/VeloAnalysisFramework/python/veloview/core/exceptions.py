@@ -33,7 +33,7 @@ class ComparisonFunctionNotFoundInEvalDictException(CombinerExceptionWithName):
         return "A comparison function could not been found in the evaluation dictionary for the combiner {}".format(self.name)
 
 
-class ComparisonFunctionNotCollableException(CombinerExceptionWithNameAndOtherInfo):
+class ComparisonFunctionNotCallableException(CombinerExceptionWithNameAndOtherInfo):
     def __str__(self):
         return "The comparison function {} for the combiner {} is not a function".format(self.other, self.name)
 

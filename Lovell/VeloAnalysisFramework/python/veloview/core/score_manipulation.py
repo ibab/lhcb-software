@@ -9,6 +9,9 @@ ERROR_LEVELS = enum("OK", "WARNING", "ERROR")
 class Score(object):
     """A class that will hold a score (integer value between 0 and 100). Scores will be later assigned to histograms."""
 
+    MIN = 0.
+    MAX = 100.
+
     def __init__(self, val):
         if isinstance(val, int):
             val = float(val)
@@ -99,7 +102,7 @@ class Score(object):
 
     @staticmethod
     def isInRange(value):
-        return Score.isNumeric(value) and 0.0 <= value <= 100.0
+        return Score.isNumeric(value) and Score.MIN <= value <= Score.MAX
 
     @staticmethod
     def isNumeric(value):

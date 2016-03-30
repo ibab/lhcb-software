@@ -13,7 +13,7 @@ from .io import DQDB
 from .interface import ComparisonFunction
 from .score_manipulation import Score, ERROR_LEVELS
 from .exceptions import DescriptionDictionaryKeyException, \
-        ComparisonFunctionNotFoundInEvalDictException, ComparisonFunctionNotCollableException, \
+        ComparisonFunctionNotFoundInEvalDictException, ComparisonFunctionNotCallableException, \
         HistogramNotFoundException
 from ..utils.rootutils import detect_zombies
 from ..utils.rundb import RunDB
@@ -120,13 +120,6 @@ class Combiner(object):
     def isRelevant(self):
         """
         Whether this Combiner instance is relevant to evaluate.
-        """
-        pass
-
-    @abstractmethod
-    def isComparison(self):
-        """
-        Whether this Combiner instance is relevant for score/level determination.
         """
         pass
 
@@ -279,19 +272,10 @@ class BranchCombiner(Combiner):
         for child in self.children:
             child.evaluate()
 
-        if self.isComparison():
-            self.results = self.__calcResults()
-        else:
-            self.results = {}
+        self.results = self.__calcResults()
 
     def isRelevant(self):
         return bool(self.children)
-
-    def isComparison(self):
-        for child in self.children:
-            if child.isComparison():
-                return True
-        return False
 
 class RootCombiner(BranchCombiner):
     MASTER_COMBINER_NAME = "MasterCombiner"    # name of the root combiner
@@ -337,9 +321,13 @@ class LeafCombiner(Combiner):
             raise ComparisonFunctionNotFoundInEvalDictException(self.getName())
         myEval = eval_dict[self.getName()]
 
-        self.__setCompareFunc(myEval)
-        self.__path = self.desc_dict["path"]
+        self.__max_warning = desc_dict[self.getName()]["maxWarning"]
+        self.__max_error = desc_dict[self.getName()]["maxError"]
 
+        self.__setCompareFunc(myEval)
+        self.__trending = myEval["trending"]
+        self.__path = self.desc_dict["path"]
+        
     def __str__(self):
         """Get a string representation of this object."""
         log_string = self.stringRep()
@@ -360,7 +348,7 @@ class LeafCombiner(Combiner):
         self.compare_class = myEval[LeafCombiner.FUNC_KEY]
         function = self.compare_class.compare
         if not callable(function):
-            raise ComparisonFunctionNotCollableException(self.getName(), function.__name__)
+            raise ComparisonFunctionNotCallableException(self.getName(), function.__name__)
         self.compare_func = function
 
         arg = ""
@@ -386,6 +374,21 @@ class LeafCombiner(Combiner):
 
         return data_hist, ref_hist
 
+    def __calc_level(self, score):
+        if score < self.__max_error:
+            return ERROR_LEVELS.ERROR
+        if score < self.__max_warning:
+            return ERROR_LEVELS.WARNING
+        return ERROR_LEVELS.OK
+
+    def __evaluate_trends(self, data_hist):
+        for trend in self.__trending:
+            if isinstance(trend, tuple):
+                trend_result = trend[0].calculate(data_hist, trend[1:])
+            else:
+                trend_result = trend.calculate(data_hist, None)
+            self.results.update(trend_result)
+
     def evaluate(self):
         """
         Evaluate this leaf by performing a check on the data histogram, either
@@ -398,24 +401,26 @@ class LeafCombiner(Combiner):
         ref_file = ROOT.TFile.Open(self.ref_file_path, "READ")
         data_file, ref_file = detect_zombies(data_file, ref_file)
 
-        data_hist, ref_hist = self.__getHistos(data_file, ref_file)
-        self.results = self.compare_func(data_hist, ref_hist, self.compare_arg)
-        if self.isComparison():
-            lvl = self.getLevel()
-            if lvl == ERROR_LEVELS.WARNING:
-                self.warnings = 1
-            elif lvl == ERROR_LEVELS.ERROR:
-                self.errors = 1
+        try:
+            data_hist, ref_hist = self.__getHistos(data_file, ref_file)
+            score = self.compare_func(data_hist, ref_hist, self.compare_arg)
+            level = self.__calc_level(float(score))
+            self.results = {"lvl": level, "score": score}
+            self.__evaluate_trends(data_hist)
+        except HistogramNotFoundException:
+            self.results = {"lvl": ERROR_LEVELS.OK, "score": Score(Score.MAX)}
+            #print("Warning! Histogram {} not found".format(self.getPath()))
 
-        #self.results = self.update_with_expected_state(result)  # TODO Uncomment when update_with-expected_state will be implemented
-        #self.summary_data = self.get_summary_data_from_hist(data_hist)  # TODO Uncomment when get_summary_data_from_hist will be implemented
+        lvl = self.getLevel()
+        if lvl == ERROR_LEVELS.WARNING:
+            self.warnings = 1
+        elif lvl == ERROR_LEVELS.ERROR:
+            self.errors = 1
 
         data_file.Close()
         ref_file.Close()
 
+
     def isRelevant(self):
         return True # Leaf nodes are always relevant
-
-    def isComparison(self):
-        return isinstance(self.compare_class, ComparisonFunction) or issubclass(self.compare_class, ComparisonFunction)
 

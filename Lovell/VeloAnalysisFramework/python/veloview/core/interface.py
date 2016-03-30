@@ -66,7 +66,7 @@ class ComparisonFunction(object):
     """
 
     @classmethod
-    def compare(cls, data_hist, ref_hist, param):
+    def compare(cls, data_hist, ref_hist, params):
         """This method needs to be implemented for every single function and will need to return (score, lvl)"""
         raise NotImplementedError("This is an abstract function that needs to be implemented for each comparison function")
 
@@ -74,7 +74,7 @@ class ComparisonFunction(object):
     def vars(cls):
         """This method returns a dictionary mapping variable names output by this
         function to their respective types."""
-        return {"score": float, "lvl": int}
+        return {"score": float}
 
     @classmethod
     def check_if_hist_exists(cls, hist):
@@ -105,11 +105,13 @@ class ValueFunction(object):
     """
 
     @classmethod
+    def calculate(cls, data_hist, params):
+        """This method needs to be implemented for every single function and will need to return some values as a dict"""
+        raise NotImplementedError("This is an abstract function that needs to be implemented for each value function")
+
+    @classmethod
     def vars(cls):
         """This method returns a dictionary mapping variable names output by this
         function to their respective types."""
-        return {"value": float}
+        raise NotImplementedError("This is an abstract function that needs to be implemented for each value function")
 
-    @classmethod
-    def create_final_dict(cls, value):
-        return {"value": value}

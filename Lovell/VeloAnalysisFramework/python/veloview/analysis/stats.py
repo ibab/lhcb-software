@@ -48,38 +48,31 @@ class KolmogorovSmirnovTest(ComparisonFunction):
         if options.find('m') < 0: # KS probability
             # probability remapped such than 0.05 -> 5, 1 -> 100
             score = KS_prob_or_dist * 100
-            debug('raw score: {}'.format(score))
-            score = Score(score)
-            if KS_prob_or_dist < 0.01:
-                lvl = ERROR_LEVELS.ERROR
-            else:
-                lvl = ERROR_LEVELS.OK
+            debug('score: {}'.format(score))
         else:
             raise NotImplementedError('KS distance option not implemented yet')
-        debug('level: {}'.format(lvl))
 
-        return cls.create_final_dict(score, lvl)
-
+        return Score(score)
 
 class Chi2Test(ComparisonFunction):
-    """χ² comparison test between data and reference histograms.
+    """Chi² comparison test between data and reference histograms.
 
     If no option is passed, a p-value is used to do the comparison.
-    ROOT calculates this from the cumulative χ² distribution,
-    precisely: 1 - ∫f(χ²,ndf)dχ² (ndf = number of degrees of freedom).
+    ROOT calculates this from the cumulative Chi² distribution,
+    precisely: 1 - ∫f(Chi²,ndf)dχ² (ndf = number of degrees of freedom).
     So we accept all p-values ≥ 0.05 (a 2σ deviation).
 
-    Approximately the above corresponds to χ²/ndf ≤ 2.  If we want to
+    Approximately the above corresponds to Chi²/ndf ≤ 2.  If we want to
     enforce this precisely, we have to pass options 'chi2' or
     'chi2/ndf' (the latter is preferred, since it accounts for empty
     bins).
 
-    The threshold χ²/ndf or p-value is mapped to a DQ score of 50 and
+    The threshold Chi²/ndf or p-value is mapped to a DQ score of 50 and
     5 respectively; a perfect match (OK) is 100.  For a p-value based
     comparison, a DQ score between 5 and 1 is a WARNING, and a score
-    below 1 (i.e. outside 3σ) is an ERROR.  Similarly for a χ² based
+    below 1 (i.e. outside 3 sigma) is an ERROR.  Similarly for a Chi² based
     comparison, a score between 50 and 25 is a WARNING, and a score
-    below 25 is (χ²/ndf > 3, or 3σ deviation) is an ERROR.
+    below 25 is (Chi²/ndf >  or 3 sigma deviation) is an ERROR.
 
     """
 
@@ -106,14 +99,7 @@ class Chi2Test(ComparisonFunction):
         if options.find('chi2') < 0: # p-value
             # p-value remapped such than 0.05 -> 5, 1 -> 100
             score = pvalue_or_chi2 * 100
-            debug('raw score: {}'.format(score))
-            score = Score(score)
-            if pvalue_or_chi2 < 0.01: # outside 3 sigma
-                lvl = ERROR_LEVELS.ERROR
-            elif pvalue_or_chi2 < 0.05:
-                lvl = ERROR_LEVELS.WARNING
-            else:
-                lvl = ERROR_LEVELS.OK
+            debug('score: {}'.format(score))
         else:                   # chi2
             if options.find('chi2/ndf') < 0: # chi2
                 ndf = data_hist.GetNbinsX()
@@ -121,17 +107,7 @@ class Chi2Test(ComparisonFunction):
                 debug('ndf: {}'.format(ndf))
             # chi2/ndf = 2 --> Score(50),  0 --> Score(100)
             score = 100 - pvalue_or_chi2*25
-            debug('raw score: {}'.format(score))
-            if score > 0:
-                score = Score(score)
-            else:
-                score = Score(0)
-            if pvalue_or_chi2 > 3: # < Score(25)
-                lvl = ERROR_LEVELS.ERROR
-            elif pvalue_or_chi2 > 2: # < Score(50)
-                lvl = ERROR_LEVELS.WARNING
-            else:
-                lvl = ERROR_LEVELS.OK
-        debug('level: {}'.format(lvl))
+            score = max(Score.MIN, score)
+            debug('score: {}'.format(score))
 
-        return cls.create_final_dict(score, lvl)
+        return Score(score)

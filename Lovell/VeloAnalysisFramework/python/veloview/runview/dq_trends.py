@@ -7,6 +7,17 @@ import veloview.analysis
 from veloview.config import Config
 from veloview.core.io import DQDB
 
+def get_comment(runnr):
+    db = DQDB(Config().dq_db_file_path)
+    value = db.get_comment(runnr)
+    db.close()
+    return value
+
+def set_comment(runnr, comment):
+    db = DQDB(Config().dq_db_file_path)
+    db.set_comment(runnr, comment)
+    db.close()
+
 def get_trending_variables(expert = False):
     dqVarsParser = DqVarsParser(True, True, expert)
     return dqVarsParser.get_dq_variables()
@@ -42,7 +53,7 @@ class DqVarsParser(object):
                 result += self.__add_variables_leaf(('{}.{}'.format(base, child)) if base else child, config[1][child])
 
         if result and self.__includeVars:
-            result += [(key + '.' + var if key else var, branch['title']) for var in ['score']]
+            result += [(key + '.' + var if key else var, branch['title'] + ' DQ score') for var in ['score']]
 
         return result
 
@@ -50,19 +61,25 @@ class DqVarsParser(object):
         if self.__trendingOnly and not leaf.get('trending', False):
             return []
 
+        sensor_dep = leaf.get("sensor_dependent", False)
+
         result = []
-        if self.__expertMode and "tell1" in leaf.keys():
+        if self.__expertMode and sensor_dep:
             for tell1 in self.TELL1_NUMBERS_R + self.TELL1_NUMBERS_PHI:
                 if self.__includeVars:
-                    functionClass = getattr(veloview.analysis, leaf["function"])
+                    functionClass = getattr(veloview.analysis, leaf["comparison"])
                     vars = functionClass.vars()
                     result += [(key + '.' + key.split('.')[-1] + "_TELL1_{:0>3d}".format(tell1) + '.' + var, leaf['title'] + ' Tell1 {:0>3d}'.format(tell1)) for var in vars]
                 else:
                     result.append((key + '.' + key.split('.')[-1] + "_TELL1_{:0>3d}".format(tell1), leaf['title'] + ' Tell1 {:0>3d}'.format(tell1)))
 
-        if self.__includeVars:
-            functionClass = getattr(veloview.analysis, leaf["function"])
-            vars = functionClass.vars()
-            return result + [(key + '.' + var, leaf['title']) for var in vars]
-        return result + [(key, leaf['title'])]
+        if self.__includeVars and not sensor_dep:
+            vars = []
+            for trend in leaf.get("trending", []):
+                trendClassName = trend[0] if isinstance(trend, tuple) else trend
+                trendClass = getattr(veloview.analysis, trendClassName)
+                vars += trendClass.vars()
+            return result + [(key + '.' + var, leaf['title'] + ' ' + var) for var in vars]
+
+        return result + [(key, leaf['title'] + ' DQ score')]
 
