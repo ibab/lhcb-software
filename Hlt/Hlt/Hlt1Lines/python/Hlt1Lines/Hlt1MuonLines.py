@@ -113,14 +113,9 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
                                                   'CalibMuonAlignJpsi'    : ( 'Muon', 'DiMuon' ),
                                                   }
                  , 'Priorities'               : { 'SingleMuonHighPT' : 7,
-                                                  'SingleMuonNoIP'   : 6,
                                                   'DiMuonLowMass'    : 5,
                                                   'DiMuonHighMass'   : 4,
-                                                  'DiMuonNoIP'       : 10,
-                                                  'MultiMuonNoL0'    : 8,
-                                                  'DiMuonNoL0'       : 22,
-                                                  'MultiDiMuonNoIP'    : 23,
-                                                  'CalibMuonAlignJpsi'    : 9,
+                                                  'DiMuonNoL0'       : 22
                                                   }
                  }
 

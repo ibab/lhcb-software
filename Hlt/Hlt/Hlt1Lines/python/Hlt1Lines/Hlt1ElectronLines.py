@@ -47,11 +47,6 @@ class Hlt1ElectronLinesConf( HltLinesConfigurableUser ):
                                                      , 'ElectronTrack'        : ( 'Electron', ) 
                                                      , 'TrackElectron'           : ( 'Electron', ) 
                                                      }
-        ,'Priorities'                              : { 'SingleElectronNoIP'   : 1 
-                                                     , 'ElectronTrack'        : 2 
-                                                     , 'TrackElectron'           : 3  
-                                                     }
-
         }
     
     def localise_props( self, prefix ):

@@ -79,15 +79,7 @@ class Physics_pp_Draft2016( object ):
         from Hlt1Lines.Hlt1CalibRICHMirrorLines import Hlt1CalibRICHMirrorLinesConf
         from Hlt1Lines.Hlt1BottomoniumLines     import Hlt1BottomoniumLinesConf
 
-        thresholds = { Hlt1TrackLinesConf :   {  'AllL0_Velo_NHits'  : 9
-                                               , 'AllL0_Velo_Qcut'   : 3
-                                               , 'AllL0_TrNTHits'    : 16
-                                               , 'AllL0_PT'          : 1300.
-                                               , 'AllL0_P'           : 6000.
-                                               , 'AllL0_IPChi2'      : 13.
-                                               , 'AllL0_TrChi2'      : 3.
-                                               , 'AllL0_GEC'         : 'Loose'
-                                               , 'Muon_TrNTHits'     : 0 #OFF
+        thresholds = { Hlt1TrackLinesConf :   {  'Muon_TrNTHits'     : 0 #OFF
                                                , 'Muon_Velo_NHits'   : 0 #OFF
                                                , 'Muon_Velo_Qcut'    : 999 #OFF
                                                , 'Muon_PT'           : 910.
@@ -103,15 +95,10 @@ class Physics_pp_Draft2016( object ):
                                                , 'MuonNoSPD_IPChi2'       : 10.
                                                , 'MuonNoSPD_TrChi2'       : 3.
                                                , 'MuonNoSPD_GEC'          : 'Loose'
-                                               , 'Photon_PT'         : 1200.
-                                               , 'Photon_P'          : 6000.
-                                               , 'Photon_IPChi2'     : 13.
-                                               , 'Photon_TrChi2'     : 4.
-                                               , 'Photon_GEC'        : 'Loose'
-                                               , 'L0Channels'        : {'AllL0'  : 'L0_DECISION_PHYSICS',
-                                                                        'Muon'   : ('Muon', 'DiMuon'),
-                                                                        'MuonNoSPD'   : ['MuonNoSPD' ],
-                                                                        'Photon' : ("Photon", "Electron")}
+                                               , 'L0Channels'        : {'Muon'   : ('Muon', 'DiMuon'),
+                                                                        'MuonNoSPD'   : ['MuonNoSPD' ]
+                                                                        }
+                                               , 'Priorities'        : { 'Muon'   : 5 }
                                                }
                      , Hlt1MVALinesConf :     {'DoTiming'                     : False,
                                                'TrackMVA' :    {'TrChi2'      :     2.5,
@@ -121,6 +108,14 @@ class Physics_pp_Draft2016( object ):
                                                                 'Param1'      :     1.0,
                                                                 'Param2'      :     1.0,
                                                                 'Param3'      :     1.6,
+                                                                'GEC'         : 'Loose'},
+                                               'TrackMVALoose' :    {'TrChi2'      :     2.5,
+                                                                'MinPT'       :  1000.  * MeV,
+                                                                'MaxPT'       : 25000.  * MeV,
+                                                                'MinIPChi2'   :     7.4,
+                                                                'Param1'      :     1.0,
+                                                                'Param2'      :     1.0,
+                                                                'Param3'      :     1.1,
                                                                 'GEC'         : 'Loose'},
                                                'TwoTrackMVA' : {'P'           :  5000. * MeV,
                                                                 'PT'          :   500. * MeV,
@@ -141,10 +136,37 @@ class Physics_pp_Draft2016( object ):
                                                                 'Classifier'  : {'Type'   : 'MatrixNet',
                                                                                  'File'   : '$PARAMFILESROOT/data/Hlt1TwoTrackMVA.mx'},
                                                                 'GEC'         : 'Loose'},
-                                               'L0Channels'  : {'TrackMVA'    : 'L0_DECISION_PHYSICS',
-                                                                'TwoTrackMVA' : 'L0_DECISION_PHYSICS'},
-                                               'Priorities'  : {'TrackMVA'    : 1,
-                                                                'TwoTrackMVA' : 2}
+                                               'TwoTrackMVALoose' : {'P'           :  5000. * MeV,
+                                                                'PT'          :   500. * MeV,
+                                                                'TrChi2'      :     2.5,
+                                                                'IPChi2'      :     4.,
+                                                                'MinMCOR'     :  1000. * MeV,
+                                                                'MaxMCOR'     :   1e9  * MeV,
+                                                                'MinETA'      :     2.,
+                                                                'MaxETA'      :     5.,
+                                                                'MinDirA'     :     0.,
+                                                                'V0PT'        :  2000. * MeV,
+                                                                'VxChi2'      :    10.,
+                                                                'Threshold'   :     0.95,
+                                                                'MvaVars'     : {'chi2'   : 'VFASPF(VCHI2)',
+                                                                                 'fdchi2' : 'BPVVDCHI2',
+                                                                                 'sumpt'  : 'SUMTREE(PT, ISBASIC, 0.0)',
+                                                                                 'nlt16'  : 'NINTREE(ISBASIC & (BPVIPCHI2() < 16))'},
+                                                                'Classifier'  : {'Type'   : 'MatrixNet',
+                                                                                 'File'   : '$PARAMFILESROOT/data/Hlt1TwoTrackMVA.mx'},
+                                                                'GEC'         : 'Loose'},
+
+                                               'L0Channels'  : {'TrackMVA'         : 'L0_DECISION_PHYSICS',
+                                                                'TwoTrackMVA'      : 'L0_DECISION_PHYSICS',
+                                                                'TrackMVALoose'    : 'L0_DECISION_PHYSICS',
+                                                                'TwoTrackMVALoose' : 'L0_DECISION_PHYSICS' },
+                                               'Priorities'  : {'TrackMVA'         : 1,
+                                                                'TwoTrackMVA'      : 2,
+                                                                'TrackMVALoose'    : 3,
+                                                                'TwoTrackMVALoose' : 4},
+                                               'Prescale' : {   'Hlt1TrackMVALoose'    : 0.0,
+                                                                'Hlt1TwoTrackMVALoose' : 0.0
+                                                                }
                                                }
                      , Hlt1ElectronLinesConf : { 'SingleElectronNoIP_P'          : 20000
                                                , 'SingleElectronNoIP_PT'         : 10000
@@ -222,6 +244,11 @@ class Physics_pp_Draft2016( object ):
                                                                                 'Hlt1DiMuonNoL0'  :  1.0,
                                                                                 'Hlt1MultiMuonNoL0'  : 0.01
                                                                                 }
+                                               , 'Priorities'               : { 'SingleMuonHighPT' : 8,
+                                                                                'DiMuonLowMass'    : 7,
+                                                                                'DiMuonHighMass'   : 6,
+                                                                                'DiMuonNoL0'       : 9
+                                                  }
                                                }
                        , Hlt1L0LinesConf :     {  'Postscale' : { 'Hlt1L0AnyRateLimited'       : 'RATE(1)'
                                                                 , 'Hlt1L0AnyNoSPDRateLimited'  : 'RATE(1)'
@@ -415,6 +442,7 @@ class Physics_pp_Draft2016( object ):
                  , 'Hlt1B2PhiPhi_LTUNB'
                  , 'Hlt1SingleElectronNoIP'
                  , 'Hlt1TrackMVA', 'Hlt1TwoTrackMVA'
+                 , 'Hlt1TrackMVALoose', 'Hlt1TwoTrackMVALoose'
                  , 'Hlt1CalibTrackingKPi' , 'Hlt1CalibTrackingKK' , 'Hlt1CalibTrackingPiPi'
                  , 'Hlt1CalibHighPTLowMultTrks', 'Hlt1CalibTrackingKPiDetached'
                  , 'Hlt1CalibMuonAlignJpsi'
