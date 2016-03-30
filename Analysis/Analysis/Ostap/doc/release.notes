@@ -8,18 +8,17 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+!=========================== Ostap v1r15 2016-03-30 ===========================
+
 ! 2016-03-30 - Vanya Belyaev
  - allow x-dependent smearinng of histograms:
    h1 = ....
    h2 = h1.smear( 0.1 )               ## convolute with the gaussian with sigma=0.1
    h2 = h1.smear( lambda x : 0.1*x )  ## convolute with the gaussian with sigma(x)=0.1*x 
    
-
 ! 2016-03-30 - Vanya Belyaev
   - scripts/ostap
    fix very stupid bug :-(  
- 
-!=========================== Ostap v1r15 2016-03-29 ===========================
 
 ! 2016-03-28 - Vanya Belyaev
  - fix the usage of runpy.run_path 
