@@ -13,6 +13,10 @@ from Hlt2Lines.Utilities.Hlt2LinesConfigurableUser import Hlt2LinesConfigurableU
 class DiMuonLines(Hlt2LinesConfigurableUser) :
     __slots__ = {'_stages' : {},
                  'Prescale' : {},
+                 'PersistReco' : {'JPsiTurbo'                          : True,
+                                  'Psi2SLowPTTurbo'                    : True,
+                                  'Psi2STurbo'                         : True,
+                                  'BTurbo'                             : True},
 
                  'Common' :        {'TrChi2'     :   10,
                                     'TrChi2Tight':    5},
@@ -147,7 +151,7 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
             linename = 'DiMuon' + nickname if nickname != 'DiMuon' else nickname
             if "Turbo" in nickname : 
                 Hlt2Line(linename, prescale = self.prescale,
-                         algos = algos, postscale = self.postscale, Turbo = True)
+                         algos = algos, postscale = self.postscale, Turbo = True,PersistReco=True)
             else:
                 Hlt2Line(linename, prescale = self.prescale,
                          algos = algos, postscale = self.postscale)
