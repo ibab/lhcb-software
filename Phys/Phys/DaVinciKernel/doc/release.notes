@@ -4,6 +4,10 @@
 ! Responsible : DV Maintainer
 !============================================================================
 
+! 2016-03-30 - Vanya Belyaev
+ - Kernel/GetTESLocations.h
+   tiny fix (missing &)
+
 !===================== DaVinciKernel v12r4 2016-03-04 =======================
 
 ! 2016-02-18 - Vanya Belyaev

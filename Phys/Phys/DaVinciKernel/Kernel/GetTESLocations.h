@@ -63,7 +63,7 @@ namespace DaVinci
       // ======================================================================
     public:  // get the collected locations 
       // ======================================================================
-      const std::vector<std::string> locations() const
+      const std::vector<std::string>& locations() const
       { return m_locations ; }
       // ======================================================================
     protected:
