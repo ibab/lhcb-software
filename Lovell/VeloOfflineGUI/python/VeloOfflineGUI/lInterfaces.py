@@ -50,6 +50,12 @@ def runview_plot(run, name, sensor, run_data_dir, refRun = 'Auto',
 def veloview_plot(name, runRange, run_data_dir):
     Config().run_data_dir = run_data_dir
     return plots.get_trending_plot(name, runRange) 
+
+    
+def veloview_plot2d(nameX, nameY, runRange, run_data_dir):
+    Config().run_data_dir = run_data_dir
+    return plots.get_2d_trending_plot(nameX, nameY, runRange) 
+
     
 def IV_plot(name, moduleID, dataDate, IV_directory, sensor_mapping, refDate = None, 
             getRef = False, notifyBox = None):

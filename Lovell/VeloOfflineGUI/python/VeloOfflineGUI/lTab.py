@@ -56,6 +56,17 @@ class lTab(QWidget):
         return variableListSorted[index][0]
 
 
+    def trendVariable2d(self):
+        index = self.variableBox2d.currentIndex()
+        variableList = lInterfaces.trending_variables()
+        variableListSorted = sorted(variableList, reverse=True)
+        return variableListSorted[index][0]
+
+    
+    def is2d(self):
+        return self.two_dimension
+
+
     def trendStartNum(self):
         return self.runNumStartBox.currentText()
 
@@ -109,11 +120,17 @@ class lTab(QWidget):
         self.sensor_mapping = pickle.load(open(fn, "rb" ))
     
 
-    def modifyPageForTrending(self, run_data_dir):
+    def modifyPageForTrending(self, run_data_dir, two_dimension):
         # Used to add options bar for trending plots
         self.run_data_dir = run_data_dir 
+        self.two_dimension = two_dimension
         self.variableBox = QComboBox(self)
         self.variableBox.currentIndexChanged.connect(self.parent().tab_options.state_changed)
+        self.variableBox2d = QComboBox(self)
+        self.variableBox2d.currentIndexChanged.connect(self.parent().tab_options.state_changed)
+        # If two dimensional options not set, hide second variable box
+        if two_dimension == False:
+            self.variableBox2d.setVisible(False)
         self.runNumStartBox = QComboBox(self)
         self.runNumStartBox.currentIndexChanged.connect(self.parent().tab_options.state_changed)
         self.runNumEndBox = QComboBox(self)
@@ -121,17 +138,27 @@ class lTab(QWidget):
 
         widg = QGroupBox('Trending options', self)
         widgLayout = QGridLayout(widg)
-        lab1 = QLabel("Trend variable:")
+        if two_dimension == True:
+            lab1 = QLabel("X trend variable:")
+        else:
+            lab1 = QLabel("Trend variable:")
         lab1.setAlignment(Qt.AlignRight)
-        lab2 = QLabel("Initial run:")
+        lab2 = QLabel("Y trend variable:")
         lab2.setAlignment(Qt.AlignRight)
-        lab3 = QLabel("Final run:")
+        # If two dimensional options not set, hide second variable label
+        if two_dimension == False:
+            lab2 = QLabel("")
+        lab3 = QLabel("Initial run:")
         lab3.setAlignment(Qt.AlignRight)
+        lab4 = QLabel("Final run:")
+        lab4.setAlignment(Qt.AlignRight)
         widgLayout.addWidget(lab1, 0, widgLayout.columnCount(), 1, 1)
         widgLayout.addWidget(self.variableBox, 0, widgLayout.columnCount(), 1, 1)
         widgLayout.addWidget(lab2, 0, widgLayout.columnCount(), 1, 1)
-        widgLayout.addWidget(self.runNumStartBox, 0, widgLayout.columnCount(), 1, 1)
+        widgLayout.addWidget(self.variableBox2d, 0, widgLayout.columnCount(), 1, 1)
         widgLayout.addWidget(lab3, 0, widgLayout.columnCount(), 1, 1)
+        widgLayout.addWidget(self.runNumStartBox, 0, widgLayout.columnCount(), 1, 1)
+        widgLayout.addWidget(lab4, 0, widgLayout.columnCount(), 1, 1)
         widgLayout.addWidget(self.runNumEndBox, 0, widgLayout.columnCount(), 1, 1)
         self.grid_layout.addWidget(widg, self.grid_layout.rowCount(), 0, 1, self.grid_layout.columnCount())
 
@@ -141,6 +168,7 @@ class lTab(QWidget):
         
         for i in xrange(len(variableList)):
                 self.variableBox.addItem(variableListSorted[i][1])
+                self.variableBox2d.addItem(variableListSorted[i][1])
         
         runList = lInterfaces.run_list(self.run_data_dir)
         runListSorted = sorted(runList)

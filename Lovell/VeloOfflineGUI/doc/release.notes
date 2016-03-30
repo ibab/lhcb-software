@@ -4,6 +4,9 @@
 ! Purpose     : Offline GUI for analysis of VELO data
 !----------------------------------------------------------------------------
 
+! 2016-03-30 - Andrew Crocombe
+ - Add two dimensional trending plots 
+
 ! 2016-02-23 - Andrew Crocombe
  - Add one dimensional trending plots
 

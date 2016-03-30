@@ -49,7 +49,8 @@ class velo_view(QWidget):
             msg = 'Preparing tab (' + str(i) + '/' + str(nTabs) + '): ' + val['title']
             print msg
             page = lTab.lTab(val, self)
-            if val['title'] == 'Trends': page.modifyPageForTrending(self.run_data_dir) 
+            if val['title'] == 'Trends': page.modifyPageForTrending(self.run_data_dir,False) 
+            if val['title'] == 'Detailed trends': page.modifyPageForTrending(self.run_data_dir,True) 
             self.top_tab.addTab(page, val['title'])
             self.pages.append(page)
             i+=1

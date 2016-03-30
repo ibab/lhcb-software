@@ -51,16 +51,26 @@ class lPlottable():
         initial_run = int(self.tab().trendStartNum())
         final_run = int(self.tab().trendEndNum())
         trend_variable = str(self.tab().trendVariable())
+        trend_variable2d = str(self.tab().trendVariable2d())
+        two_dimension = bool(self.tab().is2d())
         # Make sure a valid range is plotted
         if initial_run < final_run:
-            nominal = lInterfaces.veloview_plot(trend_variable,
-                                                (initial_run, final_run),
-                                                tabOpsState.run_data_dir) 
-            self.runview_trendingReturn(nominal)
+            # Set whether 1d or 2d plot is returned
+            if two_dimension == False:
+                nominal = lInterfaces.veloview_plot(trend_variable,
+                                                    (initial_run, final_run),
+                                                    tabOpsState.run_data_dir) 
+                self.runview_1d_trendingReturn(nominal)
+            elif two_dimension == True:
+                nominal = lInterfaces.veloview_plot2d(trend_variable,
+                                                      trend_variable2d,
+                                                      (initial_run, final_run),
+                                                      tabOpsState.run_data_dir)
+                self.runview_2d_trendingReturn(nominal) 
         else:
             msg = 'Please choose valid range - final run greater then initial run'
             print msg
-            
+    
         # Titles.
         xlabel = 'Default x label'
         ylabel = 'Default y label'
@@ -254,7 +264,7 @@ class lPlottable():
         elif maxY > self.plot.yLims[1]: self.plot.yLims[1] = maxY
    
  
-    def runview_trendingReturn(self, nominal, isRef = False):
+    def runview_1d_trendingReturn(self, nominal, isRef = False):
         #Specific method to return trending plot
         xs = map(lambda x: x[0], nominal['data']['data']['values'])
         style = self.options['style']
@@ -275,7 +285,7 @@ class lPlottable():
                     self.tab().notify(msg)
                 else: col = self.options['color']
         
-        style = 5
+        style = 2
         
         ys = map(lambda x: x[1], nominal['data']['data']['values'])
         self.add_1d_plot(xs, ys, style, col)
@@ -392,7 +402,50 @@ class lPlottable():
         elif minY < self.plot.yLims[0]: self.plot.yLims[0] = minY
         elif maxY > self.plot.yLims[1]: self.plot.yLims[1] = maxY
 
+    
+    def runview_2d_trendingReturn(self, nominal, isRef = False):
+        #Specific method to return trending plot
+        xs = map(lambda x: x[0], nominal['data']['data']['values'])
+        style = self.options['style']
 
+        col = 'b'
+        if isRef: 
+            style = 3
+            col = 'r'
+        else: 
+            if self.options['color'] is not None: 
+                if self.options['color'] == 'r' and style == 0:
+                    msg = 'Red bars are reserved for references - defaulting to blue'
+                    print msg
+                    self.tab().notify(msg)
+                elif self.options['color'] == 'g' and style == 0:
+                    msg = 'Green bars are reserved for references - defaulting to blue'
+                    print msg
+                    self.tab().notify(msg)
+                else: col = self.options['color']
+        
+        style = 3
+        
+        ys = map(lambda x: x[1], nominal['data']['data']['values'])
+        self.add_1d_plot(xs, ys, style, col)
+        minX = min(xs)
+        maxX = max(xs)
+        minY = min(ys)
+        maxY = max(ys)
+        
+        if len(self.plot.xLims) == 0: 
+            self.plot.xLims.append(minX)
+            self.plot.xLims.append(maxX)
+        elif minX < self.plot.xLims[0]: self.plot.xLims[0] = minX
+        elif maxX > self.plot.xLims[1]: self.plot.xLims[1] = maxX
+             
+        if len(self.plot.yLims) == 0: 
+            self.plot.yLims.append(minY)
+            self.plot.yLims.append(maxY)
+        elif minY < self.plot.yLims[0]: self.plot.yLims[0] = minY
+        elif maxY > self.plot.yLims[1]: self.plot.yLims[1] = maxY
+    
+    
     def plotTH1(self, g):
         xs = []
         ys = []
@@ -443,12 +496,6 @@ class lPlottable():
         elif style == 4:
             # Solid line.
             self.axes.plot(xs, ys, '-', color = col, linewidth = 2.5, label = lab)
-
-        elif style == 5:
-            # Solid line with markers
-            m = self.options['marker']
-            self.axes.plot(xs, ys, '-', marker = m, markerfacecolor = col, color = col, linewidth = 2.5, label = lab)
-            
 
 
     def plotTH2(self, g):

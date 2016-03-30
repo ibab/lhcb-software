@@ -161,6 +161,13 @@ TRENDS = (
 DETAILEDTRENDS = (
     'detailedtrends', {
         'title': 'Detailed trends',
+        'plots': [
+            {
+                'title': '2d trend view',
+                'name': '2d trends',
+                'trending': True
+            }
+        ]
     }
 )
 
