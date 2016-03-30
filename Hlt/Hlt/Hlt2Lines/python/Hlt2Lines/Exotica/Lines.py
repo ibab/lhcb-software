@@ -93,6 +93,7 @@ class ExoticaLines(Hlt2LinesConfigurableUser):
         for (nickname, algos) in self.algorithms(stages):
             linename = nickname
             turbo = True if (nickname.find('Turbo') > -1) else False
-            Hlt2Line(linename, prescale = self.prescale, algos = algos, Turbo = turbo, postscale = self.postscale)
+            persist_reco = True if (nickname.find('Turbo') > -1) else False
+            Hlt2Line(linename, prescale = self.prescale, algos = algos, Turbo = turbo, PersistReco = persist_reco, postscale = self.postscale)
 
 

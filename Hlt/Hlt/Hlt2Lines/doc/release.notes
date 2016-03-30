@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-03-30 - Karlis Dreimanis
+ - Added PersistReco flag to 2 Exotica prompt di-muon lines
+
 ! 2016-03-30 - Mark Williams
  - Added PersistReco flag for relevant CharmHad lines (30)
 
