@@ -760,6 +760,17 @@ Gaudi::Math::Kinematics::transverseKineticEnergy
     Gaudi::Math::ValueWithError ( etk , s2etk ) ;
 }
 
+// ============================================================================
+Gaudi::Math::LorentzVectorWithError 
+Gaudi::Math::LorentzVectorWithError::mean 
+( const Gaudi::Math::LorentzVectorWithError&          right ) const 
+{ return asVector ().mean ( right.asVector() ) ; }
+// ============================================================================
+Gaudi::Math::LorentzVectorWithError 
+Gaudi::Math::LorentzVectorWithError::mean 
+( const Gaudi::Math::LorentzVectorWithError::VectorE& right ) const 
+{ return asVector ().mean ( right            ) ; }
+// ============================================================================
 
 // ============================================================================
 // The END 

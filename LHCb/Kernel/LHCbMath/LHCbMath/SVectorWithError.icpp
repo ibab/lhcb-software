@@ -185,6 +185,30 @@ inline bool Gaudi::Math::SVectorWithError<N,SCALAR>::corr
   return OK ;
 }
 // ============================================================================
+// calculate the weighted average for two vectors 
+// ============================================================================
+template <unsigned int N, class SCALAR>
+inline 
+Gaudi::Math::SVectorWithError<N,SCALAR>
+Gaudi::Math::SVectorWithError<N,SCALAR>::mean
+( const Gaudi::Math::SVectorWithError<N,SCALAR>& right ) const
+{
+  int ifail1 = 0 ;  
+  int ifail2 = 0 ;  
+  const Covariance ic1 (       cov2().InverseChol ( ifail1 ) ) ;
+  const Covariance ic2 ( right.cov2().InverseChol ( ifail2 ) );
+  // calculate the covariance matrix 
+  Covariance        c  ( ic1 + ic2 ) ;
+  if ( 0 != ifail1 || 0 != ifail2 || !c.InvertChol() ) 
+  {
+    std::fill   ( c.begin() , c.end  () , -1.0 ) ;
+    return Self ( c ) ;
+  }
+  //
+  // calculate the weighted average
+  return Self ( c * ( ic1 * value() + ic2 * right.value() ) , c ) ;
+}
+// ============================================================================
 // The END 
 // ============================================================================
 #endif // LHCBMATH_SVECTORWITHERROR_ICPP 

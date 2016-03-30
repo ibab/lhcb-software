@@ -144,6 +144,11 @@ namespace Gaudi
       /// evaluate chi2 distance 
       double chi2 ( const Vector&                 right )  const ;      
       // ======================================================================
+    public: // more functions 
+      // ======================================================================
+      LorentzVectorWithError  mean ( const LorentzVectorWithError& right ) const ;
+      LorentzVectorWithError  mean ( const VectorE&                right ) const ;
+      // ======================================================================
     public: // useful accessors
       // ======================================================================
       /// get the mass with error 
@@ -538,6 +543,10 @@ namespace Gaudi
     inline Gaudi::Math::ValueWithError 
     Gaudi::Math::LorentzVectorWithError::theta              () const 
     { return Gaudi::Math::Kinematics::theta            ( *this , cov2() ) ; }
+    // ========================================================================
+    inline  Gaudi::Math::LorentzVectorWithError mean 
+    ( const Gaudi::Math::LorentzVectorWithError& v1 , 
+      const Gaudi::Math::LorentzVectorWithError& v2 ) { return v1.mean ( v2 ) ; }
     // ========================================================================
   } //                                             end of namespace Gaudi::Math 
   // ==========================================================================

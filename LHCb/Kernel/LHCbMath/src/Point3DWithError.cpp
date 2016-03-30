@@ -369,8 +369,16 @@ Gaudi::Math::Point3DWithError::__div__ ( const double v ) const
   return ( tmp /= v ) ;
 }
 // ============================================================================
-
-
+Gaudi::Math::Point3DWithError 
+Gaudi::Math::Point3DWithError::mean 
+( const Gaudi::Math::Point3DWithError&          right ) const 
+{ return asVector ().mean ( right.asVector() ) ; }
+// ============================================================================
+Gaudi::Math::Point3DWithError 
+Gaudi::Math::Point3DWithError::mean 
+( const Gaudi::Math::Point3DWithError::VectorE& right ) const 
+{ return asVector ().mean ( right            ) ; }
+// ============================================================================
 
 
 // ============================================================================

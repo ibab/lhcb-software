@@ -391,6 +391,17 @@ Gaudi::Math::Vector3DWithError::__div__ ( const double v ) const
   return ( tmp /= v ) ;
 }
 // ============================================================================
+Gaudi::Math::Vector3DWithError 
+Gaudi::Math::Vector3DWithError::mean 
+( const Gaudi::Math::Vector3DWithError&          right ) const 
+{ return asVector ().mean ( right.asVector() ) ; }
+// ============================================================================
+Gaudi::Math::Vector3DWithError 
+Gaudi::Math::Vector3DWithError::mean 
+( const Gaudi::Math::Vector3DWithError::VectorE& right ) const 
+{ return asVector ().mean ( right            ) ; }
+// ============================================================================
+
 
 // ============================================================================
 // The END 

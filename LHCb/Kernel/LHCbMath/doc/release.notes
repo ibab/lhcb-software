@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2016-03-30 - Vanya Belyaev
+ - add mean functions for *WithErrors obejcts 
+
 ! 2016-03-29 - Vanya Belyaev
  1. python/LHCbMath/deriv.py
    - improve a little bit current calculations (moderate gain)

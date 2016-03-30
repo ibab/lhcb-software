@@ -189,20 +189,27 @@ namespace Gaudi
       template <class B>
       double chi2 ( const ROOT::Math::VecExpr<B,SCALAR,N>&  right ) const ;
       // ======================================================================
+    public:  // more functions 
+      // ======================================================================
+      /// calculate the weighted average for two vectors 
+      inline Self mean    ( const Self& right ) const ;
+      /// calculate the weighted average for two vectors 
+      inline Self average ( const Self& right ) const { return mean ( right ) ; }
+      // ======================================================================
     public: //  helper functions for pythonizations
       // ======================================================================
-      Self __add__  ( const Self&  right ) const ;
-      Self __sub__  ( const Self&  right ) const ;      
-      Self __add__  ( const Value& right ) const ;
-      Self __sub__  ( const Value& right ) const ;      
-      Self __radd__ ( const Value& right ) const ;
-      Self __rsub__ ( const Value& right ) const ;
+      Self  __add__  ( const Self&  right ) const ;
+      Self  __sub__  ( const Self&  right ) const ;      
+      Self  __add__  ( const Value& right ) const ;
+      Self  __sub__  ( const Value& right ) const ;      
+      Self  __radd__ ( const Value& right ) const ;
+      Self  __rsub__ ( const Value& right ) const ;
       // ======================================================================      
-      Self& __imul__  ( const double v )       { return (*this) *= v ; }
-      Self& __idiv__  ( const double v )       { return (*this) *= v ; }
-      Self  __mul__   ( const double v ) const { return (*this) *  v ; }
-      Self  __div__   ( const double v ) const { return (*this) /  v ; }
-      Self  __rmul__  ( const double v ) const { return __mul__ ( v ) ; }
+      Self& __imul__ ( const double v     )       { return (*this) *= v ; }
+      Self& __idiv__ ( const double v     )       { return (*this) *= v ; }
+      Self  __mul__  ( const double v     ) const { return (*this) *  v ; }
+      Self  __div__  ( const double v     ) const { return (*this) /  v ; }
+      Self  __rmul__ ( const double v     ) const { return __mul__ ( v ) ; }
       // ======================================================================
     public: //  printout 
       // ======================================================================
@@ -387,6 +394,19 @@ namespace Gaudi
       SVectorWithError<N,SCALAR> tmp ( v1 ) ;
       return tmp *= v2 ;
     }
+    // ========================================================================
+    /// evaluate the mean of a and b 
+    template <unsigned int N, class SCALAR>
+    inline 
+    SVectorWithError<N,SCALAR> mean 
+    ( const SVectorWithError<N,SCALAR>& v1 , 
+      const SVectorWithError<N,SCALAR>& v2 ) { return v1.mean ( v2 ) ; }
+    /// evaluate the mean of a and b 
+    template <unsigned int N, class SCALAR>
+    inline 
+    SVectorWithError<N,SCALAR> average 
+    ( const SVectorWithError<N,SCALAR>& v1 , 
+      const SVectorWithError<N,SCALAR>& v2 ) { return v1.mean ( v2 ) ; }
     // ========================================================================
   } //                                             end of namespace Gaudi::Math
   // ==========================================================================

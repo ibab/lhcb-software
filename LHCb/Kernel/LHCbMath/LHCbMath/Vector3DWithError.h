@@ -152,6 +152,11 @@ namespace Gaudi
       /// evaluate chi2 distance 
       double chi2 ( const Vector&            right )  const ;      
       // ======================================================================
+   public: // more functions 
+      // ======================================================================
+      Vector3DWithError  mean ( const Vector3DWithError& right ) const ;
+      Vector3DWithError  mean ( const VectorE&           right ) const ;
+      // ======================================================================
     public: // helper operators for Python
       // ======================================================================
       Vector3DWithError __add__  ( const Vector3DWithError& right ) const ;
@@ -247,6 +252,10 @@ namespace Gaudi
     inline double chi2 
     ( const Vector3DWithError::Vector&   b ,
       const Vector3DWithError&           a ) { return a.chi2 ( b ) ; }  
+    // ========================================================================
+    inline Vector3DWithError mean 
+    ( const Vector3DWithError& v1 , 
+      const Vector3DWithError& v2 ) { return v1.mean ( v2 ) ; }
     // ========================================================================
   } //                                             end of namespace Gaudi::Math 
   // ==========================================================================
