@@ -24,6 +24,9 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2016-03-30 - Vanya Belyaev
+ - fix stupid bug with usage of run_py 
+
 ! 2016-03-27 - Vanya Belyaev
  - import colorized_string 
 

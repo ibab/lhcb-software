@@ -350,11 +350,12 @@ for _f in pyfiles :
         
         import runpy
         if arguments.WithContext :
-            globs = runpy.run_path ( _ff , globals() ) ## with context
-            globals().update( globs )
-            del globs 
-        else                     :
-            runpy.run_path         ( _ff )             ## with context
+        globs = runpy.run_path (
+            _ff , globals() if  arguments.WithContext else {} ,
+            run_name = '__main__'
+            )
+        globals().update( globs )
+        del globs 
         
     except :
         #
