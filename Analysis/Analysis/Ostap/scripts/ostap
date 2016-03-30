@@ -379,13 +379,12 @@ def treat_file ( f ) :
         try :
 
             import runpy 
-            if arguments.WithContext :
-                globs = runpy.run_path ( f , globals() , run_name = '__main__') ## with context
-                globals().update ( globs )
-                del globs 
-            else                     :
-                runpy.run_path ( f , run_name = '__main__')          ## plain
-
+            globs = runpy.run_path (
+                f , globals() if arguments.WithContext else {}  ,
+                run_name = '__main__' )
+            globals().update ( globs )
+            del globs 
+                
             logger.info  ("Executed       '%s'" % f )
             python_scripts.append ( f )
             
