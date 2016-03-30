@@ -151,7 +151,8 @@ class DiMuonLines(Hlt2LinesConfigurableUser) :
             linename = 'DiMuon' + nickname if nickname != 'DiMuon' else nickname
             if "Turbo" in nickname : 
                 Hlt2Line(linename, prescale = self.prescale,
-                         algos = algos, postscale = self.postscale, Turbo = True,PersistReco=True)
+                         algos = algos, postscale = self.postscale, Turbo = True,
+                         PersistReco=self.getProps()['PersistReco'].get(nickname, False))
             else:
                 Hlt2Line(linename, prescale = self.prescale,
                          algos = algos, postscale = self.postscale)
