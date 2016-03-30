@@ -4,6 +4,9 @@ Package Coordinator : Sean Benson
 Purpose             : Turbo Stream Analysis
 !-----------------------------------------------------------------------------
 
+! 2015-03-30 - Sean Benson
+ - Add more qmtests.
+
 ! 2015-03-11 - Sean Benson
  - Major change: Adapt to a single TeslaReportAlgo instance for complete sharing.
 
