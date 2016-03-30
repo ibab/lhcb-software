@@ -178,10 +178,10 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             lines = self._persistRecoLines()
             code = self._persistRecoFilterCode(lines)
             # Activate Downstream RICH for all PersistReco lines
-            hlt2DownstreamFilter = HDRFilter('DownstreamHlt2Filter', Code =  code +" | "+self.getProp("Hlt2DownstreamFilter") if len(lines)>0 else self.getProp("Hlt2DownstreamFilter"),
-                                   Location = decoder.listOutputs()[0])
             from DAQSys.Decoders import DecoderDB
             decoder = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
+            hlt2DownstreamFilter = HDRFilter('DownstreamHlt2Filter', Code =  code +" | "+self.getProp("Hlt2DownstreamFilter") if len(lines)>0 else self.getProp("Hlt2DownstreamFilter"),
+                                   Location = decoder.listOutputs()[0])
             downstreamPIDSequence = Sequence( "Hlt2AfterburnerDownstreamPIDSeq")
             downstreamPIDSequence.Members += [ hlt2DownstreamFilter ]
             downstreamTracking = Hlt2BiKalmanFittedDownstreamTracking()
