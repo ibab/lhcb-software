@@ -2,7 +2,7 @@
 ##                          S T R I P P I N G  2 6                            ##
 ##                                                                            ##
 ##  Configuration for B&Q WG                                                  ##
-##  Contact person: Roberta.Cardinale@cern.ch                                 ##
+##  Contact person: Roberta.Cardinale@cern.ch; liupan.an@cern.ch              ##
 ################################################################################
 
 from GaudiKernel.SystemOfUnits import *
@@ -572,106 +572,92 @@ XicHHH = {
     
 
 
-#########################################################
-### StrippingCC2DD
-### -----------------------------------------------------
-### Defined in:                 StrippingCC2DD.py
-### Proponent:                  Andrea.Bizzeti@fi.infn.it
-### Motivation:                 Low PT 2x charm, psi(3770)
-### Documentation:              https://indico.cern.ch/conferenceDisplay.py?confId=269979
-#########################################################
+##########################################################
+##                                                      ##
+##            StrippingCC2DD.py                         ##
+##         Lucio Anderlini and Andrea Bizzetti          ##
+##                                                      ##
+##########################################################
 
-CC2DD = {
-    'WGs'  : ['BandQ'],
-    'BUILDERTYPE'       : 'CC2DDConf',
-    'CONFIG'   :  {
-    ######## D0 / D~0 -> K pi cuts
-    'D0MassWin'     : "60*MeV",
-    'D0PT'          : "0*MeV",    ### no cut
-    'D0VtxChi2Ndof' : 10,
-    'D0Bpvdira'     : -10.,
-    'D0Bpvdls'      : 4.,
-    'D0daughterBpvIpChi2'    : 7.,
-    'D0daughterPT'           : "600*MeV",
-    'D0daughterP'            : "5*GeV",
-    'D0daughterTrkChi2'      : 100000, #disabled
-    'D0daughterTrkGhostProb' : 0.4,
-    ### ProbNN conditions
-    'D0daughterKaonProbNNk'  : 0.1,
-    'D0daughterPionProbNNpi' : 0.1,
-    ######## Dplus/Dminus -> Kpipi cuts, used also for D_s+/D_s- ->KKpi
-    'DpmMassWin'     : "60*MeV",
-    'DpmPT'          : "0*MeV",    ### no cut
-    'DpmVtxChi2Ndof' : 10,
-    'DpmBpvdira'     : -10.,
-    'DpmBpvdls'      : 4.,
-    'DpmdaughterBpvIpChi2'    : 7.,
-    'DpmdaughterPT'           : "500*MeV",
-                   'DpmdaughterP'            : "5*GeV",
-    'DpmdaughterTrkChi2'      : 100000, #disabled
-    'DpmdaughterTrkGhostProb' : 0.4,
-    ### ProbNN conditions
-    'DpmdaughterKaonProbNNk'  : 0.1,
-    'DpmdaughterPionProbNNpi' : 0.1,
-    ######## psi(3779) -> D D  cuts
-    #                   'CCMassCut'     : "(AM<5000*MeV)",
-    # no mass constraint
-    'CCMassCut'      : "(AM>0)",
-    'CCVtxChi2Ndof'  : 10,
-    'CCMaxD0ChildPT' : "0*MeV",    ### no cut
-    'CCMaxD0TreePT'  : "0*MeV",    ### no cut
-    'CCMaxD0MinTreeIpChi2'   : "0.",    ## unused for the moment
-    },
-    'STREAMS' : [
-    'CharmCompleteEvent' 
-    ],
-    }
-
-CC2DDcontrol = {
+CC2DD =  {
     'WGs'  : ['BandQ'],
     'BUILDERTYPE'       : 'CC2DDConf',
     'CONFIG'   :  {
 ######## D0 / D~0 -> K pi cuts
-    'D0MassWin'     : "60*MeV",
-    'D0PT'          : "0*MeV",    ### no cut
-    'D0VtxChi2Ndof' : 10,
+                   'D0MassWin'     : "60*MeV",
+                   'D0PT'          : "1000*MeV",
+                   'D0VtxChi2Ndof' : 8,
                    'D0Bpvdira'     : -10.,
-    'D0Bpvdls'      : 3.,
-    'D0daughterBpvIpChi2'    : 3.,
-    'D0daughterPT'           : "600*MeV",
+                   'D0Bpvdls'      : 4.,
+                   'D0daughterBpvIpChi2'    : 4.,
+                   'D0daughterPT'           : "600*MeV",
                    'D0daughterP'            : "5*GeV",
-    'D0daughterTrkChi2'      : 100000, #disabled
-    'D0daughterTrkGhostProb' : 0.4,
-    ### ProbNN conditions
-    'D0daughterKaonProbNNk'  : 0.0,
-    'D0daughterPionProbNNpi' : 0.0,
-    ######## Dplus/Dminus -> Kpipi cuts, used also for D_s+/D_s- ->KKpi
-    'DpmMassWin'     : "60*MeV",
-                   'DpmPT'          : "0*MeV",    ### no cut
-                   'DpmVtxChi2Ndof' : 10,
+                   'D0daughterTrkChi2'      : 3,
+                   'D0daughterTrkGhostProb' : 0.3,
+### ProbNN conditions
+                   'D0daughterKaonProbNNk'  : 0.1,
+                   'D0daughterPionProbNNpi' : 0.1,
+
+######## Dplus/Dminus -> Kpipi cuts, used also for D_s+/D_s- ->KKpi
+                   'DpmMassWin'     : "60*MeV",
+                   'DpmPT'          : "1000*MeV",
+                   'DpmVtxChi2Ndof' : 8,
                    'DpmBpvdira'     : -10.,
-                   'DpmBpvdls'      : 3.,
-                   'DpmdaughterBpvIpChi2'    : 3.,
+                   'DpmBpvdls'      : 4.,
+                   'DpmdaughterBpvIpChi2'    : 4.,
                    'DpmdaughterPT'           : "500*MeV",
                    'DpmdaughterP'            : "5*GeV",
-                   'DpmdaughterTrkChi2'      : 100000, #disabled
-                   'DpmdaughterTrkGhostProb' : 0.4,
+                   'DpmdaughterTrkChi2'      : 3,
+                   'DpmdaughterTrkGhostProb' : 0.3,
 ### ProbNN conditions
-                   'DpmdaughterKaonProbNNk'  : 0.0,
-                   'DpmdaughterPionProbNNpi' : 0.0,
+                   'DpmdaughterKaonProbNNk'  : 0.1,
+                   'DpmdaughterPionProbNNpi' : 0.1,
+
+######## Lambda_c+, Xi_c+ -> p+ K- pi+ cuts
+                   'LcMassWin'     : "60*MeV",
+                   'LcPT'          : "1000*MeV",
+                   'LcVtxChi2Ndof' : 8,
+                   'LcBpvdira'     : -10.,
+                   'LcBpvdls'      : 4.,               # standard cut
+                   'LcdaughterBpvIpChi2'    : 4.,
+                   'LcdaughterPT'           : "500*MeV",
+                   'LcdaughterP'            : "5*GeV",
+                   'LcdaughterTrkChi2'      : 3,
+                   'LcdaughterTrkGhostProb' : 0.3,
+### ProbNN conditions
+                   'LcdaughterKaonProbNNk'  : 0.1,
+                   'LcdaughterPionProbNNpi' : 0.1,
+                   'LcdaughterProtonProbNNp': 0.15,
+
+######## Xi_c0, Omega_c0 -> p+ K- K- pi+ cuts
+                   'XcMassWin'     : "60*MeV",
+                   'XcPT'          : "1000*MeV",
+                   'XcVtxChi2Ndof' : 8,
+                   'XcBpvdira'     : -10.,
+                   'XcBpvdls'      : -10.,             # no cut
+                   'XcdaughterBpvIpChi2'    : 2.,      # loose cut
+                   'XcdaughterPT'           : "500*MeV",
+                   'XcdaughterP'            : "5*GeV",
+                   'XcdaughterTrkChi2'      : 3,
+                   'XcdaughterTrkGhostProb' : 0.3,
+### ProbNN conditions
+                   'XcdaughterKaonProbNNk'  : 0.1,
+                   'XcdaughterPionProbNNpi' : 0.1,
+                   'XcdaughterProtonProbNNp': 0.15,
+
 ######## psi(3779) -> D D  cuts
 #                   'CCMassCut'     : "(AM<5000*MeV)",
 # no mass constraint
                    'CCMassCut'      : "(AM>0)",
                    'CCVtxChi2Ndof'  : 10,
-                   'CCMaxD0ChildPT' : "0*MeV",    ### no cut
-                   'CCMaxD0TreePT'  : "0*MeV",    ### no cut
+                   'CCMaxD0ChildPT' : "1500*MeV",
+                   'CCMaxD0TreePT'  : "1200*MeV",
                    'CCMaxD0MinTreeIpChi2'   : "0.",    ## unused for the moment
                    },
     'STREAMS' : [
-    'Charm'
+    'CharmCompleteEvent' 
     ],
-    }   
+    }
 
 
 
@@ -1201,7 +1187,7 @@ DiMuonInherit={
 PromptCharm = {
     #
     
-    'WGs'         : [ 'BandQ' , 'Charm' ] ,
+    'WGs'         : [ 'BandQ' ] ,
     'CONFIG'      : {
     #
     # use for simulation:
@@ -1407,7 +1393,6 @@ PromptCharm = {
 #####################################################################
 
 Lb2EtacKp = {
-    'WGs'               : ['BandQ'],
     'BUILDERTYPE'       :  'Lb2EtacKpConf',
     'CONFIG'    : {
         'KaonCuts'      : "(PROBNNk > 0.1) & (PT > 300*MeV) & (TRGHOSTPROB<0.4)",
@@ -1444,9 +1429,32 @@ Lb2EtacKp = {
                           & (BPVVDRHO>0.1*mm) 
                           & (BPVVDZ>2.0*mm)
                           """,
-        'Prescale'      : 1.
+        'Prescale'      : 1.,
+        'RelatedInfoTools': [{
+                      'Type'              : 'RelInfoVertexIsolation',
+                      'Location'          : 'RelInfoVertexIsolation'
+                  }, {
+                      'Type'              : 'RelInfoVertexIsolationBDT',
+                      'Location'          : 'RelInfoVertexIsolationBDT'
+                  }, {
+                      'Type'              : 'RelInfoConeVariables',
+                      'ConeAngle'         : 1.0,
+                      "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                      'Location'          : 'RelInfoConeVariables_1.0'
+                  }, {
+                      'Type'              : 'RelInfoConeVariables',
+                      'ConeAngle'         : 1.5,
+                      "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                      'Location'          : 'RelInfoConeVariables_1.5'
+                  }, {
+                      'Type'              : 'RelInfoConeVariables',
+                      'ConeAngle'         : 2.0,
+                      "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                      'Location'          : 'RelInfoConeVariables_2.0'
+                  }]        
         },
-    'STREAMS'           : ['Bhadron' ]  
+    'STREAMS'           : ['Bhadron' ],
+    'WGs'               : ['BandQ'],
     }
 
 
@@ -1474,4 +1482,125 @@ Ccbar2PPPiPi= {
         },
     'STREAMS'           : ['Bhadron' ],
     'WGs'               : ['BandQ'],
+    }
+
+
+
+#############################################################################
+##                                                                         ##
+##                           XB2DPiP                                       ##
+##                                                                         ##
+##                        Liming Zhang                                     ##
+##                                                                         ##
+#############################################################################
+
+
+XB2DPiP = {
+    'WGs'               : ['BandQ'],
+    'BUILDERTYPE'       : 'XB2DPiPConf',
+    'STREAMS' : [ 'Bhadron' ],
+    'CONFIG'    : {
+                         'TRCHI2DOF'                 :       5
+                 ,       'TRGHOSTPROB'               :       0.5
+                 ,       'MIPCHI2'                   :       9
+                 ,       'ProtonPIDp'                      :       5
+                 ,       'ProtonPIDpK'                     :      -3
+                 ,        'MomCuts'     : """
+                          (VFASPF(VCHI2/VDOF) < 10.) 
+                          & (BPVDIRA> 0.9999) 
+                          & (BPVIPCHI2()<25) 
+                          & (BPVVDCHI2>250)
+                          & (BPVVDRHO>0.1*mm) 
+                          & (BPVVDZ>2.0*mm)
+                          & (MINTREE(((ABSID=='D+') | (ABSID=='D0') | (ABSID=='Lambda_c+')) , VFASPF(VZ))-VFASPF(VZ) > 0.0 *mm )
+                          """
+                  ,'RelatedInfoTools': [{
+                      'Type'              : 'RelInfoVertexIsolation',
+                      'Location'          : 'RelInfoVertexIsolation'
+                  }, {
+                      'Type'              : 'RelInfoVertexIsolationBDT',
+                      'Location'          : 'RelInfoVertexIsolationBDT'
+                  }, {
+                      'Type'              : 'RelInfoConeVariables',
+                      'ConeAngle'         : 1.0,
+                      "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                      'Location'          : 'RelInfoConeVariables_1.0'
+                  }, {
+                      'Type'              : 'RelInfoConeVariables',
+                      'ConeAngle'         : 1.5,
+                      "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                      'Location'          : 'RelInfoConeVariables_1.5'
+                  }, {
+                      'Type'              : 'RelInfoConeVariables',
+                      'ConeAngle'         : 2.0,
+                      "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                      'Location'          : 'RelInfoConeVariables_2.0'
+                  }]
+                  }    
+    }
+
+
+
+
+###############################################################################
+##                                                                           ##
+##                        Omegab2XixKpi                                      ##
+##                                                                           ##
+##                       Marco Pappagallo                                    ##
+##                                                                           ##
+###############################################################################
+
+Omegab2XicKpi= {
+    'BUILDERTYPE'       : 'Omegab2XicKpiConf',
+    'CONFIG'    : {
+                   # Omegab
+                    'MinOmegabMass'      : 5500.     # MeV
+                   ,'MaxOmegabMass'      : 6700.     # MeV
+                   ,'Omegab_PT'          : 3500.     # MeV 
+#                   (ASUM(SUMTREE(PT,(ISBASIC | (ID=='gamma')),0.0))>5000*MeV)
+                   ,'OmegabVertChi2DOF'  : 10        # Dimensionless 
+                   ,'OmegabLT'           : 0.2       # ps
+                   ,'OmegabIPCHI2'       : 25        # Dimensionless
+                   ,'OmegabDIRA'         : 0.999     # Dimensionless
+                   ,'KaonProbNN'          : 0.1       # Dimensionless
+                   ,'PionProbNN'          : 0.1       # Dimensionless
+                   ,'ProtProbNN'          : 0.1       # Dimensionless
+                   ,'XicPT'               : 1800      # MeV
+                   ,'XicBPVVDCHI2'        : 36
+                   ,'XicDIRA'             : 0.        # Dimensionless
+                   ,'XicDeltaMassWin'     : 100       # MeV
+                   ,'MaxXicVertChi2DOF'   : 10        # Dimensionless
+                   # Pre- and postscales
+                   ,'Omegab2XicKpiPreScale'               : 1.0
+                   ,'Omegab2XicKpiPostScale'              : 1.0
+                  },
+    'STREAMS' : [ 'Bhadron' ],
+    'WGs'    : [ 'BandQ' ]
+    }
+
+
+
+###############################################################################
+##                                                                           ##
+##                        Bbbar2PhiPhi                                       ##
+##                                                                           ##
+##                       Simone Stracka                                      ##
+##                                                                           ##
+###############################################################################
+Bbbar2PhiPhi = {
+    'BUILDERTYPE' : 'Bbbar2PhiPhiConf',
+    'CONFIG' : {
+        'TRCHI2DOF'        :     3.  ,
+        'KaonPIDK'         :     0.  ,
+        'KaonPT'           :   650.  , # MeV
+        'PhiVtxChi2'       :     9.  ,
+        'PhiMassW'         :    30.  , 
+        'CombMaxMass'      : 10700.  , # MeV, before Vtx fit
+        'CombMinMass'      :  8800.  , # MeV, before Vtx fit
+        'MaxMass'          : 10600.  , # MeV, after Vtx fit
+        'MinMass'          :  8900.  , # MeV, after Vtx fit
+        'Phi_TisTosSpecs'  : { "Hlt1Global%TIS" : 0 },
+        },
+    'STREAMS' : [ 'Charm' ] ,
+    'WGs'     : [ 'BandQ' ]
     }
