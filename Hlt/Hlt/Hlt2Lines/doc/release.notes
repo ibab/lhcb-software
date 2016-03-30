@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-03-30 - Mark Williams
+ - Added PersistReco flag for relevant CharmHad lines (30)
+
 ! 2016-03-28 - Mika Vesterinen
  - Move the TrackEff lines to Turbo+PersistReco
 
