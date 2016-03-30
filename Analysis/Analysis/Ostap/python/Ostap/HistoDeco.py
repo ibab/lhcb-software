@@ -2992,6 +2992,22 @@ def _smear_ ( h1 , sigma , addsigmas = 5 ) :
     >>> histo   = ...
     >>> smeared = h.smear ( sigma = 0.01 )
     """
+
+    if   isinstance ( sigma , (int,long,float) ) :
+        if 0 > sigma or iszero ( sigma ) : return h1.clone()  ## no need to smear 
+        sig    = sigma  
+        sigma  = lambda x : sig 
+    elif isinstance ( sigma , VE ) :
+        sigma  = float ( sigma )  
+        if 0 > sigma or iszero ( sigma ) : return h1.clone()  ## no need to smear 
+        sig    = sigma  
+        sigma  = lambda x : sig 
+    elif callable  ( sigma ) :
+        sigfun = sigma
+        sigma  = lambda x : max ( float ( sigfun ( float ( x ) ) ) , 0.0 ) 
+    else :
+        raise TypeError, "Can't deduce the resolution type %s/%s" %( sigma , type( sigma ) )
+    
     #
     ## clone the input histogram
     #
@@ -3010,9 +3026,13 @@ def _smear_ ( h1 , sigma , addsigmas = 5 ) :
     fb    = bins [  0 ]
     lb    = bins [ -1 ]
     xmin  = fb[1].value() - fb[1].error()
-    xmax  = lb[1].value() + lb[1].error()    
-    x_min = xmin - abs ( addsigmas * sigma ) 
-    x_max = xmax + abs ( addsigmas * sigma ) 
+    xmax  = lb[1].value() + lb[1].error()
+    
+    s_xmin = max ( sigma ( fb[1].value() ) , 2*fb[1].error() )  
+    s_xmax = max ( sigma ( lb[1].value() ) , 2*lb[1].error() )  
+    
+    x_min = xmin - abs ( addsigmas * s_xmin ) 
+    x_max = xmax + abs ( addsigmas * s_xmax ) 
 
     ## add few fictive bins 
     while  xmin > x_min :
@@ -3042,14 +3062,23 @@ def _smear_ ( h1 , sigma , addsigmas = 5 ) :
         
         xmax  = bin[0].value()+bin[0].error()
     
-
     for ibin1 in bins :
         
         x1c  =     ibin1 [0].value () 
         x1w  = 2 * ibin1 [0].error () 
         val1 =     ibin1 [1]
+
+        ## nothinng to smear 
+        if iszero ( val1.value() ) : continue
+
+        ## calculate the resolution  
+        sig  = abs  ( float ( sigma ( x1c ) ) )
         
-        if 0 == val1.value() and 0 == val1.cov2() : continue
+        ## if very narrow, skip it...
+        if sig < 0.02 * x1w  :
+            i2      = h2.findBin  ( x1c )
+            h2[i2] += val1 
+            continue 
         
         for ibin2 in h2.iteritems() :
 
@@ -3058,8 +3087,8 @@ def _smear_ ( h1 , sigma , addsigmas = 5 ) :
             x2w     = 2 * ibin2 [1].error () 
 
             val2    = VE ( val1 )
-            val2   *= x2w  
-            val2   *= _cnv_ ( x2c , x1c , x1w , sigma ) 
+            val2   *= x2w
+            val2   *= _cnv_ ( x2c , x1c , x1w , sig ) 
             
             h2[i2] += val2
 

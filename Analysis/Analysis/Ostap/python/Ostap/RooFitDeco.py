@@ -45,12 +45,9 @@ logger.debug( 'Some useful decorations for RooFit objects')
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
 def _ral_iter_ ( self ) :
-    """
-    Iterator for RooArgList:
-
+    """Iterator for RooArgList:
     >>> arg_list = ...
-    >>> for p in arg_list : print p
-    
+    >>> for p in arg_list : print p    
     """
     l = len ( self )
     for i in range ( 0 , l )  : yield self[i]
@@ -87,12 +84,9 @@ ROOT.RooArgList . __repr__      = lambda s : str ( _rs_list_ ( s ) )
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _ras_iter_ ( self ) :
-    """
-    Simple iterator for RootArgSet:
-
+    """Simple iterator for RootArgSet:
     >>> arg_set = ...
-    >>> for i in arg_set : print i
-    
+    >>> for i in arg_set : print i    
     """    
     it  = self.createIterator()
     val = it.Next()
@@ -105,12 +99,9 @@ def _ras_iter_ ( self ) :
 # =============================================================================
 ## get the attibute for RooArgSet 
 def _ras_getattr_ ( self , aname ) :
-    """
-    Get the attibute from RooArgSet
-
+    """Get the attibute from RooArgSet
     >>> aset = ...
-    >>> print aset.pt
-    
+    >>> print aset.pt    
     """
     _v = self.find ( aname )
     if not _v : raise  AttributeError
@@ -119,12 +110,9 @@ def _ras_getattr_ ( self , aname ) :
 # =============================================================================
 ## get the attibute for RooArgSet 
 def _ras_getitem_ ( self , aname ) :
-    """
-    Get the attibute from RooArgSet
-
+    """Get the attibute from RooArgSet
     >>> aset = ...
-    >>> print aset['pt']
-    
+    >>> print aset['pt']    
     """
     _v = self.find ( aname )
     if not _v : raise  IndexError
@@ -133,8 +121,7 @@ def _ras_getitem_ ( self , aname ) :
 # =============================================================================
 ## check the presence of variable in set 
 def _ras_contains_ ( self , aname ) :
-    """
-    Check the presence of variable in set 
+    """Check the presence of variable in set 
     """
     _v = self.find ( aname )
     if not _v : return False 
@@ -179,8 +166,7 @@ def _rad_getitem_ ( self , i ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-03-31
 def _rad_vlist_ ( self ) :
-    """
-    Get variables in form of RooArgList 
+    """Get variables in form of RooArgList 
     """
     vlst     = ROOT.RooArgList()
     vset     = self.get()
@@ -193,9 +179,7 @@ def _rad_vlist_ ( self ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-03-31
 def _rad_contains_ ( self , aname ) :
-    """
-    Check the presence of variable in dataset
-    
+    """Check the presence of variable in dataset    
     >>> if 'mass' in dataset : print 'ok!'
     """
     vset = self.get()
@@ -225,12 +209,9 @@ ROOT.RooAbsData . sumVar_       = _sum_var_old_
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _rfr_print_ ( self , opts = 'v' ) :
-    """
-    Easy print of RooFitResult
-
+    """Easy print of RooFitResult
     >>> result = ...
-    >>> print result
-    
+    >>> print result    
     """
     self.Print( opts )
     return 'RooFitResult'
@@ -240,14 +221,11 @@ def _rfr_print_ ( self , opts = 'v' ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _rfr_params_ ( self , float_only = True ) :
-    """
-    GetParameters from RooFitResult:
-
+    """GetParameters from RooFitResult:
     >>> result = ...
     >>> params = results
     >>> p0     = params['A'][0]  ## get the value
-    >>> p0s    = params['A'][1]  ## get the parameter itself 
-    
+    >>> p0s    = params['A'][1]  ## get the parameter itself     
     """
     pars  = self.floatParsFinal()
     pars_ = {}
@@ -267,9 +245,7 @@ def _rfr_params_ ( self , float_only = True ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _rfr_param_  ( self , pname , float_only = False ) :
-    """
-    Get Parameter from RooFitResult by name 
-
+    """Get Parameter from RooFitResult by name 
     >>> result = ...
     >>> signal = results.param('Signal')
     >>> print signal
@@ -284,9 +260,7 @@ def _rfr_param_  ( self , pname , float_only = False ) :
 # =============================================================================
 ## iterator over fit results 
 def _rfr_iter_ ( self ) :
-    """
-    Iterator over fit results :
-
+    """Iterator over fit results :
     >>> fit_result = ...
     >>> for i in fit_results : print i 
     """
@@ -298,9 +272,7 @@ def _rfr_iter_ ( self ) :
 # =============================================================================
 ## iterator over fit items  
 def _rfr_iteritems_ ( self , float_only = False ) :
-    """
-    Iterator over fit items:
-
+    """Iterator over fit items:
     >>> fit_result = ...
     >>> for name,var in fit_results.iteritems() :
     ...                   print name,var.as_VE()  
@@ -319,15 +291,13 @@ def _rfr_iteritems_ ( self , float_only = False ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _rfr_corr_  ( self , name1 , name2 ) :
-    """
-    Get correlation coefficient for two parameter 
-
+    """Get correlation coefficient for two parameter 
     >>> result = ...
     >>> corr = results.corr('Signal', 'Background')
     >>> print corr
     """
-    p1 = self.parameters()[ name1 ]
-    p2 = self.parameters()[ name2 ]
+    p1 = self.param ( name1 )
+    p2 = self.param ( name2 )
     #
     return self.correlation ( p1[1] , p2[1] ) 
 
@@ -336,15 +306,13 @@ def _rfr_corr_  ( self , name1 , name2 ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _rfr_cov_  ( self , name1 , name2 ) :
-    """
-    Get covariance (sub) matrix 
-
+    """Get covariance (sub) matrix 
     >>> result = ...
     >>> cov = results.cov('Signal', 'Background')
     >>> print corr
     """
-    p1   = self.parameters()[ name1 ]
-    p2   = self.parameters()[ name2 ]
+    p1   = self.param ( name1 ) 
+    p2   = self.param ( name2 ) 
     args = ROOT.RooArgList ( p1[1] , p2[1] ) 
     return self.reducedCovarianceMatrix (  args )
 
@@ -354,9 +322,7 @@ def _rfr_cov_  ( self , name1 , name2 ) :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-08-03
 def _rfr_getattr_ ( self , att ) :
-    """
-    Get fit-parameter as attribute
-
+    """Get fit-parameter as attribute
     >>> r = ....
     >>> print r.sigma 
     """
@@ -468,6 +434,34 @@ def _rfr_fraction_ ( self , var1 , var2 ) :
     return 1 - self.fraction ( var2 , var1 ) 
 
 
+# ============================================================================
+## get the required results in form of SVectorWithError object
+#  @code
+#  fit_resuts = ...
+#  res   = fit_results.results( 'A', 'B' , 'C' )
+#  print res, res.cov2() 
+#  @endcode
+#  @see Gaudi::Math::SVectorWithError
+def _rfr_results_( self , *vars ) :
+    """Get the required results in form of SVectorWithError object
+    >>> fit_resuts = ...
+    >>> res   = fit_results.results( 'A', 'B' , 'C' )
+    >>> print res, res.cov2() 
+    """
+    _n = len ( vars )
+    _r = cpp.Gaudi.Math.SVectorWithError(_n,'double')()
+    _i = 0 
+    for _i1 in range( 0 , _n ) :
+        _v1                = vars[_i1]
+        _vv                = self.param ( _v1 ) [0]
+        _r       [ _i1   ] = _vv
+        _r.cov2()[_i1,_i1] = _vv.cov2() 
+        for _i2 in range ( _i1 + 1 , _n ) :
+            _v2  = vars[_i2]
+            _c12 = self.cov ( _v1 , _v2 )(0,1) 
+            _r.cov2()[_i1,_i2] = _c12 
+    return _r 
+        
 # =============================================================================
 
 ## some decoration over RooFitResult
@@ -483,6 +477,8 @@ ROOT.RooFitResult . param       = _rfr_param_
 ROOT.RooFitResult . parameter   = _rfr_param_
 ROOT.RooFitResult . corr        = _rfr_corr_
 ROOT.RooFitResult . cor         = _rfr_corr_
+ROOT.RooFitResult . cov         = _rfr_cov_
+ROOT.RooFitResult . covariance  = _rfr_cov_
 ROOT.RooFitResult . parValue    = lambda s,n : s.parameter(n)[0]
 ROOT.RooFitResult . sum         = _rfr_sum_
 ROOT.RooFitResult . plus        = _rfr_sum_
@@ -493,6 +489,7 @@ ROOT.RooFitResult . minus       = _rfr_subtract_
 ROOT.RooFitResult . divide      = _rfr_divide_
 ROOT.RooFitResult . ratio       = _rfr_divide_
 ROOT.RooFitResult . fraction    = _rfr_fraction_
+ROOT.RooFitResult . results     = _rfr_results_
 
 # =============================================================================
 ## fix parameter at some value
