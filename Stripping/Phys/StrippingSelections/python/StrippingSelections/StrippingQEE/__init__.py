@@ -3,8 +3,32 @@ Module importing stripping selection line builder modules
 for QEE WG.
 """
 
+## For Run-II spring-2016 
 list_S26 = [
+  'StrippingDisplVertices',
+  'StrippingDitau',
+  'StrippingDY2ee',
+  'StrippingDY2MuMu',
   'StrippingExotica',
+  'StrippingFullDiJets',
+  'StrippingH24Mu',
+  'StrippingHighPtTau',
+  'StrippingInclbJets',
+  'StrippingLb2dp',
+  'StrippingLLP2MuX',
+  'StrippingLowMultINC',
+  'StrippingMicroDiJets',
+  'StrippingMuMuSS',
+  'StrippingSbarSCorrelations',
+  'StrippingSingleTrackTIS',  
+  'StrippingStrangeBaryons',
+  'StrippingStrangeBaryonsNoPID',  
+  'StrippingTaggedJets',
+  'StrippingWe',
+  'StrippingWMu',
+  'StrippingWJets',
+  'StrippingZ02ee',
+  'StrippingZ02MuMu',
 ]
 
 ## For autumn-2015 Run-II End-of-2015 restripping (S24)
@@ -53,16 +77,20 @@ list_S21rXp1 = (
   'StrippingTaggedJets',          # Need Phys/JetTagging post-v1r9
 )
 
+#===============================================================================
+
 ## Choose the list to use here
 _selections = list_S26
 
 
 ## Boilerplate codes
 for _sel in _selections :  
-  try :
+  try:
     __import__( '%s.%s'  % ( __name__, _sel ) )
   except Exception, x:
     print '[WARNING] Submodule %s.%s raises the exception "%s" and will be skipped !' % ( __name__,_sel,x )
+    # raise # comment me out in production. Use for DEV
 
 ## Extract the successfully-imported modules
 _strippingModules = [ val for key,val in dict(locals()).iteritems() if key.startswith('Stripping') ]
+
