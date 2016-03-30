@@ -272,8 +272,8 @@ StatusCode WriteRichCalibrationsTool::writeInactiveHPDs(const std::string& versi
 
   std::string files[totalRiches] =
     {
-      "Online/Rich1/InactiveHPDList",
-      "Online/Rich2/InactiveHPDList"
+      "Rich1/InactiveHPDList",
+      "Rich2/InactiveHPDList"
     };
 
   for(int richID = 0; richID< totalRiches; richID++ )
