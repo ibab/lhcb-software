@@ -17,6 +17,7 @@
   <!ENTITY UTVisAtts SYSTEM "UTVisAtts.xml">
   <!ENTITY ITVisAtts SYSTEM "ITVisAtts.xml">
   <!ENTITY OTVisAtts SYSTEM "OTVisAtts.xml">
+  <!ENTITY FTVisAtts SYSTEM "FTVisAtts.xml">
   <!ENTITY InfraStructureVisAtts SYSTEM "InfraStructureVisAtts.xml">
   <!ENTITY TutorialVisAtts SYSTEM "TutorialVisAtts.xml">
 
@@ -34,6 +35,7 @@
   <!ENTITY UTMaterials SYSTEM "UTMaterials.xml">
   <!ENTITY ITMaterials SYSTEM "ITMaterials.xml">
   <!ENTITY OTMaterials SYSTEM "OTMaterials.xml">
+  <!ENTITY FTMaterials SYSTEM "FTMaterials.xml">
 
   <!ENTITY EcalLogVols SYSTEM "EcalLogVols.xml">
   <!ENTITY HcalLogVols SYSTEM "HcalLogVols.xml">
@@ -50,6 +52,7 @@
   <!ENTITY UTLogVols SYSTEM "UTLogVols.xml">
   <!ENTITY ITLogVols SYSTEM "ITLogVols.xml">
   <!ENTITY OTLogVols SYSTEM "OTLogVols.xml">
+  <!ENTITY FTLogVols SYSTEM "FTLogVols.xml">
   <!ENTITY InfraStructureLogVols SYSTEM "InfraStructureLogVols.xml">
   <!ENTITY TutorialLogVols SYSTEM "TutorialLogVols.xml">
 ]>
@@ -71,6 +74,7 @@
     &UTVisAtts;
     &ITVisAtts;
     &OTVisAtts;
+    &FTVisAtts;
     &InfraStructureVisAtts;
     &TutorialVisAtts;
   </VisAtts>
@@ -88,6 +92,7 @@
     &UTMaterials;
     &ITMaterials;
     &OTMaterials;
+    &FTMaterials;
   </Materials>
   <LogVols>
     &EcalLogVols;
@@ -105,6 +110,7 @@
     &UTLogVols;
     &ITLogVols;
     &OTLogVols;
+    &FTLogVols;
     &InfraStructureLogVols;  
     &TutorialLogVols;
   </LogVols>

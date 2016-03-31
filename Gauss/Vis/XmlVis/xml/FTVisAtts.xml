@@ -1,0 +1,17 @@
+<!-- This part of the file contains definitions of visualization attributes for -->
+<!-- the materials used in the FT description. -->
+<!-- The only attribute defined here is the color of the material -->
+
+<!-- FT materials -->
+<VisAtt name="VisFTCarbon"        visible="Yes" opened="No" mode="Plain">     <Color R="0.41" G="0.41" B="0.41"/> </VisAtt>
+<VisAtt name="VisFTDeadbulk"      visible="Yes" opened="No" mode="Plain">     <Color R="1.00" G="0.87" B="0.68"/> </VisAtt>
+<VisAtt name="VisFTHoneycomb"     visible="Yes" opened="No" mode="WireFrame"> <Color R="1.00" G="0.73" B="0.06"/> </VisAtt>
+<VisAtt name="VisFTKapton"        visible="Yes" opened="No" mode="Plain">     <Color R="0.00" G="0.80" B="0.00"/> </VisAtt>
+<VisAtt name="VisFTPolycarbonate" visible="Yes">                              <Color R="0.78" G="0.08" B="0.52"/> </VisAtt>
+<VisAtt name="VisFTSciFibre"      visible="Yes" opened="No" mode="Plain">     <Color R="0.28" G="0.46" B="1.00"/> </VisAtt>
+<VisAtt name="VisFTSiPM"          visible="Yes" opened="No" mode="Plain">     <Color R="0.00" G="0.93" B="0.00"/> </VisAtt>
+
+<!-- FT logvols -->
+<!-- <VisAtt name="VisFTMoLa0"> <Color R="0.0" G="0.7" B="0.0"/> </VisAtt> -->
+
+

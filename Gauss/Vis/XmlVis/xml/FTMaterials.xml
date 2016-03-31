@@ -1,0 +1,15 @@
+<!-- This file is where visualization attributes are mapped to materials -->
+
+<!-- FT materials -->
+<Item name="/dd/Materials/FT/Carbon"        attr="VisFTCarbon"/>
+<Item name="/dd/Materials/FT/DivinyCell"    attr="VisFTHoneycomb"/>
+<Item name="/dd/Materials/FT/Deadbulk"      attr="VisFTDeadbulk"/>
+<Item name="/dd/Materials/FT/Honeycomb"     attr="VisFTHoneycomb"/>
+<Item name="/dd/Materials/FT/Kapton"        attr="VisFTKapton"/>
+<Item name="/dd/Materials/FT/Polycarbonate" attr="VisFTPolycarbonate"/>
+<Item name="/dd/Materials/FT/SciFibre"      attr="VisFTSciFibre"/>
+<Item name="/dd/Materials/FT/Skin"          attr="VisFTCarbon"/>
+<Item name="/dd/Materials/FT/Epoxy"         attr="VisFTSiPM"/>
+
+
+
