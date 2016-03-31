@@ -5,6 +5,25 @@
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
 
+! 2016-03-31 - Vanya Belyaev
+
+ - AutomaticData:
+
+   add optional argument "monitor"  to allow better monitoring, e.g. 
+
+#
+# SelFilterPhys_SelB2PsiOmegaForPsiX0_Particles               SUCCESS Number of counters : 2
+# |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+# | "# Phys/SelB2PsiOmegaForPsiX0/Particles"        |      1000 |        103 |    0.10300 |    0.73647 |      0.0000 |      13.000 |
+# |*"#passed"                                       |      1000 |         40 |(  4.00000 +- 0.619677 )%|   -------   |   -------   |
+#
+  It is very useful for debugging
+  - At minimum one can check the exact location :-)  (modulo RootInTES, of course) 
+
+  currently it is set to False, but I thing default True is correct setting
+  (but it will break all stripping/DaVinci qmtests...)
+
+
 !======================= PhysSelPython v9r10 2016-03-21 ======================
 
 ! 2016-03-12 - Vanya Belyaev

@@ -77,7 +77,6 @@ from SelPy.selection import EventSelection as EvtSel
 from SelPy.selection import PassThroughSelection as PassThroughSel
 from SelPy.selection import AutomaticData as autodata
 
-from Configurables import LoKi__VoidFilter as VoidFilter
 from GaudiConfUtils import configurableExists, isConfigurable
 from GaudiConfUtils import ConfigurableGenerators
 import Configurables
@@ -164,15 +163,31 @@ class AutomaticData(NamedObject, SelectionBase) :
     'Phys/StdLoosePions/Particles'
     """
     
-    def __init__( self                ,
-                  Location            ,
-                  UseRootInTES = True ) :
+    def __init__( self                 ,
+                  Location             ,
+                  UseRootInTES = True  ,
+                  monitor      = False ) :
         
         NamedObject.__init__(self, Location.replace('/', '_'))
         
-        _alg = VoidFilter('SelFilter'+self.name(),
-                          Code = "CONTAINS('"+Location+"',%s)>0" % UseRootInTES )
+        from Configurables import LoKi__VoidFilter as VoidFilter
+
+        _alg = VoidFilter( 'SelFilter'+self.name() )
         
+        if not monitor : 
+            _alg.Code = """
+            0<CONTAINS('%s',%s)
+            """ % ( Location , UseRootInTES )
+        else :
+            _alg.Preambulo += [
+                "from LoKiCore.functions import monitor"     ,
+                "from LoKiCore.math      import max as lmax" ,
+                ]
+            ## create monitored functor 
+            _alg.Code       = """
+            0< monitor ( lmax ( CONTAINS('%s',%s), FZERO ) ,'# %s', 0 )
+            """ % ( Location , UseRootInTES , Location )
+            
         SelectionBase.__init__(self,
                                algorithm = _alg,
                                outputLocation=Location,
