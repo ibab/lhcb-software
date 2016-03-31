@@ -27,7 +27,6 @@ preprocessor = BrunelPreprocessor + \
   LineSkipper(["LumiCount"]) + \
   LineSkipper(["EventSelector"]) + \
   LineSkipper(["HltErrorSeq          INFO OR Member list"]) + \
-  LineSkipper(["HltFilterSeq         INFO Member list"]) + \
   LineSkipper(["HltErrorProc         INFO Whenever called will add the following to ProcStatus"]) + \
   LineSkipper(["HltErrorProc         INFO   Algorithm: HltErrorProc"]) + \
   LineSkipper(["PhysicsSeq           INFO Member list"]) + \
@@ -35,7 +34,7 @@ preprocessor = BrunelPreprocessor + \
   LineSkipper(["CaloBanksHandler     INFO Member list"]) + \
   LineSkipper(["CaloDigits           INFO Member list: CaloDigitsFromRaw/SpdFromRaw, GaudiSequencer/PrsDigitsSeq, GaudiSequencer/EcalDigitsSeq, GaudiSequencer/HcalDigitsSeq, with context 'Offline'"]) + \
   LineSkipper(["EventPersistenc...   INFO Added successfully Conversion service:LHCb::RawDataCnvSvc"]) + \
-  RegexpReplacer(when = "HltFilterSeq         INFO Member list: ", orig = r'HltRoutingBitsFilter/PhysFilter, ', repl = r'') +\
+  RegexpReplacer(when = "HltErrorFilterSeq    INFO Member list: ", orig = r'HltRoutingBitsFilter/PhysFilter, ', repl = r'') +\
   LineSkipper(["TimeSpanSeq          INFO Member list"]) + \
   LineSkipper(["NotPhysicsSeq        INFO OR Member list"]) + \
   LineSkipper(["IODataManager       ERROR Referring to existing dataset"]) + \
