@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 !========================= TrackMonitors v2r13 2016-03-18 =========================
+
+! 2016-03-31 - Komarov Ilya
+- Added STPerformance.py to python/TrackMonitors. File contains STPerformanceStudy algorithm which add histograms neccessary for
+ST Performance analysis mointoring (Efficiency and Residual). To be used for Online performance analysis.
+- Changed default histogram printout for STEfficiency.
+
 ! 2016-03-18 - Silvia Borghi
 - Change histogram range in TrackVertexMonitor and TrackPV2HalfMonitor
 

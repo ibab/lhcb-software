@@ -34,7 +34,7 @@ TrackMonitorBase( name , pSvcLocator ){
   declareProperty("splitByITType", m_splitByITType = true); 
   declareProperty("plotsByLayer", m_plotsByLayer = true);
   declareProperty("plotsBySector", m_plotsBySector = false);// residual and signal to noise plots for each sector
-  declareProperty("TH2DSummaryHist", m_2DSummaryHist = false);
+  declareProperty("TH2DSummaryHist", m_2DSummaryHist = true);
   declareProperty("ProfileSummaryHist", m_ProfileSummaryHist = false);
   declareProperty("HitsOnTrack", m_hitsOnTrack = false);// use only hits on tracks (a la track monitor)
   declareProperty("minNumITHits", m_minNumITHits = 6u); 
@@ -200,14 +200,14 @@ void ITTrackMonitor::fillHistograms(const LHCb::Track& track,
         plot(fNode->unbiasedResidual(), "BySector/UnbiasedResidual_"+sectorName, "Residual (unbiased)", -0.5, 0.5, 100);
       }
     if ( m_2DSummaryHist ) {
-      plot2D(histoBin(chan), fNode->unbiasedResidual(),  "BySector/AllSectorsUnbiasedResidualHisto", "Residual (unbiased)", -0.5, 336.5, -0.5, 0.5, 337  , 100);
-      plot2D(histoBin(chan), fNode->residual(),  "BySector/AllSectorsBiasedResidualHisto", "Biased residual", -0.5, 336.5, -0.5, 0.5, 337  , 100);
-      plot2D(histoBin(chan), residual,  "BySector/AllSectorsResidualHisto", "Residual (rms-unbiased)",  -0.5, 336.5, -0.5, 0.5,337 , 100);
+      plot2D(histoBin(chan), fNode->unbiasedResidual(),  "AllSectorsUnbiasedResidualHisto", "Residual (unbiased)", -0.5, 336.5, -0.5, 0.5, 337  , 100);
+      plot2D(histoBin(chan), fNode->residual(),  "AllSectorsBiasedResidualHisto", "Biased residual", -0.5, 336.5, -0.5, 0.5, 337  , 100);
+      plot2D(histoBin(chan), residual,  "AllSectorsResidualHisto", "Residual (rms-unbiased)",  -0.5, 336.5, -0.5, 0.5,337 , 100);
     }
     if ( m_ProfileSummaryHist ) {
-      profile1D(histoBin(chan), fNode->unbiasedResidual(),  "BySector/AllSectorsUnbiasedResidualProfile", "Residual (unbiased)",   -0.5, 336.5);
-      profile1D(histoBin(chan), fNode->residual(),  "BySector/AllSectorsBiasedResidualProfile", "Biased residual",    -0.5, 336.5);
-      profile1D(histoBin(chan), residual,  "BySector/AllSectorsResidualProfile", "Residual (rms-unbiased)",    -0.5, 336.5);
+      profile1D(histoBin(chan), fNode->unbiasedResidual(),  "AllSectorsUnbiasedResidualProfile", "Residual (unbiased)",   -0.5, 336.5);
+      profile1D(histoBin(chan), fNode->residual(),  "AllSectorsBiasedResidualProfile", "Biased residual",    -0.5, 336.5);
+      profile1D(histoBin(chan), residual,  "AllSectorsResidualProfile", "Residual (rms-unbiased)",    -0.5, 336.5);
     } 
 
     // make plots per layer

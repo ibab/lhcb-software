@@ -79,7 +79,7 @@ STEfficiency::STEfficiency( const std::string& name,
   declareProperty( "ResidualsPlot"      , m_resPlot = false );
   declareProperty( "TakeEveryHit"       , m_everyHit = true );
   declareProperty( "SingleHitPerSector" , m_singlehitpersector = false );
-  declareProperty( "TH1DSummaryHist"    , m_SummaryHist = false);
+  declareProperty( "TH1DSummaryHist"    , m_SummaryHist = true);
 
 }
 
@@ -522,11 +522,11 @@ StatusCode STEfficiency::finalize()
         ST::ITDetectorPlot::Bins theBins = static_cast<ST::ITDetectorPlot*>(propSectorStatus)->toBins(channelID);
         if(m_effPlot)
           histoEff -> fill( theBins.xBin, theBins.yBin, -1 );
-        if (m_SummaryHist){
-            histoEff_1D -> fill( IThistoBin(channelID), -1 );
-            histoNbHits_1D -> fill( IThistoBin(channelID), 0 );
-            histoNbFoundHits_1D -> fill( IThistoBin(channelID), 0 );
-        }                
+          if (m_SummaryHist){
+              histoEff_1D -> fill( IThistoBin(channelID), -1 );
+              histoNbHits_1D -> fill( IThistoBin(channelID), 0 );
+              histoNbFoundHits_1D -> fill( IThistoBin(channelID), 0 );
+          }                
         histoSectorStatus -> fill( theBins.xBin, theBins.yBin, -1 );
         histoNbHits -> fill( theBins.xBin, theBins.yBin, 0 );
         histoNbFoundHits -> fill( theBins.xBin, theBins.yBin, 0 );
