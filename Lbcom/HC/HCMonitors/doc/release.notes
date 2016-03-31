@@ -7,6 +7,8 @@
 ! 2016-03-31 - Heinrich Schindler
  - Add flag to not book 2D ADC vs. BX histograms to reduce memory footprint.
  - Add more histograms for even/odd bunch-crossings.
+ - Remove HCPedestalCorrectionTree (functionality is fully covered by 
+   HCDigitTuple).
 
 !========================= HCMonitors v1r2 2015-11-23 =========================
 ! 2015-10-28 - Heinrich Schindler

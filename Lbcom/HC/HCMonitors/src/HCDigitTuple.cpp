@@ -83,9 +83,7 @@ StatusCode HCDigitTuple::execute() {
   const ulonglong evTimeGps = odin->gpsTime();
   const int step = odin->calibrationStep();
   const LHCb::HCDigits* digits = getIfExists<LHCb::HCDigits>(m_digitLocation);
-  if (!digits) {
-    return Error("No digits in " + m_digitLocation, StatusCode::SUCCESS);
-  }
+  if (!digits) return Error("No digits in " + m_digitLocation);
   const LHCb::HCDigits* correctedDigits = nullptr;
   if (m_corrected){
     correctedDigits = getIfExists<LHCb::HCDigits>(m_correctedDigitLocation);
