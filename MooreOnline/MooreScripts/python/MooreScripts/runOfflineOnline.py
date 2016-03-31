@@ -115,7 +115,7 @@ def configure(**kwargs) :
                 found = True
                 break
         if not found:
-            print "# WARNING: skipping setting '"+k+":"+v+"' because no configurable has that option"
+            print "# WARNING: skipping setting '" + str(k) + ":" + str(v) + "' because no configurable has that option"
 
     user_package.configure()    
     OnlineEnv.end_config(False)
