@@ -1,7 +1,7 @@
 ################################################################################
 # Package: AnalysisSys
 ################################################################################
-gaudi_subdir(AnalysisSys v15r1)
+gaudi_subdir(AnalysisSys v16r0)
 
 gaudi_depends_on_subdirs(Analysis/PyAna
                          Analysis/Ostap

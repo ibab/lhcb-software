@@ -3,6 +3,56 @@ Package             : AnalysisSys
 Package Coordinator : DaVinci coordinator
 Purpose             : LHCb analysis packages
 
+</PRE><H1><A NAME=v16r0>2016-03-31 Analysis v16r0</A></H1><PRE>
+
+Development release for 2016 data taking.
+It is based on Gaudi v27r1, LHCb v40r1, Rec v19r1 and Phys v21r2, and uses LCG_84 with ROOT 6.06.02.
+
+- Packages updated :
+  Analysis/Ostap v1r15, Phys/DecayTreeTuple v5r6, Phys/DecayTreeTupleTracking v1r6,
+  Phys/DecayTreeTupleANNPID v2r0, Phys/TeslaTools v2r1.
+
+- In Analysis/Ostap v1r15 :
+  . Restore multicore with pathos.multiprocessing.
+  . Fix progress bar.
+  . Add slicing for TChain.
+  . Fix Corr2D test.
+  . Convert "--command" argument from the single command to the list of commands.
+  . Add possibility to load ROOT macros from command line
+    ostap  a.py  b.py c.C d.C+ e.C++
+  . Add new command line option -l
+    ostap -l a.C++ b.C++
+  . Remove temporary fix for 1D-interpolation.
+  . TTree.withCuts : make default value of 'progress' argument to be false.
+  . Rename "-l/--load" to "-m/--macros".
+  . Reshuffle treatment of positional arguments everything that is not opened/loaded/executes goes to
+    PARAMETERS list that can be used e.g. to propagate configuration parameters:
+       ostap a.py b.C  1 2 c.C++ 3 4
+  . Better printout of arguments.
+  . Tweak a bit converison fo TF2 to TF2.
+  . Replace execfile with runpy.run_path.
+  . Improvements for TGraph/TGraphErrors/TGraphAsymmErrors.
+  . Fix the usage of runpy.run_path.
+  . Allow x-dependent smearinng of histograms:
+       h1 = ....
+       h2 = h1.smear( 0.1 )               ## convolute with the gaussian with sigma=0.1
+       h2 = h1.smear( lambda x : 0.1*x )  ## convolute with the gaussian with sigma(x)=0.1*x
+
+- In Phys/DecayTreeTuple v5r6 :
+  . Fix bug in TupleToolAllTracks by moving MINIPCHI2 cut before adding the value to output.
+
+- In Phys/DecayTreeTupleTracking v1r6 :
+  . Updating TupleToolConeIsolation to deal with pi0s of partially reconstructed backgrounds.
+  . TupleToolConeIsolation.cpp: removed unused variable to get rid of compilation warning.
+
+- In Phys/DecayTreeTupleANNPID v2r0 :
+  . Add "MC12TuneV4" and "MC15TuneV1" to the default list of ANNPID tunes.
+
+
+- In Phys/TeslaTools v2r1 :
+  . Fix to the major change to deal with multiple lines in the same algorithm.
+  . Add tweak for alignment usage.
+
 </PRE><H1><A NAME=v15r1>2016-03-08 Analysis v15r1</A></H1><PRE>
 
 Development release for 2016 data taking.
