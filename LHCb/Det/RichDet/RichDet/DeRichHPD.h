@@ -369,6 +369,7 @@ private: // data
   double m_pixelSize{0};           ///< The pixel size on the silicon sensor
   double m_siliconHalfLengthX{0};  ///< Si sensor half size in x
   double m_siliconHalfLengthY{0};  ///< Si sensor half size in y
+  double m_siAnodeRCheck{0};       ///< Max Anode radius on Si sensor
 
   /// The demagnification factor of the HPD. Element [0] is the linear
   /// term, and element[1] the non-linear term for small corrections.

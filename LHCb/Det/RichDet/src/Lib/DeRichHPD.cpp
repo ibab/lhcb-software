@@ -42,7 +42,7 @@ namespace
   static const std::string& XmlHpdDemagPath =
     "/dd/Materials/RichMaterialTabProperties/RichHpdDemag";
   static const int simtotbins = 50; // do not change !!!
-  static const int rectotbins = 60;
+  static const int rectotbins = 80;
 }
 
 //=============================================================================
@@ -321,6 +321,10 @@ StatusCode DeRichHPD::updateGeometry()
   // Get sizes of silicon box
   m_siliconHalfLengthX = siliconBox->xHalfLength();
   m_siliconHalfLengthY = siliconBox->yHalfLength();
+  // anode radius for check in magnifyToGlobalMagnetON
+  // make it 30% bigger than the nominal size for some leaway,
+  // but smaller than the 40% used in the interpolator
+  m_siAnodeRCheck      = 1.3 * std::min(m_siliconHalfLengthX,m_siliconHalfLengthY);
 
   // get the pv and the solid for the HPD quartz window
   m_pvWindow    = pvHPDSMaster->lvolume()->pvolume("pvRichHPDQuartzWindow");
@@ -584,8 +588,8 @@ StatusCode DeRichHPD::fillHpdMagTable( const unsigned int field )
 
   }
 
-  // image size. Scale by 20% to add some leaway to the interpolator tables
-  const auto halfL = 1.2 * std::min(m_siliconHalfLengthX,m_siliconHalfLengthY);
+  // image size. Scale by 40% to add some leaway to the interpolator tables
+  const auto halfL = 1.4 * std::min(m_siliconHalfLengthX,m_siliconHalfLengthY);
 
   // Reconstruction from anode->cathode
   for ( int i = 0; i < rectotbins+1; ++i )
@@ -659,6 +663,8 @@ StatusCode DeRichHPD::magnifyToGlobalMagnetON( Gaudi::XYZPoint& detectPoint,
   detectPoint.SetZ(0.0);
   
   const auto rAnode = detectPoint.R();
+  if ( m_siAnodeRCheck < rAnode ) return StatusCode::FAILURE;
+  //const bool rAnodeOK = rAnode < m_siAnodeRCheck;
 
   double rCathode(0);
   if ( UNLIKELY( 2 == m_MDMS_version[field] ) )
@@ -676,6 +682,8 @@ StatusCode DeRichHPD::magnifyToGlobalMagnetON( Gaudi::XYZPoint& detectPoint,
 
   // check if this point could have come from the photoCathode
   if ( m_winInR < rCathode ) return StatusCode::FAILURE;
+  //if ( !rAnodeOK ) 
+  //{ info() << "rAnode check failed " << rAnode << " " << m_siAnodeRCheck << endmsg; }
 
   // add "extra" radius for the refraction on the HPD window,
   // assuming 90 degrees angle
