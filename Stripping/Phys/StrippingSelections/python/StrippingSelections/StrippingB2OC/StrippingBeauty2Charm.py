@@ -20,7 +20,6 @@ from PhysSelPython.Wrappers import EventSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from Configurables import LoKi__VoidFilter
-#from StandardParticles import StdNoPIDsPions, StdNoPIDsKaons, StdNoPIDsProtons
 from StandardParticles import ( StdAllNoPIDsPions, StdAllNoPIDsKaons,
                                 StdAllNoPIDsProtons, StdNoPIDsUpPions,
                                 StdLooseMuons, StdNoPIDsUpKaons,
@@ -176,7 +175,7 @@ default_config ={
     'BPVVDCHI2_MIN' : 36,
     'BPVDIRA_MIN'   : 0, 
     'MASS_WINDOW'   : '600*MeV', # was 50MeV
-    'DELTAMASS_MAX' : '200*MeV',
+    'DELTAMASS_MAX' : '225*MeV',
     'DELTAMASS_MIN' : '90*MeV'
     },
     "HH": { # Cuts for rho, K*, phi, XHH Dalitz analyese, etc.
@@ -501,8 +500,7 @@ default_config ={
         "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
         "Location"  : 'P2ConeVar3'
       }, 
-    ], 
-    '2TOPO' : {'ANGLE_MIN': (2/57.),'M_MIN':19000,'DPHI_MIN':0},
+    ],
     'D0INC' : {'PT_MIN' : 1000, 'IPCHI2_MIN': 100},
     "Prescales" : { # Prescales for individual lines
     'RUN_BY_DEFAULT' : True, # False = lines off by default
@@ -522,7 +520,6 @@ default_config ={
   }, 
   'STREAMS' : { 
     'BhadronCompleteEvent' : [
-    'StrippingDoubleTopoLine',
     'StrippingD02HHTopoTOSLine',
     'StrippingB02DKPiPiD2HHHPIDBeauty2CharmLine',
     'StrippingB02DPiPiPiD2HHHPIDBeauty2CharmLine',
@@ -1097,6 +1094,7 @@ default_config ={
     'StrippingXib2D0pKKD02HHBeauty2CharmLine', 
     'StrippingXib2D0pPiPiD02HHBeauty2CharmLine', 
     'StrippingXib2D0pKPiD02HHBeauty2CharmLine', 
+    'StrippingLb2D0pKD02K3PiBeauty2CharmLine', 
     'StrippingB2LcpbarKSSLc2PKPiBeauty2CharmLine', 
     'StrippingB2LcpbarPiSSLc2PKPiBeauty2CharmLine', 
     'StrippingB2LcpbarKWSLc2PKPiBeauty2CharmLine', 
@@ -1500,7 +1498,7 @@ class Beauty2CharmConf(LineBuilder):
     __configuration_keys__ = ('ALL','PIDPION','PIDKAON','PIDPROTON','UPSTREAM','KS0','Lambda0','Pi0','gamma',
                               'D2X','D2X_FOR_DDX','B2X','Bc2DD','Bc2BX',
                               'Dstar','HH','HHH','PID','FlavourTagging','RelatedInfoTools',
-                              'RawEvents','MDSTChannels','2TOPO','D0INC','Prescales','GECNTrkMax')
+                              'RawEvents','MDSTChannels','D0INC','Prescales','GECNTrkMax')
  
     def __init__(self, moduleName, config) :
         
@@ -1557,6 +1555,7 @@ class Beauty2CharmConf(LineBuilder):
         topoKaons_PID = topoInputs('K_PID',[kaons_pid])
         topoKaonsLoose = topoInputsLoose('KLoose',[kaons])
         topoProtons = topoInputs('P',[protons])
+        topoProtons_PID = topoInputs('P_PID',[protons_pid])
 
         # X -> hh
         hh = HHBuilder(pions,kaons,protons,ks,pi0_fromB,config['HH'],
@@ -1578,7 +1577,6 @@ class Beauty2CharmConf(LineBuilder):
                            config['B2X'])
         self._makeLines(b2dx.lines,config)
 
-
         # Bc -> DD lines
         bc2dd = Bc2DDBuilder( d, dst, config['Bc2DD'] )
         self._makeLines(bc2dd.lines,config)
@@ -1588,7 +1586,7 @@ class Beauty2CharmConf(LineBuilder):
         self._makeLines(bc2bx.lines,config)
 
         # Lb -> X
-        lb2x = Lb2XBuilder(lc,xicc,d,hh,topoPions,topoKaons,topoProtons,
+        lb2x = Lb2XBuilder(lc,xicc,d,hh,topoPions,topoPions_PID,topoKaons,topoKaons_PID,topoProtons,topoProtons_PID,
                            pions,kaons,ks,hhh,dst,lambda0,config['B2X'])
         self._makeLines(lb2x.lines,config)
 
@@ -1602,27 +1600,6 @@ class Beauty2CharmConf(LineBuilder):
                 if sel.name().find('WS') > 0: continue
                 dstar_sel = makeB2DstarX(sel,uppions,config['B2X'])
                 self._makeLine(ProtoLine([dstar_sel],line.pre),config)
-
-        # Double Topo line
-        from Configurables import DoubleTopoTool as DT
-        code = "ACCEPT('DoubleTopoTool/DoubleTopoLine_DT')"
-        alg = LoKi__VoidFilter('DoubleTopoLineFilter',Code=code)
-        sel = EventSelection('DoubleTopoEventSel',Algorithm=alg)
-        dt = DT('DoubleTopoLine_DT')
-        dt.minAngle = config['2TOPO']['ANGLE_MIN']
-        dt.minMass = config['2TOPO']['M_MIN']
-        dt.minDPhi = config['2TOPO']['DPHI_MIN']
-
-        # Split HLT configuration
-        from DAQSys.Decoders import DecoderDB
-        from Configurables import TriggerTisTos
-        dt.addTool(TriggerTisTos, "TriggerTisTosTool")
-        dt.TriggerTisTosTool.HltDecReportsLocation = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].listOutputs()[0]
-        dt.TriggerTisTosTool.HltSelReportsLocation = DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"].listOutputs()[0]
-
-        hlt = "HLT_PASS_RE('Hlt2Topo.*Decision')"
-        sline = StrippingLine('DoubleTopoLine',1.0,selection=sel,HLT2=hlt)
-        self.registerLine(sline)
 
         # B->D0X inclusive line
         cuts = "(PT > %d*MeV) & (ADMASS('D0') < 25*MeV) & (MIPCHI2DV(PRIMARY)>%d)" \
