@@ -1809,7 +1809,7 @@ class DstarBuilder(object):
                                          config_pid,2)]
 
           # Alessandro Bertolin: Ds*K CPV
-          self.dsgammacpv_hhh = self._makeDsst2DGammaCPV( 'D2HHH', self.d.hhh )
+          self.dsgammacpv_hhh = self._makeDsst2DGammaCPV( 'D2HHH', self.d.hhh_pid )
 
      def _makeHc2Dpi(self,name,massCut,momCut,decays,inputs):
           comboCuts = [massCut,LoKiCuts(['ADOCA12'],self.config).code()]
