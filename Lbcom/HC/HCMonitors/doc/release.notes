@@ -4,6 +4,10 @@
 ! Purpose     : Monitoring of Herschel data
 !-----------------------------------------------------------------------------
 
+! 2016-03-31 - Heinrich Schindler
+ - Add flag to not book 2D ADC vs. BX histograms to reduce memory footprint.
+ - Add more histograms for even/odd bunch-crossings.
+
 !========================= HCMonitors v1r2 2015-11-23 =========================
 ! 2015-10-28 - Heinrich Schindler
  - Bug fix in HCMonitorBase and HCDigitCorrector to update conditions 

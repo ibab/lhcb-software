@@ -6,6 +6,7 @@
 #include "Event/ODIN.h"
 // Event/DigiEvent
 #include "Event/HCDigit.h"
+// Kernel/LHCbKernel
 #include "Kernel/HCCellID.h"
 
 // Local
@@ -23,6 +24,9 @@ HCDigitMonitor::HCDigitMonitor(const std::string& name,
     : HCMonitorBase(name, pSvcLocator) {
   declareProperty("DigitLocation",
                   m_digitLocation = LHCb::HCDigitLocation::Default);
+  declareProperty("ADCvsBX", m_adcVsBx = false);
+  declareProperty("AllChannels", m_allChannels = false); 
+
 }
 
 //=============================================================================
@@ -50,16 +54,31 @@ StatusCode HCDigitMonitor::initialize() {
     const std::string st = stations[i];
     std::string name = "ADC/Sum/" + st;
     m_hAdcSum.push_back(book1D(name, st, low, high, bins));
-    m_hAdcSumEven.push_back(book1D("ADC/Sum/Even/" + st, st, low, high, bins));
-    m_hAdcSumOdd.push_back(book1D("ADC/Sum/Odd/" + st, st, low, high, bins));
-    m_hAdcSumNoBeam.push_back(
-        book1D("ADC/Sum/NoBeam/" + st, st, low, high, bins));
-    m_hAdcSumBeam.push_back(book1D("ADC/Sum/Beam/" + st, st, low, high, bins));
+    name = "ADC/Sum/Even/" + st;
+    m_hAdcSumEven.push_back(book1D(name, st, low, high, bins));
+    name = "ADC/Sum/Odd/" + st;
+    m_hAdcSumOdd.push_back(book1D(name, st, low, high, bins));
+    name = "ADC/Sum/NoBeam/" + st;
+    m_hAdcSumNoBeam.push_back(book1D(name, st, low, high, bins));
+    name = "ADC/Sum/NoBeam/Even/" + st;
+    m_hAdcSumNoBeamEven.push_back(book1D(name, st, low, high, bins));
+    name = "ADC/Sum/NoBeam/Odd/" + st;
+    m_hAdcSumNoBeamOdd.push_back(book1D(name, st, low, high, bins));
+    name = "ADC/Sum/Beam/" + st;
+    m_hAdcSumBeam.push_back(book1D(name, st, low, high, bins));
+    name = "ADC/Sum/Beam/Even/" + st;
+    m_hAdcSumBeamEven.push_back(book1D(name, st, low, high, bins));
+    name = "ADC/Sum/Beam/Odd/" + st;
+    m_hAdcSumBeamOdd.push_back(book1D(name, st, low, high, bins));
     setAxisLabels(m_hAdcSum[i], "Sum ADC", "Entries");
     setAxisLabels(m_hAdcSumEven[i], "Sum ADC", "Entries");
     setAxisLabels(m_hAdcSumOdd[i], "Sum ADC", "Entries");
     setAxisLabels(m_hAdcSumNoBeam[i], "Sum ADC", "Entries");
+    setAxisLabels(m_hAdcSumNoBeamEven[i], "Sum ADC", "Entries");
+    setAxisLabels(m_hAdcSumNoBeamOdd[i], "Sum ADC", "Entries");
     setAxisLabels(m_hAdcSumBeam[i], "Sum ADC", "Entries");
+    setAxisLabels(m_hAdcSumBeamEven[i], "Sum ADC", "Entries");
+    setAxisLabels(m_hAdcSumBeamOdd[i], "Sum ADC", "Entries");
     // Book profile histograms of average ADC vs. quadrant for each station.
     name = "ADC/" + st + "/Average";
     m_hAdcVsQuadrant.push_back(bookProfile1D(name, st, -0.5, 3.5, 4));
@@ -69,13 +88,25 @@ StatusCode HCDigitMonitor::initialize() {
     m_hAdcVsQuadrantOdd.push_back(bookProfile1D(name, st, -0.5, 3.5, 4));
     name = "ADC/" + st + "/NoBeam/Average";
     m_hAdcVsQuadrantNoBeam.push_back(bookProfile1D(name, st, -0.5, 3.5, 4));
+    name = "ADC/" + st + "/NoBeam/Even/Average";
+    m_hAdcVsQuadrantNoBeamEven.push_back(bookProfile1D(name, st, -0.5, 3.5, 4));
+    name = "ADC/" + st + "/NoBeam/Odd/Average";
+    m_hAdcVsQuadrantNoBeamOdd.push_back(bookProfile1D(name, st, -0.5, 3.5, 4));
     name = "ADC/" + st + "/Beam/Average";
     m_hAdcVsQuadrantBeam.push_back(bookProfile1D(name, st, -0.5, 3.5, 4));
+    name = "ADC/" + st + "/Beam/Even/Average";
+    m_hAdcVsQuadrantBeamEven.push_back(bookProfile1D(name, st, -0.5, 3.5, 4));
+    name = "ADC/" + st + "/Beam/Odd/Average";
+    m_hAdcVsQuadrantBeamOdd.push_back(bookProfile1D(name, st, -0.5, 3.5, 4));
     setAxisLabels(m_hAdcVsQuadrant[i], "Quadrant", "ADC");
     setAxisLabels(m_hAdcVsQuadrantEven[i], "Quadrant", "ADC");
     setAxisLabels(m_hAdcVsQuadrantOdd[i], "Quadrant", "ADC");
     setAxisLabels(m_hAdcVsQuadrantNoBeam[i], "Quadrant", "ADC");
+    setAxisLabels(m_hAdcVsQuadrantNoBeamEven[i], "Quadrant", "ADC");
+    setAxisLabels(m_hAdcVsQuadrantNoBeamOdd[i], "Quadrant", "ADC");
     setAxisLabels(m_hAdcVsQuadrantBeam[i], "Quadrant", "ADC");
+    setAxisLabels(m_hAdcVsQuadrantBeamEven[i], "Quadrant", "ADC");
+    setAxisLabels(m_hAdcVsQuadrantBeamOdd[i], "Quadrant", "ADC");
   }
 
   const unsigned int nChannels = 64;
@@ -135,24 +166,40 @@ StatusCode HCDigitMonitor::initialize() {
         m_hAdcQuadrantEven.push_back(book1D(nameEven, qu, m_edges));
         m_hAdcQuadrantOdd.push_back(book1D(nameOdd, qu, m_edges));
         m_hAdcQuadrantNoBeam.push_back(book1D(nameNoBeam, qu, m_edges));
+        m_hAdcQuadrantNoBeamEven.push_back(book1D(nameNoBeam, qu, m_edges));
+        m_hAdcQuadrantNoBeamOdd.push_back(book1D(nameNoBeam, qu, m_edges));
         m_hAdcQuadrantBeam.push_back(book1D(nameBeam, qu, m_edges));
-        m_hAdcVsBx.push_back(book2D(nameBx, qu, bxedges, m_edges));
+        m_hAdcQuadrantBeamEven.push_back(book1D(nameBeam, qu, m_edges));
+        m_hAdcQuadrantBeamOdd.push_back(book1D(nameBeam, qu, m_edges));
+        if (m_adcVsBx) {
+          m_hAdcVsBx.push_back(book2D(nameBx, qu, bxedges, m_edges));
+        }
       } else {
         m_hAdcQuadrant.push_back(book1D(name, qu, low, high, bins));
         m_hAdcQuadrantEven.push_back(book1D(nameEven, qu, low, high, bins));
         m_hAdcQuadrantOdd.push_back(book1D(nameOdd, qu, low, high, bins));
         m_hAdcQuadrantNoBeam.push_back(book1D(nameNoBeam, qu, low, high, bins));
+        m_hAdcQuadrantNoBeamEven.push_back(book1D(nameNoBeam, qu, low, high, bins));
+        m_hAdcQuadrantNoBeamOdd.push_back(book1D(nameNoBeam, qu, low, high, bins));
         m_hAdcQuadrantBeam.push_back(book1D(nameBeam, qu, low, high, bins));
-        m_hAdcVsBx.push_back(
+        m_hAdcQuadrantBeamEven.push_back(book1D(nameBeam, qu, low, high, bins));
+        m_hAdcQuadrantBeamOdd.push_back(book1D(nameBeam, qu, low, high, bins));
+        if (m_adcVsBx) {
+          m_hAdcVsBx.push_back(
             book2D(nameBx, qu, bxlow, bxhigh, bxbins, low, high, bins));
+        }
       }
       const unsigned int index = i * nStations + j;
       setAxisLabels(m_hAdcQuadrant[index], "ADC", "Entries");
       setAxisLabels(m_hAdcQuadrantEven[index], "ADC", "Entries");
       setAxisLabels(m_hAdcQuadrantOdd[index], "ADC", "Entries");
       setAxisLabels(m_hAdcQuadrantNoBeam[index], "ADC", "Entries");
+      setAxisLabels(m_hAdcQuadrantNoBeamEven[index], "ADC", "Entries");
+      setAxisLabels(m_hAdcQuadrantNoBeamOdd[index], "ADC", "Entries");
       setAxisLabels(m_hAdcQuadrantBeam[index], "ADC", "Entries");
-      setAxisLabels(m_hAdcVsBx[index], "BX", "ADC");
+      setAxisLabels(m_hAdcQuadrantBeamEven[index], "ADC", "Entries");
+      setAxisLabels(m_hAdcQuadrantBeamOdd[index], "ADC", "Entries");
+      if (m_adcVsBx) setAxisLabels(m_hAdcVsBx[index], "BX", "ADC");
     }
   }
 
@@ -194,37 +241,35 @@ StatusCode HCDigitMonitor::execute() {
 
   // Grab the digits.
   const LHCb::HCDigits* digits = getIfExists<LHCb::HCDigits>(m_digitLocation);
-  if (!digits) {
-    return Error("No digits in " + m_digitLocation, StatusCode::FAILURE);
-  }
+  if (!digits) return Error("No digits in " + m_digitLocation);
 
   // Loop over all digits.
-  for (LHCb::HCDigit* digit : *digits) {
+  for (const LHCb::HCDigit* digit : *digits) {
     const unsigned int crate = digit->cellID().crate();
     const unsigned int channel = digit->cellID().channel();
     const double adc = fadc(digit->adc());
     if (crate == m_crateB) {
-      m_hAdcB[channel]->fill(adc);
+      if (m_allChannels) m_hAdcB[channel]->fill(adc);
       m_hAdcVsChannelB->fill(channel, adc);
       if (even) {
-        m_hAdcEvenB[channel]->fill(adc);
+        if (m_allChannels) m_hAdcEvenB[channel]->fill(adc);
         m_hAdcVsChannelEvenB->fill(channel, adc);
       } else {
-        m_hAdcOddB[channel]->fill(adc);
+        if (m_allChannels) m_hAdcOddB[channel]->fill(adc);
         m_hAdcVsChannelOddB->fill(channel, adc);
       }
     } else if (crate == m_crateF) {
-      m_hAdcF[channel]->fill(adc);
+      if (m_allChannels) m_hAdcF[channel]->fill(adc);
       m_hAdcVsChannelF->fill(channel, adc);
       if (even) {
-        m_hAdcEvenF[channel]->fill(adc);
+        if (m_allChannels) m_hAdcEvenF[channel]->fill(adc);
         m_hAdcVsChannelEvenF->fill(channel, adc);
       } else {
-        m_hAdcOddF[channel]->fill(adc);
+        if (m_allChannels) m_hAdcOddF[channel]->fill(adc);
         m_hAdcVsChannelOddF->fill(channel, adc);
       }
     } else {
-      warning() << "Unexpected crate number (" << crate << ")" << endmsg;
+      Warning("Unexpected crate (" + std::to_string(crate) + ")").ignore();
     }
   }
 
@@ -240,7 +285,7 @@ StatusCode HCDigitMonitor::execute() {
       if (!digit) {
         const std::string st = bwd ? "B" + std::to_string(i) : 
                                      "F" + std::to_string(i - 2); 
-        warning() << "Cannot retrieve digit for " << st << j << endmsg; 
+        Warning("Cannot retrieve digit for " + st + std::to_string(j)).ignore();
         continue;
       }
       const double adc = fadc(digit->adc());
@@ -258,9 +303,19 @@ StatusCode HCDigitMonitor::execute() {
       if (bxtype == LHCb::ODIN::NoBeam) {
         m_hAdcVsQuadrantNoBeam[i]->fill(j, adc);
         m_hAdcQuadrantNoBeam[index]->fill(adc);
+        if (even) {
+          m_hAdcQuadrantNoBeamEven[index]->fill(adc);
+        } else {
+          m_hAdcQuadrantNoBeamOdd[index]->fill(adc);
+        }
       } else if (bxtype == LHCb::ODIN::BeamCrossing) {
         m_hAdcVsQuadrantBeam[i]->fill(j, adc);
         m_hAdcQuadrantBeam[index]->fill(adc);
+        if (even) {
+          m_hAdcQuadrantBeamEven[index]->fill(adc);
+        } else {
+          m_hAdcQuadrantBeamOdd[index]->fill(adc);
+        }
       }
       sum[i] += adc;
     }
@@ -272,8 +327,18 @@ StatusCode HCDigitMonitor::execute() {
     }
     if (bxtype == LHCb::ODIN::NoBeam) {
       m_hAdcSumNoBeam[i]->fill(sum[i]);
+      if (even) {
+        m_hAdcSumNoBeamEven[i]->fill(sum[i]);
+      } else {
+        m_hAdcSumNoBeamOdd[i]->fill(sum[i]);
+      }
     } else if (bxtype == LHCb::ODIN::BeamCrossing) {
       m_hAdcSumBeam[i]->fill(sum[i]);
+      if (even) {
+        m_hAdcSumBeamEven[i]->fill(sum[i]);
+      } else {
+        m_hAdcSumBeamOdd[i]->fill(sum[i]);
+      }
     }
   }
   return StatusCode::SUCCESS;
@@ -302,7 +367,11 @@ StatusCode HCDigitMonitor::finalize() {
       scale(m_hAdcQuadrantEven[index]);
       scale(m_hAdcQuadrantOdd[index]);
       scale(m_hAdcQuadrantNoBeam[index]);
+      scale(m_hAdcQuadrantNoBeamEven[index]);
+      scale(m_hAdcQuadrantNoBeamOdd[index]);
       scale(m_hAdcQuadrantBeam[index]);
+      scale(m_hAdcQuadrantBeamEven[index]);
+      scale(m_hAdcQuadrantBeamOdd[index]);
     }
   }
   return HCMonitorBase::finalize();
