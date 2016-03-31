@@ -35,7 +35,42 @@ class HltAfterburnerConf(LHCbConfigurableUser):
                  "RecSummaryLocation"      : "Hlt2/RecSummary",
                  "AddAdditionalTrackInfos" : True,
                  "AddPIDToDownstream"      : True,
-                 "Hlt2DownstreamFilter"    : "HLT_TURBOPASS_RE('^Hlt2CharmHad.*KS0KS0.*Decision$') | HLT_TURBOPASS_RE('^Hlt2CharmHad.*KS0DD.*Decision$') | HLT_TURBOPASS_RE('^Hlt2CharmHad.*LamDD.*Decision$') | HLT_TURBOPASS_RE('^Hlt2CharmHad.*_DD.*$') | HLT_TURBOPASS_RE('^Hlt2CharmHad.*Lam2PpPim.*Decision$')",
+                 "Hlt2DownstreamFilter"    : [ "Hlt2CharmHadDp2KS0KS0KpTurbo",
+                                               "Hlt2CharmHadDp2KS0KS0PipTurbo",
+                                               "Hlt2CharmHadLcp2LamKmKpPip_Lam2PpPimTurbo",
+                                               "Hlt2CharmHadLcp2LamKmPipPip_Lam2PpPimTurbo",
+                                               "Hlt2CharmHadDsp2KS0KS0KpTurbo",
+                                               "Hlt2CharmHadDsp2KS0KS0PipTurbo",
+                                               "Hlt2CharmHadLcp2KS0KS0PpTurbo",
+                                               "Hlt2CharmHadXim2LamPim_DDD",
+                                               "Hlt2CharmHadXim2LamPim_DDL",
+                                               "Hlt2CharmHadOmm2LamKm_DDD",
+                                               "Hlt2CharmHadOmm2LamKm_DDL",
+                                               "Hlt2CharmHadDstp2D0Pip_D02KS0KmKp_KS0DD",
+                                               "Hlt2CharmHadDstp2D0Pip_D02KS0KmKp_KS0DD_LTUNB",
+                                               "Hlt2CharmHadDstp2D0Pip_D02KS0KmPip_KS0DD",
+                                               "Hlt2CharmHadDstp2D0Pip_D02KS0KmPip_KS0DD_LTUNB",
+                                               "Hlt2CharmHadDstp2D0Pip_D02KS0KpPim_KS0DD",
+                                               "Hlt2CharmHadDstp2D0Pip_D02KS0KpPim_KS0DD_LTUNB",
+                                               "Hlt2CharmHadDstp2D0Pip_D02KS0PimPip_KS0DD",
+                                               "Hlt2CharmHadDstp2D0Pip_D02KS0PimPip_KS0DD_LTUNB",
+                                               "Hlt2CharmHadDstp2D0Pip_D02KS0KS0_KS0DDTurbo",
+                                               "Hlt2CharmHadDstp2D0Pip_D02KS0KS0_KS0LL_KS0DDTurbo",
+                                               "Hlt2CharmHadDp2KS0Pip_KS0DDTurbo",
+                                               "Hlt2CharmHadDp2KS0Kp_KS0DDTurbo",
+                                               "Hlt2CharmHadDp2KS0KmKpPip_KS0DDTurbo",
+                                               "Hlt2CharmHadDp2KS0KmPipPip_KS0DDTurbo",
+                                               "Hlt2CharmHadDp2KS0KpKpPim_KS0DDTurbo",
+                                               "Hlt2CharmHadDp2KS0KpPimPip_KS0DDTurbo",
+                                               "Hlt2CharmHadDp2KS0PimPipPip_KS0DDTurbo",
+                                               "Hlt2CharmHadDsp2KS0KmKpPip_KS0DDTurbo",
+                                               "Hlt2CharmHadDsp2KS0KmPipPip_KS0DDTurbo",
+                                               "Hlt2CharmHadDsp2KS0KpKpPim_KS0DDTurbo",
+                                               "Hlt2CharmHadDsp2KS0KpPimPip_KS0DDTurbo",
+                                               "Hlt2CharmHadDsp2KS0PimPipPip_KS0DDTurbo",
+                                               "Hlt2CharmHadLcp2LamKp_LamDDTurbo",
+                                               "Hlt2CharmHadLcp2LamPip_LamDDTurbo"
+                                               ],
                  "Hlt2Filter"              : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')"
                 }
 
@@ -49,6 +84,10 @@ class HltAfterburnerConf(LHCbConfigurableUser):
         # if not code: code = 'HLT_NONE'
         # There is no HLT_TURBOPASS functor, so need to use regexps:
         code = "HLT_TURBOPASS_RE('^({})$')".format('|'.join(decisions))
+        return code
+
+    def _filterCode(self, lines):
+        code = "HLT_TURBOPASS_RE('^({})Decision$')".format('|'.join(lines))
         return code
 
     def _persistRecoSeq(self):
@@ -172,15 +211,19 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             veloChargeSeq.Members +=  [checkProto, decodeVeloFullClusters, addVeloCharge]
             AfterburnerSeq.Members += [veloChargeSeq]
 
-
-        if self.getProp("AddPIDToDownstream"):
+        persistRecoLines = self._persistRecoLines()
+        if self.getProp("AddPIDToDownstream") and (len(persistRecoLines)>0 or len(self.getProp("Hlt2DownstreamFilter"))>0):
             from Configurables import LoKi__HDRFilter   as HDRFilter
-            lines = self._persistRecoLines()
-            code = self._persistRecoFilterCode(lines)
+            if (len(persistRecoLines)>0 and len(self.getProp("Hlt2DownstreamFilter"))>0):
+                code = self._persistRecoFilterCode(persistRecoLines) + " | " + self._filterCode(self.getProp("Hlt2DownstreamFilter"))
+            elif len(persistRecoLines)>0:
+                code = self._persistRecoFilterCode(persistRecoLines)
+            elif len(self.getProp("Hlt2DownstreamFilter"))>0:
+                code = self._filterCode(self.getProp("Hlt2DownstreamFilter"))
             # Activate Downstream RICH for all PersistReco lines
             from DAQSys.Decoders import DecoderDB
             decoder = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
-            hlt2DownstreamFilter = HDRFilter('DownstreamHlt2Filter', Code =  code +" | "+self.getProp("Hlt2DownstreamFilter") if len(lines)>0 else self.getProp("Hlt2DownstreamFilter"),
+            hlt2DownstreamFilter = HDRFilter('DownstreamHlt2Filter', Code =  code ,
                                    Location = decoder.listOutputs()[0])
             downstreamPIDSequence = Sequence( "Hlt2AfterburnerDownstreamPIDSeq")
             downstreamPIDSequence.Members += [ hlt2DownstreamFilter ]

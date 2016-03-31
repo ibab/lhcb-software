@@ -4,6 +4,10 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2016-03-31 - Sascha Stahl
+ - HltAfterburner: Adjust downstream filter for RICH pid to be a list of lines rather than
+   a regular expression.
+
 ! 2016-03-29 - Sascha Stahl
  - HltAfterburner: Adjust downstream filter for RICH pid, add calculation of ProbNN variables.
 
