@@ -1,6 +1,7 @@
 // LHCb
 #include "Event/ODIN.h"
 #include "Event/HCDigit.h"
+#include "DetDesc/Condition.h"
 
 // Local
 #include "HCDigitTuple.h"
@@ -11,7 +12,7 @@ DECLARE_ALGORITHM_FACTORY(HCDigitTuple)
 // Standard constructor, initializes variables
 //=============================================================================
 HCDigitTuple::HCDigitTuple(const std::string& name, ISvcLocator* pSvcLocator)
-    : HCMonitorBase(name, pSvcLocator), m_tag(0) {
+    : HCMonitorBase(name, pSvcLocator) {
 
   declareProperty("DigitLocation", 
                   m_digitLocation = LHCb::HCDigitLocation::Default);
@@ -59,7 +60,17 @@ StatusCode HCDigitTuple::initialize() {
     m_digitLocation = tae + "/" + m_digitLocation;
   }
   m_corrected = !m_correctedDigitLocation.empty();
-  
+ 
+  // Check if the LHC information is available in the conditions database.
+  const std::string path = "Conditions/Online/LHC";
+  if (existDet<Condition>(path)) {
+    registerCondition(path, m_condLHC, &HCDigitTuple::cacheFill);
+    // First update.
+    sc = updMgrSvc()->update(this);
+    if (sc.isFailure()) return Error("Cannot retrieve fill number.", sc);
+  } else {
+    warning() << "Cannot find " << path << " in database" << endmsg;
+  } 
   return StatusCode::SUCCESS;
 }
 
@@ -109,11 +120,18 @@ StatusCode HCDigitTuple::execute() {
   tuple->column("orbitID", orbitodin);
   tuple->column("bxID", bunchid);
   tuple->column("odinTime", evTimeGps);
+  const Gaudi::Time gtime = odin->eventTime();
+  tuple->column("GpsYear", gtime.year(false) );
+  tuple->column("GpsMonth", gtime.month(false) );
+  tuple->column("GpsDay", gtime.day(false) );
+  tuple->column("GpsHour", gtime.hour(false) );
+  tuple->column("GpsMinute", gtime.minute(false) );
+  tuple->column("GpsSecond", gtime.second(false) + (gtime.nsecond() / 1.e9));
   tuple->column("slot", m_tag);
   tuple->column("step", step);
   tuple->array("adc_B", adcB.begin(), adcB.end());
   tuple->array("adc_F", adcF.begin(), adcF.end());
-
+  tuple->column("fill", m_fillNumber);
 
   const std::vector<std::string> stations = {"B0", "B1", "B2", "F1", "F2"};
   const unsigned int nStations = 5;
@@ -147,5 +165,14 @@ StatusCode HCDigitTuple::execute() {
   }
   tuple->write();
   
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+// Call-back function for retrieving fill number from conditions database.
+//=============================================================================
+StatusCode HCDigitTuple::cacheFill() {
+
+  m_fillNumber = m_condLHC->param<int>("FillNumber");
   return StatusCode::SUCCESS;
 }
