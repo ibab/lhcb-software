@@ -1182,9 +1182,9 @@ class B2DXBuilder(object):
         config['AM_MIN'       ] = '5000*MeV'
         decays = {'B02DsstarPi': ["B0 -> D*_s- pi+","B0 -> D*_s+ pi-"],
                   'B02DsstarK' : ["B0 -> D*_s- K+","B0 -> D*_s- K-"]}
-        inputs = {'B02DsstarPi': d2x+self.topoPions,
-                  'B02DsstarK': d2x+self.topoKaons}
-        b02dssth = makeB2XSels(decays,dname,inputs,self.config,True)
+        inputs = {'B02DsstarPi': d2x+self.topoPions_PID,
+                  'B02DsstarK': d2x+self.topoKaons_PID}
+        b02dssth = makeB2XSels(decays,dname,inputs,config,True)
         self.lines.append(ProtoLine(b02dssth,1.0))
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
