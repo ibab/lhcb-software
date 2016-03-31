@@ -210,6 +210,10 @@ StatusCode TupleToolAllTracks::fill( const Particle* mother
       float Delta_phi = Target->momentum().phi() - part->momentum().phi();
       if(fabs(Delta_phi) < m_deltaphi)continue;
 
+      //PV min ipchi2
+      auto PVinfo = getminipchi(part);
+      if(m_PVipchi2Cut != -1 && PVinfo.first < m_PVipchi2Cut) continue;
+
       //Fit a vertex with the added particle
       bool VertexRefit = true;
       Vertex vtxWithExtraTrack;
@@ -230,10 +234,9 @@ StatusCode TupleToolAllTracks::fill( const Particle* mother
       if(newipchi2 < 0 || (m_ipchi2Cut != -1 && newipchi2 > m_ipchi2Cut)) continue;
       m_dist->distance( part,&v,                oldip,oldipchi2 );
       if(oldipchi2 < 0) continue;
-      //PV
-      auto PVinfo = getminipchi(part);
+      
       h_minipchi2.push_back(PVinfo.first);
-      if(m_PVipchi2Cut != -1 && PVinfo.first < m_PVipchi2Cut) continue;
+
       //FD's
       m_dist->distance ( PVinfo.second.get(), &vtxWithExtraTrack, newfd, newfdchi2 );
       m_dist->distance ( PVinfo.second.get(), &v,                 oldfd, oldfdchi2 );      

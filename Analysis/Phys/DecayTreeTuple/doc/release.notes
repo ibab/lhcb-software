@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2016-03-31 - Matthew Rudolph
+ - Fix bug in TupleToolAllTracks by moving MINIPCHI2 cut before adding the value to output 
+
 !======================= DecayTreeTuple v5r5 2016-02-04 ======================
 
 ! 2016-01-20 - Matthew Rudolph
