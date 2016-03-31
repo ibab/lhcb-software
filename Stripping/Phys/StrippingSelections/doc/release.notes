@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-03-31 - Guido Andreassi
+ - changed syntax for RelInfoTrackIsolationBDT in B2emu, B2ee and Bu2KJpsiee lines, removed MDST.DST support for the same lines and switched to NBodyDecays in Tau2MuEtaPrime-
+ lines.
+
+
 ! 2016-03-31 - Chitsanu Khurewathanakul
  - Bug fixed in QEE/WJets
  - Depreciated QEE/Dijets

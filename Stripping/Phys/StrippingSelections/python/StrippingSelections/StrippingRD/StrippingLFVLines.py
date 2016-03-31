@@ -15,8 +15,7 @@ __all__ = ('LFVLinesConf',
 
 from Gaudi.Configuration import *
 #from Configurables import FilterDesktop, CombineParticles
-from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, DaVinci__N3BodyDecays
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -65,16 +64,19 @@ related_info_tools_B2eMu = [{'Type' : 'RelInfoBs2MuMuBIsolations',
                             },
                             
                             {'Type': 'RelInfoConeVariables',
-                            'Location':'ConeIsoInfo',
+                             'Location':'ConeIsoInfo',
                             },
                             
                             {'Type': 'RelInfoVertexIsolationBDT',
-                            'Location':'VtxIsoInfoBDT',
+                             'Location':'VtxIsoInfoBDT',
                             },
                             
                             {'Type': 'RelInfoTrackIsolationBDT',
-                            'Location':'ConeIsoInfoBDT',
-                            },
+                             'Variables' : 0,
+                             'DaughterLocations': {
+                             '[B_s0 -> e+ ^[mu-]cc]CC' :  'Muon_TrackIsoBDT',
+                             '[B_s0 -> ^e+ [mu-]cc]CC' :  'Electron_TrackIsoBDT',
+                            }},
                             ] ## matches 'RelatedInfoTools'
 
 related_info_tools_JPsi2eMu = [{'Type' : 'RelInfoBs2MuMuBIsolations',
@@ -178,10 +180,12 @@ related_info_tools_B2ee = [{'Type' : 'RelInfoBs2MuMuBIsolations',
                            {'Type': 'RelInfoVertexIsolationBDT',
                            'Location':'VtxIsoInfoBDT',
                            },
-                           
                            {'Type': 'RelInfoTrackIsolationBDT',
-                           'Location':'ConeIsoInfoBDT',
-                           },
+                            'Variables' : 0,
+                            'DaughterLocations': {
+                            '[B_s0 -> e+ ^[e-]cc]CC' :  'Electron1_TrackIsoBDT',
+                            '[B_s0 -> ^e+ [e-]cc]CC' :  'Electron2_TrackIsoBDT',
+                                }},
                            ] ## matches 'RelatedInfoTools'
 
 
@@ -303,11 +307,13 @@ related_info_tools_Bu2KJPsiee = [{'Type' : 'RelInfoBs2MuMuBIsolations',
                             {'Type': 'RelInfoVertexIsolationBDT',
                             'Location':'VtxIsoInfoBDT',
                             },
-                                 
                             {'Type': 'RelInfoTrackIsolationBDT',
-                            'Location':'ConeIsoInfoBDT',
-                            },
-                           ] ## matches 'RelatedInfoTools'
+                             'Variables' : 0,
+                             'DaughterLocations': {
+                             '[B+ -> (J/psi(1S) -> ^e+ e-) K+]CC' :  'Electron1_TrackIsoBDT',
+                             '[B+ -> (J/psi(1S) -> e+ ^e-) K+]CC' :  'Electron2_TrackIsoBDT',
+                                }},
+                            ] ## matches 'RelatedInfoTools'
 
 
 default_config = {
@@ -367,6 +373,7 @@ default_config = {
             'piminus_cuts'      :   "(PROBNNpi > 0.1) & (PT > 250*MeV) & (TRGHOSTPROB < 0.3) & (TRCHI2DOF < 3.0) & (MIPCHI2DV(PRIMARY) > 9.)",
             'etap_mass_window'   :  "(ADAMASS('eta') < 80*MeV) | (ADAMASS('eta_prime') < 80*MeV)",
             'etap_cuts'          :  '(PT > 500*MeV) & (VFASPF(VCHI2/VDOF) < 6.0)',# & (MIPCHI2DV(PRIMARY)> 9)',
+            'pipi_cuts'          :  '(ACHI2DOCA(1,2)<16)',
         }, #matches config_EtaPrime2pipigamma
     
         'config_EtaPrime2pipipi'   : {
@@ -375,6 +382,7 @@ default_config = {
             'piminus_cuts'      :   "(PROBNNpi > 0.1) & (PT > 250*MeV) & (TRGHOSTPROB < 0.3) & (TRCHI2DOF < 3.0) & (MIPCHI2DV(PRIMARY) > 9.)",
             'etap_mass_window'   :  "(ADAMASS('eta') < 80*MeV) | (ADAMASS('eta_prime') < 80*MeV)", #"(in_range(450, AM, 1050))",
             'etap_cuts'          :  '(PT > 500*MeV) & (VFASPF(VCHI2/VDOF) < 6.0)',# & (MIPCHI2DV(PRIMARY)> 9)',
+            'pipi_cuts'          :  'ACHI2DOCA(1,2)<16',
         }, #matches config_EtaPrime2pipipi
     }, #matches config_Tau2MuEtaPrime
 } #matches 'CONFIG'
@@ -460,7 +468,7 @@ class LFVLinesConf(LineBuilder) :
                                            prescale = config['B2eMuPrescale'],
                                            postscale = config['Postscale'],
                                            RelatedInfoTools = config['RelatedInfoTools_B2eMu'],
-                                           MDSTFlag = True,
+                                           #MDSTFlag = True,
                                            RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
                                            algos = [ self.selB2eMu ]
                                            )
@@ -521,7 +529,7 @@ class LFVLinesConf(LineBuilder) :
                                         prescale = config['Tau2MuEtaPrimePrescale'],
                                         postscale = config['Postscale'],
                                         algos = [ self.selTau2MuEtaPrime_gamma ],
-                                        MDSTFlag = True,
+                                        #MDSTFlag = True,
                                         RelatedInfoTools = config['RelatedInfoTools_Tau2MuEtaPrime'],
                                         RequiredRawEvents = ['Calo'],
                                         )
@@ -530,7 +538,7 @@ class LFVLinesConf(LineBuilder) :
                                                 prescale = config['Tau2MuEtaPrimePrescale'],
                                                 postscale = config['Postscale'],
                                                 algos = [ self.selTau2MuEtaPrime_pi ],
-                                                MDSTFlag = True,
+                                                #MDSTFlag = True,
                                                 RelatedInfoTools = config['RelatedInfoTools_Tau2MuEtaPrime'],
                                                 RequiredRawEvents = ['Calo'],
                                                 )
@@ -1028,12 +1036,12 @@ def makeEtaPrime2pipigamma(name, config) :
         Please contact Guido Andreassi if you think of prescaling this line!
         
         Arguments:
-        name        : name of the Selection , configuration dictionary.
+        name        : name of the Selection , config:  configuration dictionary.
         """
-    EtaPrime2pipigamma = CombineParticles()
+    EtaPrime2pipigamma = DaVinci__N3BodyDecays()
     EtaPrime2pipigamma.DecayDescriptor = "eta_prime -> pi+ pi- gamma"
     EtaPrime2pipigamma.ReFitPVs = True
-                        
+    EtaPrime2pipigamma.Combination12Cut  = "{pipi_cuts}".format(**config)
     EtaPrime2pipigamma.DaughtersCuts = {"pi+"     : "{piplus_cuts}".format(**config),
                               "pi-"     : "{piminus_cuts}".format(**config),
                               "gamma"   : "{gamma_cuts}".format(**config)}
@@ -1056,12 +1064,12 @@ def makeEtaPrime2pipipi(name, config) :
         Please contact Guido Andreassi if you think of prescaling this line!
         
         Arguments:
-        name        : name of the Selection , configuration dictionary.
+        name        : name of the Selection , config:  configuration dictionary.
         """
-    EtaPrime2pipipi = CombineParticles()
+    EtaPrime2pipipi = DaVinci__N3BodyDecays()
     EtaPrime2pipipi.DecayDescriptor = "eta_prime -> pi+ pi- pi0"
     EtaPrime2pipipi.ReFitPVs = True
-    
+    EtaPrime2pipipi.Combination12Cut  = "{pipi_cuts}".format(**config)
     EtaPrime2pipipi.DaughtersCuts = {"pi+"     : "{piplus_cuts}".format(**config),
                                      "pi-"     : "{piminus_cuts}".format(**config),
                                      "pi0"     : "{pi0_cuts}".format(**config)}
