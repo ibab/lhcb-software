@@ -29,8 +29,8 @@ gaudi_add_module(MuonID
 gaudi_add_dictionary(MuonID
                      dict/MuonIDDict.h
                      dict/MuonID.xml
-                     INCLUDE_DIRS ROOT AIDA Boost RELAX ROOT PythonLibs
-                     LINK_LIBRARIES ROOT Boost RELAX ROOT PythonLibs GaudiAlgLib LHCbKernel LHCbMathLib PartPropLib LoKiCoreLib
+#                     INCLUDE_DIRS ROOT AIDA Boost RELAX ROOT PythonLibs
+#                     LINK_LIBRARIES ROOT Boost RELAX ROOT PythonLibs GaudiAlgLib LHCbKernel LHCbMathLib PartPropLib LoKiCoreLib
                      OPTIONS " -U__MINGW32__ ")
 
 
