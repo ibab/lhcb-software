@@ -8,9 +8,7 @@ from Configurables import HltPackedDataWriter
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
 
-
 __author__ = "Sean Benson, Rosen Matev"
-
 
 class HltPersistRecoConf(LHCbConfigurableUser):
     # python configurables to be applied before me
@@ -19,7 +17,12 @@ class HltPersistRecoConf(LHCbConfigurableUser):
         Hlt2BiKalmanFittedDownstreamTracking,
     ]
     # python configurables that I configure
-    __used_configurables__ = []
+    __used_configurables__ = [
+        (CaloProcessor, "SharedCaloProcessor"),
+        (RichRecSysConf, "Hlt2LongTracking_RichRecSysConf"),
+        (RichRecSysConf, "Hlt2DownstreamTracking_RichRecSysConf"),
+        (ChargedProtoANNPIDConf, "Hlt2LongTracking_ChargedProtoANNPIDConf")
+    ]
 
     __slots__ = {
         "Sequence":        None,

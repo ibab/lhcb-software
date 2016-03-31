@@ -40,7 +40,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         (CaloProcessor, "SharedCaloProcessor"),
         (RichRecSysConf, "Hlt2LongTracking_RichRecSysConf"),
         (RichRecSysConf, "Hlt2DownstreamTracking_RichRecSysConf"),
-        (ChargedProtoANNPIDConf, None)
+        (ChargedProtoANNPIDConf, "Hlt2LongTracking_ChargedProtoANNPIDConf")
         ]
 
     __slots__ = { "DataType"                        : '2012' # datatype  2009, MC09, DC06...
