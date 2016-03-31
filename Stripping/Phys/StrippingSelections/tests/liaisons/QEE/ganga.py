@@ -9,7 +9,7 @@ app.user_release_area = os.path.expandvars('$HOME/cmtuser/')
 app.optsfile  = 'TestS26_Selections.py'
 app.extraopts = """
 from Configurables import DaVinci
-DaVinci().EvtMax = 1000
+DaVinci().EvtMax = -1
 """
 
 ## S24
@@ -25,13 +25,13 @@ ds = app.readInputData('../../data/Reco15a_Run164668.py')
 ds.XMLCatalogueSlice = '../../data/Reco15a_Run164668.xml'
 
 j = Job()
-j.name        = 'TestS26 Hlt2Exotica Retention'
-j.comment     = 'Deletable'
-# j.backend     = PBS(extpraopts='--mem=2400 -t 1-0:0:0')
-j.backend     = Dirac()
+j.name        = 'TestS26'
+j.comment     = 'Deletable: Rate all lines Aevt'
+j.backend     = PBS(extraopts='--mem=5800 -t 1-0:0:0')
+# j.backend     = Dirac()
 j.application = app
 j.inputdata   = ds
-j.splitter    = SplitByFiles( filesPerJob=1 )
+j.splitter    = SplitByFiles( filesPerJob=5 )
 j.outputfiles = [ 'summary.xml' ]
 
 j.submit()

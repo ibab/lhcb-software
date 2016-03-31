@@ -41,7 +41,7 @@ default_config = {
       'RequiredRawEvents'     : ['Calo'],
       #
       'config_W': {
-        'TOS'         : 'Hlt2EWSingleMuonHighPtDecision',
+        'TOS'         : 'Hlt2EWSingleMuonVHighPtDecision', # 12.5 GeV
         'min_mu_pT'   : 10. * GeV,
         'max_mu_pT'   : 200000. * GeV,
       },
@@ -62,7 +62,7 @@ default_config = {
       'RequiredRawEvents'     : ['Calo'],
       #
       'config_W': {
-        'TOS'       : 'Hlt2EWSingleElectronHighPtDecision',
+        'TOS'       : 'Hlt2EWSingleElectronVHighPtDecision', # 15 GeV
         'min_e_pT'  : 10. * GeV,
         'max_e_pT'  : 200000. * GeV,
         'PrsCalMin' : 50. * MeV,
@@ -136,7 +136,7 @@ def SelWe( name, conf, TOS_HLT2=None ):
     Code=code, Preambulo=preambulo)
 
 
-def SelWDiJets( name, conf, sel_W, TOS_HLT2=None ):
+def SelWDiJets( name, conf, desc, sel_W, TOS_HLT2=None ):
   """
   Create the combination of W + DiJets
   """
@@ -148,16 +148,19 @@ def SelWDiJets( name, conf, sel_W, TOS_HLT2=None ):
   vfitter.Jets = ""
 
   ## Apply cuts, with TOS optionally
-  dcut = "(PT > %(min_jet_pT)s)"%conf
+  #  Asking AT LEAST one of the jet to be TOSed by given trigger.
+  ccut = "AALLSAMEBPV "\
+         "& ( dr_13 > %(dr_lepton_jet)s )"\
+         "& ( dr_23 > %(dr_lepton_jet)s )" %conf
   if TOS_HLT2:
-    dcut += "& (TOS('%s','Hlt2TriggerTisTos'))"%TOS_HLT2
+    cut_tos     = "(TOS('%s','Hlt2TriggerTisTos'))"%TOS_HLT2
+    cut_tosjet  = '(ACHILDCUT({0}, 0) | ACHILDCUT({0}, 1))'.format(cut_tos)
+    ccut       += ('&' + cut_tosjet)
 
   DiJet.Preambulo       = preambulo
-  DiJet.DecayDescriptor = "[H+ -> CELLjet CELLjet mu+]cc"
-  DiJet.DaughtersCuts   = { "CELLjet": dcut }
-  DiJet.CombinationCut  = "AALLSAMEBPV "\
-                           "& ( dr_13 > %(dr_lepton_jet)s )"\
-                           "& ( dr_23 > %(dr_lepton_jet)s )" %conf
+  DiJet.DecayDescriptor = desc
+  DiJet.DaughtersCuts   = { "CELLjet": "(PT > %(min_jet_pT)s)"%conf }
+  DiJet.CombinationCut  = ccut
   DiJet.MotherCut       = "ALL"
 
   return Selection( name, Algorithm=DiJet, RequiredSelections=[ sel_W, StdJets ])
@@ -182,9 +185,11 @@ class WJetsConf( LineBuilder ) :
 
     ## Switch the W selection, depends on the name given.
     if name == 'WmuJets':
-      SelW = SelWmu 
+      SelW = SelWmu
+      desc = "[H+ -> CELLjet CELLjet mu+]cc" 
     elif name == 'WeJets':
       SelW = SelWe 
+      desc = "[H+ -> CELLjet CELLjet e+]cc"
     else:
       raise ValueError('Unknown W to make: %s'%name)
 
@@ -194,8 +199,8 @@ class WJetsConf( LineBuilder ) :
     W_notos = SelW( name+'_W_notos', conf )
 
     ## Make w+DiJets, also 2 versions, opposite of the TOS used above
-    WJets_toslepton = SelWDiJets( name+'_toslepton', config, W_tos )
-    WJets_tosjet    = SelWDiJets( name+'_tosjet'   , config, W_notos, config['TOS_Jet'])
+    WJets_toslepton = SelWDiJets( name+'_toslepton', config, desc, W_tos )
+    WJets_tosjet    = SelWDiJets( name+'_tosjet'   , config, desc, W_notos, config['TOS_Jet'])
 
     ## Finally, register lines
     self.registerLine(StrippingLine( name + 'Line',
