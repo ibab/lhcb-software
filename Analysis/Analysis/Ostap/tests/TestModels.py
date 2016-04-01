@@ -137,8 +137,11 @@ model_cbrs = Models.Fit1D (
                                         mean  = signal_gauss.mean  ) ,
     background = model_gauss.background  )
 
-model_cbrs.signal.alpha.fix(2) 
-model_cbrs.signal.n    .fix(5) 
+model_cbrs.signal.alpha.fix( 3) 
+model_cbrs.signal.n    .fix(10) 
+
+model_cbrs.s.setVal(5000)
+model_cbrs.b.setVal( 500)
 
 with rooSilent() : 
     result, frame = model_cbrs. fitTo ( dataset0 )
@@ -343,16 +346,25 @@ model_gauss_gv2 = Models.Fit1D (
 model_gauss_gv2.signal.kappa.fix(0)
 model_gauss_gv2.b.fix(0)
 
+model_gauss_gv2.s.setVal(5000)
+model_gauss_gv2.b.setVal( 500)
+
 with rooSilent() : 
     result, frame = model_gauss_gv2. fitTo ( dataset0 )
     model_gauss_gv2.signal.mean.release() 
+    model_gauss_gv2.s.setVal(5000)
+    model_gauss_gv2.b.setVal( 500)
     result, frame = model_gauss_gv2. fitTo ( dataset0 )
     model_gauss_gv2.signal.kappa.release() 
+    model_gauss_gv2.s.setVal(5000)
+    model_gauss_gv2.b.setVal( 500)
     result, frame = model_gauss_gv2. fitTo ( dataset0 )
     result, frame = model_gauss_gv2. fitTo ( dataset0 )
     model_gauss_gv2.b.release() 
+    model_gauss_gv2.s.setVal(5000)
+    model_gauss_gv2.b.setVal( 500)
     result, frame = model_gauss_gv2. fitTo ( dataset0 )
-
+    
 if 0 != result.status() or 3 != result.covQual() :
     logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual () ) )
     print result 
@@ -494,6 +506,9 @@ model_shash = Models.Fit1D (
     background = model_gauss.background  )
 
 signal = model_shash.signal
+
+model_shash.s.setVal(5000)
+model_shash.b.setVal( 500)
 
 # m_shash.mu      .setVal (  0.79 )
 # m_shash.sigma   .setVal (  0.88 ) 
@@ -662,7 +677,8 @@ model_bw = Models.Fit1D (
       convolution = cnv             ) ,
     background = model_gauss.background  )
 
-model_bw.b.fix(500)
+model_bw.s.setVal(5000)
+model_bw.b.setVal(500)
 model_bw.signal.mean.fix ( m.value() )
 with rooSilent() : 
     result, frame = model_bw. fitTo ( dataset0 )
