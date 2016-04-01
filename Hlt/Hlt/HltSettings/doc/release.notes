@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-04-01 - Simone Stracka
+ - Tightened PT and PID cuts for muons in Hlt2DiMuonJPsiTurbo and Hlt2DiMuonPsi2STurbo lines
+
 ! 2016-03-30 - Sascha Stahl
  - Add Hlt1TrackMVALoose and Hlt1TwoTrackMVALoose to Physics_pp_Draft2016 with a prescale of 0.
  - Remove obsolete settings of Hlt1TrackAllL0 and Hlt1TrackPhoton from  Physics_pp_Draft2016.
