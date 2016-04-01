@@ -154,7 +154,7 @@ def SelWDiJets( name, conf, desc, sel_W, TOS_HLT2=None ):
          "& ( dr_23 > %(dr_lepton_jet)s )" %conf
   if TOS_HLT2:
     cut_tos     = "(TOS('%s','Hlt2TriggerTisTos'))"%TOS_HLT2
-    cut_tosjet  = '(ACHILDCUT({0}, 0) | ACHILDCUT({0}, 1))'.format(cut_tos)
+    cut_tosjet  = '(ACHILDCUT({0}, 1) | ACHILDCUT({0}, 2))'.format(cut_tos)
     ccut       += ('&' + cut_tosjet)
 
   DiJet.Preambulo       = preambulo

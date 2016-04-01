@@ -20,17 +20,15 @@ from StrippingConf.Configuration import StrippingConf
 from Configurables import DecodeRawEvent
 DecodeRawEvent().setProp("OverrideInputs",4.2)
 
-# Specify the name of your configuration
-my_wg='QEE' #FOR LIAISONS
-
-
 # NOTE: this will work only if you inserted correctly the 
 # default_config dictionary in the code where your LineBuilder 
 # is defined.
 from StrippingSelections import buildersConf
 confs = buildersConf()
-from StrippingSelections.Utils import lineBuilder, buildStreams
-streams = buildStreams( confs, WGs=my_wg )
+from StrippingSelections.Utils import lineBuilder, buildStreams, buildStreamsFromBuilder
+# streams = buildStreams( confs, WGs='QEE' )
+streams = buildStreamsFromBuilder(confs, ['WmuJets','WeJets'] )
+
 
 leptonicMicroDSTname   = 'Leptonic'
 charmMicroDSTname      = 'Charm'

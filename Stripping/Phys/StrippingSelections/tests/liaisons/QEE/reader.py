@@ -8,7 +8,7 @@ import re
 
 def valid(line):
   """Return True if this line looks like a stirppingline."""
-  return '#accept' in line and 'Stripping' in line and 'Scaler' not in line
+  return '#accept' in line and 'Stripping' in line and 'Scaler' not in line and 'ExtraInfo' not in line and 'Stream' not in line
 
 def process(line):
   name,count = re.findall(r'name="Stripping(\S+)#accept">(\d+)<', line)[0]
