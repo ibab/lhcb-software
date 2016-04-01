@@ -6,8 +6,8 @@ find_package(GaudiProject)
 #---------------------------------------------------------------
 
 # Declare project name and version
-gaudi_project(DaVinci v39r1
-              USE Analysis v15r1
+gaudi_project(DaVinci v40r0
+              USE Analysis v16r0
                   Stripping v10r1
               DATA AppConfig VERSION v3r*
                    FieldMap VERSION v5r*
