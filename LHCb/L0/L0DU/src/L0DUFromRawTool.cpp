@@ -171,8 +171,13 @@ bool L0DUFromRawTool::decoding(int ibank){
   m_dataMap.clear();
   m_report.clear();
   // reset
-  for( auto& i : *m_processorDatas ) i->setWord (L0DUBase::EmptyData);
-
+  for( auto& i : *m_processorDatas ) {
+    const std::vector<int>& BXs=i->bxList();
+    for( std::vector<int>::const_iterator ibx=BXs.begin();BXs.end()!=ibx;ibx++){    
+      i->setWord (L0DUBase::EmptyData,*ibx);
+    }    
+  }
+  
   //-----------------------------
   // get bank -------------------
   //-----------------------------

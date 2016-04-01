@@ -147,9 +147,9 @@ unsigned long L0ProcessorDataDecoder::digit( const unsigned int base[L0DUBase::I
       m_ok=false;
       return 0;
     }
-  if( ! fiber->hasData(bx))
-    Warning("Fiber "+ Gaudi::Utils::toString(base[ L0DUBase::Index::Fiber2 ]) +
-            " has no defined data for BX="+Gaudi::Utils::toString(bx),StatusCode::SUCCESS,1).ignore();
+    if( ! fiber2->hasData(bx))
+      Warning("Fiber "+ Gaudi::Utils::toString(base[ L0DUBase::Index::Fiber2 ]) +
+              " has no defined data for BX="+Gaudi::Utils::toString(bx),StatusCode::SUCCESS,1).ignore();
     unsigned long val2 =( ( fiber2->word(bx) & base[ L0DUBase::Index::Mask2 ]  )  >> base[ L0DUBase::Index::Shift2 ]) ;
     val |=  (val2  << base[ L0DUBase::Index::Offset ]  ); 
   }

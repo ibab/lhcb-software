@@ -282,7 +282,7 @@ void L0DUEmulatorTool::setDataValue(LHCb::L0DUElementaryData* l0Data,
   for( std::vector<int>::const_iterator ibx=BXs.begin();BXs.end()!=ibx;ibx++){
     l0Data->setDigit( digit( base, *ibx ) , *ibx );
     if( msgLevel(MSG::VERBOSE))
-      verbose() << "Set Data digit " << l0Data->name() << " : " <<digit(base) << " : scale  = " << scale(base) 
+      verbose() << "Set Data digit " << l0Data->name() << " : " <<digit(base, *ibx) << " : scale  = " << scale(base) 
                 << " for BX="<< Gaudi::Utils::toString(*ibx)<< endmsg;
   }
 }
