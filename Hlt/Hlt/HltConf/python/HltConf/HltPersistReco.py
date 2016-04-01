@@ -7,6 +7,7 @@ from Configurables import HltPackedDataWriter
 
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
+from Configurables import CaloProcessor, RichRecSysConf, ChargedProtoANNPIDConf
 
 __author__ = "Sean Benson, Rosen Matev"
 

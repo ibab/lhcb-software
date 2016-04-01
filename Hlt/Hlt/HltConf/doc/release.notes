@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2016-04-01 - Rosen Matev
+ - Import missing configurables in HltPersistReco
+
 ! 2016-03-31 - Sascha Stahl
  - HltAfterburner: Adjust downstream filter for RICH pid to be a list of lines rather than
    a regular expression.
