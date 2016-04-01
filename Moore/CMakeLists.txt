@@ -14,4 +14,4 @@ gaudi_project(Moore v25r0
                    ParamFiles VERSION v8r*
                    RawEventFormat
                    TCK/HltTCK VERSION v3r*
-                   TCK/L0TCK  VERSION v4r*)
+                   TCK/L0TCK  VERSION v5r*)
