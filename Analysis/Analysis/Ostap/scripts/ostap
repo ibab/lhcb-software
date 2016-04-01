@@ -326,6 +326,8 @@ for _s in _startups :
 
         import runpy
         globs = runpy.run_path ( _ss , globals() , run_name = '__main__')
+        globs = dict ( ( (k,v) for k,v in globs.items() if  not k.startswith('__') and not k.endswith('__')) )
+        logger.debug('Symbols from %s: %s' % ( _s , globs.keys() ) )
         globals().update( globs )
         del globs
         
@@ -382,6 +384,8 @@ def treat_file ( f ) :
             globs = runpy.run_path (
                 f , globals() if arguments.WithContext else {}  ,
                 run_name = '__main__' )
+            globs = dict ( ( (k,v) for k,v in globs.items() if  not k.startswith('__') and not k.endswith('__')) )
+            logger.debug('Symbols from %s: %s' % ( f , globs.keys() ) )
             globals().update ( globs )
             del globs 
                 
@@ -422,6 +426,8 @@ def treat_file ( f ) :
             ## this one is always executed with the context!!!
             import runpy
             globs = runpy.run_path ( f , globals() , run_name = '__main__')
+            globs = dict ( ( (k,v) for k,v in globs.items() if  not k.startswith('__') and not k.endswith('__')) )
+            logger.debug('Symbols from %s: %s' % ( f , globs.keys() ) ) 
             globals().update ( globs )
             del globs 
             

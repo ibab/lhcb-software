@@ -1217,7 +1217,7 @@ def _ds_var_minmax_ ( dataset , var , cuts = '' , delta = 0.0 )  :
 
 
 # =============================================================================
-## get the statistic for certain expression in Tree/Dataset
+## get the sum for certain expression in Tree/Dataset
 #  @code
 #  dataset  = ... 
 #  sum1 = dataset.sumVar( 'S_sw/effic' )
@@ -1226,11 +1226,12 @@ def _ds_var_minmax_ ( dataset , var , cuts = '' , delta = 0.0 )  :
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-09-15
 def _ds_sum_var_ ( dataset , what , *cuts ) :
-    """
+    """Get the sum for certain expression in Tree/Dataset
+    >>> sum1 = dataset.sumVar( 'S_sw/effic' )
+    >>> sum2 = dataset.sumVar( 'S_sw/effic' ,'pt>1000')    
     """
     res = _ds_stat_var_ ( dataset , what , *cuts )
-    return VE ( res.sum() , res.sumw2() )
-
+    return VE ( res.sum() , res.sum2() )
 
 ROOT.RooDataSet . statVar = _ds_stat_var_
 ROOT.RooDataSet .  sumVar = _ds_sum_var_

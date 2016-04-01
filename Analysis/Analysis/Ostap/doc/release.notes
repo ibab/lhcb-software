@@ -8,6 +8,12 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2016-04-01 - Vanya Belyaev
+
+  - fix certain tests...
+  - ostap: avoid importing of 'special' names (starts/ends with '__')
+  - fix bug/typo in RooDataSet.sumVar 
+
 !=========================== Ostap v1r15 2016-03-30 ===========================
 
 ! 2016-03-30 - Vanya Belyaev
