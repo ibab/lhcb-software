@@ -91,6 +91,8 @@ for _s in _startups :
     try :
         import runpy
         globs = runpy.run_path ( _ss , globals() )
+        globs = dict ( ( (k,v) for k,v in globs.items() if not k.startswith('__') and not k.endswith('__')) )
+        logger.debug('Symbols from %s: %s' % ( _s , globs.keys() ) )
         globals().update ( globs )
         del globs
         ##
