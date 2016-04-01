@@ -7,6 +7,10 @@
 !           ALWAYS inform the Hlt group.
 !
 !----------------------------------------------------------------------------
+
+! 2016-04-01 - Mark Williams
+ - Fixed PersistReco flag for one CharmHad line
+
 ! 2016-03-30 - Jessica Prisciandaro
  - Added PersistReco flag to Turbo  DiMuon lines
 

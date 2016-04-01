@@ -53,7 +53,7 @@ theseslots = {   'Prescale' : { 'Hlt2CharmHadDpToKmPipPip_LTUNBTurbo'         : 
                  'PersistReco' : {'Hlt2CharmHadD02KmPipTurbo'				        : True,
                                   'Hlt2CharmHadDstp2D0Pip_D02KmPipTurbo'		        : True,
                                   'Hlt2CharmHadDpToKmPipPipTurbo'			        : True,
-                                  'Hlt2CharmHadDpToKmPipPip_ForKPiAsym'			        : True,
+                                  'Hlt2CharmHadDpToKmPipPip_ForKPiAsymTurbo'		        : True,
                                   'Hlt2CharmHadDspToKmKpPipTurbo'			        : True,
                                   'Hlt2CharmHadLcpToPpKmPipTurbo'		     	        : True,
                                   'Hlt2CharmHadXic0ToPpKmKmPipTurbo'			        : True,
