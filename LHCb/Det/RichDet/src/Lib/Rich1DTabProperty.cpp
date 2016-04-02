@@ -123,45 +123,56 @@ StatusCode TabulatedProperty1D::updateTabProp()
 
 ISvcLocator* TabulatedProperty1D::svcLocator()
 {
+  // The service locator
+  static ISvcLocator * svcLocator = nullptr;
+
   // get the Gaudi service locator
-  if ( !m_svcLocator )
+  if ( !svcLocator )
   {
-    m_svcLocator = Gaudi::svcLocator();
-    if ( nullptr == m_svcLocator )
+    svcLocator = Gaudi::svcLocator();
+    if ( !svcLocator )
     {
       throw GaudiException( "ISvcLocator* points to nullptr!",
                             "*TabulatedProperty1D*", StatusCode::FAILURE );
     }
   }
-  return m_svcLocator;
+  return svcLocator;
 }
 
 IUpdateManagerSvc* TabulatedProperty1D::updMgrSvc()
 {
-  if ( !m_updMgrSvc )
+  // The Update Manager Service
+  static IUpdateManagerSvc* updMgrSvc = nullptr;
+
+  // load the service
+  if ( !updMgrSvc )
   {
-    const auto sc = svcLocator()->service("UpdateManagerSvc", m_updMgrSvc);
-    if ( sc.isFailure() )
+    const auto sc = svcLocator()->service("UpdateManagerSvc",updMgrSvc);
+    if ( !updMgrSvc || sc.isFailure() )
     {
       throw GaudiException( "Could not locate UpdateManagerSvc",
                             "*TabulatedProperty1D*", StatusCode::FAILURE );
     }
   }
-  return m_updMgrSvc;
+  return updMgrSvc;
 }
 
 IMessageSvc* TabulatedProperty1D::msgSvc()
 {
-  if ( !m_msgSvc )
+  // The Message service
+  static IMessageSvc* msgSvc = nullptr;
+
+  // get the message service
+  if ( !msgSvc )
   {
-    const auto sc = svcLocator()->service("MessageSvc", m_msgSvc);
-    if ( sc.isFailure() )
+    const auto sc = svcLocator()->service("MessageSvc", msgSvc);
+    if ( !msgSvc || sc.isFailure() )
     {
       throw GaudiException( "Could not locate MessageSvc",
                             "*TabulatedProperty1D*", StatusCode::FAILURE );
     }
   }
-  return m_msgSvc;
+  return msgSvc;
 }
 
 double 

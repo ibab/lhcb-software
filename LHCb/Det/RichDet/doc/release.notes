@@ -6,7 +6,9 @@
 
 ! 2016-04-02 - Chris Jones
  - Add range checking and subsequent error reporting to TabulatedFunction1D
-   and TabuldateProperty1D.
+   and TabulateProperty1D.
+ - Reduce memory footprint of TabulateProperty1D by making some data members
+   static.
 
 ! 2016-03-31 - Chris Jones
  - Add an anode radius check to DeRichHPD::magnifyToGlobalMagnetON to avoid

@@ -116,15 +116,6 @@ namespace Rich
     /// Pointer to the underlying TabulatedProperty
     const TabulatedProperty * m_tabProp = nullptr;
 
-    /// The service locator
-    ISvcLocator* m_svcLocator = nullptr;
-
-    /// The Message service
-    IMessageSvc* m_msgSvc = nullptr;
-
-    /// The Update Manager Service
-    IUpdateManagerSvc* m_updMgrSvc = nullptr;
-
     /// Flag to say if we have registered a dependency with the UMS
     bool m_registedUMS = false;
 
