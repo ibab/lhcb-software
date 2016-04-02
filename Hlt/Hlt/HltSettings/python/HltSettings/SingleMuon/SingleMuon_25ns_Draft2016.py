@@ -48,7 +48,7 @@ class SingleMuon_25ns_Draft2016(object) :
                                'Pt':            1000 * MeV },
             # Control with prescale
             'SingleMuon' :    {'IP'     : 0.25 * mm,
-                               'IPChi2' : 100, # Adimensional
+                               'IPChi2' : 16, # Adimensional
                                },
             'NoSPD' :  {'IP'     : 0.25 * mm,
                                     'IPChi2' : 100, # Adimensional
@@ -66,7 +66,7 @@ class SingleMuon_25ns_Draft2016(object) :
                                 'RarePMax'  : 500 * GeV,
                                 'muID'  : 1
                                 },
-            'Prescale'   : { 'Hlt2SingleMuon'      : 0.1,
+            'Prescale'   : { 'Hlt2SingleMuon'      : 0.002,
                              'Hlt2SingleMuonNoSPD'      : 0.1
                              , 'Hlt2SingleMuonHighPT'    : 1.0
                              , 'Hlt2SingleMuonLowPT' : 0.002}
