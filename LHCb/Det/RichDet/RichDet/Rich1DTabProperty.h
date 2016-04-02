@@ -104,6 +104,13 @@ namespace Rich
     /// Set up the UMS updates for the TabulatedProperty
     bool configureUMS( const TabulatedProperty * tab );
 
+    /** Issue an out of range warning
+     *  @param x    The requested x value
+     *  @param retx The x value to use (corrected to be in range)
+     *  @return x value to use
+     */
+    virtual double rangeWarning( const double x, const double retx ) const override;
+
   private: // data
 
     /// Pointer to the underlying TabulatedProperty

@@ -40,7 +40,7 @@ bool TabulatedFunction1D::initInterpolator( const double x[],
                                             const gsl_interp_type * interType )
 {
   // clear the current data map
-  m_data.clear();
+  clearData();
 
   // copy data to internal container
   for ( int i = 0; i < size; ++i ) { m_data[ x[i] ] = y[i]; }
@@ -56,7 +56,7 @@ bool TabulatedFunction1D::initInterpolator( const std::vector<double> & x,
                                             const gsl_interp_type * interType )
 {
   // clear the current data map
-  m_data.clear();
+  clearData();
 
   // Check on size of containers
   if ( x.size() != y.size() )
@@ -85,10 +85,10 @@ bool TabulatedFunction1D::initInterpolator( const std::map<double,double> & data
                                             const gsl_interp_type * interType )
 {
   // clear the current data map
-  m_data.clear();
+  clearData();
 
   // update the data map
-  m_data = data;
+  m_data = data; 
 
   // initialise interpolation
   return ( m_OK = initInterpolator( interType ) );
@@ -101,11 +101,10 @@ TabulatedFunction1D::initInterpolator( const std::vector< std::pair<double,doubl
                                        const gsl_interp_type * interType )
 {
   // clear the current data map
-  m_data.clear();
+  clearData();
 
   // copy data to internal container
-  std::vector< std::pair<double,double> >::const_iterator i;
-  for ( i = data.begin(); i != data.end(); ++i ) { m_data[i->first] = i->second; }
+  for ( auto i = data.begin(); i != data.end(); ++i ) { m_data[i->first] = i->second; }
 
   // initialise interpolation
   return ( m_OK = initInterpolator( interType ) );
@@ -119,6 +118,13 @@ bool TabulatedFunction1D::initInterpolator( const gsl_interp_type * interType )
 
   // clean up first
   clearInterpolator();
+
+  // Update the cached min and max X values
+  if ( !m_data.empty() )
+  {
+    m_minX = (*m_data.begin()).first;
+    m_maxX = (*(--m_data.end())).first;
+  }
 
   // set interpolator type
   if ( nullptr != interType ) m_interType = interType;
@@ -324,3 +330,15 @@ TabulatedFunction1D::combine( const ConstVector & funcs,
   // return
   return std::unique_ptr<TabulatedFunction1D>(combFunc);
 }
+
+//============================================================================
+
+double 
+TabulatedFunction1D::rangeWarning( const double x, const double retx ) const
+{
+  std::cerr << "Rich::TabulatedFunction1D : WARNING : Out-Of-Range x = " << x
+            << " Valid Range = " << minX() << " to " << maxX() << std::endl;
+  return retx;
+}
+
+//============================================================================

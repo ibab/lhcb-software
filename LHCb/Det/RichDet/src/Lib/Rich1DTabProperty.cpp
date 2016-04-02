@@ -163,3 +163,13 @@ IMessageSvc* TabulatedProperty1D::msgSvc()
   }
   return m_msgSvc;
 }
+
+double 
+TabulatedProperty1D::rangeWarning( const double x, const double retx ) const
+{
+  std::cerr << "Rich::TabulatedProperty1D "
+            << tabProperty()->name()
+            << " : WARNING : Out-Of-Range x = " << x
+            << " Valid Range = " << minX() << " to " << maxX() << std::endl;
+  return retx;
+}

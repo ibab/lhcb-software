@@ -143,6 +143,29 @@ namespace Rich
              const unsigned int samples = 100,
              const gsl_interp_type * interType = gsl_interp_linear ); 
 
+  private:
+
+    /// Clear (x,y) data values
+    inline void clearData() { m_data.clear(); m_minX = m_maxX = 0; }
+
+    /** Issue an out of range warning
+     *  @param x    The requested x value
+     *  @param retx The x value to use (corrected to be in range)
+     *  @return x value to use
+     */
+    virtual double rangeWarning( const double x, const double retx ) const;
+
+    /** x value range check
+     *  @param x The x value to check
+     *  @return The x value to use
+     */
+    double checkRange( const double x ) const
+    {
+      return ( x <= maxX() && x >= minX() ? x :
+               x <  minX() ? 
+               rangeWarning(x,minX()) : rangeWarning(x,maxX()) );
+    }
+
   public:
 
     /** Computes the function value (y) for the given parameter (x) value
@@ -153,7 +176,7 @@ namespace Rich
      */
     inline double value( const double x ) const
     {
-      return gsl_spline_eval( m_mainDistSpline, x, m_mainDistAcc );
+      return gsl_spline_eval( m_mainDistSpline, checkRange(x), m_mainDistAcc );
     }
 
     /**  Returns the function value (y) for the given parameter (x) value
@@ -177,10 +200,12 @@ namespace Rich
     inline double meanX ( const double from, 
                           const double to ) const
     {
-      const auto bot = integral( from, to );
+      const auto _from = checkRange(from);
+      const auto _to   = checkRange(to);
+      const auto bot = integral( _from, _to );
       return ( fabs(bot) > 0 ?
                gsl_spline_eval_integ( m_weightedDistSpline,
-                                      from, to, m_weightedDistAcc )/bot : 0 );
+                                      _from, _to, m_weightedDistAcc )/bot : 0 );
     }
 
     /** Computes the definite integral of the function between limits
@@ -193,7 +218,10 @@ namespace Rich
     inline double integral ( const double from,  
                              const double to ) const
     {
-      return gsl_spline_eval_integ( m_mainDistSpline, from, to, m_mainDistAcc );
+      return gsl_spline_eval_integ( m_mainDistSpline, 
+                                    checkRange(from), 
+                                    checkRange(to), 
+                                    m_mainDistAcc );
     }
 
     /** Computes the first derivative of the function at the given parameter point
@@ -204,7 +232,7 @@ namespace Rich
      */
     inline double firstDerivative( const double x ) const
     {
-      return gsl_spline_eval_deriv( m_mainDistSpline, x, m_mainDistAcc );
+      return gsl_spline_eval_deriv( m_mainDistSpline, checkRange(x), m_mainDistAcc );
     }
 
     /** Computes the second derivative of the function at the given parameter point
@@ -215,7 +243,7 @@ namespace Rich
      */
     inline double secondDerivative( const double x ) const
     {
-      return gsl_spline_eval_deriv2( m_mainDistSpline, x, m_mainDistAcc );
+      return gsl_spline_eval_deriv2( m_mainDistSpline, checkRange(x), m_mainDistAcc );
     }
     
     /** Computes the R.M.S. value between the given parameter limits.
@@ -254,7 +282,7 @@ namespace Rich
      *
      *  @return The minimum valid paramter value
      */
-    inline double minX() const noexcept { return (*m_data.begin()).first; }
+    inline double minX() const noexcept { return m_minX; }
 
     /** The function value for the minimum valid parameter
      *
@@ -266,7 +294,7 @@ namespace Rich
      *
      *  @return The minimum valid paramter value
      */
-    inline double maxX() const noexcept { return (*(--m_data.end())).first; }
+    inline double maxX() const noexcept { return m_maxX; }
 
     /** The function value for the minimum valid parameter
      *
@@ -387,11 +415,15 @@ namespace Rich
   private: // data
 
     // GSL interpolator objects
-    gsl_interp_accel * m_mainDistAcc = nullptr;        ///< The accelerator for the main y(x) distribution
-    gsl_spline       * m_mainDistSpline = nullptr;     ///< The spline for the main y(x) distribution
-    gsl_interp_accel * m_weightedDistAcc = nullptr;    ///< The accelerator for the weighted x.y(x) distribution
+    gsl_interp_accel * m_mainDistAcc        = nullptr; ///< The accelerator for the main y(x) distribution
+    gsl_spline       * m_mainDistSpline     = nullptr; ///< The spline for the main y(x) distribution
+    gsl_interp_accel * m_weightedDistAcc    = nullptr; ///< The accelerator for the weighted x.y(x) distribution
     gsl_spline       * m_weightedDistSpline = nullptr; ///< The spline for the weighted x.y(x) distribution
 
+    /// Cache min x
+    double m_minX{0};
+    /// Cache max x
+    double m_maxX{0};
 
   protected:
 
