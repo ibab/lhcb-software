@@ -30,8 +30,6 @@ L0DU.BankVersion = 2;
 //---------------------------------------------------------------------------
 ApplicationMgr.ExtSvc += { "NTupleSvc" };
 
-//ApplicationMgr.HistogramPersistency = "HBOOK";
-//NTupleSvc.Output={"FILE1 DATAFILE='l0pattern.hbook' TYP='HBOOK' OPT='NEW'"};
 
 // Root format 
 ApplicationMgr.HistogramPersistency = "ROOT";
@@ -48,6 +46,5 @@ EventSelector.FirstEvent = 1;
 //	"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v3-lumi2/00001883/DST/0000/00001883_00002264_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 //};
 #pragma print off
-//#include "$ORWELLOPTS/Beam5VeloCMagDownNu1WTruth_InclB.opts"
 #include "$ORWELLOPTS/inputRawData.opts"
 #pragma print on
