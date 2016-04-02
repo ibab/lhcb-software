@@ -436,7 +436,8 @@ class CondDB(ConfigurableUser):
             CondDBAccessSvc("ONLINE", ConnectionString = "CondDBOnline/ONLINE")
             if self.getProp("DisableLFC"):
                 COOLConfSvc(UseLFCReplicaSvc = False)
-                
+        elif self.getProp('UseDBSnapshot'):
+            CondDBAccessSvc("ONLINE")
         else:
             configureOnlineSnapshots()
 #            importOptions("$SQLDDDBROOT/options/SQLDDDB.py")
