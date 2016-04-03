@@ -169,10 +169,13 @@ model_cbds = Models.Fit1D (
                               mean  = signal_gauss.mean  ) ,
     background = model_gauss.background  )
 
-model_cbds.signal.aL.fix(2) 
-model_cbds.signal.nL.fix(5) 
+model_cbds.signal.aL.fix(2  ) 
+model_cbds.signal.nL.fix(10 ) 
 model_cbds.signal.aR.fix(2.5) 
-model_cbds.signal.nR.fix(10) 
+model_cbds.signal.nR.fix(10 ) 
+
+model_cbds.s.setVal(5000)
+model_cbds.b.setVal( 500)
 
 with rooSilent() : 
     result, frame = model_cbds. fitTo ( dataset0 )
@@ -236,6 +239,9 @@ model_apolonios = Models.Fit1D (
                                     alpha =  3 ) ,
     background = model_gauss.background  )
 
+model_apolonios.s.setVal(5000)
+model_apolonios.b.setVal( 500)
+
 with rooSilent() : 
     result, frame = model_apolonios. fitTo ( dataset0 )
     result, frame = model_apolonios. fitTo ( dataset0 )
@@ -260,6 +266,9 @@ model_apolonios2 = Models.Fit1D (
                                      sigma     = signal_gauss.sigma ,
                                      asymmetry = 0 ) ,
     background = model_gauss.background  )
+
+model_apolonios2.s.setVal(5000)
+model_apolonios2.b.setVal( 500)
 
 with rooSilent() : 
     result, frame = model_apolonios2. fitTo ( dataset0 )
@@ -316,6 +325,8 @@ model_gauss_gv1 = Models.Fit1D (
 
 model_gauss_gv1.signal.beta .fix(2)
 model_gauss_gv1.signal.mean .fix( m.value() ) 
+model_gauss_gv1.s.setVal(5000)
+model_gauss_gv1.b.setVal( 500)
 
 with rooSilent() : 
     result, frame = model_gauss_gv1. fitTo ( dataset0 )
@@ -344,10 +355,7 @@ model_gauss_gv2 = Models.Fit1D (
     background = model_gauss.background  )
 
 model_gauss_gv2.signal.kappa.fix(0)
-model_gauss_gv2.b.fix(0)
 
-model_gauss_gv2.s.setVal(5000)
-model_gauss_gv2.b.setVal( 500)
 
 with rooSilent() : 
     result, frame = model_gauss_gv2. fitTo ( dataset0 )
@@ -355,12 +363,11 @@ with rooSilent() :
     model_gauss_gv2.s.setVal(5000)
     model_gauss_gv2.b.setVal( 500)
     result, frame = model_gauss_gv2. fitTo ( dataset0 )
-    model_gauss_gv2.signal.kappa.release() 
+    ##model_gauss_gv2.signal.kappa.release() 
     model_gauss_gv2.s.setVal(5000)
     model_gauss_gv2.b.setVal( 500)
     result, frame = model_gauss_gv2. fitTo ( dataset0 )
     result, frame = model_gauss_gv2. fitTo ( dataset0 )
-    model_gauss_gv2.b.release() 
     model_gauss_gv2.s.setVal(5000)
     model_gauss_gv2.b.setVal( 500)
     result, frame = model_gauss_gv2. fitTo ( dataset0 )
@@ -384,6 +391,8 @@ model_gauss_skew = Models.Fit1D (
     background = model_gauss.background  )
 
 model_gauss_skew.signal.alpha.fix(0)
+model_gauss_skew.s.setVal(5000)
+model_gauss_skew.b.setVal( 500)
 
 with rooSilent() : 
     result, frame = model_gauss_skew. fitTo ( dataset0 )
@@ -415,6 +424,8 @@ model_bukin = Models.Fit1D (
 
 model_bukin.signal.mean .fix  ( m.value() )
 model_bukin.signal.sigma.fix  ( m.error() )
+model_bukin.s.setVal(5000)
+model_bukin.b.setVal( 500)
 
 with rooSilent() : 
     result, frame = model_bukin. fitTo ( dataset0 )
@@ -451,6 +462,8 @@ model_student = Models.Fit1D (
 
 model_student.signal.n    .setVal(20)
 model_student.signal.sigma.setVal(0.013)
+model_student.s.setVal(5000)
+model_student.b.setVal( 500)
 
 with rooSilent() : 
     result, frame = model_student. fitTo ( dataset0 )
@@ -479,6 +492,9 @@ model_bstudent = Models.Fit1D (
 model_bstudent.signal.sigma.setVal(0.013)
 model_bstudent.signal.nL.fix(25)
 model_bstudent.signal.nR.fix(25)
+model_bstudent.s.setVal(5000)
+model_bstudent.b.setVal( 500)
+
 with rooSilent() : 
     result, frame = model_bstudent. fitTo ( dataset0 )
     result, frame = model_bstudent. fitTo ( dataset0 )
@@ -510,10 +526,10 @@ signal = model_shash.signal
 model_shash.s.setVal(5000)
 model_shash.b.setVal( 500)
 
-# m_shash.mu      .setVal (  0.79 )
-# m_shash.sigma   .setVal (  0.88 ) 
-# m_shash.epsilon .setVal ( -0.76 ) 
-# m_shash.delta   .setVal (  0.92 ) 
+model_shash.signal.mu      .setVal (  3.10  )
+model_shash.signal.sigma   .setVal (  0.015 ) 
+model_shash.signal.epsilon .setVal (  0.021 ) 
+model_shash.signal.delta   .setVal (  1.0   ) 
 
 with rooSilent() : 
     result,f  = model_shash.fitTo ( dataset0 )  
@@ -545,6 +561,8 @@ model_jsu = Models.Fit1D (
 
 signal = model_jsu.signal
 
+model_jsu.s.setVal(5000)
+model_jsu.b.setVal( 500)
 
 with rooSilent() : 
     result,f  = model_jsu.fitTo ( dataset0 )  
@@ -575,6 +593,8 @@ model_atlas = Models.Fit1D (
     background = model_gauss.background  )
 
 signal = model_atlas.signal
+model_atlas.s.setVal(5000)
+model_atlas.b.setVal( 500)
 
 
 with rooSilent() : 
@@ -608,6 +628,9 @@ model_vgt = Models.Fit1D (
 signal = model_vgt.signal
 signal.sigma.fix ( m.error() )
 signal.gamma.fix ( 0.010     )
+
+model_vgt.b.setVal( 500)
+model_vgt.s.setVal(5000)
 
 with rooSilent() : 
     result, frame = model_vgt. fitTo ( dataset0 )
@@ -699,9 +722,11 @@ models.append ( model_bw)
 
 #
 ## check that everything is serializable
-# 
-import Ostap.ZipShelve   as DBASE
-with DBASE.tmpdb() as db : 
+#
+logger.info('Saving all objects into DBASE')
+import Ostap.ZipShelve   as     DBASE
+from   Ostap.Utils       import timing
+with timing(), DBASE.tmpdb() as db : 
     db['mass,vars'] = mass, varset0
     db['dataset'  ] = dataset0
     db['models'   ] = models
