@@ -40,7 +40,15 @@ default_config = {
     'Common': {
       'GhostProb': 0.3,
     },
+    'Prescales': {
+      'DisplPhiPhi'         : 1.0,
+      'QuadMuonNoIP'        : 1.0,
+      'DisplDiMuon'         : 1.0,
+      'DisplDiMuonNoPoint'  : 1.0,
+      'PrmptDiMuonHighMass' : 1.0,
+    },
     'DisplPhiPhi': {
+      # 'TOS_HLT2'      : 'Hlt2ExoticaDisplPhiPhiDecision', # Comment me in when needed
       'input'         : 'Phys/StdLoosePhi2KK/Particles',
       'TisTosSpec'    : "Hlt1IncPhi.*Decision",
       'KPT'           : 500*MeV,
@@ -52,18 +60,20 @@ default_config = {
       'FDChi2'        : 45,
     },
     'SharedDiMuonNoIP': {
-      'input'     : 'Phys/StdAllLooseMuons/Particles',
-      'MuPT'      : 500*MeV,
-      'MuP'       : 10000*MeV,
-      'MuProbNNmu': 0.2,
-      'DOCA'      : 0.2*mm,
+      'input'       : 'Phys/StdAllLooseMuons/Particles',
+      'MuPT'        : 500*MeV,
+      'MuP'         : 10000*MeV,
+      'MuProbNNmu'  : 0.2,
+      'DOCA'        : 0.2*mm,
+      'VChi2'       : 10,
+    },
+    'QuadMuonNoIP': {
+      # 'TOS_HLT2'  : 'Hlt2ExoticaQuadMuonNoIPDecision', # Comment me in when needed
+      'PT'        : 0,
       'VChi2'     : 10,
     },
-   'QuadMuonNoIP': {
-      'PT'      : 0,
-      'VChi2'   : 10,
-    },
     'DisplDiMuon': {
+      # 'TOS_HLT2'  : 'Hlt2ExoticaDisplDiMuonDecision', # Comment me in when needed
       'MuProbNNmu': 0.2,
       'MuIPChi2'  : 16,
       'PT'        : 1000*MeV,
@@ -71,12 +81,14 @@ default_config = {
       'FDChi2'    : 30,
     },
     'DisplDiMuonNoPoint': {
+      # 'TOS_HLT2'  : 'Hlt2ExoticaDisplDiMuonNoPointDecision', # Comment me in when needed
       'MuProbNNmu'  : 0.5,
       'MuIPChi2'    : 16,
       'PT'          : 1000*MeV,
       'FDChi2'      : 30,
     },
     'PrmptDiMuonHighMass': {
+      # 'TOS_HLT2'  : 'Hlt2ExoticaPrmptDiMuonHighMassDecision', # Comment me in when needed
       'MuPT'      : 500*MeV,
       'MuP'       : 10000*MeV,                                                  
       'M'         : 5000*MeV,
@@ -106,6 +118,10 @@ def DisplPhiPhi( conf ):
   mc =  ("(HASVERTEX)"
          "& (VFASPF(VCHI2) < %(VChi2)s) "
          "& (BPVVDCHI2 > %(FDChi2)s)")%conf
+
+  ## TOS on HLT2 on-demand
+  if 'TOS_HLT2' in conf:
+    mc += '& (TOS("%(TOS_HLT2)s", "Hlt2TriggerTisTos"))'%conf
 
   return SimpleSelection( 'DisplPhiPhi', CombineParticles, inputs,
     DecayDescriptor = 'B0 -> phi(1020) phi(1020)',
@@ -137,6 +153,11 @@ def SharedDiMuonNoIP( conf ):
 def QuadMuonNoIP( conf, sharedDiMuon ):
   cc = "APT > %(PT)s"%conf 
   mc = "(HASVERTEX) & (VFASPF(VCHI2) < %(VChi2)s)"%conf
+
+  ## TOS on HLT2 on-demand
+  if 'TOS_HLT2' in conf:
+    mc += '& (TOS("%(TOS_HLT2)s", "Hlt2TriggerTisTos"))'%conf
+
   return SimpleSelection( 'QuadMuonNoIP', CombineParticles, sharedDiMuon,
     DecayDescriptor = 'B0 -> KS0 KS0',
     CombinationCut  = cc,
@@ -151,6 +172,11 @@ def DisplDiMuon( conf, sharedDiMuon ):
             "& (HASVERTEX)"
             "& (BPVIPCHI2() < %(IPChi2)s)"
             "& (BPVVDCHI2 > %(FDChi2)s)")%conf
+
+  ## TOS on HLT2 on-demand
+  if 'TOS_HLT2' in conf:
+    code += '& (TOS("%(TOS_HLT2)s", "Hlt2TriggerTisTos"))'%conf
+
   return SimpleSelection( 'DisplDiMuon', FilterDesktop, sharedDiMuon, Code=code)
 
 
@@ -160,6 +186,11 @@ def DisplDiMuonNoPoint( conf, sharedDiMuon ):
           "& (PT > %(PT)s)"
           "& (HASVERTEX)"
           "& (BPVVDCHI2 > %(FDChi2)s)")%conf
+
+  ## TOS on HLT2 on-demand
+  if 'TOS_HLT2' in conf:
+    code += '& (TOS("%(TOS_HLT2)s", "Hlt2TriggerTisTos"))'%conf
+
   return SimpleSelection( 'DisplDiMuonNoPoint', FilterDesktop, sharedDiMuon, Code=code)
 
 
@@ -171,6 +202,11 @@ def PrmptDiMuonHighMass( conf, sharedDiMuon ):
           "& (PT > %(PT)s)"  
           "& (HASVERTEX)"
           "& (BPVVDCHI2 < %(FDChi2)s)")%conf
+
+  ## TOS on HLT2 on-demand
+  if 'TOS_HLT2' in conf:
+    code += '& (TOS("%(TOS_HLT2)s", "Hlt2TriggerTisTos"))'%conf
+
   return SimpleSelection( 'PrmptDiMuonHighMass', FilterDesktop, sharedDiMuon, Code=code)
 
 
@@ -188,27 +224,34 @@ class ExoticaConf(LineBuilder):
     for key in config:
       config[key].update(d)
 
-    ## sharedDiMuon
+    ## sharedDiMuon, used in common in many lines
     sharedDiMuon = [SharedDiMuonNoIP(config['SharedDiMuonNoIP'])]
 
     ## Register lines
+    prescales = config['Prescales']
+
     self.registerLine(StrippingLine( name+'DisplPhiPhiLine',
-      selection = DisplPhiPhi(config['DisplPhiPhi'])
+      selection = DisplPhiPhi(config['DisplPhiPhi']),
+      prescale  = prescales['DisplPhiPhi'],
     ))
 
     self.registerLine(StrippingLine( name+'QuadMuonNoIPLine',
-      selection = QuadMuonNoIP(config['QuadMuonNoIP'], sharedDiMuon)
+      selection = QuadMuonNoIP(config['QuadMuonNoIP'], sharedDiMuon),
+      prescale  = prescales['QuadMuonNoIP'],
     ))
 
     self.registerLine(StrippingLine( name+'DisplDiMuonLine',
-      selection = DisplDiMuon(config['DisplDiMuon'], sharedDiMuon)
+      selection = DisplDiMuon(config['DisplDiMuon'], sharedDiMuon),
+      prescale  = prescales['DisplDiMuon'],
     ))
 
     self.registerLine(StrippingLine( name+'DisplDiMuonNoPointLine',
-      selection = DisplDiMuonNoPoint(config['DisplDiMuonNoPoint'], sharedDiMuon)
+      selection = DisplDiMuonNoPoint(config['DisplDiMuonNoPoint'], sharedDiMuon),
+      prescale  = prescales['DisplDiMuonNoPoint'],
     ))
 
     self.registerLine(StrippingLine( name+'PrmptDiMuonHighMassLine',
-      selection = PrmptDiMuonHighMass(config['PrmptDiMuonHighMass'], sharedDiMuon)
+      selection = PrmptDiMuonHighMass(config['PrmptDiMuonHighMass'], sharedDiMuon),
+      prescale  = prescales['PrmptDiMuonHighMass'],
     ))
 

@@ -20,20 +20,20 @@ PDG 2012 Data
 
 Tau decays with following branching ratio
 
-- 49.16 % : 1-Prong hadronic  ( h1 )
-- 17.83 % : Electron          ( e  )
 - 17.41 % : Muon              ( mu )
-- 15.20 % : 3-Prongs hadronic ( h3 ) 
-- < 0.4 % : Others: 5-prongs, etc.
+- 17.83 % : Electron          ( e  )
+- 50.11 % : 1-Prong hadronic  ( h1 )
+- 14.57 % : 3-Prongs hadronic ( h3 ) 
+- < 0.1 % : Others: 5-prongs, etc.
 
-Ditau decays in major channels are thus (in alphebetical order):
+Ditau decays in major channels are thus:
 
-\%       e     mu     h1     h3
------ ------ ------ ------ ------
-e      3.18      -      -      - 
-mu     6.21    3.03     -      - 
-h1    17.53   17.12  24.17     - 
-h3     5.42    5.29  14.94   2.31
+\%                mu                e                h1                h3
+--- ---------------- ---------------- ----------------- -----------------
+mu  $3.031\pm 0.010$ $6.208\pm 0.020$ $17.448\pm 0.051$ $14.602\pm 0.075$
+e   ---              $3.179\pm 0.010$ $17.869\pm 0.051$ $5.196\pm 0.028$
+h1  ---              ---              $25.110\pm 0.090$ $14.602\pm 0.075$
+h3  ---              ---              ---               $2.123\pm 0.020$
 
 
 Structure
@@ -79,6 +79,14 @@ Alternatively, provide the loki-ready string to `extracut` which will also be us
 
 Version history
 ---------------
+
+## 2.4 -- 2016-March ( For S26 )
+- Tuned for 2016 data
+- Change the isolation technique to use `RelInfoConeVariables`, instead of
+  previously-used `SUMCONE` functor. The key to use this trick is:
+      `RelInfoConeVariables + AddRelatedInfo + PassThroughSelection`
+- Clean up unused portion of codes.
+- New helper function to get minimal ntuple for debugging.
 
 ## 2.3 -- 2015-Dec ( For S21rXp1 )
 - Tuned for Run-I incremental stripping. S21 had problem of Cone-radius-square.
@@ -133,20 +141,24 @@ Derived from works of S.Farry & P. Ilten
 
 """
 
+import os
 from GaudiKernel.SystemOfUnits import MeV, GeV, mm, micrometer
-from PhysSelPython.Wrappers import Selection, SimpleSelection, MergedSelection, AutomaticData
+from PhysSelPython.Wrappers import Selection, SimpleSelection, PassThroughSelection, MergedSelection, AutomaticData
 from StrippingUtils.Utils import LineBuilder
 from StrippingConf.StrippingLine import StrippingLine
-from StandardParticles import PFParticles
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+from GaudiConfUtils.ConfigurableGenerators import AddRelatedInfo
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles as GenCombineParticles
-from Configurables import CombineParticles, LoKi__PVReFitter
+from Configurables import CombineParticles
+from Configurables import LoKi__PVReFitter
+from Configurables import RelInfoConeVariables # Tool
+from Configurables import GaudiSequencer
 
 
 __author__  = 'chitsanu.khurewathanakul@cern.ch'
-__date__    = '2015-12-02'
-__version__ = 2.3
-__all__     = [ 'DitauConf', 'default_config' ]
+__date__    = '2016-04-02'
+__version__ = 2.4
+__all__     = 'DitauConf', 'default_config', 'Tuples'
 
 
 #-----#
@@ -157,111 +169,76 @@ config_tau_e = {
   'ISMUONLOOSE'   : False,
   'ABSID'         : 11,
   'min_PT'        : 4. * GeV,
-  'min_TRPCHI2'   : 0.01,
   'min_ETA'       : 2.0,
   'max_ETA'       : 4.5,
   'min_CaloPrsE'  : 50 * MeV,
   'min_ECALFrac'  : 0.1,  # Not good for e-conversion ??
-  #
+  'min_TRPCHI2'   : 0.01,
+  'max_TRGHP'     : 0.2,
   # 'max_HCALFrac'  : 0.05,
-  # 'max_BPVIP'     : 1. * mm,
   #
   'extracut'      : 'ALL'
-}
-
-config_tau_e_iso = {
-  'min_PTFrac05C': 0.7,
-  # 'min_PTFrac05A' : -1,  # DON'T USE ME!
 }
 
 config_tau_mu = {
   'ISMUON'        : True,
   'ABSID'         : 13,
   'min_PT'        : 4. * GeV,
-  'min_TRPCHI2'   : 0.01,
   'min_ETA'       : 2.0,
   'max_ETA'       : 4.5,
-  # 'max_BPVIP'     : 1. * mm, 
-  # 'max_HCALFrac'  : 0.20,  # Not effective
+  'min_TRPCHI2'   : 0.01,
+  'max_TRGHP'     : 0.2,
   'extracut'      : 'ALL',  
 }
 
-config_tau_mu_iso = {
-  'min_PTFrac05C' : 0.8,
-  # 'max_ECone02A'  : 100 * GeV,
-  # 'max_PTCone05C' : 4 * GeV,
-}
-
 config_tau_h1 = {
-  'ISMUONLOOSE'     : False,
-  'ISPIONORKAON'    : True,
-  'min_PT'          : 4. * GeV,
-  'min_TRPCHI2'     : 0.01,
-  'min_ETA'         : 2.25,
-  'max_ETA'         : 3.75,
-  'min_HCALFrac'    : 0.05,
-  #
-  # 'min_BPVDLS'      : -40,
-  # 'max_BPVDLS'      : 40,
-  # 'max_BPVIP'       : 1. * mm, 
-  # 'max_TRGHOSTPROB' : 0.1,
-  'extracut'        : 'ALL'  
+  'ISMUONLOOSE'   : False,
+  'min_PT'        : 4. * GeV,
+  'min_ETA'       : 2.25,
+  'max_ETA'       : 3.75,
+  'min_HCALFrac'  : 0.05,
+  'min_TRPCHI2'   : 0.01,
+  'max_TRGHP'     : 0.2,
+  'extracut'      : 'ALL'  
 }
-
-config_tau_h1_iso = {
-  'min_PTFrac05C'   : 0.8,
-  #
-  # 'max_ECone05C'    : 400 * GeV,
-  # 'min_ECone02PN'   : 20 * GeV,
-  # 'min_EFrac02PN05N': 0.7,
-  # 'min_EFrac02PN05A': 0.7,
-}
-
 
 config_tau_h3 = {
   'dcuts': {
-    'ISMUONLOOSE'     : False,
-    'ISPIONORKAON'    : True,
-    'min_PT'          : 500 * MeV,
-    'min_TRPCHI2'     : 0.01,
-    'min_ETA'         : 2.0, # 2.0,
-    'max_ETA'         : 4.5, # 4.5,
+    'ISMUONLOOSE'   : False,
+    'min_PT'        : 500 * MeV,
+    'min_ETA'       : 2.0, # 2.0,
+    'max_ETA'       : 4.5, # 4.5,
+    'min_TRPCHI2'   : 0.01,
+    'max_TRGHP'     : 0.2,
     #
-    # 'min_HCALFrac'    : 0.05,
-    # 'max_TRGHOSTPROB' : 0.1,
-    'extracut'        : 'ALL',
+    # 'min_HCALFrac'    : 0.01,
+    'extracut'      : 'ALL',
   },
   'ccuts': {
-    # 'max_ABPVIPMAX' : 2,  # suboptimal
-    'min_AM'        : 600.  * MeV,
-    'max_AM'        : 1500. * MeV,
+    'min_AM'      : 700.  * MeV,
+    'max_AM'      : 1500. * MeV,
+    'min_APTMAX'  : 2000. * MeV, 
   },
   'mcuts': {
-    # 'min_ETA'       : 2.25,
-    # 'max_ETA'       : 3.75,
-    # 'min_MT'        : 4 * GeV,
-    # 'max_BPVCORRM'  : 6 * GeV,
-    # 'min_ABSBPVDIRA': 0.9999,  # suboptimal
-    # 'min_BPVDLS'    : 0,  # suboptimal
-    # 'max_BPVIP'     : 1. * mm,
-    # 'min_BPVVDZ'    : 0.1,
-    # 'max_DRTRIOMID' : 0.3,
-    # 'max_DRTRIOMIN' : 0.2,
-    # 'min_PTTRIOMIN' :  500 * MeV,
-    # 'min_PTTRIOMID' : 1000 * MeV,
-    # 'min_PTTRIOMAX' : 2000 * MeV,
-    #
-    #
     'min_PT'        : 4 * GeV,
-    'max_DRTRIOMAX' : 0.4,
+    'max_DRTRIOMAX' : 0.3,
     'max_VCHI2PDOF' : 20.,
   }
 }
 
-config_tau_h3_iso = {
-  # 'max_ECone05C'  : 30 * GeV,
-  'min_PTFrac05C' : 0.8,  
+## Isolation fraction for each tau type
+# Defined as pt(tau) / (p(tau)+p(cone))_T
+# i.e., relative amount in PT of tau candidate, over the vectorial-sum of 
+# momenta of candidate and cone. 
+# Full isolated ~ 1
+# Anti isolated ~ 0
+config_tau_isolation = {
+  'tau_e' : 0.7,
+  'tau_mu': 0.8,
+  'tau_h1': 0.8,
+  'tau_h3': 0.8,
 }
+
 
 #-------#
 # DITAU #
@@ -270,7 +247,6 @@ config_tau_h3_iso = {
 ## Blank default fallback. 
 # Remember the Zen: *Explicit is better than Implicit*
 pcuts0 = {'extracut': 'ALL'} 
-
 
 config_ditau_e_e = {
   'dcuts': { 'e':pcuts0 },
@@ -281,20 +257,12 @@ config_ditau_e_e = {
   'mcuts': pcuts0,
 }
 
-
 config_ditau_e_h1 = {
   'dcuts': { 'e' : pcuts0, 'pi': pcuts0 },
   'ccuts': {
-    'min_APTMAX'          :   9 * GeV,
-    'min_AM'              :  12 * GeV,
-    # 'max_ADOCAMAX'        :   1 * mm,
-    # 'max_AECone05CMAX'    : 200 * GeV,
-    # 'max_APTCone05CMAX'   :  10 * GeV,
-    # 'min_AEFrac02PN05AMAX': 0.6,
-    # 'min_AEFrac05AMIN'    : 0.1,
-    # 'min_AEFrac05CMIN'    : 0.4,
-    # 'min_AEFrac05CMIN'    : 0.4,
-    'extracut'            : 'ATRUE',  
+    'min_APTMAX':   9 * GeV,
+    'min_AM'    :  12 * GeV,
+    'extracut'  : 'ATRUE',  
   },
   'mcuts': pcuts0,
 }
@@ -371,36 +339,6 @@ config_ditau_mu_mu = {
   'mcuts': pcuts0,
 }
 
-## Default config for the RelatedInfoTool framework.
-# Not part of the cut just yet...
-config_rit_default = [
-  {
-    'Type'      : 'RelInfoConeVariables',
-    'ConeAngle' : 0.5,
-    'IgnoreUnmatchedDescriptors': True,
-    'DaughterLocations': {
-      ## For those without multiplicity problem.
-      ' Z0 -> ^e-   X'      : 'taueminus',
-      ' Z0 -> ^e+   X'      : 'taueplus',
-      ' Z0 -> ^mu-  X'      : 'taumuminus',
-      ' Z0 -> ^mu+  X'      : 'taumuplus',
-      ' Z0 -> ^pi-  X'      : 'tauh1minus',
-      ' Z0 -> ^pi+  X'      : 'tauh1plus',
-      ' Z0 -> ^tau- X'      : 'tauh3minus',
-      ' Z0 -> ^tau+ X'      : 'tauh3plus',
-      #
-      ## For those with multiplicity (same-particle) problem.
-      '[Z0 -> ^e-    e-   ]CC' : 'taue1',
-      '[Z0 ->  e-   ^e-   ]CC' : 'taue2',
-      '[Z0 -> ^mu-   mu-  ]CC' : 'taumu1',
-      '[Z0 ->  mu-  ^mu-  ]CC' : 'taumu2',
-      '[Z0 -> ^pi-   pi-  ]CC' : 'tauh11',
-      '[Z0 ->  pi-  ^pi-  ]CC' : 'tauh12',
-      '[Z0 -> ^tau-  tau- ]CC' : 'tauh31',
-      '[Z0 ->  tau- ^tau- ]CC' : 'tauh32',
-    }
-  },
-]
 
 ## Specify how the decay is groupped into each line
 # Groupped by Line's name.
@@ -462,6 +400,19 @@ lines_decays = {
   },
 }
 
+## Default config for the RelatedInfoTool framework.
+config_rit_default = [
+  {
+    'Type'      : 'RelInfoConeVariables',
+    'ConeAngle' : 0.5,
+    'DaughterLocations': {
+      'X0 -> ^X-  X+': 'IsoPlus',
+      'X0 ->  X  ^X+': 'IsoMinus',
+    },
+  },
+]
+
+#==============================================================================
 
 default_config = {
   'NAME'        : 'Ditau',
@@ -471,10 +422,8 @@ default_config = {
   'CONFIG'      : {
 
     ## Particle identification, full path to ./Particles please
-    # 'TES_e' : 'Phys/PFParticles/Particles',
-    # 'TES_e' : 'Phys/StdAllLooseElectrons/Particles',
-    'TES_e' : 'Phys/StdAllNoPIDsElectrons/Particles',
     'TES_mu': 'Phys/StdAllLooseMuons/Particles', 
+    'TES_e' : 'Phys/StdAllNoPIDsElectrons/Particles',
     'TES_pi': 'Phys/StdAllNoPIDsPions/Particles',
 
     ## Individual tau
@@ -484,10 +433,7 @@ default_config = {
     'tau_mu'  : config_tau_mu,
 
     ## Isolation cuts, removed in same-sign control lines.
-    'iso_e'   : config_tau_e_iso,
-    'iso_mu'  : config_tau_mu_iso,
-    'iso_h1'  : config_tau_h1_iso,
-    'iso_h3'  : config_tau_h3_iso,
+    'tau_isolation': config_tau_isolation,
 
     ## Individual ditau
     'DITAU': {
@@ -507,39 +453,48 @@ default_config = {
     'CONSTRUCTORS': {
       'EX': {
         'prescale'        : 1.,
+        'checkPV'         : True,
         'RelatedInfoTools': config_rit_default, 
       },
       'EXnoiso': {
-        'prescale'        : 0.05,
+        'prescale'        : 0.01,
+        'checkPV'         : True,
         'RelatedInfoTools': config_rit_default, 
       },
       'EXssnoiso': {
-        'prescale'        : 0.05,
-        'RelatedInfoTools': config_rit_default, 
+        'prescale'        : 0.01,
+        'checkPV'         : True,
+        # 'RelatedInfoTools': config_rit_default, 
       },
       'HH': {
         'prescale'        : 1.,
+        'checkPV'         : True,
         'RelatedInfoTools': config_rit_default, 
       },
       'HHnoiso': {
-        'prescale'        : 0.05,
+        'prescale'        : 0.01,
+        'checkPV'         : True,
         'RelatedInfoTools': config_rit_default, 
       },
       'HHssnoiso': {
-        'prescale'        : 0.05,
-        'RelatedInfoTools': config_rit_default, 
+        'prescale'        : 0.01,
+        'checkPV'         : True,
+        # 'RelatedInfoTools': config_rit_default, 
       },
       'MX': {
         'prescale'        : 1.,
+        'checkPV'         : True,
         'RelatedInfoTools': config_rit_default, 
       },
       'MXnoiso': {
-        'prescale'        : 0.1,
+        'prescale'        : 0.05,
+        'checkPV'         : True,
         'RelatedInfoTools': config_rit_default, 
       },
       'MXssnoiso': {
-        'prescale'        : 0.1,
-        'RelatedInfoTools': config_rit_default, 
+        'prescale'        : 0.05,
+        'checkPV'         : True,
+        # 'RelatedInfoTools': config_rit_default, 
       },
     },
 
@@ -560,8 +515,6 @@ default_config = {
   }
 }
 
-
-
 #==============================================================================
 
 ## Default preambulo
@@ -581,7 +534,6 @@ def _MakeTrio(f1, f2, f3):
   trioguard = lambda f: switch(NDAUGHTERS==3, f, -1)
   return trioguard(fmin), trioguard(fmid), trioguard(fmax)
 
-
 def _MakeChildrenDR(i1, i2):                           
   from LoKiPhys.decorators import CHILD,ETA,PHI  
   from LoKiCore.math import cos,acos
@@ -591,77 +543,22 @@ def _MakeChildrenDR(i1, i2):
   return (DPHI**2 + DETA**2)**0.5
 
 DRTRIOMIN, DRTRIOMID, DRTRIOMAX = _MakeTrio( _MakeChildrenDR(1,2), _MakeChildrenDR(2,3), _MakeChildrenDR(3,1) )
-PTTRIOMIN, PTTRIOMID, PTTRIOMAX = _MakeTrio(CHILD(PT,1), CHILD(PT,2), CHILD(PT,3))
-
-MT = ((MM**2)+(PT**2))**0.5
-
-## Energy cone
-ECone02A      = SUMCONE(0.2**2, E  , 'Phys/PFParticles')
-ECone02C      = SUMCONE(0.2**2, E  , 'Phys/PFParticles', Q!=0) # Charged
-ECone02N      = SUMCONE(0.2**2, E  , 'Phys/PFParticles', Q==0) # Neutral
-ECone05A      = SUMCONE(0.5**2, E  , 'Phys/PFParticles')
-ECone05C      = SUMCONE(0.5**2, E  , 'Phys/PFParticles', Q!=0)
-ECone05N      = SUMCONE(0.5**2, E  , 'Phys/PFParticles', Q==0)
-ECone02PN     = E + ECone02N  # self+neutral
-
-EFrac05C      = E / ( E+ECone05C )
-EFrac05A      = E / ( E+ECone05A )
-EFrac02PN05N  = ECone02PN / ( E + ECone05N )  # (self+neutral) / (self+neutral)
-EFrac02PN05A  = ECone02PN / ( E + ECone05A )  # (self+neutral) / (self+neutral+charged)
-
-## PT-vectorial cone
-PXCone05A  = SUMCONE(0.5**2, PX, 'Phys/PFParticles')
-PYCone05A  = SUMCONE(0.5**2, PY, 'Phys/PFParticles')
-PXCone05C  = SUMCONE(0.5**2, PX, 'Phys/PFParticles', Q!=0)
-PYCone05C  = SUMCONE(0.5**2, PY, 'Phys/PFParticles', Q!=0)
-PTCone05A   = ( PXCone05A**2 + PYCone05A**2 )**0.5
-PTCone05C   = ( PXCone05C**2 + PYCone05C**2 )**0.5
-PTFrac05C   = PT / ( PT + PTCone05C )  # core -- charged
-PTFrac05A   = PT / ( PT + PTCone05A )  # core -- all
-
-## Calo
-CaloHcalE = PPFUN(PP_CaloHcalE, -1)     # For lowerbound req
-HCALFrac  = PPFUN(PP_CaloHcalE, -1)/P
-ECALFrac  = PPFUN(PP_CaloEcalE)/P
-CaloPrsE  = PPFUN(PP_CaloPrsE)
 
 ## Combinations
 ABPVCORRMMAX  = AMAXCHILD(BPVCORRM)
-ABPVDIRAMAX   = AMAXCHILD(BPVDIRA)
 APTMIN        = AMINCHILD(PT)
 APTMAX        = AMAXCHILD(PT)
 
-AECone02CMIN  = AMINCHILD(ECone02C)
-AECone02CMAX  = AMAXCHILD(ECone02C)
-AECone05CMIN  = AMINCHILD(ECone05C)
-AECone05CMAX  = AMAXCHILD(ECone05C)
-APTCone05CMIN = AMINCHILD(PTCone05C)
-APTCone05CMAX = AMAXCHILD(PTCone05C)
-
-AEFrac05CMIN      = AMINCHILD(EFrac05C)
-AEFrac05CMAX      = AMAXCHILD(EFrac05C)
-AEFrac05AMIN      = AMINCHILD(EFrac05A)
-AEFrac05AMAX      = AMAXCHILD(EFrac05A)
-AEFrac02PN05AMAX  = AMAXCHILD(EFrac02PN05A)
-APTFrac05CMIN     = AMINCHILD(PTFrac05C)
-APTFrac05CMAX     = AMAXCHILD(PTFrac05C)
-APTFrac05AMIN     = AMINCHILD(PTFrac05A)
-APTFrac05AMAX     = AMAXCHILD(PTFrac05A)
-
 ## instantiated
-_VCHI2      = VCHI2
-VCHI2       = VFASPF(_VCHI2)
 _VCHI2PDOF  = VCHI2PDOF
 VCHI2PDOF   = VFASPF(_VCHI2PDOF)
-_ADOCAMAX   = ADOCAMAX
-ADOCAMAX    = _ADOCAMAX('')
-_BPVIP      = BPVIP
-BPVIP       = _BPVIP()
-_BPVIPCHI2  = BPVIPCHI2
-BPVIPCHI2   = _BPVIPCHI2()
-ABSBPVDIRA  = abs(BPVDIRA)
 
-ISPIONORKAON = (ABSID==211) | (ABSID==321)
+## PID
+PIDPIONORKAON  = (ABSID==211) | (ABSID==321)
+CaloPrsE      = PPFUN(PP_CaloPrsE)
+CaloHcalE     = PPFUN(PP_CaloHcalE, -1)     # For lowerbound req
+HCALFrac      = PPFUN(PP_CaloHcalE, -1)/P
+ECALFrac      = PPFUN(PP_CaloEcalE)/P
 
 """.split('\n')
 
@@ -699,10 +596,10 @@ def join(cuts):
   """
   Join each predicate in cuts with '&' with bracket.
   - Ignore None
+  - Not recursive
   """
   cuts = [ c for c in cuts if c is not None ]
   return "("+") & (".join(cuts)+")"
-
 
 def parse_cuts_auto(config):
   """
@@ -726,6 +623,64 @@ def doubling_sign_dict(d):
   """
   return { key+sign:val for key,val in d.iteritems() for sign in ('+','-') }
 
+# def cut_iso_child( index, infoloc ):
+#   """
+#   Make on-demand functor that cut on isolation var calculated by RelInfoConeVar.
+#   This is the former `PTFrac05C` functor.
+#   More bump since the PT-fraction needs to be calculated manually.
+  
+#   ** ACTS ON MOTHER, BUT GET INFO OF CHILD***
+
+#   Remark that, due to the (weird) design of relatedInfo, even when I want to 
+#   retrieve the isolation info of a child, I need to use its mother as a pointer,
+#   and select the appropriate location where the child's info is stored.
+#   As such, the isolation info is outside the CHILDCUT functor, but act on 
+#   mother directly.  
+
+#   """
+#   PT = 'CHILD(PT,%i)'%index
+#   PX = 'CHILD(PX,%i)'%index
+#   PY = 'CHILD(PY,%i)'%index
+#   CONEPX = "RELINFO('%s', 'CONEPX', 1E12)"%infoloc
+#   CONEPY = "RELINFO('%s', 'CONEPY', 1E12)"%infoloc
+#   return '({PT}/(({PX}+{CONEPX})**2+({PY}+{CONEPY})**2)**0.5)'.format(**locals())
+
+# def cut_iso_tauchild( index, infoloc, tau_e, tau_mu, tau_h1, tau_h3, **kwargs ):
+#   """
+#   Extension of above, again, acts on ditau, in order to cut of tau's isolation.
+#   This time with conf of isolation values.
+#   """
+#   func  = cut_iso_child( index, infoloc )
+#   taue  = "(CHILDCUT(ABSID==11,{index})   & ({func} > {tau_e}))"
+#   taumu = "(CHILDCUT(ABSID==13,{index})   & ({func} > {tau_mu}))"
+#   tauh3 = "(CHILDCUT(ABSID==15,{index})   & ({func} > {tau_h3}))"
+#   tauh1 = "(CHILDCUT(ABSID==211,{index})  & ({func} > {tau_h1}))"
+#   cut   = '({taue}) | ({taumu}) | ({tauh1}) | ({tauh3})'
+#   return cut.format(**locals()).format(**locals())
+
+# def cut_iso_ditau( loc1, loc2, tau_mu, tau_e, tau_h1, tau_h3 ):
+#   """
+#   Even more complex for cutting on isolation from di-tau...
+#   """
+#   cut1 = cut_iso_tauchild( 1, loc1, **locals())
+#   cut2 = cut_iso_tauchild( 2, loc2, **locals())
+#   return join([cut1,cut2])
+
+def cut_iso_tau( infoloc, tau_e, tau_mu, tau_h1, tau_h3, **kwargs ):
+  """
+  The version where tau itself is a pointer to RIF, not mom.
+  """
+  CONEPX = "RELINFO('%s', 'CONEPX')"%infoloc
+  CONEPY = "RELINFO('%s', 'CONEPY')"%infoloc
+  func   = '(PT/((PX+{CONEPX})**2+(PY+{CONEPY})**2)**0.5)'.format(**locals())
+  #
+  c1 = '(ABSID==11)  & ({func} > {tau_e})'
+  c2 = '(ABSID==13)  & ({func} > {tau_mu})'
+  c3 = '(ABSID==15)  & ({func} > {tau_h3})'
+  c4 = '(ABSID==211) & ({func} > {tau_h1})'
+  return  '({c1}) | ({c2}) | ({c3}) | ({c4})'.format(**locals()).format(**locals())
+
+
 #------------------------------------------------------------------------------
 # SELECTION
 #------------------------------------------------------------------------------
@@ -739,14 +694,6 @@ def selection_filt( config, preambulo, sel, newname ):
     Preambulo = preambulo0 + preambulo.split('\n'),
     Code      = parse_cuts_auto(config),
   )
-
-# def selection_tau_single( config , preambulo, inputs, ttype ):
-#   return selection_filt( config , preambulo, inputs, 'SelTauCand_'+ttype )
-
-#   return SimpleSelection( 'SelTauCand_'+ttype, FilterDesktop, inputs, 
-#     Preambulo = preambulo0 + preambulo.split('\n'),
-#     Code      = parse_cuts_auto(config),
-#   )
 
 def selection_tau_h3( Config, preambulo, inputs ):
   config = Config['tau_h3']  ## Pickout tau_h3 config from big one.
@@ -769,10 +716,38 @@ def selection_tau_h3( Config, preambulo, inputs ):
   #
   return Selection( 'SelTauNoiso_h3', Algorithm=algo, RequiredSelections=inputs )
 
-def selection_ditau( config, preambulo, pcomb, dcname, decay , inputs ):
+
+def selection_tauiso( tau_noiso, conf ):
+  """
+  Take single Selection containing heteregenous list of 'tau' (11,13,15,211),
+  cut on isolation variable given for each tau type.
+
+  The code is separated into 2 parts:
+  1. Attach related info to given Selection: Phys/TauNoiso/Iso
+  2. Perform actual cut
+
+  Sadly, I couldn't find a way to add info without staging a new selection,
+  so I use PassThroughSelection.
+
+  """
+  ## First part is attaching
+  tool          = RelInfoConeVariables('TauIsoInfo', ConeAngle=0.5)
+  algo          = AddRelatedInfo()
+  algo.Inputs   = [ tau_noiso.outputLocation() ]
+  algo.Location = 'Iso' # Use for chaining!
+  algo.Tool     = tool.getFullName()
+  tau_withinfo  = PassThroughSelection( 'TauInfo', Algorithm=algo, RequiredSelection=tau_noiso )
+
+  ## Second part is filtering
+  loc  = tau_noiso.outputLocation().replace('/Particles', '/Iso')
+  code = cut_iso_tau( loc, **conf )
+  return SimpleSelection( 'TauIso', FilterDesktop, [tau_withinfo], Code=code )
+
+
+def selection_ditau( config, preambulo, pcomb, dcname, decay, inputs ):
   ## dcuts are quite complicate since it's a-priori nested dict index by particle-name.
   dcuts = { key:parse_cuts_auto(val) for key,val in doubling_sign_dict(config['dcuts']).iteritems() }
-  return SimpleSelection( 'SelDitauCand_'+dcname, GenCombineParticles, inputs,
+  return SimpleSelection( 'SelDitau_'+dcname, GenCombineParticles, inputs,
     Preambulo         = preambulo0 + preambulo.split('\n'),
     DecayDescriptor   = decay,
     DaughtersCuts     = dcuts,
@@ -781,6 +756,29 @@ def selection_ditau( config, preambulo, pcomb, dcname, decay , inputs ):
     ParticleCombiners = pcomb,
     # CombinationCut  = 'AALLSAMEBPV',  # BUGGY, don't use me!
   )
+
+# def rif_isolation( fulllinename, conf ):
+#   """
+#   Make FilterDesktop to be used as RelatedInfoFilter
+#   fulllinename ~ DitauEXssnoisoLine
+#   """
+#   code = cut_iso_ditau( 'Phys/TauNoiso/Iso', **conf )
+
+#   # ## Prepare the cut, delegates hard work externally.
+#   # locm = 'Phys/%s/IsoMinus'%fulllinename
+#   # locp = 'Phys/%s/IsoPlus' %fulllinename
+#   # code = cut_iso_ditau( loc1, loc2, **conf )
+
+#   ## Prepare the algo, use vanilla version
+#   from Configurables import FilterDesktop
+#   filt = FilterDesktop(fulllinename.replace('Line','isoLine'))
+#   filt.Code   = code
+#   filt.Inputs = [ 'Phys/%s/Particles'%fulllinename ]
+#   filt.CloneFilteredParticles = True
+
+#   print filt
+
+#   return filt
 
 #==============================================================================
 
@@ -799,77 +797,115 @@ class DitauConf(LineBuilder):
   # Note: To be instantiated by LineBuilder( default_config['NAME'], default_config['CONFIG'] )
   def __init__(self, NAME, CONFIG):
 
-    # Required the explicit name/dconfig, no default allow
+    ## Required the explicit name/dconfig, no default allow
     LineBuilder.__init__(self, NAME, CONFIG)
+
+    ## Prepare raw particle for identification
     preambulo   = CONFIG['preambulo']
     ditau_pcomb = CONFIG['ditau_pcomb']
     input_e     = [ AutomaticData(Location=CONFIG['TES_e'])  ]
     input_mu    = [ AutomaticData(Location=CONFIG['TES_mu']) ]
     input_pi    = [ AutomaticData(Location=CONFIG['TES_pi']) ]
 
-    ## Make pre-selection no-isolation of tau candidates first
-    sels_tau_noiso = {
-      'e' : selection_filt  ( CONFIG['tau_e']  , preambulo, input_e  , 'SelTauNoiso_e'  ),
-      'mu': selection_filt  ( CONFIG['tau_mu'] , preambulo, input_mu , 'SelTauNoiso_mu' ),
-      'h1': selection_filt  ( CONFIG['tau_h1'] , preambulo, input_pi , 'SelTauNoiso_h1' ),
-      'h3': selection_tau_h3( CONFIG           , preambulo, input_pi ),
-    }
+    ## Make pre-selection tau candidates, no isolation here.
+    ## Merge these together (parallel, not sequential selection)
+    tau_noiso = MergedSelection('TauNoiso', [
+      selection_filt  ( CONFIG['tau_e']  , preambulo, input_e  , 'SelTauNoiso_e'  ),
+      selection_filt  ( CONFIG['tau_mu'] , preambulo, input_mu , 'SelTauNoiso_mu' ),
+      selection_filt  ( CONFIG['tau_h1'] , preambulo, input_pi , 'SelTauNoiso_h1' ),
+      selection_tau_h3( CONFIG           , preambulo, input_pi ),
+    ])
 
-    sels_tau_iso = {
-      'e' : selection_filt( CONFIG['iso_e'] , preambulo, [sels_tau_noiso['e']] , 'SelTauIso_e'  ),
-      'mu': selection_filt( CONFIG['iso_mu'], preambulo, [sels_tau_noiso['mu']], 'SelTauIso_mu' ),
-      'h1': selection_filt( CONFIG['iso_h1'], preambulo, [sels_tau_noiso['h1']], 'SelTauIso_h1' ),
-      'h3': selection_filt( CONFIG['iso_h3'], preambulo, [sels_tau_noiso['h3']], 'SelTauIso_h3' ),
-    }
-
-    ## Merge these together (parallel, not sequential selection) for SS-Lines
-    tau_noiso = MergedSelection('TauNoiso', sels_tau_noiso.values())
-    tau_iso   = MergedSelection('TauIso'  , sels_tau_iso.values())
+    # ## Cut on isolation: RelInfoConeVariables + AddRelatedInfo + FilterDesktop
+    tau_iso = selection_tauiso( tau_noiso, CONFIG['tau_isolation'] )
 
     ## Prepare selection of ditau
-    sels_ditau = {}  # Selections, indexed by dcname (for emu sharing)
+    # Selections, indexed by dcname (for emu sharing). Think of it as caching.
+    sels_ditau = {}  
 
     ## Loop over all lines, make groupping
     for linename, condict in CONFIG['CONSTRUCTORS'].iteritems():
+      ## Make the fullname: e.g., 'Ditau' + 'EXss' + 'Line'
+      fullname = NAME + linename + 'Line'
       ## Get list of decay, indexed by Line's name      
       dcdict = lines_decays[linename]  
       ## Make list of selections to be put in single line
       sels = []
       for dcname, decay in dcdict.iteritems():
-        if dcname in sels_ditau:  # for emu case, use cache
-          sel = sels_ditau[dcname]
-        else:
+        ## Make selection if it hasn't been done.
+        if dcname not in sels_ditau:
           dtype   = dcname.split('_')[0]      # eh1_ss --> eh1
           config  = CONFIG['DITAU'][dtype]    # Same ditau-level config for OS/SS
-          inputs  = [ tau_noiso if ('noiso' in dcname) else tau_iso ] # Use non-iso version if requested.
+          inputs  = [ tau_noiso if 'noiso' in linename else tau_iso ]
+          # inputs  = [ tau_noiso ]
           sel     = selection_ditau( config, preambulo, ditau_pcomb, dcname, decay, inputs )
           sels_ditau[dcname] = sel
-        sels.append(sel)
+        sels.append(sels_ditau[dcname])
+      ## Finally, merged it
+      selection = MergedSelection( 'Sel'+linename, sels )
+
+      # ## Adding isolation cut on the ditau level.
+      # filt = None 
+      # if 'noiso' not in linename:
+      #   filt = rif_isolation( fullname, CONFIG['tau_isolation'] )
 
       ## Finally, compose a stripping line, register
-      self.registerLine(StrippingLine( NAME + linename + 'Line', # e.g., 'Ditau' + 'EXss' + 'Line'
-        selection = MergedSelection( 'Sel'+linename, sels ),
+      self.registerLine(StrippingLine( fullname,
+        selection         = selection,
+        # RelatedInfoFilter = filt,
         **CONFIG['CONSTRUCTORS'][linename]
       ))
 
+#===============================================================================
 
-#-------------------------------------------------------------------
+def Tuples():
+  """
+  Simple class-like method to return DecayTreeTuple which can be used to 
+  do quick-check on the output DST.
 
-# def line_builder_test():
-#   """Invoke the test script from StrippingUtils."""
-#   from StrippingUtils import LineBuilderTests
-#   LineBuilderTests.test_line_builder( DitauConf, default_config['CONFIG'] )
+  Usage:
+  >> from StrippingSelections.StrippingQEE import StrippingDitau
+  >> DaVinci().appendToMainSequence( StrippingDitau.Tuples() )
+  >> DaVinci().TupleFile = 'tuple.root'
 
-# if __name__ == '__main__':
-#   line_builder_test()
+  """
+  import re
+  from DecayTreeTuple.Configuration import DecayTreeTuple, EventTuple
 
-# # Workaround the LineBuilderTest
-# # Exception: test_configuration_not_dictlike_raises
-# if not isinstance(subconfigs, dict):
-#   raise AttributeError
-# # Exception: test_bad_configuration_raises
-# if 'BAD_KEY' in subconfigs:
-#   raise KeyError
-
-
+  seq = GaudiSequencer('TupleSeq')
+  seq.ModeOR       = True
+  seq.ShortCircuit = False
+  for lname, decays in lines_decays.iteritems():
+    for process, desc in decays.iteritems():
+      desc = re.sub( r'  ([a-z])', r' ^\1', desc) # regex insert ^
+      desc = desc.replace('cc', 'CC') # different between CombineP & DTT
+      #
+      ## Extra complication for cand with RIF, such that the input location
+      # after isolation filter is not at default line location, but on the 
+      # last algo's location. Otherwise the tuple will pick up candidates 
+      # before isolation filtering.
+      root = 'Phys/Ditau%sLine'%lname
+      # if 'noiso' not in root:
+      #   root = root.replace('Line','isoLine')
+      #
+      tup   = DecayTreeTuple('Tup_'+process, NTupleDir='Ditau', TupleName=process)
+      tup.Inputs    = [ root+'/Particles' ]
+      tup.Decay     = desc
+      tup.ToolList  = [
+        'TupleToolKinematic',
+      ]
+      tool = tup.addTupleTool('TupleToolConeIsolation')
+      tool.MinConeSize = 0.5
+      tool.MaxConeSize = 0.5
+      tool = tup.addTupleTool('LoKi::Hybrid::TupleTool')
+      tool.Variables = {
+        'CONEPX1': "RELINFO('%s/IsoPlus' , 'CONEPX')"%root,
+        'CONEPX2': "RELINFO('%s/IsoMinus', 'CONEPX')"%root,
+        'CONEPY1': "RELINFO('%s/IsoPlus' , 'CONEPY')"%root,
+        'CONEPY2': "RELINFO('%s/IsoMinus', 'CONEPY')"%root,
+        'CONEPT1': "RELINFO('%s/IsoPlus' , 'CONEPT')"%root,
+        'CONEPT2': "RELINFO('%s/IsoMinus', 'CONEPT')"%root,
+      }
+      seq.Members.append(tup)
+  return [seq]
 

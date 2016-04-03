@@ -3,7 +3,7 @@
 import os
 
 # app = DaVinci( version = 'v39r0p1' ) # S26, no longer compat with Ganga 6.0.44
-app = DaVinci( version = 'v38r1p1' ) 
+app = DaVinci( version = 'v38r1p1' ) # need local redirection
 app.user_release_area = os.path.expandvars('$HOME/cmtuser/')
 # app.setupProjectOptions = '--no-user-area'
 app.optsfile  = 'TestS26_Selections.py'
@@ -26,12 +26,12 @@ ds.XMLCatalogueSlice = '../../data/Reco15a_Run164668.xml'
 
 j = Job()
 j.name        = 'TestS26'
-j.comment     = 'Deletable: Rate WJets fixed ACHILD'
+j.comment     = 'Deletable: Check all lines (10kevt)'
 j.backend     = PBS(extraopts='--mem=2900 -t 1-0:0:0')
 # j.backend     = Dirac()
 j.application = app
 j.inputdata   = ds
 j.splitter    = SplitByFiles( filesPerJob=1 )
-j.outputfiles = [ 'summary.xml' ]
+j.outputfiles = [ 'summary.xml' ] #, LocalFile('*.dst') ]
 
 queues.add(j.submit)

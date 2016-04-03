@@ -8,10 +8,8 @@ We signal:  StdAllNoPIDsElectrons, PRS>50Mev & E_ECal/P>0.1 & E_HCal/P<0.05 & pT
 We control: StdAllNoPIDsElectrons, PRS>50Mev & E_ECal/P>0.1 & E_HCal/P<0.05 & pT>15GeV          (10% PRESCALE)
 """
 
-__all__ = (
-  'WeConf',
-  'default_config',
-)
+__all__ = 'WeConf', 'default_config'
+__author__ = 'S. Bifani', 'D. Ward'
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop

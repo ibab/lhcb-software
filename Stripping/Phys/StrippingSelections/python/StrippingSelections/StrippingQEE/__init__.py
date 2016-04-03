@@ -29,6 +29,9 @@ list_S26 = [
   'StrippingWJets',
   'StrippingZ02ee',
   'StrippingZ02MuMu',
+  ## NEW
+  'StrippingWRareDecay',
+  'StrippingZ0RareDecay',
 ]
 
 ## For autumn-2015 Run-II End-of-2015 restripping (S24)

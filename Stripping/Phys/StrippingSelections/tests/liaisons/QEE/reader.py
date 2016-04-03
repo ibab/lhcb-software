@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 
 """
+
 Summarize info from merged job
+
 """
 
+import os
 import re
+import sys
 
 def valid(line):
   """Return True if this line looks like a stirppingline."""
@@ -14,10 +18,10 @@ def process(line):
   name,count = re.findall(r'name="Stripping(\S+)#accept">(\d+)<', line)[0]
   return name, int(count)
 
-def read_xml():
+def read_xml(src):
   counter = {}
   ntotal  = 0
-  with open('summary.xml') as fin:
+  with open(src) as fin:
     for line in fin:
       if valid(line):
         name, count   = process(line)
@@ -32,4 +36,8 @@ def read_xml():
   print '\n[ %% for per 10k ]'
 
 if __name__ == '__main__':
-  read_xml()
+  src = 'summary.xml'
+  if len(sys.argv)==2:
+    jid = sys.argv[1]
+    src = os.path.expandvars('$HOME/gangadir/workspace/$USER/LocalXML/%s/output/summary.xml')%jid
+  read_xml(src)

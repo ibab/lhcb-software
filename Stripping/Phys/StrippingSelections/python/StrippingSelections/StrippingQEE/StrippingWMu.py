@@ -1,19 +1,18 @@
-# Stripping Lines for W->MuNu and studies of their background
-# Electroweak Group (Conveners: S.Bifani, J.Anderson; Stripping contact: W.Barter)
-#
-# S.Bifani
-#
-# WMu signal:           StdAllLooseMuons,  pT>20GeV
-# WMu control:          StdAllLooseMuons,  pT>15GeV                    (10% PRESCALE)
-# WMu background:       StdAllNoPIDsMuons, pT>5GeV  &  Hlt1MBNoBias Dec (RATE LIMITED, 20% PRESCALE)
-# SingleMuon control:   StdAllLooseMuons,  pT>10GeV &  Hlt2SingleMuonHighPT Dec     (1% PRESCALE)
-# SingleMuon control:   StdAllLooseMuons,  pT>4.8GeV & Hlt2SingleMuonLowPT Dec      (20% PRESCALE)
+"""
+Stripping Lines for W->MuNu and studies of their background
+Electroweak Group (Conveners: S.Bifani, J.Anderson; Stripping contact: W.Barter)
 
-__all__ = (
-  'WMuConf',
-  'default_config',
-)
+S.Bifani
 
+WMu signal:           StdAllLooseMuons,  pT>20GeV
+WMu control:          StdAllLooseMuons,  pT>15GeV                    (10% PRESCALE)
+WMu background:       StdAllNoPIDsMuons, pT>5GeV  &  Hlt1MBNoBias Dec (RATE LIMITED, 20% PRESCALE)
+SingleMuon control:   StdAllLooseMuons,  pT>10GeV &  Hlt2SingleMuonHighPT Dec     (1% PRESCALE)
+SingleMuon control:   StdAllLooseMuons,  pT>4.8GeV & Hlt2SingleMuonLowPT Dec      (20% PRESCALE)
+"""
+
+__all__ = 'WMuConf', 'default_config'
+__author__ = 'S. Bifani'
 
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
 from PhysSelPython.Wrappers import SimpleSelection
@@ -29,20 +28,20 @@ default_config = {
   'WGs'         : [ 'QEE'],
   'STREAMS'     : [ 'EW' ],
   'CONFIG'      : { 
-    'WMu_Prescale'        : 1.0,
-    'WMuLow_Prescale'     : 0.1,
-    'STNB_Prescale'       : 0.2,
-    'WMu_Postscale'       : 1.0,
-    'SingMuon10_Prescale' : 0.01,
-    'SingMuon48_Prescale' : 0.4,
-    'pT'                  : 20. * GeV,
-    'pTlow'               : 15. * GeV,
-    'pTvlow'              :  5. * GeV,
-    'SingMuon10_pT'       : 10. * GeV,
-    'SingMuon48_pT'       : 4.8 * GeV,
+    'WMu_Prescale'          : 1.0,
+    'WMuLow_Prescale'       : 0.1,
+    'STNB_Prescale'         : 0.2,
+    'WMu_Postscale'         : 1.0,
+    'SingMuon10_Prescale'   : 0.01,
+    'SingMuon48_Prescale'   : 0.4,
+    'pT'                    : 20. * GeV,
+    'pTlow'                 : 15. * GeV,
+    'pTvlow'                :  5. * GeV,
+    'SingMuon10_pT'         : 10. * GeV,
+    'SingMuon48_pT'         : 4.8 * GeV,
     #
-    'HLT2_Control10'        : "HLT_PASS_RE('Hlt2.*SingleMuon.*High.*Decision')",
-    'HLT2_Control4800'      : "HLT_PASS_RE('Hlt2.*SingleMuonLow.*Decision')",
+    'HLT2_Control10'        : "HLT_PASS_RE('Hlt2(EW)?SingleMuon(V)?High.*')",
+    'HLT2_Control4800'      : "HLT_PASS_RE('Hlt2(EW)?SingleMuonLow.*')",
     'HLT1_SingleTrackNoBias': "HLT_PASS( 'Hlt1MBNoBiasDecision' )",
     #
     'RawEvents' : ["Muon", "Calo", "Rich", "Velo", "Tracker"],

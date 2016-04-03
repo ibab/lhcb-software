@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-02 - Chitsanu Khurewathanakul
+ - Updated QEE/Ditau: uses RelInfoConeVariables for isolation
+ - Updated QEE/FullDijets,MicroDijets: Put switch for Hlt2 TOS
+ - Updated QEE/Exotica: Put switch for Hlt2 TOS
+ - New QEE/WRareDecay,Z0RareDecay
+
 ! 2016-04-01 - Chitsanu Khurewathanakul
  - Bug fixed in QEE/WJets. Bad ACHILD indexing.
 

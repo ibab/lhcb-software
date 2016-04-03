@@ -26,8 +26,8 @@ DecodeRawEvent().setProp("OverrideInputs",4.2)
 from StrippingSelections import buildersConf
 confs = buildersConf()
 from StrippingSelections.Utils import lineBuilder, buildStreams, buildStreamsFromBuilder
-# streams = buildStreams( confs, WGs='QEE' )
-streams = buildStreamsFromBuilder(confs, ['WmuJets','WeJets'] )
+streams = buildStreams( confs, WGs='QEE' )
+# streams = buildStreamsFromBuilder(confs, ['WRareDecay', 'Z0RareDecay', 'Exotica', 'FullDiJets', 'MicroDiJets'])
 
 
 leptonicMicroDSTname   = 'Leptonic'
@@ -119,12 +119,13 @@ AuditorSvc().Auditors.append( ChronoAuditor("Chrono") )
 
 from Configurables import StrippingReport
 sr = StrippingReport(Selections = sc.selections())
+sr.ReportFrequency = 10000
 
 from Configurables import AlgorithmCorrelationsAlg
 ac = AlgorithmCorrelationsAlg(Algorithms = list(set(sc.selections())))
 
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 100
+DaVinci().EvtMax = 20000
 DaVinci().PrintFreq = 100
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
@@ -171,3 +172,4 @@ DaVinci().EventPreFilters = [jseq,HLTFilter2]
 
 # input file
 importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco15a_Run164668.py")
+
