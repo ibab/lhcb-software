@@ -23,23 +23,23 @@
 # =============================================================================
 package       BenderSys
 author        Vanya BELYAEV
-version       v28r3
+version       v29r0
 
 
 # =========== Bender Application itself =======================================
-use           Bender         v28r3   Phys 
+use           Bender         v29r0   Phys 
   
 # =========== Bender-based tools and scripts ==================================
-use           BenderTools    v28r3   Phys 
+use           BenderTools    v29r0   Phys 
 
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v28r2   Ex
+use           BenderExample  v29r0   Ex
 
 # =========== Bender tutorial =================================================
-use           BenderTutor    v28r3   Tutorial
+use           BenderTutor    v29r0   Tutorial
 
 # =========== template of user module/script ==================================
-use           BenderUser     v26r3   Phys 
+use           BenderUser     v29r0   Phys 
 
 # Declare this as a container package
 apply_pattern container_package
