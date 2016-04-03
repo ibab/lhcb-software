@@ -5,13 +5,13 @@
 !-----------------------------------------------------------------------------
 
 ! 2016-04-03 - Chris Jones
- - Remove unneccesary data members from TabulatedFunction1D, which are 
+ - Remove some unneccesary data members from TabulatedFunction1D, which are 
    replicated as part of the GSL interpolators. Reduces their memory footprint.
 
 ! 2016-04-02 - Chris Jones
  - Add range checking and subsequent error reporting to TabulatedFunction1D
-   and TabulateProperty1D.
- - Reduce memory footprint of TabulateProperty1D by making some data members
+   and TabulatedProperty1D.
+ - Reduce memory footprint of TabulatedProperty1D by making some data members
    static.
 
 ! 2016-03-31 - Chris Jones
