@@ -296,11 +296,7 @@ TabulatedFunction1D::combine( const ConstVector & funcs,
     for ( unsigned int i = 0; i < samples; ++i, X += xInc )
     {
       double Y = 1.0;
-      for ( ConstVector::const_iterator iF = funcs.begin();
-            iF != funcs.end(); ++iF )
-      {
-        Y *= (*iF)->value(X);
-      }
+      for ( const auto func : funcs ) { Y *= func->value(X); }
       mergedData[X] = Y;
     }
 
