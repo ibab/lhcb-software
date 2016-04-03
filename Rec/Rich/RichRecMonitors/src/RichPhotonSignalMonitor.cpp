@@ -99,8 +99,7 @@ StatusCode PhotonSignalMonitor::execute()
       }
 
       // Plot the expected spectra (energy, refIndex etc.)
-      const PhotonSpectra<LHCb::RichRecSegment::FloatType> & spectra 
-        = segment->signalPhotonSpectra();
+      const auto & spectra = segment->signalPhotonSpectra();
       // min and max ref index values
       double minRefIn = m_refIndex->refractiveIndex( segment, spectra.minEnergy() );
       double maxRefIn = m_refIndex->refractiveIndex( segment, spectra.maxEnergy() );
@@ -139,9 +138,12 @@ StatusCode PhotonSignalMonitor::execute()
             "Av. energy of signal photons - True type", minPhotEn[rad], maxPhotEn[rad] );
 
     // refractive index
-    const double refInd = m_refIndex->refractiveIndex( segment, avgEnEmit );
-    plot1D( refInd-1, hid(rad,mcType,"refIndM1"),
-            "Refractive index n-1", minRefInd[rad]-1, maxRefInd[rad]-1 );
+    if ( avgEnEmit > 0 )
+    {
+      const double refInd = m_refIndex->refractiveIndex( segment, avgEnEmit );
+      plot1D( refInd-1, hid(rad,mcType,"refIndM1"),
+              "Refractive index n-1", minRefInd[rad]-1, maxRefInd[rad]-1 );
+    }
 
     // Number of signal photons for true type
     const double nSigTrue = m_tkSignal->nSignalPhotons( segment, mcType );
