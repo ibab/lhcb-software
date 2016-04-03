@@ -90,12 +90,12 @@ TabulatedProperty1D::initInterpolator( const TabulatedProperty * tab,
   m_OK = ( registerUMS ? configureUMS(tab) : true );
   if ( !m_OK ) return m_OK;
 
-  // copy data to internal container
-  m_data.clear();
-  for ( const auto & t : tab->table() ) { m_data[t.first] = t.second; }
+  // copy data to temporary data map
+  Data data;
+  for ( const auto & t : tab->table() ) { data[t.first] = t.second; }
 
   // init the underlying GSL interpolator
-  m_OK = this->TabulatedFunction1D::initInterpolator(interType);
+  m_OK = this->TabulatedFunction1D::initInterpolator(data,interType);
 
   // return
   return m_OK;

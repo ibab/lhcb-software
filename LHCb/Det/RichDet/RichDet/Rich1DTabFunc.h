@@ -61,7 +61,10 @@ namespace Rich
      *  @param interType   GSL Interpolator type.
      */
     TabulatedFunction1D( const gsl_interp_type * interType = gsl_interp_linear )
-      : m_interType ( interType ) { }
+      : m_interType ( interType ) 
+    {
+      initInterpolator(); 
+    }
 
     /** Constructor from arrays containing x and y values
      *
@@ -145,9 +148,6 @@ namespace Rich
 
   private:
 
-    /// Clear (x,y) data values
-    inline void clearData() { m_data.clear(); m_minX = m_maxX = 0; }
-
     /** Issue an out of range warning
      *  @param x    The requested x value
      *  @param retx The x value to use (corrected to be in range)
@@ -161,9 +161,8 @@ namespace Rich
      */
     double checkRange( const double x ) const
     {
-      return ( x <= maxX() && x >= minX() ? x :
-               x <  minX() ? 
-               rangeWarning(x,minX()) : rangeWarning(x,maxX()) );
+      return ( withinInputRange(x) ? x :
+               x < minX() ? rangeWarning(x,minX()) : rangeWarning(x,maxX()) );
     }
 
   public:
@@ -282,25 +281,37 @@ namespace Rich
      *
      *  @return The minimum valid paramter value
      */
-    inline double minX() const noexcept { return m_minX; }
+    inline double minX() const noexcept 
+    {
+      return m_mainDistSpline->x[0];
+    }
 
     /** The function value for the minimum valid parameter
      *
      *  @return The function value at the minimum valid parameter
      */
-    inline double minY() const noexcept { return (*m_data.begin()).second; }
+    inline double minY() const noexcept 
+    {
+      return m_mainDistSpline->y[0];
+    }
 
     /** The maximum parameter value for which the function is defined
      *
      *  @return The minimum valid paramter value
      */
-    inline double maxX() const noexcept { return m_maxX; }
+    inline double maxX() const noexcept 
+    {
+      return m_mainDistSpline->x[ m_mainDistSpline->size - 1 ];
+    }
 
     /** The function value for the minimum valid parameter
      *
      *  @return The function value at the minimum valid parameter
      */
-    inline double maxY() const noexcept { return (*(--m_data.end())).second; }
+    inline double maxY() const noexcept 
+    {
+      return m_mainDistSpline->y[ m_mainDistSpline->size - 1 ];
+    }
 
     /** The status of the interpolator.
      *
@@ -323,16 +334,12 @@ namespace Rich
      *
      *  @return The number of data (x,y) points
      */
-    inline Data::size_type nDataPoints() const noexcept
-    {
-      return m_data.size();
-    }
+    inline size_t nDataPoints() const noexcept { return m_mainDistSpline->size; }
 
     /// Return the interpolator name
     inline std::string interpName() const
     {
-      return ( m_mainDistSpline ?
-               std::string(gsl_interp_name(m_mainDistSpline->interp)) : "Undefined" );
+      return gsl_interp_name(m_mainDistSpline->interp);
     }
     
     /// Return the interpolator type
@@ -387,49 +394,30 @@ namespace Rich
     bool initInterpolator( const std::vector< std::pair<double,double> > & data,
                            const gsl_interp_type * interType = nullptr );
 
-    /** initialise the GSL interpolator using the given type
-     *
-     *  Initialisation will (re)use whatever data values the interpolator has been given
-     *
-     *  @param interType GSL Interpolator type
-     *
-     *  @return the status of the initialisation
-     *  @retval true  The interpolator initialised correctly and is ready for use
-     *  @retval false The interpolator failed to initialise correctly
-     */
-    bool initInterpolator( const gsl_interp_type * interType );
-
   protected: // methods
 
     /// clear the interpolator
     void clearInterpolator();
 
-  protected: // data
-
-    /// the data points
-    Data m_data;
-
-    /// Status flag
-    bool m_OK = false;
-
+    /// Default initialise the interpolator
+    void initInterpolator();
+    
   private: // data
-
+    
     // GSL interpolator objects
     gsl_interp_accel * m_mainDistAcc        = nullptr; ///< The accelerator for the main y(x) distribution
     gsl_spline       * m_mainDistSpline     = nullptr; ///< The spline for the main y(x) distribution
     gsl_interp_accel * m_weightedDistAcc    = nullptr; ///< The accelerator for the weighted x.y(x) distribution
     gsl_spline       * m_weightedDistSpline = nullptr; ///< The spline for the weighted x.y(x) distribution
-
-    /// Cache min x
-    double m_minX{0};
-    /// Cache max x
-    double m_maxX{0};
-
+    
   protected:
-
+    
+    /// Status flag
+    bool m_OK = false;
+    
     /// The interpolator type
     const gsl_interp_type * m_interType = nullptr;
-
+    
   };
 
 }
