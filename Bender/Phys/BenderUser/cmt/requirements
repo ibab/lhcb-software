@@ -5,7 +5,7 @@
 # =============================================================================
 package          BenderUser
 author           Vanya BELYAEV
-version          v28r4
+version          v29r0
 
 # ============== structure ====================================================
 branches         cmt doc python
