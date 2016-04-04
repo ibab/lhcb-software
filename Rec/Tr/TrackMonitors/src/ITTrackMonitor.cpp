@@ -34,7 +34,7 @@ TrackMonitorBase( name , pSvcLocator ){
   declareProperty("splitByITType", m_splitByITType = true); 
   declareProperty("plotsByLayer", m_plotsByLayer = true);
   declareProperty("plotsBySector", m_plotsBySector = false);// residual and signal to noise plots for each sector
-  declareProperty("TH2DSummaryHist", m_2DSummaryHist = true);
+  declareProperty("TH2DSummaryHist", m_2DSummaryHist = false);
   declareProperty("ProfileSummaryHist", m_ProfileSummaryHist = false);
   declareProperty("HitsOnTrack", m_hitsOnTrack = false);// use only hits on tracks (a la track monitor)
   declareProperty("minNumITHits", m_minNumITHits = 6u); 

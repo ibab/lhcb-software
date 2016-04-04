@@ -37,7 +37,7 @@ TrackMonitorBase( name , pSvcLocator ){
   declareProperty("InputData" , m_clusterLocation = STClusterLocation::TTClusters);
   declareProperty("plotsBySector", m_plotsBySector = false);// residual and signal to noise plots for each sector
   declareProperty("HitsOnTrack", m_hitsOnTrack = false);// use only hits on tracks (a la track monitor)
-  declareProperty("TH2DSummaryHist", m_2DSummaryHist = true);// residual and signal to noise plots for each sector
+  declareProperty("TH2DSummaryHist", m_2DSummaryHist = false);// residual and signal to noise plots for each sector
   declareProperty("ProfileSummaryHist", m_ProfileSummaryHist = false);// residual and signal to noise plots for each sector
 
   setSplitByType(false) ;

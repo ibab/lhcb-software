@@ -79,7 +79,7 @@ STEfficiency::STEfficiency( const std::string& name,
   declareProperty( "ResidualsPlot"      , m_resPlot = false );
   declareProperty( "TakeEveryHit"       , m_everyHit = true );
   declareProperty( "SingleHitPerSector" , m_singlehitpersector = false );
-  declareProperty( "TH1DSummaryHist"    , m_SummaryHist = true);
+  declareProperty( "TH1DSummaryHist"    , m_SummaryHist = false);
 
 }
 
