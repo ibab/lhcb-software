@@ -40,6 +40,7 @@ use GaudiUPI            v1r21    Online
 use HistDBPython        v1r9     Online
 use Hlt2Monitoring      v1r7     Online
 use InsertDB            v1r11    Online
+use IPMI                v1r18    Online
 use MBMDump             v1r18    Online
 use OMAlib              v5r1     Online
 use OnlineAlign         v0r10    Online
