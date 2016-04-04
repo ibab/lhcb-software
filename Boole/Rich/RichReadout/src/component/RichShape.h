@@ -35,9 +35,9 @@ namespace Rich
 
           // Initialise interpolator
           Rich::Map<double,double> data;
-          for ( int i = 1; i < 101; ++i )
+          for ( int i = 0; i < 101; ++i )
           {
-            const double time = m_minTime + (m_maxTime-m_minTime)*i/100;
+            const double time = m_minTime + ((m_maxTime-m_minTime)*i)/100;
             data[time] = responseFunction(time);
           }
           m_tabFunc.reset( new Rich::TabulatedFunction1D(data) );

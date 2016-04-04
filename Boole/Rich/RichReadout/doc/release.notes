@@ -4,6 +4,10 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2016-04-04 - Chris Jones
+ - Extend data range for interpolator in RichShape to avoid out-of-range 
+   interpolation requests.
+
 ! 2016-02-28 - Chris Jones
  - Adapt to removal of typedef from RichDet.
 
