@@ -54,6 +54,8 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from Beauty2Charm_LoKiCuts import LoKiCuts
+from GaudiConfUtils.ConfigurableGenerators import DaVinci__N4BodyDecays as Combine4Particles
+
 #from StrippingSelections.Utils import checkConfig
 
 class B2MuMuMuMuLinesConf(LineBuilder) :
@@ -99,7 +101,7 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
         'B2DetachedDimuonAndJpsiLinePostscale',
     )
 
-    def __init__(self, name='B2MuMuMuMu', config=None):
+    def __init__(self, name, config):
         self.name = name
         #self.__confdict__ = default_config['CONFIG']
         self.__confdict__ = config
@@ -221,61 +223,55 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
         self.registerLine(self.B2DetachedDimuonAndJpsiLine)
 
 
-
-
 def makeDefault(self,name,inputSel) :
     """
     B --> 4 mu selection
     should become     inclusive bb-->4 mu selection  ??
     """
-    from Configurables import OfflineVertexFitter
-    Detached4mu = CombineParticles("Combine"+name)
-    Detached4mu.DecayDescriptor = "B_s0 -> mu+ mu- mu+ mu-"
-    # Set the OfflineVertexFitter to keep the 4 tracks and not the J/Psi Kstar:
-    Detached4mu.addTool( OfflineVertexFitter )
-    Detached4mu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    Detached4mu.OfflineVertexFitter.useResonanceVertex = False
-    Detached4mu.ReFitPVs = True
-    Detached4mu.DaughtersCuts = { "mu+" : self.BDaughtersCuts}
+    Detached4mu = Combine4Particles(
+        DecayDescriptor="B_s0 -> mu+ mu- mu+ mu-",
+        DaughtersCuts={ "mu+" : self.BDaughtersCuts},
+        Combination12Cut="(AMAXDOCA('')<0.3*mm)",
+        Combination123Cut="(AMAXDOCA('')<0.3*mm)",
+        CombinationCut="(ADAMASS('B_s0')<1000*MeV) "\
+                         "& (AMAXDOCA('')<0.3*mm)",
+        MotherCut=self.BMotherCuts + " & (ADMASS('B_s0')<1000*MeV) "
+    )
 
-    Detached4mu.CombinationCut = "(ADAMASS('B_s0')<1000*MeV) "\
-                                   "& (AMAXDOCA('')<0.3*mm)"
-    Detached4mu.MotherCut =  self.BMotherCuts + " & (ADMASS('B_s0')<1000*MeV) "
-
-
-    return Selection (name,
-                      Algorithm = Detached4mu,
-                      RequiredSelections = inputSel)
-
+    return Selection(
+        name,
+        Algorithm=Detached4mu,
+        RequiredSelections=inputSel
+    )
 
 
 def makeD2MuMuMuMu(name,inputSel) :
     """
     D --> 4 mu selection
     """
-    from Configurables import OfflineVertexFitter
-    D2MuMuMuMu = CombineParticles("Combine"+name)
-
-    D2MuMuMuMu.DecayDescriptor = "D0 -> mu+ mu- mu+ mu-"
-    D2MuMuMuMu.addTool( OfflineVertexFitter )
-    D2MuMuMuMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-
-    D2MuMuMuMu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 3.0 ) "\
-                                  " & (MIPCHI2DV(PRIMARY)> 4.)"\
-                                 " & (TRGHOSTPROB<0.3) "\
-                                  " & (P> 3000.*MeV)"}
-
-    D2MuMuMuMu.CombinationCut =  "(ADAMASS('D0')<300*MeV) "\
-                                 "& (AMAXDOCA('')<0.2*mm) "
-
-
-    D2MuMuMuMu.MotherCut = "(VFASPF(VCHI2/VDOF)<12.) "\
+    D2MuMuMuMu = Combine4Particles(
+        DecayDescriptor = "D0 -> mu+ mu- mu+ mu-",
+        DaughtersCuts = {
+            "mu+" : "(TRCHI2DOF < 3.0 ) "\
+            " & (MIPCHI2DV(PRIMARY)> 4.)"\
+            " & (TRGHOSTPROB<0.3) "\
+            " & (P> 3000.*MeV)"
+        },
+        Combination12Cut = "(AMAXDOCA('')<0.2*mm)",
+        Combination123Cut = "(AMAXDOCA('')<0.2*mm)",
+        CombinationCut =  "(ADAMASS('D0')<300*MeV) "\
+                          "& (AMAXDOCA('')<0.2*mm) ",
+        MotherCut = "(VFASPF(VCHI2/VDOF)<12.) "\
 			      "& (BPVVDZ > 0.) " \
 			      "& (MIPCHI2DV(PRIMARY) < 25. )"
+    )
 
-    return Selection (name,
-                      Algorithm = D2MuMuMuMu,
-                      RequiredSelections = inputSel)
+    return Selection(
+        name,
+        Algorithm=D2MuMuMuMu,
+        RequiredSelections=inputSel
+    )
+
 
 def makeDetachedDimuons(name,config,inputSel):
     """
@@ -288,9 +284,11 @@ def makeDetachedDimuons(name,config,inputSel):
     KS2MuMu.CombinationCut=comboCuts
     KS2MuMu.MotherCut=momCuts
 
-    return  Selection(name,
-                      Algorithm=KS2MuMu,
-                      RequiredSelections = inputSel)
+    return Selection(
+        name,
+        Algorithm=KS2MuMu,
+        RequiredSelections=inputSel
+    )
 
 
 def makeB2TwoDetachedDimuons(name,config,inputSel) :
@@ -310,9 +308,12 @@ def makeB2TwoDetachedDimuons(name,config,inputSel) :
     B2KSKS.CombinationCut = comboCuts
     B2KSKS.MotherCut = momCuts
 
-    return Selection(name,
-                     Algorithm = B2KSKS,
-                     RequiredSelections = inputSel)
+    return Selection(
+        name,
+        Algorithm=B2KSKS,
+        RequiredSelections=inputSel
+    )
+
 
 def makeJpsi(self,name,inputSel):
     """
@@ -326,9 +327,11 @@ def makeJpsi(self,name,inputSel):
         " & (BPVDIRA > 0) "
     JpsiMuMu.DaughtersCuts = { "mu+" : self.BDaughtersCuts}
 
-    return  Selection(name,
-                      Algorithm=JpsiMuMu,
-                      RequiredSelections = inputSel)
+    return Selection(
+        name,
+        Algorithm=JpsiMuMu,
+        RequiredSelections=inputSel
+    )
 
 
 def makeJpsiWide(self,name,inputSel):
@@ -344,9 +347,12 @@ def makeJpsiWide(self,name,inputSel):
         " & (BPVDIRA > 0) "
     JpsiMuMu.DaughtersCuts = { "mu+" : self.BDaughtersCuts}
 
-    return  Selection(name,
-                      Algorithm=JpsiMuMu,
-                      RequiredSelections = inputSel)
+    return Selection(
+        name,
+        Algorithm=JpsiMuMu,
+        RequiredSelections=inputSel
+    )
+
 
 def makePhi(self,name,inputSel):
     """
@@ -360,42 +366,56 @@ def makePhi(self,name,inputSel):
         " & (BPVDIRA > 0) "
     Phimumu.DaughtersCuts = { "K+" : self.BDaughtersCuts}
 
-    return Selection(name,
-                     Algorithm = Phimumu,
-                     RequiredSelections = inputSel)
+    return Selection(
+        name,
+        Algorithm=Phimumu,
+        RequiredSelections=inputSel
+    )
 
 
 def makeB2JpsiKmumu(self,name,inputSel):
     """
     B+ -> (Jpsi->mu+ mu-) K+ mu+ mu- selection
     """
-    B2JpsiKmumu = CombineParticles("Combine"+name)
-    B2JpsiKmumu.DecayDescriptor = "[B+ -> J/psi(1S) K+ mu+ mu-]cc"
-    B2JpsiKmumu.DaughtersCuts = { "mu+" : self.BDaughtersCuts,
-                                  "K+" : self.BDaughtersCuts}
-    B2JpsiKmumu.CombinationCut  = "(ADAMASS('B+')<1000*MeV)"\
-        "& (AMAXDOCA('')<0.3*mm)"
-    B2JpsiKmumu.MotherCut =  self.BMotherCuts + " & (ADMASS('B+')<1000*MeV) "
+    B2JpsiKmumu = Combine4Particles(
+        DecayDescriptor="[B+ -> J/psi(1S) K+ mu+ mu-]cc",
+        DaughtersCuts={
+            "mu+" : self.BDaughtersCuts,
+            "K+" : self.BDaughtersCuts
+        },
+        Combination12Cut="(AMAXDOCA('')<0.3*mm)",
+        Combination123Cut="(AMAXDOCA('')<0.3*mm)",
+        CombinationCut="(ADAMASS('B+')<1000*MeV)"\
+                       "& (AMAXDOCA('')<0.3*mm)",
+        MotherCut=self.BMotherCuts + " & (ADMASS('B+')<1000*MeV) "
+    )
 
-    return Selection (name,
-                      Algorithm = B2JpsiKmumu,
-                      RequiredSelections = inputSel)
+    return Selection(
+        name,
+        Algorithm=B2JpsiKmumu,
+        RequiredSelections=inputSel
+    )
+
 
 def makeB2JpsiPhimumu(self,name,inputSel):
     """
     Bs -> (Jpsi->mu+ mu-) (phi -> K+ K-) mu+ mu- selection
     """
+    B2JpsiPhimumu = Combine4Particles(
+        DecayDescriptor="[B_s0 -> J/psi(1S) phi(1020) mu+ mu-]cc",
+        DaughtersCuts={ "mu+" : self.BDaughtersCuts },
+        Combination12Cut="(AMAXDOCA('')<0.3*mm)",
+        Combination123Cut="(AMAXDOCA('')<0.3*mm)",
+        CombinationCut="(ADAMASS('B_s0')<1000*MeV)"\
+                       "& (AMAXDOCA('')<0.3*mm)",
+        MotherCut=self.BMotherCuts + " & (ADMASS('B_s0')<1000*MeV) "
+    )
 
-    B2JpsiPhimumu = CombineParticles("Combine"+name)
-    B2JpsiPhimumu.DecayDescriptor =  "[B_s0 -> J/psi(1S) phi(1020) mu+ mu-]cc"
-    B2JpsiPhimumu.DaughtersCuts = { "mu+" : self.BDaughtersCuts }
-    B2JpsiPhimumu.CombinationCut =  "(ADAMASS('B_s0')<1000*MeV)"\
-        "& (AMAXDOCA('')<0.3*mm)"
-    B2JpsiPhimumu.MotherCut = self.BMotherCuts + " & (ADMASS('B_s0')<1000*MeV) "
-
-    return Selection(name,
-                     Algorithm = B2JpsiPhimumu,
-                     RequiredSelections = inputSel)
+    return Selection(
+        name,
+        Algorithm=B2JpsiPhimumu,
+        RequiredSelections=inputSel
+    )
 
 
 def makeB2DetachedDimuonAndJpsi(name,config,inputSel) :
@@ -415,6 +435,8 @@ def makeB2DetachedDimuonAndJpsi(name,config,inputSel) :
     B2JpsiKS.CombinationCut = comboCuts
     B2JpsiKS.MotherCut = momCuts
 
-    return Selection(name,
-                     Algorithm = B2JpsiKS,
-                     RequiredSelections = inputSel)
+    return Selection(
+        name,
+        Algorithm=B2JpsiKS,
+        RequiredSelections=inputSel
+    )
