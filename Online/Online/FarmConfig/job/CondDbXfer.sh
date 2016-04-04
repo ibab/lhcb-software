@@ -4,7 +4,7 @@ echo $2
 export HOME=/home/online
 export USER=online # these dumb offline scripts....
 ##echo "[ERROR] source /cvmfs/lhcb.cern.ch/lib/LbLogin.sh";
-source /group/online/dataflow/cmtuser/AlignmentOnlineDev_v10r5/setup.x86_64-slc6-gcc48-dbg.vars;
+source /group/online/dataflow/cmtuser/AlignmentRelease/setup.x86_64-slc6-gcc49-dbg.vars;
 export PYTHONPATH=$1/..:$1:/group/online/hlt/conditions/RunChangeHandler:$PYTHONPATH
 unset GAUDIAPPNAME
 source /sw/oracle/set_oraenv.sh
