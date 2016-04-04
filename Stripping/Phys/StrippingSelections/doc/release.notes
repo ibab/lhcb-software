@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-04 - Andrea Merli
+ - New BnoC/Xb2p3h
+
 ! 2016-04-02 - Chitsanu Khurewathanakul
  - Updated QEE/Ditau: uses RelInfoConeVariables for isolation
  - Updated QEE/FullDijets,MicroDijets: Put switch for Hlt2 TOS
