@@ -35,6 +35,7 @@ namespace Rich
 
           // Initialise interpolator
           Rich::Map<double,double> data;
+          data[-1] = 0; // Just to extend interpolator range to cover 0 safetly.
           for ( int i = 0; i < 101; ++i )
           {
             const double time = m_minTime + ((m_maxTime-m_minTime)*i)/100;
