@@ -804,6 +804,7 @@ void MBMInfoHandler::infoHandler()
       {
         const Buffers::value_type::Control& c = (*ib).ctrl;
         std::string bnam = (*ib).name;
+        if (bnam.find("LHCbA") != std::string::npos) continue;
         if (bnam.find("LHCb2") == std::string::npos)
         { //Not LHCb2
           if (bnam.find("Events") != std::string::npos)
