@@ -63,8 +63,10 @@ if HltRecoConf().getProp("NewMSinFit"):
     ToolSvc().TrackStateProvider.Extrapolator.MaterialLocator.StateMSCorrectionTool.UseRossiAndGreisen = True
     ToolSvc().TrackStateProvider.Interpolator.Extrapolator.MaterialLocator.StateMSCorrectionTool.UseRossiAndGreisen = True
 if HltRecoConf().getProp("CacheStatesInStateProvider"):
+    ToolSvc().TrackStateProvider.CacheStatesOnDemand = True
+else:
     ToolSvc().TrackStateProvider.CacheStatesOnDemand = False
-
+    
 #### Velo Tracking
 
 # the full Velo reconstruction

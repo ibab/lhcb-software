@@ -3,6 +3,8 @@
 ! Responsible : Sascha Stahl, Vladimir Gligorov
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2016-04-04 - Sascha Stahl
+ - HltSharedTracking: Switch off cache of states in TrackStateProvider, now for real.
 
 ! 2016-03-29 - Sascha Stahl
  - HltSharedTracking: Configure public StateThickMSCorrectionTool instances
