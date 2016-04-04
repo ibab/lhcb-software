@@ -115,9 +115,9 @@ void ParseConfigFile(char *supFile,vector<NodeListElement*> &nodelist, NodeListE
   f=fopen(supFile,"r");
   string line;
   line.reserve(2048);
-  char *stat;
+//  char *stat;
   if (f == 0) return;
-  stat = fgets(lin,2048,f);
+  fgets(lin,2048,f);
   while (!feof(f))
   {
     line = lin;
@@ -128,7 +128,7 @@ void ParseConfigFile(char *supFile,vector<NodeListElement*> &nodelist, NodeListE
     if (line.size() == 0)
     {
       line.reserve(2048);
-      stat = fgets(lin,2048,f);
+      fgets(lin,2048,f);
       continue;
     }
     vector<string> splt = StrSplit(line,(char*)"=");
@@ -163,7 +163,7 @@ void ParseConfigFile(char *supFile,vector<NodeListElement*> &nodelist, NodeListE
         printf("Illegal Option %s",line.c_str());
       }
       line.reserve(2048);
-      stat = fgets(lin,2048,f);
+      fgets(lin,2048,f);
       continue;
     }
     else
@@ -179,7 +179,7 @@ void ParseConfigFile(char *supFile,vector<NodeListElement*> &nodelist, NodeListE
       else
       {
         line.reserve(2048);
-        stat = fgets(lin,2048,f);
+        fgets(lin,2048,f);
         continue;
       }
       for (size_t i=0;i<splt.size();i++)
@@ -251,7 +251,7 @@ void ParseConfigFile(char *supFile,vector<NodeListElement*> &nodelist, NodeListE
       nodelist.push_back(el);
     }
     line.reserve(2048);
-    stat = fgets(lin,2048,f);
+    fgets(lin,2048,f);
   }
   fclose(f);
 }
@@ -288,7 +288,6 @@ int main(int argc, char **argv)
     return 0;
   }
   int c;
-  int indx;
   char *farms=0;
   char *supFile=0;
   int pollDel=1;
