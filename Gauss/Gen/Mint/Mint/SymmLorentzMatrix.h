@@ -109,10 +109,10 @@ class SymmLorentzMatrix : public LorentzMatrix{
     // O^{mu alpha} g_{alpha beta} M^{beta nu} g_{mu nu}
     LorentzMatrix R(Contract_1(M));
     // R^{mu nu} R_{mu nu}
-    double xx =  R.X().Dot(R.X());
-    double yy =  R.Y().Dot(R.Y());
-    double zz =  R.Z().Dot(R.Z());
-    double tt =  R.T().Dot(R.T());
+    double xx =  R.X().X();
+    double yy =  R.Y().Y();
+    double zz =  R.Z().Z();
+    double tt =  R.T().T();
     
     return tt - xx - yy - zz; // signs?
   }

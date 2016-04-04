@@ -73,5 +73,5 @@ void NamedParameter<std::string>::print(std::ostream& os) const{
   }
 }
 
-template class NamedParameter<std::string>;
+template class MINT::NamedParameter<std::string>;
 //
