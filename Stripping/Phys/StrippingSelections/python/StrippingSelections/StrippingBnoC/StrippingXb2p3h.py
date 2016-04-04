@@ -6,7 +6,7 @@ Exported symbols (use python help!):
    - Xb2p3hConf
 """
 
-__author__  = ['Andrea Merli']
+__author__  = ['Jan Mickelle V. Maratas', 'Stephane Monteil','Andrea Merli']
 __date__    = '01/04/2016'
 __version__ = 'v1r0'
 __all__     = {'Xb2phhhConf',
