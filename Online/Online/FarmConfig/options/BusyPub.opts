@@ -25,7 +25,7 @@ BusyPub.TaskPattern         = "MON_GEN_HLT02_BusyMon";
 BusyPub.ServicePattern      = "MON_GEN_Busy_00/Counter/";
 BusyPub.AdderClass          = "Counter";
 BusyPub.InDNS               = "mona08";
-BusyPub.TrendingOn          = true;
+BusyPub.TrendingOn          = false;
 BusyPub.OutDNS              = "mona08";
 BusyPub.ForcePartition = "LHCb";
 BusyPub.GlobalPublisher = true;
@@ -36,6 +36,6 @@ LHCbPub.TaskPattern         = "MON_<part>_HLT02_PartAdder_(.*)";
 LHCbPub.ServicePattern      = "MON_<part>_Busy_00/Counter/";
 LHCbPub.AdderClass          = "Counter";
 LHCbPub.InDNS               = "mona08";
-LHCbPub.TrendingOn          = true;
+LHCbPub.TrendingOn          = false;
 LHCbPub.OutDNS              = "mona08";
 
