@@ -51,6 +51,28 @@ inline double LeviCivita(const TLorentzVector& p0
   return sum;
 }
 
+inline TLorentzVector LeviCivita(const TLorentzVector& a, const TLorentzVector& b, const TLorentzVector& c){
+    
+    TLorentzVector v;
+    
+    v.SetT( -1.* a.X() * ( b.Y() * c.Z() - b.Z() * c.Y() )
+           - a.Y() * ( b.Z() * c.X() - b.X() * c.Z() )  
+           - a.Z() * ( b.X() * c.Y() - b.Y() * c.X() ) );
+    
+    v.SetZ(  a.X() * ( b.T() * c.Y() - b.Y() * c.T() )
+           + a.Y() * ( b.X() * c.T() - b.T() * c.X() )  
+           + a.T() * ( b.Y() * c.X() - b.X() * c.Y() ) );
+    
+    v.SetY(  a.X() * ( b.Z() * c.T() - b.T() * c.Z() )
+           + a.Z() * ( b.T() * c.X() - b.X() * c.T() )  
+           + a.T() * ( b.X() * c.Z() - b.Z() * c.X() ) );
+    
+    v.SetX(  a.Y() * ( b.T() * c.Z() - b.Z() * c.T() )
+           + a.Z() * ( b.Y() * c.T() - b.T() * c.Y() )  
+           + a.T() * ( b.Z() * c.Y() - b.Y() * c.Z() ) );
+
+    return  v;
+}
 
 #endif
 //

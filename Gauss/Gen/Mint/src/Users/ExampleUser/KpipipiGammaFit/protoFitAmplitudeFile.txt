@@ -2736,6 +2736,9 @@
 "WRONG_RHOOMEGADbar0->rho(770)0(->pi-,pi+),K-,K+_Amp"                                      	 1	0.0	0.0	0.0	0.0
 "WRONG_RHOOMEGADbar0->rho(770)0(->pi-,pi+),K-,K+_Phase"                                    	 1	0.0	0.0	0.0	0.0
 *
+"BgSpinZeroDbar0->NonResS0(->pi-,pi+),sigma10(->pi-,pi+)_Amp"                              	 1	0.0	0.0	0.0	0.0
+"BgSpinZeroDbar0->NonResS0(->pi-,pi+),sigma10(->pi-,pi+)_Phase"                            	 1	0.0	0.0	0.0	0.0
+*
 "BgSpinZeroDbar0->NonResV0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Amp"                           	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0->NonResV0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Phase"                         	 1	0.0	0.0	0.0	0.0
 *
@@ -2838,6 +2841,9 @@
 "BgSpinZeroDbar0[P]->rho(770)0(->pi-,pi+),rho(770)0(->pi-,pi+)_Amp"                        	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroDbar0[P]->rho(770)0(->pi-,pi+),rho(770)0(->pi-,pi+)_Phase"                      	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012Dbar0->NonResS0(->pi-,pi+),sigma10(->pi-,pi+)_Amp"                                	 1	0.0	0.0	0.0	0.0
+"CLEO2012Dbar0->NonResS0(->pi-,pi+),sigma10(->pi-,pi+)_Phase"                              	 1	0.0	0.0	0.0	0.0
+*
 "CLEO2012Dbar0->NonResV0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Amp"                             	 1	0.0	0.0	0.0	0.0
 "CLEO2012Dbar0->NonResV0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Phase"                           	 1	0.0	0.0	0.0	0.0
 *
@@ -2939,6 +2945,9 @@
 *
 "CLEO2012Dbar0[P]->rho(770)0(->pi-,pi+),rho(770)0(->pi-,pi+)_Amp"                          	 1	0.0	0.0	0.0	0.0
 "CLEO2012Dbar0[P]->rho(770)0(->pi-,pi+),rho(770)0(->pi-,pi+)_Phase"                        	 1	0.0	0.0	0.0	0.0
+*
+"Dbar0->NonResS0(->pi-,pi+),sigma10(->pi-,pi+)_Amp"                                        	 1	0.0	0.0	0.0	0.0
+"Dbar0->NonResS0(->pi-,pi+),sigma10(->pi-,pi+)_Phase"                                      	 1	0.0	0.0	0.0	0.0
 *
 "Dbar0->NonResV0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Amp"                                     	 1	0.0	0.0	0.0	0.0
 "Dbar0->NonResV0(->pi-,pi+),f(0)(980)0(->pi-,pi+)_Phase"                                   	 1	0.0	0.0	0.0	0.0
@@ -6237,6 +6246,9 @@
 "WRONG_RHOOMEGAD0->a(1)(1260)+(->rho(770)0(->pi+,pi-),pi+),K-_Amp"                         	 1	0.0	0.0	0.0	0.0
 "WRONG_RHOOMEGAD0->a(1)(1260)+(->rho(770)0(->pi+,pi-),pi+),K-_Phase"                       	 1	0.0	0.0	0.0	0.0
 *
+"BgSpinZeroD0->NonResS0(->pi+,pi-),sigma10(->pi+,pi-)_Amp"                                 	 1	0.0	0.0	0.0	0.0
+"BgSpinZeroD0->NonResS0(->pi+,pi-),sigma10(->pi+,pi-)_Phase"                               	 1	0.0	0.0	0.0	0.0
+*
 "BgSpinZeroD0->NonResV0(->pi+,pi-),f(0)(980)0(->pi+,pi-)_Amp"                              	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD0->NonResV0(->pi+,pi-),f(0)(980)0(->pi+,pi-)_Phase"                            	 1	0.0	0.0	0.0	0.0
 *
@@ -6339,6 +6351,9 @@
 "BgSpinZeroD0[P]->rho(770)0(->pi+,pi-),rho(770)0(->pi+,pi-)_Amp"                           	 1	0.0	0.0	0.0	0.0
 "BgSpinZeroD0[P]->rho(770)0(->pi+,pi-),rho(770)0(->pi+,pi-)_Phase"                         	 1	0.0	0.0	0.0	0.0
 *
+"CLEO2012D0->NonResS0(->pi+,pi-),sigma10(->pi+,pi-)_Amp"                                   	 1	0.0	0.0	0.0	0.0
+"CLEO2012D0->NonResS0(->pi+,pi-),sigma10(->pi+,pi-)_Phase"                                 	 1	0.0	0.0	0.0	0.0
+*
 "CLEO2012D0->NonResV0(->pi+,pi-),f(0)(980)0(->pi+,pi-)_Amp"                                	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0->NonResV0(->pi+,pi-),f(0)(980)0(->pi+,pi-)_Phase"                              	 1	0.0	0.0	0.0	0.0
 *
@@ -6440,6 +6455,9 @@
 *
 "CLEO2012D0[P]->rho(770)0(->pi+,pi-),rho(770)0(->pi+,pi-)_Amp"                             	 1	0.0	0.0	0.0	0.0
 "CLEO2012D0[P]->rho(770)0(->pi+,pi-),rho(770)0(->pi+,pi-)_Phase"                           	 1	0.0	0.0	0.0	0.0
+*
+"D0->NonResS0(->pi+,pi-),sigma10(->pi+,pi-)_Amp"                                           	 1	0.0	0.0	0.0	0.0
+"D0->NonResS0(->pi+,pi-),sigma10(->pi+,pi-)_Phase"                                         	 1	0.0	0.0	0.0	0.0
 *
 "D0->NonResV0(->pi+,pi-),f(0)(980)0(->pi+,pi-)_Amp"                                        	 1	0.0	0.0	0.0	0.0
 "D0->NonResV0(->pi+,pi-),f(0)(980)0(->pi+,pi-)_Phase"                                      	 1	0.0	0.0	0.0	0.0

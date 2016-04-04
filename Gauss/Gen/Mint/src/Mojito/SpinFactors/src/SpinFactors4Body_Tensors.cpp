@@ -688,8 +688,19 @@ double SF_DtoT1P0_T1toT2P1_T2toP2P3::getVal(){
   TLorentzVector DT(tT1.Contract(qT1));
 
   const double units = GeV*GeV * GeV*GeV * GeV*GeV;
-
-  double returnVal = LeviCivita(pD, DT, tT2) / units;
+  ZTspin1 LT1(qT1, pT1, MT1);
+  ZTspin1 LT2(qT2, pT2, MT2);
+  SpinSumT PT1(pT1,MT1);
+  
+  TLorentzVector tmp1 = LeviCivita(LT1,pT1,LT2);
+  TLorentzVector tmp2 = LeviCivita(LT1,pT1,pT2);
+  tmp2 *= LT2.Dot(LT2)*1./(3.*pT2.Dot(pT2));
+  
+  double returnVal = 
+    (PT1.Sandwich(qD,qD,tmp1,LT2)+PT1.Sandwich(qD,qD,tmp2,pT2))/units;
+  
+  // old version always returns zero:
+  //double returnVal = LeviCivita(pD, DT, tT2) / units;
 
   if(dbThis){
     cout << " SF_DtoT1P0_T1toT2P1_T2toP2P3::getVal "
