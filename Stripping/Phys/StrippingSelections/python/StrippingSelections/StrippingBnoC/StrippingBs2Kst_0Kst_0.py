@@ -144,7 +144,7 @@ class StrippingBs2Kst_0Kst_0Conf(LineBuilder):
                                               postscale = 1,
                                               algos = [ self.selBs2Kst_0Kst_0 ],
                                               EnableFlavourTagging = True,
-                                              MDSTFlag = True)
+                                              MDSTFlag = False)
         
 
           self.registerLine(self.Bs2Kst_0Kst_0_line)

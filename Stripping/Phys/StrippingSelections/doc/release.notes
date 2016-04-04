@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-04 - Brais Sanmartin Sedes 
+  - Change MDST Flag in BnoC/StrippingBs2Kst_0Kst_0
+
 ! 2016-04-04 - Yasmine Amhis 
   - Change MDST Flag in RD/Bu2LLK
 
