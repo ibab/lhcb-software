@@ -562,7 +562,7 @@ class Bu2LLKConf(LineBuilder) :
                                        RelatedInfoTools  = config['RelatedInfoTools'],
                                        FILTER            = SPDFilter, 
                                        RequiredRawEvents = [],
-                                       MDSTFlag          = True )
+                                       MDSTFlag          = False )
 
         self.B2eeXFromTracksLine = StrippingLine(eeXLine_name + "Line2",
                                                  prescale          = config['Bu2eeLine2Prescale'],
@@ -571,7 +571,7 @@ class Bu2LLKConf(LineBuilder) :
                                                  RelatedInfoTools  = config['RelatedInfoTools'],
                                                  FILTER            = SPDFilter, 
                                                  RequiredRawEvents = [],
-                                                 MDSTFlag          = True )
+                                                 MDSTFlag          = False )
 
         self.B2mmXLine = StrippingLine(mmXLine_name + "Line",
                                        prescale          = config['Bu2mmLinePrescale'],
@@ -580,7 +580,7 @@ class Bu2LLKConf(LineBuilder) :
                                        RelatedInfoTools  = config['RelatedInfoTools'],
                                        FILTER            = SPDFilter, 
                                        RequiredRawEvents = [],
-                                       MDSTFlag          = True )
+                                       MDSTFlag          = False )
 
         self.B2meXLine = StrippingLine(meXLine_name + "Line",
                                        prescale          = config['Bu2meLinePrescale'],
@@ -589,7 +589,7 @@ class Bu2LLKConf(LineBuilder) :
                                        RelatedInfoTools  = config['RelatedInfoTools'],
                                        FILTER            = SPDFilter, 
                                        RequiredRawEvents = [],
-                                       MDSTFlag          = True )
+                                       MDSTFlag          = False )
 
 
         self.B2meX_SSLine = StrippingLine(meXSSLine_name + "Line",
@@ -599,7 +599,7 @@ class Bu2LLKConf(LineBuilder) :
                                           RelatedInfoTools  = config['RelatedInfoTools'],
                                           FILTER            = SPDFilter, 
                                           RequiredRawEvents = [],
-                                          MDSTFlag          = True )
+                                          MDSTFlag          = False )
 
         self.B2mtXLine = StrippingLine(mtXLine_name + "Line",
                                        prescale          = config['Bu2mtLinePrescale'],
@@ -608,7 +608,7 @@ class Bu2LLKConf(LineBuilder) :
                                        RelatedInfoTools  = config['RelatedInfoTools'],
                                        FILTER            = SPDFilter,
                                        RequiredRawEvents = [],
-                                       MDSTFlag          = True,
+                                       MDSTFlag          = False,
                                        MaxCandidates     = 30 )
 
         self.B2mtX_SSLine = StrippingLine(mtXSSLine_name + "Line",
@@ -618,7 +618,7 @@ class Bu2LLKConf(LineBuilder) :
                                           RelatedInfoTools  = config['RelatedInfoTools'],
                                           FILTER            = SPDFilter,
                                           RequiredRawEvents = [],
-                                          MDSTFlag          = True,
+                                          MDSTFlag          = False,
                                           MaxCandidates     = 30 )
 
         self.B2gammaXLine = StrippingLine(eeXLine_name + "Line3",
@@ -628,7 +628,7 @@ class Bu2LLKConf(LineBuilder) :
                                           RelatedInfoTools  = config['RelatedInfoTools'],
                                           FILTER            = SPDFilter, 
                                           RequiredRawEvents = [],
-                                          MDSTFlag          = True )
+                                          MDSTFlag          = False )
 
 
         # 6 : Register Lines

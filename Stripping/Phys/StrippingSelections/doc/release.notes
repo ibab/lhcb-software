@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-04 - Yasmine Amhis 
+  - Change MDST Flag in RD/Bu2LLK
+
 ! 2016-04-04 - Andrea Merli
  - New BnoC/Xb2p3h
 
