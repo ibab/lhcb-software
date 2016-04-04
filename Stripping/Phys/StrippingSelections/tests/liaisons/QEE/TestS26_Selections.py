@@ -27,7 +27,9 @@ from StrippingSelections import buildersConf
 confs = buildersConf()
 from StrippingSelections.Utils import lineBuilder, buildStreams, buildStreamsFromBuilder
 streams = buildStreams( confs, WGs='QEE' )
-# streams = buildStreamsFromBuilder(confs, ['WRareDecay', 'Z0RareDecay', 'Exotica', 'FullDiJets', 'MicroDiJets'])
+# streams = buildStreamsFromBuilder(confs, ['DisplVertices'])
+
+
 
 
 leptonicMicroDSTname   = 'Leptonic'
@@ -125,7 +127,7 @@ from Configurables import AlgorithmCorrelationsAlg
 ac = AlgorithmCorrelationsAlg(Algorithms = list(set(sc.selections())))
 
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 20000
+DaVinci().EvtMax = 10000
 DaVinci().PrintFreq = 100
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )

@@ -13,6 +13,7 @@ __version__ = '$Revision: 1.0 $'
 __all__ = 'default_config', 'Z0RareDecayConf' 
 
 from Gaudi.Configuration import *
+from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
@@ -20,54 +21,54 @@ from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdLooseAllPhotons
 
 default_config = {
-    'NAME'        : 'Z0RareDecay',
-    'BUILDERTYPE' : 'Z0RareDecayConf',
-    'WGs'         : ['QEE'],
-    'STREAMS'     : ['EW'],
-    'CONFIG'      : {
-           'TrChi2'              : 5.        # dimensionless, useless (default is 4)
-          ,'VtxChi2'             : 20.       # dimensionless, useless (default is 4)
+  'NAME'        : 'Z0RareDecay',
+  'BUILDERTYPE' : 'Z0RareDecayConf',
+  'WGs'         : ['QEE'],
+  'STREAMS'     : ['EW'],
+  'CONFIG'      : {
+    'TrChi2'          : 5.,        # dimensionless, useless (default is 4)
+    'VtxChi2'         : 20.,       # dimensionless, useless (default is 4)
           
-          ,'RhoMassWin'          : 230.      # MeV was 150
-          ,'OmegaMassWin'        : 230.      # MeV was 150
-          ,'KstMassWin'          : 120.      # MeV was 150
-          ,'PhiMassWin'          : 200.      # MeV was 20
-          ,'D0MassWin'           : 100.      # MeV was 20
-          ,'JpsiMassMin'         : 3000.     # 
-          ,'JpsiMassMax'         : 3200.     # 
-          ,'UpsilonMassMin'      : 8500.     # 
+    'RhoMassWin'      : 230.  * MeV,
+    'OmegaMassWin'    : 230.  * MeV,
+    'KstMassWin'      : 120.  * MeV,
+    'PhiMassWin'      : 200.  * MeV,
+    'D0MassWin'       : 100.  * MeV,
+    'JpsiMassMin'     : 3000. * MeV,
+    'JpsiMassMax'     : 3200. * MeV,
+    'UpsilonMassMin'  : 8500. * MeV,
 
-          ,'MuonP'               : -8000.    # 
-          ,'MuonPT'              : 650.      # 
-          ,'photonPT'            : 2500.     # MeV
-          ,'pion0PT'             : 860.      # MeV
-          ,'Pi0Pi0PT'            : 10000.    # MeV
-          ,'MesonPT'             : 13000.    # MeV
+    'MuonP'           : -8000. * MeV,
+    'MuonPT'          : 650.   * MeV,
+    'photonPT'        : 2500.  * MeV,
+    'pion0PT'         : 860.   * MeV,
+    'Pi0Pi0PT'        : 10000. * MeV,
+    'MesonPT'         : 13000. * MeV,
 
-          ,'ZMassWin'            : 60000.    # MeV 
+    'ZMassWin'        : 60000. * MeV,
 
-          # Pre- and postscales
-          ,'Z2GammaGammaPreScale'             : 1.0
-          ,'Z2GammaGammaPostScale'            : 1.0
-          ,'Z2Pi0GammaPreScale'               : 1.0
-          ,'Z2Pi0GammaPostScale'              : 1.0
-          ,'Z2Pi0Pi0PreScale'                 : 1.0
-          ,'Z2Pi0Pi0PostScale'                : 1.0
-          ,'Z2RhoGammaPreScale'               : 1.0
-          ,'Z2RhoGammaPostScale'              : 1.0
-          ,'Z2OmegaGammaPreScale'             : 1.0
-          ,'Z2OmegaGammaPostScale'            : 1.0
-          ,'Z2KstGammaPreScale'               : 1.0
-          ,'Z2KstGammaPostScale'              : 1.0
-          ,'Z2PhiGammaPreScale'               : 1.0
-          ,'Z2PhiGammaPostScale'              : 1.0
-          ,'Z2D0GammaPreScale'                : 1.0
-          ,'Z2D0GammaPostScale'               : 1.0
-          ,'Z2QONGammaPreScale'               : 1.0
-          ,'Z2QONGammaPostScale'              : 1.0
+    # Pre- and postscales
+    'Z2GammaGammaPreScale'  : 1.0,
+    'Z2GammaGammaPostScale' : 1.0,
+    'Z2Pi0GammaPreScale'    : 1.0,
+    'Z2Pi0GammaPostScale'   : 1.0,
+    'Z2Pi0Pi0PreScale'      : 1.0,
+    'Z2Pi0Pi0PostScale'     : 1.0,
+    'Z2RhoGammaPreScale'    : 1.0,
+    'Z2RhoGammaPostScale'   : 1.0,
+    'Z2OmegaGammaPreScale'  : 1.0,
+    'Z2OmegaGammaPostScale' : 1.0,
+    'Z2KstGammaPreScale'    : 1.0,
+    'Z2KstGammaPostScale'   : 1.0,
+    'Z2PhiGammaPreScale'    : 1.0,
+    'Z2PhiGammaPostScale'   : 1.0,
+    'Z2D0GammaPreScale'     : 1.0,
+    'Z2D0GammaPostScale'    : 1.0,
+    'Z2QONGammaPreScale'    : 1.0,
+    'Z2QONGammaPostScale'   : 1.0,
 
-          ,'RawEvents' : ["Muon", "Calo", "Rich", "Velo", "Tracker"]
-    },
+    'RawEvents' : ["Muon", "Calo", "Rich", "Velo", "Tracker"],
+  },
 }
 
 class Z0RareDecayConf(LineBuilder):
@@ -184,7 +185,6 @@ class Z0RareDecayConf(LineBuilder):
                                               prescale=config['Z2GammaGammaPreScale'],
                                               postscale=config['Z2GammaGammaPostScale'],
                                               RequiredRawEvents = config['RawEvents'],
-                                              MDSTFlag = True,
                                               RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }],
                                               selection=selZ2GammaGamma)
         self.registerLine(Z2GammaGammaLine)
@@ -194,7 +194,6 @@ class Z0RareDecayConf(LineBuilder):
                                             prescale=config['Z2Pi0GammaPreScale'],
                                             postscale=config['Z2Pi0GammaPostScale'],
                                             RequiredRawEvents = config['RawEvents'],
-                                            MDSTFlag = True,
                                             RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }],
                                             selection=selZ2Pi0Gamma)
         self.registerLine(Z2Pi0GammaLine)
@@ -204,7 +203,6 @@ class Z0RareDecayConf(LineBuilder):
                                           prescale=config['Z2Pi0Pi0PreScale'],
                                           postscale=config['Z2Pi0Pi0PostScale'],
                                           RequiredRawEvents = config['RawEvents'],
-                                          MDSTFlag = True,
                                           RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }],
                                           selection=selZ2Pi0Pi0)
         self.registerLine(Z2Pi0Pi0Line)
@@ -214,7 +212,6 @@ class Z0RareDecayConf(LineBuilder):
                                             prescale=config['Z2RhoGammaPreScale'],
                                             postscale=config['Z2RhoGammaPostScale'],
                                             RequiredRawEvents = config['RawEvents'],
-                                            MDSTFlag = True,
                                             RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }],
                                             selection=selZ2RhoGamma)
         self.registerLine(Z2RhoGammaLine)
@@ -224,7 +221,6 @@ class Z0RareDecayConf(LineBuilder):
                                               prescale=config['Z2OmegaGammaPreScale'],
                                               postscale=config['Z2OmegaGammaPostScale'],
                                               RequiredRawEvents = config['RawEvents'],
-                                              MDSTFlag = True,
                                               RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }],
                                               selection=selZ2OmegaGamma)
         self.registerLine(Z2OmegaGammaLine)
@@ -234,7 +230,6 @@ class Z0RareDecayConf(LineBuilder):
                                             prescale=config['Z2KstGammaPreScale'],
                                             postscale=config['Z2KstGammaPostScale'],
                                             RequiredRawEvents = config['RawEvents'],
-                                            MDSTFlag = True,
                                             RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }],
                                             selection=selZ2KstGamma)
         self.registerLine(Z2KstGammaLine)
@@ -244,7 +239,6 @@ class Z0RareDecayConf(LineBuilder):
                                             prescale=config['Z2PhiGammaPreScale'],
                                             postscale=config['Z2PhiGammaPostScale'],
                                             RequiredRawEvents = config['RawEvents'],
-                                            MDSTFlag = True,
                                             RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }],
                                             selection=selZ2PhiGamma)
         self.registerLine(Z2PhiGammaLine)
@@ -254,7 +248,6 @@ class Z0RareDecayConf(LineBuilder):
                                            prescale=config['Z2D0GammaPreScale'],
                                            postscale=config['Z2D0GammaPostScale'],
                                            RequiredRawEvents = config['RawEvents'],
-                                           MDSTFlag = True,
                                            RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }],
                                            selection=selZ2D0Gamma)
         self.registerLine(Z2D0GammaLine)
@@ -264,7 +257,6 @@ class Z0RareDecayConf(LineBuilder):
                                             prescale=config['Z2QONGammaPreScale'],
                                             postscale=config['Z2QONGammaPostScale'],
                                             RequiredRawEvents = config['RawEvents'],
-                                            MDSTFlag = True,
                                             RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }],
                                             selection=selZ2QONGamma)
         self.registerLine(Z2QONGammaLine)
@@ -280,7 +272,7 @@ def makePhoton(name, photonPT):
     @return: Selection object
     
     """
-    code = "(PT> %(photonPT)s*MeV)" % locals()
+    code = "(PT> %(photonPT)s)" % locals()
     gammaFilter = FilterDesktop(Code=code)
     stdGamma = StdLooseAllPhotons
     return Selection(name, Algorithm=gammaFilter, RequiredSelections=[stdGamma])
@@ -296,10 +288,10 @@ def makePion0(name, pion0PT):
     """
     from StandardParticles import StdLooseResolvedPi0 as _pi0resolved
     from StandardParticles import StdLooseMergedPi0 as _pi0merged
-    code1 = "(PT > %(pion0PT)s*MeV)" % locals()
+    code1 = "(PT > %(pion0PT)s)" % locals()
     filter_pi0resolved = FilterDesktop(Code = code1)
     selpi0resolved = Selection("Selection_"+name+"_pi0resolved", RequiredSelections=[_pi0resolved], Algorithm=filter_pi0resolved)
-    code2 = "(PT > %(pion0PT)s*MeV)" % locals()
+    code2 = "(PT > %(pion0PT)s)" % locals()
     filter_pi0merged = FilterDesktop(Code = code2) 
     selpi0merged = Selection("Selection_"+name+"_pi0merged", RequiredSelections=[_pi0merged], Algorithm=filter_pi0merged)
     return MergedSelection(name, RequiredSelections=[selpi0resolved,selpi0merged])
@@ -317,7 +309,7 @@ def makeRho(name, TrChi2, MesonPT, RhoMassWin) :
     
     """
     preambulo = ["goodTrack = ((TRCHI2DOF < %(TrChi2)s))" % locals(),
-                  "goodRho = ((ADMASS('rho(770)0') < %(RhoMassWin)s*MeV) & (PT > %(MesonPT)s*MeV))" % locals()]
+                  "goodRho = ((ADMASS('rho(770)0') < %(RhoMassWin)s) & (PT > %(MesonPT)s))" % locals()]
     code = "goodRho & CHILDCUT( goodTrack , 1 ) & CHILDCUT( goodTrack , 2 )"
     rhoFilter = FilterDesktop(Preambulo=preambulo, Code=code)
     stdRho2pipi = DataOnDemand(Location="Phys/StdLooseRho0/Particles")
@@ -338,8 +330,8 @@ def makeOmega(name, MesonPT, OmegaMassWin, selPion0) :
     stdPions = DataOnDemand(Location="Phys/StdLoosePions/Particles")
     omega2pipipizero = CombineParticles()
     omega2pipipizero.DecayDescriptor = "omega(782) -> pi+ pi- pi0"
-    omega2pipipizero.CombinationCut = "(ADAMASS('omega(782)') < %(OmegaMassWin)s *MeV)" % locals()
-    omega2pipipizero.MotherCut = "((ADMASS('omega(782)') < %(OmegaMassWin)s *MeV) & (PT > %(MesonPT)s*MeV))" % locals()
+    omega2pipipizero.CombinationCut = "(ADAMASS('omega(782)') < %(OmegaMassWin)s )" % locals()
+    omega2pipipizero.MotherCut = "((ADMASS('omega(782)') < %(OmegaMassWin)s ) & (PT > %(MesonPT)s))" % locals()
     omegaConf = omega2pipipizero.configurable("Combine_"+name+"_PiPiPi0")
 
     return Selection(name, Algorithm=omegaConf, RequiredSelections=[stdPions, selPion0])
@@ -356,7 +348,7 @@ def makeKstar(name, TrChi2, MesonPT, KstMassWin) :
     
     """
     preambulo = ["goodTrack = ((TRCHI2DOF < %(TrChi2)s))" % locals(),
-                  "goodKstar = ((ADMASS('K*(892)0') < %(KstMassWin)s*MeV) & (PT > %(MesonPT)s*MeV))" % locals()]
+                  "goodKstar = ((ADMASS('K*(892)0') < %(KstMassWin)s) & (PT > %(MesonPT)s))" % locals()]
     code = "goodKstar & CHILDCUT( goodTrack , 1 ) & CHILDCUT( goodTrack , 2 )"
     kstFilter = FilterDesktop(Preambulo=preambulo, Code=code)
     stdKst2Kpi = DataOnDemand(Location="Phys/StdVeryLooseDetachedKst2Kpi/Particles")
@@ -375,7 +367,7 @@ def makePhi2KK(name, TrChi2, MesonPT, PhiMassWin) :
     
     """
     preambulo = ["goodKaon = ((TRCHI2DOF < %(TrChi2)s))" % locals(),
-                  "goodPhi = ((ADMASS('phi(1020)') < %(PhiMassWin)s*MeV) & (PT > %(MesonPT)s*MeV))" % locals()]
+                  "goodPhi = ((ADMASS('phi(1020)') < %(PhiMassWin)s) & (PT > %(MesonPT)s))" % locals()]
     code = 'goodPhi & CHILDCUT( goodKaon, 1 ) & CHILDCUT( goodKaon, 2 )'
     phiFilter = FilterDesktop(Preambulo=preambulo, Code=code)
     stdPhi2KK = DataOnDemand(Location="Phys/StdLoosePhi2KK/Particles")
@@ -394,7 +386,7 @@ def makeD02KPi(name, TrChi2, MesonPT, D0MassWin) :
     
     """
     preambulo = ["goodKaon = ((TRCHI2DOF < %(TrChi2)s))" % locals(),
-                  "goodD0 = ((ADMASS('D0') < %(D0MassWin)s*MeV) & (PT > %(MesonPT)s*MeV))" % locals()]
+                  "goodD0 = ((ADMASS('D0') < %(D0MassWin)s) & (PT > %(MesonPT)s))" % locals()]
     code = 'goodD0 & CHILDCUT( goodKaon, 1 ) & CHILDCUT( goodKaon, 2 )'
     D0Filter = FilterDesktop(Preambulo=preambulo, Code=code)
     stdD02KPi = DataOnDemand(Location="Phys/StdLooseD02KPi/Particles")
@@ -417,8 +409,8 @@ def makeQON(name, VtxChi2, TrChi2, MesonPT, MuonPT, MuonP, JpsiMassMin, JpsiMass
     @return: Selection object
     
     """
-    MuonCut = "(MINTREE('mu+'==ABSID,PT) > %(MuonPT)s *MeV) & (MINTREE('mu+'==ABSID,P) > %(MuonP)s *MeV) & (MAXTREE('mu+'==ABSID,TRCHI2DOF) < %(TrChi2)s)" % locals()
-    MuMuCut = "(((MM > %(JpsiMassMin)s *MeV) & (MM < %(JpsiMassMax)s *MeV)) | (MM > %(UpsilonMassMin)s *MeV)) & (VFASPF(VCHI2PDOF)< %(VtxChi2)s) & (PT > %(MesonPT)s *MeV)"%locals()
+    MuonCut = "(MINTREE('mu+'==ABSID,PT) > %(MuonPT)s ) & (MINTREE('mu+'==ABSID,P) > %(MuonP)s ) & (MAXTREE('mu+'==ABSID,TRCHI2DOF) < %(TrChi2)s)" % locals()
+    MuMuCut = "(((MM > %(JpsiMassMin)s ) & (MM < %(JpsiMassMax)s )) | (MM > %(UpsilonMassMin)s )) & (VFASPF(VCHI2PDOF)< %(VtxChi2)s) & (PT > %(MesonPT)s )"%locals()
 
     DiMuFilter = FilterDesktop(Code= MuonCut + "&" + MuMuCut)
     stdDiMuon = DataOnDemand(Location="Phys/StdLooseDiMuon/Particles")
@@ -438,8 +430,8 @@ def makeZ2GammaGamma(name, gammaSel, Pi0Pi0PT, ZMassWin):
     @return: Selection object
     
     """  
-    motherCut = "(ADMASS('Z0') < %(ZMassWin)s*MeV)" % locals()
-    strCutdau = "PT > %(Pi0Pi0PT)s*MeV" % locals()
+    motherCut = "(ADMASS('Z0') < %(ZMassWin)s)" % locals()
+    strCutdau = "PT > %(Pi0Pi0PT)s" % locals()
     daughtersCuts = {'gamma' : strCutdau}
     Z0 = CombineParticles(DecayDescriptor="Z0 -> gamma gamma",
                            MotherCut=motherCut,
@@ -463,8 +455,8 @@ def makeZ2Pi0Gamma(name, Pion0Sel, gammaSel, Pi0Pi0PT, ZMassWin):
     @return: Selection object
     
     """  
-    motherCut = "(ADMASS('Z0') < %(ZMassWin)s*MeV)" % locals()
-    strCutdau = "PT > %(Pi0Pi0PT)s*MeV" % locals()
+    motherCut = "(ADMASS('Z0') < %(ZMassWin)s)" % locals()
+    strCutdau = "PT > %(Pi0Pi0PT)s" % locals()
     daughtersCuts = {'pi0' : strCutdau, 'gamma' : strCutdau}
     Z0 = CombineParticles(DecayDescriptor="Z0 -> pi0 gamma",
                            MotherCut=motherCut,
@@ -485,8 +477,8 @@ def makeZ2Pi0Pi0(name, Pion0Sel, Pi0Pi0PT, ZMassWin):
     @return: Selection object
     
     """  
-    motherCut = "(ADMASS('Z0') < %(ZMassWin)s*MeV)" % locals()
-    strCutdau = "PT > %(Pi0Pi0PT)s*MeV" % locals()
+    motherCut = "(ADMASS('Z0') < %(ZMassWin)s)" % locals()
+    strCutdau = "PT > %(Pi0Pi0PT)s" % locals()
     daughtersCuts = {'pi0' : strCutdau } 
     Z0 = CombineParticles(DecayDescriptor="Z0 -> pi0 pi0",
                            MotherCut=motherCut,
@@ -507,7 +499,7 @@ def makeZ2RhoGamma(name, RhoSel, gammaSel, ZMassWin):
     @return: Selection object
     
     """  
-    motherCut = "(ADMASS('Z0') < %(ZMassWin)s*MeV)" % locals()
+    motherCut = "(ADMASS('Z0') < %(ZMassWin)s)" % locals()
     Z0 = CombineParticles(DecayDescriptor="Z0 -> rho(770)0 gamma",
                            MotherCut=motherCut,
                            ReFitPVs=False)#True)
@@ -525,7 +517,7 @@ def makeZ2OmegaGamma(name, OmegaSel, gammaSel, ZMassWin):
     @return: Selection object
     
     """  
-    motherCut = "(ADMASS('Z0') < %(ZMassWin)s*MeV)" % locals()
+    motherCut = "(ADMASS('Z0') < %(ZMassWin)s)" % locals()
     Z0 = CombineParticles(DecayDescriptor="Z0 -> omega(782) gamma",
                            MotherCut=motherCut,
                            ReFitPVs=False)#True)
@@ -543,7 +535,7 @@ def makeZ2KstGamma(name, KstSel, gammaSel, ZMassWin):
     @return: Selection object
     
     """  
-    motherCut = "(ADMASS('Z0') < %(ZMassWin)s*MeV)" % locals()
+    motherCut = "(ADMASS('Z0') < %(ZMassWin)s)" % locals()
     Z0 = CombineParticles(DecayDescriptor="[Z0 -> K*(892)0 gamma]cc",
                            MotherCut=motherCut,
                            ReFitPVs=False)#True)
@@ -561,7 +553,7 @@ def makeZ2PhiGamma(name, phiSel, gammaSel, ZMassWin):
     @return: Selection object
     
     """  
-    motherCut = "(ADMASS('Z0') < %(ZMassWin)s*MeV)" % locals()
+    motherCut = "(ADMASS('Z0') < %(ZMassWin)s)" % locals()
     Z0 = CombineParticles(DecayDescriptor="Z0 -> phi(1020) gamma",
                            MotherCut=motherCut,
                            ReFitPVs=False)#True)
@@ -579,7 +571,7 @@ def makeZ2D0Gamma(name, D0Sel, gammaSel, ZMassWin):
     @return: Selection object
     
     """  
-    motherCut = "(ADMASS('Z0') < %(ZMassWin)s*MeV)" % locals()
+    motherCut = "(ADMASS('Z0') < %(ZMassWin)s)" % locals()
     Z0 = CombineParticles(DecayDescriptor="Z0 -> D0 gamma",
                            MotherCut=motherCut,
                            ReFitPVs=False)#True)
@@ -597,7 +589,7 @@ def makeZ2QONGamma(name, QONSel, gammaSel, ZMassWin):
     @return: Selection object
     
     """  
-    motherCut = "(ADMASS('Z0') < %(ZMassWin)s*MeV)" % locals()
+    motherCut = "(ADMASS('Z0') < %(ZMassWin)s)" % locals()
     Z0 = CombineParticles(DecayDescriptor="Z0 -> J/psi(1S) gamma",
                            MotherCut=motherCut,
                            ReFitPVs=False)#True)

@@ -26,10 +26,10 @@ list_S26 = [
   'StrippingTaggedJets',
   'StrippingWe',
   'StrippingWMu',
-  'StrippingWJets',
   'StrippingZ02ee',
   'StrippingZ02MuMu',
   ## NEW
+  'StrippingWJets',
   'StrippingWRareDecay',
   'StrippingZ0RareDecay',
 ]

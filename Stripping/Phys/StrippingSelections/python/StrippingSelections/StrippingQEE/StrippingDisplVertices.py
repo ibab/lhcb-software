@@ -1,15 +1,21 @@
 """
+
 Configuration for the Exotic Displaced Vertex Stripping lines
+
+Status as of 2016-04-04: No maintainer. The script can be picked up by any
+analyst, otherwise the lines will simply be here with adequate prescale.
+
 """
 
-__author__ = [ "Pieter David <pieter.david@cern.ch>"
-             ## previously:
-             , "Victor Coco"
-             , "Veerle Heijne"
-             , "Neal Gauvin" ]
+__author__ = [ None, # As of 2016-04
+              ## previously:
+              "Pieter David <pieter.david@cern.ch>",
+              "Victor Coco",
+              "Veerle Heijne",
+              "Neal Gauvin" ]
 __date__   = "04/11/2015"
 
-__all__ = ( 'DisplVerticesLinesConf', 'default_config' )
+__all__ = ( 'DisplVerticesConf', 'default_config' )
 
 from Gaudi.Configuration import *
 from GaudiKernel import SystemOfUnits as units
@@ -45,7 +51,7 @@ LLPLHCbName = "~chi_10"
 
 default_config = {
     'NAME'        : 'DisplVertices',
-    'BUILDERTYPE' : 'DisplVerticesLinesConf',
+    'BUILDERTYPE' : 'DisplVerticesConf',
     'STREAMS'     : [ 'EW'  ],
     'WGs'         : [ 'QEE' ],
     'CONFIG'      : {
@@ -143,7 +149,7 @@ default_config = {
                                       , "JetIDCut"             : None
                                       } # Tuning: done
         ## jet sequence on top of Hlt2 candidates
-        , "JetHltSingleLowMassSelection": { "PreScale"         :  1.0
+        , "JetHltSingleLowMassSelection": { "PreScale"         :  0.1
                                       ## Jet-related cuts
                                       , "ConeSize"             :  1.2
                                       , "MinDOCABL"            :  0.1*units.mm
@@ -153,7 +159,7 @@ default_config = {
                                       , "MinNJetTransvMass"    : None
                                       , "JetIDCut"             : "( JNWITHPVINFO >= 5 ) & ( JMPT > 1800. ) & ( (PT/M) > 1.5 )"
                                       } # Tuning: done
-        , "JetHltSingleHighMassSelection" : { "PreScale"       :  1.0
+        , "JetHltSingleHighMassSelection" : { "PreScale"       :  0.1
                                       ## Jet-related cuts
                                       , "ConeSize"             :  0.7
                                       , "MinDOCABL"            :  -2.
@@ -240,7 +246,7 @@ default_config = {
 
 
 
-class DisplVerticesLinesConf(LineBuilder):
+class DisplVerticesConf(LineBuilder):
     """
     Configuration for the Exotic Displaced Vertex Stripping lines
 
@@ -431,7 +437,7 @@ class DisplVerticesLinesConf(LineBuilder):
             from GaudiConfUtils.ConfigurableGenerators import VeloEventShapeCutsS20p3
 
             veloGEC = VeloEventShapeCutsS20p3()
-            self.validatedSetProps( "VeloGEC", DisplVerticesLinesConf.veloGECCuts, veloGEC )
+            self.validatedSetProps( "VeloGEC", DisplVerticesConf.veloGECCuts, veloGEC )
 
             withVeloTracksForVertexing = PassThroughSelection( "%sVeloGEC" % self.name()
                                            , RequiredSelection = withVeloTracksForVertexing
@@ -442,7 +448,7 @@ class DisplVerticesLinesConf(LineBuilder):
             from GaudiConfUtils.ConfigurableGenerators import SelectVeloTracksNotFromPVS20p3
 
             veloWithIP = SelectVeloTracksNotFromPVS20p3()
-            self.validatedSetProps( "FilterVelo", DisplVerticesLinesConf.veloWithIPCuts, veloWithIP )
+            self.validatedSetProps( "FilterVelo", DisplVerticesConf.veloWithIPCuts, veloWithIP )
 
             withVeloTracksForVertexing = Selection( "%sVeloFilteredTracks" % self.name()
                                            , RequiredSelections = [ withVeloTracksForVertexing ]
@@ -478,7 +484,7 @@ class DisplVerticesLinesConf(LineBuilder):
                          , ForceP2PVBuild       = False
                          , VeloProtoParticlesLocation = "Phys/%s/VeloProtoP" % self.name()
                          )
-        self.validatedSetProps( "RV2PWithVelo", DisplVerticesLinesConf.recoCuts + DisplVerticesLinesConf.singleCuts, rv2pWithVelo )
+        self.validatedSetProps( "RV2PWithVelo", DisplVerticesConf.recoCuts + DisplVerticesConf.singleCuts, rv2pWithVelo )
 
         withVeloCandidates = Selection( "%sWithVeloCandidates" % self.name()
                                , RequiredSelections = [ withVeloVertexing ]
@@ -533,7 +539,7 @@ class DisplVerticesLinesConf(LineBuilder):
                      , ForceP2PVBuild       = False
                      #, OutputLevel          = VERBOSE
                      )
-        self.validatedSetProps( "RV2PDown", DisplVerticesLinesConf.recoCuts + DisplVerticesLinesConf.singleCuts, rv2pDown )
+        self.validatedSetProps( "RV2PDown", DisplVerticesConf.recoCuts + DisplVerticesConf.singleCuts, rv2pDown )
 
         downCandidates = Selection( "%sDownCandidates" % self.name()
                            , RequiredSelections = [ downVertexing ]
@@ -563,7 +569,7 @@ class DisplVerticesLinesConf(LineBuilder):
                           )
 
         hltVeloGEC = VeloEventShapeCutsS20p3()
-        self.validatedSetProps( "VeloGEC", DisplVerticesLinesConf.veloGECCuts, hltVeloGEC )
+        self.validatedSetProps( "VeloGEC", DisplVerticesConf.veloGECCuts, hltVeloGEC )
         hltVeloGEC.HistoProduce = False
         hltVeloGECSel = EventSelection( "%sHltVeloGEC" % self.name(), Algorithm=hltVeloGEC )
 
@@ -607,13 +613,13 @@ class DisplVerticesLinesConf(LineBuilder):
             code = None
             if "Down" in lAcroName:
                 candidates = downCandidates
-                code = self.getLLPSelection( self.validatedGetProps(lSelName, DisplVerticesLinesConf.singleCuts + DisplVerticesLinesConf.downCuts) )
+                code = self.getLLPSelection( self.validatedGetProps(lSelName, DisplVerticesConf.singleCuts + DisplVerticesConf.downCuts) )
             else:
-                code = self.getLLPSelection( self.validatedGetProps(lSelName, DisplVerticesLinesConf.singleCuts) )
+                code = self.getLLPSelection( self.validatedGetProps(lSelName, DisplVerticesConf.singleCuts) )
 
             lineFilter = FilterDesktop(
                              DecayDescriptor    = LLPLHCbName
-                           , Preambulo          = DisplVerticesLinesConf.llpSelectionPreambulo
+                           , Preambulo          = DisplVerticesConf.llpSelectionPreambulo
                            , Code               = code
                            , WriteP2PVRelations = False
                            , ForceP2PVBuild     = False
@@ -651,11 +657,11 @@ class DisplVerticesLinesConf(LineBuilder):
 
             # Choose between Velo-based and downstream vertexing input
             vertexCandidates = withVeloCandidates
-            code = self.getLLPSelection( self.validatedGetProps(lSelName, DisplVerticesLinesConf.singleCuts) )
+            code = self.getLLPSelection( self.validatedGetProps(lSelName, DisplVerticesConf.singleCuts) )
 
             vertexFilter = FilterDesktop(
                              DecayDescriptor    = LLPLHCbName
-                           , Preambulo          = DisplVerticesLinesConf.llpSelectionPreambulo
+                           , Preambulo          = DisplVerticesConf.llpSelectionPreambulo
                            , Code               = code
                            , WriteP2PVRelations = False
                            , ForceP2PVBuild     = False
@@ -667,7 +673,7 @@ class DisplVerticesLinesConf(LineBuilder):
                            , Algorithm          = vertexFilter
                            )
 
-            jetProps = self.validatedGetProps(lSelName, DisplVerticesLinesConf.jetCuts)
+            jetProps = self.validatedGetProps(lSelName, DisplVerticesConf.jetCuts)
             vertWithJets = Selection( "".join(( self.name(), lSelName, "Jets" ))
                            , RequiredSelections = [ goodVertices ]
                            , Algorithm          = self.makeJetCandidateAlg("".join((self.name(), lSelName, "JetAlg"))
@@ -714,7 +720,7 @@ class DisplVerticesLinesConf(LineBuilder):
             lSelName   = "%sSelection" % lShortName         # JetHltSingleMediumSelection
             lLineName  = "%s%s" % (self.name(), lShortName) # DisplVerticesJetHltSingleMedium
 
-            jetProps = self.validatedGetProps(lSelName, DisplVerticesLinesConf.jetCuts)
+            jetProps = self.validatedGetProps(lSelName, DisplVerticesConf.jetCuts)
             vertWithJets = Selection( "".join(( self.name(), lSelName, "HltJets" ))
                            , RequiredSelections = [ hlt2CandAndGECSelection ]
                            , Algorithm          = self.makeJetCandidateAlg("".join((self.name(), lSelName, "HltJetAlg"))
@@ -760,11 +766,11 @@ class DisplVerticesLinesConf(LineBuilder):
             lSelName   = "%sSelection" % lShortName
             lLineName  = "%s%s" % (self.name(), lShortName)
 
-            combinationCut, motherCut = self.getResonanceSelection( self.validatedGetProps(lSelName, DisplVerticesLinesConf.doubleResonanceCuts) )
+            combinationCut, motherCut = self.getResonanceSelection( self.validatedGetProps(lSelName, DisplVerticesConf.doubleResonanceCuts) )
             lineFilter = CombineParticles(
                              DecayDescriptor    = "H_10 -> %s %s" % (LLPLHCbName, LLPLHCbName)
-                           , Preambulo          = DisplVerticesLinesConf.llpSelectionPreambulo
-                           , DaughtersCuts      = { LLPLHCbName : self.getLLPSelection( self.validatedGetProps(lSelName, DisplVerticesLinesConf.singleCuts) ) }
+                           , Preambulo          = DisplVerticesConf.llpSelectionPreambulo
+                           , DaughtersCuts      = { LLPLHCbName : self.getLLPSelection( self.validatedGetProps(lSelName, DisplVerticesConf.singleCuts) ) }
                            , CombinationCut     = combinationCut
                            , MotherCut          = motherCut
                            , WriteP2PVRelations = False
@@ -829,8 +835,8 @@ class DisplVerticesLinesConf(LineBuilder):
             # HltEff lines are single, Velo-vertexing based lines
             lineFilter = FilterDesktop(
                              DecayDescriptor    = LLPLHCbName
-                           , Preambulo          = DisplVerticesLinesConf.llpSelectionPreambulo
-                           , Code               = self.getLLPSelection( self.validatedGetProps(lSelName, DisplVerticesLinesConf.singleCuts) )
+                           , Preambulo          = DisplVerticesConf.llpSelectionPreambulo
+                           , Code               = self.getLLPSelection( self.validatedGetProps(lSelName, DisplVerticesConf.singleCuts) )
                            , WriteP2PVRelations = False
                            , ForceP2PVBuild     = False
                            #, OutputLevel        = VERBOSE

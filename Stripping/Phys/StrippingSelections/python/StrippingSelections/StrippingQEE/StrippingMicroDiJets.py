@@ -25,6 +25,7 @@ default_config = {
     'RequiredRawEvents'         : ['Calo'],
     'min_jet_pT'                : 20. * GeV,
     'TOS_HLT2'                  : None, # 'Hlt2JetsDiJetDecision'
+    'MDSTFlag'                  : True,
   },
 }
 
@@ -48,7 +49,7 @@ class MicroDiJetsConf( LineBuilder ) :
     self.registerLine(StrippingLine( name + 'Line',
       prescale  = config[ 'MicroDiJetsLine_Prescale' ],
       postscale = config[ 'MicroDiJetsLine_Postscale' ],
-      MDSTFlag  = True,
+      MDSTFlag  = config[ 'MDSTFlag' ],
       checkPV   = False,
       selection = sel_MicroDiJets,
       RequiredRawEvents = config['RequiredRawEvents'],

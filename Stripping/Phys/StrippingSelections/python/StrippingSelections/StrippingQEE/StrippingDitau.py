@@ -142,7 +142,7 @@ Derived from works of S.Farry & P. Ilten
 """
 
 import os
-from GaudiKernel.SystemOfUnits import MeV, GeV, mm, micrometer
+from GaudiKernel.SystemOfUnits import MeV, GeV, micrometer
 from PhysSelPython.Wrappers import Selection, SimpleSelection, PassThroughSelection, MergedSelection, AutomaticData
 from StrippingUtils.Utils import LineBuilder
 from StrippingConf.StrippingLine import StrippingLine
@@ -167,7 +167,6 @@ __all__     = 'DitauConf', 'default_config', 'Tuples'
 
 config_tau_e = {
   'ISMUONLOOSE'   : False,
-  'ABSID'         : 11,
   'min_PT'        : 4. * GeV,
   'min_ETA'       : 2.0,
   'max_ETA'       : 4.5,
@@ -175,14 +174,13 @@ config_tau_e = {
   'min_ECALFrac'  : 0.1,  # Not good for e-conversion ??
   'min_TRPCHI2'   : 0.01,
   'max_TRGHP'     : 0.2,
-  # 'max_HCALFrac'  : 0.05,
+  'max_HCALFrac'  : 0.05,
   #
   'extracut'      : 'ALL'
 }
 
 config_tau_mu = {
   'ISMUON'        : True,
-  'ABSID'         : 13,
   'min_PT'        : 4. * GeV,
   'min_ETA'       : 2.0,
   'max_ETA'       : 4.5,
@@ -487,12 +485,12 @@ default_config = {
         'RelatedInfoTools': config_rit_default, 
       },
       'MXnoiso': {
-        'prescale'        : 0.05,
+        'prescale'        : 0.1,
         'checkPV'         : True,
         'RelatedInfoTools': config_rit_default, 
       },
       'MXssnoiso': {
-        'prescale'        : 0.05,
+        'prescale'        : 0.1,
         'checkPV'         : True,
         # 'RelatedInfoTools': config_rit_default, 
       },

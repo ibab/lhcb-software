@@ -6,13 +6,14 @@ Provides functions to build K*+, rho+, D+, D_s+, and B+ selections.
 
 """
 
-__author__ = ['Hang Yin']
-__date__ = '04/03/2016'
+__author__  = ['Hang Yin']
+__date__    = '04/03/2016'
 __version__ = '$Revision: 1.0 $'
 
 __all__ = 'default_config', 'WRareDecayConf' 
 
 from Gaudi.Configuration import *
+from GaudiKernel.SystemOfUnits import MeV, GeV, mm, picosecond
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
@@ -20,50 +21,50 @@ from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdLooseAllPhotons
 
 default_config = {
-    'NAME'        : 'WRareDecay',
-    'BUILDERTYPE' : 'WRareDecayConf',
-    'WGs'         : ['QEE'],
-    'STREAMS'     : ['EW'],
-    'CONFIG'      : {
-           'TrChi2'              : 5.       # dimensionless
-          ,'TrIPChi2'            : 9.       # dimensionless
-          ,'TrGhost'             : 0.4      # dimensionless
+  'NAME'        : 'WRareDecay',
+  'BUILDERTYPE' : 'WRareDecayConf',
+  'WGs'         : ['QEE'],
+  'STREAMS'     : ['EW'],
+  'CONFIG'      : {
+    'TrChi2'        : 5.    ,   # dimensionless
+    'TrIPChi2'      : 9.    ,   # dimensionless
+    'TrGhost'       : 0.4   ,   # dimensionless
           
-          ,'RhoMassWin'          : 150.     # MeV
-          ,'KSMassWin'           : 40.      # MeV
-          ,'KstMassWin'          : 120.     # MeV
-          ,'DpMassWin'           : 150.     # MeV
-          ,'DsMassWin'           : 150.     # MeV
-          ,'BuMassWin'           : 400.     # MeV
-          ,'KSLTIME'             : 0.5      # ps
-          ,'BPVLTIME'            : 0.2      # ps
+    'RhoMassWin'    : 150. * MeV,
+    'KSMassWin'     : 40.  * MeV,
+    'KstMassWin'    : 120. * MeV,
+    'DpMassWin'     : 150. * MeV,
+    'DsMassWin'     : 150. * MeV,
+    'BuMassWin'     : 400. * MeV,
+    'KSLTIME'       : 0.5  * picosecond,
+    'BPVLTIME'      : 0.2  * picosecond,
 
-          ,'photonPT'            : 2500.    # MeV
-          ,'photonHighPT'        : 10000.   # MeV
-          ,'pion0PT'             : 800.     # MeV
-          ,'kaonPT'              : 400.     # MeV
-          ,'MesonPT'             : 13000.   # MeV
+    'photonPT'      : 2500. * MeV,
+    'photonHighPT'  : 10000.* MeV,
+    'pion0PT'       : 800.  * MeV,
+    'kaonPT'        : 400.  * MeV,
+    'MesonPT'       : 13000.* MeV,
           
-          ,'WMassWin'            : 50000.   # MeV
+    'WMassWin'      : 50000. * MeV,
 
-          # Pre- and postscales
-          ,'W2PionGammaPreScale'   : 1.0
-          ,'W2PionGammaPostScale'  : 1.0
-          ,'W2KaonGammaPreScale'   : 1.0
-          ,'W2KaonGammaPostScale'  : 1.0
-          ,'W2KstPGammaPreScale'   : 1.0
-          ,'W2KstPGammaPostScale'  : 1.0
-          ,'W2RhoGammaPreScale'    : 1.0
-          ,'W2RhoGammaPostScale'   : 1.0
-          ,'W2DpGammaPreScale'     : 1.0
-          ,'W2DpGammaPostScale'    : 1.0
-          ,'W2DsGammaPreScale'     : 1.0
-          ,'W2DsGammaPostScale'    : 1.0
-          ,'W2BuGammaPreScale'     : 1.0
-          ,'W2BuGammaPostScale'    : 1.0
+    # Pre- and postscales
+    'W2PionGammaPreScale'   : 1.0,
+    'W2PionGammaPostScale'  : 1.0,
+    'W2KaonGammaPreScale'   : 1.0,
+    'W2KaonGammaPostScale'  : 1.0,
+    'W2KstPGammaPreScale'   : 1.0,
+    'W2KstPGammaPostScale'  : 1.0,
+    'W2RhoGammaPreScale'    : 1.0,
+    'W2RhoGammaPostScale'   : 1.0,
+    'W2DpGammaPreScale'     : 1.0,
+    'W2DpGammaPostScale'    : 1.0,
+    'W2DsGammaPreScale'     : 1.0,
+    'W2DsGammaPostScale'    : 1.0,
+    'W2BuGammaPreScale'     : 1.0,
+    'W2BuGammaPostScale'    : 1.0,
 
-          ,'RawEvents' : ["Muon", "Calo", "Rich", "Velo", "Tracker"]
-    },
+    'RawEvents' : ["Muon", "Calo", "Rich", "Velo", "Tracker"],
+  },
 }
 
 class WRareDecayConf(LineBuilder):
@@ -186,7 +187,6 @@ class WRareDecayConf(LineBuilder):
                                              prescale=config['W2PionGammaPreScale'],
                                              postscale=config['W2PionGammaPostScale'],
                                              RequiredRawEvents = config['RawEvents'],
-                                             MDSTFlag = True,
                                              RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }],
                                              selection=selW2PionGamma)
         self.registerLine(W2PionGammaLine)
@@ -196,7 +196,6 @@ class WRareDecayConf(LineBuilder):
                                              prescale=config['W2KaonGammaPreScale'],
                                              postscale=config['W2KaonGammaPostScale'],
                                              RequiredRawEvents = config['RawEvents'],
-                                             MDSTFlag = True,
                                              RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }],
                                              selection=selW2KaonGamma)
         self.registerLine(W2KaonGammaLine)
@@ -206,7 +205,6 @@ class WRareDecayConf(LineBuilder):
                                              prescale=config['W2KstPGammaPreScale'],
                                              postscale=config['W2KstPGammaPostScale'],
                                              RequiredRawEvents = config['RawEvents'],
-                                             MDSTFlag = True,
                                              selection=selW2KstPGamma)
         self.registerLine(W2KstPGammaLine)
 
@@ -215,7 +213,6 @@ class WRareDecayConf(LineBuilder):
                                             prescale=config['W2RhoGammaPreScale'],
                                             postscale=config['W2RhoGammaPostScale'],
                                             RequiredRawEvents = config['RawEvents'],
-                                            MDSTFlag = True,
                                             selection=selW2RhoGamma)
         self.registerLine(W2RhoGammaLine)
 
@@ -224,7 +221,6 @@ class WRareDecayConf(LineBuilder):
                                            prescale=config['W2DpGammaPreScale'],
                                            postscale=config['W2DpGammaPostScale'],
                                            RequiredRawEvents = config['RawEvents'],
-                                           MDSTFlag = True,
                                            RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }],
                                            selection=selW2DpGamma)
         self.registerLine(W2DpGammaLine)
@@ -234,7 +230,6 @@ class WRareDecayConf(LineBuilder):
                                            prescale=config['W2DsGammaPreScale'],
                                            postscale=config['W2DsGammaPostScale'],
                                            RequiredRawEvents = config['RawEvents'],
-                                           MDSTFlag = True,
                                            RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }],
                                            selection=selW2DsGamma)
         self.registerLine(W2DsGammaLine)
@@ -244,7 +239,6 @@ class WRareDecayConf(LineBuilder):
                                            prescale=config['W2BuGammaPreScale'],
                                            postscale=config['W2BuGammaPostScale'],
                                            RequiredRawEvents = config['RawEvents'],
-                                           MDSTFlag = True,
                                            RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }],
                                            selection=selW2BuGamma)
         self.registerLine(W2BuGammaLine)
@@ -259,7 +253,7 @@ def makePhoton(name, photonPT):
     @return: Selection object
     
     """
-    code = "(PT > %(photonPT)s*MeV)" % locals()
+    code = "(PT > %(photonPT)s)" % locals()
     gammaFilter = FilterDesktop(Code=code)
     stdGamma = StdLooseAllPhotons
     return Selection(name, Algorithm=gammaFilter, RequiredSelections=[stdGamma])
@@ -276,7 +270,7 @@ def makePions(name, TrChi2, TrIPChi2, TrGhost, MesonPT):
     @return: Selection object
     
     """
-    code = "(PT > %(MesonPT)s*MeV) & (TRGHOSTPROB < %(TrGhost)s) & (TRCHI2DOF<%(TrChi2)s) & ISBASIC & (MIPCHI2DV(PRIMARY) > %(TrIPChi2)s)" % locals()
+    code = "(PT > %(MesonPT)s) & (TRGHOSTPROB < %(TrGhost)s) & (TRCHI2DOF<%(TrChi2)s) & ISBASIC & (MIPCHI2DV(PRIMARY) > %(TrIPChi2)s)" % locals()
     pionFilter = FilterDesktop(Code=code)
     stdpion = DataOnDemand(Location="Phys/StdLoosePions/Particles")
     return Selection(name, Algorithm=pionFilter, RequiredSelections=[stdpion])
@@ -293,7 +287,7 @@ def makeKaons(name, TrChi2, TrIPChi2, TrGhost, MesonPT):
     @return: Selection object
     
     """
-    code = "(PT > %(MesonPT)s*MeV) & (TRGHOSTPROB < %(TrGhost)s) & (TRCHI2DOF<%(TrChi2)s) & ISBASIC & (MIPCHI2DV(PRIMARY) > %(TrIPChi2)s)" % locals()
+    code = "(PT > %(MesonPT)s) & (TRGHOSTPROB < %(TrGhost)s) & (TRCHI2DOF<%(TrChi2)s) & ISBASIC & (MIPCHI2DV(PRIMARY) > %(TrIPChi2)s)" % locals()
     kaonFilter = FilterDesktop(Code=code)
     stdkaon = DataOnDemand(Location="Phys/StdLooseKaons/Particles")
     return Selection(name, Algorithm=kaonFilter, RequiredSelections=[stdkaon])
@@ -309,10 +303,10 @@ def makePion0(name, pion0PT):
     """
     from StandardParticles import StdLooseResolvedPi0 as pi0resolved
     from StandardParticles import StdLooseMergedPi0 as pi0merged
-    code1 = "(PT > %(pion0PT)s*MeV)" % locals()
+    code1 = "(PT > %(pion0PT)s)" % locals()
     filter_pi0resolved = FilterDesktop(Code = code1)
     selpi0resolved = Selection("Selection_"+name+"_pi0resolved", RequiredSelections=[pi0resolved], Algorithm=filter_pi0resolved)
-    code2 = "(PT > %(pion0PT)s*MeV)" % locals()
+    code2 = "(PT > %(pion0PT)s)" % locals()
     filter_pi0merged = FilterDesktop(Code = code2) 
     selpi0merged = Selection("Selection_"+name+"_pi0merged", RequiredSelections=[pi0merged], Algorithm=filter_pi0merged)
     return MergedSelection(name, RequiredSelections=[selpi0resolved,selpi0merged])
@@ -323,7 +317,7 @@ def makeKS(name, KSLTIME, KSMassWin):
     """
     from StandardParticles import StdLooseKsDD as ksdd
     from StandardParticles import StdLooseKsLL as ksll
-    code = "(ADMASS('KS0') < %(KSMassWin)s*MeV) & (BPVLTIME() > %(KSLTIME)s*ps)" % locals()
+    code = "(ADMASS('KS0') < %(KSMassWin)s) & (BPVLTIME() > %(KSLTIME)s)" % locals()
     filter_ksdd = FilterDesktop(Code = code)
     filter_ksll = FilterDesktop(Code = code)
     selksdd = Selection("Selection_"+name+"_Ksdd", RequiredSelections = [ ksdd ], Algorithm = filter_ksdd)
@@ -345,7 +339,7 @@ def makeRho2PiPi(name, TrChi2, RhoMassWin, MesonPT):
     
     """
     preambulo = ["goodPion = (TRCHI2DOF < %(TrChi2)s)" % locals(),
-                  "goodRho = ((ADMASS('rho(770)+') < %(RhoMassWin)s*MeV) & (PT > %(MesonPT)s*MeV))" % locals()]
+                  "goodRho = ((ADMASS('rho(770)+') < %(RhoMassWin)s) & (PT > %(MesonPT)s))" % locals()]
     code = 'goodRho & CHILDCUT( goodPion, 1 )'
     RhoFilter = FilterDesktop(Preambulo=preambulo, Code=code)
     stdRho2PiPi = DataOnDemand(Location="Phys/StdLooseRhoPlus/Particles")
@@ -357,7 +351,7 @@ def makeKstar(name, Kaons, Pions, KstMassWin, MesonPT):
     """
     kstar = CombineParticles()
     kstar.DecayDescriptors = ["[K*(892)+ -> K+ pi0]cc", "[K*(892)+ -> KS0 pi+]cc"]
-    kstar.MotherCut = "((ADMASS('K*(892)+') < %(KstMassWin)s *MeV) & (PT > %(MesonPT)s*MeV))" % locals()
+    kstar.MotherCut = "((ADMASS('K*(892)+') < %(KstMassWin)s ) & (PT > %(MesonPT)s))" % locals()
 
     kstarConf = kstar.configurable("Combine_"+name+"_KPi")
     return Selection(name, Algorithm = kstarConf, RequiredSelections = [ Kaons, Pions ] )
@@ -375,7 +369,7 @@ def makeDp2KPiPi(name, TrChi2, DpMassWin, MesonPT):
     
     """
     preambulo = ["goodKaon = (TRCHI2DOF < %(TrChi2)s)" % locals(),
-                  "goodDp = ((ADMASS('D+') < %(DpMassWin)s*MeV) & (PT > %(MesonPT)s*MeV))" % locals()]
+                  "goodDp = ((ADMASS('D+') < %(DpMassWin)s) & (PT > %(MesonPT)s))" % locals()]
     code = 'goodDp & CHILDCUT( goodKaon, 1 ) & CHILDCUT( goodKaon, 2 ) & CHILDCUT( goodKaon, 3 )'
     DpFilter = FilterDesktop(Preambulo=preambulo, Code=code)
     stdDp2KPiPi = DataOnDemand(Location="Phys/StdLooseDplus2KPiPi/Particles")
@@ -394,7 +388,7 @@ def makeDs2KKPi(name, TrChi2, DsMassWin, MesonPT):
     
     """
     preambulo = ["goodKaon = (TRCHI2DOF < %(TrChi2)s)" % locals(),
-                  "goodDs = ((ADMASS('D_s+') < %(DsMassWin)s*MeV) & (PT > %(MesonPT)s*MeV))" % locals()]
+                  "goodDs = ((ADMASS('D_s+') < %(DsMassWin)s) & (PT > %(MesonPT)s))" % locals()]
     code = 'goodDs & CHILDCUT( goodKaon, 1 ) & CHILDCUT( goodKaon, 2 ) & CHILDCUT( goodKaon, 3 )'
     DsFilter = FilterDesktop(Preambulo=preambulo, Code=code)
     stdDs2KKPi = DataOnDemand(Location="Phys/StdLooseDplus2KKPi/Particles")
@@ -415,7 +409,7 @@ def makeBu2JpsiK(name, TrChi2, BuMassWin, MesonPT, BPVLTIME):
     stdJpsiMuMu = DataOnDemand(Location="Phys/StdLooseJpsi2MuMu/Particles")
     stdKaon = DataOnDemand(Location="Phys/StdAllNoPIDsKaons/Particles")
 
-    motherCut = "((ADMASS('B+') < %(BuMassWin)s *MeV) & (PT > %(MesonPT)s*MeV) & (BPVLTIME() > %(BPVLTIME)s *ps))" % locals()
+    motherCut = "((ADMASS('B+') < %(BuMassWin)s ) & (PT > %(MesonPT)s) & (BPVLTIME() > %(BPVLTIME)s))" % locals()
     daughtersCutstr = "TRCHI2DOF < %(TrChi2)s" % locals()
     daughtersCuts = {'K+': daughtersCutstr, 'K-':daughtersCutstr }
 
@@ -439,7 +433,7 @@ def makeW2PionGamma(name, pionSel, gammaSel, WMassWin):
     @return: Selection object
     
     """  
-    motherCut = "(ADMASS('W+') < %(WMassWin)s*MeV)" % locals()
+    motherCut = "(ADMASS('W+') < %(WMassWin)s)" % locals()
     Wp = CombineParticles(DecayDescriptor="[W+ -> pi+ gamma]cc",
                            MotherCut=motherCut,
                            #ParticleCombiners = {"" : "MomentumCombiner"},
@@ -458,7 +452,7 @@ def makeW2KaonGamma(name, kaonSel, gammaSel, WMassWin):
     @return: Selection object
     
     """  
-    motherCut = "(ADMASS('W+') < %(WMassWin)s*MeV)" % locals()
+    motherCut = "(ADMASS('W+') < %(WMassWin)s)" % locals()
     Wp = CombineParticles(DecayDescriptor="[W+ -> K+ gamma]cc",
                            MotherCut=motherCut,
                            #ParticleCombiners = {"" : "MomentumCombiner"},
@@ -477,7 +471,7 @@ def makeW2KstPGamma(name, kstpSel, gammaSel, WMassWin):
     @return: Selection object
     
     """  
-    motherCut = "(ADMASS('W+') < %(WMassWin)s*MeV)" % locals()
+    motherCut = "(ADMASS('W+') < %(WMassWin)s)" % locals()
     Wp = CombineParticles(DecayDescriptor="[W+ -> K*(892)+ gamma]cc",
                            MotherCut=motherCut,
                            #ParticleCombiners = {"" : "MomentumCombiner"},
@@ -496,7 +490,7 @@ def makeW2RhoGamma(name, rhoSel, gammaSel, WMassWin):
     @return: Selection object
     
     """  
-    motherCut = "(ADMASS('W+') < %(WMassWin)s*MeV)" % locals()
+    motherCut = "(ADMASS('W+') < %(WMassWin)s)" % locals()
     Wp = CombineParticles(DecayDescriptor="[W+ -> rho(770)+ gamma]cc",
                            MotherCut=motherCut,
                            #ParticleCombiners = {"" : "MomentumCombiner"},
@@ -515,7 +509,7 @@ def makeW2DpGamma(name, DpSel, gammaSel, WMassWin):
     @return: Selection object
     
     """  
-    motherCut = "(ADMASS('W+') < %(WMassWin)s*MeV)" % locals()
+    motherCut = "(ADMASS('W+') < %(WMassWin)s)" % locals()
     Wp = CombineParticles(DecayDescriptor="[W+ -> D+ gamma]cc",
                            MotherCut=motherCut,
                            ReFitPVs=False)#True)
@@ -533,7 +527,7 @@ def makeW2DsGamma(name, DsSel, gammaSel, WMassWin):
     @return: Selection object
     
     """  
-    motherCut = "(ADMASS('W+') < %(WMassWin)s*MeV)" % locals()
+    motherCut = "(ADMASS('W+') < %(WMassWin)s)" % locals()
     Wp = CombineParticles(DecayDescriptor="[W+ -> D+ gamma]cc",
                            MotherCut=motherCut,
                            ReFitPVs=False)#True)
@@ -551,7 +545,7 @@ def makeW2BuGamma(name, BuSel, gammaSel, WMassWin):
     @return: Selection object
     
     """  
-    motherCut = "(ADMASS('W+') < %(WMassWin)s*MeV)" % locals()
+    motherCut = "(ADMASS('W+') < %(WMassWin)s)" % locals()
     Wp = CombineParticles(DecayDescriptor="[W+ -> B+ gamma]cc",
                            MotherCut=motherCut,
                            ReFitPVs=False)#True)

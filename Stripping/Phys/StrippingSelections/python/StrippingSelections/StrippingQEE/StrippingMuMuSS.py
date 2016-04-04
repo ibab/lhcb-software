@@ -8,13 +8,15 @@
 # MuMuSS3 (10-20GeV): StdAllLooseMuons & P>10GeV & pT>3GeV
 # MuMuSS4 (>20GeV):   StdAllLooseMuons & P>10GeV & pT>3GeV
 
-__all__ = (
-  'MuMuSSConf',
-  'default_config',
+__all__ = 'default_config', 'MuMuSSConf'
+
+__author__ = (
+  None, ## Current
+  'J. Anderson', ## previous
 )
 
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-from PhysSelPython.Wrappers import Selection
+from PhysSelPython.Wrappers import Selection, SimpleSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllLooseMuons
@@ -22,131 +24,81 @@ from GaudiKernel.SystemOfUnits import GeV
 
 
 default_config = {
-    'NAME'        : 'MuMuSS',
-    'BUILDERTYPE' : 'MuMuSSConf',
-    'WGs'         : [ 'QEE'],
-    'STREAMS'     : [ 'EW' ],
-    'CONFIG'      : { 
-      'MuMuSSLine1Prescale' : 0.1,
-      'MuMuSSLine2Prescale' : 1.0,
-      'MuMuSSLine3Prescale' : 1.0,
-      'MuMuSSLine4Prescale' : 1.0,
-      'MuMuSSLinePostscale' : 1.0,  
-      'MuMuSSLine1MinMass'  : 3.2  * GeV,
-      'MuMuSSLine1MaxMass'  :  5.  * GeV,
-      'MuMuSSLine2MinMass'  :  5.  * GeV,
-      'MuMuSSLine2MaxMass'  : 10.  * GeV,
-      'MuMuSSLine3MinMass'  : 10.  * GeV,
-      'MuMuSSLine3MaxMass'  : 20.  * GeV,
-      'MuMuSSLine4MinMass'  : 20.  * GeV,
-      'p'     : 10. * GeV,
-      'pT1'   : 1.5 * GeV,
-      'pT2'   :  3. * GeV
-    },
+  'NAME'        : 'MuMuSS',
+  'BUILDERTYPE' : 'MuMuSSConf',
+  'WGs'         : [ 'QEE'],
+  'STREAMS'     : [ 'EW' ],
+  'CONFIG'      : {
+    'MuMuSSLine1Prescale' : 0.1,
+    'MuMuSSLine2Prescale' : 1.0,
+    'MuMuSSLine3Prescale' : 1.0,
+    'MuMuSSLine4Prescale' : 1.0,
+    'MuMuSSLine1MinMass'  : 3.2  * GeV,
+    'MuMuSSLine1MaxMass'  :  5.  * GeV,
+    'MuMuSSLine2MinMass'  :  5.  * GeV,
+    'MuMuSSLine2MaxMass'  : 10.  * GeV,
+    'MuMuSSLine3MinMass'  : 10.  * GeV,
+    'MuMuSSLine3MaxMass'  : 20.  * GeV,
+    'MuMuSSLine4MinMass'  : 20.  * GeV,
+    'p'     : 10. * GeV,
+    'pT1'   : 1.5 * GeV,
+    'pT2'   :  3. * GeV,
+  },
 }
 
 
 class MuMuSSConf( LineBuilder ) :
 
-    __configuration_keys__ = default_config['CONFIG'].keys()
+  __configuration_keys__ = default_config['CONFIG'].keys()
     
-    def __init__( self, name, config ) :
+  def __init__( self, name, config ) :
 
-        LineBuilder.__init__( self, name, config )
+    LineBuilder.__init__( self, name, config )
 
+    # Define the cuts
 
-        # Define the cuts
+    cut1 = '(P>%(p)s) & (PT>%(pT1)s)'%config
+    cut2 = '(P>%(p)s) & (PT>%(pT2)s)'%config
 
-        _cut1 = '(P>%(p)s) & (PT>%(pT1)s)'%config
-        _cut2 = '(P>%(p)s) & (PT>%(pT2)s)'%config
-
-        _MuMuSS1MassCut = '(MM>%(MuMuSSLine1MinMass)s) & (MM<%(MuMuSSLine1MaxMass)s)'%config
-        _MuMuSS2MassCut = '(MM>%(MuMuSSLine2MinMass)s) & (MM<%(MuMuSSLine2MaxMass)s)'%config
-        _MuMuSS3MassCut = '(MM>%(MuMuSSLine3MinMass)s) & (MM<%(MuMuSSLine3MaxMass)s)'%config
-        _MuMuSS4MassCut = '(MM>%(MuMuSSLine4MinMass)s)'%config
-
-
-        # MuMuSS1
-
-        self.sel_MuMuSS1 = makeSSCombination( name + 'MuMuSS1',
-                                              StdAllLooseMuons,
-                                              _cut1,
-                                              _MuMuSS1MassCut
-                                              )
-     
-        self.line_MuMuSS1 = StrippingLine( name + 'Line1',
-                                           prescale  = config[ 'MuMuSSLine1Prescale' ],
-                                           postscale = config[ 'MuMuSSLinePostscale' ],
-                                           MDSTFlag = True,
-                                           selection = self.sel_MuMuSS1
-                                           )
-
-        self.registerLine( self.line_MuMuSS1 )
+    MuMuSS1MassCut = '(MM>%(MuMuSSLine1MinMass)s) & (MM<%(MuMuSSLine1MaxMass)s)'%config
+    MuMuSS2MassCut = '(MM>%(MuMuSSLine2MinMass)s) & (MM<%(MuMuSSLine2MaxMass)s)'%config
+    MuMuSS3MassCut = '(MM>%(MuMuSSLine3MinMass)s) & (MM<%(MuMuSSLine3MaxMass)s)'%config
+    MuMuSS4MassCut = '(MM>%(MuMuSSLine4MinMass)s)'%config
 
 
-        # MuMuSS2
+    ## MuMuSS1
+    sel = makeSSCombination( name + 'MuMuSS1', cut1, MuMuSS1MassCut )
+    self.registerLine(StrippingLine( name + 'Line1',
+      prescale  = config[ 'MuMuSSLine1Prescale' ],
+      selection = sel,
+    ))
 
-        self.sel_MuMuSS2 = makeSSCombination( name + 'MuMuSS2', 
-                                              StdAllLooseMuons,
-                                              _cut2,
-                                              _MuMuSS2MassCut
-                                              )
-     
-        self.line_MuMuSS2 = StrippingLine( name + 'Line2',
-                                           prescale  = config[ 'MuMuSSLine2Prescale' ],
-                                           postscale = config[ 'MuMuSSLinePostscale' ],
-                                           MDSTFlag = True,
-                                           selection = self.sel_MuMuSS2
-                                           )
+    ## MuMuSS2
+    sel = makeSSCombination( name + 'MuMuSS2', cut2, MuMuSS2MassCut )
+    self.registerLine(StrippingLine( name + 'Line2',
+      prescale  = config[ 'MuMuSSLine2Prescale' ],
+      selection = sel,
+    ))
 
-        self.registerLine( self.line_MuMuSS2 )
+    ## MuMuSS3
+    sel = makeSSCombination( name + 'MuMuSS3', cut2, MuMuSS3MassCut )
+    self.registerLine(StrippingLine( name + 'Line3',
+      prescale  = config[ 'MuMuSSLine3Prescale' ],
+      selection = sel,
+    ))
 
-
-        # MuMuSS3
-
-        self.sel_MuMuSS3 = makeSSCombination( name + 'MuMuSS3', 
-                                              StdAllLooseMuons,
-                                              _cut2,
-                                              _MuMuSS3MassCut
-                                              )
-     
-        self.line_MuMuSS3 = StrippingLine( name + 'Line3',
-                                           prescale  = config[ 'MuMuSSLine3Prescale' ],
-                                           postscale = config[ 'MuMuSSLinePostscale' ],
-                                           MDSTFlag = True,
-                                           selection = self.sel_MuMuSS3
-                                           )
-
-        self.registerLine( self.line_MuMuSS3 )
-
-
-        # MuMuSS4
-
-        self.sel_MuMuSS4 = makeSSCombination( name + 'MuMuSS4', 
-                                              StdAllLooseMuons,
-                                              _cut2,
-                                              _MuMuSS4MassCut
-                                              )
-     
-        self.line_MuMuSS4 = StrippingLine( name + 'Line4',
-                                           prescale  = config[ 'MuMuSSLine4Prescale' ],
-                                           postscale = config[ 'MuMuSSLinePostscale' ],
-                                           MDSTFlag = True,
-                                           selection = self.sel_MuMuSS4
-                                           )
-
-        self.registerLine( self.line_MuMuSS4 )
+    ## MuMuSS4
+    sel = makeSSCombination( name + 'MuMuSS4', cut2, MuMuSS4MassCut )     
+    self.registerLine(StrippingLine( name + 'Line4',
+      prescale  = config[ 'MuMuSSLine4Prescale' ],
+      selection = sel,
+    ))
       
 
-def makeSSCombination( name, _input, _daughters, _mother ) :
-
-    _combination = CombineParticles( DecayDescriptor    = '[Z0 -> mu- mu-]cc',
-                                     DaughtersCuts      = { 'mu-' : _daughters },
-                                     MotherCut          = _mother,
-                                     WriteP2PVRelations = False
-                                     )
-
-    return Selection ( name,
-                       Algorithm          = _combination,
-                       RequiredSelections = [ _input ]
-                       )
+def makeSSCombination( name, dcut, mcut ) :
+  return SimpleSelection( name, CombineParticles, [StdAllLooseMuons],
+    DecayDescriptor    = '[Z0 -> mu- mu-]cc',
+    DaughtersCuts      = { 'mu-' : dcut, 'mu+' : dcut },
+    MotherCut          = mcut,
+    WriteP2PVRelations = False,
+  )
