@@ -24,15 +24,16 @@ class LFVLines(Hlt2LinesConfigurableUser):
                              'MuonTrChi2DoF': 3,
                              'MuonTrGhostProb': 0.1,
                              'VertexChi2DoF': 3},
-                 'SpdCut': {'NSPD': 350}}
+                 'SpdCut': {'NSPD': 250}}
 
     def __apply_configuration__(self):
         from Stages import SelJpsiMuE
-        stages = {'LFVJpsiMuE': [SelJpsiMuE]}
+        stages = {'LFVJpsiMuETurbo': [SelJpsiMuE]}
 
         for name, algos in self.algorithms(stages):
             Hlt2Line(name,
                      L0DU="(L0_DATA('Spd(Mult)') < {})".format(self.getProp('SpdCut')['NSPD']),
                      prescale=self.prescale,
                      algos=algos,
-                     postscale=self.postscale)
+                     postscale=self.postscale,
+                     Turbo=True)
