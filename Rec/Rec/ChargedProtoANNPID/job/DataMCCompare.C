@@ -5,7 +5,7 @@ void DataMCCompare()
 {
 
   // Location of ROOT files
-  const std::string rootDir = "/r03/lhcb/jonesc/ANNPID/ProtoParticlePIDtuples/Test/";
+  const std::string rootDir = "/r03/lhcb/jonesc/ANNPID/ProtoParticlePIDtuples/Test/StripFiltered/";
 
   // Stripping lines
   const auto stripLines = {
@@ -71,9 +71,9 @@ void DataMCCompare()
 
   // 2015
   const std::string year = "MC2015";
-  TFile * data_f = TFile::Open( (rootDir+"2015-ANNPID-BHADRONCOMPLETEEVENT.root").c_str() );
+  TFile * data_f = TFile::Open( (rootDir+"2015-S23r1-ANNPID-BHADRONCOMPLETEEVENT.root").c_str() );
   TTree * data   = (TTree*)gDirectory->Get("ANNPID/DecayTree");
-  TFile * mc_f   = TFile::Open( (rootDir+"Incb-MC2015-ANNPID-Pythia8.root").c_str() );
+  TFile * mc_f   = TFile::Open( (rootDir+"Incb-DevMCJun2015-S23r1-ANNPID-Pythia8.root").c_str() );
   TTree * mc     = (TTree*)gDirectory->Get("ANNPID/DecayTree");
   if ( !mc || !data ) return;
   
