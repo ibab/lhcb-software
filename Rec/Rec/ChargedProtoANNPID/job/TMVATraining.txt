@@ -1,0 +1,26 @@
+
+# Blank lines and lines like this starting with # are ignored
+
+# Training sample sizes. -1 for each means 
+# "Use a 1:1 signal:background mixture of the maximum size you can"
+NumSignalEntries     = 10000
+NumBackgroundEntries = 10000
+
+# TMVA Training names
+#TMVANAMES = BDT,MLP-BP-CE,MLP-BP-MSE
+#TMVANAMES = BDT
+TMVANAMES = MLP-BP-CE
+
+# BDT Configuration
+BDT:TMVAMethod = BDT
+BDT:TMVAConfig = !H:V:NTrees=800:VarTransform=Norm:BoostType=AdaBoost:PruneMethod=NoPruning:MaxDepth=3
+
+# MLP-BP-CE Configuration
+MLP-BP-CE:TMVAMethod = MLP
+MLP-BP-CE:MLPLayerTwoScale = 1.3
+MLP-BP-CE:TMVAConfig = !H:V:EpochMonitoring:UseRegulator=false:VarTransform=Norm:NCycles=750:NeuronType=tanh:TrainingMethod=BP:EstimatorType=CE
+
+# MLP-BP-MSE Configuration
+MLP-BP-MSE:TMVAMethod = MLP
+MLP-BP-MSE:MLPLayerTwoScale = 1.3
+MLP-BP-MSE:TMVAConfig = !H:V:EpochMonitoring:UseRegulator=false:VarTransform=Norm:NCycles=750:NeuronType=tanh:TrainingMethod=BP:EstimatorType=MSE

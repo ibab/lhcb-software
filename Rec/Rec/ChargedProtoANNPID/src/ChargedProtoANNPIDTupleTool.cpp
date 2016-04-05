@@ -44,8 +44,11 @@ ChargedProtoANNPIDTupleTool::ChargedProtoANNPIDTupleTool( const std::string& typ
           // RICH
           "RichUsedAero","RichUsedR1Gas","RichUsedR2Gas",
           "RichAboveElThres","RichAboveMuThres","RichAbovePiThres",
-          "RichAboveKaThres","RichAbovePrThres","RichAboveDeThres",
-          "RichDLLe","RichDLLmu","RichDLLpi","RichDLLk","RichDLLp","RichDLLd","RichDLLbt",
+          "RichAboveKaThres","RichAbovePrThres",
+          //"RichAboveDeThres",
+          "RichDLLe","RichDLLmu","RichDLLpi","RichDLLk","RichDLLp",
+          //"RichDLLd",
+          "RichDLLbt",
           // MUON
           "InAccMuon",
           "MuonMuLL","MuonBkgLL","MuonIsMuon","MuonIsLooseMuon","MuonNShared",

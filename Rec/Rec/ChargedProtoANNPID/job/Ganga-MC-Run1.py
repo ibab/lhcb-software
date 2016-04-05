@@ -17,18 +17,18 @@ datasets = [
     ##   "sim"    : ["Sim08a"],
     ##   "digi"   : "Digi13",
     ##   "reco"   : "Reco14a",
-    ##   "strp"   : "Stripping20r1" },
+    ##   "strp"   : "Stripping20r1" }
     
-    ## { "name"   : "Incb",
-    ##   "EvType" : "10000000",
-    ##   "year"   : "2012",
-    ##   "nu"     : "Nu2.5",
-    ##   "en"     : "4000GeV",
-    ##   "trig"   : "Trig0x409f0045",
-    ##   "sim"    : ["Sim08a"],
-    ##   "digi"   : "Digi13",
-    ##   "reco"   : "Reco14a",
-    ##   "strp"   : "Stripping20" },
+    { "name"   : "Incb",
+      "EvType" : "10000000",
+      "year"   : "2012",
+      "nu"     : "Nu2.5",
+      "en"     : "4000GeV",
+      "trig"   : "Trig0x409f0045",
+      "sim"    : ["Sim08a"],
+      "digi"   : "Digi13",
+      "reco"   : "Reco14a",
+      "strp"   : "Stripping20" }
 
     ## { "name"   : "Incb-KKGammaX",
     ##   "EvType" : "10002202",
@@ -505,117 +505,117 @@ datasets = [
 
     ## Kaons
 
-    ## Bd KK
-    { "name"   : "BdKK",
-      "EvType" : "11102021",
-      "year"   : "2012",
-      "nu"     : "Nu2.5",
-      "en"     : "4000GeV",
-      "trig"   : "Trig0x409f0045",
-      "sim"    : ["Sim08b"],
-      "digi"   : "Digi13",
-      "reco"   : "Reco14a",
-      "strp"   : "Stripping20" },
-    { "name"   : "BdKK",
-      "EvType" : "11102021",
-      "year"   : "2011",
-      "nu"     : "Nu2",
-      "en"     : "3500GeV",
-      "trig"   : "Trig0x40760037",
-      "sim"    : ["Sim08b"],
-      "digi"   : "Digi13",
-      "reco"   : "Reco14a",
-      "strp"   : "Stripping20r1" },
+    ## ## Bd KK
+    ## { "name"   : "BdKK",
+    ##   "EvType" : "11102021",
+    ##   "year"   : "2012",
+    ##   "nu"     : "Nu2.5",
+    ##   "en"     : "4000GeV",
+    ##   "trig"   : "Trig0x409f0045",
+    ##   "sim"    : ["Sim08b"],
+    ##   "digi"   : "Digi13",
+    ##   "reco"   : "Reco14a",
+    ##   "strp"   : "Stripping20" },
+    ## { "name"   : "BdKK",
+    ##   "EvType" : "11102021",
+    ##   "year"   : "2011",
+    ##   "nu"     : "Nu2",
+    ##   "en"     : "3500GeV",
+    ##   "trig"   : "Trig0x40760037",
+    ##   "sim"    : ["Sim08b"],
+    ##   "digi"   : "Digi13",
+    ##   "reco"   : "Reco14a",
+    ##   "strp"   : "Stripping20r1" },
 
-    ## Bd KKpi0
-    { "name"   : "BdKKPi0",
-      "EvType" : "11102422",
-      "year"   : "2012",
-      "nu"     : "Nu2.5",
-      "en"     : "4000GeV",
-      "trig"   : "Trig0x409f0045",
-      "sim"    : ["Sim08a"],
-      "digi"   : "Digi13",
-      "reco"   : "Reco14a",
-      "strp"   : "Stripping20" },
-    { "name"   : "BdKKPi0",
-      "EvType" : "11102422",
-      "year"   : "2011",
-      "nu"     : "Nu2",
-      "en"     : "3500GeV",
-      "trig"   : "Trig0x40760037",
-      "sim"    : ["Sim08a"],
-      "digi"   : "Digi13",
-      "reco"   : "Reco14a",
-      "strp"   : "Stripping20r1" },
+    ## ## Bd KKpi0
+    ## { "name"   : "BdKKPi0",
+    ##   "EvType" : "11102422",
+    ##   "year"   : "2012",
+    ##   "nu"     : "Nu2.5",
+    ##   "en"     : "4000GeV",
+    ##   "trig"   : "Trig0x409f0045",
+    ##   "sim"    : ["Sim08a"],
+    ##   "digi"   : "Digi13",
+    ##   "reco"   : "Reco14a",
+    ##   "strp"   : "Stripping20" },
+    ## { "name"   : "BdKKPi0",
+    ##   "EvType" : "11102422",
+    ##   "year"   : "2011",
+    ##   "nu"     : "Nu2",
+    ##   "en"     : "3500GeV",
+    ##   "trig"   : "Trig0x40760037",
+    ##   "sim"    : ["Sim08a"],
+    ##   "digi"   : "Digi13",
+    ##   "reco"   : "Reco14a",
+    ##   "strp"   : "Stripping20r1" },
 
-    ## Bd D0Kstar-Kpi
-    { "name"   : "BdD0KstarKpi",
-      "EvType" : "11164011",
-      "year"   : "2012",
-      "nu"     : "Nu2.5",
-      "en"     : "4000GeV",
-      "trig"   : "Trig0x409f0045",
-      "sim"    : ["Sim08a","Sim08e"],
-      "digi"   : "Digi13",
-      "reco"   : "Reco14a",
-      "strp"   : "Stripping20" },
-    { "name"   : "BdD0KstarKpi",
-      "EvType" : "11164011",
-      "year"   : "2011",
-      "nu"     : "Nu2",
-      "en"     : "3500GeV",
-      "trig"   : "Trig0x40760037",
-      "sim"    : ["Sim08e"],
-      "digi"   : "Digi13",
-      "reco"   : "Reco14a",
-      "strp"   : "Stripping20r1" },
+    ## ## Bd D0Kstar-Kpi
+    ## { "name"   : "BdD0KstarKpi",
+    ##   "EvType" : "11164011",
+    ##   "year"   : "2012",
+    ##   "nu"     : "Nu2.5",
+    ##   "en"     : "4000GeV",
+    ##   "trig"   : "Trig0x409f0045",
+    ##   "sim"    : ["Sim08a","Sim08e"],
+    ##   "digi"   : "Digi13",
+    ##   "reco"   : "Reco14a",
+    ##   "strp"   : "Stripping20" },
+    ## { "name"   : "BdD0KstarKpi",
+    ##   "EvType" : "11164011",
+    ##   "year"   : "2011",
+    ##   "nu"     : "Nu2",
+    ##   "en"     : "3500GeV",
+    ##   "trig"   : "Trig0x40760037",
+    ##   "sim"    : ["Sim08e"],
+    ##   "digi"   : "Digi13",
+    ##   "reco"   : "Reco14a",
+    ##   "strp"   : "Stripping20r1" },
 
-    ## Bd D-K KKPi
-    { "name"   : "BdD-K-KKPi",
-      "EvType" : "11264041",
-      "year"   : "2012",
-      "nu"     : "Nu2.5",
-      "en"     : "4000GeV",
-      "trig"   : "Trig0x409f0045",
-      "sim"    : ["Sim08e"],
-      "digi"   : "Digi13",
-      "reco"   : "Reco14a",
-      "strp"   : "Stripping20" },
+    ## ## Bd D-K KKPi
+    ## { "name"   : "BdD-K-KKPi",
+    ##   "EvType" : "11264041",
+    ##   "year"   : "2012",
+    ##   "nu"     : "Nu2.5",
+    ##   "en"     : "4000GeV",
+    ##   "trig"   : "Trig0x409f0045",
+    ##   "sim"    : ["Sim08e"],
+    ##   "digi"   : "Digi13",
+    ##   "reco"   : "Reco14a",
+    ##   "strp"   : "Stripping20" },
 
-    ## Bu KKK
-    { "name"   : "BuKKK",
-      "EvType" : "12103011",
-      "year"   : "2012",
-      "nu"     : "Nu2.5",
-      "en"     : "4000GeV",
-      "trig"   : "Trig0x409f0045",
-      "sim"    : ["Sim08a"],
-      "digi"   : "Digi13",
-      "reco"   : "Reco14a",
-      "strp"   : "Stripping20" },
-    { "name"   : "BuKKK",
-      "EvType" : "12103012",
-      "year"   : "2012",
-      "nu"     : "Nu2.5",
-      "en"     : "4000GeV",
-      "trig"   : "Trig0x409f0045",
-      "sim"    : ["Sim08e"],
-      "digi"   : "Digi13",
-      "reco"   : "Reco14a",
-      "strp"   : "Stripping20" },
+    ## ## Bu KKK
+    ## { "name"   : "BuKKK",
+    ##   "EvType" : "12103011",
+    ##   "year"   : "2012",
+    ##   "nu"     : "Nu2.5",
+    ##   "en"     : "4000GeV",
+    ##   "trig"   : "Trig0x409f0045",
+    ##   "sim"    : ["Sim08a"],
+    ##   "digi"   : "Digi13",
+    ##   "reco"   : "Reco14a",
+    ##   "strp"   : "Stripping20" },
+    ## { "name"   : "BuKKK",
+    ##   "EvType" : "12103012",
+    ##   "year"   : "2012",
+    ##   "nu"     : "Nu2.5",
+    ##   "en"     : "4000GeV",
+    ##   "trig"   : "Trig0x409f0045",
+    ##   "sim"    : ["Sim08e"],
+    ##   "digi"   : "Digi13",
+    ##   "reco"   : "Reco14a",
+    ##   "strp"   : "Stripping20" },
 
-    ## Bs D0Phi Kpi
-    { "name"   : "BsD0PhiKpi",
-      "EvType" : "13164001",
-      "year"   : "2012",
-      "nu"     : "Nu2.5",
-      "en"     : "4000GeV",
-      "trig"   : "Trig0x409f0045",
-      "sim"    : ["Sim08a"],
-      "digi"   : "Digi13",
-      "reco"   : "Reco14a",
-      "strp"   : "Stripping20" }
+    ## ## Bs D0Phi Kpi
+    ## { "name"   : "BsD0PhiKpi",
+    ##   "EvType" : "13164001",
+    ##   "year"   : "2012",
+    ##   "nu"     : "Nu2.5",
+    ##   "en"     : "4000GeV",
+    ##   "trig"   : "Trig0x409f0045",
+    ##   "sim"    : ["Sim08a"],
+    ##   "digi"   : "Digi13",
+    ##   "reco"   : "Reco14a",
+    ##   "strp"   : "Stripping20" }
     
         ]
 
@@ -647,18 +647,23 @@ for dataset in datasets :
                     datapath = "/MC/"+year+"/Beam"+en+"-"+year+"-"+polarity+"-"+nu+"-"+pythia+"/"+sim+"/"+digi+"/"+trig+"/"+reco+"/"+strp+"NoPrescalingFlagged/"+EvType+"/ALLSTREAMS.DST"
         
                     datalfns = BKQuery(path=datapath).getDataset()
+
+                    import random
+                    random.shuffle(datalfns.files)
+                    
                     print "Extracted", len(datalfns), "LFNS for", datapath
 
                     if len(datalfns) > 0 :
 
-                        j = Job( name = jname, application = DaVinci( version = 'v38r1' ) )
+                        j = Job( name = jname, application = DaVinci( version = 'v38r1p1' ) )
 
                         # Main options
                         j.application.optsfile = [ File('options-MC'+year+'.py') ]
                         
-                        j.splitter = SplitByFiles ( filesPerJob = 4, maxFiles = 999999 )
+                        j.splitter = SplitByFiles ( filesPerJob = 5, maxFiles = 999999 )
+                        #j.splitter = SplitByFiles ( filesPerJob = 4, maxFiles = 50 )
                         
-                        rootfiles = [ SandboxFile('ProtoPIDANN.MC.tuples.root') ]
+                        rootfiles = [ LocalFile('ProtoPIDANN.MC.tuples.root') ]
                         
                         j.outputfiles = rootfiles
                         
@@ -667,6 +672,11 @@ for dataset in datasets :
                         j.do_auto_resubmit = True
                         
                         j.backend = Dirac()
+
+                        import glob
+                        for tune in ["MC12TuneV4","MC15TuneV1"] :
+                            configfiles = glob.glob("/usera/jonesc/cmtuser/DaVinci_v38r1p1/Rec/ChargedProtoANNPID/data/"+tune+"/*")
+                            j.inputsandbox += [ File( name = f, subdir = "data/"+tune+"/" ) for f in configfiles ]
                         
                         print "Submitting job", j.name
                         j.submit()

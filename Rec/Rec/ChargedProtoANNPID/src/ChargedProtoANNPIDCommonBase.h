@@ -330,15 +330,15 @@ namespace ANNGlobalPID
       }
     };
 
-    /// RICH above deuteron threshold
-    class InRichAboveDeThres : public Input
-    {
-    public:
-      virtual double value( const LHCb::ProtoParticle * proto ) const override
-      {
-        return ( proto->richPID() ? proto->richPID()->deuteronHypoAboveThres() : 0 );
-      }
-    };
+    // /// RICH above deuteron threshold
+    // class InRichAboveDeThres : public Input
+    // {
+    // public:
+    //   virtual double value( const LHCb::ProtoParticle * proto ) const override
+    //   {
+    //     return ( proto->richPID() ? proto->richPID()->deuteronHypoAboveThres() : 0 );
+    //   }
+    // };
 
     /// RICH DLL accessor
     class InRichDLL : public Input
