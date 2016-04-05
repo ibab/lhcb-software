@@ -183,8 +183,13 @@ class DecisionReporter( Task ):
         #if 'L0' in self._config and self._config[ 'L0' ]:
             #from Configurables import L0MuonAlg
             #L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"
+        
+        if 'Dataset' in self._config:
+            from PRConfig import TestFileDB
+            TestFileDB.test_file_db[self._config[ 'Dataset' ]].run(configurable=Moore())
+        else:
+            EventSelector().Input = self._config[ 'Input' ]
 
-        EventSelector().Input = self._config[ 'Input' ]
         EventSelector().PrintFreq = 100
         FileCatalog().Catalogs = self._config[ 'Catalogs' ]
 

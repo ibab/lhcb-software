@@ -1,6 +1,9 @@
-Package     : Hlt/IndepenceTests
+Package     : Hlt/IndependenceTests
 Package Coordinator : Mika Vesterinen
-Purpose     : HLT application to test indepence of Hlt lines
+Purpose     : HLT application to test independence of Hlt lines
+
+! 2016-03-16 - Rosen Matev
+ - Update independence test to use Physics_pp_Draft2016
 
 !========================= IndependenceTests v1r14 2015-11-14 =========================
 

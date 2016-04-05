@@ -57,11 +57,16 @@ def find_lines_quick_test( options, args ):
 
 
 def find_lines( options, args ):
-        
-    jobArgs = ['--settings',options.Settings,
-               '--dddbtag', options.DDDBtag,
-               '--conddbtag', options.CondDBtag]
-    
+
+    jobArgs = ['--settings',options.Settings]
+    if not args:
+        jobArgs += ['--dddbtag', options.DDDBtag,
+                    '--conddbtag', options.CondDBtag]
+    else:
+        from PRConfig import TestFileDB
+        testfile = TestFileDB.test_file_db[args[0]]
+        jobArgs += ['--dddbtag', testfile.qualifiers['DDDB'],
+                    '--conddbtag', testfile.qualifiers['CondDB']]
     print options
     
     command = os.path.expandvars( '$INDEPENDENCETESTSROOT/scripts/Moore-Lines.py')
@@ -71,8 +76,8 @@ def find_lines( options, args ):
     
     o = p.communicate()[ 0 ]
     if ( p.returncode ):
-        print "failed finding lines"
-        return p.returncode
+        raise RuntimeError('Failed running the Moore-Lines.py script.\n' +
+            "Return code is {} and output is follows.\n\n{}".format(p.returncode, o))
 
     # Get the list of hlt lines from the output
     output = []
@@ -103,8 +108,7 @@ def find_lines( options, args ):
 def run( options, args ):
 
     print 'Starting run method'
-    
-    EventSelector().Input = ["DATAFILE='PFN:mdf:root://eoslhcb.cern.ch//eos/lhcb/wg/HLT/2015ValidationData/Run_0163051_20150913-213332.hlta0101.mdf' SVC='LHCb::MDFSelector' OPT='READ'"]
+
     EventSelector().PrintFreq = 1
 
     from Configurables import Moore
@@ -115,12 +119,16 @@ def run( options, args ):
     reporterConfig = dict()
     reporterConfig[ 'ThresholdSettings' ] = options.Settings 
     reporterConfig[ 'EvtMax' ] = options.EvtMax
-    reporterConfig[ 'DDDBtag' ] = options.DDDBtag
-    reporterConfig[ 'CondDBtag' ] = options.CondDBtag
-    reporterConfig[ 'Simulation' ] = options.Simulation
-    reporterConfig[ 'DataType' ] = options.DataType
-    reporterConfig[ 'Input' ]  = EventSelector().Input
-    reporterConfig[ 'Input' ]  = EventSelector().Input
+    if not args:
+        # EventSelector().Input = ["DATAFILE='PFN:mdf:root://eoslhcb.cern.ch//eos/lhcb/wg/HLT/2015ValidationData/Run_0163051_20150913-213332.hlta0101.mdf' SVC='LHCb::MDFSelector' OPT='READ'"]
+        reporterConfig[ 'DDDBtag' ] = options.DDDBtag
+        reporterConfig[ 'CondDBtag' ] = options.CondDBtag
+        reporterConfig[ 'Simulation' ] = options.Simulation
+        reporterConfig[ 'DataType' ] = options.DataType
+        reporterConfig[ 'Input' ]  = EventSelector().Input
+    else:
+        reporterConfig[ 'Dataset' ] = args[0]
+
     # fixed configurations
     reporterConfig[ 'Wait' ] = False     ## Don't wait after each event
     reporterConfig[ 'Persistency']= 'ROOT';
@@ -140,7 +148,9 @@ def run( options, args ):
     # Find all lines in this configuration
     print 'Determining available lines'
     all1Lines, all2Lines,removedLines = find_lines( options, args )
-    print all1Lines, all2Lines, removedLines
+    print 'all1Lines =\n   ', all1Lines
+    print 'all2Lines =\n   ', all2Lines
+    print 'removedLines =\n   ', removedLines
     ## no Hlt2 lines for now !!!!
     all2Lines = set()
     
@@ -359,7 +369,7 @@ def run( options, args ):
 if __name__ == "__main__":
 
     # Setup the option parser
-    usage = "usage: %prog settings"
+    usage = "usage: %prog [options] [TestFileDB_dataset]"
     parser = optparse.OptionParser( usage = usage )
 
     parser.add_option( "--DataType", action="store", dest="DataType", 
@@ -380,7 +390,7 @@ if __name__ == "__main__":
     
     parser.add_option( "--conddbtag", action = "store", dest = "CondDBtag",
                        default = 'cond-20150828', help = "CondDBtag to use" )
-
+    
     parser.add_option( "-s", "--simulation", action = "store_true", dest = "Simulation",
                        default = False, help = "Run on simulated data")
     
