@@ -223,7 +223,7 @@ TrackStateProvider::TrackStateProvider( const std::string& type,
   declareProperty("Interpolator",m_interpolator) ;
   declareProperty("ApplyMaterialCorrections",m_applyMaterialCorrections = true) ;
   declareProperty("LinearPropagationTolerance", m_linearPropagationTolerance = 1.0*Gaudi::Units::mm) ;
-  declareProperty("CacheStatesOnDemand",m_cacheStatesOnDemand = true ) ;
+  declareProperty("CacheStatesOnDemand",m_cacheStatesOnDemand = false ) ;
 }
 
 //=============================================================================

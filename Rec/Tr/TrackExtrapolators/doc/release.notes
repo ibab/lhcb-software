@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2016-05-04 - Sascha Stahl
+ - TrackStateProvider: Change default of property CacheStatesOnDemand to false.
+
 !========================= TrackExtrapolators v2r41 2016-02-26 =========================
 
 ! 2016-01-31- Gerhard Raven
