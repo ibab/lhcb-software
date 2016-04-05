@@ -175,8 +175,8 @@ default_config ={
     'BPVVDCHI2_MIN' : 36,
     'BPVDIRA_MIN'   : 0, 
     'MASS_WINDOW'   : '600*MeV', # was 50MeV
-    'DELTAMASS_MAX' : '225*MeV',
-    'DELTAMASS_MIN' : '90*MeV'
+    'DELTAMASS_MAX' : '250*MeV',
+    'DELTAMASS_MIN' : '80*MeV'
     },
     "HH": { # Cuts for rho, K*, phi, XHH Dalitz analyese, etc.
     'MASS_WINDOW'   : {'KST':'150*MeV','RHO':'150*MeV','PHI':'150*MeV'},

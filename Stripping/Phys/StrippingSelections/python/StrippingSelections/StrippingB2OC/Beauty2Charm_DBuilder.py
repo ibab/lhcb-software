@@ -149,8 +149,8 @@ class DBuilder(object):
           self.hhh_pid_tight = [filterPID('D2HHHPIDTIGHT',self.hhh_pid,
                                           config_pid['TIGHT'])]
           self.hhhh_pid = [filterPID('D2HHHHPID',self.hhhh,config_pid)]
-          self.hhhh_pid_tight = [filterPID('D2HHHHPIDTIGHT',self.hhhh_pid,
-                                           config_pid['TIGHT'])]
+          ''' self.hhhh_pid_tight = [filterPID('D2HHHHPIDTIGHT',self.hhhh_pid,
+                                           config_pid['TIGHT'])] '''
           self.hh_pid_tight_up = [filterPID('D2HHPIDTIGHTUP',self.hh_up,config_pid['TIGHT'])]
 
           self.ksh_ll_pid    = [filterPID('D2KsHLLPID',self.ksh_ll,config_pid)]
@@ -162,8 +162,8 @@ class DBuilder(object):
 
           self.pi0hh_merged_pid     = [filterPID('D2MergedPi0HHPID',self.pi0hh_merged,config_pid)]
           self.pi0hh_resolved_pid   = [filterPID('D2ResolvedPi0HHPID',self.pi0hh_resolved,config_pid)]
-          self.pi0hhh_merged_pid    = [filterPID('D2MergedPi0HHHPID',self.pi0hhh_merged,config_pid)]
-          self.pi0hhh_resolved_pid  = [filterPID('D2ResolvedPi0HHHPID',self.pi0hhh_resolved,config_pid)]
+          ''' self.pi0hhh_merged_pid    = [filterPID('D2MergedPi0HHHPID',self.pi0hhh_merged,config_pid)] '''
+          ''' self.pi0hhh_resolved_pid  = [filterPID('D2ResolvedPi0HHHPID',self.pi0hhh_resolved,config_pid)] '''
           #self.pi0hhhh_merged_pid   = [filterPID('D2MergedPi0HHHHPID',self.pi0hhhh_merged,config_pid)]
           #self.pi0hhhh_resolved_pid = [filterPID('D2ResolvedPi0HHHHPID',self.pi0hhhh_resolved,config_pid)]
 
@@ -173,10 +173,10 @@ class DBuilder(object):
                                                             tightPi0_sel, self.pi0hh_merged_pid)]
           self.pi0hh_tightpi0_resolved_pid = [filterSelection('D2ResolvedTightPi0HHPID',
                                                               tightPi0_sel, self.pi0hh_resolved_pid)]
-          self.pi0hhh_tightpi0_merged_pid = [filterSelection('D2MergedTightPi0HHHPID',
+          ''' self.pi0hhh_tightpi0_merged_pid = [filterSelection('D2MergedTightPi0HHHPID',
                                                              tightPi0_sel, self.pi0hhh_merged_pid)]
           self.pi0hhh_tightpi0_resolved_pid = [filterSelection('D2ResolvedTightPi0HHHPID',
-                                                               tightPi0_sel, self.pi0hhh_resolved_pid)]
+                                                               tightPi0_sel, self.pi0hhh_resolved_pid)] '''
           
           # subset decays
           oneK = "NINTREE(ABSID=='K+') == 1"
@@ -197,10 +197,10 @@ class DBuilder(object):
           self.kskhh_dd = [filterSelection('D2KsKHHDD',atLeastOneK,self.kshhh_dd)]
           self.kskhh_ll_pid = [filterPID('D2KsKHHLLPID',self.kskhh_ll,config_pid)]
           self.kskhh_dd_pid = [filterPID('D2KsKHHDDPID',self.kskhh_dd,config_pid)]
-          self.pi0khh_merged   = [filterSelection('D2MergedPi0KHH',atLeastOneK,self.pi0hhh_merged)]
-          self.pi0khh_resolved = [filterSelection('D2ResolvedPi0KHH',atLeastOneK,self.pi0hhh_resolved)]
-          self.pi0khh_merged_pid   = [filterPID('D2MergedPi0KHHPID',self.pi0khh_merged,config_pid)]
-          self.pi0khh_resolved_pid = [filterPID('D2ResolvedPi0KHHPID',self.pi0khh_resolved,config_pid)]
+          ''' self.pi0khh_merged   = [filterSelection('D2MergedPi0KHH',atLeastOneK,self.pi0hhh_merged)]
+          self.pi0khh_resolved = [filterSelection('D2ResolvedPi0KHH',atLeastOneK,self.pi0hhh_resolved)] '''
+          ''' self.pi0khh_merged_pid   = [filterPID('D2MergedPi0KHHPID',self.pi0khh_merged,config_pid)]
+          self.pi0khh_resolved_pid = [filterPID('D2ResolvedPi0KHHPID',self.pi0khh_resolved,config_pid)] '''
 
           #d0 narrow mass window +-40MeV
           d0_narrow_min,d0_narrow_max = self._massWindow('D0narrow')
@@ -257,7 +257,7 @@ class DBuilder(object):
           #Different PID filtering
           self.hhh_pid_tightpi = [filterPID('D2HHHPIDTIGHTPI',self.hhh_pid,config_pid['TIGHTPI'])]
           self.hhh_pid_tightpi_up = [filterPID('D2HHHPIDTIGHTPIUP',self.hhh_up,config_pid['TIGHTPI'])]
-          self.hhh_pid_tighter = [filterPID('D2HHHPIDTIGHTER',self.hhh_pid,config_pid['TIGHTER'])]
+          ''' self.hhh_pid_tighter = [filterPID('D2HHHPIDTIGHTER',self.hhh_pid,config_pid['TIGHTER'])] '''
           self.hhh_pid_special = [filterPID('D2HHHPIDSPECIAL',self.hhh,config_pid['SPECIAL'])]
           self.hhh_pid_specialpi = [filterPID('D2HHHPIDSPECIALPI',self.hhh,config_pid['SPECIALPI'])]
 
@@ -342,11 +342,11 @@ class DBuilder(object):
           #                                            RequiredSelections=self.ds_hhh_pid_custom+self.d_hhh_custom)]
           self.d_hhh_4_B2DD_custom = [MergedSelection('D2HHH_4_B2DD_CUSTOM_Beauty2Charm',
                                                       RequiredSelections=self.hhh_pid_custom+self.d_cf_hhh_pid_tightpi)]
-          #for use with FULL DST D0D0 line
+          ''' #for use with FULL DST D0D0 line
           self.d0_cf_pid_tight = [filterPID('D0CFPIDTIGHT',
                                             self.d0_cf_pid,config_pid['TIGHT'])]
           self.d0_cf_pid_tight_up = [MergedSelection('D0CFPIDTIGHTUPBeauty2Charm',
-                                                     RequiredSelections=self.kpi_pid_tight_up+self.k3pi_pid_tight_up)]
+                                                     RequiredSelections=self.kpi_pid_tight_up+self.k3pi_pid_tight_up)] '''
 
      def _makeD2TwoBody(self,name,decays,wm,up,config,inputs):
           ''' Makes all D -> HH selections.'''
