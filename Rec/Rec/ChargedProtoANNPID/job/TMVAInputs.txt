@@ -6,7 +6,7 @@
 #NumLongTracks ; I ; NumLongTracks
 
 TrackP ; F ; TrackP
-#TrackPt ; F ; TrackPt
+TrackPt ; F ; TrackPt
 TrackChi2PerDof ; F ; TrackChi2PerDof
 #TrackNumDof ; I ; TrackNumDof
 TrackGhostProb ; F ; TrackGhostProbability
