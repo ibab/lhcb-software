@@ -1,5 +1,7 @@
 
 #include <sstream>
+#include <tuple>
+#include <vector>
 
 void DataMCCompare()
 {
@@ -87,92 +89,135 @@ void DataMCCompare()
   TCut tkSel = "TrackType==3";
 
   TCanvas * c = new TCanvas( "RICH", "RICH", 1400, 1000 );
+  gStyle->SetOptStat(0);
 
-  for ( std::string var : {
+  // variable name, min, max
+  typedef std::vector< std::tuple<std::string,double,double,unsigned int> > Variables;
 
-        "NumRich1Hits",
-        "NumRich2Hits",
-        "NumSPDHits",
-        "NumLongTracks",
+  const Variables vars =
+    {
+      std::make_tuple( "NumRich1Hits", -0.5, 10000.5, 101 ),
+      std::make_tuple( "NumRich2Hits", -0.5, 10000.5, 101 ),
+      std::make_tuple( "NumSPDHits", -0.5, 1000.5, 201 ),
+      std::make_tuple( "NumLongTracks", -0.5, 175.5, 176 ),
 
-        "TrackP",
-        "TrackPt",
-        "TrackChi2PerDof",
-        "TrackNumDof",
-        "TrackGhostProbability",
-        "TrackFitMatchChi2",
-        "TrackFitVeloChi2",
-        "TrackFitVeloNDoF",
-        "TrackFitTChi2",
-        "TrackFitTNDoF",
-        "RichUsedR1Gas",
-        "RichUsedR2Gas",
-        "RichAbovePiThres",
-        "RichAboveKaThres",
-        "RichDLLe",
-        "RichDLLmu",
-        "RichDLLk",
-        "RichDLLp",
-        "RichDLLbt",
-        "MuonBkgLL",
-        "MuonMuLL",
-        "MuonIsMuon",
-        "MuonNShared",
-        "InAccMuon",
-        "MuonIsLooseMuon",
-        "EcalPIDe",
-        "EcalPIDmu",
-        "HcalPIDe",
-        "HcalPIDmu",
-        "PrsPIDe",
-        "InAccBrem",
-        "BremPIDe",
-      
-      "piplus_MC15TuneV1_ProbNNe",
-      "piplus_MC15TuneV1_ProbNNmu",
-      "piplus_MC15TuneV1_ProbNNpi",
-      "piplus_MC15TuneV1_ProbNNk",
-      "piplus_MC15TuneV1_ProbNNp",
-      "piplus_MC15TuneV1_ProbNNghost",
+      std::make_tuple( "TrackP", 0, 100000, 100 ),
+      std::make_tuple( "TrackPt", 0, 10000, 100 ),
+      std::make_tuple( "TrackChi2PerDof", 0, 3.5, 100 ),
+      std::make_tuple( "TrackNumDof", -0.5, 50.5 , 51 ),
+      std::make_tuple( "TrackGhostProbability", 0, 1, 100 ),
+      std::make_tuple( "TrackFitMatchChi2", 0, 10, 100 ),
+      std::make_tuple( "TrackFitVeloChi2", 0, 10, 100 ),
+      std::make_tuple( "TrackFitVeloNDoF", -0.5, 20.5, 21 ),
+      std::make_tuple( "TrackFitTChi2", 0, 50, 100 ),
+      std::make_tuple( "TrackFitTNDoF", -0.5, 30.5, 31 ),
+
+      std::make_tuple( "RichUsedR1Gas", -0.5, 1.5, 2 ),
+      std::make_tuple( "RichUsedR2Gas", -0.5, 1.5, 2 ),
+      std::make_tuple( "RichAbovePiThres", -0.5, 1.5, 2 ),
+      std::make_tuple( "RichAboveKaThres", -0.5, 1.5, 2 ),
+      std::make_tuple( "RichDLLe", -50, 50 , 100 ),
+      std::make_tuple( "RichDLLmu",-50, 50 , 100 ),
+      std::make_tuple( "RichDLLk", -50, 50 , 100 ),
+      std::make_tuple( "RichDLLp", -50, 50 , 100 ),
+      std::make_tuple( "RichDLLbt", -50, 50 , 100 ),
+
+      std::make_tuple( "EcalPIDe", -10, 10, 100 ),
+      std::make_tuple( "EcalPIDmu", -10, 10, 100 ),
+      std::make_tuple( "HcalPIDe", -10, 10, 100 ),
+      std::make_tuple( "HcalPIDmu", -10, 10, 100 ),
+      std::make_tuple( "PrsPIDe", -10, 10, 100 ),
+      std::make_tuple( "InAccBrem", -0.5, 1.5, 2 ),
+      std::make_tuple( "BremPIDe", -10, 10, 100 ),
+
+      std::make_tuple( "MuonBkgLL", -10, 10, 100 ),
+      std::make_tuple( "MuonMuLL", -10, 10, 100 ),
+      std::make_tuple( "MuonNShared", -0.5, 30.5 , 31 ),
+      std::make_tuple( "InAccMuon", -0.5, 1.5, 2 ),
+      std::make_tuple( "MuonIsMuon", -0.5, 1.5, 2 ),
+      std::make_tuple( "MuonIsLooseMuon", -0.5, 1.5, 2 ),
+
+      std::make_tuple( "piplus_MC15TuneV1_ProbNNe", 0, 1 , 100 ),
+      std::make_tuple( "piplus_MC15TuneV1_ProbNNmu", 0, 1 , 100 ),
+      std::make_tuple( "piplus_MC15TuneV1_ProbNNpi", 0, 1 , 100 ),
+      std::make_tuple( "piplus_MC15TuneV1_ProbNNk", 0, 1 , 100 ),
+      std::make_tuple( "piplus_MC15TuneV1_ProbNNp", 0, 1 , 100 ),
+      std::make_tuple( "piplus_MC15TuneV1_ProbNNghost", 0, 1 , 100 ),
   
-      "piplus_MC12TuneV4_ProbNNe",
-      "piplus_MC12TuneV4_ProbNNmu",
-      "piplus_MC12TuneV4_ProbNNpi",
-      "piplus_MC12TuneV4_ProbNNk",
-      "piplus_MC12TuneV4_ProbNNp",
-      "piplus_MC12TuneV4_ProbNNghost"
-        
-        } )
+      std::make_tuple( "piplus_MC12TuneV4_ProbNNe", 0, 1 , 100 ),
+      std::make_tuple( "piplus_MC12TuneV4_ProbNNmu", 0, 1 , 100 ),
+      std::make_tuple( "piplus_MC12TuneV4_ProbNNpi" ,0, 1 , 100 ),
+      std::make_tuple( "piplus_MC12TuneV4_ProbNNk", 0, 1 , 100 ),
+      std::make_tuple( "piplus_MC12TuneV4_ProbNNp", 0, 1 , 100 ),
+      std::make_tuple( "piplus_MC12TuneV4_ProbNNghost", 0, 1, 100 )
+
+    };
+
+      
+
+  
+  for ( const auto & tvar : vars )
   {
+    const auto & var = std::get<0>(tvar);
     std::cout << "Making plots for " << var << std::endl;
     
-    double min(0.0), max(1.0);
+    const double min = std::get<1>(tvar);
+    const double max = std::get<2>(tvar);
     std::ostringstream tmp1;
     tmp1 << var << " > " << min << " && " << var << " < " << max;
+    TCut varSel = tmp1.str().c_str();
+    //std::cout << tmp1.str() << std::endl;
+    //TCut varSel = "";
+
+    const auto nbins = std::get<3>(tvar);
+    const std::string hParams = "("+std::to_string(nbins)+","+std::to_string(min)+","+std::to_string(max)+")";
     
-    //TCut varSel = tmp1.str().c_str();
-    TCut varSel = "";
+    data->Draw( (var+">>dataH"+var+hParams).c_str(), varSel && tkSel, "prof" );
+    TH1F * hdata = (TH1F*) gDirectory->Get(("dataH"+var).c_str());
+    //hdata->Sumw2();
+    const double dentries = hdata->GetEntries();
+    //std::cout << "data entries = " << dentries << std::endl;
+    hdata->Scale( 1.0/dentries );
+    hdata->SetMarkerColor(kRed);
+    hdata->SetLineColor(kRed);
     
+    mc->Draw( (var+">>mcH"+var+hParams).c_str(), varSel && tkSel, "prof" );
+    TH1F * hmc = (TH1F*) gDirectory->Get(("mcH"+var).c_str());
+    //hmc->Sumw2();
+    const double mcentries = hmc->GetEntries(); //hmc->Integral(min,max);
+    //std::cout << "mc entries = " << mcentries << std::endl;
+    hmc->Scale( 1.0/mcentries );
+    hmc->SetMarkerColor(kBlue);
+    hmc->SetLineColor(kBlue);
+
+    // which plot has biggest bin entry ? Need to draw first.
+    auto plots = ( hdata->GetBinContent(hdata->GetMaximumBin()) >
+                   hmc->GetBinContent(hmc->GetMaximumBin()) ? 
+                   std::make_pair(hdata,hmc) : std::make_pair(hmc,hdata) );
+
+    // Legion for plot
+    TLegend * legend = new TLegend(0.865,0.9,0.935,0.85);
+    legend->SetTextSize(0.02);
+    legend->SetMargin(0.12);
+
+    legend->AddEntry( hdata, "Data", "p" );
+    legend->AddEntry( hmc, year.c_str(), "p" );
+
+    plots.first->SetTitle( (year+" "+var).c_str() );
+
+    c->SetLogy(false);
+    plots.first->Draw();
+    plots.second->Draw("SAME");
+    legend->Draw();
+    c->SaveAs( ("pdf/"+year+"-"+var+"_liny.pdf").c_str() );
+
     c->SetLogy(true);
-    
-    data->Draw( (var+">>dataH").c_str(), stripSel && varSel && tkSel, "prof" );
-    TH1F * a = (TH1F*) gDirectory->Get("dataH");
-    a->Scale( 1.0/( a->GetEntries() ) );
-    a->SetMarkerColor(kRed);
-    a->SetLineColor(kRed);
-    
-    mc->Draw( (var+">>mcH").c_str(), stripSel && varSel && tkSel, "prof" );
-    TH1F * b = (TH1F*) gDirectory->Get("mcH");
-    b->Scale( 1.0/( b->GetEntries() ) );
-    b->SetMarkerColor(kBlue);
-    b->SetLineColor(kBlue);
-    b->SetTitle( (year+" "+var).c_str() );
-    
-    b->Draw();
-    a->Draw("SAME");
-    
-    
-    c->SaveAs( (year+"-"+var+".pdf").c_str() );
+    plots.first->Draw();
+    plots.second->Draw("SAME");
+    legend->Draw();
+    c->SaveAs( ("pdf/"+year+"-"+var+"_logy.pdf").c_str() );
+
+    delete legend;
     
   }
 
