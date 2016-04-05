@@ -307,7 +307,7 @@ default_config = {
     
 
 from Gaudi.Configuration import *
-from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, DaVinci__N3BodyDecays
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection, AutomaticData
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -751,20 +751,23 @@ class Bu2LLKConf(LineBuilder) :
         _Decays = "[K_1(1270)+ -> K+ pi+ pi-]cc"
 
          # define all the cuts
+        _K1Comb12Cuts  = "(AM > %(K1_MassWindow_Lo)s*MeV) & (AM < %(K1_MassWindow_Hi)s*MeV)" % params
         _K1CombCuts    = "(AM > %(K1_MassWindow_Lo)s*MeV) & (AM < %(K1_MassWindow_Hi)s*MeV) & ((APT1+APT2+APT3) > %(K1_SumPTHad)s*MeV)" % params
 
         _K1MotherCuts  = "(VFASPF(VCHI2) < %(K1_VtxChi2)s) & (SUMTREE(MIPCHI2DV(PRIMARY),((ABSID=='K+') | (ABSID=='K-') | (ABSID=='pi+') | (ABSID=='pi-')),0.0) > %(K1_SumIPChi2Had)s)" % params
-
         _daughtersCuts = "(TRCHI2DOF < %(Trk_Chi2)s) & (TRGHOSTPROB < %(Trk_GhostProb)s)" % params
 
-        _Combine = CombineParticles( DecayDescriptor = _Decays,
-                                     CombinationCut  = _K1CombCuts,
-                                     MotherCut       = _K1MotherCuts )
+        _Combine = DaVinci__N3BodyDecays()
+
+        _Combine.DecayDescriptor = _Decays
 
         _Combine.DaughtersCuts = {
             "K+"  : _daughtersCuts,
-            "pi+" : _daughtersCuts
-            }
+            "pi+" : _daughtersCuts }
+
+        _Combine.Combination12Cut = _K1Comb12Cuts 
+        _Combine.CombinationCut   = _K1CombCuts
+        _Combine.MotherCut        = _K1MotherCuts
 
         # make and store the Selection object
         return Selection( name, Algorithm = _Combine, RequiredSelections = [ kaons, pions ] )
