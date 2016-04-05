@@ -7,14 +7,18 @@
 # Purpose: Standard test in many applications, check that the default application does something sensible
 # Prerequisites: None
 # Common failure modes, severities and cures: 
-#               . SEVERE: Segfault or raised exception
-#               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
-#               . MAJOR: additional WARNING messages, no warnings should be printed when instantiating a default algorithm
-#               . EXPECTED: I do not set up the complete Online environemtn in this test, I just fake the existance of some of the modules and variables so that the configurable can at least be instantiated. That list of things to set up initially may vary in the future as Markus/Eric edit the configuration.
+#    . SEVERE: Segfault or raised exception
+#    . MAJOR: additional FATAL/ERROR messages always a major problem. No ERROR messages
+              should ever be printed when running this test.
+#    . MAJOR: additional WARNING messages, no warnings should be printed when instantiating a default algorithm
+#    . EXPECTED: I do not set up the complete Online environment in this test,
+#                I just fake the existence of some of the modules and variables so that
+#                the configurable can at least be instantiated. That list of things to set
+#                up initially may vary in the future as Markus/Eric edit the configuration.
 #######################################################
 -->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
-  <argument name="exit_code"><integer>1</integer></argument>
+  <argument name="exit_code"><integer>10</integer></argument>
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
     <text>../options/default-online-env.py</text>
@@ -23,7 +27,7 @@
   </set></argument>
   <argument name="validator"><text>
 
-countErrorLines({"FATAL":2,"ERROR":0,"WARNING":0})
+countErrorLines({"FATAL":1,"ERROR":1,"WARNING":0})
 
 checkerr=[s for s in stderr.strip().split('\n') if "openFifo" not in s]
 
