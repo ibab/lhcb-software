@@ -152,7 +152,7 @@ def run( options, args ):
     print 'all2Lines =\n   ', all2Lines
     print 'removedLines =\n   ', removedLines
     ## no Hlt2 lines for now !!!!
-    all2Lines = set()
+    #all2Lines = set()
     
     hlt1Lines = set()
     # Process the options to setup Hlt lines to be run
@@ -209,6 +209,14 @@ def run( options, args ):
         config = reporterConfig.copy()
         config[ 'Hlt1Lines' ] = [ lineName ]
         config[ 'Hlt2Lines' ] = []
+        wrappers[ lineName ] = ProcessWrapper( i, DecisionReporter, lineName, config,
+                                               options.Verbose )
+
+    for lineName in hlt2Lines:
+        i += 1
+        config = reporterConfig.copy()
+        config[ 'Hlt1Lines' ] = list( hlt1Lines )
+        config[ 'Hlt2Lines' ] = [lineName]
         wrappers[ lineName ] = ProcessWrapper( i, DecisionReporter, lineName, config,
                                                options.Verbose )
 
@@ -340,28 +348,37 @@ def run( options, args ):
             if all_dec and not single_dec:
                 passed_all_not_single[line] += 1
                   
+    
+    ### begin print summary table
+    first_width=36
+    second_width=8
+    full_width=76
+    print '='*full_width
+    print 'Independence test summary starts here'
+    print '='*full_width
     if len( mismatches ):
         print 'Found mismatches:'
         for line, events in mismatches.iteritems():
             print '%s %d' % ( line, len( events ) )
     else:
-        print 'No mismatches found in %s' %len(dm['pass'].events())
-
-    ### print a summary table
-    first_width=36
-    second_width=12
-    full_width=76
-    print '-'*full_width
-    print ('Line:\t').expandtabs(first_width) + '|'+('All(A)\tSingle(S)\tA!S\tS!A').expandtabs(second_width)
-    print '-'*full_width
-    line_list = hlt1Lines.union( hlt2Lines )
-    nLine=0
-    for line in line_list:
-        nLine+=1
-        print ('%s:%s:\t'%(nLine,line)).expandtabs(first_width) + '|'+('%s\t%s\t%s\t%s' %(passed_all[line],passed_single[line],passed_all_not_single[line],passed_single_not_all[line])).expandtabs(second_width)
+        print 'No mismatches found in %s processed events' %len(dm['pass'].events())
     print '-'*full_width
     print 'removed lines:', removedLines
     print '-'*full_width
+    print 'key:'
+    print 'A: number of events pass when all lines run'
+    print 'S: number of events pass when single line runs'
+    for line_list in [hlt1Lines,hlt2Lines]:
+        print '-'*full_width
+        print ('Line:\t').expandtabs(first_width) + '|'+('A\tS\tA!S\tS!A').expandtabs(second_width)
+        print '-'*full_width
+        nLine=0
+        for line in line_list:
+            nLine+=1
+            print ('%s:%s:\t'%(nLine,line)).expandtabs(first_width) + '|'+('%s\t%s\t%s\t%s' %(passed_all[line],passed_single[line],passed_all_not_single[line],passed_single_not_all[line])).expandtabs(second_width)
+    print '='*full_width
+    print 'Independence test summary ends here'
+    print '='*full_width
     ### end print summary table
     
     return 0
@@ -379,7 +396,7 @@ if __name__ == "__main__":
                        dest = "EvtMax", default = 1e2, help = "Number of events to run" )
     
     parser.add_option( "--Settings", action = "store", dest = "Settings",
-                       default = "Physics_25ns_September2015", help = "Threshold settings" )
+                       default = "Physics_pp_Draft2016", help = "Threshold settings" )
     
     parser.add_option( "--nprocesses", action = "store", type = 'int',
                        dest = "NProcesses", default = 8,
@@ -401,11 +418,10 @@ if __name__ == "__main__":
                        default = False, help = "Verbose output" )
     
     parser.add_option( "--hlt1lines", action = "store", dest = "Hlt1Lines",
-                       default = "all", help = "Colon seperated list of additional hlt1 lines" )
+                       default = "Hlt1TrackMVA;Hlt1TwoTrackMVA", help = "Colon seperated list of additional hlt1 lines" )
     
     parser.add_option( "--hlt2lines", action = "store", dest = "Hlt2Lines",
-                       default = "none", help = "Colon seperated list of additional hlt2 lines" )
-    
+                       default = "Hlt2Topo2Body;Hlt2Topo3Body", help = "Colon seperated list of additional hlt2 lines" )
     parser.add_option( "-d","--debug", action="store_true", dest="debug",
                        default=False, help="debug" )
 

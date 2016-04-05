@@ -9,8 +9,6 @@
     <text>-n</text>
     <text>1000</text>
     <text>--hlt1lines=all</text>
-    <text>--hlt2lines=none</text>
-    <text>--nprocesses=8</text>
     <text>--Settings=Physics_pp_Draft2016</text>
     <text>2015NB_25ns_L0Filt0x0050</text>
   </set></argument>

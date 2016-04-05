@@ -2,6 +2,9 @@ Package     : Hlt/IndependenceTests
 Package Coordinator : Mika Vesterinen
 Purpose     : HLT application to test independence of Hlt lines
 
+! 2016-03-16 - Mika Vesterinen
+ - Update independence test to also try two Hlt2 lines
+
 ! 2016-03-16 - Rosen Matev
  - Update independence test to use Physics_pp_Draft2016
 
