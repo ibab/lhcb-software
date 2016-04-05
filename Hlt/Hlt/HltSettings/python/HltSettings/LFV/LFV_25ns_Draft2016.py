@@ -14,7 +14,7 @@ class LFV_25ns_Draft2016(object):
     def ActiveHlt2Lines(self):
         """Returns a list of active lines."""
 
-        lines = ['Hlt2LFVJpsiMuE']
+        lines = ['Hlt2LFVJpsiMuETurbo']
 
         return lines
 
