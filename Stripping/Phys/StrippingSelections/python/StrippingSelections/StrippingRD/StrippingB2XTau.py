@@ -338,7 +338,7 @@ class B2XTauConf(LineBuilder) :
                                            #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                            prescale    = config['B2TauTau_TOSLinePrescale'],
                                            postscale   = config['B2TauTau_TOSLinePostscale'],
-                                           MDSTFlag = True,
+                                           MDSTFlag = False,
                                            RelatedInfoTools = [
                                              { "Type" : "RelInfoBstautauMuonIsolationBDT",  "Location"  : "MuonIsolationBDT"},
                                              { "Type" : "RelInfoBstautauMuonIsolation" ,  "Location"  : "MuonIsolation" },
@@ -364,7 +364,7 @@ class B2XTauConf(LineBuilder) :
                                            #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                            prescale    = config['B2TauTau_SameSign_TOSLinePrescale'],
                                            postscale   = config['B2TauTau_SameSign_TOSLinePostscale'],
-                                           MDSTFlag = True,
+                                           MDSTFlag = False,
                                            RelatedInfoTools = [
                                              { "Type" : "RelInfoBstautauMuonIsolationBDT",  "Location"  : "MuonIsolationBDT"},
                                              { "Type" : "RelInfoBstautauMuonIsolation" ,  "Location"  : "MuonIsolation" },
@@ -390,7 +390,7 @@ class B2XTauConf(LineBuilder) :
                                                 #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                                 prescale    = config['B2TauTau_SameSign_TOSLinePrescale'],
                                                 postscale   = config['B2TauTau_SameSign_TOSLinePostscale'],
-                                                MDSTFlag = True,
+                                                MDSTFlag = False,
                                                 RelatedInfoTools = [
                                                   { "Type" : "RelInfoBstautauMuonIsolationBDT",  "Location"  : "MuonIsolationBDT"},
                                                   { "Type" : "RelInfoBstautauMuonIsolation" ,  "Location"  : "MuonIsolation" },
@@ -416,7 +416,7 @@ class B2XTauConf(LineBuilder) :
                                         #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                         prescale    = config['B2DD_LinePrescale'],
                                         postscale   = config['B2DD_LinePostscale'],
-                                        MDSTFlag = True,
+                                        MDSTFlag = False,
                                         RelatedInfoTools = [
                                           { "Type" : "RelInfoBstautauMuonIsolationBDT",  "Location"  : "MuonIsolationBDT"},
                                           { "Type" : "RelInfoBstautauMuonIsolation" ,  "Location"  : "MuonIsolation" },
@@ -442,7 +442,7 @@ class B2XTauConf(LineBuilder) :
                                         #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                         prescale    = config['B2DD_SameSign_LinePrescale'],
                                         postscale   = config['B2DD_SameSign_LinePostscale'],
-                                        MDSTFlag = True,
+                                        MDSTFlag = False,
                                         RelatedInfoTools = [
                                           { "Type" : "RelInfoBstautauMuonIsolationBDT",  "Location"  : "MuonIsolationBDT"},
                                           { "Type" : "RelInfoBstautauMuonIsolation" ,  "Location"  : "MuonIsolation" },
@@ -468,7 +468,7 @@ class B2XTauConf(LineBuilder) :
                                            #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                            prescale    = config['B2TauMu_TOSLinePrescale'],
                                            postscale   = config['B2TauMu_TOSLinePostscale'],
-                                           MDSTFlag = True,
+                                           MDSTFlag = False,
                                            RelatedInfoTools = [
                                              { "Type" : "RelInfoBstautauMuonIsolationBDT",  "Location"  : "MuonIsolationBDT"},
                                              { "Type" : "RelInfoBstautauMuonIsolation" ,  "Location"  : "MuonIsolation" },
@@ -493,7 +493,7 @@ class B2XTauConf(LineBuilder) :
                                                 #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                                 prescale    = config['B2TauMu_SameSign_TOSLinePrescale'],
                                                 postscale   = config['B2TauMu_SameSign_TOSLinePostscale'],
-                                                MDSTFlag = True,
+                                                MDSTFlag = False,
                                                 RelatedInfoTools = [
                                                   { "Type" : "RelInfoBstautauMuonIsolationBDT",  "Location"  : "MuonIsolationBDT"},
                                                   { "Type" : "RelInfoBstautauMuonIsolation" ,  "Location"  : "MuonIsolation" },
@@ -518,7 +518,7 @@ class B2XTauConf(LineBuilder) :
                                            #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                            prescale    = config['B2TauMu_SameSign_TOSLinePrescale'],
                                            postscale   = config['B2TauMu_SameSign_TOSLinePostscale'],
-                                           MDSTFlag = True,
+                                           MDSTFlag = False,
                                            RelatedInfoTools = [
                                              { "Type" : "RelInfoBstautauMuonIsolationBDT",  "Location"  : "MuonIsolationBDT"},
                                              { "Type" : "RelInfoBstautauMuonIsolation" ,  "Location"  : "MuonIsolation" },
@@ -543,7 +543,7 @@ class B2XTauConf(LineBuilder) :
                                         #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                         prescale    = config['B2DPi_LinePrescale'],
                                         postscale   = config['B2DPi_LinePostscale'],
-                                        MDSTFlag = True,
+                                        MDSTFlag = False,
                                         RelatedInfoTools = [
                                              { "Type" : "RelInfoBstautauMuonIsolationBDT",  "Location"  : "MuonIsolationBDT"},
                                              { "Type" : "RelInfoBstautauMuonIsolation" ,  "Location"  : "MuonIsolation" },
@@ -568,7 +568,7 @@ class B2XTauConf(LineBuilder) :
                                         #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                         prescale    = config['B2DPi_SameSign_LinePrescale'],
                                         postscale   = config['B2DPi_SameSign_LinePostscale'],
-                                        MDSTFlag = True,
+                                        MDSTFlag = False,
                                         RelatedInfoTools = [
                                              { "Type" : "RelInfoBstautauMuonIsolationBDT",  "Location"  : "MuonIsolationBDT"},
                                              { "Type" : "RelInfoBstautauMuonIsolation" ,  "Location"  : "MuonIsolation" },

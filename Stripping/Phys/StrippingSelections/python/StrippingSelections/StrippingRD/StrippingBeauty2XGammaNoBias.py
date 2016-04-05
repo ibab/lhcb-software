@@ -84,7 +84,7 @@ class Beauty2XGammaNoBiasConf(LineBuilder):
                                              postscale=config['Bs2PhiGammaPostScale'],
                                              EnableFlavourTagging = True,
                                              RequiredRawEvents = ["Calo"],
-                                             MDSTFlag = True,
+                                             MDSTFlag = False,
                                              RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }],
                                              selection=tisTosSelection(self.selBs2PhiGamma,config['TISTOSLinesDict']))
         self.registerLine(self.Bs2PhiGammaLine)
@@ -94,7 +94,7 @@ class Beauty2XGammaNoBiasConf(LineBuilder):
                                              postscale=config['Bd2KstGammaPostScale'],
                                              EnableFlavourTagging = True,
                                              RequiredRawEvents = ["Calo"],
-                                             MDSTFlag = True,
+                                             MDSTFlag = False,
                                              RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }],
                                              selection=tisTosSelection(self.selBd2KstGamma,config['TISTOSLinesDict']))
         self.registerLine(self.Bd2KstGammaLine)

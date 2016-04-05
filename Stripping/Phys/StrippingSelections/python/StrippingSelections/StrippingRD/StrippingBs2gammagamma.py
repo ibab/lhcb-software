@@ -176,7 +176,7 @@ class StrippingBs2gammagammaConf(LineBuilder):
                      , selection = self.TOSFilter(name+"_LLTOSLine",[Bs2gammagamma_LL],"Hlt2RadiativeB2GammaGammaLLDecision") # HLT2 lines require L0 anyway
                      , L0DU = self.L0cut
                      , HLT2 = config["HLT2LL"]
-                     , RequiredRawEvents = ["Calo"],MDSTFlag = True
+                     , RequiredRawEvents = ["Calo"],MDSTFlag = False
                      , EnableFlavourTagging = False
                      )
     def _Bs2gammagammaDD_X_Line( self, name, config) :
@@ -204,7 +204,7 @@ class StrippingBs2gammagammaConf(LineBuilder):
                 , selection = self.TOSFilter(name+"_DDTOSLine",[Bs2gammagamma_DD],"Hlt2RadiativeB2GammaGammaDDDecision") # HLT2 lines require L0 anyway
                 , L0DU = self.L0cut
                 , HLT2 = config["HLT2DD"]
-                , RequiredRawEvents = ["Calo"],MDSTFlag = True
+                , RequiredRawEvents = ["Calo"],MDSTFlag = False
                 , EnableFlavourTagging = False)
     def _Bs2gammagammaDouble_X_Line( self, name, config) :
         BsGG_DC_double = "(PT>0.5*%(gammaConvPT)s*MeV) & (P>0.5*%(gammaP)s*MeV)" % config
@@ -232,7 +232,7 @@ class StrippingBs2gammagammaConf(LineBuilder):
                 , selection = self.TOSFilter(name+"_doubleTOSLine",[Bs2gammagamma_double],"Hlt2RadiativeB2GammaGammaDoubleDecision") # HLT2 lines require L0 anyway
                 , L0DU = self.L0cut
                 , HLT2 = config["HLT2Double"]
-                , RequiredRawEvents = ["Calo"],MDSTFlag = True
+                , RequiredRawEvents = ["Calo"],MDSTFlag = False
                 , EnableFlavourTagging = False)
     def _Bs2gammagammaNone_X_Line( self, name, config, wide) :
 
@@ -269,7 +269,7 @@ class StrippingBs2gammagammaConf(LineBuilder):
                 #, selection = self.TOSFilter(name+"_NoConvTOSLine",[Bs2gammagamma_none],"L0(Photon|Electron)Decision")
                 , selection = self.TOSFilter(name+"_NoConvTOSLine",[Bs2gammagamma_none],"Hlt2RadiativeB2GammaGammaDecision") # HLT2 lines require L0 anyway
                                 , L0DU = self.L0cut
-                                , RequiredRawEvents = ["Calo"],MDSTFlag = True
+                                , RequiredRawEvents = ["Calo"],MDSTFlag = False
                 , EnableFlavourTagging = False)
 
     def TOSFilter( self, name = None, sel = None, trigger = None ):

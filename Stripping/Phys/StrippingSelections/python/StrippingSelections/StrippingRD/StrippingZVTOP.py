@@ -227,7 +227,7 @@ class ZVTOP_Conf(LineBuilder) :
                                         prescale    = config['B2TauTau_LinePrescale'],
                                         postscale   = config['B2TauTau_LinePostscale'],
                                         #                                           selection   = self._makeTOS(name+"_TOSForTauTau",selB2TauTau)
-                                        MDSTFlag = True,
+                                        MDSTFlag = False,
                                         RelatedInfoTools = [
                                              { "Type" : "RelInfoBstautauTauIsolationBDT", "Location"  : "TauIsolationBDT" },
                                              { "Type" : "RelInfoBstautauTauIsolation",  "Location"  : "TauIsolation"  },
@@ -250,7 +250,7 @@ class ZVTOP_Conf(LineBuilder) :
                                         prescale    = config['B2TauTauSS_LinePrescale'],
                                         postscale   = config['B2TauTauSS_LinePostscale'],
                                         #                                           selection   = self._makeTOS(name+"_TOSForTauTau",selB2TauTau)
-                                        MDSTFlag = True,
+                                        MDSTFlag = False,
                                         RelatedInfoTools = [
                                              { "Type" : "RelInfoBstautauTauIsolationBDT", "Location"  : "TauIsolationBDT" },
                                              { "Type" : "RelInfoBstautauTauIsolation",  "Location"  : "TauIsolation"  },
@@ -272,7 +272,7 @@ class ZVTOP_Conf(LineBuilder) :
                                       prescale    = config['High_LinePrescale'],
                                       postscale   = config['High_LinePostscale'],
                                       #                                           selection   = self._makeTOS(name+"_TOSForTauTau",selB2TauTau)
-                                      MDSTFlag = True,
+                                      MDSTFlag = False,
                                         RelatedInfoTools = [
                                              { "Type" : "RelInfoBstautauTauIsolationBDT", "Location"  : "TauIsolationBDT" },
                                              { "Type" : "RelInfoBstautauTauIsolation",  "Location"  : "TauIsolation"  },

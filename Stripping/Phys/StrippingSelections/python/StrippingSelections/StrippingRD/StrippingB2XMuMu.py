@@ -398,7 +398,7 @@ class B2XMuMuConf(LineBuilder) :
                 L0DU = config['L0DU_FILTER'],
                 FILTER = self.FilterSPD,
                 algos=[self.Bs],
-                MDSTFlag=True
+                MDSTFlag=False
                 )
         
             self.registerLine(self.line)

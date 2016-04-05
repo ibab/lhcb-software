@@ -175,17 +175,17 @@ class B2XLLConf(LineBuilder) :
             'Preambulo' : [ "from LoKiNumbers.decorators import *", "from LoKiCore.basic import LHCb" ]
             }
         self.eeXLine = StrippingLine(eeXLine_name+"Line", prescale = config['eeXLinePrescale'], postscale = 1, selection = SeleeX, RelatedInfoTools = self._RelInfoTools(SeleeX),
-                                     FILTER = SPDFilter, RequiredRawEvents = [], MDSTFlag = True )
+                                     FILTER = SPDFilter, RequiredRawEvents = [], MDSTFlag = False )
         self.mmXLine = StrippingLine(mmXLine_name+"Line", prescale = config['mmXLinePrescale'], postscale = 1, selection = SelmmX, RelatedInfoTools = self._RelInfoTools(SelmmX),
-                                     FILTER = SPDFilter, RequiredRawEvents = [], MDSTFlag = True )
+                                     FILTER = SPDFilter, RequiredRawEvents = [], MDSTFlag = False )
         self.meXLine = StrippingLine(meXLine_name+"Line", prescale = config['meXLinePrescale'], postscale = 1, selection = SelmeX, RelatedInfoTools = self._RelInfoTools(SelmeX),
-                                     FILTER = SPDFilter, RequiredRawEvents = [], MDSTFlag = True )
+                                     FILTER = SPDFilter, RequiredRawEvents = [], MDSTFlag = False )
         self.mmX_SSLine = StrippingLine(mmXSSLine_name+"Line", prescale = config['mmXSSLinePrescale'], postscale = 1, selection = SelmmX_SS, RelatedInfoTools = self._RelInfoTools(SelmmX_SS),
-                                        FILTER = SPDFilter, RequiredRawEvents = [], MDSTFlag = True )
+                                        FILTER = SPDFilter, RequiredRawEvents = [], MDSTFlag = False )
         self.meX_SSLine = StrippingLine(meXSSLine_name+"Line", prescale = config['meXSSLinePrescale'], postscale = 1, selection = SelmeX_SS, RelatedInfoTools = self._RelInfoTools(SelmeX_SS),
-                                        FILTER = SPDFilter, RequiredRawEvents = [], MDSTFlag = True )
+                                        FILTER = SPDFilter, RequiredRawEvents = [], MDSTFlag = False )
         self.eeX_SSLine = StrippingLine(eeXSSLine_name+"Line", prescale = config['eeXSSLinePrescale'], postscale = 1, selection = SeleeX_SS, RelatedInfoTools = self._RelInfoTools(SeleeX_SS),
-                                        FILTER = SPDFilter, RequiredRawEvents = [], MDSTFlag = True )
+                                        FILTER = SPDFilter, RequiredRawEvents = [], MDSTFlag = False )
 
         # 5 : register Line
         self.registerLine( self.mmXLine )

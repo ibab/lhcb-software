@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-05 - Pablo Ruiz Valls
+ - All MDSTFlags in RD set to False
+
 ! 2016-04-05 - Rafael Coutinho
  - Updated StrippingBu2LLK line with NBodyDecays configuration for JpsiK1 decays
 

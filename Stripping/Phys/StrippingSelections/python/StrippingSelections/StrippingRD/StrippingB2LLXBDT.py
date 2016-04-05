@@ -391,7 +391,7 @@ class B2LLXBDTConf(LineBuilder):
         self.Bu2eeKLine = StrippingLine( self.name + '_Bu2eeKLine',                                                
                                          RelatedInfoTools = config['RelatedInfoTools'],                                        
                                          algos     = [ self.MvaBu2eeK ],
-                                         MDSTFlag  = True
+                                         MDSTFlag  = False
                                          )
 
         self.registerLine( self.Bu2eeKLine )
@@ -416,7 +416,7 @@ class B2LLXBDTConf(LineBuilder):
         self.Bu2mumuKLine = StrippingLine( self.name + '_Bu2mumuKLine',                                                
                                            RelatedInfoTools = config['RelatedInfoTools'],
                                            algos     = [ self.MvaBu2mumuK ],
-                                           MDSTFlag  = True
+                                           MDSTFlag  = False
                                            )
 
         self.registerLine( self.Bu2mumuKLine )
@@ -469,7 +469,7 @@ class B2LLXBDTConf(LineBuilder):
         self.Bd2eeKstarLine = StrippingLine( self.name + '_Bd2eeKstarLine',                                                
                                              RelatedInfoTools = config['RelatedInfoTools'], 
                                              algos     = [ self.MvaBd2eeKstar ],
-                                             MDSTFlag  = True
+                                             MDSTFlag  = False
                                              )
 
         self.registerLine( self.Bd2eeKstarLine )
@@ -493,7 +493,7 @@ class B2LLXBDTConf(LineBuilder):
         self.Bd2mumuKstarLine = StrippingLine( self.name + '_Bd2mumuKstarLine',                                                
                                                RelatedInfoTools = config['RelatedInfoTools'],
                                                algos     = [ self.MvaBd2mumuKstar ],
-                                               MDSTFlag  = True
+                                               MDSTFlag  = False
                                                )
 
         self.registerLine( self.Bd2mumuKstarLine )
@@ -517,7 +517,7 @@ class B2LLXBDTConf(LineBuilder):
         self.Bd2eeKsLine = StrippingLine( self.name + '_Bd2eeKsLine',                                                
                                           RelatedInfoTools = config['RelatedInfoTools'],                                        
                                           algos     = [ self.MvaBd2eeKs ],
-                                          MDSTFlag  = True
+                                          MDSTFlag  = False
                                           )
         
         self.registerLine( self.Bd2eeKsLine )
@@ -542,7 +542,7 @@ class B2LLXBDTConf(LineBuilder):
         self.Bd2mumuKsLine = StrippingLine( self.name + '_Bd2mumuKsLine',                                                
                                             RelatedInfoTools = config['RelatedInfoTools'],
                                             algos     = [ self.MvaBd2mumuKs ],
-                                            MDSTFlag  = True
+                                            MDSTFlag  = False
                                             )
         
         self.registerLine( self.Bd2mumuKsLine )
@@ -567,7 +567,7 @@ class B2LLXBDTConf(LineBuilder):
         self.Bs2eePhiLine = StrippingLine( self.name + '_Bs2eePhiLine',                                                
                                            RelatedInfoTools = config['RelatedInfoTools'],
                                            algos     = [ self.MvaBs2eePhi ],
-                                           MDSTFlag  = True
+                                           MDSTFlag  = False
                                            )
         
         self.registerLine( self.Bs2eePhiLine )
@@ -592,7 +592,7 @@ class B2LLXBDTConf(LineBuilder):
         self.Bs2mumuPhiLine = StrippingLine( self.name + '_Bs2mumuPhiLine',                                                
                                              RelatedInfoTools = config['RelatedInfoTools'],
                                              algos     = [ self.MvaBs2mumuPhi ],
-                                             MDSTFlag  = True
+                                             MDSTFlag  = False
                                              )
         
         self.registerLine( self.Bs2mumuPhiLine )
@@ -617,7 +617,7 @@ class B2LLXBDTConf(LineBuilder):
         self.Lb2eeLambdaLine = StrippingLine( self.name + '_Lb2eeLambdaLine',                                                
                                               RelatedInfoTools = config['RelatedInfoTools'],                                        
                                               algos     = [ self.MvaLb2eeLambda ],
-                                              MDSTFlag  = True
+                                              MDSTFlag  = False
                                               )
         
         self.registerLine( self.Lb2eeLambdaLine )
@@ -642,7 +642,7 @@ class B2LLXBDTConf(LineBuilder):
         self.Lb2mumuLambdaLine = StrippingLine( self.name + '_Lb2mumuLambdaLine',                                                
                                                 RelatedInfoTools = config['RelatedInfoTools'],
                                                 algos     = [ self.MvaLb2mumuLambda ],
-                                                MDSTFlag  = True
+                                                MDSTFlag  = False
                                                 )
         
         self.registerLine( self.Lb2mumuLambdaLine )
@@ -671,7 +671,7 @@ class B2LLXBDTConf(LineBuilder):
         self.Lb2eePKLine = StrippingLine( self.name + '_Lb2eePKLine',
                                           RelatedInfoTools = config['RelatedInfoTools'],                                        
                                           algos     = [ self.MvaLb2eePK ],
-                                          MDSTFlag  = True
+                                          MDSTFlag  = False
                                           )
         
         self.registerLine( self.Lb2eePKLine )
@@ -696,7 +696,7 @@ class B2LLXBDTConf(LineBuilder):
         self.Lb2mumuPKLine = StrippingLine( self.name + '_Lb2mumuPKLine',       
                                             RelatedInfoTools = config['RelatedInfoTools'], 
                                             algos     = [ self.MvaLb2mumuPK ],
-                                            MDSTFlag  = True
+                                            MDSTFlag  = False
                                             )
         
         self.registerLine( self.Lb2mumuPKLine )

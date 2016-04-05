@@ -387,7 +387,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
         self.defaultLine = StrippingLine(default_name+"Line",
                                          prescale = config['DefaultLinePrescale'],
                                          postscale = config['DefaultPostscale'],
-                                         MDSTFlag = True,
+                                         MDSTFlag = False,
                                          RequiredRawEvents = ["Muon", "Calo"],
                                          algos = [ self.selDefault ],
                                          RelatedInfoTools = [
@@ -461,7 +461,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
         self.wideLine = StrippingLine(wide_name+"Line",
                                       prescale = config['Bs2mmWideLinePrescale'],
                                       postscale = config['DefaultPostscale'],
-                                      MDSTFlag = True,
+                                      MDSTFlag = False,
                                       RequiredRawEvents = ["Muon", "Calo"],
                                       algos = [ self.selWide ],
                                       RelatedInfoTools = [
@@ -533,7 +533,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
         self.looseLine = StrippingLine(loose_name+"Line",
                                        prescale = config['LooseLinePrescale'],
                                        postscale = config['DefaultPostscale'],
-                                       MDSTFlag = True,
+                                       MDSTFlag = False,
                                        RequiredRawEvents = ["Muon", "Calo"],
                                        algos = [ self.selLoose ],
                                        )
@@ -543,7 +543,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
         self.buLine = StrippingLine(bu_name+"Line",
                                     prescale = config['BuPrescale'],
                                     postscale = config['DefaultPostscale'],
-                                    MDSTFlag = True,
+                                    MDSTFlag = False,
                                     RequiredRawEvents = ["Muon", "Calo"],
                                     algos = [ self.selBu ],
                                     RelatedInfoTools = [
@@ -618,7 +618,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
         self.bsLine = StrippingLine(bs_name+"Line",
                                     prescale = config['BsPrescale'],
                                     postscale = config['DefaultPostscale'],
-                                    MDSTFlag = True,
+                                    MDSTFlag = False,
                                     RequiredRawEvents = ["Muon", "Calo"],
                                     algos = [ self.selBs ],
                                  RelatedInfoTools = [
@@ -696,7 +696,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
         self.bdLine = StrippingLine(bd_name+"Line",
                                     prescale = config['BdPrescale'],
                                     postscale = config['DefaultPostscale'],
-                                    MDSTFlag = True,
+                                    MDSTFlag = False,
                                     RequiredRawEvents = ["Muon", "Calo"],
                                     algos = [ self.selBd ], 
                                     RelatedInfoTools = [
@@ -776,7 +776,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
         self.ssLine = StrippingLine(ss_name+"Line",
                                     prescale = config['SSPrescale'],
                                     postscale = config['DefaultPostscale'],
-                                    MDSTFlag = True,
+                                    MDSTFlag = False,
                                     RequiredRawEvents = ["Muon", "Calo"],
                                     algos = [ self.selSS ],
                                     RelatedInfoTools = [
@@ -846,7 +846,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
         self.ltubLine = StrippingLine(ltub_name+"Line",
                                     prescale = config['Bs2mmLTUBLinePrescale'],
                                     postscale = config['DefaultPostscale'],
-                                    MDSTFlag = True,
+                                    MDSTFlag = False,
                                     RequiredRawEvents = ["Muon", "Calo"],
                                     algos = [ self.selLTUB ],
                                     RelatedInfoTools = [
@@ -914,7 +914,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
         self.bsstLine = StrippingLine(bsst_name+"Line",
                                     prescale = config['Bsst2mmLinePrescale'],
                                     postscale = config['DefaultPostscale'],
-                                    MDSTFlag = True,
+                                    MDSTFlag = False,
                                     RequiredRawEvents = ["Muon", "Calo"],
                                     algos = [ self.selbsst ],
                                     RelatedInfoTools = [
@@ -983,7 +983,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
         self.Bs2KKltubLine = StrippingLine(Bs2KKltub_name+"Line",
                                     prescale = config['Bs2KKLTUBLinePrescale'],
                                     postscale = config['DefaultPostscale'],
-                                    MDSTFlag = True,
+                                    MDSTFlag = False,
                                     RequiredRawEvents = ["Muon", "Calo"],
                                     algos = [ self.selBs2KKLTUB ],
                                     RelatedInfoTools = [

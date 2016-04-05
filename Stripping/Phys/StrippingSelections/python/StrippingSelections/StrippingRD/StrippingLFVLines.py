@@ -453,7 +453,7 @@ class LFVLinesConf(LineBuilder) :
             self.tau2PhiMuLine = StrippingLine(tau_name+'Line',
                                                prescale = config['TauPrescale'],
                                                postscale = config['Postscale'],
-                                               MDSTFlag = True,
+                                               MDSTFlag = False,
                                                selection=self.selTau2PhiMu,
                                                RelatedInfoTools = config['RelatedInfoTools_Tau2PhiMu'],
                                                )
@@ -468,7 +468,7 @@ class LFVLinesConf(LineBuilder) :
                                            prescale = config['B2eMuPrescale'],
                                            postscale = config['Postscale'],
                                            RelatedInfoTools = config['RelatedInfoTools_B2eMu'],
-                                           #MDSTFlag = True,
+                                           #MDSTFlag = False,
                                            RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
                                            algos = [ self.selB2eMu ]
                                            )
@@ -476,7 +476,7 @@ class LFVLinesConf(LineBuilder) :
                                            prescale = config['JPsi2eMuPrescale'],
                                            postscale = config['Postscale'],
                                            RelatedInfoTools = config['RelatedInfoTools_JPsi2eMu'],
-                                           MDSTFlag = True,
+                                           MDSTFlag = False,
                                            RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
                                            algos = [ self.selJPsi2eMu ]
                                            )
@@ -529,7 +529,7 @@ class LFVLinesConf(LineBuilder) :
                                         prescale = config['Tau2MuEtaPrimePrescale'],
                                         postscale = config['Postscale'],
                                         algos = [ self.selTau2MuEtaPrime_gamma ],
-                                        #MDSTFlag = True,
+                                        #MDSTFlag = False,
                                         RelatedInfoTools = config['RelatedInfoTools_Tau2MuEtaPrime'],
                                         RequiredRawEvents = ['Calo'],
                                         )
@@ -538,7 +538,7 @@ class LFVLinesConf(LineBuilder) :
                                                 prescale = config['Tau2MuEtaPrimePrescale'],
                                                 postscale = config['Postscale'],
                                                 algos = [ self.selTau2MuEtaPrime_pi ],
-                                                #MDSTFlag = True,
+                                                #MDSTFlag = False,
                                                 RelatedInfoTools = config['RelatedInfoTools_Tau2MuEtaPrime'],
                                                 RequiredRawEvents = ['Calo'],
                                                 )

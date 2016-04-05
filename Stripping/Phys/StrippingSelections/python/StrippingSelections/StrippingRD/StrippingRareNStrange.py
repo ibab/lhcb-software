@@ -148,7 +148,7 @@ class RnSConf(LineBuilder) :
                                         postscale = self.config['SignalLinePostscale'],
                                         algos = [ self.Ks2Pi0MuMuSignal ],
                                         RequiredRawEvents = ["Muon","Calo"],
-                                        MDSTFlag = True
+                                        MDSTFlag = False
                                         )
 
         self.Pi0MMsidebandLine = StrippingLine("Ks2Pi0MuMuSBLine",
@@ -156,7 +156,7 @@ class RnSConf(LineBuilder) :
                                           postscale = self.config['SidebandLinePostscale'],
                                           algos = [ self.Ks2Pi0MuMuSB ],
                                           RequiredRawEvents = ["Muon","Calo"],
-                                          MDSTFlag = True
+                                          MDSTFlag = False
                                                )
        
         self.K0s2PiPiLine = StrippingLine("Ks2PiPiForRnSLine",
@@ -179,7 +179,7 @@ class RnSConf(LineBuilder) :
                                         postscale = config['K0s2mmSBLinePostscale'],
                                         algos = [ self.K0s2MuMuLeftSB ],
                                         RequiredRawEvents = ["Muon"],
-                                        MDSTFlag = True
+                                        MDSTFlag = False
                                         )
         
         
@@ -188,28 +188,28 @@ class RnSConf(LineBuilder) :
                                       postscale = config['K0s2mmLinePostscale'],
                                       algos = [ self.K0s2MuMu ],
                                       RequiredRawEvents = ["Muon"],
-                                      MDSTFlag = True
+                                      MDSTFlag = False
                                       )
         self.Lambda02pPiLine = StrippingLine("Lambda2pPiForRnSLine",
                                         prescale = self.config['NoMuIDLinePrescale'],
                                         postscale = self.config['NoMuIDLinePostscale'],
                                         algos = [ self.L02pPi ],
                                         RequiredRawEvents = ["Muon"],
-                                        MDSTFlag = True
+                                        MDSTFlag = False
                                         )
         self.Lambda02PiMuLine = StrippingLine("Lambda02PiMuLine",
                                       prescale = config['K0s2mmLinePrescale'],
                                       postscale = config['K0s2mmLinePostscale'],
                                       algos = [ self.L02PiMu ],
                                       RequiredRawEvents = ["Muon"],
-                                      MDSTFlag = True
+                                      MDSTFlag = False
                                             )
         self.Lambda02Pi3MuLine = StrippingLine("Lambda02Pi3MuLine",
                                       prescale = config['K0s2mmLinePrescale'],
                                       postscale = config['K0s2mmLinePostscale'],
                                       algos = [ self.L02Pi3Mu ],
                                       RequiredRawEvents = ["Muon"],
-                                      MDSTFlag = True
+                                      MDSTFlag = False
                                             )
        
        
@@ -218,28 +218,28 @@ class RnSConf(LineBuilder) :
                                       postscale = config['K0s2mmLinePostscale'],
                                       algos = [ self.K0s24ProngLFV ],
                                       RequiredRawEvents = ["Muon"],
-                                      MDSTFlag = True
+                                      MDSTFlag = False
                                       )
         self.K0s2e3MuLine = StrippingLine("K0s2e3MuLine",
                                       prescale = config['K0s2mmLinePrescale'],
                                       postscale = config['K0s2mmLinePostscale'],
                                       algos = [ self.K0s2e3Mu ],
                                       RequiredRawEvents = ["Muon"],
-                                      MDSTFlag = True
+                                      MDSTFlag = False
                                       )
         self.K0s2Mu3eLine = StrippingLine("K0s2Mu3eLine",
                                       prescale = config['K0s2mmLinePrescale'],
                                       postscale = config['K0s2mmLinePostscale'],
                                       algos = [ self.K0s2Mu3e ],
                                       RequiredRawEvents = ["Muon"],
-                                      MDSTFlag = True
+                                      MDSTFlag = False
                                       )
         self.Lambda02PiMuMuELine = StrippingLine("Lambda02PiMuMuELine",
                                       prescale = config['K0s2mmLinePrescale'],
                                       postscale = config['K0s2mmLinePostscale'],
                                       algos = [ self.L02PiMuMuE ],
                                       RequiredRawEvents = ["Muon"],
-                                      MDSTFlag = True
+                                      MDSTFlag = False
                                             )       
 
         self.K0s2eMuLine = StrippingLine("K0s2eMuLine",
@@ -247,14 +247,14 @@ class RnSConf(LineBuilder) :
                                       postscale = config['K0s2mmLinePostscale'],
                                       algos = [ self.K0s2eMu ],
                                       RequiredRawEvents = ["Muon"],
-                                      MDSTFlag = True
+                                      MDSTFlag = False
                                                  )
         self.Lambda02PiELine = StrippingLine("Lambda02PiELine",
                                       prescale = config['K0s2mmLinePrescale'],
                                       postscale = config['K0s2mmLinePostscale'],
                                       algos = [ self.L02PiE ],
                                       #RequiredRawEvents = ["Muon"],
-                                      MDSTFlag = True
+                                      MDSTFlag = False
                                                  )
         self.TriggerTestLine = StrippingLine("TriggerTestLine",
                                       prescale = config['K0s2mmLinePrescale'],

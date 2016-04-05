@@ -565,7 +565,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                             postscale = config['Postscale'],
                                             algos = [ self.selSigmaPEE ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True,
+                                            MDSTFlag=False,
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
@@ -602,7 +602,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                             postscale = config['Postscale'],
                                             algos = [ self.selSigmaPEEDet ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True,
+                                            MDSTFlag=False,
                                             RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
@@ -638,7 +638,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                            postscale = config['Postscale'],
                                            algos = [ self.selSigmaPPi0 ],
                                            RequiredRawEvents = ["Velo"],
-                                           MDSTFlag=True,
+                                           MDSTFlag=False,
                                            RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
@@ -671,7 +671,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                            postscale = config['Postscale'],
                                            algos = [ self.selSigmaPPi0Cal ],
                                            RequiredRawEvents = ["Velo"],
-                                           MDSTFlag=True,
+                                           MDSTFlag=False,
                                            RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
@@ -706,7 +706,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                             postscale = config['Postscale'],
                                             algos = [ self.selSigmaPEEDown ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True,
+                                            MDSTFlag=False,
                                              RelatedInfoTools = [
                                               {
                                                 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 

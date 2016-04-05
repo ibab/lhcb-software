@@ -222,7 +222,7 @@ class Bu2MuNuConf( LineBuilder ) :
                                           selection = DataOnDemand( self.selMuonsLocationControl ),
                                           RelatedInfoTools = RelatedInfoToolsControl,
                                           RequiredRawEvents = ["Calo"],
-                                          MDSTFlag = True                                         
+                                          MDSTFlag = False                                         
                                           )
         
         # signal line (no prescale)
@@ -233,7 +233,7 @@ class Bu2MuNuConf( LineBuilder ) :
                                          selection = DataOnDemand( self.selMuonsLocation ),
                                          RelatedInfoTools = RelatedInfoToolsSignal,
                                          RequiredRawEvents = ["Calo"],
-                                         MDSTFlag = True
+                                         MDSTFlag = False
                                          )
         
         

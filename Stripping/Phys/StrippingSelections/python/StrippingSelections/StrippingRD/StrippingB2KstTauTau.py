@@ -301,7 +301,7 @@ class B2KstTauXConf(LineBuilder) :
                                            #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                         prescale    = config['B2KstTauTau_LinePrescale'],
                                         postscale   = config['B2KstTauTau_LinePostscale'],
-                                        MDSTFlag = True,
+                                        MDSTFlag = False,
                                         FILTER = self.FilterSPD,
                                         #RelatedInfoTools = config['RelatedInfoTools'],
                                         RelatedInfoTools      = [
@@ -324,7 +324,7 @@ class B2KstTauXConf(LineBuilder) :
                                         #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                         prescale    = config['B2KstTauTau_SameSign_LinePrescale'],
                                         postscale   = config['B2KstTauTau_SameSign_LinePostscale'],
-                                        MDSTFlag = True,
+                                        MDSTFlag = False,
                                         FILTER = self.FilterSPD,
                                         #RelatedInfoTools = config['RelatedInfoTools'],
                                         RelatedInfoTools      = [
@@ -348,7 +348,7 @@ class B2KstTauXConf(LineBuilder) :
                                         #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                         prescale    = config['B2KstTauMu_LinePrescale'],
                                         postscale   = config['B2KstTauMu_LinePostscale'],
-                                        MDSTFlag = True,
+                                        MDSTFlag = False,
                                         FILTER = self.FilterSPD,
                                         #RelatedInfoTools = config['RelatedInfoTools'],
                                         RelatedInfoTools      = [
@@ -371,7 +371,7 @@ class B2KstTauXConf(LineBuilder) :
                                         #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                         prescale    = config['B2KstTauMu_SameSign_LinePrescale'],
                                         postscale   = config['B2KstTauMu_SameSign_LinePostscale'],
-                                        MDSTFlag = True,
+                                        MDSTFlag = False,
                                         FILTER = self.FilterSPD,
                                         #RelatedInfoTools = config['RelatedInfoTools'],
                                         RelatedInfoTools      = [
@@ -395,7 +395,7 @@ class B2KstTauXConf(LineBuilder) :
                                         #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                         prescale    = config['B2KstMuMu_LinePrescale'],
                                         postscale   = config['B2KstMuMu_LinePostscale'],
-                                        MDSTFlag = True,
+                                        MDSTFlag = False,
                                         FILTER = self.FilterSPD,
                                         #RelatedInfoTools = config['RelatedInfoTools'],
                                         RelatedInfoTools      = [
@@ -417,7 +417,7 @@ class B2KstTauXConf(LineBuilder) :
                                         #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                         prescale    = config['B2KstMuMu_SameSign_LinePrescale'],
                                         postscale   = config['B2KstMuMu_SameSign_LinePostscale'],
-                                        MDSTFlag = True,
+                                        MDSTFlag = False,
                                         FILTER = self.FilterSPD,
                                         #RelatedInfoTools = config['RelatedInfoTools'],
                                         RelatedInfoTools      = [
@@ -439,7 +439,7 @@ class B2KstTauXConf(LineBuilder) :
                                       #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                       prescale    = config['B2DDSL_LinePrescale'],
                                       postscale   = config['B2DDSL_LinePostscale'],
-                                      MDSTFlag = True,
+                                      MDSTFlag = False,
                                       FILTER = self.FilterSPD,
                                       #RelatedInfoTools = config['RelatedInfoTools'],
                                       RelatedInfoTools      = [

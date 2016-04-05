@@ -718,32 +718,32 @@ class B2XTauMuConf(LineBuilder) :
                                         selection = self.selb2Kst0TauMu,
                                         RequiredRawEvents = ["Rich","Velo","Tracker","Trigger","Muon","Calo"],
                                         RelatedInfoTools = config["RelatedInfoTools"],
-                                        MDSTFlag = True)
+                                        MDSTFlag = False)
 
         self.B2PhiTauMu = StrippingLine(name_phi+ 'Line', 
                                         prescale = config["Prescale"], 
                                         selection = self.selb2PhiTauMu,
                                         RelatedInfoTools = config["RelatedInfoTools"],
-                                        MDSTFlag = True)
+                                        MDSTFlag = False)
 
         self.B2KTauMu = StrippingLine(name_k+ 'Line', 
                                         prescale = config["Prescale"], 
                                         selection = self.selb2KTauMu,
                                         RelatedInfoTools = config["RelatedInfoTools"],
-                                        MDSTFlag = True)
+                                        MDSTFlag = False)
 
         self.B2PhiTauMu_3pi = StrippingLine(name_phi_3pi+ 'Line', 
                                             prescale = config["Prescale"], 
                                             selection = self.selb2PhiTauMu_3pi,
                                         RelatedInfoTools = config["RelatedInfoTools"],
-                                        MDSTFlag = True)
+                                        MDSTFlag = False)
 
         self.B2KTauMu_3pi = StrippingLine(name_k_3pi+ 'Line', 
                                             prescale = config["Prescale"], 
                                             selection = self.selb2KTauMu_3pi,
                                           RequiredRawEvents = ["Rich","Velo","Tracker","Trigger","Muon","Calo"],
                                         RelatedInfoTools = config["RelatedInfoTools"],
-                                        MDSTFlag = True)
+                                        MDSTFlag = False)
 
 
         self.B2KTauMu_3pi_loose = StrippingLine(name_k_3pi_loose+ 'Line', 
@@ -751,7 +751,7 @@ class B2XTauMuConf(LineBuilder) :
                                             selection = self.selb2KTauMu_3pi_loose,
                                           RequiredRawEvents = ["Rich","Velo","Tracker","Trigger","Muon","Calo"],
                                         RelatedInfoTools = config["RelatedInfoTools"],
-                                        MDSTFlag = True)
+                                        MDSTFlag = False)
 
 
 
@@ -760,32 +760,32 @@ class B2XTauMuConf(LineBuilder) :
                                         selection = self.selb2Kst0TauMu_WS,
                                            RequiredRawEvents = ["Rich","Velo","Tracker","Trigger","Muon","Calo"],
                                         RelatedInfoTools = config["RelatedInfoTools"],
-                                        MDSTFlag = True)
+                                        MDSTFlag = False)
 
         self.B2PhiTauMu_WS = StrippingLine(name_phi_WS+ 'Line', 
                                         prescale = config["Prescale_WS"], 
                                         selection = self.selb2PhiTauMu_WS,
                                         RelatedInfoTools = config["RelatedInfoTools"],
-                                        MDSTFlag = True)
+                                        MDSTFlag = False)
 
         self.B2KTauMu_WS = StrippingLine(name_k_WS+ 'Line', 
                                         prescale = config["Prescale_WS"], 
                                         selection = self.selb2KTauMu_WS,
                                         RelatedInfoTools = config["RelatedInfoTools"],
-                                        MDSTFlag = True)
+                                        MDSTFlag = False)
 
         self.B2PhiTauMu_3pi_WS = StrippingLine(name_phi_3pi_WS+ 'Line', 
                                                prescale = config["Prescale_WS"], 
                                                selection = self.selb2PhiTauMu_3pi_WS,
                                         RelatedInfoTools = config["RelatedInfoTools"],
-                                        MDSTFlag = True)
+                                        MDSTFlag = False)
 
         self.B2KTauMu_3pi_WS = StrippingLine(name_k_3pi_WS+ 'Line', 
                                                prescale = config["Prescale_WS"], 
                                                selection = self.selb2KTauMu_3pi_WS,
                                              RequiredRawEvents = ["Rich","Velo","Tracker","Trigger","Muon","Calo"],
                                              RelatedInfoTools = config["RelatedInfoTools"],
-                                        MDSTFlag = True) 
+                                        MDSTFlag = False) 
 
 
         self.B2KTauMu_3pi_loose_WS = StrippingLine(name_k_3pi_loose_WS+ 'Line', 
@@ -793,7 +793,7 @@ class B2XTauMuConf(LineBuilder) :
                                                selection = self.selb2KTauMu_3pi_loose_WS,
                                              RequiredRawEvents = ["Rich","Velo","Tracker","Trigger","Muon","Calo"],
                                              RelatedInfoTools = config["RelatedInfoTools"],
-                                        MDSTFlag = True) 
+                                        MDSTFlag = False) 
 
 
         self.registerLine(self.B2KstTauMu)        

@@ -91,7 +91,7 @@ class Tau23MuLinesConf(LineBuilder) :
         self.tau23MuLine = StrippingLine(tau_name+"Line",
                                      prescale = config['TauPrescale'],
                                      postscale = config['TauPostscale'],
-                                     MDSTFlag = True,
+                                     MDSTFlag = False,
                                      RequiredRawEvents = ["Calo"],
                                      algos = [ self.selTau23Mu ],
                                      RelatedInfoTools = [{ 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.,
@@ -118,7 +118,7 @@ class Tau23MuLinesConf(LineBuilder) :
         self.ds23PiLine = StrippingLine(ds23Pi_name+"Line",
                                       prescale = config['Ds23PiPrescale'],
                                       postscale = config['TauPostscale'],
-                                      MDSTFlag = True,
+                                      MDSTFlag = False,
                                       RequiredRawEvents = [ ],
                                       algos = [ self.selDs23Pi ]
                                       )
@@ -126,7 +126,7 @@ class Tau23MuLinesConf(LineBuilder) :
         self.ds2PhiPiLine = StrippingLine(ds2PhiPi_name+"Line",
                                       prescale = config['Ds2PhiPiPrescale'],
                                       postscale = config['TauPostscale'],
-                                      MDSTFlag = True,
+                                      MDSTFlag = False,
                                       RequiredRawEvents = ["Calo"],
                                       algos = [ self.selDs2PhiPi ],
                                       RelatedInfoTools = [{ 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.,
@@ -148,7 +148,7 @@ class Tau23MuLinesConf(LineBuilder) :
         self.tau25MuLine = StrippingLine(tau25_name+"Line",
                                      prescale = config['Tau25Prescale'],
                                      postscale = config['TauPostscale'],
-                                     MDSTFlag = True,
+                                     MDSTFlag = False,
                                      RequiredRawEvents = [ ],
                                      algos = [ self.selTau25Mu ]
                                      )
@@ -156,7 +156,7 @@ class Tau23MuLinesConf(LineBuilder) :
         self.tau2PMuMuLine = StrippingLine(tau2pmm_name+"Line",
                                            prescale = config['Tau2PMuMuPrescale'],
                                            postscale = config['TauPostscale'],
-                                           MDSTFlag = True,
+                                           MDSTFlag = False,
                                            RequiredRawEvents = ["Calo"],
                                            algos = [ self.selTau2PMuMu ] ,
                                            RelatedInfoTools = [{ 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.,

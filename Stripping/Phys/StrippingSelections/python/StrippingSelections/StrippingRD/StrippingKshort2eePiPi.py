@@ -122,14 +122,14 @@ class Kshort2eePiPiConf(LineBuilder) :
                                         prescale  = config['Kshort2eePiPiLinePrescale'],
                                         postscale = config['Kshort2eePiPiLinePostscale'],
                                         selection = selKshort2eePiPi,
-                                        MDSTFlag  = True
+                                        MDSTFlag  = False
                                         )
         
         self.eePiPiFromTracksLine = StrippingLine(PiPiLine_name+"FromTracks"+"Line",
                                                   prescale  = config['Kshort2eePiPiLinePrescale'],
                                                   postscale = config['Kshort2eePiPiLinePostscale'],
                                                   selection = selKshort2eePiPiFromTracks,
-                                                  MDSTFlag  = True
+                                                  MDSTFlag  = False
                                                   )
                                                                                
         # 5 : register Line

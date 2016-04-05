@@ -277,7 +277,7 @@ class Bs2st2KKMuXConf(LineBuilder):
                                             FILTER    = self.GECs,
                                             RelatedInfoTools = config['RelatedInfoTools'],
                                             selection = self.SelBs2KKMu
-                                            #, MDSTFlag  = True
+                                            #, MDSTFlag  = False
                                             )
 
         self.Bs2st2KKMuWSLine = StrippingLine("Bs2st2KKMuWSLine",
@@ -285,21 +285,21 @@ class Bs2st2KKMuXConf(LineBuilder):
                                               FILTER    = self.GECs,
                                               RelatedInfoTools = self.Bs2st2KKMuLine.RelatedInfoTools,
                                               selection = self.SelBs2KKMuWS
-                                              #, MDSTFlag  = True
+                                              #, MDSTFlag  = False
                                               )
 
         self.Bs2st2KKJpsiLine = StrippingLine("Bs2st2KKJpsiLine",
                                               prescale  = config['Bs2st2KKMuPrescale'],
                                               FILTER    = self.GECs,
                                               selection = self.SelBs2KKJpsi
-                                              #, MDSTFlag  = True
+                                              #, MDSTFlag  = False
                                               )
 
         self.Bs2st2KKJpsiWSLine = StrippingLine("Bs2st2KKJpsiWSLine",
                                                 prescale  = config['Bs2st2KKJpsiWSPrescale'],
                                                 FILTER    = self.GECs,
                                                 selection = self.SelBs2KKJpsiWS
-                                                #, MDSTFlag  = True
+                                                #, MDSTFlag  = False
                                                 )
 
         # register stripping lines

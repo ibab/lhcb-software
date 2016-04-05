@@ -217,7 +217,7 @@ class StrippingLb2L0GammaConf(LineBuilder):
                                                     self.get_cone_relinfo(1.0, children=children),
                                                    ],
                                   RequiredRawEvents=['Calo'],
-                                  MDSTFlag = True,
+                                  MDSTFlag = False,
                                   selection=lambda_b)
         self.registerLine(self.line)
         self.line_cnv = StrippingLine("Lb2L0GammaConverted",
@@ -232,7 +232,7 @@ class StrippingLb2L0GammaConf(LineBuilder):
                                                         self.get_vtxisol_relinfo(lambda_b_cnv),
                                                        ],
                                       RequiredRawEvents=['Calo'],
-                                      MDSTFlag = True,
+                                      MDSTFlag = False,
                                       selection=lambda_b_cnv)
         self.registerLine(self.line_cnv)
 
