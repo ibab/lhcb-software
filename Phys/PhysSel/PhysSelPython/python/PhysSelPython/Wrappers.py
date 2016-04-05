@@ -229,6 +229,8 @@ class VoidEventSelection(UniquelyNamedObject,
         _code = Code.replace('<Location>',
                              "'"+RequiredSelection.outputLocation()+"'")
         _code = _code.replace('\"\'', '\'').replace('\'\"', '\'').replace('\'\'','\'')
+        
+        from Configurables import LoKi__VoidFilter as VoidFilter
         _alg = VoidFilter(self.name(), Code = _code)
 
         SelectionBase.__init__(self,
