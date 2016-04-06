@@ -20,7 +20,8 @@ __all__ = ('Tau23MuLinesConf',
            )
 
 from Gaudi.Configuration import *
-from Configurables import FilterDesktop, CombineParticles
+from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays as Combine3Particles
+from GaudiConfUtils.ConfigurableGenerators import DaVinci__N5BodyDecays as Combine5Particles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -64,9 +65,10 @@ class Tau23MuLinesConf(LineBuilder) :
 
     
     
-    def __init__(self, 
-                 name = 'Tau23Mu',
-                 config = None) :
+    def __init__(self, name, config):
+        self.name = name
+        self.__confdict__ = config
+
 
         LineBuilder.__init__(self, name, config)
         #checkConfig(Bs2MuMuLinesConf.__configuration_keys__,config)
@@ -191,17 +193,18 @@ def makeTau23Mu(name, config):
     name        : name of the Selection.
     """
     
-    Tau2MuMuMu = CombineParticles("Comine"+name)
-    Tau2MuMuMu.DecayDescriptor = " [ tau+ -> mu+ mu+ mu- ]cc"
-    Tau2MuMuMu.DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRGHOSTPROB < %(TrackGhostProb)s ) & ( TRCHI2DOF < 3  ) "\
-                                 "& ( BPVIPCHI2 () >  9 ) " % config}
-    Tau2MuMuMu.CombinationCut = "(ADAMASS('tau+')<400*MeV)"
-
-    Tau2MuMuMu.MotherCut = """
+    Tau2MuMuMu = Combine3Particles(\
+               DecayDescriptor = " [ tau+ -> mu+ mu+ mu- ]cc",
+               DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRGHOSTPROB < %(TrackGhostProb)s ) & ( TRCHI2DOF < 3  ) "\
+                                 "& ( BPVIPCHI2 () >  9 ) " % config},
+               Combination12Cut = "AM< 2078*MeV", #"(ADAMASS('tau+')<400*MeV)" -> 1778+400  and then -100 for muon rest mass
+               CombinationCut = "(ADAMASS('tau+')<400*MeV)",
+               MotherCut = """
             ( VFASPF(VCHI2) < 15 ) &
             ( (BPVLTIME () * c_light)   > 100 * micrometer ) &
             ( BPVIPCHI2() < 225 )
             """ 
+            )
                              
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
 
@@ -217,16 +220,17 @@ def makeDs23Pi(name, config):
     name        : name of the Selection.
     """
     
-    Ds2PiPiPi = CombineParticles("Comine"+name)
-    Ds2PiPiPi.DecayDescriptor = " [ D_s+  -> pi+ pi+ pi- ]cc " 
-    Ds2PiPiPi.DaughtersCuts = { "pi+" : " ( PT > 300 * MeV ) & ( TRGHOSTPROB < %(TrackGhostProb)s ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) " % config}
-    Ds2PiPiPi.CombinationCut = "(ADAMASS('D_s+')<80*MeV)"
-
-    Ds2PiPiPi.MotherCut = """
+    Ds2PiPiPi = Combine3Particles(\
+              DecayDescriptor = " [ D_s+  -> pi+ pi+ pi- ]cc " ,
+              DaughtersCuts = { "pi+" : " ( PT > 300 * MeV ) & ( TRGHOSTPROB < %(TrackGhostProb)s ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) " % config},
+              Combination12Cut = "AM('D_s+')<1920*MeV)", #"(ADAMASS('D_s+')<80*MeV)" -> 1970+80 = 2050 and then minus 130 for pion rest mass
+              CombinationCut = "(ADAMASS('D_s+')<80*MeV)",
+              MotherCut = """
             ( VFASPF(VCHI2) < 15 ) &
             ( (BPVLTIME () * c_light)   > 100 * micrometer ) &
             ( BPVIPCHI2() < 225 )
             """ 
+              )
                              
     _stdLoosePions = DataOnDemand(Location = "Phys/StdLoosePions/Particles")
 
@@ -280,18 +284,18 @@ def makeDs2PhiPi(name, config):
     name        : name of the Selection.
     """
     
-    Ds2PhiPi = CombineParticles("Comine"+name)
-    Ds2PhiPi.DecayDescriptor =   " [ D_s+  -> pi+  mu+ mu- ]cc "
-    Ds2PhiPi.DaughtersCuts = { "pi+" : " ( PT > 300 * MeV ) & ( TRGHOSTPROB < %(TrackGhostProb)s ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) " % config,
-                               "mu+" : " ( PT > 300 * MeV ) & ( TRGHOSTPROB < %(TrackGhostProb)s ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) " % config}
-
-    Ds2PhiPi.CombinationCut = "(ADAMASS('D_s+')<250*MeV) & in_range ( 970 * MeV , AM23 , 1070 * MeV )"
-
-    Ds2PhiPi.MotherCut = """
+    Ds2PhiPi = Combine3Particles(\
+             DecayDescriptor =   " [ D_s+  -> mu+  mu- pi+ ]cc ",
+             DaughtersCuts = { "pi+" : " ( PT > 300 * MeV ) & ( TRGHOSTPROB < %(TrackGhostProb)s ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) " % config,
+                               "mu+" : " ( PT > 300 * MeV ) & ( TRGHOSTPROB < %(TrackGhostProb)s ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) " % config},
+             Combination12Cut = " in_range ( 970 * MeV , AM , 1070 * MeV )",
+             CombinationCut = "(ADAMASS('D_s+')<250*MeV)", # & in_range ( 970 * MeV , AM12 , 1070 * MeV )"
+             MotherCut = """
             ( VFASPF(VCHI2) < 15 ) &
             ( (BPVLTIME () * c_light)   >100 * micrometer ) &
             ( BPVIPCHI2() < 225 )
             """ 
+            )
                              
     _stdLoosePions = DataOnDemand(Location = "Phys/StdLoosePions/Particles")
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
@@ -310,16 +314,19 @@ def makeTau25Mu(name, config):
     name        : name of the Selection.
     """
     
-    Tau2MuMuMuMuMu = CombineParticles("Comine"+name)
-    Tau2MuMuMuMuMu.DecayDescriptor = " [ tau+ -> mu+ mu+ mu+ mu- mu-]cc"
-    Tau2MuMuMuMuMu.DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRGHOSTPROB < %(TrackGhostProb)s ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) " % config }
-    Tau2MuMuMuMuMu.CombinationCut = "(ADAMASS('tau+')<400*MeV)"
-
-    Tau2MuMuMuMuMu.MotherCut = """
+    Tau2MuMuMuMuMu = Combine5Particles(\
+                   DecayDescriptor = " [ tau+ -> mu+ mu+ mu+ mu- mu-]cc",
+                   DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRGHOSTPROB < %(TrackGhostProb)s ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) " % config },
+                   Combination12Cut = "AM<1878*MeV",   # 1778 + 400 - 3*100
+                   Combination123Cut = "AM<1978*MeV",   # 1778 + 400 - 2*100
+                   Combination1234Cut = "AM<2078*MeV",   # 1778 + 400 - 1*100
+                   CombinationCut = "(ADAMASS('tau+')<400*MeV)",
+                   MotherCut = """
             ( VFASPF(VCHI2) < 30 ) &
             ( (BPVLTIME () * c_light)   > 100 * micrometer ) &
             ( BPVIPCHI2() < 225 )
             """ 
+                   )
                              
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
 
@@ -336,21 +343,21 @@ def makeTau2pmm(name, config):
     name        : name of the Selection.
     """
     
-    Tau2PMuMu = CombineParticles("Comine"+name)
-    Tau2PMuMu.DecayDescriptors = [" [ tau+ -> p+ mu+ mu- ]cc"," [ tau+ -> p~- mu+ mu+ ]cc",
-                                  " [ Lambda_c+ -> p+ mu+ mu- ]cc"," [ Lambda_c+ -> p~- mu+ mu+ ]cc" ]
-    Tau2PMuMu.DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) "\
+    Tau2PMuMu = Combine3Particles(\
+              DecayDescriptors = [" [ tau+ -> p+ mu+ mu- ]cc"," [ tau+ -> p~- mu+ mu+ ]cc",
+                                  " [ Lambda_c+ -> p+ mu+ mu- ]cc"," [ Lambda_c+ -> p~- mu+ mu+ ]cc" ],
+              DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) "\
                                   "& ( PIDmu > -5 ) & ( (PIDmu - PIDK) > 0 ) & ( TRGHOSTPROB < %(TrackGhostProb)s )"% config,
                                   "p+" :  " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) "\
-                                  "& (PIDp>10) & ( TRGHOSTPROB < %(TrackGhostProb)s )" % config}
-
-    Tau2PMuMu.CombinationCut = "( (ADAMASS('tau+')<150*MeV) | (ADAMASS('Lambda_c+')<150*MeV) )"
-
-    Tau2PMuMu.MotherCut = """
+                                  "& (PIDp>10) & ( TRGHOSTPROB < %(TrackGhostProb)s )" % config},
+              Combination12Cut = "AM<2340*MeV", # lambda_c mass + 150 - muon mass = 2290 + 150 -100 = 
+              CombinationCut = "( (ADAMASS('tau+')<150*MeV) | (ADAMASS('Lambda_c+')<150*MeV) )",
+              MotherCut = """
             ( VFASPF(VCHI2) < 15 ) &
             ( (BPVLTIME () * c_light)   > 100 * micrometer ) &
             ( BPVIPCHI2() < 225 )
             """ 
+              )
                              
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
     _stdLooseProtons = DataOnDemand(Location = "Phys/StdLooseProtons/Particles")

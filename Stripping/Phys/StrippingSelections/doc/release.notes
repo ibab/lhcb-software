@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-06 - Paul Seyfert
+ - Migrate Tau23Mu lines to NBodyDecays
+
 ! 2016-04-06 - Francesco Dettori
  - Updating StrippingRareStrange to DaVinci__N3BodyDecays
 
