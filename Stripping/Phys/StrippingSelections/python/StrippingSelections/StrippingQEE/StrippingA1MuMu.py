@@ -39,7 +39,7 @@ default_config = {'NAME'        : 'A1MuMu',
                                    'PT_DIMUON_MIN'                     : '7500.0',    # MeV/c
                                    'VCHI2_DIMUON_MAX'                  : '12'         # dimensionless
                                    },
-                  'STREAMS'     : [ 'Leptonic' ]} # Moving from FullDST to MicroDST.
+                  'STREAMS'     : [ 'Dimuon' ]} # FullDST for iso5 variables.
 
 
 __all__ = ('A1MuMuConf', 'filterDiMuon', 'filterDiMuonSameSign', 'default_config')
@@ -76,7 +76,7 @@ class A1MuMuConf(LineBuilder) :
         self.A1MuMuLine          = StrippingLine(name + 'Line',
                                                  prescale  = config['A1MuMu_LinePrescale'],
                                                  postscale = config['A1MuMu_LinePrescale'],
-                                                 #RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
+                                                 RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                                  checkPV   = config['A1MuMu_checkPV'],
                                                  selection = self.SelA1MuMu)#,
                                                  #MDSTFlag = True)
@@ -93,7 +93,7 @@ class A1MuMuConf(LineBuilder) :
         self.A1MuMuSameSignLine = StrippingLine(name + 'SameSign' + 'Line',
                                                 prescale  = config['A1MuMu_LinePrescale'],
                                                 postscale = config['A1MuMu_LinePrescale'],
-                                                #RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
+                                                RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                                 checkPV   = config['A1MuMu_checkPV'],
                                                 selection = self.SelA1MuMuSameSign)#,
                                                 #MDSTFlag = True)
