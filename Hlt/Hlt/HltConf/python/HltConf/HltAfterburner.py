@@ -232,9 +232,10 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             downstreamPIDSequence.Members += [ hlt2DownstreamFilter ]
             downstreamTracking = Hlt2BiKalmanFittedDownstreamTracking()
             tracksDown = downstreamTracking.hlt2PrepareTracks()
-            chargedProtosOutputLocation =  downstreamTracking.hlt2ChargedNoPIDsProtos().outputSelection()
+            protosDown = downstreamTracking.hlt2ChargedNoPIDsProtos()
+            chargedProtosOutputLocation =  protosDown.outputSelection()
             richPid = downstreamTracking.hlt2RICHID()
-            downstreamPIDSequence.Members += list(uniqueEverseen(chain.from_iterable([ tracksDown, richPid ])))
+            downstreamPIDSequence.Members += list(uniqueEverseen(chain.from_iterable([ tracksDown, protosDown, richPid ])))
             from Configurables import ChargedProtoParticleAddRichInfo,ChargedProtoParticleAddMuonInfo
             downstreamRichDLL_name            = "Hlt2AfterburnerDownstreamProtoPAddRich"
             downstreamRichDLL                 = ChargedProtoParticleAddRichInfo(downstreamRichDLL_name)

@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2016-04-06 - Sascha Stahl
+ - HltAfterBurner: Add Downstream protoparticle creation to the RICH pid sequence.
+
 ! 2016-04-05 - Roel Aaij
  - Add support for "flagging" mode to HltOutputConf
  - Align file writing behaviour for online and offline, i.e. write a file per
