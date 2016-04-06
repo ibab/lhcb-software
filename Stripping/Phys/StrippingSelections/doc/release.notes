@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-06 - Francesco Dettori
+ - Updating StrippingRareStrange to DaVinci__N3BodyDecays
+
 ! 2016-04-05 - Pablo Ruiz Valls
  - All MDSTFlags in RD set to False
 

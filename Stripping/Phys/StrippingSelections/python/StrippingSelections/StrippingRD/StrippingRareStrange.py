@@ -40,6 +40,8 @@ __all__ = ('RareStrangeLinesConf',
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays as Combine3Particles
+from GaudiConfUtils.ConfigurableGenerators import DaVinci__N4BodyDecays as Combine4Particles
 from CommonParticles import StdNoPIDsDownElectrons
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
@@ -1295,9 +1297,10 @@ def makeSigmaPMuMu(name, config):
     """
     
     #from Configurables import OfflineVertexFitter
-    SigmaPMuMu = CombineParticles(  DecayDescriptor = "[Sigma+ -> p+ mu+ mu-]cc",
+    SigmaPMuMu = Combine3Particles(  DecayDescriptor = "[Sigma+ -> p+ mu+ mu-]cc",
                                     DaughtersCuts = { "mu+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muonMinIpChi2)s)"%config, 
                                                      "p+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PROBNNp> %(protonProbNNp)s)"%config},
+                                    Combination12Cut = "( AM < 1500 * MeV  )",
                                     CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config,
                                     MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
                               "& (ADMASS('Sigma+') < %(SigmaMassWin)s *MeV )"\
@@ -1325,9 +1328,10 @@ def makeSigmaPMuMuLFV(name, config):
     name        : name of the Selection.
     config      : dictionary of tunable cuts 
     """
-    SigmaPMuMu = CombineParticles(  DecayDescriptor = "[Sigma+ -> p~- mu+ mu+]cc",
+    SigmaPMuMu = Combine3Particles(  DecayDescriptor = "[Sigma+ -> p~- mu+ mu+]cc",
                                     DaughtersCuts = { "mu+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muonMinIpChi2)s)"%config,
                                                         "p+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PROBNNp> %(protonProbNNp)s)"%config},
+                                     Combination12Cut = "( AM < 1500 * MeV  )",
                                     CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config,
                                     MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
                                                 "& (ADMASS('Sigma+') < %(SigmaMassWin)s *MeV )"\
@@ -1457,11 +1461,12 @@ def makeSigmaPEE(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    SigmaPEE = CombineParticles(    DecayDescriptor = "[Sigma+ -> p+ e+ e-]cc",
+    SigmaPEE = Combine3Particles(    DecayDescriptor = "[Sigma+ -> p+ e+ e-]cc",
                                     DaughtersCuts = { "e+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PIDe > %(electronPIDe)s ) &  (MIPCHI2DV(PRIMARY)>%(electronMinIpChi2)s)"%config,
                                                     "p+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PROBNNp> %(protonProbNNp)s)"%config},
+                                    Combination12Cut = "( AM < 1500 * MeV  )",
                                     CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config,
-                                    MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
+                                   MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
                                                 "& (ADMASS('Sigma+') < %(SigmaMassWin)s *MeV )"\
                                                 "& (BPVDIRA > %(SigmaMinDIRA)s) "\
                                                 "& (BPVIPCHI2()< %(SigmaMaxIpChi2)s)"\
@@ -1491,10 +1496,11 @@ def makeSigmaPEMu(name, config):
     """
     
     #from Configurables import OfflineVertexFitter
-    SigmaPEMu = CombineParticles(  DecayDescriptors = [ "[Sigma+ -> p+ e+ mu-]cc","[Sigma+ -> p+ mu+ e-]cc"],
+    SigmaPEMu = Combine3Particles(  DecayDescriptors = [ "[Sigma+ -> p+ e+ mu-]cc","[Sigma+ -> p+ mu+ e-]cc"],
                                     DaughtersCuts = { "mu+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muonMinIpChi2)s)"%config,
                                                       "e+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muonMinIpChi2)s)"%config, 
                                                      "p+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PROBNNp> %(protonProbNNp)s)"%config},
+                                   Combination12Cut = "( AM < 1500 * MeV  )",
                                     CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWin)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCA)s *mm)"%config,
                                     MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2)s)  & (PT> %(SigmaMinPt)s *MeV)"\
                               "& (ADMASS('Sigma+') < %(SigmaMassWin)s *MeV )"\
@@ -1601,8 +1607,9 @@ def makeSigmaMuMuMu(name, config):
     """
     
     #from Configurables import OfflineVertexFitter
-    SigmaMuMuMu = CombineParticles(  DecayDescriptor = "[Sigma+ -> mu+ mu+ mu-]cc",
+    SigmaMuMuMu = Combine3Particles(  DecayDescriptor = "[Sigma+ -> mu+ mu+ mu-]cc",
                                      DaughtersCuts = { "mu+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muon3MinIpChi2)s)"%config },
+                                      Combination12Cut = "( AM < 1500 * MeV  )",
                                      CombinationCut = "(ADAMASS('Sigma+')<%(Sigma3MassWin)s *MeV) & (AMAXDOCA('')< %(Sigma3MaxDOCA)s *mm)"%config,
                                      MotherCut = "(VFASPF(VCHI2/VDOF)< %(Sigma3VtxChi2)s)  & (PT> %(Sigma3MinPt)s *MeV)"\
                                      "& (ADMASS('Sigma+') < %(Sigma3MassWin)s *MeV )"\
@@ -1634,8 +1641,9 @@ def makeSigmaMuMuMuDown(name, config):
     """
     
     #from Configurables import OfflineVertexFitter
-    SigmaMuMuMu = CombineParticles(  DecayDescriptor = "[Sigma+ -> mu+ mu+ mu-]cc",
+    SigmaMuMuMu = Combine3Particles(  DecayDescriptor = "[Sigma+ -> mu+ mu+ mu-]cc",
                                      DaughtersCuts = { "mu+" : "(TRCHI2DOF< %(Sigma3DauTrChi2Down)s) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muon3MinIpChi2Down)s)"%config},
+                                     Combination12Cut ="( AM < 1500 * MeV  )",
                                      CombinationCut = "(ADAMASS('Sigma+')<%(Sigma3MassWinDown)s *MeV) & (AMAXDOCA('')< %(Sigma3MaxDOCADown)s *mm)"%config,
                                      MotherCut = "(VFASPF(VCHI2/VDOF)< %(Sigma3VtxChi2Down)s)  & (PT> %(Sigma3MinPtDown)s *MeV)"\
                                      "& (ADMASS('Sigma+') < %(Sigma3MassWinDown)s *MeV )"\
@@ -1665,9 +1673,10 @@ def makeKPiMuMu(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    KPiMuMu = CombineParticles( DecayDescriptor = "[K+ -> pi+ mu+ mu-]cc",
+    KPiMuMu = Combine3Particles( DecayDescriptor = "[K+ -> pi+ mu+ mu-]cc",
                                 DaughtersCuts = { "mu+" : "(P>3000) & (TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2)s)"%config,
                                                     "pi+":"(P>1000) & (TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB < 0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2)s)"%config},
+                                 Combination12Cut = "( AM < 1500 * MeV  )",
                                 CombinationCut = "(ADAMASS('K+') < %(KMassWin)s *MeV) & (AMAXDOCA('')< %(KMaxDOCA)s *mm)"%config,
                                 MotherCut ="(PT> %(KMinPT)s) & (ADMASS('K+') < %(KMassWin)s *MeV) & (BPVDIRA > %(KMinDIRA)s)"\
                                     "& (VFASPF(VCHI2) < %(KVtxChi2)s) & (BPVVDCHI2 > %(KMinVDChi2)s) & (BPVIPCHI2()< %(KMaxIpChi2)s )"%config
@@ -1691,9 +1700,10 @@ def makeKPiMuMuLFV(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    KPiMuMuLFV = CombineParticles(  DecayDescriptor = "[K+ -> pi- mu+ mu+]cc",
+    KPiMuMuLFV = Combine3Particles(  DecayDescriptor = "[K+ -> pi- mu+ mu+]cc",
                                     DaughtersCuts = { "mu+" : "(P>3000) & (TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2)s)"%config,
                                         "pi+":"(P>1000) & (TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB < 0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2)s)"%config},
+                                     Combination12Cut = "( AM < 1500 * MeV  )",                                     
                                     CombinationCut = "(ADAMASS('K+') < %(KMassWin)s *MeV) & (AMAXDOCA('')< %(KMaxDOCA)s *mm)"%config,
                                     MotherCut ="(PT> %(KMinPT)s) & (ADMASS('K+') < %(KMassWin)s *MeV) & ((BPVDIRA > %(KMinDIRA)s))"\
                                         "& (VFASPF(VCHI2) < %(KVtxChi2)s) & (BPVVDCHI2 > %(KMinVDChi2)s) & (BPVIPCHI2()< %(KMaxIpChi2)s )"%config
@@ -1719,9 +1729,10 @@ def makeKPiPiPi(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    KPiPiPi = CombineParticles( DecayDescriptor = "[K+ -> pi+ pi+ pi-]cc",
+    KPiPiPi = Combine3Particles( DecayDescriptor = "[K+ -> pi+ pi+ pi-]cc",
                                 DaughtersCuts = { "pi+":"(P>1000) & (TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB < 0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2)s)"%config},
-                                CombinationCut = "(ADAMASS('K+') < %(KMassWin)s *MeV) & (AMAXDOCA('')< %(KMaxDOCA)s *mm)"%config,
+                                 CombinationCut = "(ADAMASS('K+') < %(KMassWin)s *MeV) & (AMAXDOCA('')< %(KMaxDOCA)s *mm)"%config,
+                                 Combination12Cut = "( AM < 1500 * MeV  )",
                                 MotherCut ="(PT> %(KMinPT)s) & (ADMASS('K+') < %(KMassWin)s *MeV) & (BPVDIRA > %(KMinDIRA)s)"\
                                 "& (VFASPF(VCHI2) < %(KVtxChi2)s) & (BPVVDCHI2 > %(KMinVDChi2)s) & (BPVIPCHI2()< %(KMaxIpChi2)s )"%config
                             )
@@ -1744,8 +1755,9 @@ def makeKPiPiPiMassMeas(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    KPiPiPi = CombineParticles( DecayDescriptor = "[K+ -> pi+ pi+ pi-]cc",
+    KPiPiPi = Combine3Particles( DecayDescriptor = "[K+ -> pi+ pi+ pi-]cc",
                                 DaughtersCuts = {   "pi+":"(P>1000) & (MIPCHI2DV(PRIMARY) > 25.0) & (TRCHI2DOF<5) & (TRGHOSTPROB < 0.4)"},
+                                Combination12Cut = "( AM < 1500 * MeV  )",
                                 CombinationCut = "(ADAMASS('K+') < %(KMassWinMassMeas)s *MeV) & (AMAXDOCA('')< %(KMaxDOCAMassMeas)s *mm)"%config,
                                 MotherCut ="(PT> %(KMinPTMassMeas)s) & (ADMASS('K+') < %(KMassWinMassMeas)s *MeV) & (BPVDIRA > %(KMinDIRAMassMeas)s)"\
                                 "& (VFASPF(VCHI2) < %(KVtxChi2MassMeas)s) & (BPVVDCHI2 > %(KMinVDChi2MassMeas)s) & (BPVIPCHI2()< %(KMaxIpChi2MassMeas)s )"%config
@@ -1773,10 +1785,11 @@ def makeSigmaPMuMuDown(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    SigmaPMuMu = CombineParticles(  DecayDescriptor = "[Sigma+ -> p+ mu+ mu-]cc",
+    SigmaPMuMu = Combine3Particles(  DecayDescriptor = "[Sigma+ -> p+ mu+ mu-]cc",
                                     DaughtersCuts = { "mu+" : "(TRCHI2DOF< %(SigmaDauTrChi2Down)s) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muonMinIpChi2Down)s)"%config,
                                                 "p+" : "(TRCHI2DOF<%(SigmaDauTrChi2Down)s) & (TRGHOSTPROB<0.3)"%config},
-                                    CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWinDown)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCADown)s *mm)"%config,
+                                     Combination12Cut = "( AM < 1500 * MeV  )",
+                                     CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWinDown)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCADown)s *mm)"%config,
                                     MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2Down)s)  & (PT> %(SigmaMinPtDown)s *MeV)"\
                                         "& (ADMASS('Sigma+') < %(SigmaMassWinDown)s *MeV )"\
                                         "& (BPVDIRA > %(SigmaMinDIRADown)s) "\
@@ -1802,10 +1815,11 @@ def makeSigmaPMuMuLFVDown(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    SigmaPMuMu = CombineParticles(  DecayDescriptor = "[Sigma+ -> p~- mu+ mu+]cc",
+    SigmaPMuMu = Combine3Particles(  DecayDescriptor = "[Sigma+ -> p~- mu+ mu+]cc",
                                     DaughtersCuts = { "mu+" : "(TRCHI2DOF<%(SigmaDauTrChi2Down)s) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muonMinIpChi2)s)"%config,
                                     "p~-" : "(TRCHI2DOF<%(SigmaDauTrChi2Down)s) & (TRGHOSTPROB<0.3)"%config},
-                                    CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWinDown)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCADown)s *mm)"%config,
+                                     Combination12Cut = "( AM < 1500 * MeV  )",
+                                     CombinationCut = "(ADAMASS('Sigma+')<%(SigmaMassWinDown)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCADown)s *mm)"%config,
                                     MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2Down)s)  & (PT> %(SigmaMinPtDown)s *MeV)"\
                                         "& (ADMASS('Sigma+') < %(SigmaMassWinDown)s *MeV )"\
                                         "& (BPVDIRA > %(SigmaMinDIRADown)s) "\
@@ -1834,10 +1848,11 @@ def makeSigmaPEEDown(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    SigmaPEE = CombineParticles(    DecayDescriptor = "[Sigma+ -> p+ e+ e-]cc",
+    SigmaPEE = Combine3Particles(    DecayDescriptor = "[Sigma+ -> p+ e+ e-]cc",
                                     DaughtersCuts = { "e+" : "(TRCHI2DOF<%(SigmaDauTrChi2Down)s) & (TRGHOSTPROB<0.3)  &  (MIPCHI2DV(PRIMARY)>%(electronMinIpChi2Down)s)"%config,
                                     "p+" : "(TRCHI2DOF<%(SigmaDauTrChi2Down)s) & (TRGHOSTPROB<0.3) "%config},
-                                    CombinationCut = "(ADAMASS('Sigma+')<%(SigmaPEEMassWinDown)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCADown)s *mm)"%config,
+                                     Combination12Cut = "( AM < 1500 * MeV  )",
+                                     CombinationCut = "(ADAMASS('Sigma+')<%(SigmaPEEMassWinDown)s *MeV) & (AMAXDOCA('')< %(SigmaMaxDOCADown)s *mm)"%config,
                                     MotherCut = "(VFASPF(VCHI2/VDOF)< %(SigmaVtxChi2Down)s)  & (PT> %(SigmaMinPtDown)s *MeV)"\
                                     "& (ADMASS('Sigma+') < %(SigmaPEEMassWinDown)s *MeV )"\
                                     "& (BPVDIRA > %(SigmaMinDIRADown)s) "\
@@ -1867,10 +1882,11 @@ def makeKPiMuMuDown(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    KPiMuMu = CombineParticles( DecayDescriptor = "[K+ -> pi+ mu+ mu-]cc",
+    KPiMuMu = Combine3Particles( DecayDescriptor = "[K+ -> pi+ mu+ mu-]cc",
                                 DaughtersCuts = {  "mu+" : "(TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2Down)s)"%config,
                                                     "pi+":"(TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB < 0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2Down)s)"%config},
-                                CombinationCut = "(ADAMASS('K+') < %(KMassWinDown)s *MeV) & (AMAXDOCA('')< %(KMaxDOCADown)s *mm)"%config,
+                                 Combination12Cut = "( AM < 1500 * MeV  )",
+                                 CombinationCut = "(ADAMASS('K+') < %(KMassWinDown)s *MeV) & (AMAXDOCA('')< %(KMaxDOCADown)s *mm)"%config,
                                 MotherCut ="(PT> %(KMinPTDown)s) & (ADMASS('K+') < %(KMassWinDown)s *MeV) & (BPVDIRA > %(KMinDIRADown)s)"\
                                 "& (VFASPF(VCHI2) < %(KVtxChi2Down)s) & (BPVVDCHI2 > %(KMinVDChi2Down)s) & (BPVVDZ > %(KVDPVMinDown)s*mm) & (BPVVDZ < %(KVDPVMaxDown)s*mm)"%config
                                 )
@@ -1894,10 +1910,11 @@ def makeKPiMuMuLFVDown(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    KPiMuMu = CombineParticles( DecayDescriptor = "[K+ -> pi- mu+ mu+]cc",
+    KPiMuMu = Combine3Particles( DecayDescriptor = "[K+ -> pi- mu+ mu+]cc",
                                 DaughtersCuts = { "mu+" : "(TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2Down)s)"%config,
                                 "pi-":"(TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB < 0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2Down)s)"%config},
-                                CombinationCut = "(ADAMASS('K+') < %(KMassWin)s *MeV) & (AMAXDOCA('')< %(KMaxDOCA)s *mm)"%config,
+                                 Combination12Cut = "( AM < 1500 * MeV  )",
+                                 CombinationCut = "(ADAMASS('K+') < %(KMassWin)s *MeV) & (AMAXDOCA('')< %(KMaxDOCA)s *mm)"%config,
                                 MotherCut ="(PT> %(KMinPTDown)s) & (ADMASS('K+') < %(KMassWinDown)s *MeV) & (BPVDIRA > %(KMinDIRADown)s)"\
                                 "& (VFASPF(VCHI2) < %(KVtxChi2Down)s) & (BPVVDCHI2 > %(KMinVDChi2Down)s) & (BPVVDZ > %(KVDPVMinDown)s*mm) & (BPVVDZ < %(KVDPVMaxDown)s*mm)"%config
                                 )
@@ -1920,9 +1937,10 @@ def makeKPiPiPiDown(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    KPiPiPi = CombineParticles( DecayDescriptor = "[K+ -> pi+ pi+ pi-]cc",
-                                DaughtersCuts = {  "pi+":"(TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB < 0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2Down)s)"%config},
-                                CombinationCut = "(ADAMASS('K+') < %(KMassWinDown)s *MeV) & (AMAXDOCA('')< %(KMaxDOCADown)s *mm)"%config,
+    KPiPiPi = Combine3Particles( DecayDescriptor = "[K+ -> pi+ pi+ pi-]cc",
+                                 DaughtersCuts = {  "pi+":"(TRCHI2DOF<%(KDauTrChi2)s) & (TRGHOSTPROB < 0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2Down)s)"%config},
+                                 Combination12Cut = "( AM < 1500 * MeV  )",
+                                 CombinationCut = "(ADAMASS('K+') < %(KMassWinDown)s *MeV) & (AMAXDOCA('')< %(KMaxDOCADown)s *mm)"%config,
                                 MotherCut ="(PT> %(KMinPTDown)s) & (ADMASS('K+') < %(KMassWinDown)s *MeV) & (BPVDIRA > %(KMinDIRADown)s)"\
                                     "& (VFASPF(VCHI2) < %(KVtxChi2Down)s) & (BPVVDCHI2 > %(KMinVDChi2Down)s) & (BPVVDZ > %(KVDPVMinDown)s*mm) & (BPVVDZ < %(KVDPVMaxDown)s*mm)"%config
                                 )
@@ -1944,9 +1962,10 @@ def makeKPiPiPiMassMeasDown(name, config):
     config      : dictionary of tunable cuts 
     """
     
-    KPiPiPi = CombineParticles( DecayDescriptor = "[K+ -> pi+ pi+ pi-]cc",
+    KPiPiPi = Combine3Particles( DecayDescriptor = "[K+ -> pi+ pi+ pi-]cc",
                                 DaughtersCuts = {  "pi+":"(TRCHI2DOF<5) & (TRGHOSTPROB < 0.3) & (MIPCHI2DV(PRIMARY)>%(KDauMinIpChi2MassMeasDown)s)"%config},
-                                CombinationCut = "(ADAMASS('K+') < %(KMassWinMassMeasDown)s *MeV) & (AMAXDOCA('')< %(KMaxDOCAMassMeasDown)s *mm)"%config,
+                                 Combination12Cut = "( AM < 1500 * MeV  )",
+                                 CombinationCut = "(ADAMASS('K+') < %(KMassWinMassMeasDown)s *MeV) & (AMAXDOCA('')< %(KMaxDOCAMassMeasDown)s *mm)"%config,
                                 MotherCut ="(PT> %(KMinPTMassMeasDown)s) & (ADMASS('K+') < %(KMassWinMassMeasDown)s *MeV) & (BPVDIRA > %(KMinDIRAMassMeasDown)s)"\
                                 "& (VFASPF(VCHI2) < %(KVtxChi2MassMeasDown)s) & (BPVVDCHI2 > %(KMinVDChi2MassMeasDown)s)  & (BPVVDZ > %(KVDPVMinMassMeasDown)s*mm) & (BPVVDZ < %(KVDPVMaxMassMeasDown)s*mm)"%config
                                 )
@@ -2042,12 +2061,13 @@ def makeLambdaPPiEE(name, config, inputs):
     config      : dictionary of tunable cuts 
     """
     
-    LambdaPPi = CombineParticles( DecayDescriptor = "[Lambda0 -> p+ pi- KS0]cc",
+    LambdaPPi = Combine3Particles( DecayDescriptor = "[Lambda0 -> p+ pi- KS0]cc",
                                   DaughtersCuts = { "pi+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(pionMinIpChi2)s)"%config, 
                                                      "p+" : "(TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PROBNNp> %(protonProbNNp)s) & (MIPCHI2DV(PRIMARY)>%(protonMinIpChi2)s)"%config,
                                                     "KS0" : "(MIPCHI2DV(PRIMARY)>%(DiElectronMinIpChi2)s)"%config, 
                                                     },
-                                  CombinationCut = "(ADAMASS('Lambda0')<%(LambdaMassWin)s *MeV) & (AMAXDOCA('')< %(LambdaMaxDOCA)s *mm)"%config,
+                                   Combination12Cut = "( AM < 1500 * MeV  )",
+                                   CombinationCut = "(ADAMASS('Lambda0')<%(LambdaMassWin)s *MeV) & (AMAXDOCA('')< %(LambdaMaxDOCA)s *mm)"%config,
                                   MotherCut = "(VFASPF(VCHI2/VDOF)< %(LambdaVtxChi2)s)  & (PT> %(LambdaMinPt)s *MeV)"\
                                   "& (ADMASS('Lambda0') < %(LambdaMassWin)s *MeV )"\
                                   "& (BPVDIRA > %(LambdaMinDIRA)s) "\
