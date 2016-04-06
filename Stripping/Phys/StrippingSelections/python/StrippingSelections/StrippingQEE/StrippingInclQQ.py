@@ -15,14 +15,14 @@ from StrippingUtils.Utils import LineBuilder
 from GaudiConfUtils.ConfigurableGenerators import bJetSeeds
 
 __all__ = (
-  'InclbJetsLinesConf',
+  'InclQQLinesConf',
   'default_config',
 )
 
 
 default_config = {
-    'NAME'        : 'InclbJets',
-    'BUILDERTYPE' : 'InclbJetsConf',
+    'NAME'        : 'InclQQ',
+    'BUILDERTYPE' : 'InclQQConf',
     'WGs'         : [ 'QEE' ],
     'STREAMS'     : [ 'EW'  ],
     'CONFIG'      : {
@@ -42,7 +42,7 @@ default_config = {
     },
 }
 
-class InclbJetsConf(LineBuilder) :
+class InclQQConf(LineBuilder) :
 
     __configuration_keys__ = default_config['CONFIG'].keys()
 

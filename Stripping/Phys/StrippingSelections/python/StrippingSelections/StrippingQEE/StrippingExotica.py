@@ -1,106 +1,154 @@
-#!/usr/bin/env python
-
+"""
+Stripping lines which pass through the HLT2 exotica decisions.
 """
 
-DUMMY Stripping line mimic the effect of new 2016 Hlt2Exotica triggers
-before having test sample.
+# Additional line information.
+__author__  = ['Chitsanu Khurewathanakul', 'Philip Ilten', 'Michael Williams']
+__date__    = '25/03/2016'
+__version__ = 1.0
+__all__     = ['default_config', 'ExoticaConf']
 
-### Exotica Lines written by Phil Ilten and Mike Williams (mwill@mit.edu)
-Hlt2ExoticaDisplPhiPhi
-Hlt2ExoticaSharedDiMuonNoIP
-Hlt2ExoticaQuadMuonNoIP
-Hlt2ExoticaDisplDiMuon
-Hlt2ExoticaDisplDiMuonNoPoint
-Hlt2ExoticaPrmptDiMuonTurbo
-Hlt2ExoticaPrmptDiMuonSSTurbo
-Hlt2ExoticaPrmptDiMuonHighMass
+# Default configuration.
+default_config = {
+    'NAME'        : 'Exotica',
+    'BUILDERTYPE' : 'ExoticaConf',
+    'STREAMS'     : ['EW'],
+    'WGs'         : ['QEE'],
+    'CONFIG'      : {
+# The settings defined here should be used when HLT2 is available.
+#        'DisplPhiPhi': {
+#            'Prescale': 1.0,
+#            'Hlt2Tos': "HLT_PASS_RE('Hlt2ExoticaDisplPhiPhiDecision')"},
+#        'QuadMuonNoIP': {
+#            'Prescale': 1.0,
+#            'Hlt2Tos': "HLT_PASS_RE('Hlt2ExoticaQuadMuonNoIPDecision')"},
+#        'DisplDiMuon': {
+#            'Prescale': 1.0,
+#            'Hlt2Tos': "HLT_PASS_RE('Hlt2ExoticaDisplDiMuonDecision')"},
+#        'DisplDiMuonNoPoint': {
+#            'Prescale': 1.0,
+#            'Hlt2Tos': "HLT_PASS_RE('Hlt2ExoticaDisplDiMuonNoPointDecision')"},
+#        'PrmptDiMuonHighMass': {
+#            'Prescale': 1.0,
+#            'Hlt2Tos': "HLT_PASS_RE('Hlt2ExoticaPrmptDiMuonHighMassDecision')"},
+# All settings defined here should be removed when HLT2 is available.
+        'Common': {
+            'GhostProb': 0.3,
+            },
+        'Prescales': {
+            'DisplPhiPhi'         : 1.0,
+            'QuadMuonNoIP'        : 1.0,
+            'DisplDiMuon'         : 1.0,
+            'DisplDiMuonNoPoint'  : 1.0,
+            'PrmptDiMuonHighMass' : 1.0,
+            },
+        'DisplPhiPhi': {
+            'input'         : 'Phys/StdLoosePhi2KK/Particles',
+            'TisTosSpec'    : "Hlt1IncPhi.*Decision",
+            'KPT'           : 500*MeV,
+            'KIPChi2'       : 16,
+            'KProbNNk'      : 0.1,
+            'PhiPT'         : 1000*MeV,
+            'PhiMassWindow' : 20*MeV,
+            'VChi2'         : 10,
+            'FDChi2'        : 45,
+            },
+        'SharedDiMuonNoIP': {
+            'input'       : 'Phys/StdAllLooseMuons/Particles',
+            'MuPT'        : 500*MeV,
+            'MuP'         : 10000*MeV,
+            'MuProbNNmu'  : 0.2,
+            'DOCA'        : 0.2*mm,
+            'VChi2'       : 10,
+            },
+        'QuadMuonNoIP': {
+            'PT'        : 0,
+            'VChi2'     : 10,
+            },
+        'DisplDiMuon': {
+            'MuProbNNmu': 0.2,
+            'MuIPChi2'  : 16,
+            'PT'        : 1000*MeV,
+            'IPChi2'    : 16,
+            'FDChi2'    : 30,
+            },
+        'DisplDiMuonNoPoint': {
+            'MuProbNNmu'  : 0.5,
+            'MuIPChi2'    : 16,
+            'PT'          : 1000*MeV,
+            'FDChi2'      : 30,
+            },
+        'PrmptDiMuonHighMass': {
+            'MuPT'      : 500*MeV,
+            'MuP'       : 10000*MeV,
+            'M'         : 5000*MeV,
+            'MuProbNNmu': 0.99,
+            'MuIPChi2'  : 6,
+            'PT'        : 1000*MeV,                                  
+            'FDChi2'    : 45,
+            }
+        }
+    }
 
+# Define the class for the exotica stripping configuration.
+from StrippingUtils.Utils import LineBuilder
+from StrippingConf.StrippingLine import StrippingLine
+class ExoticaConf(LineBuilder):
+    def __init__(self, name, config):
+        LineBuilder.__init__(self, name, config)
+        for line, cfg in config.iteritems():
+            prescale = cfg['Prescale'] if 'Prescale' in cfg else 1.0
+            hlt2tos  = cfg.get('Hlt2Tos')
+            if hlt2tos: 
+                self.registerLine(StrippingLine(name + line + 'Line'), 
+                                  prescale = prescale, checkPV = False,
+                                  HLT2 = hlt2tos)
+                
+# Remove everything below when HLT2 is available (no longer mixed tabs).
+        if 'Hlt2Tos' in config['DisplPhiPhi']: return
+  
+        ## Inject 'Common' into all other confs
+        d = config.pop('Common')
+        for key in config:
+            config[key].update(d)
+    
+        ## sharedDiMuon, used in common in many lines
+        sharedDiMuon = [SharedDiMuonNoIP(config['SharedDiMuonNoIP'])]
+    
+        ## Register lines
+        prescales = config['Prescales']
+    
+        self.registerLine(StrippingLine( name+'DisplPhiPhiLine',
+          selection = DisplPhiPhi(config['DisplPhiPhi']),
+          prescale  = prescales['DisplPhiPhi'],
+        ))
+    
+        self.registerLine(StrippingLine( name+'QuadMuonNoIPLine',
+          selection = QuadMuonNoIP(config['QuadMuonNoIP'], sharedDiMuon),
+          prescale  = prescales['QuadMuonNoIP'],
+        ))
+    
+        self.registerLine(StrippingLine( name+'DisplDiMuonLine',
+          selection = DisplDiMuon(config['DisplDiMuon'], sharedDiMuon),
+          prescale  = prescales['DisplDiMuon'],
+        ))
+    
+        self.registerLine(StrippingLine( name+'DisplDiMuonNoPointLine',
+          selection = DisplDiMuonNoPoint(config['DisplDiMuonNoPoint'], sharedDiMuon),
+          prescale  = prescales['DisplDiMuonNoPoint'],
+        ))
+    
+        self.registerLine(StrippingLine( name+'PrmptDiMuonHighMassLine',
+          selection = PrmptDiMuonHighMass(config['PrmptDiMuonHighMass'], sharedDiMuon),
+          prescale  = prescales['PrmptDiMuonHighMass'],
+        ))
 
-"""
+#-------------------------------------------------------------------------------
 
 from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from PhysSelPython.Wrappers import Selection, SimpleSelection, MergedSelection, AutomaticData
-from StrippingUtils.Utils import LineBuilder
-from StrippingConf.StrippingLine import StrippingLine
-
-
-__author__  = 'chitsanu.khurewathanakul@cern.ch'
-__date__    = '2016-03-25'
-__version__ = 1.0
-__all__     = [ 'ExoticaConf', 'default_config' ]
-
-default_config = {
-  'NAME'        : 'Exotica',
-  'BUILDERTYPE' : 'ExoticaConf',
-  'STREAMS'     : [ 'EW'  ],
-  'WGs'         : [ 'QEE' ],
-  'CONFIG'      : {
-    'Common': {
-      'GhostProb': 0.3,
-    },
-    'Prescales': {
-      'DisplPhiPhi'         : 1.0,
-      'QuadMuonNoIP'        : 1.0,
-      'DisplDiMuon'         : 1.0,
-      'DisplDiMuonNoPoint'  : 1.0,
-      'PrmptDiMuonHighMass' : 1.0,
-    },
-    'DisplPhiPhi': {
-      # 'TOS_HLT2'      : 'Hlt2ExoticaDisplPhiPhiDecision', # Comment me in when needed
-      'input'         : 'Phys/StdLoosePhi2KK/Particles',
-      'TisTosSpec'    : "Hlt1IncPhi.*Decision",
-      'KPT'           : 500*MeV,
-      'KIPChi2'       : 16,
-      'KProbNNk'      : 0.1,
-      'PhiPT'         : 1000*MeV,
-      'PhiMassWindow' : 20*MeV,
-      'VChi2'         : 10,
-      'FDChi2'        : 45,
-    },
-    'SharedDiMuonNoIP': {
-      'input'       : 'Phys/StdAllLooseMuons/Particles',
-      'MuPT'        : 500*MeV,
-      'MuP'         : 10000*MeV,
-      'MuProbNNmu'  : 0.2,
-      'DOCA'        : 0.2*mm,
-      'VChi2'       : 10,
-    },
-    'QuadMuonNoIP': {
-      # 'TOS_HLT2'  : 'Hlt2ExoticaQuadMuonNoIPDecision', # Comment me in when needed
-      'PT'        : 0,
-      'VChi2'     : 10,
-    },
-    'DisplDiMuon': {
-      # 'TOS_HLT2'  : 'Hlt2ExoticaDisplDiMuonDecision', # Comment me in when needed
-      'MuProbNNmu': 0.2,
-      'MuIPChi2'  : 16,
-      'PT'        : 1000*MeV,
-      'IPChi2'    : 16,
-      'FDChi2'    : 30,
-    },
-    'DisplDiMuonNoPoint': {
-      # 'TOS_HLT2'  : 'Hlt2ExoticaDisplDiMuonNoPointDecision', # Comment me in when needed
-      'MuProbNNmu'  : 0.5,
-      'MuIPChi2'    : 16,
-      'PT'          : 1000*MeV,
-      'FDChi2'      : 30,
-    },
-    'PrmptDiMuonHighMass': {
-      # 'TOS_HLT2'  : 'Hlt2ExoticaPrmptDiMuonHighMassDecision', # Comment me in when needed
-      'MuPT'      : 500*MeV,
-      'MuP'       : 10000*MeV,                                                  
-      'M'         : 5000*MeV,
-      'MuProbNNmu': 0.99,
-      'MuIPChi2'  : 6,
-      'PT'        : 1000*MeV,                                  
-      'FDChi2'    : 45,
-    },
-  },
-}
-
-#===============================================================================
 
 def DisplPhiPhi( conf ):
 
@@ -208,50 +256,3 @@ def PrmptDiMuonHighMass( conf, sharedDiMuon ):
     code += '& (TOS("%(TOS_HLT2)s", "Hlt2TriggerTisTos"))'%conf
 
   return SimpleSelection( 'PrmptDiMuonHighMass', FilterDesktop, sharedDiMuon, Code=code)
-
-
-#===============================================================================
-
-class ExoticaConf(LineBuilder):
-
-  __configuration_keys__ = default_config['CONFIG'].keys()  # Legacy field
-
-  def __init__(self, name, config):
-    LineBuilder.__init__(self, name, config)
-
-    ## Inject 'Common' into all other confs
-    d = config.pop('Common')
-    for key in config:
-      config[key].update(d)
-
-    ## sharedDiMuon, used in common in many lines
-    sharedDiMuon = [SharedDiMuonNoIP(config['SharedDiMuonNoIP'])]
-
-    ## Register lines
-    prescales = config['Prescales']
-
-    self.registerLine(StrippingLine( name+'DisplPhiPhiLine',
-      selection = DisplPhiPhi(config['DisplPhiPhi']),
-      prescale  = prescales['DisplPhiPhi'],
-    ))
-
-    self.registerLine(StrippingLine( name+'QuadMuonNoIPLine',
-      selection = QuadMuonNoIP(config['QuadMuonNoIP'], sharedDiMuon),
-      prescale  = prescales['QuadMuonNoIP'],
-    ))
-
-    self.registerLine(StrippingLine( name+'DisplDiMuonLine',
-      selection = DisplDiMuon(config['DisplDiMuon'], sharedDiMuon),
-      prescale  = prescales['DisplDiMuon'],
-    ))
-
-    self.registerLine(StrippingLine( name+'DisplDiMuonNoPointLine',
-      selection = DisplDiMuonNoPoint(config['DisplDiMuonNoPoint'], sharedDiMuon),
-      prescale  = prescales['DisplDiMuonNoPoint'],
-    ))
-
-    self.registerLine(StrippingLine( name+'PrmptDiMuonHighMassLine',
-      selection = PrmptDiMuonHighMass(config['PrmptDiMuonHighMass'], sharedDiMuon),
-      prescale  = prescales['PrmptDiMuonHighMass'],
-    ))
-
