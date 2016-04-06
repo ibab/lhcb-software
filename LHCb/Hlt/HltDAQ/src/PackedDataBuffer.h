@@ -258,8 +258,8 @@ public:
     m_buffer.write(x, pos);
   }
   /// Save a size integer.
-  void saveSize(std::size_t x) {
-    save<uint32_t>(x);
+  std::pair<std::size_t, std::size_t> saveSize(std::size_t x) {
+    return save<uint32_t>(x);
   }
   /// Save a vector of scalars.
   template<typename T>

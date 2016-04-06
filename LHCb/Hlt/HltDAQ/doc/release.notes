@@ -4,6 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2016-04-06 - Rosen Matev
+ - Important changes to packed object persistence in raw banks
+   o Now persisting links between containers on the TES!
+   o Checksum calculation is controlled by EnableChecksum propert
 
 !========================= HltDAQ v4r26 2016-03-19 =========================
 

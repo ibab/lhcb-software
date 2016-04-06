@@ -19,10 +19,12 @@ HltPackedDataDecoder::HltPackedDataDecoder(const std::string& name,
                                            ISvcLocator* pSvcLocator)
   : HltRawBankDecoderBase(name, pSvcLocator)
 {
+  declareProperty("EnableChecksum", m_enableChecksum = false);
+  
   // The default m_sourceID=0 triggers a warning in HltRawBankDecoderBase::initialize
   // Since we only care about HLT2 persistence, set it explicitly:
   m_sourceID = kSourceID_Hlt2;
-  
+
   using namespace std::placeholders; 
   m_loaders[LHCb::CLID_PackedTracks] =
     std::bind(&HltPackedDataDecoder::loadObject<LHCb::PackedTracks>, this, _1);
@@ -43,7 +45,7 @@ StatusCode HltPackedDataDecoder::initialize() {
   const StatusCode sc = HltRawBankDecoderBase::initialize();
   if (sc.isFailure()) return sc;
 
-  if (msgLevel(MSG::DEBUG)) {
+  if (UNLIKELY(m_enableChecksum)) {
     m_checksum = new PackedDataPersistence::PackedDataChecksum();
   }
 
@@ -52,12 +54,12 @@ StatusCode HltPackedDataDecoder::initialize() {
 
 
 template<typename T>
-size_t HltPackedDataDecoder::loadObject(const std::string& location) {
+std::pair<DataObject*, size_t> HltPackedDataDecoder::loadObject(const std::string& location) {
   auto object = new T{};
   put(object, location);
   auto nBytesRead = m_buffer.load(*object);
-  if (msgLevel(MSG::DEBUG)) m_checksum->processObject(*object);
-  return nBytesRead;
+  if (UNLIKELY(m_enableChecksum)) m_checksum->processObject(*object);
+  return std::make_pair(dynamic_cast<DataObject*>(object), nBytesRead);
 }
 
 
@@ -68,13 +70,13 @@ StatusCode HltPackedDataDecoder::execute() {
   if (!rawEvent) {
     return Error("Raw event not found!");
   }
-  
+
   const auto& rawBanksConst = rawEvent->banks(LHCb::RawBank::DstData);
   if (rawBanksConst.empty()) {
     return Warning("No appropriate HltPackedData raw bank in raw event. Quitting.",
                    StatusCode::SUCCESS, 10);
   }
-  
+
   std::vector<const LHCb::RawBank*> rawBanks;
   rawBanks.reserve(rawBanksConst.size());
   std::copy(std::begin(rawBanksConst), std::end(rawBanksConst),
@@ -86,7 +88,7 @@ StatusCode HltPackedDataDecoder::execute() {
   if (rawBank0->version() < 2 || rawBank0->version() > kVersionNumber) {
     return Error("HltPackedData raw bank version is not supported.");
   }
-  
+
   // Put the banks into the right order
   std::sort(
     std::begin(rawBanks), std::end(rawBanks), 
@@ -103,7 +105,7 @@ StatusCode HltPackedDataDecoder::execute() {
       return Error("Part IDs for HltPackedData banks are not sequential. Quitting.", StatusCode::SUCCESS, 20);
     payloadSize += rawBanks[i]->size();
   }
-  
+
   // Collect the data into a contiguous buffer
   std::vector<uint8_t> payload;
   payload.reserve(payloadSize);
@@ -115,7 +117,7 @@ StatusCode HltPackedDataDecoder::execute() {
   if (msgLevel(MSG::DEBUG)) {
     debug() << "Compression " << compression << ", payload size " << payload.size() << endmsg;
   }
-  
+
   // Decompress the payload and load into the buffer
   switch (compression) {
     case HltPackedDataWriter::NoCompression: {
@@ -137,15 +139,19 @@ StatusCode HltPackedDataDecoder::execute() {
   // Get the map of ids to locations (may differ between events)
   const auto& locationsMap = packedObjectLocation2string(tck());
 
+  std::vector<int32_t> linkLocationIDs;
+
   // Do the actual loading of the objects
   while (!m_buffer.eof()) {
+    // Load the metadata
     CLID classID = m_buffer.load<uint32_t>();
     auto locationID = m_buffer.load<int32_t>();
+    m_buffer.load(linkLocationIDs);
     auto storedObjectSize = m_buffer.load<uint32_t>();
 
     auto locationIt = locationsMap.find(locationID);
     if (locationIt == std::end(locationsMap)) {
-      error() << "Packed object location not found in map for id=" << locationID
+      error() << "Packed object location not found in ANNSvc for id=" << locationID
               << ". Skipping reading the container!" << endmsg;
       m_buffer.skip(storedObjectSize);
       continue;
@@ -157,7 +163,7 @@ StatusCode HltPackedDataDecoder::execute() {
               << "for object with CLID " << classID << " into TES location "
               << containerPath << endmsg;
     }
-    
+
     const auto it = m_loaders.find(classID);
     if (it == m_loaders.end()) {
       error() << "Unknown class ID " << classID << endmsg;
@@ -165,7 +171,11 @@ StatusCode HltPackedDataDecoder::execute() {
       continue;
     }
     const auto loadObjectFun = it->second;
-    auto readObjectSize = loadObjectFun(containerPath);
+
+    // Load the packed object
+    auto ret = loadObjectFun(containerPath);
+    auto dataObject = ret.first;
+    auto readObjectSize = ret.second;
 
     if (readObjectSize != storedObjectSize) {
       fatal() << "Loading of object (CLID=" << classID << ") "
@@ -174,9 +184,20 @@ StatusCode HltPackedDataDecoder::execute() {
               << "but " << storedObjectSize << " were stored!" << endmsg;
       return StatusCode::FAILURE;
     }
+
+    // Restore the links to other containers on the TES
+    for (const auto& linkLocationID: linkLocationIDs) {
+      auto locationIt = locationsMap.find(linkLocationID);
+      if (locationIt == std::end(locationsMap)) {
+        error() << "Packed object location not found in ANNSvc for id=" << linkLocationID
+                << ". Skipping this link, unpacking may fail!" << endmsg;
+        continue;
+      }
+      dataObject->linkMgr()->addLink(locationIt->second, nullptr);
+    }
   }
-  
-  if (msgLevel(MSG::DEBUG)) {
+
+  if (UNLIKELY(m_enableChecksum)) {
     debug() << "packed data checksum = " << m_checksum->checksum() << endmsg;
   }
 
@@ -188,8 +209,8 @@ StatusCode HltPackedDataDecoder::execute() {
 
 
 StatusCode HltPackedDataDecoder::finalize() {
-  if (msgLevel(MSG::DEBUG)) {
-    debug() << "Global packed data checksum = " << m_checksum->checksum() << endmsg;
+  if (UNLIKELY(m_enableChecksum)) {
+    info() << "Global packed data checksum = " << m_checksum->checksum() << endmsg;
     delete m_checksum;
   }
   return HltRawBankDecoderBase::finalize();  // must be called after all other actions

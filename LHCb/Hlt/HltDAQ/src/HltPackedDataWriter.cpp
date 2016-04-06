@@ -27,6 +27,7 @@ HltPackedDataWriter::HltPackedDataWriter(const std::string& name, ISvcLocator* p
                   m_outputRawEventLocation=LHCb::RawEventLocation::Default);
   declareProperty("Compression", m_compression = LZMA);
   declareProperty("CompressionLevel", m_compressionLevel = 6);
+  declareProperty("EnableChecksum", m_enableChecksum = false);
 
   using namespace std::placeholders; 
   m_savers[LHCb::CLID_PackedTracks] =
@@ -65,7 +66,7 @@ StatusCode HltPackedDataWriter::initialize() {
     }
   }
 
-  if (msgLevel(MSG::DEBUG)) {
+  if (UNLIKELY(m_enableChecksum)) {
     m_checksum = new PackedDataPersistence::PackedDataChecksum();
   }
 
@@ -78,13 +79,13 @@ size_t HltPackedDataWriter::saveObject(const DataObject& dataObject) {
   const auto& object = dynamic_cast<const T&>(dataObject);
   
   // Reserve bytes for the size of the object
-  auto posObjectSize = m_buffer.save<uint32_t>(0).first;
+  auto posObjectSize = m_buffer.saveSize(0).first;
   // Save the object actual object and see how many bytes were written
   auto objectSize = m_buffer.save(object).second;
   // Save the object's size in the correct position
   m_buffer.saveAt<uint32_t>(objectSize, posObjectSize);
 
-  if (msgLevel(MSG::DEBUG)) { m_checksum->processObject(object); }
+  if (UNLIKELY(m_enableChecksum)) { m_checksum->processObject(object); }
   return objectSize;
 }
 
@@ -109,6 +110,7 @@ StatusCode HltPackedDataWriter::execute() {
 
     // Obtain the integer ID to be saved instead of the location string
     auto locationID = m_hltANNSvc->value(PackedObjectLocations, containerPath);
+    // TODO fail if unknown location, even if HltANNSvc.allowUndefined=True
     if (!locationID) {
       error() << "Requested to persist " << containerPath
               << " but no ID is registered for it in the HltANNSvc, skipping!"
@@ -125,14 +127,42 @@ StatusCode HltPackedDataWriter::execute() {
     }
     const auto saveObjectFun = it->second;
 
-    // Save the CLID, location and object itself
+    // Save the CLID and location
     m_buffer.save<uint32_t>(classID);
     m_buffer.save<int32_t>(locationID->second);
+
+    // Save the links to other containers on the TES
+    auto* linkMgr = dataObject->linkMgr();
+    unsigned int nlinks = linkMgr->size();
+    m_buffer.saveSize(nlinks);
+    for (unsigned int id = 0; id < nlinks; ++id) {
+      auto linkLocationID = m_hltANNSvc->value(PackedObjectLocations,
+                                               linkMgr->link(id)->path());
+      // TODO fail if unknown location, even if HltANNSvc.allowUndefined=True
+      if (!linkLocationID) {
+        error() << "Requested to persist link to " << containerPath
+                << " but no ID is registered for it in the HltANNSvc, skipping!"
+                << endmsg;
+        return StatusCode::FAILURE;
+      }
+      m_buffer.save<int32_t>(linkLocationID->second);
+    }
+
+    // Save the packed object itself
     auto objectSize = saveObjectFun(*dataObject);
 
     if (msgLevel(MSG::DEBUG)) {
       debug() << "Packed " << containerPath << " with ID " << locationID->second
               << " and CLID " << classID << " into " << objectSize << " bytes" << endmsg;
+      debug() << "Packed " << nlinks << " links: ";
+      for (unsigned int id = 0; id < nlinks; ++id) {
+        auto linkLocationID = m_hltANNSvc->value(PackedObjectLocations,
+                                                 linkMgr->link(id)->path());
+        debug() << id << ": {" << linkMgr->link(id)->path()
+                << " (" << linkLocationID->second << "), ";
+      }
+      debug() << "}" << endmsg;
+
       counter(containerPath) += objectSize;
     }
   }
@@ -149,8 +179,9 @@ StatusCode HltPackedDataWriter::execute() {
     counter("Size of serialized data") += m_buffer.buffer().size();
     counter("Size of comppressed data") += output.size();
     debug() << "Total size of serialized data " << m_buffer.buffer().size() << endmsg;
-    debug() << "Wrote " << output.size() << " compressed bytes" << endmsg;    
-    debug() << "Packed data checksum = " << m_checksum->checksum() << endmsg;
+    debug() << "Wrote " << output.size() << " compressed bytes" << endmsg;
+    if (UNLIKELY(m_enableChecksum))
+      debug() << "Packed data checksum = " << m_checksum->checksum() << endmsg;
   }
 
   m_buffer.clear();
@@ -162,8 +193,8 @@ StatusCode HltPackedDataWriter::execute() {
 
 
 StatusCode HltPackedDataWriter::finalize() {
-  if (msgLevel(MSG::DEBUG)) {
-    debug() << "Global packed data checksum = " << m_checksum->checksum() << endmsg;
+  if (UNLIKELY(m_enableChecksum)) {
+    info() << "Global packed data checksum = " << m_checksum->checksum() << endmsg;
     delete m_checksum;
   }
   return GaudiAlgorithm::finalize();  // must be called after all other actions

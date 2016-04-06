@@ -27,11 +27,14 @@ public:
   StatusCode finalize() override; ///< Algorithm finalization
   
 private:
+  /// Property enabling calculation and print of checksums
+  bool m_enableChecksum;
+  
   /// Load an object from the buffer and save it to TES.
-  template<typename T> size_t loadObject(const std::string& location);
+  template<typename T> std::pair<DataObject*, size_t> loadObject(const std::string& location);
   
   /// Map between CLIDs and load functions
-  std::map<CLID, std::function<size_t(const std::string&)> > m_loaders;
+  std::map<CLID, std::function<std::pair<DataObject*, size_t>(const std::string&)> > m_loaders;
   /// Buffer for de-serialization of the packed objects
   PackedDataPersistence::PackedDataInBuffer m_buffer; 
   /// Helper for computing checksums

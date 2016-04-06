@@ -70,6 +70,8 @@ private:
   int m_compression;
   /// Property setting the compression level
   int m_compressionLevel;
+  /// Property enabling calculation and print of checksums
+  bool m_enableChecksum;
 
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc{nullptr};
