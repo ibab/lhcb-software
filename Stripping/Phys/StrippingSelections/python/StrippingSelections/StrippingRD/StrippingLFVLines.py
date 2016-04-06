@@ -22,6 +22,12 @@ from StrippingUtils.Utils import LineBuilder
 from GaudiKernel.PhysicalConstants import c_light
 from GaudiKernel.SystemOfUnits import GeV, MeV, mm
 
+#
+# Configure related info tools
+# some of these tools are used several times:
+# eg the related_info_Jpsi2eMu tool can be used for both 
+# the prompt and the detached Jpsi line.
+#
 
 related_info_tools_B2eMu = [{'Type' : 'RelInfoBs2MuMuBIsolations',
                             'Variables' : ['BSMUMUCDFISO',
@@ -80,26 +86,250 @@ related_info_tools_B2eMu = [{'Type' : 'RelInfoBs2MuMuBIsolations',
                             ] ## matches 'RelatedInfoTools'
 
 related_info_tools_JPsi2eMu = [{'Type' : 'RelInfoBs2MuMuBIsolations',
-                            'Variables' : ['BSMUMUCDFISO',
-                                           'BSMUMUOTHERBMAG',
-                                           'BSMUMUOTHERBANGLE',
-                                           'BSMUMUOTHERBBOOSTMAG',
-                                           'BSMUMUOTHERBBOOSTANGLE',
-                                           'BSMUMUOTHERBTRACKS'],
+                            'Variables' : [
+                                            'BSMUMUCDFISO', 
+                                            'BSMUMUOTHERBMAG',
+                                            'BSMUMUOTHERBANGLE', 
+                                            'BSMUMUOTHERBBOOSTMAG',
+                                            'BSMUMUOTHERBBOOSTANGLE',
+                                            'BSMUMUOTHERBTRACKS'
+                                          ],
                             'Location'  : 'BSMUMUVARIABLES',  ## For the B
                             'tracktype' : 3,
                             'makeTrackCuts' : False
                             },
-                            {'Type' : 'RelInfoBs2MuMuTrackIsolations',
-                            'Variables' : ['BSMUMUTRACKPLUSISO',
+                            {
+                              'Type' : 'RelInfoBs2MuMuTrackIsolations',
+                              'Variables' : [
+                                              'BSMUMUTRACKPLUSISO', 
+                                              'BSMUMUTRACKPLUSISOTWO',
+                                              'ISOTWOBODYQPLUS', 
+                                              'ISOTWOBODYMASSISOPLUS',
+                                              'ISOTWOBODYCHI2ISOPLUS', 
+                                              'ISOTWOBODYISO5PLUS'
+                                            ],
+                              'DaughterLocations' : {
+                                '[J/psi(1S) -> e+ ^[mu-]cc]CC' :  'Muon_ISO',
+                                '[J/psi(1S) -> ^e+ [mu-]cc]CC' :  'Electron_ISO',
+                              },
+    
+                              'tracktype'  : 3,
+                              'angle'      : 0.27,
+                              'fc'         : 0.60,
+                              'doca_iso'   : 0.13,
+                              'ips'        : 3.0,
+                              'svdis'      : -0.15,
+                              'svdis_h'    : 30.,
+                              'pvdis'      : 0.5,
+                              'pvdis_h'    : 40.,
+                              'makeTrackCuts' : False,
+                              'IsoTwoBody' : True
+                            },
+                            { 
+                              "Type" : "RelInfoTrackIsolationBDT",
+                              "Variables" : 1,
+                              "DaughterLocations" : {
+                                "[J/psi(1S) -> e+ ^[mu-]cc]CC" :  'Muon_TrackIso_BDT6vars',
+                                "[J/psi(1S) -> ^e+ [mu-]cc]CC" :  'Electron_TrackIso_BDT6vars'
+                              },
+                              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsB_v1r4.xml"
+                            },
+                            { 
+                              "Type" : "RelInfoTrackIsolationBDT",
+                              "Variables" : 2,
+                              "DaughterLocations" : {
+                                "[J/psi(1S) -> e+ ^[mu-]cc]CC" :  'Muon_TrackIso_BDT9vars',
+                                "[J/psi(1S) -> ^e+ [mu-]cc]CC" :  'Electron_TrackIso_BDT9vars'
+                              },
+                              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT9vars_v1r4.xml"
+                            },
+                            { 
+                              'Type' : 'RelInfoConeVariables',
+                              'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPT', 'CONEPTASYM'],
+                              'Location'  : 'coneInfo'
+                            },
+                            {
+                              'Type': 'RelInfoVertexIsolation',
+                              'Location':'VtxIsoInfo'
+                            },
+                            {
+                              'Type': 'RelInfoVertexIsolationBDT',
+                              'Location':'VtxIsoInfoBDT'
+                            }
+                            ] ## matches 'RelatedInfoTools'
+
+related_info_tools_JPsi2MuMuControl = [{'Type' : 'RelInfoBs2MuMuBIsolations',
+                            'Variables' : [
+                                            'BSMUMUCDFISO', 
+                                            'BSMUMUOTHERBMAG',
+                                            'BSMUMUOTHERBANGLE', 
+                                            'BSMUMUOTHERBBOOSTMAG',
+                                            'BSMUMUOTHERBBOOSTANGLE',
+                                            'BSMUMUOTHERBTRACKS'
+                                          ],
+                            'Location'  : 'BSMUMUVARIABLES',  ## For the B
+                            'tracktype' : 3,
+                            'makeTrackCuts' : False
+                            },
+                            {
+                              'Type' : 'RelInfoBs2MuMuTrackIsolations',
+                              'Variables' : [
+                                              'BSMUMUTRACKPLUSISO', 
+                                              'BSMUMUTRACKPLUSISOTWO',
+                                              'ISOTWOBODYQPLUS', 
+                                              'ISOTWOBODYMASSISOPLUS',
+                                              'ISOTWOBODYCHI2ISOPLUS', 
+                                              'ISOTWOBODYISO5PLUS'
+                                            ],
+                              'DaughterLocations' : {
+                                '[J/psi(1S) -> mu+ ^[mu-]cc]CC' :  'Muon_ISO',
+                                '[J/psi(1S) -> ^mu+ [mu-]cc]CC' :  'Electron_ISO',
+                              },
+    
+                              'tracktype'  : 3,
+                              'angle'      : 0.27,
+                              'fc'         : 0.60,
+                              'doca_iso'   : 0.13,
+                              'ips'        : 3.0,
+                              'svdis'      : -0.15,
+                              'svdis_h'    : 30.,
+                              'pvdis'      : 0.5,
+                              'pvdis_h'    : 40.,
+                              'makeTrackCuts' : False,
+                              'IsoTwoBody' : True
+                            },
+                            { 
+                              "Type" : "RelInfoTrackIsolationBDT",
+                              "Variables" : 1,
+                              "DaughterLocations" : {
+                                "[J/psi(1S) -> mu+ ^[mu-]cc]CC" :  'Muon_TrackIso_BDT6vars',
+                                "[J/psi(1S) -> ^mu+ [mu-]cc]CC" :  'Electron_TrackIso_BDT6vars'
+                              },
+                              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsB_v1r4.xml"
+                            },
+                            { 
+                              "Type" : "RelInfoTrackIsolationBDT",
+                              "Variables" : 2,
+                              "DaughterLocations" : {
+                                "[J/psi(1S) -> mu+ ^[mu-]cc]CC" :  'Muon_TrackIso_BDT9vars',
+                                "[J/psi(1S) -> ^mu+ [mu-]cc]CC" :  'Electron_TrackIso_BDT9vars'
+                              },
+                              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT9vars_v1r4.xml"
+                            },
+                            { 
+                              'Type' : 'RelInfoConeVariables',
+                              'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPT', 'CONEPTASYM'],
+                              'Location'  : 'coneInfo'
+                            },
+                            {
+                              'Type': 'RelInfoVertexIsolation',
+                              'Location':'VtxIsoInfo'
+                            },
+                            {
+                              'Type': 'RelInfoVertexIsolationBDT',
+                              'Location':'VtxIsoInfoBDT'
+                            }
+                            ] ## matches 'RelatedInfoTools'
+
+related_info_tools_JPsi2eeControl = [{'Type' : 'RelInfoBs2MuMuBIsolations',
+                            'Variables' : [
+                                            'BSMUMUCDFISO', 
+                                            'BSMUMUOTHERBMAG',
+                                            'BSMUMUOTHERBANGLE', 
+                                            'BSMUMUOTHERBBOOSTMAG',
+                                            'BSMUMUOTHERBBOOSTANGLE',
+                                            'BSMUMUOTHERBTRACKS'
+                                          ],
+                            'Location'  : 'BSMUMUVARIABLES',  ## For the B
+                            'tracktype' : 3,
+                            'makeTrackCuts' : False
+                            },
+                            {
+                              'Type' : 'RelInfoBs2MuMuTrackIsolations',
+                              'Variables' : [
+                                              'BSMUMUTRACKPLUSISO', 
+                                              'BSMUMUTRACKPLUSISOTWO',
+                                              'ISOTWOBODYQPLUS', 
+                                              'ISOTWOBODYMASSISOPLUS',
+                                              'ISOTWOBODYCHI2ISOPLUS', 
+                                              'ISOTWOBODYISO5PLUS'
+                                            ],
+                              'DaughterLocations' : {
+                                '[J/psi(1S) -> e+ ^[e-]cc]CC' :  'Muon_ISO',
+                                '[J/psi(1S) -> ^e+ [e-]cc]CC' :  'Electron_ISO',
+                              },
+    
+                              'tracktype'  : 3,
+                              'angle'      : 0.27,
+                              'fc'         : 0.60,
+                              'doca_iso'   : 0.13,
+                              'ips'        : 3.0,
+                              'svdis'      : -0.15,
+                              'svdis_h'    : 30.,
+                              'pvdis'      : 0.5,
+                              'pvdis_h'    : 40.,
+                              'makeTrackCuts' : False,
+                              'IsoTwoBody' : True
+                            },
+                            { 
+                              "Type" : "RelInfoTrackIsolationBDT",
+                              "Variables" : 1,
+                              "DaughterLocations" : {
+                                "[J/psi(1S) -> e+ ^[e-]cc]CC" :  'Muon_TrackIso_BDT6vars',
+                                "[J/psi(1S) -> ^e+ [e-]cc]CC" :  'Electron_TrackIso_BDT6vars'
+                              },
+                              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsB_v1r4.xml"
+                            },
+                            { 
+                              "Type" : "RelInfoTrackIsolationBDT",
+                              "Variables" : 2,
+                              "DaughterLocations" : {
+                                "[J/psi(1S) -> e+ ^[e-]cc]CC" :  'Muon_TrackIso_BDT9vars',
+                                "[J/psi(1S) -> ^e+ [e-]cc]CC" :  'Electron_TrackIso_BDT9vars'
+                              },
+                              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT9vars_v1r4.xml"
+                            },
+                            { 
+                              'Type' : 'RelInfoConeVariables',
+                              'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPT', 'CONEPTASYM'],
+                              'Location'  : 'coneInfo'
+                            },
+                            {
+                              'Type': 'RelInfoVertexIsolation',
+                              'Location':'VtxIsoInfo'
+                            },
+                            {
+                              'Type': 'RelInfoVertexIsolationBDT',
+                              'Location':'VtxIsoInfoBDT'
+                            }
+                            ] ## matches 'RelatedInfoTools'                            
+
+related_info_tools_Phi2eMu = [{'Type' : 'RelInfoBs2MuMuBIsolations',
+                            'Variables' : [
+                                           'BSMUMUCDFISO',
+                                           'BSMUMUOTHERBMAG',
+                                           'BSMUMUOTHERBANGLE', 
+                                           'BSMUMUOTHERBBOOSTMAG',
+                                           'BSMUMUOTHERBBOOSTANGLE', 
+                                           'BSMUMUOTHERBTRACKS'
+                                          ],
+                            'Location'  : 'BSMUMUVARIABLES',  ## For the B
+                            'tracktype' : 3,
+                            'makeTrackCuts' : False
+                            },
+                            {
+                            'Type' : 'RelInfoBs2MuMuTrackIsolations',
+                            'Variables' : [
+                                           'BSMUMUTRACKPLUSISO', 
                                            'BSMUMUTRACKPLUSISOTWO',
-                                           'ISOTWOBODYQPLUS',
+                                           'ISOTWOBODYQPLUS', 
                                            'ISOTWOBODYMASSISOPLUS',
-                                           'ISOTWOBODYCHI2ISOPLUS',
-                                           'ISOTWOBODYISO5PLUS'],
+                                           'ISOTWOBODYCHI2ISOPLUS', 
+                                           'ISOTWOBODYISO5PLUS'
+                                          ],
                             'DaughterLocations' : {
-                            '[J/psi(1S) -> e+ ^[mu-]cc]CC' :  'Muon_ISO',
-                            '[J/psi(1S) -> ^e+ [mu-]cc]CC' :  'Electron_ISO',
+                            '[phi(1020) -> e+ ^[mu-]cc]CC' :  'Muon_ISO',
+                            '[phi(1020) -> ^e+ [mu-]cc]CC' :  'Electron_ISO',
                             },
     
                             'tracktype'  : 3,
@@ -114,24 +344,111 @@ related_info_tools_JPsi2eMu = [{'Type' : 'RelInfoBs2MuMuBIsolations',
                             'makeTrackCuts' : False,
                             'IsoTwoBody' : True
                             },
-                            
-                            {'Type': 'RelInfoVertexIsolation',
-                            'Location':'VtxIsoInfo',
+                            { 
+                              "Type" : "RelInfoTrackIsolationBDT",
+                              "Variables" : 1,
+                              "DaughterLocations" : {
+                                "[phi(1020) -> e+ ^[mu-]cc]CC" :  'Muon_TrackIso_BDT6vars',
+                                "[phi(1020) -> ^e+ [mu-]cc]CC" :  'Electron_TrackIso_BDT6vars'
+                              },
+                              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsB_v1r4.xml"
                             },
-                            
-                            {'Type': 'RelInfoConeVariables',
-                            'Location':'ConeIsoInfo',
+                            { 
+                              "Type" : "RelInfoTrackIsolationBDT",
+                              "Variables" : 2,
+                              "DaughterLocations" : {
+                                "[phi(1020) -> e+ ^[mu-]cc]CC" :  'Muon_TrackIso_BDT9vars',
+                                "[phi(1020) -> ^e+ [mu-]cc]CC" :  'Electron_TrackIso_BDT9vars'
+                              },
+                              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT9vars_v1r4.xml"
                             },
-                            
-                            {'Type': 'RelInfoVertexIsolationBDT',
-                            'Location':'VtxIsoInfoBDT',
+                            { 
+                              'Type' : 'RelInfoConeVariables',
+                              'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPT', 'CONEPTASYM'],
+                              'Location'  : 'coneInfo'
                             },
-                            
-                            {'Type': 'RelInfoTrackIsolationBDT',
-                            'Location':'ConeIsoInfoBDT',
+                            {
+                              'Type': 'RelInfoVertexIsolation',
+                              'Location':'VtxIsoInfo'
                             },
+                            {
+                              'Type': 'RelInfoVertexIsolationBDT',
+                              'Location':'VtxIsoInfoBDT',
+                            }
                             ] ## matches 'RelatedInfoTools'
 
+related_info_tools_Phi2MuMuControl = [{'Type' : 'RelInfoBs2MuMuBIsolations',
+                            'Variables' : [
+                                           'BSMUMUCDFISO',
+                                           'BSMUMUOTHERBMAG',
+                                           'BSMUMUOTHERBANGLE', 
+                                           'BSMUMUOTHERBBOOSTMAG',
+                                           'BSMUMUOTHERBBOOSTANGLE', 
+                                           'BSMUMUOTHERBTRACKS'
+                                          ],
+                            'Location'  : 'BSMUMUVARIABLES',  ## For the B
+                            'tracktype' : 3,
+                            'makeTrackCuts' : False
+                            },
+                            {
+                            'Type' : 'RelInfoBs2MuMuTrackIsolations',
+                            'Variables' : [
+                                           'BSMUMUTRACKPLUSISO', 
+                                           'BSMUMUTRACKPLUSISOTWO',
+                                           'ISOTWOBODYQPLUS', 
+                                           'ISOTWOBODYMASSISOPLUS',
+                                           'ISOTWOBODYCHI2ISOPLUS', 
+                                           'ISOTWOBODYISO5PLUS'
+                                          ],
+                            'DaughterLocations' : {
+                            '[phi(1020) -> mu+ ^[mu-]cc]CC' :  'Muon_ISO',
+                            '[phi(1020) -> ^mu+ [mu-]cc]CC' :  'Electron_ISO',
+                            },
+    
+                            'tracktype'  : 3,
+                            'angle'      : 0.27,
+                            'fc'         : 0.60,
+                            'doca_iso'   : 0.13,
+                            'ips'        : 3.0,
+                            'svdis'      : -0.15,
+                            'svdis_h'    : 30.,
+                            'pvdis'      : 0.5,
+                            'pvdis_h'    : 40.,
+                            'makeTrackCuts' : False,
+                            'IsoTwoBody' : True
+                            },
+                            { 
+                              "Type" : "RelInfoTrackIsolationBDT",
+                              "Variables" : 1,
+                              "DaughterLocations" : {
+                                "[phi(1020) -> mu+ ^[mu-]cc]CC" :  'Muon_TrackIso_BDT6vars',
+                                "[phi(1020) -> ^mu+ [mu-]cc]CC" :  'Electron_TrackIso_BDT6vars'
+                              },
+                              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsB_v1r4.xml"
+                            },
+                            { 
+                              "Type" : "RelInfoTrackIsolationBDT",
+                              "Variables" : 2,
+                              "DaughterLocations" : {
+                                "[phi(1020) -> mu+ ^[mu-]cc]CC" :  'Muon_TrackIso_BDT9vars',
+                                "[phi(1020) -> ^mu+ [mu-]cc]CC" :  'Electron_TrackIso_BDT9vars'
+                              },
+                              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT9vars_v1r4.xml"
+                            },
+                            { 
+                              'Type' : 'RelInfoConeVariables',
+                              'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPT', 'CONEPTASYM'],
+                              'Location'  : 'coneInfo'
+                            },
+                            {
+                              'Type': 'RelInfoVertexIsolation',
+                              'Location':'VtxIsoInfo'
+                            },
+                            {
+                              'Type': 'RelInfoVertexIsolationBDT',
+                              'Location':'VtxIsoInfoBDT',
+                            }
+                            ] ## matches 'RelatedInfoTools'
 
 related_info_tools_B2ee = [{'Type' : 'RelInfoBs2MuMuBIsolations',
                            'Variables' : ['BSMUMUCDFISO',
@@ -188,8 +505,6 @@ related_info_tools_B2ee = [{'Type' : 'RelInfoBs2MuMuBIsolations',
                                 }},
                            ] ## matches 'RelatedInfoTools'
 
-
-
 related_info_tools_Tau2MuEtaPrime = [{'Type': 'RelInfoVertexIsolation',
                            'Location':'VtxIsoInfo',
                            },
@@ -198,8 +513,6 @@ related_info_tools_Tau2MuEtaPrime = [{'Type': 'RelInfoVertexIsolation',
                            'Location':'VtxIsoInfoBDT',
                            },
                            ] ## matches 'RelatedInfoTools'
-
-
 
 related_info_tools_Tau2PhiMu = [{ 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5,
                                 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPT', 'CONEPTASYM'],
@@ -252,9 +565,6 @@ related_info_tools_Tau2PhiMu = [{ 'Type' : 'RelInfoConeVariables', 'ConeAngle' :
                                 '[tau+ -> (phi(1020)->K+ ^K-) mu+]CC' : 'KminusTrackIsoBDTInfo'
                                 }}
                                 ]
-
-
-
 
 related_info_tools_Bu2KJPsiee = [{'Type' : 'RelInfoBs2MuMuBIsolations',
                            'Variables' : ['BSMUMUCDFISO',
@@ -322,45 +632,101 @@ default_config = {
     'STREAMS' : [ 'Leptonic' ],
     'WGs'     : [ 'RD' ],
     'CONFIG'  : {
-    'Postscale'             :1,
-    'TauPrescale'           :1,
-    'Tau2MuMuePrescale'     :1,
-    'B2eMuPrescale'         :1,
-    'JPsi2eMuPrescale'      :1,
-    'B2eePrescale'          :1,
-    'B2heMuPrescale'        :1,
-    'B2pMuPrescale'         :1,
-    'Bu2KJPsieePrescale'    :1,
-    'B2TauMuPrescale'       :1,
-    'B2hTauMuPrescale'      :1,
-    'Tau2MuEtaPrimePrescale':1,
-    'RelatedInfoTools_B2eMu': related_info_tools_B2eMu,
-    'RelatedInfoTools_JPsi2eMu': related_info_tools_JPsi2eMu,
-    'RelatedInfoTools_B2ee' : related_info_tools_B2ee,
-    'RelatedInfoTools_Tau2PhiMu' : related_info_tools_Tau2PhiMu,
-    'RelatedInfoTools_Bu2KJPsiee' : related_info_tools_Bu2KJPsiee,
-    'RelatedInfoTools_Tau2MuEtaPrime' : related_info_tools_Tau2MuEtaPrime,
+    'Postscale'                         :1,
+    'TauPrescale'                       :1,
+    'Tau2MuMuePrescale'                 :1,
+    'B2eMuPrescale'                     :1,
+    'JPsi2eMuPrescale'                  :1,
+    'JPsi2MuMuControlPrescale'          :1,
+    'JPsi2eeControlPrescale'            :1,
+    'PromptJPsi2eMuPrescale'            :1,
+    'PromptJPsi2MuMuControlPrescale'    :0.3,
+    'PromptJPsi2eeControlPrescale'      :0.3,
+    'Phi2eMuPrescale'                   :1,
+    'Phi2MuMuControlPrescale'           :1,
+    'PromptPhi2eMuPrescale'             :1,
+    'PromptPhi2MuMuControlPrescale'     :1,
+    'B2eePrescale'                      :1,
+    'B2heMuPrescale'                    :1,
+    'B2pMuPrescale'                     :1,
+    'Bu2KJPsieePrescale'                :1,
+    'B2TauMuPrescale'                   :1,
+    'B2hTauMuPrescale'                  :1,
+    'Tau2MuEtaPrimePrescale'            :1,
+    'RelatedInfoTools_B2eMu'            : related_info_tools_B2eMu,
+    'RelatedInfoTools_JPsi2eMu'         : related_info_tools_JPsi2eMu,
+    'RelatedInfoTools_JPsi2MuMuControl' : related_info_tools_JPsi2MuMuControl,
+    'RelatedInfoTools_JPsi2eeControl'   : related_info_tools_JPsi2eeControl,
+    'RelatedInfoTools_Phi2eMu'          : related_info_tools_Phi2eMu,
+    'RelatedInfoTools_Phi2MuMuControl'  : related_info_tools_Phi2MuMuControl,
+    'RelatedInfoTools_B2ee'             : related_info_tools_B2ee,
+    'RelatedInfoTools_Tau2PhiMu'        : related_info_tools_Tau2PhiMu,
+    'RelatedInfoTools_Bu2KJPsiee'       : related_info_tools_Bu2KJPsiee,
+    'RelatedInfoTools_Tau2MuEtaPrime'   : related_info_tools_Tau2MuEtaPrime,
     'config_B2eMu'          : {
-    'min_MIPCHI2DV': 25.,
-    'max_ADAMASS'  : 1200*MeV,
-    'max_TRCHI2DV' : 3.,
-    'max_TRGHOSTPROB'  : 0.3,
-    'max_AMAXDOCA' : 0.3*mm,
-    'min_BPVDIRA'  : 0,
-    'min_BPVVDCHI2': 225,
-    'max_BPVIPCHI2': 25,
+      'min_MIPCHI2DV': 25.,
+      'max_ADAMASS'  : 1200*MeV,
+      'max_TRCHI2DV' : 3.,
+      'max_TRGHOSTPROB'  : 0.3,
+      'max_AMAXDOCA' : 0.3*mm,
+      'min_BPVDIRA'  : 0.,
+      'min_BPVVDCHI2': 225.,
+      'max_BPVIPCHI2': 25.
     },
     'config_JPsi2eMu'          : {
-    'min_MIPCHI2DV': 36.,
-    'max_ADAMASS'  : 1000*MeV,
-    'max_TRCHI2DV' : 3.,
-    'max_TRGHOSTPROB'  : 0.3,
-    'max_AMAXDOCA' : 0.3*mm,
-    'min_BPVDIRA'  : 0,
-    'min_BPVVDCHI2': 256,
-    'max_BPVIPCHI2': 25,
+      'min_MIPCHI2DV'     : 36.,
+      'max_ADAMASS'       : 1000*MeV,
+      'max_TRCHI2DV'      : 3.,
+      'max_TRGHOSTPROB'   : 0.3,
+      'max_AMAXDOCA'      : 0.3*mm,
+      'min_BPVDIRA'       : 0,
+      'min_BPVVDCHI2'     : 256.,
+      'max_VtxChi2DoF'    : 3.,
+      'min_e_ProbNN'      : 0.1,
+      'min_mu_ProbNN'     : 0.1,
+      'min_e_ProbNN_phi'  : 0.3,
+      'min_mu_ProbNN_phi' : 0.3,
+      'max_PhiMass'       : 2020*MeV,
+      'min_PhiMass'       : 250*MeV
     },
-    
+    'config_PromptJPsi2eMu'     : {
+      'max_MIPCHI2DV'           : 16.,
+      'max_BPVVDCHI2'           : 16.,
+      'max_BPVIPCHI2'           : 16.,
+      'max_TRCHI2DV'            : 3.,
+      'max_mu_TRGHOSTPROB'      : 0.2,
+      'max_e_TRGHOSTPROB'       : 0.2,
+      'max_AMAXDOCA'            : 0.3*mm,
+      'max_SPD'                 : 350,
+      'max_JpsiMass'            : 4096*MeV,
+      'min_JpsiMass'            : 2096*MeV,
+      'min_mu_ProbNN'           : 0.8,
+      'min_e_ProbNN'            : 0.8,
+      'max_VtxChi2DoF'          : 3.0,
+      'max_SPD_Control'         : 350,
+      'max_TRGHOSTPROB_Control' : 0.2,
+      'min_mu_ProbNN_Control'   : 0.5,
+      'min_e_ProbNN_Control'    : 0.5
+    },
+    'config_PromptPhi2eMu'     : {
+      'max_MIPCHI2DV'           : 16.,
+      'max_BPVVDCHI2'           : 16.,
+      'max_BPVIPCHI2'           : 16.,
+      'max_TRCHI2DV'            : 3.,
+      'max_mu_TRGHOSTPROB'      : 0.2,
+      'max_e_TRGHOSTPROB'       : 0.2,
+      'max_AMAXDOCA'            : 0.3*mm,
+      'max_SPD'                 : 350,
+      'max_PhiMass'             : 2020*MeV,
+      'min_PhiMass'             : 250*MeV,
+      'min_mu_ProbNN'           : 0.85,
+      'min_e_ProbNN'            : 0.85,
+      'max_VtxChi2DoF'          : 3.0,
+      'max_SPD_Control'         : 350,      
+      'max_TRGHOSTPROB_Control' : 0.2,
+      'min_mu_ProbNN_Control'   : 0.5,
+      'min_e_ProbNN_Control'    : 0.5
+    },
     'config_Tau2MuEtaPrime' : {
         'muplus_cuts'       : '(ISLONG) & (TRCHI2DOF < 3 )  & (MIPCHI2DV(PRIMARY) >  9.) & (PT > 300*MeV) & (TRGHOSTPROB < 0.3)',
         'tau_mass_window'   : "(ADAMASS('tau+')<150*MeV)",
@@ -396,6 +762,15 @@ class LFVLinesConf(LineBuilder) :
                               'Tau2MuMuePrescale',
                               'B2eMuPrescale',
                               'JPsi2eMuPrescale',
+                              'JPsi2MuMuControlPrescale',
+                              'JPsi2eeControlPrescale',
+                              'PromptJPsi2eMuPrescale',
+                              'PromptJPsi2MuMuControlPrescale',
+                              'PromptJPsi2eeControlPrescale',
+                              'Phi2eMuPrescale',
+                              'Phi2MuMuControlPrescale',
+                              'PromptPhi2eMuPrescale',
+                              'PromptPhi2MuMuControlPrescale',
                               'B2eePrescale',
                               'B2heMuPrescale',
                               'B2pMuPrescale',
@@ -405,12 +780,18 @@ class LFVLinesConf(LineBuilder) :
                               'Tau2MuEtaPrimePrescale',
                               'RelatedInfoTools_B2eMu',
                               'RelatedInfoTools_JPsi2eMu',
+                              'RelatedInfoTools_JPsi2MuMuControl',
+                              'RelatedInfoTools_JPsi2eeControl',
+                              'RelatedInfoTools_Phi2eMu',
+                              'RelatedInfoTools_Phi2MuMuControl',
                               'RelatedInfoTools_B2ee',
                               'RelatedInfoTools_Tau2PhiMu',
                               'RelatedInfoTools_Bu2KJPsiee',
                               'RelatedInfoTools_Tau2MuEtaPrime',
                               'config_B2eMu',
                               'config_JPsi2eMu',
+                              'config_PromptJPsi2eMu',
+                              'config_PromptPhi2eMu',
                               'config_Tau2MuEtaPrime',
                               )
         
@@ -425,6 +806,15 @@ class LFVLinesConf(LineBuilder) :
             mme_name = name+'Tau2eMuMu'
             emu_name=name+'B2eMu'
             JPsiemu_name=name+'JPsi2eMu'
+            JPsimumuControl_name=name+'JPsi2MuMuControl'
+            JPsieeControl_name=name+'JPsi2eeControl'
+            PromptJPsiemu_name=name+'PromptJPsi2eMu'
+            PromptJPsimumuControl_name=name+'PromptJPsi2MuMuControl'
+            PromptJPsieeControl_name=name+'PromptJPsi2eeControl'
+            Phiemu_name=name+'Phi2eMu'
+            PhimumuControl_name=name+'Phi2MuMuControl'
+            PromptPhiemu_name=name+'PromptPhi2eMu'
+            PromptPhimumuControl_name=name+'PromptPhi2MuMuControl'
             ee_name=name+'B2ee'
             hemu_name=name+'B2heMu'
             pmu_name=name+'B2hMu'
@@ -435,18 +825,32 @@ class LFVLinesConf(LineBuilder) :
             muetap_pi_name = name+'Tau2MuEtaP2pipipi'
 
 
-            self.selTau2PhiMu = makeTau2PhiMu(tau_name)
-            self.selTau2eMuMu = makeTau2eMuMu(mme_name)
-            self.selB2eMu     = makeB2eMu(emu_name, config['config_B2eMu'])
-            self.selJPsi2eMu     = makeJPsi2eMu(JPsiemu_name, config['config_JPsi2eMu'])
-            self.selB2ee      = makeB2ee(ee_name)
-            self.selB2heMu    = makeB2heMu(hemu_name)
-            self.selB2pMu     = makeB2pMu(pmu_name)
-            self.selBu        = makeBu(bu_name)
-            #self.selB2TauMu  = makeB2TauMu(taumu_name)
-            self.selB2hTauMu  = makeB2hTauMu(htaumu_name)
+            self.selTau2PhiMu       = makeTau2PhiMu(tau_name)
+            self.selTau2eMuMu       = makeTau2eMuMu(mme_name)
+            self.selB2eMu           = makeB2eMu(emu_name, config['config_B2eMu'])
+            #JPsi LFV lines with Jpsi2ee/mumu control modes
+            self.selJPsi2eMu         = makeJPsi2eMu(JPsiemu_name, config['config_JPsi2eMu'])
+            self.selJPsi2MuMuControl = makeJPsi2MuMuControl(JPsimumuControl_name, config['config_JPsi2eMu'])
+            self.selJPsi2eeControl   = makeJPsi2eeControl(JPsieeControl_name, config['config_JPsi2eMu'])
+            # prompt Jpsi LFV with control channels
+            self.selPromptJPsi2eMu          = makePromptJPsi2eMu(PromptJPsiemu_name, config['config_PromptJPsi2eMu'])
+            self.selPromptJPsi2MuMuControl  = makePromptJPsi2MuMuControl(PromptJPsimumuControl_name, config['config_PromptJPsi2eMu'])
+            self.selPromptJPsi2eeControl    = makePromptJPsi2eeControl(PromptJPsieeControl_name, config['config_PromptJPsi2eMu'])
+            # detached Phi line can use jpsi config only mass cut in prompt line differs
+            self.selPhi2eMu                 = makePhi2eMu(Phiemu_name, config['config_JPsi2eMu'])
+            self.selPhi2MuMuControl         = makePhi2MuMuControl(PhimumuControl_name, config['config_JPsi2eMu'])
+            # promtp phi LFV lines
+            self.selPromptPhi2eMu           = makePromptPhi2eMu(PromptPhiemu_name, config['config_PromptPhi2eMu'])
+            self.selPromptPhi2MuMuControl   = makePromptPhi2MuMuControl(PromptPhimumuControl_name, config['config_PromptPhi2eMu'])
+            # ===============================================
+            self.selB2ee            = makeB2ee(ee_name)
+            self.selB2heMu          = makeB2heMu(hemu_name)
+            self.selB2pMu           = makeB2pMu(pmu_name)
+            self.selBu              = makeBu(bu_name)
+            #self.selB2TauMu        = makeB2TauMu(taumu_name)
+            self.selB2hTauMu        = makeB2hTauMu(htaumu_name)
             self.selTau2MuEtaPrime_gamma  = makeTau2MuEtaPrime(self, muetap_gamma_name, config['config_Tau2MuEtaPrime'], 'gamma')
-            self.selTau2MuEtaPrime_pi  = makeTau2MuEtaPrime(self, muetap_pi_name, config['config_Tau2MuEtaPrime'], 'pi0')
+            self.selTau2MuEtaPrime_pi     = makeTau2MuEtaPrime(self, muetap_pi_name, config['config_Tau2MuEtaPrime'], 'pi0')
 
 
 
@@ -472,16 +876,97 @@ class LFVLinesConf(LineBuilder) :
                                            RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
                                            algos = [ self.selB2eMu ]
                                            )
+            #================ JPsi LFV lines
             self.jpsi2eMuLine = StrippingLine(JPsiemu_name+'Line',
                                            prescale = config['JPsi2eMuPrescale'],
                                            postscale = config['Postscale'],
                                            RelatedInfoTools = config['RelatedInfoTools_JPsi2eMu'],
-                                           MDSTFlag = False,
+                                           MDSTFlag = True,
                                            RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
                                            algos = [ self.selJPsi2eMu ]
                                            )
-                                           
+            self.promptjpsi2eMuLine = StrippingLine(PromptJPsiemu_name+'Line',
+                                           prescale = config['PromptJPsi2eMuPrescale'],
+                                           postscale = config['Postscale'],
+                                           RelatedInfoTools = config['RelatedInfoTools_JPsi2eMu'],
+                                           MDSTFlag = True,
+                                           RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
+                                           algos = [ self.selPromptJPsi2eMu ],
+                                           L0DU="(L0_DATA('Spd(Mult)') < {})".format(config['config_PromptJPsi2eMu']['max_SPD'])
+                                           )
+            #================ JPsi LFV control lines
+            self.jpsi2MuMuControlLine   = StrippingLine(JPsimumuControl_name+'Line',
+                                           prescale = config['JPsi2MuMuControlPrescale'],
+                                           postscale = config['Postscale'],
+                                           RelatedInfoTools = config['RelatedInfoTools_JPsi2MuMuControl'],
+                                           MDSTFlag = True,
+                                           RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
+                                           algos = [ self.selJPsi2MuMuControl ]
+                                           )
+            self.jpsi2eeControlLine   = StrippingLine(JPsieeControl_name+'Line',
+                                           prescale = config['JPsi2eeControlPrescale'],
+                                           postscale = config['Postscale'],
+                                           RelatedInfoTools = config['RelatedInfoTools_JPsi2eeControl'],
+                                           MDSTFlag = True,
+                                           RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
+                                           algos = [ self.selJPsi2eeControl ]
+                                           )
+            self.promptjpsi2MuMuControlLine = StrippingLine(PromptJPsimumuControl_name+'Line',
+                                                  prescale = config['PromptJPsi2MuMuControlPrescale'],
+                                                  postscale = config['Postscale'],
+                                                  RelatedInfoTools = config['RelatedInfoTools_JPsi2MuMuControl'],
+                                                  MDSTFlag = True,
+                                                  RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
+                                                  algos = [ self.selPromptJPsi2MuMuControl ],
+                                                  L0DU="(L0_DATA('Spd(Mult)') < {})".format(config['config_PromptJPsi2eMu']['max_SPD_Control'])
+                                                  )
+            self.promptjpsi2eeControlLine = StrippingLine(PromptJPsieeControl_name+'Line',
+                                                  prescale = config['PromptJPsi2eeControlPrescale'],
+                                                  postscale = config['Postscale'],
+                                                  RelatedInfoTools = config['RelatedInfoTools_JPsi2eeControl'],
+                                                  MDSTFlag = True,
+                                                  RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
+                                                  algos = [ self.selPromptJPsi2eeControl ],
+                                                  L0DU="(L0_DATA('Spd(Mult)') < {})".format(config['config_PromptJPsi2eMu']['max_SPD_Control'])
+                                                  )            
+            #================ Phi LFV lines
+            self.phi2eMuLine = StrippingLine(Phiemu_name+'Line',
+                                           prescale = config['Phi2eMuPrescale'],
+                                           postscale = config['Postscale'],
+                                           RelatedInfoTools = config['RelatedInfoTools_Phi2eMu'],
+                                           MDSTFlag = True,
+                                           RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
+                                           algos = [ self.selPhi2eMu ]
+                                           )
 
+            self.promptphi2eMuLine = StrippingLine(PromptPhiemu_name+'Line',
+                                           prescale = config['PromptPhi2eMuPrescale'],
+                                           postscale = config['Postscale'],
+                                           RelatedInfoTools = config['RelatedInfoTools_Phi2eMu'],
+                                           MDSTFlag = True,
+                                           RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
+                                           algos = [ self.selPromptPhi2eMu ],
+                                           L0DU = "(L0_DATA('Spd(Mult)') < {})".format(config['config_PromptPhi2eMu']['max_SPD'])
+                                           )                      
+            #================ Phi LFV control lines
+            self.phi2MuMuControlLine = StrippingLine(PhimumuControl_name+'Line',
+                                           prescale = config['Phi2MuMuControlPrescale'],
+                                           postscale = config['Postscale'],
+                                           RelatedInfoTools = config['RelatedInfoTools_Phi2MuMuControl'],
+                                           MDSTFlag = True,
+                                           RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
+                                           algos = [ self.selPhi2MuMuControl ]
+                                           )
+
+            self.promptphi2MuMuControlLine = StrippingLine(PromptPhimumuControl_name+'Line',
+                                           prescale = config['PromptPhi2MuMuControlPrescale'],
+                                           postscale = config['Postscale'],
+                                           RelatedInfoTools = config['RelatedInfoTools_Phi2MuMuControl'],
+                                           MDSTFlag = True,
+                                           RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
+                                           algos = [ self.selPromptPhi2MuMuControl ],
+                                           L0DU = "(L0_DATA('Spd(Mult)') < {})".format(config['config_PromptPhi2eMu']['max_SPD_Control'])
+                                           )   
             '''
             self.b2TauMuLine = StrippingLine(taumu_name+'Line',
                                             prescale = config['B2TauMuPrescale'],
@@ -547,7 +1032,21 @@ class LFVLinesConf(LineBuilder) :
             self.registerLine(self.tau2PhiMuLine)
             self.registerLine(self.tau2eMuMuLine)
             self.registerLine(self.b2eMuLine)
+            # JPsi LFV
             self.registerLine(self.jpsi2eMuLine)
+            self.registerLine(self.promptjpsi2eMuLine)
+            # JPsi LFV control
+            self.registerLine(self.jpsi2MuMuControlLine)
+            self.registerLine(self.jpsi2eeControlLine)
+            self.registerLine(self.promptjpsi2MuMuControlLine)
+            self.registerLine(self.promptjpsi2eeControlLine)
+            # Phi LFV
+            self.registerLine(self.phi2eMuLine)
+            self.registerLine(self.promptphi2eMuLine)
+            # Phi LFV control
+            self.registerLine(self.phi2MuMuControlLine)
+            self.registerLine(self.promptphi2MuMuControlLine)
+            ####
             self.registerLine(self.b2eeLine)
             self.registerLine(self.b2heMuLine)
             self.registerLine(self.b2pMuLine)
@@ -616,9 +1115,6 @@ def makeTau2PhiMu(name):
     return SelTau_triggered
 
     
-
-
-
 def makeTau2eMuMu(name):
     """
     Please contact Johannes Albrecht if you think of prescaling this line!
@@ -646,7 +1142,6 @@ def makeTau2eMuMu(name):
     return Selection (name,
                       Algorithm = Tau2eMuMu,
                       RequiredSelections = [ _stdLooseMuons,_stdLooseElectrons]) 
-
 
 
 def makeB2TauMu(name):
@@ -719,6 +1214,7 @@ def makeB2eMu(name, myconfig):
                       Algorithm = Bs2eMu,
                       RequiredSelections = [ _stdLooseMuons,_stdLooseElectrons])
 
+
 def makeJPsi2eMu(name, myconfig):
     """
     Please contact Johannes Albrecht if you think of prescaling this line!
@@ -732,18 +1228,20 @@ def makeJPsi2eMu(name, myconfig):
     
         DecayDescriptors = ["[J/psi(1S) -> e+ mu-]cc","[J/psi(1S) -> e+ mu+]cc"],
         DaughtersCuts = {
-          "mu+" : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV}) & (TRCHI2DOF < {max_TRCHI2DV}) & (TRGHOSTPROB< {max_TRGHOSTPROB})".format(**myconfig) ,
-          "e+"  : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV})&(TRCHI2DOF < {max_TRCHI2DV})&(PIDe>-2)".format(**myconfig),
+          "mu+" : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV})"\
+                  " & (TRCHI2DOF < {max_TRCHI2DV}) & (PROBNNmu > {min_mu_ProbNN}) &"\
+                  "(TRGHOSTPROB< {max_TRGHOSTPROB})".format(**myconfig) ,
+          "e+"  : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV}) & (TRGHOSTPROB< {max_TRGHOSTPROB}) &"\
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & (PROBNNe > {min_e_ProbNN}) ".format(**myconfig),
         },
 
         CombinationCut = "(ADAMASS('J/psi(1S)') < {max_ADAMASS})"\
                             "& (AMAXDOCA('') < {max_AMAXDOCA})".format(**myconfig),
 
-        MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
+        MotherCut = "(VFASPF(VCHI2/VDOF)<{max_VtxChi2DoF}) "\
                               "& (ADMASS('J/psi(1S)') < {max_ADAMASS} )"\
                               "& (BPVDIRA > {min_BPVDIRA}) "\
-                              "& (BPVVDCHI2 > {min_BPVVDCHI2})"\
-                              "& (BPVIPCHI2() < {max_BPVIPCHI2}) ".format(**myconfig),
+                              "& (BPVVDCHI2 > {min_BPVVDCHI2})".format(**myconfig)
     )
     
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
@@ -752,6 +1250,361 @@ def makeJPsi2eMu(name, myconfig):
     return Selection (name,
                       Algorithm = JPsi2eMu,
                       RequiredSelections = [ _stdLooseMuons,_stdLooseElectrons])
+
+
+def makeJPsi2MuMuControl(name, myconfig):
+    """
+    Please contact Maximilian Schlupp or Johannes Albrecht if any issues 
+    occur with this line. 
+    Cloned from JPsi2eMu Line except for the PID criteria
+
+    Arguments:
+    name        : name of the Selection.
+    """
+    
+    #from Configurables import OfflineVertexFitter
+    JPsi2MuMuControl = CombineParticles(
+    
+        DecayDescriptors = ["J/psi(1S) -> mu+ mu-","[J/psi(1S) -> mu+ mu+]cc"],
+        DaughtersCuts = {
+          "mu+" : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV}) &"\
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & "\
+                  "(TRGHOSTPROB< {max_TRGHOSTPROB}) & (PROBNNmu > {min_mu_ProbNN})".format(**myconfig) ,
+          "mu-"  : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV}) & (TRGHOSTPROB< {max_TRGHOSTPROB}) &"\
+                    "(TRCHI2DOF < {max_TRCHI2DV}) & (PROBNNmu > {min_mu_ProbNN})".format(**myconfig) # remove PIDe>-2 for muon!
+        },
+
+        CombinationCut = "(ADAMASS('J/psi(1S)') < {max_ADAMASS})"\
+                            "& (AMAXDOCA('') < {max_AMAXDOCA})".format(**myconfig),
+
+        MotherCut = "(VFASPF(VCHI2/VDOF)<{max_VtxChi2DoF}) "\
+                              "& (ADMASS('J/psi(1S)') < {max_ADAMASS} )"\
+                              "& (BPVDIRA > {min_BPVDIRA}) "\
+                              "& (BPVVDCHI2 > {min_BPVVDCHI2})".format(**myconfig)
+    )
+    
+    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
+    
+    return Selection (name,
+                      Algorithm = JPsi2MuMuControl,
+                      RequiredSelections = [ _stdLooseMuons])
+
+
+def makeJPsi2eeControl(name, myconfig):
+    """
+    Please contact Maximilian Schlupp or Johannes Albrecht if any issues 
+    occur with this line. 
+    Cloned from JPsi2eMu Line except for the PID criteria
+
+    Arguments:
+    name        : name of the Selection.
+    """
+    
+    #from Configurables import OfflineVertexFitter
+    JPsi2eeControl = CombineParticles(
+    
+        DecayDescriptors = ["J/psi(1S) -> e+ e-","[J/psi(1S) -> e+ e+]cc"],
+        DaughtersCuts = {
+          "e+" : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV}) & (TRCHI2DOF < {max_TRCHI2DV}) & "\
+                 "(TRGHOSTPROB< {max_TRGHOSTPROB}) & (PROBNNe > {min_e_ProbNN}) ".format(**myconfig) ,
+          "e-" : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV}) & (TRCHI2DOF < {max_TRCHI2DV}) &"\
+                 "(TRGHOSTPROB< {max_TRGHOSTPROB}) & (PROBNNe > {min_e_ProbNN}) ".format(**myconfig) # remove PIDe>-2 for muon! IS implicitly made in stdLooseElectrons
+        },
+
+        CombinationCut = "(ADAMASS('J/psi(1S)') < {max_ADAMASS})"\
+                            "& (AMAXDOCA('') < {max_AMAXDOCA})".format(**myconfig),
+
+        MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
+                              "& (ADMASS('J/psi(1S)') < {max_ADAMASS} )"\
+                              "& (BPVDIRA > {min_BPVDIRA}) "\
+                              "& (BPVVDCHI2 > {min_BPVVDCHI2})".format(**myconfig)
+    )
+    
+    _stdLooseElectrons = DataOnDemand(Location = "Phys/StdLooseElectrons/Particles")
+    
+    return Selection (name,
+                      Algorithm = JPsi2eeControl,
+                      RequiredSelections = [ _stdLooseElectrons])
+
+
+def makePromptJPsi2eMu(name, myconfig):
+    """
+    Please contact Maximilian Schlupp or Johannes Albrecht if you think of prescaling this line!
+    
+    Arguments:
+    name        : name of the Selection.
+    """
+
+    #from Configurables import OfflineVertexFitter
+    PromptJPsi2eMu = CombineParticles(
+    
+        DecayDescriptors = ["[J/psi(1S) -> e+ mu-]cc","[J/psi(1S) -> e+ mu+]cc"],
+        DaughtersCuts = {
+          "mu+" : "(MIPCHI2DV(PRIMARY) < {max_MIPCHI2DV}) &"\
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & (TRGHOSTPROB< {max_mu_TRGHOSTPROB})"\
+                  " & (PROBNNmu > {min_mu_ProbNN})".format(**myconfig) ,
+          "e+"  : "(MIPCHI2DV(PRIMARY) < {max_MIPCHI2DV}) & "\
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & (TRGHOSTPROB< {max_e_TRGHOSTPROB})"\
+                  " & ( PROBNNe > {min_e_ProbNN})".format(**myconfig),
+        },
+
+        CombinationCut = "in_range( {min_JpsiMass}, AM, {max_JpsiMass} )"\
+                         "& (AMAXDOCA('') < {max_AMAXDOCA})".format(**myconfig),
+
+        MotherCut = "(VFASPF(VCHI2/VDOF) < {max_VtxChi2DoF}) "\
+                    "& (MM < {max_JpsiMass})"\
+                    "& (MM > {min_JpsiMass} )"\
+                    "& (BPVVDCHI2 < {max_BPVVDCHI2})"\
+                    "& (BPVIPCHI2() < {max_BPVIPCHI2})".format(**myconfig),
+    )
+    
+    _stdAllLooseMuons = DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")
+    _stdAllLooseElectrons= DataOnDemand(Location = "Phys/StdAllLooseElectrons/Particles")
+
+    return Selection (name,
+                      Algorithm = PromptJPsi2eMu,
+                      RequiredSelections = [ _stdAllLooseMuons,_stdAllLooseElectrons])
+
+
+def makePromptJPsi2MuMuControl(name, myconfig):
+    """
+    Please contact Maximilian Schlupp or Johannes Albrecht if 
+    this line has issues. 
+    
+    Arguments:
+    name        : name of the Selection.
+    """
+
+    #from Configurables import OfflineVertexFitter
+    PromptJPsi2MuMuControl = CombineParticles(
+    
+        DecayDescriptors = ["J/psi(1S) -> mu+ mu-","[J/psi(1S) -> mu+ mu+]cc"],
+        DaughtersCuts = {
+          "mu+" : "(MIPCHI2DV(PRIMARY) < {max_MIPCHI2DV}) &"\
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & (TRGHOSTPROB< {max_TRGHOSTPROB_Control})"\
+                  " & (PROBNNmu > {min_mu_ProbNN_Control})".format(**myconfig) ,
+          "mu-" : "(MIPCHI2DV(PRIMARY) < {max_MIPCHI2DV}) &"\
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & (TRGHOSTPROB< {max_TRGHOSTPROB_Control})"\
+                  " & ( PROBNNmu > {min_mu_ProbNN_Control})".format(**myconfig),
+        },
+
+        CombinationCut = "in_range( {min_JpsiMass}, AM, {max_JpsiMass} )"\
+                         "& (AMAXDOCA('') < {max_AMAXDOCA})".format(**myconfig),
+
+        MotherCut = "(VFASPF(VCHI2/VDOF) < {max_VtxChi2DoF}) "\
+                    "& (MM < {max_JpsiMass})"\
+                    "& (MM > {min_JpsiMass} )"\
+                    "& (BPVVDCHI2 < {max_BPVVDCHI2})"\
+                    "& (BPVIPCHI2() < {max_BPVIPCHI2})".format(**myconfig),
+    )
+    
+    _stdAllLooseMuons = DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")
+
+    return Selection (name,
+                      Algorithm = PromptJPsi2MuMuControl,
+                      RequiredSelections = [ _stdAllLooseMuons])
+
+
+def makePromptJPsi2eeControl(name, myconfig):
+    """
+    Please contact Maximilian Schlupp or Johannes Albrecht if 
+    this line has issues. 
+    
+    Arguments:
+    name        : name of the Selection.
+    """
+
+    #from Configurables import OfflineVertexFitter
+    PromptJPsi2eeControl = CombineParticles(
+    
+        DecayDescriptors = ["J/psi(1S) -> e+ e-","[J/psi(1S) -> e+ e+]cc"],
+        DaughtersCuts = {
+          "e+" : "(MIPCHI2DV(PRIMARY) < {max_MIPCHI2DV}) &"\
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & (TRGHOSTPROB< {max_TRGHOSTPROB_Control})"\
+                  " & (PROBNNe > {min_e_ProbNN_Control})".format(**myconfig) ,
+          "e-" : "(MIPCHI2DV(PRIMARY) < {max_MIPCHI2DV}) &"\
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & (TRGHOSTPROB< {max_TRGHOSTPROB_Control})"\
+                  " & ( PROBNNe > {min_e_ProbNN_Control})".format(**myconfig),
+        },
+
+        CombinationCut = "in_range( {min_JpsiMass}, AM, {max_JpsiMass} )"\
+                         "& (AMAXDOCA('') < {max_AMAXDOCA})".format(**myconfig),
+
+        MotherCut = "(VFASPF(VCHI2/VDOF) < {max_VtxChi2DoF}) "\
+                    "& (MM < {max_JpsiMass})"\
+                    "& (MM > {min_JpsiMass} )"\
+                    "& (BPVVDCHI2 < {max_BPVVDCHI2})"\
+                    "& (BPVIPCHI2() < {max_BPVIPCHI2})".format(**myconfig),
+    )
+    
+    _stdAllLooseElectrons = DataOnDemand(Location = "Phys/StdAllLooseElectrons/Particles")
+
+    return Selection (name,
+                      Algorithm = PromptJPsi2eeControl,
+                      RequiredSelections = [ _stdAllLooseElectrons])
+
+
+def makePhi2eMu(name, myconfig):
+    """
+    Please contact Maximilian Schlupp or Johannes Albrecht if you think of prescaling this line!
+    
+    Arguments:
+    name        : name of the Selection.
+    """
+    
+    #from Configurables import OfflineVertexFitter
+    Phi2eMu = CombineParticles(
+    
+        DecayDescriptors = ["[phi(1020) -> e+ mu-]cc","[phi(1020) -> e+ mu+]cc"],
+        DaughtersCuts = {
+          "mu+" : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV}) & "\
+                  "(TRCHI2DOF < {max_TRCHI2DV}) &"\
+                  "(TRGHOSTPROB< {max_TRGHOSTPROB}) & "\
+                  "(PROBNNmu > {min_mu_ProbNN_phi})".format(**myconfig) ,
+          "e+"  : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV}) & "\
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & "\
+                  "(TRGHOSTPROB< {max_TRGHOSTPROB}) & "\
+                  "(PROBNNe > {min_e_ProbNN_phi})".format(**myconfig),
+        },
+
+        CombinationCut = "(ADAMASS('phi(1020)') < {max_ADAMASS})"\
+                            "& (AMAXDOCA('') < {max_AMAXDOCA})".format(**myconfig),
+
+        MotherCut = "(VFASPF(VCHI2/VDOF) < {max_VtxChi2DoF}) "\
+                              "& (MM > {min_PhiMass}) & (MM < {max_PhiMass})"\
+                              "& (BPVDIRA > {min_BPVDIRA}) "\
+                              "& (BPVVDCHI2 > {min_BPVVDCHI2})".format(**myconfig)
+    )
+    
+    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
+    _stdLooseElectrons= DataOnDemand(Location = "Phys/StdLooseElectrons/Particles")
+
+    return Selection (name,
+                      Algorithm = Phi2eMu,
+                      RequiredSelections = [ _stdLooseMuons,_stdLooseElectrons])
+
+
+def makePhi2MuMuControl(name, myconfig):
+    """
+    Please contact Maximilian Schlupp or Johannes Albrecht if experience 
+    issues with this line
+    
+    Arguments:
+    name        : name of the Selection.
+    """
+    
+    #from Configurables import OfflineVertexFitter
+    Phi2MuMuControl = CombineParticles(
+    
+        DecayDescriptors = ["phi(1020) -> mu+ mu-","[phi(1020) -> mu+ mu+]cc"],
+        DaughtersCuts = {
+          "mu+" : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV}) & "\
+                  "(TRCHI2DOF < {max_TRCHI2DV}) &"\
+                  "(TRGHOSTPROB< {max_TRGHOSTPROB}) &"\
+                  "(PROBNNmu > {min_mu_ProbNN_phi})".format(**myconfig) ,
+          "mu-" : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV}) & "\
+                  "(TRCHI2DOF < {max_TRCHI2DV}) &"\
+                  "(TRGHOSTPROB< {max_TRGHOSTPROB}) &"\
+                  "(PROBNNmu > {min_mu_ProbNN_phi})".format(**myconfig),
+        },
+
+        CombinationCut = "in_range( {min_PhiMass}, AM, {max_PhiMass} )"\
+                            "& (AMAXDOCA('') < {max_AMAXDOCA})".format(**myconfig),
+
+        MotherCut = "(VFASPF(VCHI2/VDOF) < {max_VtxChi2DoF} ) "\
+                              "& (MM > {min_PhiMass}) & (MM < {max_PhiMass})"\
+                              "& (BPVDIRA > {min_BPVDIRA}) "\
+                              "& (BPVVDCHI2 > {min_BPVVDCHI2})".format(**myconfig)
+    )
+    
+    _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
+
+    return Selection (name,
+                      Algorithm = Phi2MuMuControl,
+                      RequiredSelections = [ _stdLooseMuons])
+
+
+def makePromptPhi2eMu(name, myconfig):
+    """
+    Please contact Maximilian Schlupp or Johannes Albrecht if you think of prescaling this line!
+    
+    Arguments:
+    name        : name of the Selection.
+    """
+
+    #from Configurables import OfflineVertexFitter
+    PromptPhi2eMu = CombineParticles(
+    
+        DecayDescriptors = ["[phi(1020) -> e+ mu-]cc","[phi(1020) -> e+ mu+]cc"],
+        DaughtersCuts = {
+          "mu+" : "(MIPCHI2DV(PRIMARY) < {max_MIPCHI2DV}) &"\
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & "\
+                  "(TRGHOSTPROB< {max_mu_TRGHOSTPROB}) &"\
+                  "(PROBNNmu > {min_mu_ProbNN})".format(**myconfig) ,
+          "e+"  : "(MIPCHI2DV(PRIMARY) < {max_MIPCHI2DV}) &"\
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & "\
+                  "(TRGHOSTPROB< {max_e_TRGHOSTPROB}) & "\
+                  "( PROBNNe > {min_e_ProbNN})".format(**myconfig),
+        },
+
+        CombinationCut = "in_range( {min_PhiMass}, AM, {max_PhiMass} )"\
+                         "& (AMAXDOCA('') < {max_AMAXDOCA})".format(**myconfig),
+
+        MotherCut = "(VFASPF(VCHI2/VDOF) < {max_VtxChi2DoF}) "\
+                    "& (MM < {max_PhiMass})"\
+                    "& (MM > {min_PhiMass} )"\
+                    "& (BPVVDCHI2 < {max_BPVVDCHI2})"\
+                    "& (BPVIPCHI2() < {max_BPVIPCHI2})".format(**myconfig),
+    )
+    
+    _stdAllLooseMuons = DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")
+    _stdAllLooseElectrons= DataOnDemand(Location = "Phys/StdAllLooseElectrons/Particles")
+
+    return Selection (name,
+                      Algorithm = PromptPhi2eMu,
+                      RequiredSelections = [ _stdAllLooseMuons,_stdAllLooseElectrons])
+
+
+def makePromptPhi2MuMuControl(name, myconfig):
+    """
+    Please contact Maximilian Schlupp or Johannes Albrecht if you see 
+    issues with this line.
+    
+    Arguments:
+    name        : name of the Selection.
+    """
+
+    #from Configurables import OfflineVertexFitter
+    PromptPhi2MuMuControl = CombineParticles(
+    
+        DecayDescriptors = ["phi(1020) -> mu+ mu-","[phi(1020) -> mu+ mu+]cc"],
+        DaughtersCuts = {
+          "mu+" : "(MIPCHI2DV(PRIMARY) < {max_MIPCHI2DV}) &"\
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & "\
+                  "(TRGHOSTPROB< {max_TRGHOSTPROB_Control}) & "\
+                  "(PROBNNmu > {min_mu_ProbNN_Control})".format(**myconfig) ,
+          "mu-" : "(MIPCHI2DV(PRIMARY) < {max_MIPCHI2DV}) &"\
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & "\
+                  "(TRGHOSTPROB< {max_TRGHOSTPROB_Control}) & "\
+                  "(PROBNNmu > {min_mu_ProbNN_Control})".format(**myconfig),
+        },
+
+        CombinationCut = "in_range( {min_PhiMass}, AM, {max_PhiMass} )"\
+                         "& (AMAXDOCA('') < {max_AMAXDOCA})".format(**myconfig),
+
+        MotherCut = "(VFASPF(VCHI2/VDOF) < {max_VtxChi2DoF}) "\
+                    "& (MM < {max_PhiMass})"\
+                    "& (MM > {min_PhiMass} )"\
+                    "& (BPVVDCHI2 < {max_BPVVDCHI2})"\
+                    "& (BPVIPCHI2() < {max_BPVIPCHI2})".format(**myconfig),
+    )
+    
+    _stdAllLooseMuons = DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")
+
+    return Selection (name,
+                      Algorithm = PromptPhi2MuMuControl,
+                      RequiredSelections = [ _stdAllLooseMuons])
+
 
 def makeB2ee(name):
     """
@@ -785,8 +1638,6 @@ def makeB2ee(name):
     return Selection (name,
                       Algorithm = Bs2ee,
                       RequiredSelections = [ _stdLooseElectrons])
-
-
 
 
 def makeB2hTauMu(name):
@@ -835,8 +1686,6 @@ def makeB2hTauMu(name):
                                              _stdNoPIDsPions, _stdNoPIDsKaons,
                                              _stdNoPIDsProtons ])
                       
-
-
 
 def makeB2heMu(name):
     """
@@ -995,7 +1844,6 @@ def makeDetachedJPsi(name) :
                       RequiredSelections = [ _stdLooseElectrons ])
 
 
-
 def makeTau2MuEtaPrime(self, name, config, setEtaPrime) :
     
     """
@@ -1028,8 +1876,6 @@ def makeTau2MuEtaPrime(self, name, config, setEtaPrime) :
                         RequiredSelections=[self.SelEtaPrime,_muons] )
 
 
-
-
 def makeEtaPrime2pipigamma(name, config) :
     """
         eta' selection for tau -> mu eta'
@@ -1055,7 +1901,6 @@ def makeEtaPrime2pipigamma(name, config) :
     return Selection (name,
                         Algorithm = EtaPrime2pipigamma,
                         RequiredSelections = [ _stdLoosePions, _stdLooseAllPhotons ])
-
 
 
 def makeEtaPrime2pipipi(name, config) :

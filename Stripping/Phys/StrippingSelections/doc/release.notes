@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-06 - Maximilian Schlupp
+ - Modified LFVJpsi2emu line: remove BPVIPCHI2 cut, add ProbNN
+ - Add 9 LFV Jpsi/Phi2emu/mumu/ee lines, rates & output tested
+ - Reactivate MDSTFlags - Analyses used to commission offline PID & isolations in trigger
+
 ! 2016-04-06 - Paula Alvarez
  - Updated StrippingB2XTauMu to use DaVinci__N3BodyDecays in phi_3pi lines
 
