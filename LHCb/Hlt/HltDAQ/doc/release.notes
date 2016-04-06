@@ -5,6 +5,9 @@
 !------------------------------------------------------------------------------
 
 ! 2016-04-06 - Rosen Matev
+ - Improve failure error message in HltPackedDataWriter
+
+! 2016-04-06 - Rosen Matev
  - Important changes to packed object persistence in raw banks
    o Now persisting links between containers on the TES!
    o Checksum calculation is controlled by EnableChecksum propert

@@ -132,21 +132,24 @@ StatusCode HltPackedDataWriter::execute() {
     m_buffer.save<int32_t>(locationID->second);
 
     // Save the links to other containers on the TES
+    StatusCode status{StatusCode::SUCCESS};
     auto* linkMgr = dataObject->linkMgr();
     unsigned int nlinks = linkMgr->size();
     m_buffer.saveSize(nlinks);
     for (unsigned int id = 0; id < nlinks; ++id) {
-      auto linkLocationID = m_hltANNSvc->value(PackedObjectLocations,
-                                               linkMgr->link(id)->path());
+      const auto& linkPath = linkMgr->link(id)->path();
+      auto linkLocationID = m_hltANNSvc->value(PackedObjectLocations, linkPath);
       // TODO fail if unknown location, even if HltANNSvc.allowUndefined=True
-      if (!linkLocationID) {
-        error() << "Requested to persist link to " << containerPath
+      if (linkLocationID) {
+        m_buffer.save<int32_t>(linkLocationID->second);
+      } else {
+        error() << "Requested to persist link to " << linkPath
                 << " but no ID is registered for it in the HltANNSvc, skipping!"
                 << endmsg;
-        return StatusCode::FAILURE;
+        status = StatusCode::FAILURE;
       }
-      m_buffer.save<int32_t>(linkLocationID->second);
     }
+    if (!status) return status;
 
     // Save the packed object itself
     auto objectSize = saveObjectFun(*dataObject);
