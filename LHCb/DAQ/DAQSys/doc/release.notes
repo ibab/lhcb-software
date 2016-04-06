@@ -4,7 +4,7 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
-! 2015-04-06 - Rosen Matev
+! 2016-04-06 - Rosen Matev
  - Add decoder for packed objects (HltPackedDataDecoder)
 
 !========================= DAQSys v8r10 2015-11-23 =========================
