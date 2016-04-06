@@ -5,7 +5,7 @@
 package           HltBase
 version           v15r8p1
 
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches          cmt doc dict src HltBase
 
@@ -18,7 +18,7 @@ use TrackEvent          v*    Event
 use RecEvent            v*    Event
 use LHCbMath            v*    Kernel
 use HltInterfaces       v*    Kernel
-use LoKiCore            v*    Phys 
+use LoKiCore            v*    Phys
 
 use DetDesc             v*    Det
 
@@ -26,12 +26,12 @@ use Boost        v*   LCG_Interfaces
 
 private
 use GaudiObjDesc v* -no_auto_imports
-  use PRConfig v* 
+  use PRConfig v*
 end_private
 
 # include directory
 #=========================================================================
-apply_pattern 	install_more_includes more=HltBase offset=Event 
+apply_pattern 	install_more_includes more=HltBase offset=Event
 
 #============================================================================
 # library building rule
@@ -54,7 +54,7 @@ apply_pattern    reflex_dictionary                                 \
 
 # Hack for cmt v1r19 bug to link dictionary on windows
 macro        HltBaseDict_use_linkopts $(use_linkopts)
-macro_append HltBaseDict_dependencies    " HltBase " 
+macro_append HltBaseDict_dependencies    " HltBase "
 
 macro_append Boost_linkopts " $(Boost_linkopts_regex) "
 
@@ -66,5 +66,5 @@ private
   macro LHCbAlgs_use "" QMTest "LHCbAlgs v* Kernel  -no_auto_imports"
   use $(SQL_use)
   use $(LHCbAlgs_use)
-  use PRConfig v* 
+  use PRConfig v*
 end_private

@@ -21,6 +21,8 @@ class TechnicalLines(Hlt2LinesConfigurableUser):
                                   'VoidFilter' : ''},
                  'Lumi'        : {'HLT1' : "HLT_PASS_SUBSTR('Hlt1Lumi')",
                                   'VoidFilter' : ''},
+                 'BeamGas'     : {'HLT1' : "HLT_PASS_SUBSTR('Hlt1BeamGas')",
+                                  'VoidFilter' : ''},
                  'KS0_DD'      : {'HLT1' : "HLT_PASS_RE('^Hlt1(?!Lumi).*Decision$')",
                                   'VoidFilter' : ''},
                  'KS0_LL'      : {'HLT1' : "HLT_PASS_RE('^Hlt1(?!Lumi).*Decision$')",
@@ -39,6 +41,7 @@ class TechnicalLines(Hlt2LinesConfigurableUser):
                   'Transparent' : [],
                   'SMOGPhysics' : [],
                   'Lumi'        : [],
+                  'BeamGas'     : [],
                   'KS0_DD'      : [KS0_DD],
                   'KS0_LL'      : [KS0_LL]}
 

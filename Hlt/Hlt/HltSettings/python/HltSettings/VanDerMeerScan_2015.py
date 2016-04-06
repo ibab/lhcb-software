@@ -17,12 +17,6 @@ class VanDerMeerScan_2015:
              self.ActiveHlt2Lines() != ref.ActiveHlt2Lines(self) ) :
             raise RuntimeError('Must update HltType when modifying ActiveHlt.Lines()')
 
-    def __init__(self) :
-        self.NanoBanks = [
-            'ODIN', 'HltLumiSummary', 'HltRoutingBits', 'DAQ', 'Velo',
-            'L0DU', 'HltDecReports', 'HC',
-        ]
-
     def L0TCK(self) :
         return '0x0041'
 
@@ -150,3 +144,7 @@ class VanDerMeerScan_2015:
             'BEAMGAS' : "HLT_PASS_SUBSTR('Hlt1BeamGas') | HLT_PASS_RE('Hlt1L0.*Decision') | HLT_PASS_SUBSTR('Hlt1Lumi')",
             'VELOCLOSING' : "HLT_PASS_RE('Hlt1Velo.*Decision')",
         }
+
+    def NanoBanks(self):
+        return ['ODIN', 'HltLumiSummary', 'HltRoutingBits', 'DAQ', 'Velo',
+                'L0DU', 'HltDecReports', 'HC']

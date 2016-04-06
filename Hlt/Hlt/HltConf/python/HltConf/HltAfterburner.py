@@ -116,6 +116,8 @@ class HltAfterburnerConf(LHCbConfigurableUser):
         """
         HLT Afterburner configuration
         """
+        from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
+        from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedDownstreamTracking
 
         Afterburner = self.getProp("Sequence") if self.isPropertySet("Sequence") else None
         if not Afterburner:
@@ -130,7 +132,7 @@ class HltAfterburnerConf(LHCbConfigurableUser):
                                    Location = decoder.listOutputs()[0])
             AfterburnerFilterSeq.Members += [hlt2Filter]
         AfterburnerSeq = Sequence("HltAfterburnerSequence", IgnoreFilterPassed = True)
-        AfterburnerFilterSeq.Members += [ AfterburnerSeq ] 
+        AfterburnerFilterSeq.Members += [ AfterburnerSeq ]
         if self.getProp("EnableHltRecSummary"):
             from Configurables import RecSummaryAlg
             seq = Sequence("RecSummarySequence")
@@ -154,8 +156,8 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             recSeq = Sequence("RecSummaryRecoSequence", IgnoreFilterPassed = True)
             from itertools import chain
             from Hlt2Lines.Utilities.Utilities import uniqueEverseen
-            recSeq.Members = (list(chain.from_iterable([dec[0] for dec in decoders.itervalues()]))
-                              + list(uniqueEverseen(chain.from_iterable([tracks, tracksDown, muonID, PVs]))))
+            recSeq.Members = list(uniqueEverseen(chain.from_iterable([dec[0] for dec in decoders.itervalues()]
+                                                                     + [tracks, tracksDown, muonID, PVs])))
             summary = RecSummaryAlg('Hlt2RecSummary', SummaryLocation = self.getProp("RecSummaryLocation"),
                                     HltSplitTracks = True,
                                     SplitLongTracksLocation = tracks.outputSelection(),
@@ -178,7 +180,8 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             infoSeq = Sequence("TrackInfoSequence", IgnoreFilterPassed = True)
             # I don't want to pull in reconstruction if not run before, then there should be also no candidates needing this information
             # This is anyhow done by the RecSummary above
-            infoSeq.Members +=  Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks().members() + Hlt2BiKalmanFittedDownstreamTracking().hlt2PrepareTracks().members()
+            members = [Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks().members() + Hlt2BiKalmanFittedDownstreamTracking().hlt2PrepareTracks().members()]
+            infoSeq.Members += list(uniqueEverseen(chain.from_iterable(members)))
             prefix = "Hlt2"
             trackClones = Sequence(prefix + "TrackClonesSeq")
             #checkTracks =  Filter(prefix+"CheckTrackLoc",Code = "EXISTS('%(trackLocLong)s') & EXISTS('%(trackLocDown)s')" % {"trackLocLong" : trackLocations[0], "trackLocDown" : trackLocations[1]})
@@ -195,7 +198,7 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             cloneCleaner.inputLocations = trackLocations
             cloneCleaner.linkerLocation = cloneTable.outputLocation
             trackClones.Members += [ cloneTable, cloneCleaner ]
-            
+
             infoSeq.Members += [trackClones]
 
             AfterburnerSeq.Members += [infoSeq]
@@ -231,7 +234,6 @@ class HltAfterburnerConf(LHCbConfigurableUser):
             tracksDown = downstreamTracking.hlt2PrepareTracks()
             chargedProtosOutputLocation =  downstreamTracking.hlt2ChargedNoPIDsProtos().outputSelection()
             richPid = downstreamTracking.hlt2RICHID()
-
             downstreamPIDSequence.Members += list(uniqueEverseen(chain.from_iterable([ tracksDown, richPid ])))
             from Configurables import ChargedProtoParticleAddRichInfo,ChargedProtoParticleAddMuonInfo
             downstreamRichDLL_name            = "Hlt2AfterburnerDownstreamProtoPAddRich"

@@ -1,0 +1,35 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: Roel Aaij
+# Purpose: Does the default output streaming work
+# Prerequisites: 
+#######################################################
+-->
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="timeout">
+    <integer>200</integer>
+  </argument>
+  <argument name="args"><set>
+    <text>../options/output_streaming.py</text>
+    <text>../options/flagging.py</text>
+    <text>--option</text>
+    <text>from Configurables import LHCbTimingAuditor, LHCbSequencerTimerTool; LHCbTimingAuditor('TIMER').addTool(LHCbSequencerTimerTool, name = 'TIMER'); LHCbTimingAuditor('TIMER').TIMER.SummaryFile="output_streaming_flagging.csv";</text>
+  </set></argument>
+  <argument name="validator"><text>
+
+myname='hltcommon.output_streaming_flagging'
+
+from HltCommon.QMTest.HltTests import compareTimingTableFiles
+
+compareTimingTableFiles(myname, result, causes, "output_streaming_flagging.csv","output_streaming_flagging.csv")
+
+#count error lines, shouldn't be any warnings or errors, ideally
+countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})
+
+</text></argument>
+</extension>
+

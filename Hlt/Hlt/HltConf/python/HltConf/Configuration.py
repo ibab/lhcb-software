@@ -1,5 +1,5 @@
 """
-High level configuration tools for HltConf, to be invoked by Moore and DaVinci
+High level configuration of the HLT, when not running from TCK. Configured by Moore.
 """
 __version__ = "$Id: Configuration.py,v 1.208 2010-09-02 14:05:36 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
@@ -12,6 +12,8 @@ from Hlt1                import Hlt1Conf
 from Hlt2                import Hlt2Conf
 from HltAfterburner      import HltAfterburnerConf
 from HltMonitoring       import HltMonitoringConf
+from HltOutput           import HltOutputConf
+from HltPersistReco      import HltPersistRecoConf
 from ThresholdUtils import overwriteThresholds, Name2Threshold
 
 def __forAll__( c, prop_value_dict, types=['FilterDesktop','CombineParticles',"DVAlgorithm", "DaVinciAlgorithm", "DaVinciHistoAlgorithm", "DaVinciTupleAlgorithm", "*" ] ) :
@@ -54,24 +56,12 @@ class HltConf(LHCbConfigurableUser):
     """
     Hlt configuration
     """
-    ## Streams we know about: {name, (rb, enabled-by-default)}
-    __streams__ = {"LUMI"        : (33, True),
-                   "BEAMGAS"     : (35, True),
-                   "VELOCLOSING" : (40, True),
-                   "FULL"        : (87, True),
-                   "TURBO"       : (88, True),
-                   "PARKED"      : (89, False),
-                   "TURCAL"      : (90, True),
-                   "NOBIAS"      : (91, False),
-                   "SMOGPHYS"    : (93, False)}
-
-    # python configurables that I configure
-    __used_configurables__ = [
-        Hlt1Conf,
-        Hlt2Conf,
-        HltMonitoringConf,
-        HltAfterburnerConf,
-    ]
+    __used_configurables__ = [ Hlt1Conf
+                             , Hlt2Conf
+                             , HltMonitoringConf
+                             , HltAfterburnerConf
+                             , HltPersistRecoConf
+                             , HltOutputConf ]
 
     __slots__ = { "L0TCK"                          : None
                 , 'ForceSingleL0Configuration'     : True
@@ -90,25 +80,18 @@ class HltConf(LHCbConfigurableUser):
                 , "EnableLumiEventWriting"         : True
                 , "EnableAcceptIfSlow"             : False      # Switch on AcceptIfSlow switch of HltLine
                 , "SlowHlt1Threshold"              : 500000     # microseconds
-                , "SlowHlt2Threshold"              : 5000000     # microseconds
+                , "SlowHlt2Threshold"              : 5000000    # microseconds
                 , 'RequireL0ForEndSequence'        : False
                 , 'RequireRoutingBits'             : [] # to require not lumi exclusive, set to [ 0x0, 0x4, 0x0 ]
                 , 'VetoRoutingBits'                : []
-                , 'SkipHltRawBankOnRejectedEvents' : True
-                , 'LumiBankKillerPredicate'        : "(HLT_PASS_SUBSTR('Hlt1Lumi') & ~HLT_PASS_RE('Hlt1(?!Lumi).*Decision'))"
-                , "LumiBankKillerAcceptFraction"   : 0.9999     # fraction of lumi-only events where raw event is stripped down
-                                                                # (only matters if EnablelumiEventWriting = True)
                 , "AdditionalHlt1Lines"            : []         # must be configured
                 , "AdditionalHlt2Lines"            : []         # must be configured
                 , "RemoveHlt1Lines"                : []         # must be configured
                 , "RemoveHlt2Lines"                : []         # must be configured
-                , "Hlt2LinesForDQ"                 : ["PIDD02KPiTagTurboCalib", "PIDLambda2PPiLLTurboCalib", "PIDDetJPsiMuMuPosTaggedTurboCalib",
-                                                      "PIDDetJPsiMuMuNegTaggedTurboCalib", "PIDLambda2PPiLLhighPTTurboCalib", "PIDLambda2PPiLLveryhighPTTurboCalib",
-                                                      "DiMuonDetachedJPsi"]
-                , "NanoBanks"                      : ['ODIN','HltLumiSummary','HltRoutingBits','DAQ']
                 , "PruneHltANNSvc"                 : True
-                , "EnabledStreams"                 : {"LUMI" : None, "BEAMGAS" : None, "FULL" : None, "TURBO" : None, "TURCAL" : None, "VELOCLOSING" : None}
                 , "OverwriteSettings"              : {}  # a dictionary with settings to overwrite
+                , "EnableOutputStreaming"          : False      # Enable HltOutputConf to create copies of the RawEvent
+                                                                # for (groups of) output streams and treat them differently.
                 }
 
     __settings__ = None
@@ -120,9 +103,6 @@ class HltConf(LHCbConfigurableUser):
     #_log.addHandler( handler )
     #_log.setLevel(logging.DEBUG)
 
-    def knownStreams(self):
-        return self.__streams__
-    
     def defineL0Channels(self, L0TCK = None) :
         """
         Define L0 channels
@@ -309,195 +289,6 @@ class HltConf(LHCbConfigurableUser):
             __forAll__(hlt, {"InputPrimaryVertices":loc})
         appendPostConfigAction(__setOnlinePV__)
 
-
-    def configureRoutingBits(self) :
-        """
-        Routing bits
-        """
-        ## set triggerbits
-        #  0-7 : reserved for ODIN  // need to add ODIN support to routing bit writer
-        #  8-31: reserved for L0    // need to add L0DU support to routing bit writer
-        # 32-63: reserved for Hlt1
-        # 64-91: reserved for Hlt2
-
-        ## NOTE: any change in the _meaning_ of any of the following needs to be
-        ##       communicated (at least!) with online, to insure the events are
-        ##       still properly routed!!! (this goes esp. for [32,36]!!!)
-        ## NOTE: Usage of bits set in HLT1:
-        ##       bit 46 -> 'physics triggers'
-        ##       bit 37 -> subscribed to be Hlt monitoring
-        ##       bit 36 -> express stream
-        ##       bit 35 -> subscribed to by Velo closing monitoring
-        ##       bit 34 -> count number of 'non-lumi-exlusive events'
-        ##       bit 33 -> lumi stream
-        ##       bit 32 -> full stream (actually, not used for that, but it could be ;-)
-        ## NOTE: Routing bits for streams set in HLT2
-        ##       bit 87 for the full (non-turbo(calib)) stream
-        ##       bit 88 for Turbo stream, includes lumi events.
-        ##       bit 89 for parked stream; reserved but not set for now
-        ##       bit 90 for TurboCalib stream, includes lumi events.
-        ##       bit 91 for NOBIAS stream; reserved
-        ##       bit 92 for online DQ on HLT2 output
-        ##       bit 93 for SMOG physics; reserved
-
-        from Hlt1Lines.HltL0Candidates import L0Channels
-
-        from Configurables import HltRoutingBitsWriter
-        routingBits = {  0 : '( ODIN_BXTYP == LHCb.ODIN.Beam1 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
-                      ,  1 : '( ODIN_BXTYP == LHCb.ODIN.Beam2 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
-                      ,  3 : 'ODIN_TRUE'
-                      ,  4 : 'ODIN_TRGTYP == LHCb.ODIN.LumiTrigger'
-                      ,  5 : 'jbit( ODIN_EVTTYP, 2)' # ODIN NOBIAS
-                      ,  6 : 'jbit( ODIN_EVTTYP, 14)' # ODIN LEADING BUNCH
-                      ,  8 : 'L0_DECISION_PHYSICS'
-                      ,  9 : "L0_CHANNEL_RE('B?gas')"
-                      , 10 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'CALO','MUON,minbias' ] if chan in L0Channels() ] )
-                      , 11 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'Electron','Photon','Hadron','Muon','DiMuon',
-                                                                                 'Muon,lowMult','DiMuon,lowMult','Electron,lowMult',
-                                                                                 'Photon,lowMult','DiEM,lowMult','DiHadron,lowMult'] if chan in L0Channels() ] )
-                      , 12 : "L0_CHANNEL('CALO')" if 'CALO' in L0Channels() else "" # note: need to take into account prescale in L0...
-                      , 13 : "L0_CHANNEL( 'Hadron' )" if 'Hadron' in L0Channels() else ""
-                      , 14 : "L0_CHANNEL_RE('Electron|Photon')"
-                      , 15 : "L0_CHANNEL_RE('Muon|DiMuon')"
-                      , 16 : "L0_CHANNEL_RE('.*NoSPD')"
-                      , 17 : "L0_CHANNEL_RE('.*,lowMult')"
-                      , 18 : "L0_CHANNEL('DiMuon')" if 'DiMuon' in L0Channels() else ""
-                      , 19 : "L0_CHANNEL( 'Hadron|SumEt' )" if ('Hadron' in L0Channels() and 'SumEt' in L0Channels()) else ""
-                      , 32 : "HLT_PASS('Hlt1Global')"
-                      , 33 : "HLT_PASS_RE('^Hlt1Lumi.*Decision$')"  # lumi stream
-                      , 34 : " ~ ( %s ) " % self.getProp('LumiBankKillerPredicate') #  this must be the opposite of the LumiStripper, i.e. if 34 is set, the event should NEVER be a nanoevent...
-                      , 35 : "HLT_PASS_SUBSTR('Hlt1BeamGas')" # beamgas stream
-                      , 37 : "HLT_PASS_RE('Hlt1(?!BeamGas).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global # full stream
-                      , 38 : "HLT_PASS('Hlt1ODINTechnicalDecision')"
-                      , 39 : "HLT_PASS_SUBSTR('Hlt1L0')"
-                      , 40 : "HLT_PASS_RE('Hlt1(Velo|BeamGas).*Decision')"  # bit (to be) used by the Velo (closing) monitoring
-                      , 41 : "HLT_PASS_RE('Hlt1(Single|Track)Muon.*Decision')"
-                      , 42 : "HLT_PASS_RE('Hlt1.*DiMuon.*Decision')"
-                      , 43 : "HLT_PASS_RE('Hlt1.*MuonNoL0.*Decision')"
-                      , 44 : "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
-                      , 45 : "HLT_PASS_RE('Hlt1.*Gamma.*Decision')"
-                      , 46 : "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi)(?!Tell1)(?!MB)(?!NZS)(?!Velo)(?!BeamGas)(?!Incident).*Decision')"    # exclude 'non-physics' lines
-                      , 47 : "HLT_PASS_RE('Hlt1MBMicroBias.*Decision')"
-                      , 48 : "HLT_PASS('Hlt1MBNoBiasDecision')"
-                      , 49 : "HLT_PASS_RE('Hlt1.*MVA.*Decision')"
-                      , 50 : "HLT_PASS('Hlt1LumiLowBeamCrossingDecision')"
-                      , 51 : "HLT_PASS('Hlt1LumiMidBeamCrossingDecision')"
-                      , 53 : "HLT_PASS_RE('Hlt1Calib(TrackingKPiDetached|HighPTLowMultTrks)Decision')"
-                      , 54 : "HLT_PASS_RE('Hlt1CalibRICH.*Decision')"
-                      , 55 : "HLT_PASS('Hlt1MBNoBiasRateLimitedDecision')"
-                      , 56 : "HLT_PASS('Hlt1CalibMuonAlignJpsiDecision')"
-                      , 60 : "HLT_PASS('Hlt1TrackAllL0Decision')"
-
-                      # 64--96: Hlt2
-                      , 64 : "HLT_PASS('Hlt2Global')"
-                      , 65 : "HLT_PASS('Hlt2DebugEventDecision')"
-                      , 66 : "HLT_PASS_RE('Hlt2(?!Transparent).*Decision')"
-                      , 67 : "HLT_PASS_RE('Hlt2.*SingleMuon.*Decision')"
-                      , 68 : "HLT_PASS_RE('Hlt2.*DiMuon.*Decision')"
-                      , 69 : "HLT_PASS_RE('Hlt2.*DY.*Decision')"
-                      , 70 : "HLT_PASS_RE('Hlt2.*Topo.*Decision')"
-                      , 71 : "HLT_PASS_RE('Hlt2.*CharmHad.*Decision')"
-                      , 72 : "HLT_PASS_RE('Hlt2.*IncPhi.*Decision')"
-                      , 73 : "HLT_PASS_RE('Hlt2.*Gamma.*Decision')"
-                      , 74 : "HLT_PASS_RE('Hlt2.*TriMuon.*Decision')"
-                      , 75 : "HLT_PASS_RE('Hlt2.*RareCharm.*Decision')"
-                      , 76 : "HLT_PASS_RE('Hlt2.*DisplVertices.*Decision')"
-                      , 77 : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')"
-                      , 78 : "HLT_PASS_RE('Hlt2.*Muon.*Decision')"
-                      , 79 : "HLT_PASS_RE('Hlt2.*Incl.*HHX.*Decision')"
-                      , 80 : "HLT_PASS_RE('Hlt2.*Electron.*Decision')"
-                      , 81 : "HLT_PASS_RE('Hlt2Topo.*2Body.*Decision')"
-                      , 82 : "HLT_PASS_RE('Hlt2Topo.*3Body.*Decision')"
-                      , 83 : "HLT_PASS_RE('Hlt2Topo.*4Body.*Decision')"
-                      , 84 : "HLT_PASS_RE('Hlt2TopoMu[234]Body.*Decision')"
-                      , 85 : "HLT_PASS_RE('Hlt2TopoE[234]Body.*Decision')"
-                      , 86 : "HLT_PASS_RE('Hlt2Topo[234]Body.*Decision')"
-                      # RB 87 for the full (non-turbo(calib)) stream
-                      , 87 : "HLT_NONTURBOPASS_RE('Hlt2.*Decision') | HLT_PASS('Hlt2LumiDecision')"
-                      # RB 88 for Turbo stream, includes lumi events.
-                      # this now excludes turbocalib events which have their own stream/routing bit
-                      , 88 : "HLT_TURBOPASS_RE('^Hlt2.*(?!TurboCalib)Decision$') | HLT_PASS('Hlt2LumiDecision')"
-                      # RB 89 for the parked stream; reserved but not set for now
-                      # RB 90 for TurboCalib stream, includes lumi events.
-                      , 90 : "HLT_TURBOPASS_RE('^Hlt2.*TurboCalibDecision$') | HLT_PASS('Hlt2LumiDecision')"
-                      # RB 91 for the NOBIAS stream; reserved
-                      # RB 92 for online DQ on HLT2 output
-                      , 92 : "HLT_PASS_RE('^Hlt2(%s)Decision$')" % '|'.join(self.getProp("Hlt2LinesForDQ"))
-                      # RB 93 for SMOG physics; reserved
-        }
-
-        ## Stream configuration
-        knownStreams = self.knownStreams()
-        defaultEnabled = dict(filter(lambda e: e[1][1], knownStreams.iteritems()))
-
-        ## Update routing bits according to enabled streams
-        sets = self.settings()
-        ep = 'EnabledStreams'
-        if self.isPropertySet(ep) and self.getProp(ep) != self.getDefaultProperty(ep):
-            log.warning( '##########################################################')
-            log.warning( 'Non-default stream configuration specified from EnabledStreams property')
-        elif sets and hasattr(sets, 'Streams') and set(sets.Streams()) != set(self.getDefaultProperty(ep)):
-            log.warning( '##########################################################')
-            log.warning( 'Non-default stream configuration specified in Settings')
-            self._safeSet('EnabledStreams', sets.Streams())
-
-        streams = {s : (bit, None, False) for (s, (bit, on)) in knownStreams.iteritems()}
-        for stream, expr in self.getProp('EnabledStreams').iteritems():
-            if stream not in streams:
-                log.fatal("Attempt to enable a non-existent stream %s." % stream)
-                raise RuntimeError
-            if stream not in defaultEnabled:
-                log.warning("Enabling non-default enabled stream %s." % stream)
-            bit = streams[stream][0]
-            if expr == None:
-                if bit in routingBits:
-                    expr = routingBits[bit]
-                else:
-                    log.fatal("Attempt to enable %s stream with the default expression, which is not defined." % stream)
-                    raise RuntimeError
-            streams[stream] = (bit, expr, True)
-
-        ## Check if default enabled streams are on
-        disabled = [s[0] for s in streams.iteritems() if not s[1][2] and s[0] in defaultEnabled]
-        if disabled:
-            log.warning( '##########################################################')
-            log.warning( 'Normally enabled streams are disabled: %s.' % ', '.join(disabled) )
-            log.warning( '##########################################################')
-
-        if {k : (bit, on) for (k, (bit, expr, on)) in streams.iteritems()} != knownStreams:
-            log.warning( '##########################################################' )
-            log.warning( 'Non-standard stream configuration' )
-            log.warning( 'Enabled:  %s' % ', '.join(s[0] for s in streams.iteritems() if s[1][2]) )
-            log.warning( 'Disabled: %s' % ', '.join(s[0] for s in streams.iteritems() if not s[1][2]) )
-            log.warning( '##########################################################' )
-
-        ## Do the actual disabling of streams
-        for stream, (bit, expr, on) in streams.iteritems():
-            if not on and bit in routingBits:
-                routingBits.pop(bit)
-            if on and routingBits.get(bit, None) != expr:
-                log.warning( 'Setting non standard routing bit expression for %s stream' % stream)
-                log.warning( 'Now:     %s' % expr)
-                log.warning( 'Default: %s' % routingBits.get(bit, "Disabled"))
-                log.warning( '##########################################################' )
-                routingBits[bit] = expr
-
-        ## Record the settings in the ANN service
-        from Configurables       import HltANNSvc
-        HltANNSvc().RoutingBits = dict( [ (v,k) for k,v in routingBits.iteritems() ] )
-        # LoKi::Hybrid::HltFactory is what RoutingBitsWriter uses as predicate factory..
-        # make sure 'strings' is known...
-        # make sure 'RATE,SCALE and SKIP' are known...
-        from Configurables import LoKi__Hybrid__HltFactory as HltFactory
-        HltFactory('ToolSvc.LoKi::Hybrid::HltFactory').Modules += [ 'LoKiCore.functions', 'LoKiNumbers.sources' ]
-        #  forward compatibility: HltFactory will become private for HltRoutingBitsWriter...
-        for stage in ('Hlt1', 'Hlt2'):
-            HltFactory(stage + 'RoutingBitsWriter.LoKi::Hybrid::HltFactory').Modules += [ 'LoKiCore.functions', 'LoKiNumbers.sources' ]
-
-        # and, last but not least, tell the writers what they should write..
-        HltRoutingBitsWriter('Hlt1RoutingBitsWriter').RoutingBits = {k : routingBits[k] for k in routingBits.iterkeys() if k < 64}
-        HltRoutingBitsWriter('Hlt2RoutingBitsWriter').RoutingBits = routingBits
-
     def configurePersistence(self, hlt1Lines, lines, stage) :
         """
         persistify vertices
@@ -614,7 +405,7 @@ class HltConf(LHCbConfigurableUser):
             if l in activeHlt2Lines:
                 activeHlt2Lines.remove(l)
 
-        
+
         # make sure Hlt.Global is included as soon as there is at least one Hlt. line...
         if activeHlt1Lines : activeHlt1Lines += [ 'Hlt1Global' ]
         if activeHlt2Lines : activeHlt2Lines += [ 'Hlt2Global' ]
@@ -782,9 +573,7 @@ class HltConf(LHCbConfigurableUser):
                                                                                                          'InputHltVertexReportsLocation': hlt1_vtxrep_loc } )
                          )
         _hlt2postamble = ( ( "EnableHltRoutingBits" ,  type(l0decoder), l0decoder.getName(), {})
-                         , ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter,   'Hlt2RoutingBitsWriter', { 'Hlt1DecReportsLocation' : hlt1_decrep_loc,
-                                                                                                          'Hlt2DecReportsLocation' : hlt2_decrep_loc,
-                                                                                                          'UpdateExistingRawBank'  : True} )
+
                          , ( "EnableHltDecReports"  ,  HltDecReportsWriter,    'Hlt2DecReportsWriter',  { 'SourceID': 2,
                                                                                                           'InputHltDecReportsLocation' : hlt2_decrep_loc } )
                          , ( "EnableHltSelReports"  ,  Hlt2SelReportsMaker,    'Hlt2SelReportsMaker',   dict( InputHltDecReportsLocation = hlt2_decrep_loc,
@@ -819,32 +608,14 @@ class HltConf(LHCbConfigurableUser):
         if self.getProp('L0TCK') is None:
             HltMonitoringConf().EnableL0Monitor = False
 
-        if (self.getProp("EnableLumiEventWriting")) :
-            if sets and hasattr(sets, 'NanoBanks') :
-                if not self.isPropertySet('NanoBanks') :
-                    self.setProp('NanoBanks',sets.NanoBanks)
-                else :
-                    log.warning('Setting %s requested NanoBanks = %s, but also explicitly set; using %s.' % (sets.HltType(), sets.NanoBanks, self.getProp('NanoBanks')))
-            if self.isPropertySet('NanoBanks') :
-                    log.warning('Using non-default NanoBanks = %s.' % (self.getProp('NanoBanks')))
-
-            from DAQSys.Decoders import DecoderDB
-            decoder = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
-            End.Members += [ HltLumiWriter()
-                           , Sequence( 'LumiStripper' , Members =
-                                       [ decoder.setup()
-                                       , HltFilter('LumiStripperHlt1Filter', Code = self.getProp('LumiBankKillerPredicate')
-                                                  , Location = decoder.listOutputs()[0])
-                                       , Prescale('LumiStripperPrescaler', AcceptFraction=self.getProp('LumiBankKillerAcceptFraction'))
-                                       , bankKiller('LumiStripperBankKiller', BankTypes=self.getProp('NanoBanks'),  DefaultIsKill=True )
-                                       ] )
-                           ]
+        # Set end sequence for output
+        HltOutputConf().HltEndSequence = End
 
         if self.getProp('RequireL0ForEndSequence') :
             from Configurables import LoKi__L0Filter as L0Filter
             from HltLine.HltDecodeRaw import DecodeL0DU
             L0accept = Sequence(name='HltEndSequenceFilter', Members = DecodeL0DU.members() + [ L0Filter( 'L0Pass', Code = "L0_DECISION_PHYSICS" )])
-            EndMembers.insert(1,  L0accept )  # after routing bits
+            End.Members += [L0accept]
 
     def __apply_configuration__(self):
         """
@@ -855,10 +626,12 @@ class HltConf(LHCbConfigurableUser):
         GaudiKernel.ProcessJobOptions.PrintOff()
         import HltConf.HltInit  # make sure ANN numbers are assigned...
 
+        # Deal with output configurables
+        self.setOtherProps(HltOutputConf(), ['EnableLumiEventWriting'])
+
         self.configureFactories()
         self.confType()
         self.endSequence()
-        self.configureRoutingBits()
 
         #appendPostConfigAction( self.postConfigAction )
         GaudiKernel.Configurable.postConfigActions.insert( 0,  self.postConfigAction )

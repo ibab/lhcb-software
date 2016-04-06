@@ -13,10 +13,8 @@ __author__ = "Sean Benson, Rosen Matev"
 
 class HltPersistRecoConf(LHCbConfigurableUser):
     # python configurables to be applied before me
-    __queried_configurables__ = [
-        Hlt2BiKalmanFittedForwardTracking,
-        Hlt2BiKalmanFittedDownstreamTracking,
-    ]
+    __queried_configurables__ = [Hlt2BiKalmanFittedForwardTracking,
+                                 Hlt2BiKalmanFittedDownstreamTracking]
     # python configurables that I configure
     __used_configurables__ = [
         (CaloProcessor, "SharedCaloProcessor"),

@@ -14,6 +14,14 @@
 ! 2016-03-29 - Jessica Prisciandaro
  - HltRecoConf.py: VeloTTMuonMatch Chi2 cut has been tightened
 
+! 2016-03-29 - Sascha Stahl
+ - HltSharedTracking: Configure public StateThickMSCorrectionTool instances
+   to be the same as used in Brunel.
+ - HltSharedTracking: Switch off cache for states.
+
+! 2016-03-29 - Jessica Prisciandaro
+ - HltRecoConf.py: VeloTTMuonMatch Chi2 cut has been tightened
+
 ! 2016-03-28 - Roel Aaij
  - Hard code the instance names of the Rich configurables. Otherwise, for some
    obscure reason, the downstream rich does not get configured properly...

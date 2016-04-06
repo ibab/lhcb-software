@@ -4,6 +4,11 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2016-04-05 - Roel Aaij
+ - Add support for "flagging" mode to HltOutputConf
+ - Align file writing behaviour for online and offline, i.e. write a file per
+   logical stream.
+
 ! 2016-04-01 - Rosen Matev
  - Import missing configurables in HltPersistReco
 
@@ -20,6 +25,20 @@
   - Cut down track states before packing
   - Use HltPackedDataWriter for writing to the raw event
   - Remove properties from HltConf
+
+! 2016-03-28 - Roel Aaij
+ - Add HltOutputConf: a separate configurable that configures the output of
+   the HLT, including multiple streams, if requested. To allow the TCK to
+   determine the stream content, two components are used.
+
+   HltOutputSvc contains a property that gives the stream name and which filters
+   should pass to indicate an event should be output to that stream.
+
+   HltOutputSequence is always configured from python with the type and
+   properties of the writers it should instantiate. The stream name is
+   substituted into a subset of properties to allow different values per output
+   stream. These are typically the location of the raw event and the
+   name of the output file.
 
 ! 2016-03-24 - Rosen Matev
  - Fix dependencies between configurables.
@@ -45,7 +64,7 @@
 !========================= HltConf v13r7 2016-02-26 =========================
 
 ! 2016-02-24 - Rosen Matev
- - Implement overwriting of threshold settings from HltConf. 
+ - Implement overwriting of threshold settings from HltConf.
 
 ! 2016-02-12 - Roel Aaij
  - Add HltJetConf to used configurables hlt Hlt2 to ensure correct order of
@@ -57,7 +76,7 @@
  - Fix downstream protos for persist reco and further fix for writing via TCK.
 
 ! 2016-01-28 - Mika Vesterinen
- - Add slots RemoveHlt(1|2)Lines 
+ - Add slots RemoveHlt(1|2)Lines
 
 ! 2016-01-12 - Sean Benson
  - Add slot to configure pre-filter for PersistReco.
@@ -106,18 +125,18 @@
  - Fix configuration of Hlt2SelReportsMaker.
  - Move configuration of LoKi::HltFactories into Configuration.py to ensure
    they are also configured when running with Split = 'Hlt2'.
- 
+
 ! 2015-10-29 - Roel Aaij
  - Adapt to split of HltSelReportsMaker into separate version
    for HLT1 and HLT2.
  - Add HLT1 mass monitoring plot for non-detached D->Kpi.
- 
+
 ! 2015-10-26 - Roel Aaij
  - Configure SelReportsMaker with RelatedInfo locations and add corresponding
  	 IDs to the HtlANNSvc.
 
 ! 2015-10-26 - Sean Benson
- - Added HltPersistRecoConf to go with new slot "PersistReco". 
+ - Added HltPersistRecoConf to go with new slot "PersistReco".
 
 ! 2015-10-23 - Dan Johnson
  - Change CEP to LowMult in HltMonitoring.py

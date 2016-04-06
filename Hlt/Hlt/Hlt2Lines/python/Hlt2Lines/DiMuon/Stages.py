@@ -1,7 +1,5 @@
 # Each stage must specify its own inputs
 from Hlt2Lines.Utilities.Hlt2Filter import Hlt2ParticleFilter
-from LoKiTrigger.decorators import *
-
 
 from HltTracking.HltPVs import PV3D
 from Inputs import TrackFittedDiMuon
@@ -52,13 +50,13 @@ class SoftDiMuonFilter(Hlt2ParticleFilter):
                 " & (DOCAMAX < %(doca)s)" +
                 " & (BPVVDZ > %(MinVDZ)s) " +
                 "&  (BPVDIRA > %(MinBPVDira)s) " +
-                "& (PCUTA (ALV (1,2) < %(cosAngle)s))"  
+                "& (PCUTA (ALV (1,2) < %(cosAngle)s))"
                 )
         inputs = [TrackFittedDiMuon]
-        Hlt2ParticleFilter.__init__(self, name, code, inputs, shared = True, 
+        Hlt2ParticleFilter.__init__(self, name, code, inputs, shared = True,
                                     dependencies = [PV3D('Hlt2')],
                                     UseP2PVRelations = False)
-        
+
 
 class JpsiFilter(Hlt2ParticleFilter):
     def __init__(self, name):
@@ -82,7 +80,7 @@ class JpsiPIDFilter(Hlt2ParticleFilter):
                 "& (PT > %(Pt)s) " +
                 "& (MAXTREE('mu-' == ABSID,TRCHI2DOF) < %(TrChi2Tight)s )" +
                 "& (MINTREE('mu-' == ABSID,PT) > %(MuPt)s) " +
-                "& (VFASPF(VCHI2PDOF) < %(VertexChi2)s )" + 
+                "& (VFASPF(VCHI2PDOF) < %(VertexChi2)s )" +
                 "& ( %(PIDCut)s ) ")
 
         from HltLine.Hlt2Monitoring import Hlt2Monitor, Hlt2MonitorMinMax
@@ -105,7 +103,7 @@ class DetachedJpsiFilter(Hlt2ParticleFilter):
         Hlt2ParticleFilter.__init__(self, name, code, inputs,
                                     dependencies = [PV3D('Hlt2')],
                                     **args)
-                        
+
 class Psi2SFilter(Hlt2ParticleFilter):
     def __init__(self, name):
         code = ("(ADMASS(3686.09) < %(MassWindow)s) " +
@@ -113,7 +111,7 @@ class Psi2SFilter(Hlt2ParticleFilter):
                 "& (PT > %(Pt)s) " +
                 "& (MINTREE('mu-' == ABSID, PT) > %(MuPt)s) " +
                 "& (VFASPF(VCHI2PDOF) < %(VertexChi2)s )")
-        
+
         from HltLine.Hlt2Monitoring import Hlt2Monitor, Hlt2MonitorMinMax
         args = {'PreMonitor'  : Hlt2Monitor("M", "M(#mu#mu)", 3097, 200, 'M_in',  nbins = 25),
                 'PostMonitor' : Hlt2Monitor("M", "M(#mu#mu)", 3686, 200, 'M_out', nbins = 25)}
@@ -126,9 +124,9 @@ class Psi2SPIDFilter(Hlt2ParticleFilter):
                 "& (MAXTREE('mu-' == ABSID, TRCHI2DOF) < %(TrChi2Tight)s) " +
                 "& (PT > %(Pt)s) " +
                 "& (MINTREE('mu-' == ABSID, PT) > %(MuPt)s) " +
-                "& (VFASPF(VCHI2PDOF) < %(VertexChi2)s )" + 
+                "& (VFASPF(VCHI2PDOF) < %(VertexChi2)s )" +
                 "& ( %(PIDCut)s ) ")
-        
+
         from HltLine.Hlt2Monitoring import Hlt2Monitor, Hlt2MonitorMinMax
         args = {'PreMonitor'  : Hlt2Monitor("M", "M(#mu#mu)", 3097, 200, 'M_in',  nbins = 25),
                 'PostMonitor' : Hlt2Monitor("M", "M(#mu#mu)", 3686, 200, 'M_out', nbins = 25)}
@@ -142,12 +140,12 @@ class Psi2SLowPtFilter(Hlt2ParticleFilter):
                 "& (PT < %(PtMax)s) " +
                 "& (MINTREE('mu-' == ABSID, PT) > %(MuPt)s) " +
                 "& (VFASPF(VCHI2PDOF) < %(VertexChi2)s )")
-        
+
         from HltLine.Hlt2Monitoring import Hlt2Monitor, Hlt2MonitorMinMax
         args = {'PreMonitor'  : Hlt2Monitor("M", "M(#mu#mu)", 3097, 200, 'M_in',  nbins = 25),
                 'PostMonitor' : Hlt2Monitor("M", "M(#mu#mu)", 3686, 200, 'M_out', nbins = 25)}
         inputs = [TrackFittedDiMuon]
-        Hlt2ParticleFilter.__init__(self, name, code, inputs, shared = True, **args)        
+        Hlt2ParticleFilter.__init__(self, name, code, inputs, shared = True, **args)
 
 class Psi2SLowPtPIDFilter(Hlt2ParticleFilter):
     def __init__(self, name):
@@ -155,14 +153,14 @@ class Psi2SLowPtPIDFilter(Hlt2ParticleFilter):
                 "& (MAXTREE('mu-' == ABSID, TRCHI2DOF) < %(TrChi2Tight)s) " +
                 "& (PT < %(PtMax)s) " +
                 "& (MINTREE('mu-' == ABSID, PT) > %(MuPt)s) " +
-                "& (VFASPF(VCHI2PDOF) < %(VertexChi2)s )" + 
-                "& (%(PIDCut)s ) ")                
-        
+                "& (VFASPF(VCHI2PDOF) < %(VertexChi2)s )" +
+                "& (%(PIDCut)s ) ")
+
         from HltLine.Hlt2Monitoring import Hlt2Monitor, Hlt2MonitorMinMax
         args = {'PreMonitor'  : Hlt2Monitor("M", "M(#mu#mu)", 3097, 200, 'M_in',  nbins = 25),
                 'PostMonitor' : Hlt2Monitor("M", "M(#mu#mu)", 3686, 200, 'M_out', nbins = 25)}
         inputs = [TrackFittedDiMuon]
-        Hlt2ParticleFilter.__init__(self, name, code, inputs, shared = True, **args)        
+        Hlt2ParticleFilter.__init__(self, name, code, inputs, shared = True, **args)
 
 
 class DetachedPsi2SFilter(Hlt2ParticleFilter):

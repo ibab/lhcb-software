@@ -1,5 +1,5 @@
 """
- script to configure HLT Monitoring
+ Configurable to configure HLT monitoring
 
  @author R. Aaij
  @date 19-06-2015
@@ -265,6 +265,69 @@ class HltMonitoringConf(LHCbConfigurableUser):
 
         return monSeq
 
+    def __rateMonitoring(self):
+
+        hlt1_rates = {  0 : '( ODIN_BXTYP == LHCb.ODIN.Beam1 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
+                     ,  1 : '( ODIN_BXTYP == LHCb.ODIN.Beam2 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
+                     ,  3 : 'ODIN_TRUE'
+                     ,  4 : 'ODIN_TRGTYP == LHCb.ODIN.LumiTrigger'
+                     ,  5 : 'jbit( ODIN_EVTTYP, 2)' # ODIN NOBIAS
+                     ,  6 : 'jbit( ODIN_EVTTYP, 14)' # ODIN LEADING BUNCH
+                     ,  8 : 'L0_DECISION_PHYSICS'
+                     ,  9 : "L0_CHANNEL_RE('B?gas')"
+                     , 10 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'CALO','MUON,minbias' ] if chan in L0Channels() ] )
+                     , 11 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'Electron','Photon','Hadron','Muon','DiMuon',
+                                                                                'Muon,lowMult','DiMuon,lowMult','Electron,lowMult',
+                                                                                'Photon,lowMult','DiEM,lowMult','DiHadron,lowMult'] if chan in L0Channels() ] )
+                     , 12 : "L0_CHANNEL('CALO')" if 'CALO' in L0Channels() else "" # note: need to take into account prescale in L0...
+                     , 13 : "L0_CHANNEL( 'Hadron' )" if 'Hadron' in L0Channels() else ""
+                     , 14 : "L0_CHANNEL_RE('Electron|Photon')"
+                     , 15 : "L0_CHANNEL_RE('Muon|DiMuon')"
+                     , 16 : "L0_CHANNEL_RE('.*NoSPD')"
+                     , 17 : "L0_CHANNEL_RE('.*,lowMult')"
+                     , 18 : "L0_CHANNEL('DiMuon')" if 'DiMuon' in L0Channels() else ""
+                     , 19 : "L0_CHANNEL( 'Hadron|SumEt' )" if ('Hadron' in L0Channels() and 'SumEt' in L0Channels()) else ""
+                     , 32 : "HLT_PASS('Hlt1Global')"
+                     , 38 : "HLT_PASS('Hlt1ODINTechnicalDecision')"
+                     , 39 : "HLT_PASS_SUBSTR('Hlt1L0')"
+                     , 41 : "HLT_PASS_RE('Hlt1(Single|Track)Muon.*Decision')"
+                     , 42 : "HLT_PASS_RE('Hlt1.*DiMuon.*Decision')"
+                     , 43 : "HLT_PASS_RE('Hlt1.*MuonNoL0.*Decision')"
+                     , 44 : "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                     , 45 : "HLT_PASS_RE('Hlt1.*Gamma.*Decision')"
+                     , 47 : "HLT_PASS_RE('Hlt1MBMicroBias.*Decision')"
+                     , 49 : "HLT_PASS_RE('Hlt1.*MVA.*Decision')"
+                     , 50 : "HLT_PASS('Hlt1LumiLowBeamCrossingDecision')"
+                     , 51 : "HLT_PASS('Hlt1LumiMidBeamCrossingDecision')"
+                     , 60 : "HLT_PASS('Hlt1TrackAllL0Decision')"
+                     }
+
+
+        hlt2_rates = { 64 : "HLT_PASS('Hlt2Global')"
+                        , 65 : "HLT_PASS('Hlt2DebugEventDecision')"
+                        , 66 : "HLT_PASS_RE('Hlt2(?!Transparent).*Decision')"
+                        , 67 : "HLT_PASS_RE('Hlt2.*SingleMuon.*Decision')"
+                        , 68 : "HLT_PASS_RE('Hlt2.*DiMuon.*Decision')"
+                        , 69 : "HLT_PASS_RE('Hlt2.*DY.*Decision')"
+                        , 70 : "HLT_PASS_RE('Hlt2.*Topo.*Decision')"
+                        , 71 : "HLT_PASS_RE('Hlt2.*CharmHad.*Decision')"
+                        , 72 : "HLT_PASS_RE('Hlt2.*IncPhi.*Decision')"
+                        , 73 : "HLT_PASS_RE('Hlt2.*Gamma.*Decision')"
+                        , 74 : "HLT_PASS_RE('Hlt2.*TriMuon.*Decision')"
+                        , 75 : "HLT_PASS_RE('Hlt2.*RareCharm.*Decision')"
+                        , 76 : "HLT_PASS_RE('Hlt2.*DisplVertices.*Decision')"
+                        , 77 : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')"
+                        , 78 : "HLT_PASS_RE('Hlt2.*Muon.*Decision')"
+                        , 79 : "HLT_PASS_RE('Hlt2.*Incl.*HHX.*Decision')"
+                        , 80 : "HLT_PASS_RE('Hlt2.*Electron.*Decision')"
+                        , 81 : "HLT_PASS_RE('Hlt2Topo.*2Body.*Decision')"
+                        , 82 : "HLT_PASS_RE('Hlt2Topo.*3Body.*Decision')"
+                        , 83 : "HLT_PASS_RE('Hlt2Topo.*4Body.*Decision')"
+                        , 84 : "HLT_PASS_RE('Hlt2TopoMu[234]Body.*Decision')"
+                        , 85 : "HLT_PASS_RE('Hlt2TopoE[234]Body.*Decision')"
+                        , 86 : "HLT_PASS_RE('Hlt2Topo[234]Body.*Decision')"}
+
+    
     def __configureOutput(self):
         histoFile = self.getProp("OutputFile")
         if not histoFile:

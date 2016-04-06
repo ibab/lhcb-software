@@ -16,12 +16,6 @@ class SMOG_April2015(object):
              self.ActiveHlt2Lines() != ref.ActiveHlt2Lines(self) ) :
             raise RuntimeError('Must update HltType when modifying ActiveHlt.Lines()')
 
-    def __init__(self) :
-        self.NanoBanks = [
-            'ODIN', 'HltLumiSummary', 'HltRoutingBits', 'DAQ', 'Velo',
-            'L0DU', 'HltDecReports', 'HC',
-        ]
-
     def L0TCK(self) :
         # VDM TCK
         # return '0x0041'
@@ -177,3 +171,7 @@ class SMOG_April2015(object):
             }
         })
         return thresholds
+
+    def NanoBanks(self):
+        return ['ODIN', 'HltLumiSummary', 'HltRoutingBits', 'DAQ', 'Velo',
+                'L0DU', 'HltDecReports', 'HC']

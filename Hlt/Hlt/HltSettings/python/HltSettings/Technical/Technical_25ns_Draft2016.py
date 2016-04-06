@@ -1,38 +1,39 @@
-from GaudiKernel.SystemOfUnits import GeV, mm, MeV 
+from GaudiKernel.SystemOfUnits import GeV, mm, MeV
 
 class Technical_25ns_Draft2016(object) :
     """
     Threshold settings for Hlt2 Commissioning lines
-    
+
     WARNING :: DO NOT EDIT WITHOUT PERMISSION OF THE AUTHORS
-    
+
     @author M. Vesterinen
     @date 2015-07-023
     """
-    
+
     __all__ = ( 'ActiveHlt2Lines' )
-    
-    
+
+
     def ActiveHlt2Lines(self) :
         """
         Returns a list of active lines
         """
-        
+
         lines = ['Hlt2PassThrough','Hlt2Lumi','Hlt2DebugEvent',
-                 'Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent']
-        
+                 'Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent',
+                 'Hlt2BeamGas']
+
         return lines
 
-   
+
     def Thresholds(self) :
         """
         Returns a dictionary of cuts
         """
-        
+
         # keep pass through thresholds
         d = { }
 
-        from Hlt2Lines.Technical.Lines     import TechnicalLines            
+        from Hlt2Lines.Technical.Lines     import TechnicalLines
         d.update({TechnicalLines :
                       {'Prescale'    : {'Hlt2PassThrough' : 0.0001,
                                         'Hlt2Forward'     : 0.00001,
@@ -47,7 +48,9 @@ class Technical_25ns_Draft2016(object) :
                                         'VoidFilter' : ''},
                        'NoBiasPassThrough' : {'HLT1' : "HLT_PASS('Hlt1NoBiasPrescaledDecision')",
                                               'VoidFilter' : ''},
-                       'Transparent' : {'HLT1' : "HLT_PASS_RE('^Hlt1(ODIN.*|L0.*|MB.*|BeamGas.*|Velo.*|NZS.*|Incident|Tell1Error|ErrorEvent)Decision$')",
+                       'Transparent' : {'HLT1' : "HLT_PASS_RE('^Hlt1(ODIN.*|L0.*|MB.*|Velo.*|NZS.*|Incident|Tell1Error|ErrorEvent)Decision$')",
+                                        'VoidFilter' : ''},
+                       'BeamGas'     : {'HLT1' : "HLT_PASS_SUBSTR('Hlt1BeamGas')" ,
                                         'VoidFilter' : ''},
                        'Lumi'        : {'HLT1' : "HLT_PASS_SUBSTR('Hlt1Lumi')",
                                         'VoidFilter' : ''},
@@ -59,6 +62,3 @@ class Technical_25ns_Draft2016(object) :
                        }}
                  )
         return d
-    
-
-

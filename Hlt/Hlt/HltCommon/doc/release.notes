@@ -4,12 +4,15 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2016-03-28 - Roel Aaij
+ - Add HltOutputSvc and HltOutputSequence to configure and the HLT output.
+
 !========================= HltCommon v10r7 2016-02-26 =========================
 
 ! 2016-02-22 - Sascha Stahl
  - HltGEC: Use OTHitCreator to get the number of OT hits. This will trigger the
-   creation of all OT hits. Since we do not cut tight on the number of hits 
-   the hits are created anyways later for almost all events and one avoids 
+   creation of all OT hits. Since we do not cut tight on the number of hits
+   the hits are created anyways later for almost all events and one avoids
    double work.
 
 !========================= HltCommon v10r6 2015-09-01 =========================
@@ -113,14 +116,14 @@
 
 !========================= HltCommon v8r7 2012-08-30 =========================
 ! 2012-08-29 - Johannes Albrecht
- - HltGEC: add activity trigger 
+ - HltGEC: add activity trigger
 
 !========================= HltCommon v8r6 2012-06-19 =========================
 ! 2012-06-04 - Olivier Deschamps :
  - HltL0CaloCandidates :remove CaloCandidate Et-sorting (done by the candidate producer)
 
 ! 2012-05-10 - Olivier Deschamps
- - HltL0CalOCandidates.cpp : change ClusterizationLevel default value to 2 (needed for merged Pi0) 
+ - HltL0CalOCandidates.cpp : change ClusterizationLevel default value to 2 (needed for merged Pi0)
 
 !========================= HltCommon v8r5 2012-02-24 =========================
 ! 2012-04-19 - Albert Puig
@@ -129,7 +132,7 @@
 !========================= HltCommon v8r4 2012-02-06 =========================
 
 ! 2012-01-30 - Eric van Herwijnen
- - Remove the namespace with redefinition of << as this is now done in 
+ - Remove the namespace with redefinition of << as this is now done in
    GaudiKernel/TypeNameString.h
 
 !========================= HltCommon v8r3 2012-01-25 =========================
@@ -175,7 +178,7 @@
 
 !========================== HltCommon v7r1 2010-12-08 ===================
 ! 2010-11-22 - V. Gligorov
- - Add protection for a pointer dereference. 
+ - Add protection for a pointer dereference.
 
 ! 2010-11-21 - V. Gligorov
  - Rewrite the swimming code in HltMoveVerticesForSwimming.{cpp,h}
@@ -192,7 +195,7 @@
     the calculation.
   . The I/O of the algorithm is accomplished through its properties. The
     swimming distance is supplied as a property and the lifetime/IP
-    retrieved as property values.    
+    retrieved as property values.
 
 !========================== HltCommon v7r0p1 2010-09-08 ===================
 ! 2010-09-08 - Gerhard Raven
@@ -203,7 +206,7 @@
  - New functor to cut on the total number of hits on a track.
 
 ! 2010-08-25 - V. Gligorov
- - New functor to allow cutting on vertex PT. 
+ - New functor to allow cutting on vertex PT.
 
 ! 2010-08-23 - V. Gligorov
  - New functors to allow cutting on PT/P of a track.
@@ -228,20 +231,20 @@
 
 ! 2010-08-05 - Vanya Belyaev
 
- - fix pipe & filter 
+ - fix pipe & filter
 
 ! 2010-08-02 - Vanya Belyaev
 
  - add Hlt::GEC
-  
+
 
 ! 2010-07-29 - Vanya Belyaev
 
- - fix Hlt::TrackFilter & Hlt::TrackPipe 
+ - fix Hlt::TrackFilter & Hlt::TrackPipe
 
- - cmt/requirments 
+ - cmt/requirments
 
-     version increment to v6r1 
+     version increment to v6r1
 
 !========================== HltCommon v6r0p1 2010-06-06 ===================
 ! 2010-06-06 - Gerhard Raven
@@ -315,8 +318,8 @@
  - cmt/requirements
   . Increase version to v5r21.
 
-! 2010-04-07 - V. Gligorov 
- - Allow the user to set the raw event location in the ANNDispatchSvc. 
+! 2010-04-07 - V. Gligorov
+ - Allow the user to set the raw event location in the ANNDispatchSvc.
 
 !========================== HltCommon v5r20 2010-03-28 ===================
 ! 2010-03-27 - Gerhard Raven
@@ -344,7 +347,7 @@
 
 ! 2010-02-09 - Gerhard Raven
  - ConfigTarFileAccess now supports direct writing to tar files.
-   
+
 
 !========================== HltCommon v5r17 2010-02-01 ===================
 ! 2010-01-31 - Gerhard Raven
@@ -361,8 +364,8 @@
  - add Hlt::TrackFilter
 
 ! 2010-01-20 - Gerhard Raven
- - optimize tar file access 
- - allow reading of gzipped files inside tar file (no support for gzipped tar 
+ - optimize tar file access
+ - allow reading of gzipped files inside tar file (no support for gzipped tar
    file themselves, as it would presumably reduce the random access I/O performance
    to the various entries in the file -- typically only a small fraction of
    the files inside the tar file is read)
@@ -372,14 +375,14 @@
 
 !========================== HltCommon v5r16p1 2010-01-15 ===================
 ! 2010-01-15 - Gerhard Raven
- - add Odin decoding to HltReferenceRateSvc in case Odin hasn't been decoded 
+ - add Odin decoding to HltReferenceRateSvc in case Odin hasn't been decoded
    yet
  - protect against unphysical timeintervals in HltReferenceRateSvc
  - adapt to the fact that HltTCK is now in SVN
 
 !========================== HltCommon v5r16 2009-12-03 ===================
 ! 2010-01-11 - Gerhard Raven
- - add some info printout in HltReferenceRateSvc 
+ - add some info printout in HltReferenceRateSvc
 
 ! 2010-01-08 - V. Gligorov
  - src/HltMoveVerticesForSwimming.{cpp,h}
@@ -423,7 +426,7 @@
 
 !========================== HltCommon v5r15 2009-12-03 ===================
 ! 2009-12-02 - Johannes Albrecht
-  - HltFunctionFactories.cpp, HltFunctions.h: added Vertex z and transverse position filter 	
+  - HltFunctionFactories.cpp, HltFunctions.h: added Vertex z and transverse position filter
 
 !========================== HltCommon v5r14 2009-11-13 ===================
 ! 2009-11-09 - Antonio Perez-Calero
@@ -479,7 +482,7 @@
 
 !========================== HltCommon v5r10 2009-08-31 ===================
 ! 2009-08-27 - Gerhard Raven
- - add overrule capability when generating configurations, 
+ - add overrule capability when generating configurations,
    add optional default for reference properties (if reference AWOL)
 
 ! 2009-08-17 - Gerhard Raven
@@ -574,20 +577,20 @@
  - adapt HltGenConfig for Gaudi v21
 
 ! 2009-04-18 - Gerhard Raven
- - cleanup in HltLine, reduce the # of published histograms to avoid 
-   overloading the Adders in the HLT farm: 
-    o remove CPU time as, on linux, it is measured in ms granularity -- 
+ - cleanup in HltLine, reduce the # of published histograms to avoid
+   overloading the Adders in the HLT farm:
+    o remove CPU time as, on linux, it is measured in ms granularity --
       only plot realtime, as that is available us granularity
     o remove the 'errorrate' counter, as it is available as histogram
     o remove the 'normalized stepplot' -- this should be made in the
       monitoring task running in the monitoring farm instead
-    o for events taking more than 5 ms in a given line, set 2nd error 
+    o for events taking more than 5 ms in a given line, set 2nd error
       bit in corresponding DecReport
-      
+
 
 
 ! 2009-04-13 - Wouter Hulsbergen
- - add HltFixedRateScaler which uses IHltReferenceClockSvc to downscale a 
+ - add HltFixedRateScaler which uses IHltReferenceClockSvc to downscale a
    trigger line to a fixed rate
  - add HltReferenceClockSvc.cpp, which implements an IHltReferenceClockSvc
 
@@ -602,7 +605,7 @@
  - add HltCopySelection to copy (possible from TES) to an HltSelection
 
 ! 2009-03-30 - Gerhard Raven
- - add Hlt2 support to HltLine 
+ - add Hlt2 support to HltLine
 
 ! 2009-03-25 - Gerhard Raven
  - add HltTriggerRawConversion: simple algorithm to trigger the DOD service
@@ -611,15 +614,15 @@
    some low rate, and accept the event in case the conversion fails...
 
 ! 2009-03-23 - V. Gligorov
- - Removed obsolete generic execute/initialize in HltTrackFromParticle 
+ - Removed obsolete generic execute/initialize in HltTrackFromParticle
 
 !========================== HltCommon v5r3 2009-03-23 ===================
 ! 2009-03-19 - David Hutchcroft
- - Added the TrackFilter MissedVeloHits 
+ - Added the TrackFilter MissedVeloHits
 
 ! 2009-03-11 - Antonio Perez-Calero
   - In HltFunctions.h and HltFunctionFactories.cpp: added filters VertexTrack1Chi2OverNdf and also
-  	for track2, to apply chi2 filter to each of the daughter tracks, in order to distinguish between 
+  	for track2, to apply chi2 filter to each of the daughter tracks, in order to distinguish between
     muon and the extra track in muon+track line.
 
 ! 2009-03-06 - Jose A. Hernando
@@ -629,8 +632,8 @@
   - check for illegal bin numbers
 
 ! 2009-03-03 - Antonio Perez-Calero
-  - In HltFunctions.h and HltFunctionFactories.cpp: added filters VertexTrack1PT, VertexTrack1IP 
-  	and similar for track2. Given a vertex, apply a filter in each of the daughter tracks, to 
+  - In HltFunctions.h and HltFunctionFactories.cpp: added filters VertexTrack1PT, VertexTrack1IP
+  	and similar for track2. Given a vertex, apply a filter in each of the daughter tracks, to
   	distinguish between muon and the extra track
 
 ! 2009-02-25 - Gerhard Raven
@@ -656,10 +659,10 @@
   - HltFunction and HltFunctionFactories - new filter (MuChi2) for DiMuonLines
 
 ! 2009-02-17 - Mariusz Witek
-  - add VertexDiElectronMass as new IRecVertexFunctionTool 
+  - add VertexDiElectronMass as new IRecVertexFunctionTool
 
 ! 2009-02-13 - Jose Angel Hernando
-  - HltTFilter add the index in the filters counters to do a printout in order of the filters in finalize 
+  - HltTFilter add the index in the filters counters to do a printout in order of the filters in finalize
 
 ! 2009-02-13 - Gerhard Raven
   - remove HltL0{Calo,Muon}Prepare -- use HltL0{Calo,Muon}Candidates instead
@@ -699,7 +702,7 @@
 ! 2009-01-16 - Antonio Perez-Calero
  - added definition of VertexDOCA in HltFunctions.h
  - added declaration of VertexDOCA and FitVertexDOCA in HltFunctionFactories.cpp
-   and replicated other filters to be reapplied after the fast track fit 
+   and replicated other filters to be reapplied after the fast track fit
 
 ! 2009-01-15 - Gerhard Raven
  - make HltDataSvc less verbose
@@ -754,7 +757,7 @@
  - add HltFunctionFactories entry for anti T confirmation of L0Electrons
 
 ! 2008-12-11 - Vanya BELYAEV
- - HltDataSvc :  IAlgorithm*  -> const IAlgorithm* 
+ - HltDataSvc :  IAlgorithm*  -> const IAlgorithm*
 
 ! 2008-12-09 - Gerhard Raven
  - add 'RoutingBits' major to HltANNSvc
@@ -764,7 +767,7 @@
  - add HtlL0MuonCandidates, the muon version of HltL0CaloCandidates
 
 ! 2008-12-08 - Vanya BELYAEV
- - fixes for new signature of LHcb::Track::stateAt 
+ - fixes for new signature of LHcb::Track::stateAt
 
 ! 2008-12-05 - Gerhard Raven
  - add HltL0CaloCandidates -- automatically picks up L0CaloCandidates
@@ -827,9 +830,9 @@
 
 !========================== HltCommon v4r1 2008-08-28 ===================
 !2008-08-27 - Gerhard Raven
-  - set RequirePositiveInputs to False for HltL0{Calo,Muon}Prepare -- to be 
+  - set RequirePositiveInputs to False for HltL0{Calo,Muon}Prepare -- to be
     investigated why this is required.
-   
+
 !2008-08-26 - Gerhard Raven
   - PropertyConfigSvc now supports substitution of 'reference' properties,
     eg. foo.bar = @baz.kaboom sets the property bar of component foo to the
@@ -867,7 +870,7 @@
 
 !2008-08-03 - Gerhard Raven
   - fix default TCK data location
-  - adapt to change in TCK on-disk format 
+  - adapt to change in TCK on-disk format
 
 !2008-08-01 - Gerhard Raven
   - add release number & runtype in toplevel config aliases
@@ -889,12 +892,12 @@
   - add HltIncidentFilter: responds to incidents requesting the event to be kept
 
 !2008-07-16 - Mariusz Witek
-  - add new track filter into HltFunctionFactories.cpp 
+  - add new track filter into HltFunctionFactories.cpp
     ( HltIsPhotonTool in new Hlt/HltEcalAlley imported to CVS )
 
 !========================== HltCommon v3r4 2008-07-09 ===================
 !2008-07-10 - Gerhard Raven
-  - ConfigFileAccessSvc: wrap around boost::create_directories to catch exception 
+  - ConfigFileAccessSvc: wrap around boost::create_directories to catch exception
     thrown when it fails due to eg. lack of permissions
 
 !2008-07-09 - Gerhard Raven
@@ -911,12 +914,12 @@
   - check for presence of Odin before grabbing the TCK from the Odin bank
 ! 2008-07-04 - Gerhard Raven
   - TCK -> config ID mapping is now functional: can be obtained from database,
-    and is used by HltConfigSvc, unless a TCK entry is (first) found in the 
+    and is used by HltConfigSvc, unless a TCK entry is (first) found in the
     joboptions
   - clean up of ConfigStackAccessSvc
   - fix readback of aliases in ConfigFileAccessSvc
   - allow to specify configurations to preload by TCK instead of by config ID
-   
+
 ! 2008-07-04 - Gerhard Raven
   - binders now bind against containers-of-items instead of items, and enforce the
     container to be std::vector<item*> -- update FunctionFactories accordingly
@@ -1014,12 +1017,12 @@
 	- HltFunctionFactories.cpp: add PtTransporter tool to get pt at origin
 
 ! 2008-05-21 Gerhard Raven
- - rename L0Entry into HltL0Filter for consistentcy of other filters, and make 
+ - rename L0Entry into HltL0Filter for consistentcy of other filters, and make
    it adapt dynamically to the L0 configuration
  - HltTFilter: use min_element resp. max_element when looking for the min/max
    value instead of sorting the entire vector; make m_ttemp a local variable
    as it is only ever used in execute
- - HltSummaryTool, HltSummaryWriter: follow change in HltEvent/HltSelectionSummary 
+ - HltSummaryTool, HltSummaryWriter: follow change in HltEvent/HltSelectionSummary
    to use strings as key
 
 
@@ -1030,7 +1033,7 @@
  - use dynamic_cast<T&>(t) instead of *dynamic_cast<T*>(&t) to get an exception
    instead of SEGV when dynamic_cast fails
  - HltTFunctionFactory: for binding, go through the algorithm requesting
-   the functor (using the context service) in order to make sure it registers 
+   the functor (using the context service) in order to make sure it registers
    the binding argument as input selection. use auto_ptr & disallow copy c'tor
  - HltTFilter: make factoryName part of the constructor arguments instead
    of setting it in derived classes; use auto_ptr to manage owned pointers,
@@ -1039,16 +1042,16 @@
    to reduce the number of conversions name <-> id
  - HltSummaryTool: cache grabbing the summary from the event store, use
    IIncidentSvc to clean cache at beginEvent; use ?: instead of ifs in a few
-   places; 
+   places;
  - register(T)Selection now _always_ uses m_outputSelectionName, so no need
    to pass it along.
  - HltSelectionToTes: move 'copy' template from header file to cpp file;
    use strings instead of ID.
- - HltInit: clear the store in the destructor instead of in finalize: because 
-   finalize is called in the same order as initialize instead of the opposite 
+ - HltInit: clear the store in the destructor instead of in finalize: because
+   finalize is called in the same order as initialize instead of the opposite
    order, other algorithms still have pointers into the datastore; also, no
-   need to keep Data and Configuration pointers as data members. Finally, 
-   use new 'clean' function of Hlt::Data to clean selections instead of 
+   need to keep Data and Configuration pointers as data members. Finally,
+   use new 'clean' function of Hlt::Data to clean selections instead of
    looping explicity over all selections in Hlt::Data...
  - change protected into private when possible to indicate derived classes
    are not changing member data
@@ -1063,7 +1066,7 @@
 
 ! 2008-05-07 Gerhard Raven
  - remove unused protected datamember in HltAlgorithm
- - make sure that declareProperty isn't called more than once 
+ - make sure that declareProperty isn't called more than once
    with the same argument in HltFilters
 
 ! 2008-05-02 Gerhard Raven
@@ -1072,7 +1075,7 @@
 
 !========================== HltCommon v3r2 2008-04-25 ===================
 ! 2008-04-23 (St. Jorge) - Jose A. Hernando
- - MakeVertex set option DoMergeInputs option (true by default)   
+ - MakeVertex set option DoMergeInputs option (true by default)
 
 ! 2008-04-21 - Jose a. Hernando
  - Addapted to the new enum type name HltSelectionSummaryEnum
@@ -1085,7 +1088,7 @@
 
 ! 2008-03-18 - Sandra Amato
  - in HltFunctionFactories.cpp, added a new functor named "PT0"
- 
+
 ! 2008-03-13 - Gerhard Raven
  - in HltGenConfig, dump configurations in 'finalize' rather than in the
    first call to 'execute'
@@ -1109,12 +1112,12 @@
    and HltMoveVerticesForSwimming.{h,cpp}.
 
 ! 2008-02-18 - Patrick Koppenburg
- - HltSummary tool: return Particle::ConstVector. Do not use helper 
+ - HltSummary tool: return Particle::ConstVector. Do not use helper
 
 ! 2008-02-15 - Gerhard Raven
   - PropertyConfigSvc now inherits from IPropertyConfigSvc so it can expose
     some of its functionality to the rest of the world...
-  - reduce the output level of ConfigDBAccessSvc by setting the SEAL 
+  - reduce the output level of ConfigDBAccessSvc by setting the SEAL
     output level from Debug to Info
 
 ! 2008-02-12 Jose A. Hernando
@@ -1130,7 +1133,7 @@
 
 ! 2008-02-11 - Gerhard Raven
   - add .cvsignore file to cmt directory to ignore cmt generated files
-  - follow factorization of MD5 computation out of HltBase/PropertyConfig 
+  - follow factorization of MD5 computation out of HltBase/PropertyConfig
      into seperate file
 
 ! 2008-02-08 - Gerhard Raven
@@ -1139,12 +1142,12 @@
 ! 2008-02-07 - Gerhard Raven
   - add PropertyConfigSvc: a service which, given a configuration key
     pushes sets of properties to the job options service
-  - add HltConfigSvc: extension of the PropertyConfigSvc which 
+  - add HltConfigSvc: extension of the PropertyConfigSvc which
     maps a TCK to a configuration key, and which subscribes to the
-    beginEvent incident to check for changes in TCK (right now, 
-    it doesn't actually check as there is no data with a TCK in 
+    beginEvent incident to check for changes in TCK (right now,
+    it doesn't actually check as there is no data with a TCK in
     the ODIN bank)
-    
+
 ! 2008-02-07 Jose A. Hernando
   - HltFunctionFactory.h trying to get back the factory to be use in Python
 
@@ -1168,7 +1171,7 @@
 
 ! 2008-01-22 Jose A. Hernando
       HLT-clean
-     - remove: 
+     - remove:
   src/HltL0Monitor.h
   src/HltMatchOffTrack2OnCalo.cpp (move to HltHadronAlley)
   src/HltMatchOffTrack2OnCalo.h
@@ -1178,29 +1181,29 @@
   src/HltPrepareL0Muons.h
 	src/HltPrepareTracks.cpp (defined in HltFilters)
   src/HltPrepareTracks.h
-	src/HltPrepareVertices.cpp (defined in HltFilters)	
+	src/HltPrepareVertices.cpp (defined in HltFilters)
   src/HltPrepareVertices.h
   src/HltSelectionDataToTes.cpp (rename HltSelectionToTES)
   src/HltSelectionDataToTes.h
   src/HltSelectionEntry.cpp (rename to HltSelectionFilter)
-  src/HltSelectionEntry.h 
-  src/HltTrackFilter.cpp (defined in HltFilters)	
+  src/HltSelectionEntry.h
+  src/HltTrackFilter.cpp (defined in HltFilters)
   src/HltTrackFilter.h
-	src/HltTrackFromParticle.cpp 
+	src/HltTrackFromParticle.cpp
   src/HltTrackFromParticle.h
   src/HltTrackFromTes.cpp
   src/HltTrackFromTes.h (defined in HltFilters)
-  src/HltTrackMaker.cpp 
+  src/HltTrackMaker.cpp
   src/HltTrackMaker.h
   src/HltTrackMerge.cpp
   src/HltTrackMerge.h
-  src/HltVertexFilter.cpp (defined in HltFilters)	
+  src/HltVertexFilter.cpp (defined in HltFilters)
   src/HltVertexFilter.h
   src/L0Value.cpp
   src/L0Value.h
-  src/MatchTVeloTracks.cpp (move to HltMuonAlley)	
+  src/MatchTVeloTracks.cpp (move to HltMuonAlley)
   src/MatchTVeloTracks.h
-  src/PhysSelEntry.cpp 
+  src/PhysSelEntry.cpp
   src/PhysSelEntry.h
 
   - add:
@@ -1258,7 +1261,7 @@
 
 ! 2007-11-20 Jose A. Hernando
 	  - HltVertexToTracks: put the tracks of the vertex into a selection (for DiMuon alley)
-     
+
 ! 2007-11-20 Gerhard Raven
 	 - HltPrepareCalos: set pointers to 0 when they're not pointing at anything valid
                         remove data members that are not referenced
@@ -1291,7 +1294,7 @@
 
 !========================== HltCommon v1r6p1 2007-10-28 ===================
 ! 2007-10-11 Jose A. Hernando
-  - deleting delete from destructors (problems slc4_amd64_gcc34 -Gaudi) 
+  - deleting delete from destructors (problems slc4_amd64_gcc34 -Gaudi)
   - Using HltDataSvc from DataSvc (following M.Frank suguestions)
 
 ! 2007-10-11 Jose A. Hernando
@@ -1305,7 +1308,7 @@
  - HltTrackMerge: allow merging 2 inputs in which either one may be empty
      add property AllowEmptyInputTracks1 to activate the new feature (default functionality not changed)
      add property RemoveDuplicates to allow removing duplicate tracks in merge
- 
+
 ! 2007-09-19 - Patrick Koppenburg
  - Reduce verbosity of HltSummaryWriter
 
@@ -1327,7 +1330,7 @@
 
 ! 2007-07-31 Gabriel Guerrer
   - HltMatchOffTrack2OnCalo: tool for matching offline Track to L0CaloCandidate
-  - HltFunctionFactory: added '=' operator for filters, added 'MatchOffTrack2OnCalo' option for trackFunction 
+  - HltFunctionFactory: added '=' operator for filters, added 'MatchOffTrack2OnCalo' option for trackFunction
   	(related to HltMatchOffTrack2OnCalo)
 
 ! 2007-07-31 - Jose A. Hernando
@@ -1335,7 +1338,7 @@
 
 ! 2007-07-27 - Jose A. Hernando
   - HltSelectionEntry: make a selection from previous selections
-     to be used to define the exit of the alleys as the OR of the alleys 
+     to be used to define the exit of the alleys as the OR of the alleys
 
 ! 2007-07-12 - Jose A. Hernando
   - HltSummaryTool adding NCandidates method
@@ -1358,16 +1361,16 @@
 	- HltFunctionFactory and Filters, Maker, simplify interface
 
 ! 2007-06-25 - Jose A. Hernando
-	- HltPrepareVertices : prepare vertices (i.e PV2D)	
+	- HltPrepareVertices : prepare vertices (i.e PV2D)
 	- HltSummaryWriter : write selections in the TES report-summary
-	- HltFunctionFactory : simplifying the interface of the factory (getting ready to be LoKi-like)	
+	- HltFunctionFactory : simplifying the interface of the factory (getting ready to be LoKi-like)
 	- HltInit : do not use HltDataStore anymore, create data-summary in HltES and configuration of data-summary, store the enums into the configuration
 	- HltSummaryTool : implementation of a tool (for gaudipython) to have human like interface with the TES report-summary
 	- HltSequencer : register info into the configuration
 	- All: getting adapted to the new HltBase that uses the data-summary and configuration
 	- HltDataStore: removed!
 	- HltEnd: removed!
-	- removing all the monitoring algos (to go to monitoring package)	
+	- removing all the monitoring algos (to go to monitoring package)
 
 
 ! 2007-06-20 - Jose A. Hernando
@@ -1377,7 +1380,7 @@
  - HltTrackFilter  filter tracks according from list of conditions via the factory
  - HltTrackMerge merge 2 tracks containers in one
  - HltTrackFromParticle: select tracks from a list of particles
- - HltVertexFilter filter vertices from a list of conditions via the factory  
+ - HltVertexFilter filter vertices from a list of conditions via the factory
  - HltVertexMaker makes vertices with a list of conditions via the factory
  - L0Value retrieve L0 (best) values
 
@@ -1396,7 +1399,7 @@
 
 ! ======================== HltCommon v1r3 2007-02-12 =========================
 ! 2007-02-08 - Jose A. Hernando
- - src/HltSummaryTool 
+ - src/HltSummaryTool
        tool to simplify the current access to hltsummary info
  - src/HltMonitorEffvsPt
        algorithm to monitor the eff of L0/hlt selections vs Pt (offline) track
@@ -1446,7 +1449,7 @@
 ! 2006-09-22 Jose A. Hernando
 	 replacing code for DC06
 
- - src/HltDataStore.h   : implementation of the hlt data store 
+ - src/HltDataStore.h   : implementation of the hlt data store
  - src/HltDataInit.h    : deals with the initialization of the Hlt
  - src/HltDataEnd.h     : deals with the end, locate objects in TES
  - src/HltMonitor.h     : simple implementation of the monitoring
@@ -1463,13 +1466,13 @@
   - src/HltEntry.h
     decision algorithm to enter or no in a given trigger line
   - src/HltUtils
-    some utilities to operate with Tracks and Vertices and compute IP, etc 
+    some utilities to operate with Tracks and Vertices and compute IP, etc
     (TODO: move them to Track?)
   - src/HltTrackIPSelection
     make a selection depending on the IP of the tracks
     (TODO: create a 'node' class for PV+{Tracks with IP} where the trigger should be applied
   - src/HltDummy.h
-    dummy decision algorithm to complete the empty trigger boxes 
+    dummy decision algorithm to complete the empty trigger boxes
   - src/TrgVertexToTVertex
     convert TrgVertex (using TrgTracks) to TrackVertex (using Track)
     (TODO: temporally here, remove when the PV algorithms use Tracks)

@@ -4,27 +4,28 @@
   <class name = "ITrackL0CaloMatchTool" />
   <class name = "ITrackView"       />
   <class name = "ITrackUpgrade" />
+  <class name = "IHltOutputSvc" />
   <class name = "Hlt::Selection" />
   <class name = "Hlt::TrackSelection" />
   <class name = "Hlt::VertexSelection" />
   <class name = "Hlt::ITrack2CandidateMatch" />
 
-  
+
   <class name   = "Hlt::Cache"         />
   <enum  name   = "Hlt::Cache::Values" />
-  
-  <class name   = "Hlt::Candidate"         
+
+  <class name   = "Hlt::Candidate"
          id     = "00001D89-0000-0000-0000-000000000000" />
-  <class name   = "Hlt::MultiTrack"        
+  <class name   = "Hlt::MultiTrack"
          id     = "00001D8C-0000-0000-0000-000000000000" />
-  <class name   = "Hlt::L0DiMuonCandidate" 
+  <class name   = "Hlt::L0DiMuonCandidate"
          id     = "00001D8B-0000-0000-0000-000000000000" />
-  <class name   = "Hlt::Stage"           
+  <class name   = "Hlt::Stage"
          id     = "00001D8A-0000-0000-0000-000000000000"  >
     <field name = "m_locker" transient = "true"/>
-  </class> 
-  
-  
+  </class>
+
+
   <class name   = "Hlt::Candidate::Vector"      />
   <class name   = "Hlt::Candidate::ConstVector" />
   <class name   = "Hlt::Candidate::Container"   />
@@ -45,7 +46,7 @@
   <class name   = "Hlt::MultiTrack::Container"   />
   <class name   = "Hlt::MultiTrack::Range"       />
   <class name   = "Hlt::MultiTrack::Selection"   />
-  
+
   <class name   = "Hlt::L0DiMuonCandidate::Vector"      />
   <class name   = "Hlt::L0DiMuonCandidate::ConstVector" />
   <class name   = "Hlt::L0DiMuonCandidate::Container"   />
@@ -55,14 +56,14 @@
 
   <class pattern = "Gaudi::*Range_<*Hlt::*>" />
   <class pattern = "Gaudi::*Range_<*Muon*>"  />
-  
+
   <class name   = "Hlt::TSelection<Hlt::Candidate>"          />
   <class name   = "Hlt::TSelection<Hlt::Stage>"              />
   <class name   = "Hlt::TSelection<Hlt::MultiTrack>"         />
   <class name   = "Hlt::TSelection<Hlt::L0DiMuonCandidate>"  />
-  
+
   <function name = "HltUtils::impactParameter"             />
   <function name = "HltUtils::impactParameterVector"       />
   <function name = "HltUtils::impactParameterSignificance" />
-  
+
 </lcgdict>

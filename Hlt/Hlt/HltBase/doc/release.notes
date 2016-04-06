@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2016-03-28 - Roel Aaij
+ - Add IHltOutputSvc, an interface for the HltOutputSvc.
+
 ! 2016-03-21 - Roel Aaij
  - Replace declareInput with declareInputSelection in Hlt algorithms.
 
@@ -15,7 +18,7 @@
 !========================= HltBase v15r8 2015-12-17 =========================
 
 ! 2015-12-06 - Gerhard Raven
- - make single-argument Selection constructor explicit 
+ - make single-argument Selection constructor explicit
  - remove __GCCXML__ guards
  - prefer lambda over std::mem_fn (the latter makes inlining impossible)
 

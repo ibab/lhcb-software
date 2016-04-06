@@ -17,7 +17,7 @@
 #include "HltBase/IHltData.h"
 #include "HltBase/IHltInspector.h"
 #include "HltBase/HltSelection.h"
-
+#include "HltBase/IHltOutputSvc.h"
 
 #include "Event/HltCandidate.h"
 #include "Event/HltL0DiMuonCandidate.h"
@@ -78,4 +78,3 @@ struct __Instantiations
 }
 
 #endif // DICT_HLTBASEDICT_H
-

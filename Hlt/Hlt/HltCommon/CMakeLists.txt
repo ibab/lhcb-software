@@ -17,7 +17,7 @@ gaudi_depends_on_subdirs(Det/VeloDet
                          Phys/LoKiTracks
                          Phys/LoKiTrigger
                          Tr/TrackInterfaces
-			 Tf/TfTools)
+                         Tf/TfTools)
 
 find_package(Boost COMPONENTS system regex iostreams)
 
@@ -26,5 +26,6 @@ gaudi_add_module(HltCommon
                  INCLUDE_DIRS Boost Event/DigiEvent Phys/LoKi Tr/TrackInterfaces Tf/TfTools
                  LINK_LIBRARIES Boost VeloDetLib DAQEventLib HltEvent L0Event TrackEvent GaudiAlgLib HltBase HltInterfaces LoKiHltLib LoKiTracksLib LoKiTriggerLib)
 
+gaudi_install_python_modules()
 
 gaudi_add_test(QMTest QMTEST)

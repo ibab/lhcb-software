@@ -20,6 +20,12 @@
 ! 2016-03-30 - Mark Williams
  - Added PersistReco flag for relevant CharmHad lines (30)
 
+! 2016-03-30 - Karlis Dreimanis
+ - Added PersistReco flag to 2 Exotica prompt di-muon lines
+
+! 2016-03-30 - Mark Williams
+ - Added PersistReco flag for relevant CharmHad lines (30)
+
 ! 2016-03-28 - Mika Vesterinen
  - Move the TrackEff lines to Turbo+PersistReco
 
@@ -36,8 +42,11 @@
  - Adding Turbo flag and name in Hlt2StrangeKPiPiPiLine
  - Adding description and author in several modules
 
+! 2016-03-22 - Roel Aaij
+ - Add Hlt2BeamGas line for Hlt2-based routing bit for the BeamGas stream.
+
 ! 2016-03-17 - Francesco Dettori
- - Bug fix to RareStrange lines to include also same sign muons for LFV  K-> pi mu mu 
+ - Bug fix to RareStrange lines to include also same sign muons for LFV  K-> pi mu mu
 
 ! 2016-03-16 - Jon Harrison
  - Line name changes in Phi lines and addition of header information in Lines.py
@@ -46,7 +55,7 @@
  - Line name changes in Bc2JpsiX, CcDiHadron (added folder name), and DPS lines (removed special characters)
 
 ! 2016-03-14 - Francesco Dettori
- - Removing duplications of Jpsi and Psi2S Turbo lines. Only lines with PID are kept, but "PID" is removed from line names. 
+ - Removing duplications of Jpsi and Psi2S Turbo lines. Only lines with PID are kept, but "PID" is removed from line names.
 
 ! 2016-03-11 - Kevin Dungs
  - Fix SPD cut in Hlt2LFVJpsiMuE.

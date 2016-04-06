@@ -13,13 +13,6 @@ from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import GaudiSequencer as Sequence
 from ThresholdUtils import importLineConfigurables
-
-#import all Hlt2 lines configurables
-import Hlt2Lines
-_hlt2linesconfs = importLineConfigurables(Hlt2Lines)
-# explicitly put them in our  scope so that genConfUser can find it...
-globals().update( ( cfg.__name__, cfg ) for cfg in _hlt2linesconfs )
-
 #
 # The tracking configurations
 #
@@ -33,6 +26,9 @@ from HltTracking.Hlt2ProbeTrackingConfigurations import (Hlt2MuonTTTracking,
                                                          Hlt2VeloMuonTracking,
                                                          Hlt2FullDownstreamTracking)
 
+import Hlt2Lines
+_hlt2linesconfs = importLineConfigurables(Hlt2Lines)
+
 class Hlt2Conf(LHCbConfigurableUser):
     __used_configurables__ = [ (Hlt2Tracking, "Hlt2LongTracking"),
                                (Hlt2Tracking, "Hlt2DownstreamTracking"),
@@ -40,6 +36,7 @@ class Hlt2Conf(LHCbConfigurableUser):
                                (Hlt2ProbeTracking, "Hlt2VeloMuonTracking"),
                                (Hlt2ProbeTracking, "Hlt2FullDownstreamTracking"),
                                ] + _hlt2linesconfs
+
 
     __slots__ = { "DataType"                   : '2010'    # datatype is one of 2009, MC09, DC06...
                 , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration
@@ -71,7 +68,6 @@ class Hlt2Conf(LHCbConfigurableUser):
         #
         from ThresholdUtils import setThresholds
         from functools import partial
-        from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
         map( partial(  setThresholds, self.getProp("ThresholdSettings") ) , _hlt2linesconfs )
         from Configurables import LoKi__HDRFilter   as HDRFilter
         Hlt2Line( 'Global', priority = 255, VoidFilter = '', HLT1 = ''

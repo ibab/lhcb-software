@@ -17,12 +17,6 @@ class protonNeon_2015:
              self.ActiveHlt2Lines() != ref.ActiveHlt2Lines(self) ) :
             raise RuntimeError('Must update HltType when modifying ActiveHlt.Lines()')
 
-    def __init__(self) :
-        self.NanoBanks = [
-            'ODIN', 'HltLumiSummary', 'HltRoutingBits', 'DAQ', 'Velo',
-            'L0DU', 'HltDecReports', 'HC',
-        ]
-
     def L0TCK(self) :
         return '0x024f'
 
@@ -37,7 +31,7 @@ class protonNeon_2015:
             'Hlt1Lumi',
             'Hlt1L0CALO', 'Hlt1VeloClosingMicroBias',
             # Beam-gas lines
-            'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2', 
+            'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2',
             'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingForcedRecoFullZ',
             # proton Neon lines:
             'Hlt1MBMicroBiasVelo',  ## Beam1 Micro Bias, prescaled to get 200 M events
@@ -141,7 +135,7 @@ class protonNeon_2015:
             },
             },
             }
-            
+
         # HLT2 PassThrough
         from Hlt2Lines.Commissioning.Lines import CommissioningLines
         thresholds.update({
@@ -152,3 +146,7 @@ class protonNeon_2015:
             }
         })
         return thresholds
+
+    def NanoBanks(self):
+        return ['ODIN', 'HltLumiSummary', 'HltRoutingBits', 'DAQ', 'Velo',
+                'L0DU', 'HltDecReports', 'HC']

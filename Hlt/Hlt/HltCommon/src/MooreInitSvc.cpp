@@ -18,7 +18,7 @@
 // 2010-??-?? : Gerhard Raven
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
+// Declaration of the Service Factory
 DECLARE_SERVICE_FACTORY( MooreInitSvc )
 
 //=============================================================================
