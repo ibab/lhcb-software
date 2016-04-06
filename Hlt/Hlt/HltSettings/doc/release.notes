@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-04-06 - Mika Vesterinen
+ - TrackMVA line thresholds loosened to the 2015 setting. We should also propose something for the TrackMVALoose line(s).
+
 ! 2016-04-01 - Simone Stracka
  - Tightened PT and PID cuts for muons in Hlt2DiMuonJPsiTurbo and Hlt2DiMuonPsi2STurbo lines
 

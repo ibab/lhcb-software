@@ -107,7 +107,7 @@ class Physics_pp_Draft2016( object ):
                                                                 'MinIPChi2'   :     7.4,
                                                                 'Param1'      :     1.0,
                                                                 'Param2'      :     1.0,
-                                                                'Param3'      :     1.6,
+                                                                'Param3'      :     1.1,
                                                                 'GEC'         : 'Loose'},
                                                'TrackMVALoose' :    {'TrChi2'      :     2.5,
                                                                 'MinPT'       :  1000.  * MeV,
