@@ -16,6 +16,7 @@ def configure(**kwargs) :
     from Moore.Configuration import Moore, MooreExpert
     moore = Moore()
     moore.OutputLevel = output_level
+    moore.RunOnline = True
 
     # We need MooreOnline to setup the buffer manager infrastructure etc, but we
     # don't want to use things like the RunChangeHandler and database snapshots.
@@ -27,7 +28,7 @@ def configure(**kwargs) :
     mooreOnline.UseDBSnapshot = False
     mooreOnline.CheckOdin = False
     mooreOnline.EnableUpdateAndReset = False
-    
+
     # Add the timing auditor by hand with output level INFO, as Moore is never
     # going to do it for us if the rest is at WARNING
     from Gaudi.Configuration import ApplicationMgr, AuditorSvc
@@ -62,20 +63,23 @@ def configure(**kwargs) :
     ##     ta.OutputLevel = OnlineEnv.OutputLevel
     ##     ta.addTool(LHCbSequencerTimerTool, name = 'TIMER')
     ##     ta.TIMER.OutputLevel = OnlineEnv.OutputLevel
-    ## appendPostConfigAction(info_dammit)    
+    ## appendPostConfigAction(info_dammit)
 
     userOptions = user_package.MooreOptions
     # This is the stuff that should come from the PRConfig user module
+    # This is the stuff that should come from the PRConfig user module
     for conf, d in { moore: {'DDDBtag' : str, 'CondDBtag' : str},
                      mooreOnline : {'UseTCK' : bool, 'Simulation' : bool,
-                                    'DataType' : ('2011', '2012', '2013', '2014', '2015'),
+                                    'DataType' : tuple(str(y) for y in range(2011, 2017)),
                                     'HltLevel' : ('Hlt1', 'Hlt2', 'Hlt1Hlt2')}}.iteritems():
         for a, t in d.iteritems():
             ua = userOptions.pop(a)
             if hasattr(t, '__iter__'):
-                assert(ua in t)
+                if ua not in t:
+                    raise ValueError('Property %s should be one of %s, not %s.' % (a, t, ua))
             else:
-                assert(type(ua) == t)
+                if type(ua) != t:
+                    raise ValueError('Property %s should be of type %s, not %s.' % (a, t, ua))
             conf.setProp(a, ua)
 
     if 'InitialTCK' in userOptions:
@@ -83,12 +87,12 @@ def configure(**kwargs) :
 
     if userOptions.pop('Split', None):
         print 'WARNING: Split property is ignored, value from HltLevel will be used instead.'
-        
+
     if mooreOnline.getProp('HltLevel') == 'Hlt1Hlt2':
         moore.setProp('Split', '')
     else:
         moore.setProp('Split', mooreOnline.getProp('HltLevel'))
-            
+
     if input_type == 'MEP' and 'Hlt1' in mooreOnline.HltLevel:
         mooreOnline.REQ1 = "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
     elif input_type == 'MDF' and 'Hlt1' in mooreOnline.HltLevel:
@@ -117,5 +121,5 @@ def configure(**kwargs) :
         if not found:
             print "# WARNING: skipping setting '" + str(k) + ":" + str(v) + "' because no configurable has that option"
 
-    user_package.configure()    
+    user_package.configure()
     OnlineEnv.end_config(False)

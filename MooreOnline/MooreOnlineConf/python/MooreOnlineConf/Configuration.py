@@ -15,10 +15,11 @@ class MooreOnline(LHCbConfigurableUser):
     ## Possible used Configurables
     __used_configurables__ = [ Moore, CondDB ]
     __slots__ = {
+          '__buffers' : []
         ############################################
         # Options specific to the Online environment
         ############################################
-        "NbOfSlaves":        0
+        , "NbOfSlaves":        0
         , 'EnableMonitoring' : False
         , 'REQ1' : ''
         , 'ForceMDFInput' : False
@@ -44,7 +45,7 @@ class MooreOnline(LHCbConfigurableUser):
         , "UseTCK"     :       True
         , 'EnableTimer' :    False
         , 'Simulation': False
-        , 'DataType' : '2012'
+        , 'DataType' : '2016'
         , "CheckOdin" : True
         , "HltLevel" : 'Hlt1'
         , 'EnableUpdateAndReset' : True
@@ -70,12 +71,8 @@ class MooreOnline(LHCbConfigurableUser):
         LoKiSvc().Welcome = False
 
         import OnlineEnv
-
-        #from Configurables import LHCb__RawDataCnvSvc as RawDataCnvSvc
-        #done in LHCbApp
-        #EventPersistencySvc().CnvServices.append( RawDataCnvSvc('RawDataCnvSvc') )
         EventLoopMgr().Warnings = False
-        
+
         app = ApplicationMgr()
 
         # setup the histograms and the monitoring service
@@ -115,20 +112,12 @@ class MooreOnline(LHCbConfigurableUser):
         mbm_setup = allConfigurables['OnlineEnv']
         task_type = os.environ['TASK_TYPE']
 
-        ## The next four lines are a temporary hack for the timing tests. It
-        ## will be removed once the permanent solution for the
-        ## CheckPointingSvc is in place.
-        import re
-        m = re.match("(.*)_(?:\\d+)$", task_type)
-        if m:
-            task_type = m.group(1)
-
         input_buffer  = mbm_setup.__getattribute__(task_type + '_Input')   #'Events'
         output_buffer = mbm_setup.__getattribute__(task_type + '_Output')  #'Send'
-
+        self.__buffers = [input_buffer, output_buffer]
         TAE = (OnlineEnv.TAE != 0)
         mepMgr = OnlineEnv.mepManager(OnlineEnv.PartitionID, OnlineEnv.PartitionName,
-                                      [input_buffer, output_buffer], False)
+                                      self.__buffers, False)
         mepMgr.PartitionBuffers = True
         mepMgr.PartitionName    = OnlineEnv.PartitionName
         mepMgr.PartitionID      = OnlineEnv.PartitionID
@@ -136,10 +125,6 @@ class MooreOnline(LHCbConfigurableUser):
 
         app.Runable = OnlineEnv.evtRunable(mepMgr)
         app.ExtSvc.append(mepMgr)
-        evtMerger = OnlineEnv.evtMerger(name = 'Output', buffer = output_buffer,
-                                        location = 'DAQ/RawEvent', datatype = OnlineEnv.MDF_NONE,
-                                        routing = 1)
-        evtMerger.DataType = OnlineEnv.MDF_BANKS
 
         if TAE:
              eventSelector = OnlineEnv.mbmSelector(input = input_buffer, TAE = TAE, decode = False)
@@ -152,24 +137,23 @@ class MooreOnline(LHCbConfigurableUser):
         OnlineEnv.evtDataSvc()
         if self.getProp('REQ1') : eventSelector.REQ1 = self.getProp('REQ1')
 
-        # define the send sequence
-        writer =  GaudiSequencer('SendSequence')
-        writer.OutputLevel = OnlineEnv.OutputLevel
-        if len(Moore().getProp('WriterRequires')):
-            from Configurables import LoKi__VoidFilter as Filter
-            writer.Members.append( Filter( "SendSequenceFilter"
-                                         , Preambulo = [ 'from LoKiHlt.algorithms import ALG_EXECUTED, ALG_PASSED' ]
-                                         , Code = ' & '.join( [ "ALG_EXECUTED('{0}') & ALG_PASSED('{0}')".format(i) for i in Moore().getProp('WriterRequires') ] )
-                                         )
-                                 )
-        writer.Members.append(evtMerger)
-        app.OutStream.append( writer )
-
-        #ToolSvc.SequencerTimerTool.OutputLevel = @OnlineEnv.OutputLevel;
         from Configurables import AuditorSvc
         AuditorSvc().Auditors = []
         # Now setup the message service
         self._configureOnlineMessageSvc()
+
+    def rawEventMergerProperties(self):
+        import OnlineEnv
+        iProps = {'Buffer' : self.__buffers[1],
+                  "Compress" : "0",
+                  "DataType" : str(OnlineEnv.MDF_BANKS),
+                  "InputDataType" : str(OnlineEnv.MDF_NONE),
+                  "RoutingBits" : "1",
+                  "Silent"      : "false",
+                  "OutputLevel" : str(OnlineEnv.OutputLevel)}
+        gProps = {"BankLocation" : "DAQ/%sRawEvent"}
+
+        return "LHCb::RawEvent2MBMMergerAlg", iProps, gProps, {}
 
     def _configureOnlineForking(self):
         import os, socket, OnlineEnv
@@ -244,41 +228,49 @@ class MooreOnline(LHCbConfigurableUser):
 
         ### TODO: see if 'OnlineEnv' has InitialTCK attibute. If so, set it
         ## in case of LHCb or FEST, _REQUIRE_ it exists...
-        if hasattr(OnlineEnv,'InitialTCK') and self.getProp('HltLevel') != "Hlt2":
-            Moore().setProp('InitialTCK',OnlineEnv.InitialTCK)
-            if not self._setIfNotSet('CheckOdin',True) :
+        if hasattr(OnlineEnv,'InitialTCK'):
+            Moore().setProp('InitialTCK', OnlineEnv.InitialTCK)
+            if not self._setIfNotSet('CheckOdin', True) and self.getProp('HltLevel') != "Hlt2":
                 print 'WARNING '*10
-                print 'WARNING: you are running online, using a TCK, but ignoring ODIN. Are you sure this is really what you want???'
+                print ('WARNING: you are running HLT1 or HLT1HLT2 online, using a TCK, but ignoring ODIN. '
+                       'Are you sure this is really what you want???')
                 print 'WARNING '*10
 
     def _setIfNotSet(self,prop,value) :
         if not self.isPropertySet(prop) : self.setProp(prop,value)
         return self.getProp(prop) == value
 
-    def forceOtherProps(self, other, props):
+    def forceOtherProps(self, other, props, force):
         """
         Force overwriting properties in online mode
         """
         for prop in props:
-            if other.isPropertySet(prop) and other.getProp(prop)!=self.getProp(prop):
-                log.warning("Resetting "+prop+" even though you set is elsewhere!")
-            other.setProp(prop,self.getProp(prop))
+            if other.isPropertySet(prop) and other.getProp(prop) != self.getProp(prop) and force:
+                log.warning("Resetting "+prop+" even though you set it elsewhere!")
+            if not other.isPropertySet(prop) or force:
+                other.setProp(prop,self.getProp(prop))
+
 
     def __apply_configuration__(self):
         GaudiKernel.ProcessJobOptions.PrintOff()
+        from functools import partial
 
-        propagator=None
+        propagator = None
         if self.getProp("RunOnline") :
             #check and reconfigure own properties
             self._onlineMode()
             #in online mode, force certain Moore properties!
-            propagator=self.forceOtherProps
+            propagator = partial(self.forceOtherProps, force = True)
         else:
             #in offline mode don't force, but set them if not set
-            propagator=self.setOtherProps
+            propagator = partial(self.forceOtherProps, force = False)
 
         #pass certain properties to Moore
         propagator(Moore(), ["RunOnline","UseTCK",'EnableTimer','Simulation','DataType','CheckOdin'] )
+
+        # Use the online output algorithm
+        from Configurables import HltOutputConf
+        HltOutputConf().setProp("OutputAlgProperties", self.rawEventMergerProperties)
 
         from Configurables import LoKiSvc, LoKi__Reporter
         LoKiSvc().addTool(LoKi__Reporter, 'REPORT')
