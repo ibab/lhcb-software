@@ -9,6 +9,7 @@ from functools import partial
 from LHCbKernel.Configuration import *
 from Gaudi.Configuration import *
 from Configurables import HltConf
+from Configurables import HltOutputConf
 from Configurables import GaudiSequencer
 from Configurables import LHCbApp
 from Configurables import DecodeRawEvent, RawEventFormatConf, DDDBConf
@@ -32,14 +33,13 @@ class MooreExpert(LHCbConfigurableUser):
         #########################################
         # Expert options, only set if you know what you are doing
         #########################################
-        "prefetchConfigDir" :'MOORE_v14r8'  # which configurations to prefetch
-        , "DQFLAGStag" : "latest" # latest in the CondDB for this DataType
+          'DQFLAGStag'  : "latest" # latest in the CondDB for this DataType
         , 'WriteFSR'    :  True #copy FSRs as required
         , "configAlgorithms" : ['Hlt']    # which algorithms to configure (automatically including their children!)...
-        , "configServices" :   ['ToolSvc','Hlt::Service','HltANNSvc' ]    # which services to configure (automatically including their dependencies!)...
-        , "TCKpersistency" :   'cdb' # which method to use for TCK data? valid is 'file','tarfile', 'zipfile', 'cdb' and 'sqlite'
-        , "Hlt2Independent" : False #turn off HLT1 track decoding
-        , "DisableMonitors" : False #Disable HLT monitoring
+        , "configServices"   :   ['ToolSvc', 'Hlt::Service', 'HltANNSvc', 'HltOutputSvc'] # which services to configure (automatically including their dependencies!)...
+        , "TCKpersistency"   :   'cdb' # which method to use for TCK data? valid is 'file','tarfile', 'zipfile', 'cdb' and 'sqlite'
+        , "Hlt2Independent"  : False #turn off HLT1 track decoding
+        , "DisableMonitors"  : False #Disable HLT monitoring
         }
 
     def __apply_configuration__(self):
@@ -48,17 +48,18 @@ class MooreExpert(LHCbConfigurableUser):
             if self.isPropertySet(prop) and self.getProp(prop)!=self.getDefaultProperty(prop):
                 log.warning("Hey! You're setting an expert property "+prop+" are you an expert? Let's hope so!")
         #seriously, this configurable should not hold any logic, it is only used as a singleton options store
-        return
+        from Configurables import HltOutputConf
+        HltOutputConf().setProp('WriteFSR', self.getProp('WriteFSR'))
 
 
 class Moore(LHCbConfigurableUser):
     ## Possible used Configurables
     __used_configurables__ = [ HltConf
+                             , HltOutputConf
                              , LHCbApp
                              , DecodeRawEvent
-                             , DDDBConf
-                             , MooreExpert ]
-
+                             , DDDBConf ]
+    __queried_configurables = [ MooreExpert ]
     __slots__ = {
         #########################################
         # Basic options, used to set LHCbApp
@@ -66,7 +67,7 @@ class Moore(LHCbConfigurableUser):
           "EvtMax":            -1    # Maximum number of events to process
         , "SkipEvents":        0
         , "Simulation":        False # True implies use SimCond
-        , "DataType":          '2012' # Data type, can be [ 'DC06','2008' ]
+        , "DataType":          '2016' # Data type, can be [ 'DC06','2008' ]
         , "DDDBtag" :          'default' # default as set in DDDBConf for DataType
         , "CondDBtag" :        'default' # default as set in DDDBConf for DataType
         #########################################
@@ -102,7 +103,8 @@ class Moore(LHCbConfigurableUser):
         #######################################
         # Options nominally for online running
         #######################################
-        , "RunOnline"         : False
+        , "RunOnline"     : False
+        , 'EnableOutputStreaming' : False
         #######################################
         # Options to make processed data look like actual input...
         #######################################
@@ -123,7 +125,6 @@ class Moore(LHCbConfigurableUser):
         #, "DBSnapshotDirectory" : None # use CondDB directly or MooreOnline!
         #, 'EnableMonitoring' : None # use HltConf directly or MooreOnline!
         #, 'SkipDisabledL0Channels' : None # use HltConf directly
-        #, "prefetchConfigDir" : None # use MooreExpert
         #, "EnableLumiEventWriting"       : None # use HltConf directly
         #, 'EnableAcceptIfSlow' : None # use HltConf directly
         #, 'RequireL0ForEndSequence'     :  None # use HltConf directly
@@ -192,6 +193,7 @@ class Moore(LHCbConfigurableUser):
         #######################################
         # Options for offline running
         #######################################
+        , 'EnableOutputStreaming' : "Enable streaming of output in HLT2."
         #########################################
         # Deprecated former options
         #########################################
@@ -210,7 +212,6 @@ class Moore(LHCbConfigurableUser):
         #, "DBSnapshotDirectory" : "None # DEPRECATED.  use CondDB() directly or MooreOnline"
         #, 'EnableMonitoring' : "None # DEPRECATED.  use HltConf() directly or MooreOnline"
         #, 'SkipDisabledL0Channels' : "None # DEPRECATED.  use HltConf() directly"
-        #, "prefetchConfigDir" : "None # DEPRECATED. use MooreExpert"
         #, "EnableLumiEventWriting"       : "None # DEPRECATED.  use HltConf() directly"
         #, 'EnableAcceptIfSlow' : "None # DEPRECATED.  use HltConf directly"
         #, 'RequireL0ForEndSequence'     :  "None # DEPRECATED.  use HltConf() directly"
@@ -277,8 +278,6 @@ class Moore(LHCbConfigurableUser):
             bk = bankKiller( 'RemoveInputHltRawBanks',  BankTypes=hlt_banks )
             app.TopAlg.insert(0, bk)
 
-
-
     def _setRawEventLocations(self):
         """
         Check that I can set DecodeRawEvent.py options correctly.
@@ -311,60 +310,25 @@ class Moore(LHCbConfigurableUser):
         if ext in ["MDF","RAW","DIGI","XDIGI"]:
             raise ValueError("When running from a DIGI, XDIGI or RAW file, the only raw event location is DAQ/RawEvent, but you're resetting it into"+DecodeRawEvent().getProp("OverrideInputs"))
 
+    def forceOtherProps(self, other, props):
+        """
+        Force overwriting properties in online mode
+        """
+        for prop in props:
+            if other.isPropertySet(prop) and other.getProp(prop)!=self.getProp(prop):
+                log.warning("Resetting "+prop+" even though you set it elsewhere!")
+            other.setProp(prop,self.getProp(prop))
+
     def _configureOutput(self):
-        fname = self.getProp('outputFile')
-        if not fname : return
-        writer = None
+        if self.getProp('Split') != 'Hlt1' and self.getProp('EnableOutputStreaming'):
+            self.forceOtherProps(HltConf(), ['EnableOutputStreaming'])
 
-        #retrieve the persistency
-        persistency=None
-        from GaudiConf import IOExtension, IOHelper
-        iox=IOExtension()
-
-        #check the file type and use MDF writer or InputCopyStream
-        if iox.detectFileType(fname) == 'MDF'  :
-            from Configurables import LHCb__MDFWriter as MDFWriter
-            writer = IOHelper("MDF","MDF").outputAlgs(fname
-                                                       ,writer = MDFWriter( 'Writer' , Compress = 0 )
-                                                       ,writeFSR=False)
-            if self.getProp('WriterRequires') :
-                from Configurables import LoKi__VoidFilter as VoidFilter
-                #this next part does not work correctly, and I don't know why
-                #writer = GaudiSequencer( 'WriteSequence'
-                #                         , Members = self.getProp('WriterRequires') + writer
-                #                         )
-                writer = GaudiSequencer( 'WriteSequence'
-                                         , Members = [ VoidFilter( "WriterFilter"
-                                                                   , Preambulo = [ 'from LoKiHlt.algorithms import ALG_EXECUTED, ALG_PASSED' ]
-                                                                   , Code = ' & '.join( [ "ALG_EXECUTED('%s') & ALG_PASSED('%s')" % (i,i) for i in self.getProp('WriterRequires') ] )
-                                                                   )
-                                                       ] + writer
-                                         )
-                #convert to a smegging list consistently
-                writer=[writer]
-
-            ApplicationMgr().OutStream+=writer
-
-        else :
-            from Configurables import InputCopyStream
-            writer = InputCopyStream("Writer"
-                                    , RequireAlgs = self.getProp('WriterRequires')
-                                    )
-            IOHelper(persistency,persistency).outStream(fname,writer,writeFSR=MooreExpert().getProp('WriteFSR'))
-            #print "Writing extra reco locations:"
-            writer.OptItemList+=['Hlt2/pRec/long/Protos#99'
-                    , 'Hlt2/pRec/down/Protos#99'
-                    , 'Hlt2/pRec/long/RichPIDs#99'
-                    , 'Hlt2/pRec/long/MuonIDs#99'
-                    , 'Hlt2/pRec/long/Tracks#99'
-                    , 'Hlt2/pRec/down/Tracks#99'
-                    , 'Hlt2/pRec/neutral/Protos#99'
-                    , 'Hlt2/pRec/neutral/CaloClusters#99'
-                    , 'Hlt2/pRec/neutral/Electrons#99'
-                    , 'Hlt2/pRec/neutral/Photons#99'
-                    , 'Hlt2/pRec/neutral/MergedPi0s#99'
-                    , 'Hlt2/pRec/neutral/SplitPhotons#99']
-
+        from Configurables import HltOutputConf
+        outputConf = HltOutputConf()
+        for (op, tp) in {'outputFile' : 'OutputFile', 'generateConfig' : 'GenerateTCK'}.iteritems():
+            outputConf.setProp(tp, self.getProp(op))
+        self.forceOtherProps(outputConf, ['Split', 'UseTCK', 'RunOnline', 'WriterRequires',
+                                          'EnableOutputStreaming', 'Simulation'])
 
     def getRelease(self):
         import re,fileinput
@@ -541,7 +505,7 @@ class Moore(LHCbConfigurableUser):
             CaloGetterTool("ToolSvc.CaloGetter")
             OTChannelMapTool("ToolSvc.OTChannelMapTool")
             CaloClusterizationTool("ToolSvc.CaloClusterizationTool")
-            
+
             # visit_properties = ['Members', 'Filter0', 'Filter1', 'TopAlg']
             descend_properties = ['Members', 'Prescale', 'ODIN', 'L0DU', 'HLT', 'HLT1', 'HLT2', 'Filter0', 'Filter1', 'Postscale']
             appendPostConfigAction(partial(recurseConfigurables, func, descend_properties=descend_properties, descend_tools=True))
@@ -713,8 +677,7 @@ class Moore(LHCbConfigurableUser):
     def _config_with_tck(self):
         from Configurables import HltConfigSvc
         from Funcs import _tck
-        cfg = HltConfigSvc( prefetchDir = MooreExpert().getProp('prefetchConfigDir')
-                          , initialTCK =  _tck(self.getProp('InitialTCK'))
+        cfg = HltConfigSvc( initialTCK =  _tck(self.getProp('InitialTCK'))
                           , checkOdin = self.getProp('CheckOdin')
                           , ConfigAccessSvc = self.getConfigAccessSvc().getFullName() )
 
@@ -739,9 +702,9 @@ class Moore(LHCbConfigurableUser):
             raise ValueError("Invalid option for Moore().Split: '%s'"% split )
         if useTCK and split:
             from Funcs import _tck
-            tck = _tck(self.getProp('InitialTCK'))
+            tck = int(_tck(self.getProp('InitialTCK')), 16)
             # Check that the TCK matches the split configuration
-            bits = {'Hlt1' : 1, 'Hlt2' : 2, '' : 0}
+            bits = {'Hlt1' : 1, 'Hlt2' : 2, '' : 0}[self.getProp('Split')]
             if (tck & (bits << 28)) != (bits << 28):
                 raise ValueError("Running from TCK with split is %s, but TCK doesn't match: 0x%08x" % (split, tck))
 
@@ -863,6 +826,9 @@ class Moore(LHCbConfigurableUser):
             self._profile()
             if self.getProp("generateConfig") : self._generateConfig()
             self._configureInput()
-            self._configureOutput()
+
+        # Configure EndSequence and output through HltOutputConf
+        self._configureOutput()
+
         #last thing, set output levels
         self._outputLevel()
