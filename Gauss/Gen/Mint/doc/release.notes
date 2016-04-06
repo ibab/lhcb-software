@@ -6,7 +6,7 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
-!=========================== Mint v3r3 2016-03-94 ============================
+!=========================== Mint v4r0 2016-03-94 ============================
 ! 2015-03-04 - Gloria Corti
  - Increase major version to highligth that behavioru may be different
    Add release notes for all commits.
