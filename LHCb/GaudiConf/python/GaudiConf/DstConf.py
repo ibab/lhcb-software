@@ -422,9 +422,12 @@ class DstConf(LHCbConfigurableUser):
                     InputName="/Event/Hlt2/pRec/down/Protos",
                     OutputName="/Event/Hlt2/down/Protos")
             from Configurables import DataPacking__Unpack_LHCb__RichPIDPacker_ as UnpackRichPIDs
-            rich1=UnpackRichPIDs( name = "Hlt2UnpackRichPIDs",
+            rich1=UnpackRichPIDs( name = "Hlt2UnpackLongRichPIDs",
                     InputName          = "/Event/Hlt2/pRec/long/RichPIDs",
-                    OutputName         = "/Event/Hlt2/TrackFitted/Long/PID/RICH/electronmuonpionkaonprotonbelowThreshold/Rich1GasRich2GasLong" )
+                    OutputName         = "/Event/Hlt2/TrackFitted/Long/PID/RICH/electronmuonpionkaonprotondeuteronbelowThreshold/Rich1GasRich2GasLong" )
+            rich2=UnpackRichPIDs( name = "Hlt2UnpackDownRichPIDs",
+                    InputName          = "/Event/Hlt2/pRec/down/RichPIDs",
+                    OutputName         = "/Event/Hlt2/TrackFitted/Downstream/PID/RICH/electronmuonpionkaonprotondeuteronbelowThreshold/Rich1GasRich2GasDownstream" )
             from Configurables import DataPacking__Unpack_LHCb__MuonPIDPacker_ as UnpackMuonPIDs
             muon1=UnpackMuonPIDs( name = "Hlt2UnpackMuonPIDs",
                     InputName          = "/Event/Hlt2/pRec/long/MuonIDs",
@@ -436,6 +439,9 @@ class DstConf(LHCbConfigurableUser):
             track2=UnpackTrack( name = "UnpackDownTracks",
                     InputName          = "/Event/Hlt2/pRec/down/Tracks",
                     OutputName         = "/Event/Hlt2/TrackFitted/Downstream" )
+            track3=UnpackTrack( name = "UnpackDownPIDMuonSegments",
+                    InputName          = "/Event/Hlt2/pRec/down/PID/MuonSegments",
+                    OutputName         = "/Event/Hlt2/TrackFitted/Downstream/PID/MuonSegments" )
             proto3=UnpackProtoParticle( name = "UnpackNeutralProtoP",
                     InputName          = "/Event/Hlt2/pRec/neutral/Protos",
                     OutputName         = "/Event/Hlt2/neutral/Protos" )
@@ -443,6 +449,9 @@ class DstConf(LHCbConfigurableUser):
             clusters1=UnpackCaloClusters( name = "UnpackCaloClusters",
                     InputName          = "/Event/Hlt2/pRec/neutral/CaloClusters", 
                     OutputName         = "Hlt/Calo/EcalClusters" )
+            clusters2=UnpackCaloClusters( name = "UnpackEcalSplitClusters",
+                    InputName          = "/Event/Hlt2/pRec/neutral/EcalSplitClusters",
+                    OutputName         = "Hlt/Calo/EcalSplitClusters" )
             clustersRep=UnpackCaloClusters( name = "UnpackCaloClustersRep",
                     InputName          = "/Event/Turbo/pRec/neutral/Clusters", 
                     OutputName         = "Turbo/CaloClusters" )
@@ -462,7 +471,7 @@ class DstConf(LHCbConfigurableUser):
             hyposRep=UnpackCaloHypos( name = "UnpackCaloHyposRep",
                     InputName          = "/Event/Turbo/pRec/neutral/Hypos", 
                     OutputName         = "Turbo/CaloHypos" )
-            unpackers+=[proto1,proto2,proto3,rich1,muon1,track1,track2,clusters1,hypos1,hypos2,hypos3,hypos4,clustersRep,hyposRep]
+            unpackers+=[proto1,proto2,proto3,rich1,rich2,muon1,track1,track2,track3,clusters1,clusters2,hypos1,hypos2,hypos3,hypos4,clustersRep,hyposRep]
             
             recProtos = GaudiSequencer("TurboProtosAsRec")
             recNeutralProtos = GaudiSequencer("TurboNeutralProtosAsRec")

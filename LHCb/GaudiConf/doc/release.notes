@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+ - DstConf: Add persist reco unpackers for downstream Rich PID and MuonSegments
+   and EcalSplitClusters
+
 !========================= GaudiConf v19r17 2016-03-16 =========================
 ! 2016-03-16 - Gloria Corti
  - SimConf: Add possibility to write Bls and Bcm MCHits
