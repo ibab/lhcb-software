@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-06 - Paula Alvarez
+ - Updated StrippingB2XTauMu to use DaVinci__N3BodyDecays in phi_3pi lines
+
 ! 2016-04-06 - Andrea Contu
  - Update to DstarD02xx
 

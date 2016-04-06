@@ -9,10 +9,10 @@ Stripping selection for B->X tau mu:
 
 __author__ = "Paula Alvarez"
 __date__ = "01/12/2015"
-__version__ = "2.0"
+__version__ = "3.0"
 
 __all__ = ('B2XTauMuConf',
-           'default_conf')
+           'default_config')
 
 
 from Gaudi.Configuration import *
@@ -22,6 +22,7 @@ from PhysSelPython.Wrappers import Selection, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdLoosePions, StdAllLooseMuons, StdLooseKaons, StdTightDetachedTau3pi
+from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays as Combine3Particles
 
 
 default_config = {
@@ -84,7 +85,7 @@ default_config = {
 
         # Xmu cuts
         ,"XMuVCHI2DOF_phi" : 20.0    # adimensiional
-        
+
         # B cuts for phitaumu
         ,"BVCHI2DOF_phi"     : 1e10    # adimensiional
 
@@ -547,20 +548,22 @@ class B2XTauMuConf(LineBuilder) :
 
 
         ### B -> Phi Tau(3pi) Mu
-        self.selb2PhiTauMu_3pi = self._B2XTauMu_3pi(name_phi_3pi,
-                                                    DecayDescriptors = ["[B0 ->  phi(1020)  tau+ mu-]cc",  
-                                                                        "[B0 ->  phi(1020)  tau- mu+]cc"], 
+        self.selb2PhiTauMu_3pi = self._B2XTauMu_3pi_3Body(name_phi_3pi,
+                                                    DecayDescriptors = ["[B0 ->  phi(1020) tau+ mu-]cc",  
+                                                                        "[B0 ->  phi(1020) tau- mu+]cc"], 
                                                     
                                                     LeptonSel = [ StdTightDetachedTau3pi, self.selmuon ],
                                                     XSel = [self.selphi2kk],
                                                     TauPT = 0.,
                                                     TauP = 0.,
                                                     TauIPCHI2 = 0.,
+                                                    Comb12_MaxMass = config['B_MAX_MASS'],
                                                     BVCHI2DOF = config['BVCHI2DOF_phi'],
                                                     BPT = 0,
                                                     BDIRA = 0,
                                                     B_FDCHI2 = 0,
                                                     B_MIN_MASS = config['B_MIN_MASS'], B_MAX_MASS = config['B_MAX_MASS'])
+
 
 
         ### B -> K Tau(3pi) Mu
@@ -657,13 +660,14 @@ class B2XTauMuConf(LineBuilder) :
 
 
         ### B -> Phi Tau(3pi) Mu
-        self.selb2PhiTauMu_3pi_WS = self._B2XTauMu_3pi(name_phi_3pi_WS,
+        self.selb2PhiTauMu_3pi_WS = self._B2XTauMu_3pi_3Body(name_phi_3pi_WS,
                                                        DecayDescriptors = ["[B0 ->  phi(1020)  tau+ mu+]cc"], 
                                                        LeptonSel = [StdTightDetachedTau3pi, self.selmuon],
                                                        XSel = [self.selphi2kk],
                                                        TauPT = 0,
                                                        TauP = 0,
                                                        TauIPCHI2 = 0,
+                                                       Comb12_MaxMass = config['B_MAX_MASS'],
                                                        BVCHI2DOF = config['BVCHI2DOF_phi'],
                                                        BPT = 0,
                                                        BDIRA = 0,
@@ -1036,6 +1040,7 @@ class B2XTauMuConf(LineBuilder) :
                      " & (BPVVDCHI2 > %(B_FDCHI2)s)" % locals()
 
 
+            
         _B = CombineParticles(DecayDescriptors = DecayDescriptors,
                               DaughtersCuts = _daughtersCuts,
                               CombinationCut = _combinationCut,
@@ -1046,6 +1051,51 @@ class B2XTauMuConf(LineBuilder) :
 
         _req_selections = LeptonSel
         _req_selections.append(_sel_Daughters)
+        
+        sel = Selection( name,
+                         Algorithm = _B,
+                         RequiredSelections = _req_selections)
+        return sel
+
+
+
+    def _B2XTauMu_3pi_3Body(self,
+                      name,
+                      DecayDescriptors,
+                      LeptonSel,
+                      XSel,
+                      TauPT,
+                      TauP,
+                      TauIPCHI2,
+                      Comb12_MaxMass,
+                      BVCHI2DOF,
+                      BPT,
+                      BDIRA,
+                      B_FDCHI2,
+                      B_MIN_MASS,
+                      B_MAX_MASS):
+
+        _daughtersCuts = {  "tau+"  : "(P > %(TauP)s *GeV) & (PT > %(TauPT)s *MeV) & (MIPCHI2DV(PRIMARY) > %(TauIPCHI2)s )" % locals() }
+                          
+        _combinationCut = "(AM< ( %(B_MAX_MASS)s + 200) *MeV)" % locals()
+        _motherCut = "  (MM < %(B_MAX_MASS)s *MeV)"\
+                     " & (MM> %(B_MIN_MASS)s *MeV)"\
+                     " & (VFASPF(VCHI2/VDOF) < %(BVCHI2DOF)s)"\
+                     " & (PT> %(BPT)s)"\
+                     " & (BPVDIRA > %(BDIRA)s)"\
+                     " & (BPVVDCHI2 > %(B_FDCHI2)s)" % locals()
+
+        _Comb12Cuts = "(AM < %(Comb12_MaxMass)s *MeV)" % locals()
+
+        _B = Combine3Particles(DecayDescriptors = DecayDescriptors, 
+                               DaughtersCuts = _daughtersCuts,
+                               Combination12Cut = _Comb12Cuts,
+                               CombinationCut = _combinationCut,
+                               MotherCut = _motherCut)
+            
+
+        _req_selections = LeptonSel
+        _req_selections += XSel
         
         sel = Selection( name,
                          Algorithm = _B,
