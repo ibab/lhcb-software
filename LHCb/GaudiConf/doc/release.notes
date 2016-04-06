@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2016-04-06 - Rosen Matev
  - DstConf: Add persist reco unpackers for downstream Rich PID and MuonSegments
    and EcalSplitClusters
 
