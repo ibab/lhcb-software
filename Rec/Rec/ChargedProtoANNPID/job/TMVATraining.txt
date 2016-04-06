@@ -3,13 +3,13 @@
 
 # Training sample sizes. -1 for each means 
 # "Use a 1:1 signal:background mixture of the maximum size you can"
-NumSignalEntries     = 10000
-NumBackgroundEntries = 10000
+NumSignalEntries     = 2000000
+NumBackgroundEntries = 2000000
 
 # TMVA Training names
-#TMVANAMES = BDT,MLP-BP-CE,MLP-BP-MSE
+TMVANAMES = BDT,MLP-BP-CE,MLP-BP-MSE
 #TMVANAMES = BDT
-TMVANAMES = MLP-BP-CE
+#TMVANAMES = MLP-BP-CE
 
 # BDT Configuration
 BDT:TMVAMethod = BDT
