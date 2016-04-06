@@ -69,8 +69,7 @@ default_config = {'NAME': 'DstarD02xx',
                   ,'DstD0DMWin'         : 10.        # MeV
                   ,'DstD0DMWinMuMu'      : 30.        # MeV  
                   ,'RequireHlt'         : 1
-                  #,'HLT2String'          :  "Hlt2RareCharmD02LAB1LAB2*Decision" #run2
-                  ,'HLT2String'          :  "Hlt2Dst2PiD02LAB1LAB2*Decision" #run1
+                  ,'HLT2String'          :  "Hlt2RareCharmD02LAB1LAB2*Decision"
                   ,'HLT1MB'             : "HLT_PASS_RE('Hlt1(MB|L0).*Decision')"
                   ,'HLT2MB'             : "HLT_PASS_RE('Hlt2CharmHadMinBiasD02KPiDecision')"
                   #hltname = "Hlt2Dst2PiD02"+Xplus+Xminus+"*Decision"
@@ -203,20 +202,15 @@ class StrippingDstarD02xxConf(LineBuilder):
                                           '[D*(2010)+ -> (Charm -> X+ ^X- ) pi+]CC' : 'P2CVminus'+conekey,
                                         } 
                                       })
-        coneinfo.append({
-                                       'Type' : "RelInfoMuonIsolation",
-                                       'DaughterLocations':{
-                                         '[D*(2010)+ -> (Charm -> ^X+ X- ) pi+]CC' : 'P2CVplusMuDetIso',
-                                         '[D*(2010)+ -> (Charm -> X+ ^X- ) pi+]CC' : 'P2CVminusMuDetIso',
-                                         }
-                                       })
+          
         
         if (xplus == "e" and xminus =="mu") or (xplus == "mu" and xminus == "e"):
             
             line_box = StrippingLine(name+config['prefix']+"Dst2PiD02"+combname+"Box",
                                      algos = [ _tag_sel ],
                                      prescale = config[ pres ],
-                                     RequiredRawEvents = ["Muon"],                                                                        
+                                     RequiredRawEvents = ["Muon"],                                   
+                                     RelatedInfoTools = coneinfo
                                      )
             
         else:
@@ -263,20 +257,12 @@ class StrippingDstarD02xxConf(LineBuilder):
                                           '[Charm -> X+ ^X- ]CC' : 'P2CVminus'+conekey,
                                         } 
                                       })
-        coneinfo.append({
-            'Type' : "RelInfoMuonIsolation",
-            'DaughterLocations':{
-            '[Charm -> ^X+ X- ]CC' : 'P2CVplusMuDetIso',
-            '[Charm -> X+ ^X- ]CC' : 'P2CVminusMuDetIso',
-            }
-            })
-                        
+        
         if(minbias==1):
             line_untagged_box = StrippingLine(name+config['prefix']+"Dst2PiD02"+combname+"_untagged_BoxMB",
                                               HLT1 = config['HLT1MB'],
                                               algos = [ xxCombSel ], 
                                               prescale = config[ pres+"MB" ],
-                                              RequiredRawEvents = ["Muon"],                                                          
                                               RelatedInfoTools = coneinfo
                                               )
         elif(minbias==2):
@@ -284,7 +270,6 @@ class StrippingDstarD02xxConf(LineBuilder):
                                               HLT2 = config['HLT2MB'],
                                               algos = [ xxCombSel ], 
                                               prescale = config[ pres+"MBTrEff" ],
-                                              RequiredRawEvents = ["Muon"],                                                                        
                                               RelatedInfoTools = coneinfo
                                               )
         else :
@@ -292,7 +277,6 @@ class StrippingDstarD02xxConf(LineBuilder):
                                               HLT2 = "HLT_PASS_RE('"+hltname+"')",
                                               algos = [ xxCombSel ], 
                                               prescale = config[ pres ],
-                                              RequiredRawEvents = ["Muon"],                                                                        
                                               RelatedInfoTools = coneinfo
                                               )
 
@@ -360,5 +344,3 @@ def combineDstar(config) :
         )
 
     return dstar
-
-

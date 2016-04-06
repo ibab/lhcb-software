@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-06 - Andrea Contu
+ - Update to DstarD02xx
+
 ! 2016-04-06 - Paul Seyfert
  - Migrate Tau23Mu lines to NBodyDecays
 
