@@ -3,6 +3,10 @@
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
 
+! 2016-04-06 - Vanuya Belyaev 
+ - DaVinci;:ParticleTransporter
+   fix it, see discussion at https://its.cern.ch/jira/browse/LHCBPS-1493
+
 !==================== DaVinciTransporter v3r14 2016-02-04 =====================
 
 ! 2016-01-15 - Vanya Belyaev

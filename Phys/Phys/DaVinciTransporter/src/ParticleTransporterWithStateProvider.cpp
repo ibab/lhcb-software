@@ -315,21 +315,21 @@ StatusCode DaVinci::ParticleTransporter::transportChargedBasic
   {
     StatusCode sc = m_stateprovider -> stateFromTrajectory ( state , *track , znew );
     if ( sc.isFailure() ) 
-    { Warning ("Error from StateProvider::stateFromTrajectory", sc , 3 ) ; }
-    sc = m_stateprovider -> state ( state , *track , znew );
-    if ( sc.isFailure() ) 
-    { return Warning ("Error from StateProvider::state", sc, 3 ) ; } 
+    {
+      Warning ("Error from StateProvider::stateFromTrajectory", sc , 3 ) ;
+      // make  a try with anothe rmethod: 
+      sc = m_stateprovider -> state ( state , *track , znew );
+      if ( sc.isFailure() ) { return Warning ("Error from StateProvider::state", sc, 3 ) ; } 
+    }
   }
   else 
   {
     StatusCode sc = m_stateprovider -> state ( state , *track , znew );
-    if ( sc.isFailure() ) 
-    { return Warning ("Error from StateProvider::state", sc, 3 ) ; }
+    if ( sc.isFailure() ) { return Warning ("Error from StateProvider::state", sc, 3 ) ; }
   }
   //
   StatusCode sc = m_particle2state -> state2Particle ( state , transported ) ;
-  if ( sc.isFailure() ) 
-  { return Warning ( "Error from Particle2State", sc, 3 ) ; }
+  if ( sc.isFailure() ) { return Warning ( "Error from Particle2State", sc, 3 ) ; }
   //
   return sc ;
 }
