@@ -412,6 +412,28 @@ Decoder("HltLumiSummaryDecoder",
         outputs={"OutputContainerName":None},
         conf=DecoderDB)
 
+Decoder("HltPackedDataDecoder/Hlt2PackedDataDecoder",
+        active=True, banks=["DstData"],
+        inputs={"RawEventLocations": None},
+        outputs=[
+            "Hlt2/pRec/long/Protos",
+            "Hlt2/pRec/down/Protos",
+            "Hlt2/pRec/long/RichPIDs",
+            "Hlt2/pRec/down/RichPIDs",
+            "Hlt2/pRec/long/MuonIDs",
+            "Hlt2/pRec/long/Tracks",
+            "Hlt2/pRec/down/Tracks",
+            "Hlt2/pRec/down/PID/MuonSegments",
+            "Hlt2/pRec/neutral/Protos",
+            "Hlt2/pRec/neutral/CaloClusters",
+            "Hlt2/pRec/neutral/EcalSplitClusters",
+            "Hlt2/pRec/neutral/Electrons",
+            "Hlt2/pRec/neutral/Photons",
+            "Hlt2/pRec/neutral/MergedPi0s",
+            "Hlt2/pRec/neutral/SplitPhotons",
+        ],
+        conf=DecoderDB)
+
 #UPGRADE ===========UT===========
 Decoder("RawBankToSTLiteClusterAlg/createUTLiteClusters",
         active=True, banks=["UT"],
