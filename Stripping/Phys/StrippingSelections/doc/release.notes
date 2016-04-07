@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-08 - Simone Stracka
+ - Updated StrippingCharm/StrippingD2PiPi0 
+
 ! 2016-04-07 - Dan Johnson
  - Updated B2DDX lines in StrippingB2OC/
 

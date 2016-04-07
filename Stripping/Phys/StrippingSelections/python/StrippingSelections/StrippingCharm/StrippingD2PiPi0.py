@@ -94,7 +94,7 @@ default_config = {
                 # minimum flight time                
                 'D_BPVLTIME_MIN'       : 0.15*picosecond,
                 # max chi^2 per DOF of DTF fit
-                'DTF_CHI2NDOF_MAX'   : 5,
+                'DTF_CHI2NDOF_MAX'   : 100, # added 
                 # Track quality requirement for soft pion from Dstar
                 'Soft_TRCHI2DOF_MAX'   : 5,
                 # Maximum Dstar-D0 mass difference
@@ -164,7 +164,7 @@ default_config = {
                 # minimum flight time                
                 'D_BPVLTIME_MIN'       : 0.15*picosecond,
                 # max chi^2 per DOF of DTF fit
-                'DTF_CHI2NDOF_MAX'   : 5,
+                'DTF_CHI2NDOF_MAX'   : 100, #added 
                 # HLT filters, only process events firing triggers matching the RegEx
                 'Hlt1Filter'         : None,
                 'Hlt2Filter'      : "HLT_PASS_RE('Hlt2CharmHadDp2Eta.*_Eta2EmEpG.*Decision')",
@@ -209,7 +209,7 @@ default_config = {
                 'Electron_IPCHI2_MIN'      : 16.0,   
                 # HLT filters, only process events firing triggers matching the RegEx
                 'Hlt1Filter'         : None,
-                'Hlt2Filter'      : "HLT_PASS_RE('Hlt2CharmHadDstp2.*EmEp.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision')",
+                'Hlt2Filter'      : "HLT_PASS_RE('Hlt2CharmHadDstp2.*EmEp.*Decision')", # removed Topo
                  # prescale and postscale
                 'PrescaleDst2PiD0EEG'  : 1,
                 'PostscaleDst2PiD0EEG' : 1,
@@ -273,12 +273,12 @@ default_config = {
                 # minimum flight time
                 'D_BPVLTIME_MIN'       : 0.25*picosecond,
                 # max chi^2 per DOF of DTF fit
-                'DTF_CHI2NDOF_MAX'   : 5,    # not used
+                'DTF_CHI2NDOF_MAX'   : 100,    # added
                 # HLT filters, only process events firing triggers matching the RegEx
                 'Hlt1Filter'         : None,
                 #'Hlt2Filter'         : None,
                 #'Hlt2Filter'      : "(HLT_PASS_RE('Hlt2CharmHadDp2EtaPip_.*Decision') | HLT_PASS_RE('Hlt2CharmHadDp2EtaKp_.*Decision'))",
-                'Hlt2Filter'      : "HLT_PASS_RE('Hlt2CharmHadDp2Eta.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision')",
+                'Hlt2Filter'      : "HLT_PASS_RE('Hlt2CharmHadDp2Eta.*Decision')", # removed Topo
                 # prescale and postscale
                 'PrescaleD2PiEtaPPG' : 1,
                 'PrescaleD2PiEta3HM' : 1,
@@ -300,7 +300,7 @@ default_config = {
           'STREAMS': ['Charm'],
           'CONFIG': {
                 # Minimum best primary vertex IP chi^2 for charged D daughters
-                'Bachelor_IPCHI2_MIN'      : 16.0,        # 25 
+                'Bachelor_IPCHI2_MIN'      : 25.0,        # 25 
                 # Minimum PT for charged D daughters
                 'Bachelor_PT_MIN'          : 600  *MeV,   # 600
                 # Minimum momentum for charged D daughters
@@ -308,7 +308,7 @@ default_config = {
                 # Bachelor particle PID requirement 
                 'Bachelor_PIDK_MIN'        : -999.0, # not used 
                 # Minimum best primary vertex IP chi^2 for charged D daughters
-                'Daug_IPCHI2_MIN'      : 16.0,        # 25 --> 16
+                'Daug_IPCHI2_MIN'      : 25.0,        # 25 --> 16
                 # Minimum PT for charged D daughters
                 'Daug_PT_MIN'          : 500  *MeV,   # 600 --> 500
                 # Minimum momentum for charged D daughters
@@ -336,9 +336,9 @@ default_config = {
                 # Maximum DOCA chi2 for dipion combination
                 'Dipion_DOCACHI2_MAX': 15,
                 # Minimum mass for intermediate resonance
-                'Res_Mass_MIN'       : 650   *MeV,  # 900 --> 800
+                'Res_Mass_MIN'       : 800   *MeV,  # 900 --> 800
                 # Maximum mass for intermediate resonance
-                'Res_Mass_MAX'       : 1200  *MeV,   # 990 --> 1050
+                'Res_Mass_MAX'       : 1050  *MeV,   # 990 --> 1050
                 # Minimum D PT
                 'D_PT_Min'           : 2000 *MeV,   # 2000
                 # Minimum D mass
@@ -350,7 +350,7 @@ default_config = {
                 # minimum flight time
                 'D_BPVLTIME_MIN'       : 0.25*picosecond,
                 # max chi^2 per DOF of DTF fit
-                'DTF_CHI2NDOF_MAX'   : 5,
+                'DTF_CHI2NDOF_MAX'   : 25,
                 # HLT filters, only process events firing triggers matching the RegEx
                 'Hlt1Filter'         : None,
                 #'Hlt2Filter'         : None, 
@@ -372,7 +372,7 @@ default_config = {
           'STREAMS': ['Charm'],
           'CONFIG': {
                 # Minimum best primary vertex IP chi^2 for charged D daughters
-                'Bachelor_IPCHI2_MIN'      : 16.0,        # 25 --> 16
+                'Bachelor_IPCHI2_MIN'      : 25.0,        # 25 --> 16
                 # Minimum PT for charged D daughters
                 'Bachelor_PT_MIN'          : 600  *MeV,   # 600 
                 # Minimum momentum for charged D daughters
@@ -380,9 +380,9 @@ default_config = {
                 # Bachelor particle PID requirement 
                 'Bachelor_PIDK_MIN'        : -999.0, # not used 
                 # Minimum best primary vertex IP chi^2 for charged D daughters
-                'Daug_IPCHI2_MIN'      : 16.0,        # 25 --> 4
+                'Daug_IPCHI2_MIN'      : 25.0,        # 25 --> 4
                 # Minimum PT for charged D daughters
-                'Daug_PT_MIN'          : 500  *MeV,   # 600 --> 300
+                'Daug_PT_MIN'          : 600  *MeV,   # 600 --> 300
                 # Minimum momentum for charged D daughters
                 'Daug_P_MIN'           : 1000 *MeV,
                 # Maximum momentum for charged D daughters
@@ -408,9 +408,9 @@ default_config = {
                 # Maximum DOCA chi2 for dipion combination
                 'Dipion_DOCACHI2_MAX': 15,
                 # Minimum mass for intermediate resonance
-                'Res_Mass_MIN'       : 650   *MeV,  #  includes omega
+                'Res_Mass_MIN'       : 680   *MeV,  #  includes omega
                 # Maximum mass for intermediate resonance
-                'Res_Mass_MAX'       : 1200  *MeV,   #
+                'Res_Mass_MAX'       : 890  *MeV,   #
                 # Minimum D PT
                 'D_PT_Min'           : 2000 *MeV,   #
                 # Minimum D mass
@@ -422,10 +422,10 @@ default_config = {
                 # minimum flight time
                 'D_BPVLTIME_MIN'       : 0.25*picosecond,
                 # max chi^2 per DOF of DTF fit
-                'DTF_CHI2NDOF_MAX'   : 5,
+                'DTF_CHI2NDOF_MAX'   : 25,
                 # HLT filters, only process events firing triggers matching the RegEx
                 'Hlt1Filter'         : None,
-                'Hlt2Filter'      : None,
+                'Hlt2Filter'      : "HLT_PASS_RE('Hlt2CharmHadDp2.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision')",
                 # prescale and postscale
                 'PrescaleD2PiPhi3HM' : 1,
                 'PrescaleD2PiPhi3HR' : 1,
@@ -1255,7 +1255,7 @@ def makeD(name, config, inputSel, decDescriptors, useBachelorPID):
     dCuts = (
         '(VFASPF(VCHI2PDOF) < {0[D_VCHI2PDOF_MAX]})'
         '& (BPVLTIME() > {0[D_BPVLTIME_MIN]})'
-        #'& (DTF_CHI2NDOF(True) < {0[DTF_CHI2NDOF_MAX]})' 
+        '& (DTF_CHI2NDOF(True) < {0[DTF_CHI2NDOF_MAX]})' 
         ).format(config)
     
     _D = CombineParticles(
