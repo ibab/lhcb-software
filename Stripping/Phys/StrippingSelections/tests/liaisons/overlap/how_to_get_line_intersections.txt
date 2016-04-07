@@ -1,0 +1,4 @@
+Line intersections files are stored at:
+
+/eos/lhcb/wg/stripping/intersections_data/
+
