@@ -122,7 +122,7 @@ class B2JpsiHHConf(LineBuilder) :
                                    PreVertexCuts = "in_range(5170,AM,5470)",
 	                           PostVertexCuts = "(VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s )" % self.config ) # for the other particles is 10.
 
-        Bs2Jpsif0PrescaledLine  = StrippingLine( self.name + "Bs2Jpsif0PrescaledLine", algos = [ Bs2Jpsif0Prescaled ], MDSTFlag = True, EnableFlavourTagging = False, HLT2 = self.config['HLTCuts'], prescale = self.config["Bs2Jpsif0Prescale"]  )
+        Bs2Jpsif0PrescaledLine  = StrippingLine( self.name + "Bs2Jpsif0PrescaledLine", algos = [ Bs2Jpsif0Prescaled ], EnableFlavourTagging = False, HLT2 = self.config['HLTCuts'], prescale = self.config["Bs2Jpsif0Prescale"]  )#, MDSTFlag = True )
 
         self.registerLine(Bs2Jpsif0Line)
         self.registerLine(Bs2Jpsif0PrescaledLine)
@@ -135,7 +135,7 @@ class B2JpsiHHConf(LineBuilder) :
                                 PreVertexCuts = "in_range(4900,AM,5600)",
                                 PostVertexCuts = "in_range(5000,M,5500) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s) & (BPVDIRA >0.999) & (BPVVD > 1.5 *mm)" %self.config )
 
-        Bs2JpsiKstarLine = StrippingLine( self.name + "Bs2JpsiKstarLine", algos = [ Bs2JpsiKstar ], MDSTFlag = True, EnableFlavourTagging = True )
+        Bs2JpsiKstarLine = StrippingLine( self.name + "Bs2JpsiKstarLine", algos = [ Bs2JpsiKstar ], EnableFlavourTagging = True )#, MDSTFlag = True )
 
         self.registerLine(Bs2JpsiKstarLine)
 

@@ -181,9 +181,7 @@ class Bs2EtacPhiBDTConf(LineBuilder):
                                                    prescale  = config['Prescale'],
                                                    HLT2      = config['HLTCuts'],
                                                    algos     = [ self.SelBs2EtacPhi_KsKPi ],
-                                                   EnableFlavourTagging = True,
-                                                   MDSTFlag = True
-                                                   )
+                                                   EnableFlavourTagging = True )#, MDSTFlag = True )
 
         self.registerLine( self.Bs2EtacPhi_KsKPiLine )
         
@@ -245,9 +243,8 @@ class Bs2EtacPhiBDTConf(LineBuilder):
                                                 prescale  = config['Prescale'],
                                                 HLT2      = config['HLTCuts'],
                                                 algos     = [ self.MvaBs2EtacPhi ],
-                                                EnableFlavourTagging = True,
-                                                MDSTFlag = True
-                                                )
+                                                EnableFlavourTagging = True )#, MDSTFlag = True )
+
         self.registerLine( self.Bs2EtacPhiBDTLine )
         
 

@@ -24,7 +24,7 @@ default_config = {
                           , 'HLTCuts'                   :       "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')"
                           , 'Bs2JpsiPi0Prescale'        :       1.0     # 2011: 0.185, 2012: 0.9
                           },
-    'STREAMS'          : { 'Leptonic' : [ 'StrippingBetaSBd2JpsiPi0PrescaledLine' ,
+    'STREAMS'          : { 'Dimuon' : [ 'StrippingBetaSBd2JpsiPi0PrescaledLine' ,
                                           'StrippingBetaSBd2JpsiPi0DetachedLine'  ] }
                  }
 
@@ -80,15 +80,13 @@ class B2JpsiPi0Conf(LineBuilder) :
                                                  algos = [ Bd2JpsiPi0 ] ,
                                                  HLT2 = self.config['HLTCuts'],
                                                  prescale = self.config['Bs2JpsiPi0Prescale'],
-                                                 MDSTFlag = True,
-                                                 EnableFlavourTagging = True )
+                                                 EnableFlavourTagging = True )#, MDSTFlag = True )
 
         Bd2JpsiPi0DetachedLine  = StrippingLine( self.name + "Bd2JpsiPi0DetachedLine",
                                                  algos = [ self.createSubSel( InputList = Bd2JpsiPi0,
                                                                          OutputList = Bd2JpsiPi0.name() + "Detached" + self.name,
                                                                          Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )],
-                                                 MDSTFlag = True,
-                                                 EnableFlavourTagging = True )
+                                                 EnableFlavourTagging = True )#, MDSTFlag = True )
 
         self.registerLine(Bd2JpsiPi0PrescaledLine)
         self.registerLine(Bd2JpsiPi0DetachedLine)

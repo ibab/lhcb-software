@@ -170,9 +170,7 @@ class Bs2JpsieePhiConf(LineBuilder):
               , prescale = config['Prescale']
               , postscale = 1
               , selection = Bs
-              , EnableFlavourTagging = True
-              , MDSTFlag = True
-              )
+              , EnableFlavourTagging = True )#, MDSTFlag = True )
 
 
     def _Bs2JpsieePhiDetachedLine( self, dielectron, name, config ) :
@@ -217,9 +215,7 @@ class Bs2JpsieePhiConf(LineBuilder):
               , prescale = config['PrescaleLoose']
               , postscale = 1
               , selection = Bs
-              , EnableFlavourTagging = True
-              , MDSTFlag = True
-              )
+              , EnableFlavourTagging = True )#, MDSTFlag = True )
 
     def _DielectronTestLine( self, dielectron, name, config ) :
         return StrippingLine(name+"Line"
