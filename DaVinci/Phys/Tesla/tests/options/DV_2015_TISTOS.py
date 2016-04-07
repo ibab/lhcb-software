@@ -43,12 +43,18 @@ while True:
     #parts = TES["Turbo/Hlt2CharmHadDstp2D0Pip_D02PimPipTurbo/Particles"]
     parts = TES["Turbo/"+hltline+"/Particles"]
     if hasattr(parts,"__iter__"):
-        HLT2TISTOS = triggerTisTosTool2.triggerSelectionNames(parts[0],hltline+"Decision",tistostool.kAnything,tistostool.kAnything,tistostool.kAnything,tistostool.kAnything)
-        dec = triggerTisTosTool2.triggerTisTos().decision()
-        tos = triggerTisTosTool2.triggerTisTos().tos()
-        if dec:
-            nDEC += 1
-        if tos:
-            nTOS += 1
+        for p in parts:
+            if p.particleID().pid()==443:
+                #HLT2TISTOS = triggerTisTosTool2.triggerSelectionNames(p,hltline+"Decision",tistostool.kAnything,tistostool.kAnything,tistostool.kAnything,tistostool.kAnything)
+                #tos = triggerTisTosTool2.triggerTisTos().tos()
+                triggerTisTosTool2.setTriggerInput(hltline+"Decision")
+                tistostool.setOfflineInput(p)
+                triggerTisTosTool2.setOfflineInput(tistostool.offlineLHCbIDs())
+                tos = triggerTisTosTool2.tisTosTobTrigger().tos()
+                dec = triggerTisTosTool2.triggerTisTos().decision()
+                if dec:
+                    nDEC += 1
+                if tos:
+                    nTOS += 1
 print "# decisions = "+str(nDEC)
 print "# TOS = "+str(nTOS)
