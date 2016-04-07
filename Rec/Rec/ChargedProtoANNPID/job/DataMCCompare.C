@@ -7,7 +7,7 @@ void DataMCCompare()
 {
 
   // Location of ROOT files
-  const std::string rootDir = "/r03/lhcb/jonesc/ANNPID/ProtoParticlePIDtuples/Test/StripFiltered/";
+  const std::string rootDir = "/r03/lhcb/jonesc/ANNPID/ProtoParticlePIDtuples/Test/V1/StripFiltered/";
 
   // Stripping lines
   const auto stripLines = {
@@ -71,20 +71,34 @@ void DataMCCompare()
   TCut stripSel( stripCutS.c_str() );
   //std::cout << stripCutS << std::endl;
 
-  // 2015
-  const std::string year = "MC2015";
-  TFile * data_f = TFile::Open( (rootDir+"2015-S23r1-ANNPID-BHADRONCOMPLETEEVENT.root").c_str() );
+  // 2015 S23r1
+  // const std::string year    = "MC2015";
+  // const std::string dstrip  = "S23r1";
+  // const std::string mcstrip = "S23r1";
+  // TFile * data_f = TFile::Open( (rootDir+"2015-S23r1-ANNPID-BHADRONCOMPLETEEVENT.root").c_str() );
+  // TTree * data   = (TTree*)gDirectory->Get("ANNPID/DecayTree");
+  // TFile * mc_f   = TFile::Open( (rootDir+"Incb-DevMCJun2015-S23r1-ANNPID-Pythia8.root").c_str() );
+  // TTree * mc     = (TTree*)gDirectory->Get("ANNPID/DecayTree");
+
+  // 2015 S24
+  const std::string year    = "MC2015";
+  const std::string dstrip  = "S24";
+  const std::string mcstrip = "S23r1";
+  TFile * data_f = TFile::Open( (rootDir+"2015-S24-ANNPID-BHADRONCOMPLETEEVENT.root").c_str() );
   TTree * data   = (TTree*)gDirectory->Get("ANNPID/DecayTree");
   TFile * mc_f   = TFile::Open( (rootDir+"Incb-DevMCJun2015-S23r1-ANNPID-Pythia8.root").c_str() );
   TTree * mc     = (TTree*)gDirectory->Get("ANNPID/DecayTree");
-  if ( !mc || !data ) return;
   
-  // // 2012
+  // // 2012 S20
   // const std::string year = "MC2012";
-  // TFile * data_f = TFile::Open( (rootDir+"2012-ANNPID-BHADRONCOMPLETEEVENT-MagDown.root").c_str() );
+  // const std::string dstrip  = "S20";
+  // const std::string mcstrip = "S20";
+  // TFile * data_f = TFile::Open( (rootDir+"2012-S20-ANNPID-BHADRONCOMPLETEEVENT.root").c_str() );
   // TTree * data   = (TTree*)gDirectory->Get("ANNPID/DecayTree");
-  // TFile * mc_f   = TFile::Open( (rootDir+"Incb-MC2012-ANNPID-Pythia8.root").c_str() );
+  // TFile * mc_f   = TFile::Open( (rootDir+"Incb-MC2012-S20-ANNPID-Pythia8.root").c_str() );
   // TTree * mc     = (TTree*)gDirectory->Get("ANNPID/DecayTree");
+
+  if ( !mc || !data ) return;
 
   TCut tkSel = "TrackType==3";
 
@@ -196,26 +210,28 @@ void DataMCCompare()
                    std::make_pair(hdata,hmc) : std::make_pair(hmc,hdata) );
 
     // Legion for plot
-    TLegend * legend = new TLegend(0.865,0.9,0.935,0.85);
+    TLegend * legend = new TLegend(0.83,0.9,0.935,0.85);
     legend->SetTextSize(0.02);
     legend->SetMargin(0.12);
 
-    legend->AddEntry( hdata, "Data", "p" );
-    legend->AddEntry( hmc, year.c_str(), "p" );
+    legend->AddEntry( hdata, ("Data "+dstrip).c_str(), "p" );
+    legend->AddEntry( hmc, (year+" "+mcstrip).c_str(), "p" );
 
-    plots.first->SetTitle( (year+" "+var).c_str() );
+    plots.first->SetTitle( ("Data "+dstrip+" | "+year+" "+mcstrip+" | "+var).c_str() );
+
+    const std::string fname = "pdf/Data"+dstrip+"_"+year+mcstrip+"_"+var;
 
     c->SetLogy(false);
     plots.first->Draw();
     plots.second->Draw("SAME");
     legend->Draw();
-    c->SaveAs( ("pdf/"+year+"-"+var+"_liny.pdf").c_str() );
+    c->SaveAs( (fname+"_liny.pdf").c_str() );
 
     c->SetLogy(true);
     plots.first->Draw();
     plots.second->Draw("SAME");
     legend->Draw();
-    c->SaveAs( ("pdf/"+year+"-"+var+"_logy.pdf").c_str() );
+    c->SaveAs( (fname+"_logy.pdf").c_str() );
 
     delete legend;
     
