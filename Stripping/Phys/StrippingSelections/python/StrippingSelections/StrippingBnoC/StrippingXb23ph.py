@@ -6,7 +6,7 @@ Exported symbols (use python help!):
    - Xb23phConf
 """
 
-__author__  = ['Jinlin Fu', 'Maurizio Martinelli']
+__author__  = ['Jinlin Fu', 'Maurizio Martinelli','Andrea Merli']
 __date__    = '12/11/2015'
 __version__ = 'v1r0'
 __all__     = {'Xb23phConf',
@@ -123,39 +123,43 @@ class Xb23phConf(LineBuilder) :
                                          RelatedInfoTools = [ { "Type"           : "RelInfoConeVariables",
                                                                 "ConeAngle"      : 0.8,
                                                                 "Variables"      : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-																"DaughterLocations" : {'[Lambda_b0 -> ^p+ p~- p+ pi-]CC' : 'P2ConeVar08_1',
-																					   '[Lambda_b0 -> p+ ^p~- p+ pi-]CC' : 'P2ConeVar08_2',
-																					   '[Lambda_b0 -> p+ p~- ^p+ pi-]CC' : 'P2ConeVar08_3',
-																					   '[Lambda_b0 -> p+ p~- p+ ^pi-]CC' : 'P2ConeVar08_4'}
-																 },
+                                                                "Location"       : "P2ConeVar08_0",
+                                                                "DaughterLocations" : {'[Lambda_b0 -> ^p+ p~- p+ pi-]CC' : 'P2ConeVar08_1',
+                                                                                       '[Lambda_b0 -> p+ ^p~- p+ pi-]CC' : 'P2ConeVar08_2',
+                                                                                       '[Lambda_b0 -> p+ p~- ^p+ pi-]CC' : 'P2ConeVar08_3',
+                                                                                       '[Lambda_b0 -> p+ p~- p+ ^pi-]CC' : 'P2ConeVar08_4'}
+                                                                },
                                                               { "Type"           : "RelInfoConeVariables",
                                                                 "ConeAngle"      : 1.0,
                                                                 "Variables"      : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-																"DaughterLocations" : {'[Lambda_b0 -> ^p+ p~- p+ pi-]CC' : 'P2ConeVar10_1',
-																					   '[Lambda_b0 -> p+ ^p~- p+ pi-]CC' : 'P2ConeVar10_2',
-																					   '[Lambda_b0 -> p+ p~- ^p+ pi-]CC' : 'P2ConeVar10_3',
-																					   '[Lambda_b0 -> p+ p~- p+ ^pi-]CC' : 'P2ConeVar10_4'}
-																 },
+                                                                "Location"       : "P2ConeVar10_0",
+                                                                "DaughterLocations" : {'[Lambda_b0 -> ^p+ p~- p+ pi-]CC' : 'P2ConeVar10_1',
+                                                                                       '[Lambda_b0 -> p+ ^p~- p+ pi-]CC' : 'P2ConeVar10_2',
+                                                                                       '[Lambda_b0 -> p+ p~- ^p+ pi-]CC' : 'P2ConeVar10_3',
+                                                                                       '[Lambda_b0 -> p+ p~- p+ ^pi-]CC' : 'P2ConeVar10_4'}
+                                                                },
                                                               { "Type"           : "RelInfoConeVariables",
                                                                 "ConeAngle"      : 1.3,
                                                                 "Variables"      : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-																"DaughterLocations" : {'[Lambda_b0 -> ^p+ p~- p+ pi-]CC' : 'P2ConeVar13_1',
-																					   '[Lambda_b0 -> p+ ^p~- p+ pi-]CC' : 'P2ConeVar13_2',
-																					   '[Lambda_b0 -> p+ p~- ^p+ pi-]CC' : 'P2ConeVar13_3',
-																					   '[Lambda_b0 -> p+ p~- p+ ^pi-]CC' : 'P2ConeVar13_4'}
-																},
+                                                                "Location"       : "P2ConeVar13_0",
+                                                                "DaughterLocations" : {'[Lambda_b0 -> ^p+ p~- p+ pi-]CC' : 'P2ConeVar13_1',
+                                                                                       '[Lambda_b0 -> p+ ^p~- p+ pi-]CC' : 'P2ConeVar13_2',
+                                                                                       '[Lambda_b0 -> p+ p~- ^p+ pi-]CC' : 'P2ConeVar13_3',
+                                                                                       '[Lambda_b0 -> p+ p~- p+ ^pi-]CC' : 'P2ConeVar13_4'}
+                                                                },
                                                               { "Type"           : "RelInfoConeVariables",
                                                                 "ConeAngle"      : 1.7,
                                                                 "Variables"      : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-																"DaughterLocations" : {'[Lambda_b0 -> ^p+ p~- p+ pi-]CC' : 'P2ConeVar17_1',
-																					   '[Lambda_b0 -> p+ ^p~- p+ pi-]CC' : 'P2ConeVar17_2',
-																					   '[Lambda_b0 -> p+ p~- ^p+ pi-]CC' : 'P2ConeVar17_3',
-																					   '[Lambda_b0 -> p+ p~- p+ ^pi-]CC' : 'P2ConeVar17_4'}
-																},
+                                                                "Location"       : "P2ConeVar17_0",
+                                                                "DaughterLocations" : {'[Lambda_b0 -> ^p+ p~- p+ pi-]CC' : 'P2ConeVar17_1',
+                                                                                       '[Lambda_b0 -> p+ ^p~- p+ pi-]CC' : 'P2ConeVar17_2',
+                                                                                       '[Lambda_b0 -> p+ p~- ^p+ pi-]CC' : 'P2ConeVar17_3',
+                                                                                       '[Lambda_b0 -> p+ p~- p+ ^pi-]CC' : 'P2ConeVar17_4'}
+                                                                },
                                                               { "Type"           : "RelInfoVertexIsolation",
                                                                 "Location"       : "VertexIsoInfo"
-																 }]
-										)
+                                                                }]
+                                         )
 
         self.registerLine(self.lineXb2ppph)
 

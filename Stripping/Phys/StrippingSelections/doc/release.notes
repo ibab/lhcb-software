@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-07 - Andrea Merli
+ - Modified the isolation dictionary for StrippingXb23ph
+
 ! 2016-04-07 - Maxime Schubiger
  - Modified StrippingDstarD0ToHHPi0, added exclusive Hlt2 trigger line and Hlt2Global
  
