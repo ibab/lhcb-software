@@ -49,7 +49,7 @@ class Bc2DDBuilder(object):
         # ( D->hh )
         name = "D02HH"
         #dmodes = self.d.hh
-        dmodes = self.d.hh_pid
+        dmodes = self.d.hh_pid_tight
         # With Upstream tracks as well
         #dmodes += self.d.hh_up
         self._buildSel(dmodes,name,self.d0modes)
@@ -66,7 +66,7 @@ class Bc2DDBuilder(object):
         name = "D02KHHH"
         #dmodes = self.d.k3h
         #dmodes = self.d.k3h_pid
-        dmodes = self.d.k3pi_pid
+        dmodes = self.d.k3pi_pid_tight
         self._buildSel(dmodes,name,self.d0modes)
 
         # ( D->Kshh )
@@ -124,7 +124,8 @@ class Bc2DDBuilder(object):
         name = "D2HHH"
         #dmodes = self.d.hhh
         #dmodes = self.d.hhh_pid
-        dmodes = self.d.hhh_pid_nossK
+        #dmodes = self.d.hhh_pid_nossK
+        dmodes = self.d.hhh_pid_tight_nossK
         self._buildSel(dmodes,name,self.dpmodes)
 
         # ( D->Ksh )
