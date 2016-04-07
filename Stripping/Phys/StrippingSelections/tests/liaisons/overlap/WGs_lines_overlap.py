@@ -40,7 +40,12 @@ def getLinelist(my_wg, strippingVersion):
     default condif dictionary ['WG'] key"""
     linelist = []
     for myWG in my_wg:
-        if myWG not in ['B2CC','B2OC','BandQ','BnoC','Calib','Charm','MiniBias','QEE','RD','SL']: raise ValueError(myWG+' WG not defined')
+        # CVS: Defining aliases for certain WGs.
+        if   myWG=='BnoC':    myWG='Charmless'
+        elif myWG=='Calib':   myWG='Calibration'
+        elif myWG=='SL':      myWG='Semileptonic'
+        if myWG not in ['B2CC','B2OC','BandQ','Charmless','Calibration','Charm','QEE','RD','Semileptonic']: raise ValueError(myWG+' WG not defined')
+        # CVS: Removed 'MiniBias', does not exist as a WG tag itself.        
         myStreams = buildStreams('stripping'+strippingVersion,WGs = myWG)
         for stream in myStreams:
             for line in stream.lines: linelist.append(line.name().strip('Stripping'))
@@ -181,7 +186,7 @@ def main():
     parser.add_argument("-min_overlap","--minOverlap",type=int,default=75,help='Minimum overlap to consider as int, 75% by default')
     parser.add_argument("-input_file","--inputFile",type=str,help='Input file formatted as version.line1.line2 overlap',required=True)
     args = parser.parse_args()
-    if args.WG==['ALL']: args.WG = ['B2CC','B2OC','BandQ','BnoC','Calib','Charm','MiniBias','QEE','RD','SL']
+    if args.WG==['ALL']: args.WG = ['B2CC','B2OC','BandQ','BnoC','Calib','Charm','QEE','RD','SL']
     with open(args.inputFile) as input_io: overlaps = read_lines_intersections(input_io,args.WG)
     print("Valid file %s" % args.inputFile)
     args_WG = ''
