@@ -337,26 +337,7 @@ class Brunel(LHCbConfigurableUser):
         if self.getProp("SkipTracking"):
             from TrackSys import RecoTracking
             RecoTracking.DecodeTracking(["FastVelo"])
-
-            
-        # Code  lifted from TrackSys/RecoTracking.py, to be repackaged
-#        if self.getProp("SkipTracking"):
-#            from DAQSys.Decoders import DecoderDB
-#            from DAQSys.DecoderClass import decodersForBank
-#            decs=[]
-            #clone an existing algorithm, in order to create both the full
-            #and the partial clusters
-#            vdec=DecoderDB["DecodeVeloRawBuffer/createBothVeloClusters"]
-            #set as active to make sure nobody tries to use the DoD service along side...
-#            vdec.Active=True
-#            globalCuts = TrackSys().getProp("GlobalCuts")
-#            if( "Velo" in globalCuts ) :
-#                vdec.Properties["MaxVeloClusters"] =  globalCuts["Velo"]
-#                decs=decs+[vdec]
-#            decs=decs+decodersForBank(DecoderDB,"TT")
-#            decs=decs+decodersForBank(DecoderDB,"IT")
-#            GaudiSequencer("RecoDecodingSeq").Members += [d.setup() for d in decs ]
-    
+           
     def defineMonitors(self):
 
         # get all defined monitors
@@ -390,11 +371,19 @@ class Brunel(LHCbConfigurableUser):
                 lumiSeq.Members += [ lumiCounters ]
                 LumiAlgsConf().LumiSequencer = lumiCounters
 
+            # Trigger masks changed in 2016, see LHCBPS-1486
+            if self.getProp( "DataType" ) in self.Run1DataTypes or self.getProp( "DataType" ) in [ "2015" ]:
+                physFilterRequireMask = [ 0x0, 0x4, 0x0 ]
+                lumiFilterRequireMask = [ 0x0, 0x2, 0x0 ]
+            else:
+                physFilterRequireMask = [ 0x0, 0x0, 0x80000000 ]
+                lumiFilterRequireMask = [ 0x0, 0x0, 0x40000000 ]
+
             # Filter out Lumi only triggers from further processing, but still write to output
             from Configurables import HltRoutingBitsFilter
-            physFilter = HltRoutingBitsFilter( "PhysFilter", RequireMask = [ 0x0, 0x4, 0x0 ] )
+            physFilter = HltRoutingBitsFilter( "PhysFilter", RequireMask = physFilterRequireMask )
             physicsSeq.Members += [ physFilter ]
-            lumiFilter = HltRoutingBitsFilter( "LumiFilter", RequireMask = [ 0x0, 0x2, 0x0 ] )
+            lumiFilter = HltRoutingBitsFilter( "LumiFilter", RequireMask = lumiFilterRequireMask )
             lumiSeq.Members += [ lumiFilter, physFilter ]
             lumiSeq.ModeOR = True
 
@@ -404,7 +393,6 @@ class Brunel(LHCbConfigurableUser):
             notPhysSeq.Members = [ physFilter ]
 
             brunelSeq.Members += [ lumiSeq, notPhysSeq ]
-            #brunelSeq.Members += [ lumiSeq ]
             
         # Hlt decreports decoders
         from DAQSys.Decoders import DecoderDB
