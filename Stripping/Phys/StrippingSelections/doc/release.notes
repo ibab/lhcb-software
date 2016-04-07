@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-07 - Stefano Perazzini
+ - Update of StrippingB2HHBDT line for BnoC group
+
 ! 2016-04-07 - Tobias Tekampe
  - Modified LFVTau2eMuMu, LFVB2hTauMu and LFVB2heMu lines to use DaVinci__N3BodyDecays 
  - Added related infos for LFVB2heMu in order to use isolation tools

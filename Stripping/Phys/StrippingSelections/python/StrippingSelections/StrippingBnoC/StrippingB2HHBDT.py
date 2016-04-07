@@ -38,14 +38,14 @@ default_config = {
                       'DOCACHI2'        : 9,
                       'BIPCHI2'         : 9,
                       'BDIRA'           : 0.99,
-                      'BPT'             : 1200,
+                      'BPT'             : 0,
                       'BMassWinLow'     : 4700,
                       'BMassWinHigh'    : 6200,
                       'BMassLow'        : 4800,
                       'BMassHigh'       : 6200,
                       'PionIPCHI2'      : 16,
                       'BFDCHI2'         : 100,
-                      'BDTCut'          : -0.3,
+                      'BDTCut'          : -1,
                       'BDTWeightsFile'  : "$TMVAWEIGHTSROOT/data/B2HH_BDT_v1r5.xml"
                     },
     'STREAMS'     : ['Bhadron']
@@ -102,11 +102,11 @@ class B2HHBDTLines( LineBuilder ) :
                                     config['BMassHigh']       
                                   )
 
-        self.lineB2HHBkg = StrippingLine( B2HHBDTName+"BkgLine",
-                                          prescale  = config['PrescaleB2HHBDT'],
-                                          selection = self.B2HHBDT,
-                                          EnableFlavourTagging = True,
-                                          MDSTFlag = True )
+        #self.lineB2HHBkg = StrippingLine( B2HHBDTName+"BkgLine",
+        #                                  prescale  = config['PrescaleB2HHBDT'],
+        #                                  selection = self.B2HHBDT,
+        #                                  EnableFlavourTagging = True,
+        #                                  MDSTFlag = True )
 
         _bdtVars = { "minPT"      : "MINTREE(ABSID=='pi+',PT) / GeV",
                      "minIPCHI2"  : "MINTREE(ABSID=='pi+',MIPCHI2DV(PRIMARY))",
@@ -133,7 +133,7 @@ class B2HHBDTLines( LineBuilder ) :
                                           MDSTFlag = True )
 
         self.registerLine(self.lineB2HHBDT)
-        self.registerLine(self.lineB2HHBkg)
+        #self.registerLine(self.lineB2HHBkg)
 
 def makeB2HHBDT( name,
                  trChi2,trGhostProb,minPT,sumPT,docachi2,
