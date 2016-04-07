@@ -194,6 +194,16 @@ class DBuilder(object):
           self.kpi_pid_tight = [filterSelection('D2KPITIGHTPID',oneK,self.hh_pid_tight)]
           self.kpi_pid_tighter1 = [filterPID('D2KPITIGHTER1PID',self.kpi_pid,config_pid['TIGHTER1'])]
 
+          # Sub set decays for DDX
+            # D+/-(s) -> K+K-pi+/-
+          loki_kpkmpip_cc    = "((NINTREE(ID=='K-')==1) & (NINTREE(ID=='K+')==1))"
+          loki_kmpippip_cc   = "(((ID=='D+') & (NINTREE(ID=='K-')==1) & (%s)) | "\
+                               "((ID=='D-') & (NINTREE(ID=='K+')==1) & (%s)))" % (oneK,oneK)
+          self.kpkmpip_cc  = [filterSelection('D2KpKmPip_cc',  loki_kpkmpip_cc,  self.hhh)]
+          self.kmpippip_cc = [filterSelection('D2KmPipPip_cc', loki_kmpippip_cc, self.hhh)]
+          self.kpkmpip_cc_pid  = [filterPID('D2KpKmPip_cc_PID',  self.kpkmpip_cc,  config_pid)]
+          self.kmpippip_cc_pid = [filterPID('D2KmPipPip_cc_PID', self.kmpippip_cc, config_pid)]
+
           atLeastOneK = "NINTREE(ABSID=='K+') > 0"
           self.k2h = [filterSelection('D2K2H',atLeastOneK,self.hhh)]
           self.k3h = [filterSelection('D2K3H',atLeastOneK,self.hhhh)]
@@ -1648,6 +1658,7 @@ class DstarBuilder(object):
           self.d0pi_kshh_ll_pid  = self._makeDstar2D0pi('D2KSHHLLPID',self.d.kshh_ll_pid)
           self.d0pi_kshh_dd_pid  = self._makeDstar2D0pi('D2KSHHDDPID',self.d.kshh_dd_pid)
           self.d0pi_pid       = [filterPID('Dstar2D0PiPID',self.d0pi,config_pid,2)]
+          self.d0pi_k3pi_pid  = [filterPID('Dstar2D0PiK3PiPID',self.d0pi_k3pi,config_pid,2)]
 
           self.d0pi_kspi0hh_ll_merged = self._makeDstar2D0pi('D2KSLLPI0MERGEDHH',self.d.kspi0hh_ll_merged)
           self.d0pi_kspi0hh_dd_merged = self._makeDstar2D0pi('D2KSDDPI0MERGEDHH',self.d.kspi0hh_dd_merged)
