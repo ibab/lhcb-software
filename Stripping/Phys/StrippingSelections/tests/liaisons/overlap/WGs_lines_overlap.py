@@ -45,8 +45,9 @@ def getLinelist(my_wg, strippingVersion):
         elif myWG=='Calib':   myWG='Calibration'
         elif myWG=='SL':      myWG='Semileptonic'
         if myWG not in ['B2CC','B2OC','BandQ','Charmless','Calibration','Charm','QEE','RD','Semileptonic']: raise ValueError(myWG+' WG not defined')
-        # CVS: Removed 'MiniBias', does not exist as a WG tag itself.        
-        myStreams = buildStreams('stripping'+strippingVersion,WGs = myWG)
+        # CVS: Removed 'MiniBias', does not exist as a WG tag itself.
+        WGList=[myWG]
+        myStreams = buildStreams('stripping'+strippingVersion,WGs = WGList)
         for stream in myStreams:
             for line in stream.lines: linelist.append(line.name().strip('Stripping'))
     return linelist
