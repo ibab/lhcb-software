@@ -42,14 +42,14 @@ default_config ={
   'BUILDERTYPE' : 'Beauty2CharmConf',
   'CONFIG' : {
     "ALL" : { # Cuts made on all charged input particles in all lines (expt. upstream)
-    'TRCHI2DOF_MAX' : 3.,
+    'TRCHI2DOF_MAX' : 4.,
     'PT_MIN'        : '100*MeV',
     'P_MIN'         : '1000*MeV',
     'MIPCHI2DV_MIN' : 4., 
     'TRGHP_MAX'     : 0.4
     },
     "PIDPION" : {
-    'TRCHI2DOF_MAX' : 3.,
+    'TRCHI2DOF_MAX' : 4.,
     'PT_MIN'        : '100*MeV',
     'P_MIN'         : '1000*MeV',
     'MIPCHI2DV_MIN' : 4.,
@@ -57,7 +57,7 @@ default_config ={
     'TRGHP_MAX'     : 0.4
     },
     "PIDKAON" : {
-    'TRCHI2DOF_MAX' : 3.,
+    'TRCHI2DOF_MAX' : 4.,
     'PT_MIN'        : '100*MeV',
     'P_MIN'         : '1000*MeV',
     'MIPCHI2DV_MIN' : 4.,
@@ -65,7 +65,7 @@ default_config ={
     'TRGHP_MAX'     : 0.4
     },
     "PIDPROTON" : {
-    'TRCHI2DOF_MAX' : 3.,
+    'TRCHI2DOF_MAX' : 4.,
     'PT_MIN'        : '100*MeV',
     'P_MIN'         : '1000*MeV',
     'MIPCHI2DV_MIN' : 4.,
@@ -175,8 +175,10 @@ default_config ={
     'BPVVDCHI2_MIN' : 36,
     'BPVDIRA_MIN'   : 0, 
     'MASS_WINDOW'   : '600*MeV', # was 50MeV
-    'DELTAMASS_MAX' : '250*MeV',
-    'DELTAMASS_MIN' : '80*MeV'
+    'DELTAMASS_MAX' : '200*MeV',
+    'DELTAMASS_MIN' : '90*MeV',
+    'DM_DSPH_MAX'   : '250*MeV',
+    'DM_DSPH_MIN'   : '80*MeV'
     },
     "HH": { # Cuts for rho, K*, phi, XHH Dalitz analyese, etc.
     'MASS_WINDOW'   : {'KST':'150*MeV','RHO':'150*MeV','PHI':'150*MeV'},

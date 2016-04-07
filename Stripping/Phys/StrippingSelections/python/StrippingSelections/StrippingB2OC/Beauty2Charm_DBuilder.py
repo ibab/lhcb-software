@@ -1932,7 +1932,7 @@ class DstarBuilder(object):
           decays = [ "[D*_s+ -> D+ gamma]cc" ]
 
           combinationCuts = "(AALL)"
-          motherCuts      = "(M-MAXTREE(ABSID=='D+',M) > %(DELTAMASS_MIN)s) & (M-MAXTREE(ABSID=='D+',M) < %(DELTAMASS_MAX)s)" % self.config
+          motherCuts      = "(M-MAXTREE(ABSID=='D+',M) > %(DM_DSPH_MIN)s) & (M-MAXTREE(ABSID=='D+',M) < %(DM_DSPH_MAX)s)" % self.config
           # daughtersCuts   = "(ACHILD(M,1) > %(CHARMMASS_MIN)s)" % self.config
 
           cp = CombineParticles( CombinationCut   = combinationCuts,
