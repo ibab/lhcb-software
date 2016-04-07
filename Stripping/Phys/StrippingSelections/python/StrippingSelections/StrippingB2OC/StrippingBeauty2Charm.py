@@ -151,7 +151,7 @@ default_config ={
     "Bc2DD" : { # Cuts made on Bc -> DD lines
     'SUMPT_MIN'     : '5000*MeV',
     'VCHI2DOF_MAX'  : 10,
-    'BPVIPCHI2_MAX' : 25,
+    'BPVIPCHI2_MAX' : 20,
     'BPVLTIME_MIN'  : '0.05*ps',
     'BPVDIRA_MIN'   : 0.999,
     'AM_MIN'        : '4800*MeV', 
