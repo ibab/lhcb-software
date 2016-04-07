@@ -306,10 +306,14 @@ class Physics_pp_Draft2016( object ):
                                                         ,'ValidateTT'            : False
                                                         ,'Prescale'  : { 'Hlt1CalibTrackingKPi': 0.2 }
                                                        }
-                       , Hlt1CommissioningLinesConf : { 'Postscale' : { 'Hlt1ErrorEvent'   : 'RATE(0.01)'
-
-                                                                        }
-                                                        }
+                       , Hlt1CommissioningLinesConf : { 'Postscale' : { 'Hlt1Incident'     : 'RATE(1)'
+                                                                      , 'Hlt1Tell1Error'   : 'RATE(10)',
+                                                                      , 'Hlt1ErrorEvent'   : 'RATE(0.01)'
+                                                                      , 'Hlt1NZSVelo'      : 'RATE(1)'
+                                                                      , 'Hlt1GEC.*'        : 'RATE(1)'
+                                                                      , 'Hlt1VeloClosingMicroBias' : 'RATE(500)'
+                                                                      }
+                                                      }
                        # micro bias lines switched off for high mu physics running
                        , Hlt1MBLinesConf :     { 'Prescale' : { 'Hlt1MBMicroBiasVelo'                : 0
                                                               , 'Hlt1MBMicroBiasTStation'            : 0
@@ -364,8 +368,8 @@ class Physics_pp_Draft2016( object ):
                                                     , 'Bb2PhiPhiMassMax'     : 10500    # MeV
                                                     , 'KstDauPT'             : 1500    # MeV
                                                     , 'KstDauP'              : 5000    # MeV
-                                                    , 'KstDauCHI2DOF'        : 2       # dimensionless  
-                                                    , 'KstDauIPCHI2'         : 12      
+                                                    , 'KstDauCHI2DOF'        : 2       # dimensionless
+                                                    , 'KstDauIPCHI2'         : 12
                                                     , 'KstCombMaxDaughtPT'   : 2000    # MeV
                                                     , 'KstCombAPT'           : 2000    # MeV
                                                     , 'KstCombDOCA'          : 0.1     # mm
@@ -379,9 +383,9 @@ class Physics_pp_Draft2016( object ):
                                                     , 'Bb2KstKstAMassMin'    :  8500    # MeV
                                                     , 'Bb2KstKstAMassMax'    : 11000    # MeV
                                                     , 'Bb2KstKstMassMin'     :  8900    # MeV
-                                                    , 'Bb2KstKstMassMax'     : 10000    # MeV                 
+                                                    , 'Bb2KstKstMassMax'     : 10000    # MeV
                                                     , 'l0'                   : 'L0_DECISION_PHYSICS'
-                 
+
                                                     }
                        , Hlt1LowMultLinesConf : { 'Prescale' : {"Hlt1LowMultPassThrough" : 0.01}
                                                 , 'SpdMult'  :   100.   # dimensionless, Spd Multiplicity cut
@@ -461,9 +465,9 @@ class Physics_pp_Draft2016( object ):
                  , 'Hlt1NoBiasNonBeamBeam'
                  , 'Hlt1Bottomonium2PhiPhi'
                  , 'Hlt1Bottomonium2KstarKstar']
-                   
-                   
-                   
+
+
+
 
         from Hlt1TechnicalLines import Hlt1TechnicalLines
         lines.extend( Hlt1TechnicalLines().ActiveHlt1Lines() )

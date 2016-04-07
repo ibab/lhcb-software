@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-04-07 - Roel Aaij
+ - Add 10 Hz postscale to Hlt1Tell1Error.
+ - Remove Hlt1Tell1Error from Hlt2Transparent.
+
 ! 2016-04-06 - Mika Vesterinen
  - TrackMVA line thresholds loosened to the 2015 setting. We should also propose something for the TrackMVALoose line(s).
 
@@ -31,23 +35,23 @@
  - Add configuration dictionary of Hlt1MVALines to Hlt2_TrackingOnly.
 
 ! 2016-03-17 - Francesco Dettori
- - Committing bug fix for RareStrange lines 
+ - Committing bug fix for RareStrange lines
 
 ! 2016-03-16 - Jon Harrison
- - Added Phi_25ns_Draft2016 and updated Physics_pp_Draft2016 accordingly 
+ - Added Phi_25ns_Draft2016 and updated Physics_pp_Draft2016 accordingly
 
 ! 2016-03-14 - Simone Stracka
- - Updating {DPS,CcDiHadron,Bc2JpsiX}_25ns_Draft2016 to match name changes in Hlt2Lines 
+ - Updating {DPS,CcDiHadron,Bc2JpsiX}_25ns_Draft2016 to match name changes in Hlt2Lines
 
 ! 2016-03-14 - Francesco Dettori
- - Updating DiMuon_25ns_Draft2016 to match changes in Hlt2Lines 
+ - Updating DiMuon_25ns_Draft2016 to match changes in Hlt2Lines
 
 ! 2016-03-11 - Roel Aaij
  - Added settings for Hlt1BottomoniumLines and set {Multi,Di}MuonNoL0 L0 settings
    to L0_DECISION_PHYSICS.
 
 ! 2016-03-06 - Jessica Prisciandaro
-- Added Strange lines settings 
+- Added Strange lines settings
 
 ! 2016-03-03 - Sascha Stahl
  - Removed duplication of Rare Strange and TriMuon in Physics_pp_Draft2016.py.
@@ -87,17 +91,17 @@
  - Deleted CharmHadSpec* (56) and CharmHadMuTag* (10) lines, and moved some lines in CharmHad from full->turbo.
 
 ! 2016-02-18 - Simone Stracka
- - Add the following settings files: 
-   Bottomonium_25ns_Draft2016.py (in new folder), 
-	 CcDiHadron_25ns_Draft2016.py  (no changes from August), 	
-	 DPS_25ns_Draft2016.py         (no changes from August), 	
+ - Add the following settings files:
+   Bottomonium_25ns_Draft2016.py (in new folder),
+	 CcDiHadron_25ns_Draft2016.py  (no changes from August),
+	 DPS_25ns_Draft2016.py         (no changes from August),
    Bc2JpsiX_25ns_Draft2016.py    (no changes from August)
 
 ! 2016-02-18 - Mika Vesterinen
  - Pick up recent Draft2016 settings, and move Commissioning to Technical
 
 ! 2016-02-18 - Carla Marin
- - Add Majorana_25ns_Draft2016.py 
+ - Add Majorana_25ns_Draft2016.py
 
 ! 2016-02-18 - Sascha Stahl
  - Adjust priority of TrackMVA and TwoTrackMVA in Physics_pp_Draft2016 to run first.

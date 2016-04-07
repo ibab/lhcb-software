@@ -6,6 +6,8 @@
 
 ! 2016-04-07 - Roel Aaij
  - Fix two leftover bugs spotted in the nightlies.
+ - Add routing bit 57 for Hlt1Tell1Error to allow them to be sent to the
+   monitoring.
 
 ! 2016-04-06 - Roel Aaij
  - Remove Beamgas events from Full stream

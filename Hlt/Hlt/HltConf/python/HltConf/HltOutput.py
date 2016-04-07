@@ -321,6 +321,8 @@ class HltOutputConf(LHCbConfigurableUser):
                       , 55 : "HLT_PASS('Hlt1MBNoBiasRateLimitedDecision')"
                       # RB 56 Muon alignment
                       , 56 : "HLT_PASS('Hlt1CalibMuonAlignJpsiDecision')"
+                      # RB 57 Tell1 Error events
+                      , 57 : "HLT_PASS('Hlt1Tell1ErrorDecision')"
                       # 64--96: Hlt2
                       # RB 85 Turbo stream with full raw event
                       , 85 : "HLT_TURBOPASS_RE('^Hlt2.*(?!TurboCalib)Decision$')"

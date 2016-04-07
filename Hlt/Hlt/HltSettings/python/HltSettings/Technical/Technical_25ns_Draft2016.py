@@ -48,7 +48,7 @@ class Technical_25ns_Draft2016(object) :
                                         'VoidFilter' : ''},
                        'NoBiasPassThrough' : {'HLT1' : "HLT_PASS('Hlt1NoBiasPrescaledDecision')",
                                               'VoidFilter' : ''},
-                       'Transparent' : {'HLT1' : "HLT_PASS_RE('^Hlt1(ODIN.*|L0.*|MB.*|Velo.*|NZS.*|Incident|Tell1Error|ErrorEvent)Decision$')",
+                       'Transparent' : {'HLT1' : "HLT_PASS_RE('^Hlt1(ODIN.*|L0.*|MB.*|Velo.*|NZS.*|Incident|ErrorEvent)Decision$')",
                                         'VoidFilter' : ''},
                        'BeamGas'     : {'HLT1' : "HLT_PASS_SUBSTR('Hlt1BeamGas')" ,
                                         'VoidFilter' : ''},

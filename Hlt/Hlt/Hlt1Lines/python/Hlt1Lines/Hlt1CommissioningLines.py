@@ -19,11 +19,12 @@ class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
 
    __slots__ = { 'Prescale' : { 'Hlt1ODINPhysics'    : 0.000001
                               , 'Hlt1ODINTechnical'  : 0.000001 # @OnlineEnv.AcceptRate
-                              , 'Hlt1Tell1Error'     : 0
-                              , 'Hlt1VeloClosingMicroBias' : 1 
+                              , 'Hlt1Tell1Error'     : 1
+                              , 'Hlt1VeloClosingMicroBias' : 1
                               }
-               , 'Postscale' : { 'Hlt1Incident'     : 'RATE(1)' 
-                               , 'Hlt1ErrorEvent'   : 'RATE(1)' 
+               , 'Postscale' : { 'Hlt1Incident'     : 'RATE(1)'
+                               , 'Hlt1Tell1Error'   : 'RATE(10)',
+                               , 'Hlt1ErrorEvent'   : 'RATE(0.01)'
                                , 'Hlt1NZSVelo'      : 'RATE(1)'
                                , 'Hlt1GEC.*'        : 'RATE(1)'
                                , 'Hlt1VeloClosingMicroBias' : 'RATE(500)'
@@ -36,7 +37,7 @@ class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
         from HltLine.HltLine import Hlt1Line   as Line
         #from Hlt1GECs import Hlt1_GEC
         #for i in [ 'VELO','IT','OT' ] :
-        #    # WARNING: these imply we always decode Velo & IT 
+        #    # WARNING: these imply we always decode Velo & IT
         #    Line('GECPassThrough%s'  % i
         #        , L0DU = 'L0_DECISION_PHYSICS'
         #        , prescale = self.prescale
@@ -53,18 +54,18 @@ class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
             )
         from Configurables import FilterByBankType
         Line('Tell1Error'
-            , algos = [ FilterByBankType('Hlt1Tell1ErrorDecision' 
+            , algos = [ FilterByBankType('Hlt1Tell1ErrorDecision'
                                         , PassSelectedEvents = True
-                                        , BankNames = [ ".*Error" ] 
+                                        , BankNames = [ ".*Error" ]
                                         )
                       ]
             , prescale = self.prescale
             , postscale = self.postscale
             )
         Line('NZSVelo'
-            , algos = [ FilterByBankType('Hlt1NZSVeloDecision' 
+            , algos = [ FilterByBankType('Hlt1NZSVeloDecision'
                                         , PassSelectedEvents = True
-                                        , BankNames = [ "VeloFull" ] 
+                                        , BankNames = [ "VeloFull" ]
                                         )
                       ]
             , prescale = self.prescale
@@ -97,7 +98,7 @@ class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
                                       , Code = [ 'TrALL' ]
                                       , InputSelection = 'TES:%s' % MinimalVelo.outputSelection()
                                       , OutputSelection = '%Decision'
-                                      ) 
+                                      )
                               ]
                     , postscale = self.postscale
-                    ) 
+                    )
