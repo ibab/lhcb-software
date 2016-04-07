@@ -96,7 +96,7 @@ default_config ={
     'CHILDCL1_MIN'  : 0.25,
     'CHILDCL2_MIN'  : 0.25,
     'FROM_B_P_MIN'  : '2000*MeV',
-    'TIGHT_PT_MIN'  : '1000*MeV'
+    'TIGHT_PT_MIN'  : '1500*MeV'
     },
     "gamma" : { # Cuts made on all photons
     'PT_MIN'     : '800*MeV',
