@@ -54,7 +54,7 @@ default_config = {
                                 'StrippingBd2JpsieeKSBd2JpsieeKstarFromTracksDetachedLine',
                                 'StrippingBd2JpsieeKSBu2JpsieeKFromTracksDetachedLine'],
                   'Leptonic' : ['StrippingBd2JpsieeKSBd2JpsieeKSFromTracksPrescaledLine',
-                                'StrippingBd2JpsieeKSBd2JpsieeKstarFromTracksPrescaledLine'] }
+                                'StrippingBd2JpsieeKSBd2JpsieeKstarFromTracksPrescaledLine'] },
     'WGs'    : [ 'B2CC' ]
     }
 
