@@ -17,6 +17,8 @@ default_config = {
     'CONFIG'      : {
         'B2MuMuMuMuLinePrescale'    : 1,
         'B2MuMuMuMuLinePostscale'   : 1,
+        'B23MuPiLinePrescale'    : 1,
+        'B23MuPiLinePostscale'   : 1,
         'D2MuMuMuMuLinePrescale'    : 1,
         'D2MuMuMuMuLinePostscale'   : 1,
         'B2TwoDetachedDimuonLinePrescale'  : 1,
@@ -87,6 +89,8 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
     __configuration_keys__ = (
         'B2MuMuMuMuLinePrescale',
         'B2MuMuMuMuLinePostscale',
+        'B23MuPiLinePrescale',
+        'B23MuPiLinePostscale',
         'D2MuMuMuMuLinePrescale',
         'D2MuMuMuMuLinePostscale',
         'B2TwoDetachedDimuonLinePrescale',
@@ -121,6 +125,7 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
         # Generaly used input particles
         self.inMuons = DataOnDemand(Location="Phys/StdLooseMuons/Particles")
         self.inKaons = DataOnDemand(Location="Phys/StdAllNoPIDsKaons/Particles")
+        self.inPions = DataOnDemand(Location="Phys/StdAllNoPIDsPions/Particles")
         self.inDetachedDimuons = makeDetachedDimuons(
             name +'DetachedDimuons',
             config['DetachedDiMuons'],
@@ -146,6 +151,16 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
         )
         self.registerLine(self.defaultLine)
 
+
+        b23mupi_name = name + "B23MuPi"
+        self.selB23mupi = makeB23mupi(self, b23mupi_name, inputSel=[self.inMuons, self.inPions])
+        self.b23mupiLine = StrippingLine(
+            b23mupi_name + "Line",
+            prescale=config['B23MuPiLinePrescale'],
+            postscale=config['B23MuPiLinePostscale'],
+            algos=[self.selB23mupi]
+        )
+        self.registerLine(self.b23mupiLine)
 
 
         D_name = name + 'D24Mu'
@@ -233,14 +248,35 @@ def makeDefault(self,name,inputSel) :
         DaughtersCuts={ "mu+" : self.BDaughtersCuts},
         Combination12Cut="(AMAXDOCA('')<0.3*mm)",
         Combination123Cut="(AMAXDOCA('')<0.3*mm)",
-        CombinationCut="(ADAMASS('B_s0')<1000*MeV) "\
+        CombinationCut="(AM>4000*MeV) "\
                          "& (AMAXDOCA('')<0.3*mm)",
-        MotherCut=self.BMotherCuts + " & (ADMASS('B_s0')<1000*MeV) "
+        MotherCut=self.BMotherCuts + " & (M>4000*MeV) "
     )
 
     return Selection(
         name,
         Algorithm=Detached4mu,
+        RequiredSelections=inputSel
+    )
+
+
+def makeB23mupi(self,name,inputSel) :
+    """
+    B --> mu mu mu pi selection. pi = not-strong-selected muon
+    """
+    Detached3mupi = Combine4Particles(
+        DecayDescriptor="B_s0 -> mu+ mu- mu+ pi-",
+        DaughtersCuts={"mu+" : self.BDaughtersCuts, "pi+": self.BDaughtersCuts},
+        Combination12Cut="(AMAXDOCA('')<0.3*mm)",
+        Combination123Cut="(AMAXDOCA('')<0.3*mm)",
+        CombinationCut="(AM>4000*MeV) "\
+                         "& (AMAXDOCA('')<0.3*mm)",
+        MotherCut=self.BMotherCuts + " & (M>4000*MeV) "
+    )
+
+    return Selection(
+        name,
+        Algorithm=Detached3mupi,
         RequiredSelections=inputSel
     )
 
