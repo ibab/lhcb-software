@@ -36,56 +36,34 @@ class HCDigitMonitor : public HCMonitorBase {
   bool m_allChannels;
 
   /// ADC distributions of all channels
-  std::vector<AIDA::IHistogram1D*> m_hAdcB;
-  std::vector<AIDA::IHistogram1D*> m_hAdcF;
-  std::vector<AIDA::IHistogram1D*> m_hAdcEvenB;
-  std::vector<AIDA::IHistogram1D*> m_hAdcEvenF;
-  std::vector<AIDA::IHistogram1D*> m_hAdcOddB;
-  std::vector<AIDA::IHistogram1D*> m_hAdcOddF;
+  std::vector<std::vector<AIDA::IHistogram1D*> > m_hAdcChannel;
 
   /// ADC distributions of all quadrants
-  std::vector<AIDA::IHistogram1D*> m_hAdcQuadrant;
-  std::vector<AIDA::IHistogram1D*> m_hAdcQuadrantEven;
-  std::vector<AIDA::IHistogram1D*> m_hAdcQuadrantOdd;
-  std::vector<AIDA::IHistogram1D*> m_hAdcQuadrantNoBeam;
-  std::vector<AIDA::IHistogram1D*> m_hAdcQuadrantNoBeamEven;
-  std::vector<AIDA::IHistogram1D*> m_hAdcQuadrantNoBeamOdd;
-  std::vector<AIDA::IHistogram1D*> m_hAdcQuadrantBeam;
-  std::vector<AIDA::IHistogram1D*> m_hAdcQuadrantBeamEven;
-  std::vector<AIDA::IHistogram1D*> m_hAdcQuadrantBeamOdd;
+  std::vector<std::vector<AIDA::IHistogram1D*> > m_hAdcQuadrant;
+  /// ADC distributions of all quadrants for empty-empty crossings
+  std::vector<std::vector<AIDA::IHistogram1D*> > m_hAdcQuadrantNoBeam;
+  /// ADC distributions of all quadrants for beam-beam crossings
+  std::vector<std::vector<AIDA::IHistogram1D*> > m_hAdcQuadrantBeam;
 
   /// ADC distributions as function of BX ID.
   std::vector<AIDA::IHistogram2D*> m_hAdcVsBx;
 
   /// ADC sum distributions
-  std::vector<AIDA::IHistogram1D*> m_hAdcSum;
-  std::vector<AIDA::IHistogram1D*> m_hAdcSumEven;
-  std::vector<AIDA::IHistogram1D*> m_hAdcSumOdd;
-  std::vector<AIDA::IHistogram1D*> m_hAdcSumNoBeam;
-  std::vector<AIDA::IHistogram1D*> m_hAdcSumNoBeamEven;
-  std::vector<AIDA::IHistogram1D*> m_hAdcSumNoBeamOdd;
-  std::vector<AIDA::IHistogram1D*> m_hAdcSumBeam;
-  std::vector<AIDA::IHistogram1D*> m_hAdcSumBeamEven;
-  std::vector<AIDA::IHistogram1D*> m_hAdcSumBeamOdd;
+  std::vector<std::vector<AIDA::IHistogram1D*> > m_hAdcSum;
+  /// ADC sum distributions for empty-empty crossings
+  std::vector<std::vector<AIDA::IHistogram1D*> > m_hAdcSumNoBeam;
+  /// ADC sum distributions for beam-beam crossings
+  std::vector<std::vector<AIDA::IHistogram1D*> > m_hAdcSumBeam;
 
   /// Mean ADC vs. channel number
-  AIDA::IProfile1D* m_hAdcVsChannelB;
-  AIDA::IProfile1D* m_hAdcVsChannelF;
-  AIDA::IProfile1D* m_hAdcVsChannelEvenB;
-  AIDA::IProfile1D* m_hAdcVsChannelEvenF;
-  AIDA::IProfile1D* m_hAdcVsChannelOddB;
-  AIDA::IProfile1D* m_hAdcVsChannelOddF;
+  std::vector<std::vector<AIDA::IProfile1D*> > m_hAdcVsChannel;
 
   /// Mean ADC vs. quadrant
-  std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrant;
-  std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantEven;
-  std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantOdd;
-  std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantNoBeam;
-  std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantNoBeamEven;
-  std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantNoBeamOdd;
-  std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantBeam;
-  std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantBeamEven;
-  std::vector<AIDA::IProfile1D*> m_hAdcVsQuadrantBeamOdd;
+  std::vector<std::vector<AIDA::IProfile1D*> > m_hAdcVsQuadrant;
+  /// Mean ADC vs. quadrant for empty-empty crossings
+  std::vector<std::vector<AIDA::IProfile1D*> > m_hAdcVsQuadrantNoBeam;
+  /// Mean ADC vs. quadrant for beam-beam crossings
+  std::vector<std::vector<AIDA::IProfile1D*> > m_hAdcVsQuadrantBeam;
 
 };
 

@@ -11,6 +11,9 @@
    HCDigitTuple).
  - Add fill number information to HCDigitTuple.
 
+! 2016-04-07 - Heinrich Schindler
+ - Restructure histogram vectors.
+ 
 !========================= HCMonitors v1r2 2015-11-23 =========================
 ! 2015-10-28 - Heinrich Schindler
  - Bug fix in HCMonitorBase and HCDigitCorrector to update conditions 
