@@ -65,7 +65,8 @@ class Bc2DDBuilder(object):
         # ( D->khhh )
         name = "D02KHHH"
         #dmodes = self.d.k3h
-        dmodes = self.d.k3h_pid
+        #dmodes = self.d.k3h_pid
+        dmodes = self.d.k3pi_pid
         self._buildSel(dmodes,name,self.d0modes)
 
         # ( D->Kshh )
