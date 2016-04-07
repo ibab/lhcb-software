@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-07 - Matthew Tilley
+ - Modified Strippingbhad2PMuX to include same sign protons for ppbar selection 
+
 ! 2016-04-07 - Chitsanu Khurewathanakul (QEE)
  - Tuned DY2MuMu, new A1MuMu, fix init.
 

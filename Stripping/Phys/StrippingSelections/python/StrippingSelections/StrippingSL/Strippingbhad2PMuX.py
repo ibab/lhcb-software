@@ -387,7 +387,7 @@ class bhad2PMuXBuilder(LineBuilder):
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection
         
-        PPbar = CombineParticles(DecayDescriptors = ["J/psi(1S) -> p+ p~-"], ReFitPVs = True)
+        PPbar = CombineParticles(DecayDescriptors = ["J/psi(1S) -> p+ p~-","[J/psi(1S) -> p+ p+]cc"], ReFitPVs = True)
         PPbar.Preambulo = self._Definitions()
         PPbar.MotherCut = self._PPbarSelection() % self._config
         PPbar.ReFitPVs = True
@@ -403,7 +403,7 @@ class bhad2PMuXBuilder(LineBuilder):
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection
         
-        PPbar = CombineParticles(DecayDescriptors = ["J/psi(1S) -> p+ p~-"], ReFitPVs = True)
+        PPbar = CombineParticles(DecayDescriptors = ["J/psi(1S) -> p+ p~-","[J/psi(1S) -> p+ p+]cc"], ReFitPVs = True)
         PPbar.Preambulo = self._Definitions()
         PPbar.MotherCut = self._fakePPbarSelection() % self._config
         PPbar.ReFitPVs = True
