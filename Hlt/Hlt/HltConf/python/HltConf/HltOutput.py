@@ -17,6 +17,7 @@ Lumi events in a group of streams are nanofied only if none of component streams
 __author__  = "R. Aaij roel.aaij@cern.ch"
 # =============================================================================
 from itertools import chain
+from copy import copy, deepcopy
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import GaudiSequencer as Sequence
@@ -213,36 +214,36 @@ class HltOutputConf(LHCbConfigurableUser):
 
         return [stripper]
 
-    def __hlt2RoutingBitsWriter(self, stream, routingBits, rawLocation = None):
-        from Configurables import LoKi__VoidFilter as VoidFilter
+    def __hlt2RoutingBitsWriter(self, stream, routingBits = None, rawLocation = None):
+        # Create RoutingBitsWriter instance for HLT2
         from Configurables import HltRoutingBitsWriter
         from DAQSys.Decoders import DecoderDB
         hlt1_decrep_loc = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].listOutputs()[0]
         hlt2_decrep_loc = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].listOutputs()[0]
 
-        # The EndSequence always runs and the HLT2 routing bits writer needs the
-        # HLT2 DecReports, so we need to check that HLT2 at least ran.
-        hlt2Filter = VoidFilter("RoutingBitsHlt2Filter",
-                                 Preambulo = ['from LoKiHlt.algorithms import ALG_EXECUTED'],
-                                 Code = "ALG_EXECUTED('Hlt2')")
-        self.__checkRoutingBits(routingBits)
         rbWriterName = stream + 'Hlt2RoutingBitsWriter'
-        rbWriter = HltRoutingBitsWriter(rbWriterName,
-                                        RoutingBits = routingBits,
-                                        Hlt1DecReportsLocation = hlt1_decrep_loc,
-                                        Hlt2DecReportsLocation = hlt2_decrep_loc,
-                                        UpdateExistingRawBank = True)
+        rbWriter = HltRoutingBitsWriter(rbWriterName)
+        rbWriter.Hlt1DecReportsLocation = hlt1_decrep_loc
+        rbWriter.Hlt2DecReportsLocation = hlt2_decrep_loc
+        rbWriter.UpdateExistingRawBank = True
+
         # Configure private HltFactory of RoutingBitWriter
         from Configurables import LoKi__Hybrid__HltFactory as HltFactory
         HltFactory(rbWriterName + '.LoKi::Hybrid::HltFactory').Modules += [ 'LoKiCore.functions', 'LoKiNumbers.sources' ]
 
-        # If the rawLocation is not set, it's the default value and the
+        if routingBits == None:
+            return rbWriter
+
+        self.__checkRoutingBits(routingBits)
+        rbWriter.RoutingBits = routingBits,
+
+        # If the rawLocation is not set, the default value is used
         if rawLocation:
             rbWriter.RawEventLocation = rawLocation
 
         return rbWriter
 
-    def __rawEventAlgs(self, stream, banks, lumiExclude, routingBits, rawLocation = None):
+    def __rawEventAlgs(self, stream, banks, lumiExclude, routingBits = None, rawLocation = None):
         # Return the list of algorithms that are required to correctly output an
         # event to a stream
 
@@ -527,38 +528,45 @@ class HltOutputConf(LHCbConfigurableUser):
             streamsSequence.Members += self.__rawEventAlgs('', [], '', routingBits)
         else:
             # Case of single output stream
-            # not-exclusive lumi bit
-            self.__addNotExclusiveLumiBit(routingBits, self.getProp('NotLumiPredicate'))
-            # Update routing bits that require lumi
-            self.__addLumiToStreamBits(routingBits, bitsByStream)
+            rbs = None
+            if self.getProp("Split") != "Hlt1":
+                # Hlt2 routing bits make no sense when running only Hlt1
+                rbs = deepcopy(routingBits)
+                # not-exclusive lumi bit
+                self.__addNotExclusiveLumiBit(rbs, self.getProp('NotLumiPredicate'))
+                # Update routing bits that require lumi
+                self.__addLumiToStreamBits(rbs, bitsByStream)
             # Plug the single global instance directly into the end sequence
-            rawAlgs = self.__rawEventAlgs('', [], self.getProp('NotLumiPredicate'), routingBits)
+            rawAlgs = self.__rawEventAlgs('', [], self.getProp('NotLumiPredicate'), rbs)
             prepSequence = Sequence("RawEventSequence", ModeOR = True, ShortCircuit = False,
                                     Members = rawAlgs)
             EndSequence.Members += [prepSequence]
 
-    def __configureOutStream(self):
-        # Without filename, or running online, there is nothing to do
-        filename = self.getProp('OutputFile')
-        if not (filename or self.getProp('RunOnline') or self.getProp('GenerateTCK')):
-            return
+    def __routingBitsForFlaggingMode(self):
+        # The EndSequence always runs and the HLT2 routing bits writer needs the
+        # HLT2 DecReports, so we need to check that HLT2 at least ran.
+        from Configurables import LoKi__VoidFilter as VoidFilter
+        hlt2Filter = VoidFilter("RoutingBitsHlt2Filter",
+                                 Preambulo = ['from LoKiHlt.algorithms import ALG_EXECUTED'],
+                                 Code = "ALG_EXECUTED('Hlt2')")
+        rbWriter = self.__hlt2RoutingBitsWriter('')
+        return GaudiSequencer("Hlt2RoutingBitsSequence", Members = [hlt2Filter, rbWriter])
 
-        writerRequires = self.getProp('WriterRequires')
+    def __configureInputCopy(self, filename, writerRequires):
+        if self.getProp('EnableOutputStreaming'):
+            raise AttributeError("OutputStreaming doesn't work with a DST file as output, only with MDF.")
+        from Configurables import InputCopyStream
+        writer = InputCopyStream("Writer", RequireAlgs = writerRequires)
+        IOHelper(None, None).outStream(filename, writer, writeFSR = self.getProp('WriteFSR'))
 
-        # Check the file type and use if it's InputCopyStream, configure a single InputCopyStream
-        iox = IOExtension()
-        if filename and iox.detectFileType(filename) != 'MDF':
-            if self.getProp('EnableOutputStreaming'):
-                raise AttributeError("OutputStreaming doesn't work with a DST file as output, only with MDF.")
-            from Configurables import InputCopyStream
-            writer = InputCopyStream("Writer", RequireAlgs = writerRequires)
-            IOHelper(None, None).outStream(filename, writer, writeFSR = self.getProp('WriteFSR'))
+        if not bool(writerRequires):
+            # If Moore is running in flagging mode, the RoutingBitsWriter
+            # should be added here to write routing bits for events that
+            # didn't pass.
+            ApplicationMgr().OutStream = [self.__routingBitsForFlaggingMode()]
+        ApplicationMgr().OutStream += [writer]
 
-            HltRoutingBitsWriter('Hlt2RoutingBitsWriter').RoutingBits = routingBits
-            HltFactory('Hlt2RoutingBitsWriter.LoKi::Hybrid::HltFactory').Modules += [ 'LoKiCore.functions', 'LoKiNumbers.sources' ]
-            ApplicationMgr().OutStream = [writer]
-            return
-
+    def __configureHltOutputSequence(self, filename, writerRequires):
         from Configurables import HltOutputSvc, HltOutputSequence
         outputSvc = HltOutputSvc()
         ApplicationMgr().ExtSvc += [outputSvc.getFullName()]
@@ -584,11 +592,11 @@ class HltOutputConf(LHCbConfigurableUser):
             outputSvc.StreamGroups = streamGroups
             outputSvc.Filters = filters
 
-        if not bool(self.getProp('WriterRequires')):
+        if not bool(writerRequires):
             # If Moore is running in flagging mode, the RoutingBitsWriter
             # should be added here to write routing bits for events that
             # didn't pass.
-            ApplicationMgr().OutStream = [self.__hlt2RoutingBitsWriter('', routingBits)]
+            ApplicationMgr().OutStream = [self.__routingBitsForFlaggingMode()]
 
         if filename or self.getProp('RunOnline'):
             # Configure HltOutputStream
@@ -603,6 +611,22 @@ class HltOutputConf(LHCbConfigurableUser):
             if self.getProp('Simulation') and not self.getProp('EnableOutputStreaming'):
                 outStream.ForceStreams = {'' : [self.__writerFilterName()]}
             ApplicationMgr().OutStream += [outStream]
+
+
+    def __configureOutStream(self):
+        # Without filename, or running online, there is nothing to do
+        filename = self.getProp('OutputFile')
+        if not (filename or self.getProp('RunOnline') or self.getProp('GenerateTCK')):
+            return
+
+        writerRequires = self.getProp('WriterRequires')
+
+        # Check the file type and use if it's InputCopyStream, configure a single InputCopyStream
+        iox = IOExtension()
+        if filename and iox.detectFileType(filename) != 'MDF':
+            self.__configureInputCopy(filename, writerRequires)
+        else:
+            self.__configureHltOutputSequence(filename, writerRequires)
 
     def __propFromSettings(self, settings, prop):
         if settings and hasattr(settings, prop):

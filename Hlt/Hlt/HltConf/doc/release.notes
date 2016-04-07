@@ -4,6 +4,12 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2016-04-07 - Roel Aaij
+ - Fix two leftover bugs spotted in the nightlies.
+
+! 2016-04-06 - Roel Aaij
+ - Remove Beamgas events from Full stream
+
 ! 2016-04-07 - Rosen Matev
  - Finalize the Persist Reco configuration
    o Add downstream Rich PIDs, PID/MuonSegments, EcalSplitClusters
