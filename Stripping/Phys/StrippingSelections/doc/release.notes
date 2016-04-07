@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-07 - Tobias Tekampe
+ - Modified LFVTau2eMuMu, LFVB2hTauMu and LFVB2heMu lines to use DaVinci__N3BodyDecays 
+ - Added related infos for LFVB2heMu in order to use isolation tools
+
 ! 2016-04-06 - Maximilian Schlupp
  - Modified LFVJpsi2emu line: remove BPVIPCHI2 cut, add ProbNN
  - Add 9 LFV Jpsi/Phi2emu/mumu/ee lines, rates & output tested

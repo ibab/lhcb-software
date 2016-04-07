@@ -302,7 +302,83 @@ related_info_tools_JPsi2eeControl = [{'Type' : 'RelInfoBs2MuMuBIsolations',
                               'Type': 'RelInfoVertexIsolationBDT',
                               'Location':'VtxIsoInfoBDT'
                             }
-                            ] ## matches 'RelatedInfoTools'                            
+                            ] ## matches 'RelatedInfoTools' 
+
+related_info_tools_B2hemu = [{'Type' : 'RelInfoBs2MuMuBIsolations',
+                            'Variables' : [
+                                            'BSMUMUCDFISO', 
+                                            'BSMUMUOTHERBMAG',
+                                            'BSMUMUOTHERBANGLE', 
+                                            'BSMUMUOTHERBBOOSTMAG',
+                                            'BSMUMUOTHERBBOOSTANGLE',
+                                            'BSMUMUOTHERBTRACKS'
+                                          ],
+                            'Location'  : 'BSMUMUVARIABLES',  ## For the B
+                            'tracktype' : 3,
+                            'makeTrackCuts' : False
+                            },
+                            {
+                              'Type' : 'RelInfoBs2MuMuTrackIsolations',
+                              'Variables' : [
+                                              'BSMUMUTRACKPLUSISO', 
+                                              'BSMUMUTRACKPLUSISOTWO',
+                                              'ISOTWOBODYQPLUS', 
+                                              'ISOTWOBODYMASSISOPLUS',
+                                              'ISOTWOBODYCHI2ISOPLUS', 
+                                              'ISOTWOBODYISO5PLUS'
+                                            ],
+                              'DaughterLocations' : {
+                                '[[B+]cc -> ^X [e+]cc [mu-]cc]CC' :  'Hadron_ISO',
+                                '[[B+]cc -> X [e+]cc ^[mu-]cc]CC' :  'Muon_ISO',
+                                '[[B+]cc -> X ^[e+]cc [mu-]cc]CC' :  'Electron_ISO'
+                              },
+    
+                              'tracktype'  : 3,
+                              'angle'      : 0.27,
+                              'fc'         : 0.60,
+                              'doca_iso'   : 0.13,
+                              'ips'        : 3.0,
+                              'svdis'      : -0.15,
+                              'svdis_h'    : 30.,
+                              'pvdis'      : 0.5,
+                              'pvdis_h'    : 40.,
+                              'makeTrackCuts' : False,
+                              'IsoTwoBody' : True
+                            },
+                            { 
+                              "Type" : "RelInfoTrackIsolationBDT",
+                              "Variables" : 1,
+                              "DaughterLocations" : {
+                                '[[B+]cc -> ^X [e+]cc [mu-]cc]CC' :  'Hadron_TrackIso_BDT6vars',
+                                '[[B+]cc -> X [e+]cc ^[mu-]cc]CC' :  'Muon_TrackIso_BDT6vars',
+                                '[[B+]cc -> X ^[e+]cc [mu-]cc]CC' :  'Electron_TrackIso_BDT6vars'
+                              },
+                              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsB_v1r4.xml"
+                            },
+                            { 
+                              "Type" : "RelInfoTrackIsolationBDT",
+                              "Variables" : 2,
+                              "DaughterLocations" : {
+                                '[[B+]cc -> ^X [e+]cc [mu-]cc]CC' :  'Hadron_TrackIso_BDT9vars',
+                                '[[B+]cc -> X [e+]cc ^[mu-]cc]CC' :  'Muon_TrackIso_BDT9vars',
+                                '[[B+]cc -> X ^[e+]cc [mu-]cc]CC' :  'Electron_TrackIso_BDT9vars'
+                              },
+                              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT9vars_v1r4.xml"
+                            },
+                            { 
+                              'Type' : 'RelInfoConeVariables',
+                              'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPT', 'CONEPTASYM'],
+                              'Location'  : 'coneInfo'
+                            },
+                            {
+                              'Type': 'RelInfoVertexIsolation',
+                              'Location':'VtxIsoInfo'
+                            },
+                            {
+                              'Type': 'RelInfoVertexIsolationBDT',
+                              'Location':'VtxIsoInfoBDT'
+                            }
+                            ] ## matches 'RelatedInfoTools'                           
 
 related_info_tools_Phi2eMu = [{'Type' : 'RelInfoBs2MuMuBIsolations',
                             'Variables' : [
@@ -660,6 +736,7 @@ default_config = {
     'RelatedInfoTools_Phi2eMu'          : related_info_tools_Phi2eMu,
     'RelatedInfoTools_Phi2MuMuControl'  : related_info_tools_Phi2MuMuControl,
     'RelatedInfoTools_B2ee'             : related_info_tools_B2ee,
+    'RelatedInfoTools_B2hemu'           : related_info_tools_B2hemu,
     'RelatedInfoTools_Tau2PhiMu'        : related_info_tools_Tau2PhiMu,
     'RelatedInfoTools_Bu2KJPsiee'       : related_info_tools_Bu2KJPsiee,
     'RelatedInfoTools_Tau2MuEtaPrime'   : related_info_tools_Tau2MuEtaPrime,
@@ -785,6 +862,7 @@ class LFVLinesConf(LineBuilder) :
                               'RelatedInfoTools_Phi2eMu',
                               'RelatedInfoTools_Phi2MuMuControl',
                               'RelatedInfoTools_B2ee',
+                              'RelatedInfoTools_B2hemu',
                               'RelatedInfoTools_Tau2PhiMu',
                               'RelatedInfoTools_Bu2KJPsiee',
                               'RelatedInfoTools_Tau2MuEtaPrime',
@@ -992,6 +1070,7 @@ class LFVLinesConf(LineBuilder) :
             self.b2heMuLine = StrippingLine(hemu_name+'Line',
                                             prescale = config['B2heMuPrescale'],
                                             postscale = config['Postscale'],
+                                            RelatedInfoTools = config['RelatedInfoTools_B2hemu'],
                                             algos = [ self.selB2heMu ]
                                             )
                 
@@ -1123,12 +1202,16 @@ def makeTau2eMuMu(name):
     name        : name of the Selection.
     """
     #from Configurables import OfflineVertexFitter
-    Tau2eMuMu = CombineParticles()
+    #Tau2eMuMu = CombineParticles()
+    Tau2eMuMu = DaVinci__N3BodyDecays()
     Tau2eMuMu.DecayDescriptors = [" [ tau+ -> e+ mu+ mu- ]cc"," [ tau+ -> mu+ mu+ e- ]cc"]
     Tau2eMuMu.DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) & (TRGHOSTPROB<0.3) " ,
                                 "e+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) "\
                                 "& (PIDe > 2) " }
     Tau2eMuMu.CombinationCut = "(ADAMASS('tau+')<200*MeV)"
+
+    # cut added along with the switch to DaVinci__N3BodyDecays instead of CombineParticles
+    Tau2eMuMu.Combination12Cut = "(AM < 200*MeV)"
 
     Tau2eMuMu.MotherCut = """
             ( VFASPF(VCHI2) < 15 ) &
@@ -1649,7 +1732,8 @@ def makeB2hTauMu(name):
     """
     
     #from Configurables import OfflineVertexFitter
-    Bs2hTauMu = CombineParticles()
+    #Bs2hTauMu = CombineParticles()
+    Bs2hTauMu = DaVinci__N3BodyDecays()
     Bs2hTauMu.DecayDescriptors = ["[B+ -> K+ tau+ mu-]cc","[B+ -> K- tau+ mu+]cc", "[B+ -> K+ tau- mu+]cc",
                                   "[B+ -> pi+ tau+ mu-]cc","[B+ -> pi- tau+ mu+]cc", "[B+ -> pi+ tau- mu+]cc",
                                   "[B+ -> p+ tau+ mu-]cc","[B- -> p+ tau- mu-]cc", "[B+ -> p+ tau- mu+]cc"]
@@ -1664,6 +1748,10 @@ def makeB2hTauMu(name):
 
     Bs2hTauMu.CombinationCut = "(ADAMASS('B+')<400*MeV)"\
                             "& (AMAXDOCA('')<0.15*mm)"
+
+    # cut added along with the switch to DaVinci__N3BodyDecays instead of CombineParticles
+    Bs2hTauMu.Combination12Cut = "(AM < 6100*MeV)"\
+                                 "& (AMAXDOCA('')<0.15*mm)"
 
     Bs2hTauMu.MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
                           "& (BPVDIRA>0.999)"\
@@ -1696,7 +1784,8 @@ def makeB2heMu(name):
     """
     
     #from Configurables import OfflineVertexFitter
-    Bs2heMu = CombineParticles()
+    #Bs2heMu = CombineParticles()
+    Bs2heMu = DaVinci__N3BodyDecays()
     Bs2heMu.DecayDescriptors = ["[B+ -> K+ e+ mu-]cc","[B+ -> K- e+ mu+]cc", "[B+ -> K+ e- mu+]cc",
                                 "[B+ -> pi+ e+ mu-]cc","[B+ -> pi- e+ mu+]cc" , "[B+ -> pi+ e- mu+]cc",
                                 "[B+ -> p+ e+ mu-]cc","[B- -> p+ e- mu-]cc", "[B+ -> p+ e- mu+]cc"]
@@ -1712,6 +1801,10 @@ def makeB2heMu(name):
 
     Bs2heMu.CombinationCut = "(ADAMASS('B+')<600*MeV)"\
                             "& (AMAXDOCA('')<0.3*mm)"
+    # cut added along with the switch to DaVinci__N3BodyDecays instead of CombineParticles
+    Bs2heMu.Combination12Cut = "(AM < 6300*MeV)"\
+                               "& (AMAXDOCA('')<0.3*mm)"
+
 
     Bs2heMu.MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
                               "& (ADMASS('B_s0') < 600*MeV )"\
