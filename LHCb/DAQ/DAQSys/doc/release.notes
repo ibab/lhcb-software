@@ -4,6 +4,9 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2016-04-07 - Rosen Matev
+ - Update daqsys.decoder-compare qmtest by adding the packed object locations
+
 ! 2016-04-06 - Rosen Matev
  - Add decoder for packed objects (HltPackedDataDecoder)
 

@@ -13,6 +13,16 @@ known_extras=['Raw/Prs/Adcs', 'Hlt1/DecReports', 'Hlt2/DecReports',
               'Raw/Spd/Adcs', 'Hlt2/SelReports', 'Hlt1/Track/Velo',
               'Hlt/DecReports', 'Trig/L0/L0DUData', 'Hlt1/SelReports',
               'Raw/Velo/PUClusters', 'Hlt2/VertexReports', 'Hlt/LumiSummary']
+known_extras+=[
+    "Hlt2/pRec/long/Protos", "Hlt2/pRec/down/Protos",
+    "Hlt2/pRec/long/RichPIDs", "Hlt2/pRec/down/RichPIDs",
+    "Hlt2/pRec/long/MuonIDs", "Hlt2/pRec/long/Tracks", "Hlt2/pRec/down/Tracks",
+    "Hlt2/pRec/down/PID/MuonSegments",
+    "Hlt2/pRec/neutral/Protos", "Hlt2/pRec/neutral/CaloClusters",
+    "Hlt2/pRec/neutral/EcalSplitClusters", "Hlt2/pRec/neutral/Electrons",
+    "Hlt2/pRec/neutral/Photons", "Hlt2/pRec/neutral/MergedPi0s",
+    "Hlt2/pRec/neutral/SplitPhotons",
+]
 
 #known differences, none :)
 known_diffs={}
