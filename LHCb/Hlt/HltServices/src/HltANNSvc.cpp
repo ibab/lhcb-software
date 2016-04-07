@@ -26,7 +26,7 @@ DECLARE_COMPONENT( HltANNSvc )
 boost::optional<IANNSvc::minor_value_type> 
 HltANNSvc::handleUndefined(const major_key_type& major, const std::string& minor) const
 {
-   if (!m_allowUndefined)  return minor_value_type();
+   if (!m_allowUndefined)  return boost::none;
 
    static boost::hash<std::string> hasher; 
    log() << MSG::DEBUG << "handleUndefined called for " << major << " : " << minor
