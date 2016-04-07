@@ -10,8 +10,6 @@ __all__ = ( 'B2XLLConf', 'default_config' )
   ll = e+e- / mu+mu- / mu+e- / mu+e+ / e+e+ / mu+mu+
   X  = rho0 / D0 /  D*+ / J/psi / psi(2S) / K*0 / phi / K+ / pi+ / proton / K1(1270)0 / K1(1270)+
   and anti-particles of the above
-
-  Additional contribution from Albert Puig (K1(1270) decays)
 """
 
 default_config = {
@@ -53,7 +51,7 @@ default_config = {
 
 
 from Gaudi.Configuration import *
-from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, DaVinci__N3BodyDecays
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection, AutomaticData
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -267,10 +265,9 @@ class B2XLLConf(LineBuilder) :
         """
         Combine J/Psi and 2 pions to make psi(2S)
         """
-        _psi2S = DaVinci__N3BodyDecays()
+        _psi2S = CombineParticles()
         _psi2S.DecayDescriptor = "psi(2S) -> J/psi(1S) pi+ pi-"
         _psi2S.CombinationCut = "(ADAMASS('psi(2S)')<200*MeV)"
-        _psi2S.Combination12Cut = "AM > 20*MeV"
         _psi2S.MotherCut = "(ADMASS('psi(2S)')<200*MeV)"
         return Selection(name, Algorithm = _psi2S, RequiredSelections = [ jpsi, pions, pions ])
 
@@ -293,11 +290,9 @@ class B2XLLConf(LineBuilder) :
         """
         Make omega -> pi+ pi- pi0
         """
-        # _omega2pipipizero = CombineParticles()
-        _omega2pipipizero = DaVinci__N3BodyDecays()
+        _omega2pipipizero = CombineParticles()
         _omega2pipipizero.DecayDescriptor = "omega(782) -> pi+ pi- pi0"
         _omega2pipipizero.CombinationCut = "(ADAMASS('omega(782)') < 200 *MeV)"
-        _omega2pipipizero.Combination12Cut = "AM > 20*MeV"
         _omega2pipipizero.MotherCut = "(ADMASS('omega(782)') < 200 *MeV) & (VFASPF(VPCHI2)> 0.00001)"
         _omegaConf = _omega2pipipizero.configurable("Combine_"+name+"_PiPiPi0")
         _selOMEGA2PIPIPIZERO = Selection( "Selection_"+name+"_omega2pipipizero",
@@ -337,11 +332,8 @@ class B2XLLConf(LineBuilder) :
         """
         Make Ds -> K K Pi
         """
-        # _dsPlus = CombineParticles()
-        _dsPlus = DaVinci__N3BodyDecays()
+        _dsPlus = CombineParticles()
         _dsPlus.DecayDescriptor = "[D_s+ -> K+ K- pi+]cc"
-        _dsPlus.CombinationCut = "(ADAMASS('D_s+') < 300 *MeV)"
-        _dsPlus.Combination12Cut = "AM > 20*MeV"
         _dsPlus.MotherCut = "(ADMASS('D_s+') < 300 *MeV)"
         _dsPlusConf = _dsPlus.configurable("Combine_"+name+"_Dsplus")
         _selDsPlus = Selection( "Selection_"+name+"_DsPlus", Algorithm = _dsPlusConf, RequiredSelections = [ Pion, Kaons ] )
@@ -377,12 +369,9 @@ class B2XLLConf(LineBuilder) :
         """
         Make K1(1270)+ -> K+ pi- pi+
         """
-        # _kpipi = CombineParticles()
-        _kpipi = DaVinci__N3BodyDecays()
+        _kpipi = CombineParticles()
         _kpipi.DecayDescriptors = ["[K_1(1270)+ -> K+ pi- pi+]cc"]
         _kpipi.MotherCut = "in_range(500*MeV, M, 3000*MeV) & ( VFASPF(VCHI2PDOF) < 36 )"
-        _kpipi.CombinationCut = "ADAMASS('K_1(1270)0') > 500*MeV"
-        _kpipi.Combination12Cut = "AM > 20*MeV"
         _kpipiConf = _kpipi.configurable("Combine_"+name+"_KPiPi")
         _selKPiPiPlus = Selection( "Selection_"+name+"_kpipi", Algorithm = _kpipiConf, RequiredSelections = [ Kaons, Pions ] )
         return _selKPiPiPlus
@@ -392,12 +381,9 @@ class B2XLLConf(LineBuilder) :
         """
         Make K1(1270)0 -> KS pi- pi+
         """
-        # _kpipi = CombineParticles()
-        _kpipi = DaVinci__N3BodyDecays()
+        _kpipi = CombineParticles()
         _kpipi.DecayDescriptors = ["K_1(1270)0 -> KS0 pi- pi+"]
         _kpipi.MotherCut = "in_range(500*MeV, M, 3000*MeV) & ( VFASPF(VCHI2PDOF) < 36 )"
-        _kpipi.CombinationCut = "ADAMASS('K_1(1270)0') > 500*MeV"
-        _kpipi.Combination12Cut = "AM > 20*MeV"
         _kpipiConf = _kpipi.configurable("Combine_"+name+"_KSPiPi")
         _selKPiPiZero = Selection( "Selection_"+name+"_kspipi", Algorithm = _kpipiConf, RequiredSelections = [ Kaons, Pions ] )
         return _selKPiPiZero
