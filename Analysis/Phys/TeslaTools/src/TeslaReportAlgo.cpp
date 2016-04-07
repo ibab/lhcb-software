@@ -806,6 +806,7 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
 
         case LHCb::CLID_CaloHypo:
           {
+            bool alreadyPresent=false;
             LHCb::CaloHypo* hypotemp = new LHCb::CaloHypo();
             const LHCb::HltObjectSummary::Info hypo_info = ObjBasic->numericalInfo();
             // What keys are present:
@@ -821,8 +822,8 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
             debug() << "Hypo object Z: " << hypo->position()->z() << endmsg;
             if(hypo!=hypotemp) {
               if ( msgLevel(MSG::DEBUG) ) debug() << "Found already inserted hypo, using that one" << endmsg;
+              alreadyPresent=true;
               delete hypotemp;
-              break;
             }
 
             if ( msgLevel(MSG::DEBUG) ) debug() << "Added hypo info to object" << endmsg;
@@ -831,7 +832,7 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj,
             if ( msgLevel(MSG::DEBUG) ) debug() << "Commencing cluster addition" << endmsg;
             if ( msgLevel(MSG::DEBUG) ) debug() << "Hypo has " << hyposub.size() << " clusters" << endmsg;
             for(auto cluster : hyposub){
-              hypo->addToClusters(processCluster(cluster.target(),calo_vector,cont_CaloClust));
+              if(!alreadyPresent) hypo->addToClusters(processCluster(cluster.target(),calo_vector,cont_CaloClust));
               // hypo has no ids, need to add the ones from the cluster
               totalIDs.insert( totalIDs.end(), cluster.target()->lhcbIDs().begin(), cluster.target()->lhcbIDs().end());
             }

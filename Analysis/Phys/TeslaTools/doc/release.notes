@@ -3,6 +3,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-04-07 - Sean Benson
+ - Fix CaloHypo restoration for Hypos already present.
+
 !========================= TeslaTools v2r1 2016-03-31 ========================
 
 ! 2015-03-23 - Sean Benson
