@@ -79,14 +79,14 @@ class B2JpsiPi0Conf(LineBuilder) :
         Bd2JpsiPi0PrescaledLine = StrippingLine( self.name + "Bd2JpsiPi0PrescaledLine",
                                                  algos = [ Bd2JpsiPi0 ] ,
                                                  HLT2 = self.config['HLTCuts'],
-                                                 prescale = self.config['Bs2JpsiPi0Prescale'],
-                                                 EnableFlavourTagging = True )#, MDSTFlag = True )
+                                                 prescale = self.config['Bs2JpsiPi0Prescale'] )
+                                                 #, EnableFlavourTagging = True )#, MDSTFlag = True )
 
         Bd2JpsiPi0DetachedLine  = StrippingLine( self.name + "Bd2JpsiPi0DetachedLine",
                                                  algos = [ self.createSubSel( InputList = Bd2JpsiPi0,
                                                                          OutputList = Bd2JpsiPi0.name() + "Detached" + self.name,
-                                                                         Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )],
-                                                 EnableFlavourTagging = True )#, MDSTFlag = True )
+                                                                         Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )] )
+                                                 #, EnableFlavourTagging = True )#, MDSTFlag = True )
 
         self.registerLine(Bd2JpsiPi0PrescaledLine)
         self.registerLine(Bd2JpsiPi0DetachedLine)
