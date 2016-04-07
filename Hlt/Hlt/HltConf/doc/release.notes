@@ -4,6 +4,12 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2016-04-07 - Rosen Matev
+ - Finalize the Persist Reco configuration
+   o Add downstream Rich PIDs, PID/MuonSegments, EcalSplitClusters
+   o Register TES link locations in the HltANNSvc
+   o Check that the output locations are consistent with the decoder
+
 ! 2016-04-06 - Sascha Stahl
  - HltAfterBurner: Add Downstream protoparticle creation to the RICH pid sequence.
 

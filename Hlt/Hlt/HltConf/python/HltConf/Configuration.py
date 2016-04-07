@@ -626,6 +626,11 @@ class HltConf(LHCbConfigurableUser):
         GaudiKernel.ProcessJobOptions.PrintOff()
         import HltConf.HltInit  # make sure ANN numbers are assigned...
 
+        # TODO uncomment the following when Hlt/HltServices >v2r14 is out
+        # # Disallow undefined, on-demand generated, key/value pairs
+        # from Configurables import HltANNSvc
+        # HltANNSvc().allowUndefined = False
+
         # Deal with output configurables
         self.setOtherProps(HltOutputConf(), ['EnableLumiEventWriting'])
 

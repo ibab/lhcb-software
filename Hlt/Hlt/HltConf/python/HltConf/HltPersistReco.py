@@ -1,5 +1,6 @@
 """Configures the persistence of reconstructed objects."""
 
+import itertools
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import GaudiSequencer as Sequence
@@ -11,10 +12,13 @@ from Configurables import CaloProcessor, RichRecSysConf, ChargedProtoANNPIDConf
 
 __author__ = "Sean Benson, Rosen Matev"
 
+
 class HltPersistRecoConf(LHCbConfigurableUser):
     # python configurables to be applied before me
-    __queried_configurables__ = [Hlt2BiKalmanFittedForwardTracking,
-                                 Hlt2BiKalmanFittedDownstreamTracking]
+    __queried_configurables__ = [
+        Hlt2BiKalmanFittedForwardTracking,
+        Hlt2BiKalmanFittedDownstreamTracking,
+    ]
     # python configurables that I configure
     __used_configurables__ = [
         (CaloProcessor, "SharedCaloProcessor"),
@@ -36,7 +40,6 @@ class HltPersistRecoConf(LHCbConfigurableUser):
         from Configurables import GaudiSequencer
         from Configurables import LoKi__HDRFilter
         from Configurables import TrackToDST
-        from DAQSys.Decoders import DecoderDB
 
         persistRecoSeq = self.getProp("Sequence")
         if not self.getProp("Sequence"):
@@ -62,21 +65,30 @@ class HltPersistRecoConf(LHCbConfigurableUser):
 
         # Configure HltPackedDataWriter algorithm to add to the raw banks
         pdwriter = HltPackedDataWriter("Hlt2PackedDataWriter")
-        pdwriter.Containers = self.packedObjectLocations()
+        pdwriter.Containers = [out for inp, out in self.packedObjectLocations()]
         persistRecoSeq.Members += [pdwriter]
 
         # Register the mapping of output locations and integers
         self._registerToHltANNSvc()
 
     def packedObjectLocations(self):
-        """Return a list with the packed object locations."""
-        return [alg.OutputName for alg in self._packers()]
+        """Return a list with the (unpacked, packed) object locations."""
+        return [(alg.InputName, alg.OutputName) for alg in self._packers()]
 
     def _registerToHltANNSvc(self):
         """Register the packed object locations in the HltANNSvc."""
         from Configurables import HltANNSvc
-        d = dict((loc, i) for i, loc in enumerate(self.packedObjectLocations()))
-        HltANNSvc().PackedObjectLocations = d
+        locations = list(itertools.chain(*self.packedObjectLocations()))
+        # We need to register the locations of (non-reconstructed) data
+        # that is referenced by the some of the packed objects.
+        locations += [
+            '/Event/Raw/Ecal/Digits',
+            '/Event/Raw/Prs/Digits',
+            '/Event/Raw/Spd/Digits',
+        ]
+        location_ids = {loc: i+1 for i, loc in enumerate(locations)}
+        print {i: loc for loc, i in location_ids.items()}
+        HltANNSvc().PackedObjectLocations = location_ids
 
     def _packers(self):
         """Return a list with the packer algorithms."""
@@ -111,9 +123,13 @@ class HltPersistRecoConf(LHCbConfigurableUser):
                 OutputName="Hlt2/pRec/down/Protos"),
             # RICH PIDs
             PackRichPIDs(
-                name="Hlt2PackRichPIDs",
+                name="Hlt2PackLongRichPIDs",
                 InputName=longTracking.hlt2RICHID().outputSelection(),
                 OutputName="Hlt2/pRec/long/RichPIDs"),
+            PackRichPIDs(
+                name="Hlt2PackDownRichPIDs",
+                InputName=downstreamTracking.hlt2RICHID().outputSelection(),
+                OutputName="Hlt2/pRec/down/RichPIDs"),
             # MUON PIDs
             PackMuonPIDs(
                 name="Hlt2PackMuonPIDs",
@@ -128,6 +144,10 @@ class HltPersistRecoConf(LHCbConfigurableUser):
                 name="Hlt2PackDownTracks",
                 InputName=downstreamTracking.hlt2PrepareTracks().outputSelection(),
                 OutputName="Hlt2/pRec/down/Tracks"),
+            PackTrack(
+                name="Hlt2PackDownPIDMuonSegments",
+                InputName=downstreamTracking._trackifiedMuonIDLocation(),
+                OutputName="Hlt2/pRec/down/PID/MuonSegments"),
 
             # Neutral protoparticles are in the same place as the charged with "Neutrals" replacing "Charged"
             PackProtoParticle(
@@ -139,6 +159,10 @@ class HltPersistRecoConf(LHCbConfigurableUser):
                 name="Hlt2PackCaloClusters",
                 InputName="Hlt/Calo/EcalClusters",
                 OutputName="Hlt2/pRec/neutral/CaloClusters"),
+            PackCaloClusters(
+                name="Hlt2PackEcalSplitClusters",
+                InputName=caloHypoPrefix + "/EcalSplitClusters",
+                OutputName="Hlt2/pRec/neutral/EcalSplitClusters"),
             # Neutral Calo Hypos
             PackCaloHypos(
                 name="Hlt2PackCaloElectronHypos",
@@ -162,6 +186,21 @@ class HltPersistRecoConf(LHCbConfigurableUser):
             alg.AlwaysCreateOutput = True
             alg.DeleteInput = False
             alg.OutputLevel = self.getProp("OutputLevel")
+            if not alg.InputName.startswith('/Event/'):
+                # This is needed to have the full locations registered in ANNSvc
+                alg.InputName = '/Event/' + alg.InputName
+
+        # Check that the output locations are consistent with the decoder
+        from DAQSys.Decoders import DecoderDB
+        decoder = DecoderDB["HltPackedDataDecoder/Hlt2PackedDataDecoder"]
+        decoder_outputs = sorted(decoder.listOutputs())
+        configured_outputs = sorted(alg.OutputName for alg in algs)
+        if configured_outputs != decoder_outputs:
+            log.warning('Configured output locations: {}'.format(configured_outputs))
+            log.warning('Configured decoder locations: {}'.format(decoder_outputs))
+            raise ValueError('Configured output locations do not match the decoder!' +
+                             'Please update the DecoderDB (Decoders.py)!'
+                             )
 
         self._packersCache = algs
         return algs
