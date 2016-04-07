@@ -173,9 +173,19 @@ class Tesla(LHCbConfigurableUser):
         LumiAlgsConf().InputType = "MDF"
         #
         # Filter out Lumi only triggers from further processing, but still write to output
+        # Trigger masks changed in 2016, see LHCBPS-1486
+        physFilterRequireMask = []
+        lumiFilterRequireMask = []
+        if self.getProp( "DataType" ) == "2015":
+            physFilterRequireMask = [ 0x0, 0x4, 0x0 ]
+            lumiFilterRequireMask = [ 0x0, 0x2, 0x0 ]
+        else:
+            physFilterRequireMask = [ 0x0, 0x0, 0x80000000 ]
+            lumiFilterRequireMask = [ 0x0, 0x0, 0x40000000 ]
         from Configurables import HltRoutingBitsFilter
-        physFilter = HltRoutingBitsFilter( "PhysFilter", RequireMask = [ 0x0, 0x4, 0x0 ] )
-        lumiFilter = HltRoutingBitsFilter( "LumiFilter", RequireMask = [ 0x0, 0x2, 0x0 ] )
+        physFilter = HltRoutingBitsFilter( "PhysFilter", RequireMask = physFilterRequireMask )
+        lumiFilter = HltRoutingBitsFilter( "LumiFilter", RequireMask = lumiFilterRequireMask )
+
         lumiSeq.Members += [ lumiFilter, physFilter ]
         lumiSeq.ModeOR = True
         #
