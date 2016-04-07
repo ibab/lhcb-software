@@ -179,6 +179,12 @@ class DBuilder(object):
                                                                tightPi0_sel, self.pi0hhh_resolved_pid)] '''
           
           # subset decays
+          nossK = "((NINTREE(ID=='K+') < 2) & (NINTREE(ID=='K-') < 2))"
+          self.hhh_pid_nossK = [filterSelection('D2HHHPIDNOSSK',nossK,self.hhh_pid)]
+          self.hhh_pid_tight_nossK = [filterSelection('D2HHHPIDTIGHTNOSSK',nossK,self.hhh_pid_tight)]
+          self.kshhh_ll_pid_nossK = [filterSelection('D2KsHHHLLPIDNOSSK',nossK,self.kshhh_ll_pid)]
+          self.kshhh_dd_pid_nossK = [filterSelection('D2KsHHHDDPIDNOSSK',nossK,self.kshhh_dd_pid)]
+
           oneK = "NINTREE(ABSID=='K+') == 1"
           self.kpi = [filterSelection('D2KPi',oneK,self.hh)]
           d_cf = "(((ID=='D+') & (NINTREE(ID=='K-')==1) & (%s)) | "\
