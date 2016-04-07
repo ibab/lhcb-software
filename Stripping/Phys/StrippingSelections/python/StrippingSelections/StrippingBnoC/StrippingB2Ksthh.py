@@ -7,8 +7,8 @@ Exported symbols (use python help!):
 """
 
 __author__ = ['Rafael Coutinho']
-__date__ = '10/11/2015'
-__version__ = 'Stripping24'
+__date__ = '07/04/2015'
+__version__ = 'Stripping26'
 __all__ = {'B2KsthhConf',
            'default_config'}
 
@@ -24,8 +24,8 @@ default_config = {
     'NAME'        : 'B2Ksthh',
     'WGs'         : ['BnoC'],
     'BUILDERTYPE' : 'B2KsthhConf',
-    'CONFIG'      : {'Trk_Chi2'                : 3.0,
-                     'Trk_GhostProb'           : 0.3,
+    'CONFIG'      : {'Trk_Chi2'                : 4.0,
+                     'Trk_GhostProb'           : 0.4,
                      'Kstar_MassLo'            : 0.0,
                      'Kstar_MassHi'            : 5000.0,
                      'B_Mlow'                  : 1279.0,
@@ -34,10 +34,10 @@ default_config = {
                      'B_PTmin'                 : 1500.0,
                      'BDaug_MedPT_PT'          : 800.0,
                      'BDaug_MaxPT_IP'          : 0.05,
-                     'BDaug_PTsum'             : 3200.0,
+                     'BDaug_PTsum'             : 3000.0,
                      'B_IPCHI2sum'             : 50.0,
                      'B_VtxChi2'               : 12.0,
-                     'B_Dira'                  : 0.9995,
+                     'B_Dira'                  : 0.999,
                      'B_IPCHI2wrtPV'           : 8.0,
                      'B_FDwrtPV'               : 1.0,
                      'B_FDChi2'                : 50.0,
@@ -45,8 +45,8 @@ default_config = {
                      'ConeAngle10'             : 1.0, 
                      'ConeAngle15'             : 1.5, 
                      'ConeAngle17'             : 1.7, 
-                     'HLT1Dec'                 : 'Hlt1TrackAllL0Decision', 
-                     'HLT2Dec'                 : 'Hlt2Topo[234]Body.*Decision',
+                     'HLT1Dec'                 : 'Hlt1(Two)?TrackMVADecision',
+                     'HLT2Dec'                 : 'Hlt2Topo[234]BodyDecision',
                      'Prescale'                : 1.0,
                      'Postscale'               : 1.0
                      },

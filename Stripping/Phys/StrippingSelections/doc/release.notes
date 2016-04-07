@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-07 - Rafael Coutinho
+ - Updated strippings Bu2Ksthh, B2Ksthh and Hb2V0V0h for correct Trigger scheme 
+
 ! 2016-04-07 - Andrea Merli
  - Modified the isolation dictionary for StrippingXb23ph
 

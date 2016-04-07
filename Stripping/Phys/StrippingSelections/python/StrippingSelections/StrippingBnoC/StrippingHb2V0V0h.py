@@ -8,8 +8,8 @@ Exported symbols (use python help!):
 """
 
 __author__ = ['Rafael Coutinho']
-__date__ = '10/11/2015'
-__version__ = 'Stripping24'
+__date__ = '07/04/2016'
+__version__ = 'Stripping26'
 __all__ = 'Hb2V0V0hConf'
 
 from Gaudi.Configuration import *

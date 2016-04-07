@@ -8,8 +8,8 @@ Exported symbols (use python help!):
 """
 
 __author__ = ['Rafael Coutinho']
-__date__ = '10/11/2015'
-__version__ = 'Stripping24'
+__date__ = '07/04/2015'
+__version__ = 'Stripping26'
 __all__ = {'Bu2KsthhConf',
            'default_config'}
 
@@ -61,8 +61,8 @@ default_config = {
                      'ConeAngle10'             : 1.0, 
                      'ConeAngle15'             : 1.5, 
                      'ConeAngle17'             : 1.7, 
-                     'HLT1Dec'                 : 'Hlt1TrackAllL0Decision', 
-                     'HLT2Dec'                 : 'Hlt2Topo[234]Body.*Decision',
+                     'HLT1Dec'                 : 'Hlt1(Two)?TrackMVADecision',
+                     'HLT2Dec'                 : 'Hlt2Topo[234]BodyDecision',
                      'Prescale'                : 1.0,
                      'Postscale'               : 1.0
                      },
