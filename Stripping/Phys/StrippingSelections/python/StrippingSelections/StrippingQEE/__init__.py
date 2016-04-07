@@ -13,7 +13,6 @@ list_S26 = [
   'StrippingFullDiJets',
   'StrippingH24Mu',
   'StrippingHighPtTau',
-  'StrippingInclbJets',
   'StrippingLb2dp',
   'StrippingLLP2MuX',
   'StrippingLowMultINC',
@@ -33,6 +32,8 @@ list_S26 = [
   'StrippingWRareDecay',
   'StrippingZ0RareDecay',
   'StrippingA1MuMu',
+  'StrippingJets',
+  'StrippingInclQQ', # renamed from InclbJets
 ]
 
 ## For autumn-2015 Run-II End-of-2015 restripping (S24)

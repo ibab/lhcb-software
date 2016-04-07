@@ -19,7 +19,7 @@ default_config = {
   'BUILDERTYPE' : 'FullDiJetsConf',
   'WGs'         : [ 'QEE' ],
   'STREAMS'     : [ 'EW' ],
-  'CONFIG' :{
+  'CONFIG': {
     'FullDiJetsLine_Prescale'   : 0.05, 
     'FullDiJetsLine_Postscale'  : 1.0,
     'RequiredRawEvents'         : ['Calo'],

@@ -20,20 +20,14 @@ default_config = {
   'WGs'         : [ 'QEE' ],
   'STREAMS'     : [ 'BhadronCompleteEvent' ],
   'CONFIG': {
-    'TaggedJetsPair_Prescale'   : 1.0,
-    'TaggedJetsPair_Postscale'  : 1.0,
-    'TaggedJetsPairExclusiveDiJet_Prescale':1.0,
-    'TaggedJetsPairExclusiveDiJet_Postscale':1.0,
-    'DiTaggedJetsPair_Prescale' : 1.0,
-    'DiTaggedJetsPair_Postscale': 1.0,
-    # 'TaggedJetsFour_Prescale'   : 1.0,
-    # 'TaggedJetsFour_Postscale'  : 1.0,
-    # 'TaggedJetsSix_Prescale'    : 1.0,
-    # 'TaggedJetsSix_Postscale'   : 1.0,
-    # 'TaggedJetsEight_Prescale'  : 1.0,
-    # 'TaggedJetsEight_Postscale' : 1.0,
-    'min_jet_pT'                : 25. * GeV, # GeV/c
-    'min_jet_pT_ExclusiveDiJet' : 20. * GeV, # GeV/c
+    'TaggedJetsPair_Prescale'               : 1.0,
+    'TaggedJetsPair_Postscale'              : 1.0,
+    'TaggedJetsPairExclusiveDiJet_Prescale' : 1.0,
+    'TaggedJetsPairExclusiveDiJet_Postscale': 1.0,
+    'DiTaggedJetsPair_Prescale'             : 1.0,
+    'DiTaggedJetsPair_Postscale'            : 1.0,
+    'min_jet_pT'                            : 25. * GeV,
+    'min_jet_pT_ExclusiveDiJet'             : 20. * GeV,
   }
 }
 

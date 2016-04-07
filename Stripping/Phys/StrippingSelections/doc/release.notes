@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-07 - Chitsanu Khurewathanakul (QEE)
+ - Tuned DY2MuMu, new A1MuMu, fix init.
+
 ! 2016-04-07 - Stefano Perazzini
  - Update of StrippingB2HHBDT line for BnoC group
 

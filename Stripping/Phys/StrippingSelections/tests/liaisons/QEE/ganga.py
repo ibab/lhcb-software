@@ -9,7 +9,7 @@ app.user_release_area = os.path.expandvars('$HOME/cmtuser/')
 app.optsfile  = 'TestS26_Selections.py'
 app.extraopts = """
 from Configurables import DaVinci
-DaVinci().EvtMax = 1000
+DaVinci().EvtMax = 10000
 """
 
 ## S24
@@ -26,8 +26,8 @@ ds.XMLCatalogueSlice = '../../data/Reco15a_Run164668.xml'
 
 j = Job()
 j.name        = 'TestS26'
-j.comment     = 'Deletable: Test rate DisplVertices'
-j.backend     = PBS(extraopts='--mem=2400 -t 1-0:0:0')
+j.comment     = 'Deletable: Test DY2MuMu2LineHltPrescale 0.5'
+j.backend     = PBS(extraopts='--mem=2416 -t 1-0:0:0')
 # j.backend     = Dirac()
 j.application = app
 j.inputdata   = ds

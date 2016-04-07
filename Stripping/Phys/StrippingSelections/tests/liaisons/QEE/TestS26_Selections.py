@@ -8,6 +8,7 @@
 # DEV HACK
 import sys
 sys.path.insert(0, '../../../python')
+# sys.path.insert(0, '../../../../StrippingConf/python')
 
 
 from Gaudi.Configuration import *
@@ -26,8 +27,9 @@ DecodeRawEvent().setProp("OverrideInputs",4.2)
 from StrippingSelections import buildersConf
 confs = buildersConf()
 from StrippingSelections.Utils import lineBuilder, buildStreams, buildStreamsFromBuilder
-streams = buildStreams( confs, WGs='QEE' )
-# streams = buildStreamsFromBuilder(confs, ['DisplVertices'])
+# streams = buildStreams( confs )
+# streams = buildStreams( confs, WGs='QEE' )
+streams = buildStreamsFromBuilder(confs, ['Jets'])
 
 
 
@@ -127,7 +129,7 @@ from Configurables import AlgorithmCorrelationsAlg
 ac = AlgorithmCorrelationsAlg(Algorithms = list(set(sc.selections())))
 
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 10000
+DaVinci().EvtMax = 100
 DaVinci().PrintFreq = 100
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )

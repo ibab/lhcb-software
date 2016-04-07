@@ -12,10 +12,7 @@ DY2MuMu3    (10-20GeV): StdAllLooseMuons & TrkPChi2>0.1% & P>10GeV & pT>3GeV
 DY2MuMu4    (20-40GeV): StdAllLooseMuons & TrkPChi2>0.1% & P>10GeV & pT>3GeV
 """
 
-__all__ = (
-  'DY2MuMuConf',
-  'default_config',
-)
+__all__ = 'DY2MuMuConf', 'default_config'
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
@@ -33,9 +30,9 @@ default_config = {
     'STREAMS'     : [ 'EW'  ],
     'CONFIG'      : { 
         'DY2MuMu1LinePrescale'    : 0.05,
-        'DY2MuMu1LineHltPrescale' : 0.5,
+        'DY2MuMu1LineHltPrescale' : 0.1,
         'DY2MuMu2LinePrescale'    : 0.25,
-        'DY2MuMu2LineHltPrescale' : 1.0,
+        'DY2MuMu2LineHltPrescale' : 0.5,
         'DY2MuMu3LinePrescale'    : 1.0,  
         'DY2MuMu4LinePrescale'    : 1.0,
         'DY2MuMuLinePostscale'    : 1.0,
@@ -90,14 +87,6 @@ class DY2MuMuConf( LineBuilder ) :
             RequiredRawEvents = config['RawEvents'],
             selection = sel,
         ))
-#                                            RelatedInfoTools = [
-#                                                               {'Type' : 'RelInfoConeVariables',
-#                                                                'ConeAngle' : 0.5,
-#                                                                'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-#                                                                'TopSelection' : sel_DY2MuMu1,
-#                                                                'Location' : 'P2CVD'
-#                                                               },
-#                                                               ]
 
         ## DY2MuMu1Hlt
 
@@ -131,7 +120,6 @@ class DY2MuMuConf( LineBuilder ) :
            HLT2      = config[ 'DY2MuMu1HLT2' ],
            selection = sel,
         ))
-
 
         ## DY2MuMu3
 
