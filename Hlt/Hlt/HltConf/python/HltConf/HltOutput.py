@@ -235,7 +235,7 @@ class HltOutputConf(LHCbConfigurableUser):
             return rbWriter
 
         self.__checkRoutingBits(routingBits)
-        rbWriter.RoutingBits = routingBits,
+        rbWriter.RoutingBits = routingBits
 
         # If the rawLocation is not set, the default value is used
         if rawLocation:
@@ -578,8 +578,8 @@ class HltOutputConf(LHCbConfigurableUser):
             writerFilter = HltOutputConf.__writer_filter_name__
             if self.getProp('Split') == 'Hlt1' or not self.getProp('EnableOutputStreaming'):
                 # Configure HltOutputSvc with single stream
-                streamGroups[''] = ['All']
-                filters['All'] = [writerFilter]
+                streamGroups[''] = ['']
+                filters[''] = [writerFilter]
             elif self.getProp('EnableOutputStreaming'):
                 # Multiple stream case, not HLT1, not using TCK and using output
                 # streams. This is used when generating a TCK for HLT2, so the
