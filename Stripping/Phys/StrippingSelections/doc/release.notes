@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-08 - Roberta Cardinale
+ - Added CC2DD control line config dict in BandQ
+
 ! 2016-04-08 - Guido Andreassi
  - Added Upsilon2eMu and Upsilon2ee lines to LFV lines in RD
 

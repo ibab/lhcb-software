@@ -22,7 +22,7 @@ __all__ = ('CC2DDConf',
 
 
 default_config =  {
-    'NAME' : 'CC2DD',
+    'CC2DD': {
     'WGs'  : ['BandQ'],
     'BUILDERTYPE'       : 'CC2DDConf',
     'CONFIG'   :  {
@@ -100,7 +100,88 @@ default_config =  {
     'STREAMS' : [
     'CharmCompleteEvent' 
     ],
-    }   
+    },
+    'CC2DDcontrol' :  {
+    #'NAME' : 'CC2DDcontrol',
+	'BUILDERTYPE'       : 'CC2DDConf',
+	'CONFIG'   :  {
+	   ######## D0 / D~0 -> K pi cuts
+	   'D0MassWin'     : "60*MeV",
+	   'D0PT'          : "1000*MeV",
+	   'D0VtxChi2Ndof' : 8,
+	   'D0Bpvdira'     : -10.,
+	   'D0Bpvdls'      : 4.,
+	   'D0daughterBpvIpChi2'    : 4.,
+	   'D0daughterPT'           : "600*MeV",
+	   'D0daughterP'            : "5*GeV",
+	   'D0daughterTrkChi2'      : 3,
+	   'D0daughterTrkGhostProb' : 0.4,
+	   ### ProbNN conditions
+	   'D0daughterKaonProbNNk'  : 0.0,
+	   'D0daughterPionProbNNpi' : 0.0,
+
+	   ######## Dplus/Dminus -> Kpipi cuts, used also for D_s+/D_s- ->KKpi
+	   'DpmMassWin'     : "60*MeV",
+	   'DpmPT'          : "1000*MeV",
+	   'DpmVtxChi2Ndof' : 8,
+	   'DpmBpvdira'     : -10.,
+	   'DpmBpvdls'      : 4.,
+	   'DpmdaughterBpvIpChi2'    : 4.,
+	   'DpmdaughterPT'           : "500*MeV",
+	   'DpmdaughterP'            : "5*GeV",
+	   'DpmdaughterTrkChi2'      : 3,
+	   'DpmdaughterTrkGhostProb' : 0.4,
+	   ### ProbNN conditions
+	   'DpmdaughterKaonProbNNk'  : 0.0,
+	   'DpmdaughterPionProbNNpi' : 0.0,
+	   ######## Lambda_c+, Xi_c+ -> p+ K- pi+ cuts
+	   'LcMassWin'     : "60*MeV",
+	   'LcPT'          : "1000*MeV",
+	   'LcVtxChi2Ndof' : 8,
+	   'LcBpvdira'     : -10.,
+	   'LcBpvdls'      : 4.,               # standard cut
+	   'LcdaughterBpvIpChi2'    : 4.,
+	   'LcdaughterPT'           : "500*MeV",
+	   'LcdaughterP'            : "5*GeV",
+	   'LcdaughterTrkChi2'      : 3,
+	   'LcdaughterTrkGhostProb' : 0.4,
+	   ### ProbNN conditions
+	   'LcdaughterKaonProbNNk'  : 0.0,
+	   'LcdaughterPionProbNNpi' : 0.0,
+	   'LcdaughterProtonProbNNp': 0.15,
+
+	   ######## Xi_c0, Omega_c0 -> p+ K- K- pi+ cuts
+	   'XcMassWin'     : "60*MeV",
+	   'XcPT'          : "1000*MeV",
+	   'XcVtxChi2Ndof' : 8,
+	   'XcBpvdira'     : -10.,
+	   'XcBpvdls'      : -10.,             # no cut
+         'XcdaughterBpvIpChi2'    : 2.,      # loose cut
+         'XcdaughterPT'           : "500*MeV",
+	   'XcdaughterP'            : "5*GeV",
+	   'XcdaughterTrkChi2'      : 3,
+	   'XcdaughterTrkGhostProb' : 0.4,
+	   ### ProbNN conditions
+	   'XcdaughterKaonProbNNk'  : 0.0,
+	   'XcdaughterPionProbNNpi' : 0.0,
+	   'XcdaughterProtonProbNNp': 0.15,
+
+	   ######## psi(3770) -> D D  cuts
+	   #                   'CCMassCut'     : "(AM<5000*MeV)",
+	   # no mass constraint
+	   'CCMassCut'      : "(AM>0)",
+	   'CCVtxChi2Ndof'  : 10,
+	   'CCMaxD0ChildPT' : "1500*MeV",
+	   'CCMaxD0TreePT'  : "1200*MeV",
+	   'CCMaxD0MinTreeIpChi2'   : "0.",    ## unused for the moment
+	   },
+	'STREAMS' : [
+		'Charm'
+	   ],
+        'WGs'  : ['BandQ']
+        }
+    }
+
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
