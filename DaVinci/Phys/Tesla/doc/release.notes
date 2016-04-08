@@ -4,25 +4,31 @@ Package Coordinator : Sean Benson
 Purpose             : Turbo Stream Analysis
 !-----------------------------------------------------------------------------
 
-! 2015-04-08 - Sean Benson
+!========================== Tesla v2r0 2016-04-08 ============================
+
+! 2016-04-08 - Eduardo Rodrigues
+ - Major version number to reflect the major change from 2016-03-11
+   (no worries since v1r15 did not get used anywhere).
+
+! 2016-04-08 - Sean Benson
  - Adjustments for qmtests.
 
-! 2015-04-07 - Sean Benson
+! 2016-04-07 - Sean Benson
  - Adjust qmtest for fix.
  - Lumi filter fix.
  - More qmtests.
 
 !========================== Tesla v1r15 2016-04-05 ===========================
 
-! 2015-03-30 - Sean Benson
+! 2016-03-30 - Sean Benson
  - Add more qmtests.
 
-! 2015-03-11 - Sean Benson
+! 2016-03-11 - Sean Benson
  - Major change: Adapt to a single TeslaReportAlgo instance for complete sharing.
 
 !========================== Tesla v1r14 2016-02-08 ===========================
 
-! 2015-02-03 - Sean Benson
+! 2016-02-03 - Sean Benson
  - Add packing of calo clusters and hypos.
 
 !========================== Tesla v1r13 2015-10-19 ===========================
