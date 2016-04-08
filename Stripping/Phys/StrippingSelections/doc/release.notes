@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-08 - Luis Miguel Garcia
+ - Added StrippingRD/StrippingHypbL0HGamma
+
 ! 2016-04-08 - Maximilian Schlupp
  - Bugfix Upsilon2emu/ee lines in LFV
 

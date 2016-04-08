@@ -40,6 +40,7 @@ _selections = [
     'StrippingB2XLL',
     'StrippingB2LLXBDT',
     'StrippingB2MuMuMuMuLines',
+    'StrippingHypb2L0HGamma',
     ]
 
 for _sel in _selections :
