@@ -250,7 +250,7 @@ def makeDefault(self,name,inputSel) :
         Combination123Cut="(AMAXDOCA('')<0.3*mm)",
         CombinationCut="(AM>4000*MeV) "\
                          "& (AMAXDOCA('')<0.3*mm)",
-        MotherCut=self.BMotherCuts + " & (M>4000*MeV) "
+        MotherCut=self.BMotherCuts + " & (MM>4000*MeV) "
     )
 
     return Selection(
@@ -265,13 +265,13 @@ def makeB23mupi(self,name,inputSel) :
     B --> mu mu mu pi selection. pi = not-strong-selected muon
     """
     Detached3mupi = Combine4Particles(
-        DecayDescriptor="B_s0 -> mu+ mu- mu+ pi-",
+        DecayDescriptor="[B_s0 -> mu+ mu- mu+ pi-]cc",
         DaughtersCuts={"mu+" : self.BDaughtersCuts, "pi+": self.BDaughtersCuts},
         Combination12Cut="(AMAXDOCA('')<0.3*mm)",
         Combination123Cut="(AMAXDOCA('')<0.3*mm)",
         CombinationCut="(AM>4000*MeV) "\
                          "& (AMAXDOCA('')<0.3*mm)",
-        MotherCut=self.BMotherCuts + " & (M>4000*MeV) "
+        MotherCut=self.BMotherCuts + " & (MM>4000*MeV) "
     )
 
     return Selection(
