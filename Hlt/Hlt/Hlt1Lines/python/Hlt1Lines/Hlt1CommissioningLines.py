@@ -23,7 +23,7 @@ class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
                               , 'Hlt1VeloClosingMicroBias' : 1
                               }
                , 'Postscale' : { 'Hlt1Incident'     : 'RATE(1)'
-                               , 'Hlt1Tell1Error'   : 'RATE(10)',
+                               , 'Hlt1Tell1Error'   : 'RATE(10)'
                                , 'Hlt1ErrorEvent'   : 'RATE(0.01)'
                                , 'Hlt1NZSVelo'      : 'RATE(1)'
                                , 'Hlt1GEC.*'        : 'RATE(1)'

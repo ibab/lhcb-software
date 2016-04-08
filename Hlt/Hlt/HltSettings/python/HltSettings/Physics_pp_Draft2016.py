@@ -300,7 +300,7 @@ class Physics_pp_Draft2016( object ):
                                                         ,'Prescale'  : { 'Hlt1CalibTrackingKPi': 0.2 }
                                                        }
                        , Hlt1CommissioningLinesConf : { 'Postscale' : { 'Hlt1Incident'     : 'RATE(1)'
-                                                                      , 'Hlt1Tell1Error'   : 'RATE(10)',
+                                                                      , 'Hlt1Tell1Error'   : 'RATE(10)'
                                                                       , 'Hlt1ErrorEvent'   : 'RATE(0.01)'
                                                                       , 'Hlt1NZSVelo'      : 'RATE(1)'
                                                                       , 'Hlt1GEC.*'        : 'RATE(1)'
