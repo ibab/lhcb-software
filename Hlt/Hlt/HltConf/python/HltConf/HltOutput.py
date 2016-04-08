@@ -336,7 +336,8 @@ class HltOutputConf(LHCbConfigurableUser):
                       # RB 89 for the parked stream; reserved but not set for now
                       # RB 90 for TurboCalib stream, includes lumi events.
                       , 90 : "HLT_TURBOPASS_RE('^Hlt2.*TurboCalibDecision$')"
-                      # RB 91 for the NOBIAS stream; reserved
+                      # RB 91 for the NOBIAS stream
+                      , 91 : "HLT_PASS('Hlt2MBNoBiasDecision')"
                       # RB 92 for online DQ on HLT2 output
                       , 92 : "HLT_PASS('Hlt2(%s)Decision')" % '|'.join(self.getProp("Hlt2LinesForDQ"))
                       # RB 93 for SMOG physics; reserved

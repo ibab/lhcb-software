@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2016-04-08 - Rosen Matev
+ - Subscribe the NOBIAS routing bit to Hlt2MBNoBiasDecision
+
+! 2016-04-08 - Rosen Matev
  - Disable consistency check with DecoderDB when version is too old 
 
 ! 2016-04-07 - Roel Aaij
