@@ -21,7 +21,7 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from GaudiKernel.PhysicalConstants import c_light
 from GaudiKernel.SystemOfUnits import GeV, MeV, mm
-
+from copy import deepcopy
 #
 # Configure related info tools
 # some of these tools are used several times:
@@ -526,6 +526,21 @@ related_info_tools_Phi2MuMuControl = [{'Type' : 'RelInfoBs2MuMuBIsolations',
                             }
                             ] ## matches 'RelatedInfoTools'
 
+related_info_tools_Phi2eeControl = deepcopy(related_info_tools_Phi2MuMuControl) # copy phi2mm configuration
+related_info_tools_Phi2eeControl[1]['DaughterLocations'] = {
+                            '[phi(1020) -> e+ ^[e-]cc]CC' :  'Muon_ISO',
+                            '[phi(1020) -> ^e+ [e-]cc]CC' :  'Electron_ISO',
+                            }
+related_info_tools_Phi2eeControl[2]['DaughterLocations'] = {
+                                "[phi(1020) -> e+ ^[e-]cc]CC" :  'Muon_TrackIso_BDT6vars',
+                                "[phi(1020) -> ^e+ [e-]cc]CC" :  'Electron_TrackIso_BDT6vars'
+                              }
+related_info_tools_Phi2eeControl[3]['DaughterLocations'] = {
+                                "[phi(1020) -> e+ ^[e-]cc]CC" :  'Muon_TrackIso_BDT9vars',
+                                "[phi(1020) -> ^e+ [e-]cc]CC" :  'Electron_TrackIso_BDT9vars'
+                              }
+
+
 related_info_tools_B2ee = [{'Type' : 'RelInfoBs2MuMuBIsolations',
                            'Variables' : ['BSMUMUCDFISO',
                                           'BSMUMUOTHERBMAG',
@@ -820,7 +835,38 @@ related_info_tools_Upsilon2ee = [{'Type' : 'RelInfoBs2MuMuBIsolations',
 default_config = {
     'NAME' : 'LFV',
     'BUILDERTYPE' : 'LFVLinesConf' ,
-    'STREAMS' : [ 'Leptonic' ],
+    'STREAMS' : {    
+        'Dimuon' : [
+          'StrippingLFVJPsi2MuMuControlLine',
+          'StrippingLFVJPsi2eeControlLine',
+          'StrippingLFVPromptJPsi2MuMuControlLine',
+          'StrippingLFVPromptJPsi2eeControlLine'
+        ],
+        'Leptonic' : [
+          'StrippingLFVTau2PhiMuLine',
+          'StrippingLFVTau2eMuMuLine',
+          'StrippingLFVB2eMuLine',
+          'StrippingLFVJPsi2eMuLine',
+          'StrippingLFVPromptJPsi2eMuLine',
+          'StrippingLFVJPsi2MuMuControlLine',
+          'StrippingLFVJPsi2eeControlLine',
+          'StrippingLFVPromptJPsi2MuMuControlLine',
+          'StrippingLFVPromptJPsi2eeControlLine',
+          'StrippingLFVPhi2eMuLine',
+          'StrippingLFVPromptPhi2eMuLine',
+          'StrippingLFVPhi2MuMuControlLine',
+          'StrippingLFVPhi2eeControlLine',
+          'StrippingLFVPromptPhi2MuMuControlLine',
+          'StrippingLFVPromptPhi2eeControlLine',
+          'StrippingLFVB2eeLine',
+          'StrippingLFVB2heMuLine',
+          'StrippingLFVB2hMuLine',
+          'StrippingLFVBu2KJPsieeLine',
+          'StrippingLFVB2hTauMuLine',
+          'StrippingLFVTau2MuEtaP2pipigLine',
+          'StrippingLFVTau2MuEtaP2pipipiLine'
+        ]
+    },
     'WGs'     : [ 'RD' ],
     'CONFIG'  : {
     'Postscale'                         :1,
@@ -828,15 +874,17 @@ default_config = {
     'Tau2MuMuePrescale'                 :1,
     'B2eMuPrescale'                     :1,
     'JPsi2eMuPrescale'                  :1,
-    'JPsi2MuMuControlPrescale'          :1,
-    'JPsi2eeControlPrescale'            :1,
+    'JPsi2MuMuControlPrescale'          :0.05,
+    'JPsi2eeControlPrescale'            :0.05,
     'PromptJPsi2eMuPrescale'            :1,
-    'PromptJPsi2MuMuControlPrescale'    :0.3,
-    'PromptJPsi2eeControlPrescale'      :0.3,
+    'PromptJPsi2MuMuControlPrescale'    :0.05,
+    'PromptJPsi2eeControlPrescale'      :0.05,
     'Phi2eMuPrescale'                   :1,
-    'Phi2MuMuControlPrescale'           :1,
+    'Phi2MuMuControlPrescale'           :0.05,
+    'Phi2eeControlPrescale'             :0.05,
     'PromptPhi2eMuPrescale'             :1,
-    'PromptPhi2MuMuControlPrescale'     :1,
+    'PromptPhi2MuMuControlPrescale'     :0.01,
+    'PromptPhi2eeControlPrescale'       :0.01,
     'B2eePrescale'                      :1,
     'B2heMuPrescale'                    :1,
     'B2pMuPrescale'                     :1,
@@ -852,6 +900,7 @@ default_config = {
     'RelatedInfoTools_JPsi2eeControl'   : related_info_tools_JPsi2eeControl,
     'RelatedInfoTools_Phi2eMu'          : related_info_tools_Phi2eMu,
     'RelatedInfoTools_Phi2MuMuControl'  : related_info_tools_Phi2MuMuControl,
+    'RelatedInfoTools_Phi2eeControl'    : related_info_tools_Phi2eeControl,
     'RelatedInfoTools_B2ee'             : related_info_tools_B2ee,
     'RelatedInfoTools_B2hemu'           : related_info_tools_B2hemu,
     'RelatedInfoTools_Tau2PhiMu'        : related_info_tools_Tau2PhiMu,
@@ -872,57 +921,39 @@ default_config = {
     'config_JPsi2eMu'          : {
       'min_MIPCHI2DV'     : 36.,
       'max_ADAMASS'       : 1000*MeV,
-      'max_TRCHI2DV'      : 3.,
+      'max_TRCHI2DV'      : 3,
       'max_TRGHOSTPROB'   : 0.3,
       'max_AMAXDOCA'      : 0.3*mm,
       'min_BPVDIRA'       : 0,
-      'min_BPVVDCHI2'     : 256.,
-      'max_VtxChi2DoF'    : 3.,
-      'min_e_ProbNN'      : 0.1,
-      'min_mu_ProbNN'     : 0.1,
-      'min_e_ProbNN_phi'  : 0.3,
-      'min_mu_ProbNN_phi' : 0.3,
+      'min_BPVVDCHI2'     : 324.,
+      'max_VtxChi2DoF'    : 2.5,
+      'min_ProbNN'        : 0.3,
+      'min_ProbNN_phi'    : 0.4,
+      'max_JpsiMass'      : 4096*MeV,
+      'min_JpsiMass'      : 2200*MeV,
       'max_PhiMass'       : 2020*MeV,
-      'min_PhiMass'       : 250*MeV
+      'min_PhiMass'       : 300*MeV,
+      'min_Pt'            : 300*MeV
     },
     'config_PromptJPsi2eMu'     : {
-      'max_MIPCHI2DV'           : 16.,
-      'max_BPVVDCHI2'           : 16.,
-      'max_BPVIPCHI2'           : 16.,
-      'max_TRCHI2DV'            : 3.,
-      'max_mu_TRGHOSTPROB'      : 0.2,
-      'max_e_TRGHOSTPROB'       : 0.2,
+      'max_MIPCHI2DV'           : 9.,
+      'max_BPVVDCHI2'           : 9.,
+      'max_BPVIPCHI2'           : 9.,
+      'max_TRCHI2DV'            : 3,
+      'max_TRGHOSTPROB'         : 0.2,
       'max_AMAXDOCA'            : 0.3*mm,
       'max_SPD'                 : 350,
       'max_JpsiMass'            : 4096*MeV,
-      'min_JpsiMass'            : 2096*MeV,
-      'min_mu_ProbNN'           : 0.8,
-      'min_e_ProbNN'            : 0.8,
-      'max_VtxChi2DoF'          : 3.0,
-      'max_SPD_Control'         : 350,
-      'max_TRGHOSTPROB_Control' : 0.2,
-      'min_mu_ProbNN_Control'   : 0.5,
-      'min_e_ProbNN_Control'    : 0.5
-    },
-    'config_PromptPhi2eMu'     : {
-      'max_MIPCHI2DV'           : 16.,
-      'max_BPVVDCHI2'           : 16.,
-      'max_BPVIPCHI2'           : 16.,
-      'max_TRCHI2DV'            : 3.,
-      'max_mu_TRGHOSTPROB'      : 0.2,
-      'max_e_TRGHOSTPROB'       : 0.2,
-      'max_AMAXDOCA'            : 0.3*mm,
-      'max_SPD'                 : 350,
+      'min_JpsiMass'            : 2200*MeV,
+      'min_ProbNN'              : 0.8,
+      'min_ProbNN_phi'          : 0.8,
+      'max_VtxChi2DoF'          : 2.5,
+      'min_Pt'                  : 300*MeV,
       'max_PhiMass'             : 2020*MeV,
-      'min_PhiMass'             : 250*MeV,
-      'min_mu_ProbNN'           : 0.85,
-      'min_e_ProbNN'            : 0.85,
-      'max_VtxChi2DoF'          : 3.0,
-      'max_SPD_Control'         : 350,      
-      'max_TRGHOSTPROB_Control' : 0.2,
-      'min_mu_ProbNN_Control'   : 0.5,
-      'min_e_ProbNN_Control'    : 0.5
+      'min_PhiMass'             : 300*MeV,
+      'min_ProbNN_Control'      : 0.65
     },
+
     'config_Tau2MuEtaPrime' : {
         'muplus_cuts'       : '(ISLONG) & (TRCHI2DOF < 3 )  & (MIPCHI2DV(PRIMARY) >  9.) & (PT > 300*MeV) & (TRGHOSTPROB < 0.3)',
         'tau_mass_window'   : "(ADAMASS('tau+')<150*MeV)",
@@ -979,8 +1010,10 @@ class LFVLinesConf(LineBuilder) :
                               'PromptJPsi2eeControlPrescale',
                               'Phi2eMuPrescale',
                               'Phi2MuMuControlPrescale',
+                              'Phi2eeControlPrescale',
                               'PromptPhi2eMuPrescale',
                               'PromptPhi2MuMuControlPrescale',
+                              'PromptPhi2eeControlPrescale',
                               'B2eePrescale',
                               'B2heMuPrescale',
                               'B2pMuPrescale',
@@ -996,6 +1029,7 @@ class LFVLinesConf(LineBuilder) :
                               'RelatedInfoTools_JPsi2eeControl',
                               'RelatedInfoTools_Phi2eMu',
                               'RelatedInfoTools_Phi2MuMuControl',
+                              'RelatedInfoTools_Phi2eeControl',
                               'RelatedInfoTools_B2ee',
                               'RelatedInfoTools_B2hemu',
                               'RelatedInfoTools_Tau2PhiMu',
@@ -1006,12 +1040,10 @@ class LFVLinesConf(LineBuilder) :
                               'config_B2eMu',
                               'config_JPsi2eMu',
                               'config_PromptJPsi2eMu',
-                              'config_PromptPhi2eMu',
                               'config_Tau2MuEtaPrime',
                               'config_Upsilon2eMu',
                               'config_Upsilon2ee'
                               )
-        
         
     def __init__(self,
                  name = 'LFV',
@@ -1030,8 +1062,10 @@ class LFVLinesConf(LineBuilder) :
             PromptJPsieeControl_name=name+'PromptJPsi2eeControl'
             Phiemu_name=name+'Phi2eMu'
             PhimumuControl_name=name+'Phi2MuMuControl'
+            PhieeControl_name=name+'Phi2eeControl'
             PromptPhiemu_name=name+'PromptPhi2eMu'
             PromptPhimumuControl_name=name+'PromptPhi2MuMuControl'
+            PromptPhieeControl_name=name+'PromptPhi2eeControl'
             ee_name=name+'B2ee'
             hemu_name=name+'B2heMu'
             pmu_name=name+'B2hMu'
@@ -1058,9 +1092,11 @@ class LFVLinesConf(LineBuilder) :
             # detached Phi line can use jpsi config only mass cut in prompt line differs
             self.selPhi2eMu                 = makePhi2eMu(Phiemu_name, config['config_JPsi2eMu'])
             self.selPhi2MuMuControl         = makePhi2MuMuControl(PhimumuControl_name, config['config_JPsi2eMu'])
+            self.selPhi2eeControl           = makePhi2eeControl(PhieeControl_name, config['config_JPsi2eMu'])
             # promtp phi LFV lines
-            self.selPromptPhi2eMu           = makePromptPhi2eMu(PromptPhiemu_name, config['config_PromptPhi2eMu'])
-            self.selPromptPhi2MuMuControl   = makePromptPhi2MuMuControl(PromptPhimumuControl_name, config['config_PromptPhi2eMu'])
+            self.selPromptPhi2eMu           = makePromptPhi2eMu(PromptPhiemu_name, config['config_PromptJPsi2eMu'])
+            self.selPromptPhi2MuMuControl   = makePromptPhi2MuMuControl(PromptPhimumuControl_name, config['config_PromptJPsi2eMu'])
+            self.selPromptPhi2eeControl   = makePromptPhi2eeControl(PromptPhieeControl_name, config['config_PromptJPsi2eMu'])
             # ===============================================
             self.selB2ee            = makeB2ee(ee_name)
             self.selB2heMu          = makeB2heMu(hemu_name)
@@ -1121,7 +1157,7 @@ class LFVLinesConf(LineBuilder) :
                                            prescale = config['JPsi2MuMuControlPrescale'],
                                            postscale = config['Postscale'],
                                            RelatedInfoTools = config['RelatedInfoTools_JPsi2MuMuControl'],
-                                           MDSTFlag = True,
+                                           #MDSTFlag = True,
                                            RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
                                            algos = [ self.selJPsi2MuMuControl ]
                                            )
@@ -1129,7 +1165,7 @@ class LFVLinesConf(LineBuilder) :
                                            prescale = config['JPsi2eeControlPrescale'],
                                            postscale = config['Postscale'],
                                            RelatedInfoTools = config['RelatedInfoTools_JPsi2eeControl'],
-                                           MDSTFlag = True,
+                                           #MDSTFlag = True,
                                            RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
                                            algos = [ self.selJPsi2eeControl ]
                                            )
@@ -1137,19 +1173,19 @@ class LFVLinesConf(LineBuilder) :
                                                   prescale = config['PromptJPsi2MuMuControlPrescale'],
                                                   postscale = config['Postscale'],
                                                   RelatedInfoTools = config['RelatedInfoTools_JPsi2MuMuControl'],
-                                                  MDSTFlag = True,
+                                                  #MDSTFlag = True,
                                                   RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
                                                   algos = [ self.selPromptJPsi2MuMuControl ],
-                                                  L0DU="(L0_DATA('Spd(Mult)') < {})".format(config['config_PromptJPsi2eMu']['max_SPD_Control'])
+                                                  L0DU="(L0_DATA('Spd(Mult)') < {})".format(config['config_PromptJPsi2eMu']['max_SPD'])
                                                   )
             self.promptjpsi2eeControlLine = StrippingLine(PromptJPsieeControl_name+'Line',
                                                   prescale = config['PromptJPsi2eeControlPrescale'],
                                                   postscale = config['Postscale'],
                                                   RelatedInfoTools = config['RelatedInfoTools_JPsi2eeControl'],
-                                                  MDSTFlag = True,
+                                                  #MDSTFlag = True,
                                                   RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
                                                   algos = [ self.selPromptJPsi2eeControl ],
-                                                  L0DU="(L0_DATA('Spd(Mult)') < {})".format(config['config_PromptJPsi2eMu']['max_SPD_Control'])
+                                                  L0DU="(L0_DATA('Spd(Mult)') < {})".format(config['config_PromptJPsi2eMu']['max_SPD'])
                                                   )            
             #================ Phi LFV lines
             self.phi2eMuLine = StrippingLine(Phiemu_name+'Line',
@@ -1168,7 +1204,7 @@ class LFVLinesConf(LineBuilder) :
                                            MDSTFlag = True,
                                            RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
                                            algos = [ self.selPromptPhi2eMu ],
-                                           L0DU = "(L0_DATA('Spd(Mult)') < {})".format(config['config_PromptPhi2eMu']['max_SPD'])
+                                           L0DU = "(L0_DATA('Spd(Mult)') < {})".format(config['config_PromptJPsi2eMu']['max_SPD'])
                                            )                      
             #================ Phi LFV control lines
             self.phi2MuMuControlLine = StrippingLine(PhimumuControl_name+'Line',
@@ -1180,6 +1216,15 @@ class LFVLinesConf(LineBuilder) :
                                            algos = [ self.selPhi2MuMuControl ]
                                            )
 
+            self.phi2eeControlLine  = StrippingLine(PhieeControl_name+'Line',
+                                           prescale = config['Phi2eeControlPrescale'],
+                                           postscale = config['Postscale'],
+                                           RelatedInfoTools = config['RelatedInfoTools_Phi2eeControl'],
+                                           MDSTFlag = True,
+                                           RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
+                                           algos = [ self.selPhi2eeControl ]
+                                           )
+
             self.promptphi2MuMuControlLine = StrippingLine(PromptPhimumuControl_name+'Line',
                                            prescale = config['PromptPhi2MuMuControlPrescale'],
                                            postscale = config['Postscale'],
@@ -1187,8 +1232,18 @@ class LFVLinesConf(LineBuilder) :
                                            MDSTFlag = True,
                                            RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
                                            algos = [ self.selPromptPhi2MuMuControl ],
-                                           L0DU = "(L0_DATA('Spd(Mult)') < {})".format(config['config_PromptPhi2eMu']['max_SPD_Control'])
-                                           )   
+                                           L0DU = "(L0_DATA('Spd(Mult)') < {})".format(config['config_PromptJPsi2eMu']['max_SPD'])
+                                           )  
+
+            self.promptphi2eeControlLine = StrippingLine(PromptPhieeControl_name+'Line',
+                                           prescale = config['PromptPhi2eeControlPrescale'],
+                                           postscale = config['Postscale'],
+                                           RelatedInfoTools = config['RelatedInfoTools_Phi2eeControl'],
+                                           MDSTFlag = True,
+                                           RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
+                                           algos = [ self.selPromptPhi2eeControl ],
+                                           L0DU = "(L0_DATA('Spd(Mult)') < {})".format(config['config_PromptJPsi2eMu']['max_SPD'])
+                                           )    
             '''
             self.b2TauMuLine = StrippingLine(taumu_name+'Line',
                                             prescale = config['B2TauMuPrescale'],
@@ -1285,7 +1340,9 @@ class LFVLinesConf(LineBuilder) :
             self.registerLine(self.promptphi2eMuLine)
             # Phi LFV control
             self.registerLine(self.phi2MuMuControlLine)
+            self.registerLine(self.phi2eeControlLine)
             self.registerLine(self.promptphi2MuMuControlLine)
+            self.registerLine(self.promptphi2eeControlLine)
             ####
             self.registerLine(self.b2eeLine)
             self.registerLine(self.b2heMuLine)
@@ -1476,19 +1533,21 @@ def makeJPsi2eMu(name, myconfig):
         DecayDescriptors = ["[J/psi(1S) -> e+ mu-]cc","[J/psi(1S) -> e+ mu+]cc"],
         DaughtersCuts = {
           "mu+" : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV})"\
-                  " & (TRCHI2DOF < {max_TRCHI2DV}) & (PROBNNmu > {min_mu_ProbNN}) &"\
-                  "(TRGHOSTPROB< {max_TRGHOSTPROB})".format(**myconfig) ,
+                  " & (TRCHI2DOF < {max_TRCHI2DV}) & (PROBNNmu > {min_ProbNN}) &"\
+                  "(TRGHOSTPROB< {max_TRGHOSTPROB}) & "\
+                  "(PT > {min_Pt})".format(**myconfig) ,
           "e+"  : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV}) & (TRGHOSTPROB< {max_TRGHOSTPROB}) &"\
-                  "(TRCHI2DOF < {max_TRCHI2DV}) & (PROBNNe > {min_e_ProbNN}) ".format(**myconfig),
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & (PROBNNe > {min_ProbNN}) & "\
+                  "(PT > {min_Pt})".format(**myconfig),
         },
 
-        CombinationCut = "(ADAMASS('J/psi(1S)') < {max_ADAMASS})"\
-                            "& (AMAXDOCA('') < {max_AMAXDOCA})".format(**myconfig),
+        CombinationCut = "in_range( {min_JpsiMass}, AM, {max_JpsiMass} )"\
+                          "& (AMAXDOCA('') < {max_AMAXDOCA})".format(**myconfig),
 
-        MotherCut = "(VFASPF(VCHI2/VDOF)<{max_VtxChi2DoF}) "\
-                              "& (ADMASS('J/psi(1S)') < {max_ADAMASS} )"\
-                              "& (BPVDIRA > {min_BPVDIRA}) "\
-                              "& (BPVVDCHI2 > {min_BPVVDCHI2})".format(**myconfig)
+        MotherCut = "(VFASPF(VCHI2/VDOF) < {max_VtxChi2DoF}) &"\
+                     "in_range( {min_JpsiMass}, MM, {max_JpsiMass} )"\
+                     "& (BPVDIRA > {min_BPVDIRA}) "\
+                     "& (BPVVDCHI2 > {min_BPVVDCHI2})".format(**myconfig)
     )
     
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
@@ -1516,18 +1575,20 @@ def makeJPsi2MuMuControl(name, myconfig):
         DaughtersCuts = {
           "mu+" : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV}) &"\
                   "(TRCHI2DOF < {max_TRCHI2DV}) & "\
-                  "(TRGHOSTPROB< {max_TRGHOSTPROB}) & (PROBNNmu > {min_mu_ProbNN})".format(**myconfig) ,
+                  "(TRGHOSTPROB< {max_TRGHOSTPROB}) & (PROBNNmu > {min_ProbNN}) & "\
+                  "(PT > {min_Pt})".format(**myconfig) ,
           "mu-"  : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV}) & (TRGHOSTPROB< {max_TRGHOSTPROB}) &"\
-                    "(TRCHI2DOF < {max_TRCHI2DV}) & (PROBNNmu > {min_mu_ProbNN})".format(**myconfig) # remove PIDe>-2 for muon!
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & (PROBNNmu > {min_ProbNN}) & "\
+                  "(PT > {min_Pt})".format(**myconfig) # remove PIDe>-2 for muon!
         },
 
         CombinationCut = "(ADAMASS('J/psi(1S)') < {max_ADAMASS})"\
                             "& (AMAXDOCA('') < {max_AMAXDOCA})".format(**myconfig),
 
         MotherCut = "(VFASPF(VCHI2/VDOF)<{max_VtxChi2DoF}) "\
-                              "& (ADMASS('J/psi(1S)') < {max_ADAMASS} )"\
-                              "& (BPVDIRA > {min_BPVDIRA}) "\
-                              "& (BPVVDCHI2 > {min_BPVVDCHI2})".format(**myconfig)
+                    " & in_range( {min_JpsiMass}, MM, {max_JpsiMass} )"\
+                    " & (BPVDIRA > {min_BPVDIRA}) "\
+                    " & (BPVVDCHI2 > {min_BPVVDCHI2})".format(**myconfig)
     )
     
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
@@ -1553,18 +1614,20 @@ def makeJPsi2eeControl(name, myconfig):
         DecayDescriptors = ["J/psi(1S) -> e+ e-","[J/psi(1S) -> e+ e+]cc"],
         DaughtersCuts = {
           "e+" : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV}) & (TRCHI2DOF < {max_TRCHI2DV}) & "\
-                 "(TRGHOSTPROB< {max_TRGHOSTPROB}) & (PROBNNe > {min_e_ProbNN}) ".format(**myconfig) ,
+                 "(TRGHOSTPROB< {max_TRGHOSTPROB}) & (PROBNNe > {min_ProbNN}) & "\
+                  "(PT > {min_Pt})".format(**myconfig) ,
           "e-" : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV}) & (TRCHI2DOF < {max_TRCHI2DV}) &"\
-                 "(TRGHOSTPROB< {max_TRGHOSTPROB}) & (PROBNNe > {min_e_ProbNN}) ".format(**myconfig) # remove PIDe>-2 for muon! IS implicitly made in stdLooseElectrons
+                 "(TRGHOSTPROB< {max_TRGHOSTPROB}) & (PROBNNe > {min_ProbNN}) & "\
+                  "(PT > {min_Pt})".format(**myconfig) # remove PIDe>-2 for muon! IS implicitly made in stdLooseElectrons
         },
 
-        CombinationCut = "(ADAMASS('J/psi(1S)') < {max_ADAMASS})"\
-                            "& (AMAXDOCA('') < {max_AMAXDOCA})".format(**myconfig),
+        CombinationCut = "in_range( {min_JpsiMass}, AM, {max_JpsiMass} )"\
+                         "& (AMAXDOCA('') < {max_AMAXDOCA})".format(**myconfig),
 
-        MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
-                              "& (ADMASS('J/psi(1S)') < {max_ADAMASS} )"\
-                              "& (BPVDIRA > {min_BPVDIRA}) "\
-                              "& (BPVVDCHI2 > {min_BPVVDCHI2})".format(**myconfig)
+        MotherCut = "(VFASPF(VCHI2/VDOF) < {max_VtxChi2DoF}) "\
+                    "& in_range( {min_JpsiMass}, MM, {max_JpsiMass} )"\
+                    "& (BPVDIRA > {min_BPVDIRA}) "\
+                    "& (BPVVDCHI2 > {min_BPVVDCHI2})".format(**myconfig)
     )
     
     _stdLooseElectrons = DataOnDemand(Location = "Phys/StdLooseElectrons/Particles")
@@ -1588,19 +1651,20 @@ def makePromptJPsi2eMu(name, myconfig):
         DecayDescriptors = ["[J/psi(1S) -> e+ mu-]cc","[J/psi(1S) -> e+ mu+]cc"],
         DaughtersCuts = {
           "mu+" : "(MIPCHI2DV(PRIMARY) < {max_MIPCHI2DV}) &"\
-                  "(TRCHI2DOF < {max_TRCHI2DV}) & (TRGHOSTPROB< {max_mu_TRGHOSTPROB})"\
-                  " & (PROBNNmu > {min_mu_ProbNN})".format(**myconfig) ,
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & (TRGHOSTPROB< {max_TRGHOSTPROB})"\
+                  " & (PROBNNmu > {min_ProbNN}) & "\
+                  "(PT > {min_Pt})".format(**myconfig) ,
           "e+"  : "(MIPCHI2DV(PRIMARY) < {max_MIPCHI2DV}) & "\
-                  "(TRCHI2DOF < {max_TRCHI2DV}) & (TRGHOSTPROB< {max_e_TRGHOSTPROB})"\
-                  " & ( PROBNNe > {min_e_ProbNN})".format(**myconfig),
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & (TRGHOSTPROB< {max_TRGHOSTPROB})"\
+                  " & ( PROBNNe > {min_ProbNN}) & "\
+                  "(PT > {min_Pt})".format(**myconfig),
         },
 
         CombinationCut = "in_range( {min_JpsiMass}, AM, {max_JpsiMass} )"\
                          "& (AMAXDOCA('') < {max_AMAXDOCA})".format(**myconfig),
 
         MotherCut = "(VFASPF(VCHI2/VDOF) < {max_VtxChi2DoF}) "\
-                    "& (MM < {max_JpsiMass})"\
-                    "& (MM > {min_JpsiMass} )"\
+                    "& in_range( {min_JpsiMass}, MM, {max_JpsiMass} )"\
                     "& (BPVVDCHI2 < {max_BPVVDCHI2})"\
                     "& (BPVIPCHI2() < {max_BPVIPCHI2})".format(**myconfig),
     )
@@ -1628,19 +1692,20 @@ def makePromptJPsi2MuMuControl(name, myconfig):
         DecayDescriptors = ["J/psi(1S) -> mu+ mu-","[J/psi(1S) -> mu+ mu+]cc"],
         DaughtersCuts = {
           "mu+" : "(MIPCHI2DV(PRIMARY) < {max_MIPCHI2DV}) &"\
-                  "(TRCHI2DOF < {max_TRCHI2DV}) & (TRGHOSTPROB< {max_TRGHOSTPROB_Control})"\
-                  " & (PROBNNmu > {min_mu_ProbNN_Control})".format(**myconfig) ,
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & (TRGHOSTPROB< {max_TRGHOSTPROB})"\
+                  " & (PROBNNmu > {min_ProbNN_Control}) & "\
+                  "(PT > {min_Pt})".format(**myconfig) ,
           "mu-" : "(MIPCHI2DV(PRIMARY) < {max_MIPCHI2DV}) &"\
-                  "(TRCHI2DOF < {max_TRCHI2DV}) & (TRGHOSTPROB< {max_TRGHOSTPROB_Control})"\
-                  " & ( PROBNNmu > {min_mu_ProbNN_Control})".format(**myconfig),
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & (TRGHOSTPROB< {max_TRGHOSTPROB})"\
+                  " & ( PROBNNmu > {min_ProbNN_Control}) & "\
+                  "(PT > {min_Pt})".format(**myconfig),
         },
 
         CombinationCut = "in_range( {min_JpsiMass}, AM, {max_JpsiMass} )"\
                          "& (AMAXDOCA('') < {max_AMAXDOCA})".format(**myconfig),
 
         MotherCut = "(VFASPF(VCHI2/VDOF) < {max_VtxChi2DoF}) "\
-                    "& (MM < {max_JpsiMass})"\
-                    "& (MM > {min_JpsiMass} )"\
+                    "& in_range( {min_JpsiMass}, MM, {max_JpsiMass} )"\
                     "& (BPVVDCHI2 < {max_BPVVDCHI2})"\
                     "& (BPVIPCHI2() < {max_BPVIPCHI2})".format(**myconfig),
     )
@@ -1667,19 +1732,20 @@ def makePromptJPsi2eeControl(name, myconfig):
         DecayDescriptors = ["J/psi(1S) -> e+ e-","[J/psi(1S) -> e+ e+]cc"],
         DaughtersCuts = {
           "e+" : "(MIPCHI2DV(PRIMARY) < {max_MIPCHI2DV}) &"\
-                  "(TRCHI2DOF < {max_TRCHI2DV}) & (TRGHOSTPROB< {max_TRGHOSTPROB_Control})"\
-                  " & (PROBNNe > {min_e_ProbNN_Control})".format(**myconfig) ,
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & (TRGHOSTPROB< {max_TRGHOSTPROB})"\
+                  " & (PROBNNe > {min_ProbNN_Control}) & "\
+                  "(PT > {min_Pt})".format(**myconfig) ,
           "e-" : "(MIPCHI2DV(PRIMARY) < {max_MIPCHI2DV}) &"\
-                  "(TRCHI2DOF < {max_TRCHI2DV}) & (TRGHOSTPROB< {max_TRGHOSTPROB_Control})"\
-                  " & ( PROBNNe > {min_e_ProbNN_Control})".format(**myconfig),
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & (TRGHOSTPROB< {max_TRGHOSTPROB})"\
+                  " & ( PROBNNe > {min_ProbNN_Control}) & "\
+                  "(PT > {min_Pt})".format(**myconfig),
         },
 
         CombinationCut = "in_range( {min_JpsiMass}, AM, {max_JpsiMass} )"\
                          "& (AMAXDOCA('') < {max_AMAXDOCA})".format(**myconfig),
 
         MotherCut = "(VFASPF(VCHI2/VDOF) < {max_VtxChi2DoF}) "\
-                    "& (MM < {max_JpsiMass})"\
-                    "& (MM > {min_JpsiMass} )"\
+                    "& in_range( {min_JpsiMass}, MM, {max_JpsiMass} )"\
                     "& (BPVVDCHI2 < {max_BPVVDCHI2})"\
                     "& (BPVIPCHI2() < {max_BPVIPCHI2})".format(**myconfig),
     )
@@ -1707,11 +1773,13 @@ def makePhi2eMu(name, myconfig):
           "mu+" : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV}) & "\
                   "(TRCHI2DOF < {max_TRCHI2DV}) &"\
                   "(TRGHOSTPROB< {max_TRGHOSTPROB}) & "\
-                  "(PROBNNmu > {min_mu_ProbNN_phi})".format(**myconfig) ,
+                  "(PROBNNmu > {min_ProbNN_phi}) & "\
+                  "(PT > {min_Pt})".format(**myconfig) ,
           "e+"  : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV}) & "\
                   "(TRCHI2DOF < {max_TRCHI2DV}) & "\
                   "(TRGHOSTPROB< {max_TRGHOSTPROB}) & "\
-                  "(PROBNNe > {min_e_ProbNN_phi})".format(**myconfig),
+                  "(PROBNNe > {min_ProbNN_phi}) & "\
+                  "(PT > {min_Pt})".format(**myconfig),
         },
 
         CombinationCut = "(ADAMASS('phi(1020)') < {max_ADAMASS})"\
@@ -1745,14 +1813,16 @@ def makePhi2MuMuControl(name, myconfig):
     
         DecayDescriptors = ["phi(1020) -> mu+ mu-","[phi(1020) -> mu+ mu+]cc"],
         DaughtersCuts = {
-          "mu+" : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV}) & "\
+          "mu+" : "(MIPCHI2DV(PRIMARY) > {min_MIPCHI2DV}) & "\
                   "(TRCHI2DOF < {max_TRCHI2DV}) &"\
-                  "(TRGHOSTPROB< {max_TRGHOSTPROB}) &"\
-                  "(PROBNNmu > {min_mu_ProbNN_phi})".format(**myconfig) ,
+                  "(TRGHOSTPROB < {max_TRGHOSTPROB}) &"\
+                  "(PROBNNmu > {min_ProbNN_phi}) & "\
+                  "(PT > {min_Pt})".format(**myconfig) ,
           "mu-" : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV}) & "\
                   "(TRCHI2DOF < {max_TRCHI2DV}) &"\
-                  "(TRGHOSTPROB< {max_TRGHOSTPROB}) &"\
-                  "(PROBNNmu > {min_mu_ProbNN_phi})".format(**myconfig),
+                  "(TRGHOSTPROB < {max_TRGHOSTPROB}) &"\
+                  "(PROBNNmu > {min_ProbNN_phi}) & "\
+                  "(PT > {min_Pt})".format(**myconfig),
         },
 
         CombinationCut = "in_range( {min_PhiMass}, AM, {max_PhiMass} )"\
@@ -1771,6 +1841,48 @@ def makePhi2MuMuControl(name, myconfig):
                       RequiredSelections = [ _stdLooseMuons])
 
 
+def makePhi2eeControl(name, myconfig):
+    """
+    Please contact Maximilian Schlupp or Johannes Albrecht if experience 
+    issues with this line
+    
+    Arguments:
+    name        : name of the Selection.
+    """
+    
+    #from Configurables import OfflineVertexFitter
+    Phi2eeControl = CombineParticles(
+    
+        DecayDescriptors = ["phi(1020) -> e+ e-","[phi(1020) -> e+ e+]cc"],
+        DaughtersCuts = {
+          "e+" : "(MIPCHI2DV(PRIMARY) > {min_MIPCHI2DV}) & "\
+                  "(TRCHI2DOF < {max_TRCHI2DV}) &"\
+                  "(TRGHOSTPROB < {max_TRGHOSTPROB}) &"\
+                  "(PROBNNe > {min_ProbNN_phi}) & "\
+                  "(PT > {min_Pt})".format(**myconfig) ,
+          "e-" : "(MIPCHI2DV(PRIMARY)> {min_MIPCHI2DV}) & "\
+                  "(TRCHI2DOF < {max_TRCHI2DV}) &"\
+                  "(TRGHOSTPROB < {max_TRGHOSTPROB}) &"\
+                  "(PROBNNe > {min_ProbNN_phi}) & "\
+                  "(PT > {min_Pt})".format(**myconfig),
+        },
+
+        CombinationCut = "in_range( {min_PhiMass}, AM, {max_PhiMass} )"\
+                            "& (AMAXDOCA('') < {max_AMAXDOCA})".format(**myconfig),
+
+        MotherCut = "(VFASPF(VCHI2/VDOF) < {max_VtxChi2DoF} ) "\
+                              "& (MM > {min_PhiMass}) & (MM < {max_PhiMass})"\
+                              "& (BPVDIRA > {min_BPVDIRA}) "\
+                              "& (BPVVDCHI2 > {min_BPVVDCHI2})".format(**myconfig)
+    )
+    
+    _stdLooseElectrons = DataOnDemand(Location = "Phys/StdLooseElectrons/Particles")
+
+    return Selection (name,
+                      Algorithm = Phi2eeControl,
+                      RequiredSelections = [ _stdLooseElectrons])
+
+
 def makePromptPhi2eMu(name, myconfig):
     """
     Please contact Maximilian Schlupp or Johannes Albrecht if you think of prescaling this line!
@@ -1786,12 +1898,14 @@ def makePromptPhi2eMu(name, myconfig):
         DaughtersCuts = {
           "mu+" : "(MIPCHI2DV(PRIMARY) < {max_MIPCHI2DV}) &"\
                   "(TRCHI2DOF < {max_TRCHI2DV}) & "\
-                  "(TRGHOSTPROB< {max_mu_TRGHOSTPROB}) &"\
-                  "(PROBNNmu > {min_mu_ProbNN})".format(**myconfig) ,
+                  "(TRGHOSTPROB < {max_TRGHOSTPROB}) &"\
+                  "(PROBNNmu > {min_ProbNN}) & "\
+                  "(PT > {min_Pt})".format(**myconfig) ,
           "e+"  : "(MIPCHI2DV(PRIMARY) < {max_MIPCHI2DV}) &"\
                   "(TRCHI2DOF < {max_TRCHI2DV}) & "\
-                  "(TRGHOSTPROB< {max_e_TRGHOSTPROB}) & "\
-                  "( PROBNNe > {min_e_ProbNN})".format(**myconfig),
+                  "(TRGHOSTPROB < {max_TRGHOSTPROB}) & "\
+                  "( PROBNNe > {min_ProbNN}) & "\
+                  "(PT > {min_Pt})".format(**myconfig),
         },
 
         CombinationCut = "in_range( {min_PhiMass}, AM, {max_PhiMass} )"\
@@ -1828,12 +1942,14 @@ def makePromptPhi2MuMuControl(name, myconfig):
         DaughtersCuts = {
           "mu+" : "(MIPCHI2DV(PRIMARY) < {max_MIPCHI2DV}) &"\
                   "(TRCHI2DOF < {max_TRCHI2DV}) & "\
-                  "(TRGHOSTPROB< {max_TRGHOSTPROB_Control}) & "\
-                  "(PROBNNmu > {min_mu_ProbNN_Control})".format(**myconfig) ,
+                  "(TRGHOSTPROB < {max_TRGHOSTPROB}) & "\
+                  "(PROBNNmu > {min_ProbNN_Control}) & "\
+                  "(PT > {min_Pt})".format(**myconfig) ,
           "mu-" : "(MIPCHI2DV(PRIMARY) < {max_MIPCHI2DV}) &"\
                   "(TRCHI2DOF < {max_TRCHI2DV}) & "\
-                  "(TRGHOSTPROB< {max_TRGHOSTPROB_Control}) & "\
-                  "(PROBNNmu > {min_mu_ProbNN_Control})".format(**myconfig),
+                  "(TRGHOSTPROB < {max_TRGHOSTPROB}) & "\
+                  "(PROBNNmu > {min_ProbNN_Control}) & "\
+                  "(PT > {min_Pt})".format(**myconfig),
         },
 
         CombinationCut = "in_range( {min_PhiMass}, AM, {max_PhiMass} )"\
@@ -1851,6 +1967,48 @@ def makePromptPhi2MuMuControl(name, myconfig):
     return Selection (name,
                       Algorithm = PromptPhi2MuMuControl,
                       RequiredSelections = [ _stdAllLooseMuons])
+
+def makePromptPhi2eeControl(name, myconfig):
+    """
+    Please contact Maximilian Schlupp or Johannes Albrecht if you see 
+    issues with this line.
+    
+    Arguments:
+    name        : name of the Selection.
+    """
+
+    #from Configurables import OfflineVertexFitter
+    PromptPhi2eeControl = CombineParticles(
+    
+        DecayDescriptors = ["phi(1020) -> e+ e-","[phi(1020) -> e+ e+]cc"],
+        DaughtersCuts = {
+          "e+" : "(MIPCHI2DV(PRIMARY) < {max_MIPCHI2DV}) &"\
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & "\
+                  "(TRGHOSTPROB < {max_TRGHOSTPROB}) & "\
+                  "(PROBNNe > {min_ProbNN_Control}) & "\
+                  "(PT > {min_Pt})".format(**myconfig) ,
+          "e-" : "(MIPCHI2DV(PRIMARY) < {max_MIPCHI2DV}) &"\
+                  "(TRCHI2DOF < {max_TRCHI2DV}) & "\
+                  "(TRGHOSTPROB < {max_TRGHOSTPROB}) & "\
+                  "(PROBNNe > {min_ProbNN_Control}) & "\
+                  "(PT > {min_Pt})".format(**myconfig),
+        },
+
+        CombinationCut = "in_range( {min_PhiMass}, AM, {max_PhiMass} )"\
+                         "& (AMAXDOCA('') < {max_AMAXDOCA})".format(**myconfig),
+
+        MotherCut = "(VFASPF(VCHI2/VDOF) < {max_VtxChi2DoF}) "\
+                    "& (MM < {max_PhiMass})"\
+                    "& (MM > {min_PhiMass} )"\
+                    "& (BPVVDCHI2 < {max_BPVVDCHI2})"\
+                    "& (BPVIPCHI2() < {max_BPVIPCHI2})".format(**myconfig),
+    )
+    
+    _stdAllLooseElectrons = DataOnDemand(Location = "Phys/StdAllLooseElectrons/Particles")
+
+    return Selection (name,
+                      Algorithm = PromptPhi2eeControl,
+                      RequiredSelections = [ _stdAllLooseElectrons])
 
 
 def makeB2ee(name):
