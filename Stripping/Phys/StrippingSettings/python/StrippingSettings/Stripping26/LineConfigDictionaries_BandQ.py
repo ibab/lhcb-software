@@ -656,7 +656,7 @@ CC2DD =  {
                    },
     'STREAMS' : [
     'CharmCompleteEvent' 
-    ],
+    ]
     }
 
 CC2DDcontrol =  {
@@ -736,7 +736,7 @@ CC2DDcontrol =  {
 	   },
 	'STREAMS' : [
 		'Charm'
-	   ],
+	   ]
 }
 
 
