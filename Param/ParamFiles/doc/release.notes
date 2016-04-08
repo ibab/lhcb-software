@@ -4,6 +4,12 @@
 ! Purpose     : Distribution of parametrization data files
 !-----------------------------------------------------------------------------
 
+! 2016-04-08 - Patrick Spradlin
+  Added updated versions of the lookup tables for inclusive D* and inclusive
+  Sigc triggers in Hlt2.
+    + data/Hlt2Sigc2PiLc2HHX_BDTParams_v2r0.txt
+    + data/Hlt2Dst2PiD02HHX_BDTParams_v2r0.txt
+
 !========================= ParamFiles v8r18 2015-09-10 =========================
 
 ! 2015-09-10 - Julien Cogan
