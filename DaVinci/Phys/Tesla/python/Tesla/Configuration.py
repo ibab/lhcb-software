@@ -176,7 +176,7 @@ class Tesla(LHCbConfigurableUser):
         # Trigger masks changed in 2016, see LHCBPS-1486
         physFilterRequireMask = []
         lumiFilterRequireMask = []
-        if self.getProp( "DataType" ) == "2015":
+        if self.getProp( "DataType" ) in ["2012","2015"]: # 2012 needed for nightlies tests.
             physFilterRequireMask = [ 0x0, 0x4, 0x0 ]
             lumiFilterRequireMask = [ 0x0, 0x2, 0x0 ]
         else:

@@ -17,7 +17,7 @@
   <argument name="program"><text>python</text></argument>
   <argument name="timeout"><integer>3600</integer></argument>
   <argument name="args"><set>
-    <text>../options/DV_2015_RichCheck.py</text>
+    <text>../options/DV_2015_MuonCheck.py</text>
   </set></argument>
   <argument name="validator"><text>
 block = """
