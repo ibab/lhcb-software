@@ -64,7 +64,7 @@ default_config = {
         'Prescale_B0s2DsTauNu'           : 1.0,
         'Prescale_Bc2JpsiTauNu'          : 1.0,
         'Prescale_Lb2LcTauNu'            : 1.0,       
-        'Prescale_Lb2pTauNu'             : 1.0,
+        'Prescale_Lb2pTauNu'             : 0.2,
         'Prescale_B0d2DdoubleStarTauNu'  : 1.0,
         'Prescale_NonPhys'               : 0.1,
         'Postscale'   : 1.0 ,

@@ -9,12 +9,6 @@ from Configurables import DaVinci
 from StrippingConf.Configuration import StrippingConf
 
 #
-#Raw event juggler to split Other/RawEvent into Velo/RawEvent and Tracker/RawEvent
-#
-from Configurables import RawEventJuggler
-juggler = RawEventJuggler( DataOnDemand=True, Input=0.3, Output=4.2 )
-
-#
 #Fix for TrackEff lines
 #
 from Configurables import DecodeRawEvent
@@ -147,6 +141,28 @@ MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 DaVinci().DDDBtag   = "dddb-20150724"
 DaVinci().CondDBtag = "cond-20150828"
 
+#
+# Raw event juggler to split DAQ/RawEvent into FULL.DST format
+#
+from Configurables import GaudiSequencer, RawEventJuggler
+jseq=GaudiSequencer("RawEventSplitSeq")
+juggler=RawEventJuggler("rdstJuggler")
+juggler.Sequencer=jseq
+juggler.Input=0.3  # 2015 Online (Moore) format 
+juggler.Output=4.2 # Reco15 format
+
+
+# filter out events triggered exclusively by CEP lines
+from Configurables import LoKi__HDRFilter   as HDRFilter
+from DAQSys.Decoders import DecoderDB
+Hlt2DecReportsDecoder=DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].setup()
+HLTFilter2 = HDRFilter("LoKiHLT2Filter", Code =  "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Lumi)(?!Transparent)(?!PassThrough)(?!LowMult).*Decision')"
+                              , Location = Hlt2DecReportsDecoder.OutputHltDecReportsLocation)
+otherseq=GaudiSequencer("filters")
+otherseq.Members=[jseq,HLTFilter2]
+
+DaVinci().EventPreFilters = [jseq,HLTFilter2]
+
+
 # input file
-#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_Run125113.py")
 importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco15a_Run164668.py")

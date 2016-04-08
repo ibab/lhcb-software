@@ -21,11 +21,11 @@ default_config = {
         'BUILDERTYPE' : 'B2DMuNuXAllLinesConf',
         'CONFIG'      : {
             "prescaleFakes": 0.02
-            ,"prescales":{'StrippingB2DMuNuX_D0_Electron':0.1}
+            ,"prescales":{'StrippingB2DMuNuX_D0_Electron':1.}
             ,"GEC_nLongTrk" : 250 
             ,"TTSpecs"      : {'Hlt1.*Track.*Decision%TOS':0,'Hlt2Topo.*Decision%TOS':0,'Hlt2SingleMuon.*Decision%TOS':0,"Hlt2Global%TIS":0}
             ,"HLT1"   : "HLT_PASS_RE('Hlt1.*Decision')"
-            ,"HLT2"   : "HLT_PASS_RE('Hlt2(SingleMuon|Topo).*Decision')"
+            ,"HLT2"   : "HLT_PASS_RE('Hlt2(SingleMuon|Topo).*Decision|Hlt2XcMuXForTauB2XcMuDecision')"
             ,"Monitor"      : False
             ,"UseNoPIDsInputs":False
             ,"TRGHOSTPROB"   : 0.35 
@@ -43,8 +43,8 @@ default_config = {
             ,"KaonPIDK"      : -2.0
             ,"KaonP"         : 2.0*GeV
             ,"PionPIDK"      : 20.0 
-            ,"ElectronPIDe"  : 0.0  
-            ,"ElectronPT"    : 1200*MeV
+            ,"ElectronPIDe"  : 3.0  
+            ,"ElectronPT"    : 300*MeV
             ,"D_BPVDIRA"     : 0.99 
             ,"D_FDCHI2"      : 25.0 
             ,"D_AMassWin"    : 90.*MeV ## this should be 10 MeV wider than the widest D_MassWin

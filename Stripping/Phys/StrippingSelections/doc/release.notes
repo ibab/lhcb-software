@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-08 - Greg Ciezarek
+ - Updated SL / StrippingB2XTauNu and StrippingB2DMuNuX 
+
 ! 2016-04-08 - Simone Stracka
  - Updated StrippingCharm/StrippingD2PiPi0 
 
