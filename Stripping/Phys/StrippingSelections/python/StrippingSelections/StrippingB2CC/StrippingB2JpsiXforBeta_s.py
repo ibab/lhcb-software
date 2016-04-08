@@ -9,7 +9,7 @@ Exported symbols (use python help!):
    B2JpsiXLines
 '''
 
-__author__ = ['Greig Cowan', 'Juan Palacios', 'Francesca Dordei', 'Carlos Vazquez Sierra']
+__author__ = ['Greig Cowan', 'Juan Palacios', 'Francesca Dordei', 'Carlos Vazquez Sierra', 'Xuesong Liu']
 __date__ = '07/04/2016'
 __version__ = '$Revision: 3.0$'
 
