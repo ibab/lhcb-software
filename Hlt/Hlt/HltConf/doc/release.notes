@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration
 ! -----------------------------------------------------------------------------
 
+! 2016-04-08 - Rosen Matev
+ - Disable consistency check with DecoderDB when version is too old 
+
 ! 2016-04-07 - Roel Aaij
  - Fix two leftover bugs spotted in the nightlies.
  - Add routing bit 57 for Hlt1Tell1Error to allow them to be sent to the

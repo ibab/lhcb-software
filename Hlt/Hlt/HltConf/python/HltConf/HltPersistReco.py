@@ -192,15 +192,20 @@ class HltPersistRecoConf(LHCbConfigurableUser):
 
         # Check that the output locations are consistent with the decoder
         from DAQSys.Decoders import DecoderDB
-        decoder = DecoderDB["HltPackedDataDecoder/Hlt2PackedDataDecoder"]
-        decoder_outputs = sorted(decoder.listOutputs())
-        configured_outputs = sorted(alg.OutputName for alg in algs)
-        if configured_outputs != decoder_outputs:
-            log.warning('Configured output locations: {}'.format(configured_outputs))
-            log.warning('Configured decoder locations: {}'.format(decoder_outputs))
-            raise ValueError('Configured output locations do not match the decoder!' +
-                             'Please update the DecoderDB (Decoders.py)!'
-                             )
+        try:
+            decoder = DecoderDB["HltPackedDataDecoder/Hlt2PackedDataDecoder"]
+        except KeyError:
+            # TODO remove that for a release on the most recent DAQSys
+            decoder = None
+        if decoder:
+            decoder_outputs = sorted(decoder.listOutputs())
+            configured_outputs = sorted(alg.OutputName for alg in algs)
+            if configured_outputs != decoder_outputs:
+                log.warning('Configured output locations: {}'.format(configured_outputs))
+                log.warning('Configured decoder locations: {}'.format(decoder_outputs))
+                raise ValueError('Configured output locations do not match the decoder!' +
+                                 'Please update the DecoderDB (Decoders.py)!'
+                                )
 
         self._packersCache = algs
         return algs
