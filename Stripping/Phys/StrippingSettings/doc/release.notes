@@ -4,6 +4,15 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-08 - Liupan An
+ - Stripping26 BandQ: Modify the prescale factors of PromptCharm; add the CC2DDcontrol line 
+
+! 2016-04-07 - Liupan An
+ - Stripping26 BandQ: Modify the StrippingXibcXibc2LcJpsi line (prescale factor 0.2 introduced) 
+
+! 2016-03-30 - Liupan An
+ - Stripping26 BandQ: Update LineConfigDictionaries_BandQ for S26 (add a few lines from Stripping21rXp1, add the StrippingBbbar2PhiPhiLine)
+
 ! 2016-03-29 - Maxime Schubiger
  - Updated LineConfigDictionaries_Charm for S26 (removed Xicc lines and added D2HMuNu and ExcitedDsSpectroscopy lines)
  
