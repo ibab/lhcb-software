@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2016-04-08 - Rosen Matev
+ - Add the Hlt2MBNoBias line to the active Hlt2 lines
+
+! 2016-04-08 - Rosen Matev
  - Keep only used beam-gas lines in physics settings
    Hlt1BeamGasBeam1, Hlt1BeamGasBeam2 and Hlt1BeamGasHighRhoVertices
 

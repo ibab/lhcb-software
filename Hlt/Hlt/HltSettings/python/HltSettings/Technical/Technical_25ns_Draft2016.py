@@ -18,9 +18,16 @@ class Technical_25ns_Draft2016(object) :
         Returns a list of active lines
         """
 
-        lines = ['Hlt2PassThrough','Hlt2Lumi','Hlt2DebugEvent',
-                 'Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent',
-                 'Hlt2BeamGas']
+        lines = [
+            'Hlt2PassThrough',
+            'Hlt2MBNoBias',
+            'Hlt2Lumi',
+            'Hlt2DebugEvent',
+            'Hlt2Forward',
+            'Hlt2ErrorEvent',
+            'Hlt2Transparent',
+            'Hlt2BeamGas',
+        ]
 
         return lines
 
@@ -46,8 +53,8 @@ class Technical_25ns_Draft2016(object) :
                                         'HLT2' : "HLT_COUNT_ERRORBITS_RE('^Hlt2.*',0xffff) > 0"},
                        'PassThrough' : {'HLT1' : "HLT_PASS_RE('^Hlt1(?!Lumi).*Decision$')",
                                         'VoidFilter' : ''},
-                       'NoBiasPassThrough' : {'HLT1' : "HLT_PASS('Hlt1NoBiasPrescaledDecision')",
-                                              'VoidFilter' : ''},
+                       'MBNoBias'    : {'HLT1' : "HLT_PASS('Hlt1MBNoBiasDecision')",
+                                        'VoidFilter' : ''},
                        'Transparent' : {'HLT1' : "HLT_PASS_RE('^Hlt1(ODIN.*|L0.*|MB.*|Velo.*|NZS.*|Incident|ErrorEvent)Decision$')",
                                         'VoidFilter' : ''},
                        'BeamGas'     : {'HLT1' : "HLT_PASS_SUBSTR('Hlt1BeamGas')" ,
