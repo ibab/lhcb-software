@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2016-04-08 - Rosen Matev
+ - Keep only used beam-gas lines in physics settings
+   Hlt1BeamGasBeam1, Hlt1BeamGasBeam2 and Hlt1BeamGasHighRhoVertices
+
 ! 2016-04-07 - Roel Aaij
  - Add 10 Hz postscale to Hlt1Tell1Error.
  - Remove Hlt1Tell1Error from Hlt2Transparent.

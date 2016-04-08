@@ -257,19 +257,12 @@ class Physics_pp_Draft2016( object ):
                                                                , 'Hlt1L0AnyNoSPD'     : 0.01
                                                                }
                                                }
-                       , Hlt1BeamGasLinesConf : {
-                                         'Prescale'  : { 'Hlt1BeamGasCrossingForcedRecoFullZ': 0.001 }
-                                       , 'Postscale' : { 'Hlt1BeamGasNoBeamBeam1'            : 'RATE(0.5)'
-                                                       , 'Hlt1BeamGasNoBeamBeam2'            : 'RATE(0.5)'
-                                                       , 'Hlt1BeamGasBeam1'                  : 1.
-                                                       , 'Hlt1BeamGasBeam2'                  : 1.
-                                                       , 'Hlt1BeamGasCrossingEnhancedBeam1'  : 'RATE(0)'
-                                                       , 'Hlt1BeamGasCrossingEnhancedBeam2'  : 'RATE(0)'
-                                                       , 'Hlt1BeamGasCrossingForcedReco'     : 'RATE(0.5)'
-                                                       , 'Hlt1BeamGasCrossingForcedRecoFullZ': 'RATE(0.5)'
-                                                       , 'Hlt1BeamGasCrossingParasitic'      : 'RATE(1)'
-                                                       , 'Hlt1BeamGasHighRhoVertices'        : 'RATE(4)'
-                                                       }
+                       , Hlt1BeamGasLinesConf: {
+                            'Postscale': {
+                                'Hlt1BeamGasBeam1': 1.,
+                                'Hlt1BeamGasBeam2': 1.,
+                                'Hlt1BeamGasHighRhoVertices': 'RATE(4)',
+                            }
                                                 }
                        , Hlt1CalibTrackingLinesConf :  { 'ParticlePT'            : 600     # MeV
                                                         ,'ParticleP'             : 4000    # MeV
