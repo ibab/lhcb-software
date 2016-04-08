@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-08 - Nicola Skidmore
+ - Stripping26 B2OC:Updated LineConfig for B2OC
+
 ! 2016-04-08 - Roberta Cardinale
  - Stripping26 BandQ: Fixed typo in CC2DD/control line 
 
