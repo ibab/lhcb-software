@@ -8,7 +8,7 @@
 # DEV HACK
 import sys
 sys.path.insert(0, '../../../python')
-# sys.path.insert(0, '../../../../StrippingConf/python')
+sys.path.insert(0, '../../../../StrippingConf/python')
 
 
 from Gaudi.Configuration import *
@@ -29,10 +29,19 @@ confs = buildersConf()
 from StrippingSelections.Utils import lineBuilder, buildStreams, buildStreamsFromBuilder
 # streams = buildStreams( confs )
 # streams = buildStreams( confs, WGs='QEE' )
-streams = buildStreamsFromBuilder(confs, ['Jets'])
+streams = buildStreamsFromBuilder(confs, ['HltQEEJets', 'HltQEEExotica', 'Exotica'])
 
 
-
+#clone lines for CommonParticles overhead-free timing
+cloned_names = set()
+print "Creating line clones for timing"
+for s in streams:
+    for l in s.lines:
+        if "_TIMING" not in l.name():
+            cname  = l.name().replace("Stripping",'')+"_TIMING"
+            if cname not in cloned_names:
+              cloned_names.add(cname)
+              s.appendLines([l.clone(cname)])
 
 leptonicMicroDSTname   = 'Leptonic'
 charmMicroDSTname      = 'Charm'
@@ -129,7 +138,7 @@ from Configurables import AlgorithmCorrelationsAlg
 ac = AlgorithmCorrelationsAlg(Algorithms = list(set(sc.selections())))
 
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 100
+DaVinci().EvtMax = 10000
 DaVinci().PrintFreq = 100
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )

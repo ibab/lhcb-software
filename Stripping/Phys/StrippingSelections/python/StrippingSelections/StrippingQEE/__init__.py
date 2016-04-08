@@ -32,7 +32,7 @@ list_S26 = [
   'StrippingWRareDecay',
   'StrippingZ0RareDecay',
   'StrippingA1MuMu',
-  'StrippingJets',
+  'StrippingHltQEE',
   'StrippingInclQQ', # renamed from InclbJets
 ]
 
