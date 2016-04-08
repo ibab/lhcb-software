@@ -1394,7 +1394,7 @@ PromptCharm = {
     ## monitoring ?
     'Monitor'     : False ,
     ## pescales
-    'D0Prescale'               : 0.4 ,
+    'D0Prescale'               : 0.3 ,
     'D*Prescale'               : 1.0 ,
     'DsPrescale'               : 0.7 ,
     'D+Prescale'               : 0.4 ,
