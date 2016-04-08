@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-08 - Ricardo Vazquez Gomez
+ - Add mass cut in Ds lines for StrippingB2DMuForTauMu.py
+
 ! 2016-04-08 - Roberta Cardinale
  - Added CC2DD control line config dict in BandQ
 

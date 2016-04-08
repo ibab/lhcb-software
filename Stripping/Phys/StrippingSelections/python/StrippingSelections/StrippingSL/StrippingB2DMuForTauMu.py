@@ -24,26 +24,28 @@ default_config = {
 	'BUILDERTYPE' : 'B2DMuForTauMuconf',
         'CONFIG'      : {
  
-	 "MINIPCHI2"     : 9.0    # adimensiional 
-	,"GhostProb"     : 0.5     # adimensional  
-	,"KaonPIDK"      : 4.0    # adimensiional
-	,"ProtonPIDp"    : 0.0    # adimensiional
-	,"PionPIDKTight" : 2.0    # adimensiional
-	,"MuonIPCHI2"    : 16.00   # adimensiional
+	 "MINIPCHI2"     : 9.0    # adimensional 
+	,"GhostProb"     : 0.5    # adimensional  
+	,"KaonPIDK"      : 4.0    # adimensional
+	,"ProtonPIDp"    : 0.0    # adimensional
+	,"PionPIDKTight" : 2.0    # adimensional
+	,"MuonIPCHI2"    : 16.00  # adimensional
 	,"KPiPT"         : 300.0  # MeV
 	,"DSumPT"        : 2500.0 # MeV
-	,"DsDIRA"        : 0.999   # adimensiional
-	,"DsFDCHI2"      : 25.0  # adimensiional
+	,"DsDIRA"        : 0.999  # adimensional
+	,"DsFDCHI2"      : 25.0   # adimensional
 	,"DsMassWin"     : 80.0   # MeV
 	,"DsAMassWin"    : 100.0  # MeV
-	,"DsVCHI2DOF"    : 4.0    # adimensiional
-	,"PIDmu"         : -200.0   # adimensiional
-	,"BDIRA"         : 0.999  #adimensiional
-	,"BVCHI2DOF"     : 6.0    # adimensiional
-	,"SPDmax"        : 600    # adimensiional
+  ,"M_MIN"         : 1920.0 # MeV
+  ,"M_MAX"         : 2010.0 # MeV
+	,"DsVCHI2DOF"    : 4.0    # adimensional
+	,"PIDmu"         : -200.0 # adimensional
+  ,"BDIRA"         : 0.999  # adimensional
+	,"BVCHI2DOF"     : 6.0    # adimensional
+	,"SPDmax"        : 600    # adimensional
 	,"FakePrescale"  : 1.     # adimensional
-	,"Hlt2Line"        : "HLT_PASS_RE('Hlt2XcMuXForTauB2XcMuDecision')"    # adimensiional
-	,"Hlt2LineFake"        : "HLT_PASS_RE('Hlt2XcMuXForTauB2XcFakeMuDecision')"    # adimensiional
+	,"Hlt2Line"      : "HLT_PASS_RE('Hlt2XcMuXForTauB2XcMuDecision')"    # adimensiional
+	,"Hlt2LineFake"  : "HLT_PASS_RE('Hlt2XcMuXForTauB2XcFakeMuDecision')"    # adimensiional
 	  },
       'STREAMS'     : ['Semileptonic']	  
       }
@@ -67,6 +69,8 @@ class B2DMuForTauMuconf(LineBuilder) :
         ,"DsFDCHI2"      
         ,"DsMassWin"     
         ,"DsAMassWin"
+        ,"M_MIN"
+        ,"M_MAX"
         ,"DsVCHI2DOF"    
         ,"PIDmu"         
         ,"BDIRA"         
@@ -256,7 +260,7 @@ class B2DMuForTauMuconf(LineBuilder) :
         self.registerLine(self.FakeB2LcMuForTauMu)     
 
     def _muonFilter( self ):
-        _code = "(MIPCHI2DV(PRIMARY)> %(MuonIPCHI2)s) &(TRGHOSTPROB < %(GhostProb)s) & (PIDmu > %(PIDmu)s)   & (P> 3.0*GeV)" % self.config
+        _code = "(MIPCHI2DV(PRIMARY)> %(MuonIPCHI2)s) &(TRGHOSTPROB < %(GhostProb)s) & (PIDmu > %(PIDmu)s) & (P> 3.0*GeV)" % self.config
         _mu = FilterDesktop( Code = _code )
         return _mu 
         
@@ -267,12 +271,12 @@ class B2DMuForTauMuconf(LineBuilder) :
 
     def _pionFilter( self ):
         _code = "(P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
-                   "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) &  (PIDK< %(PionPIDKTight)s) &(TRGHOSTPROB < %(GhostProb)s) " % self.config
+                   "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) & (PIDK< %(PionPIDKTight)s) &(TRGHOSTPROB < %(GhostProb)s) " % self.config
         _pi = FilterDesktop( Code = _code )
         return _pi
 
     def _kaonFilter( self ):
-        _code = "(PIDK> %(KaonPIDK)s) & (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
+        _code = "(PIDK>%(KaonPIDK)s) & (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
                    "    & (TRGHOSTPROB < %(GhostProb)s)" % self.config
         _ka = FilterDesktop( Code = _code )
         return _ka     
@@ -303,7 +307,6 @@ class B2DMuForTauMuconf(LineBuilder) :
                                     CombinationCut = _combinationCut,
                                     MotherCut = _motherCut)                            
         return _d02k3pi
-  
 
     def _Dp2K2PiFilter( self ):
         _decayDescriptors = [ '[D+ -> K- pi+ pi+]cc' ]
@@ -319,8 +322,7 @@ class B2DMuForTauMuconf(LineBuilder) :
     def _Dsp2KKPiFilter( self ):
         _decayDescriptors = [ '[D_s+ -> K- K+ pi+]cc' ]
         _combinationCut = "(ADAMASS('D_s+') < %(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > %(DSumPT)s *MeV) " % self.config
-        _motherCut = "(SUMTREE( PT,  ISBASIC )> %(DSumPT)s * MeV) &(ADMASS('D_s+') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
-                            "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.config
+        _motherCut = "(MM < %(M_MAX)s * MeV) & (MM > %(M_MIN)s * MeV) & (SUMTREE( PT,  ISBASIC )> %(DSumPT)s * MeV) &(ADMASS('D_s+') < %(DsMassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) & (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.config
         _dsp2kkpi = CombineParticles( DecayDescriptors = _decayDescriptors,
                                     CombinationCut = _combinationCut,
                                     MotherCut = _motherCut)                            
