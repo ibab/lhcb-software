@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-08 - Thomas Blake
+ - Replaced CombineParticles by DaVinci__N3BodyDecays in B2XMuMu
+
 ! 2016-04-08 - Liupan An
  - Stripping26 BandQ: prescale factor added for StrippingPromptCharm.py and StrippingXibc.py
 

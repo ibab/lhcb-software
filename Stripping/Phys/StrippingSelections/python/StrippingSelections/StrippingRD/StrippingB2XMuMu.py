@@ -13,7 +13,7 @@ from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *  #check if needed
 
 
-from GaudiConfUtils.ConfigurableGenerators import  CombineParticles, FilterDesktop
+from GaudiConfUtils.ConfigurableGenerators import  CombineParticles, FilterDesktop, DaVinci__N3BodyDecays
 
 from PhysSelPython.Wrappers import Selection, AutomaticData, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
@@ -66,15 +66,15 @@ default_config = {
     
     # A1 cuts
     , 'A1_Comb_MassLow'  :    0.0
-    , 'A1_Comb_MassHigh' : 5550.0
+    , 'A1_Comb_MassHigh' : 5000.0
     , 'A1_MassLow'       :    0.0
-    , 'A1_MassHigh'      : 5500.0
+    , 'A1_MassHigh'      : 5000.0
     , 'A1_MinIPCHI2'     :    4.0
     , 'A1_FlightChi2'    :   25.0
     , 'A1_VtxChi2'       :   10.0
     , 'A1_Dau_MaxIPCHI2' :    9.0
     # From Bd2KstarMuMu line 
-    ,'UseNoPIDsHadrons'          : True,
+    , 'UseNoPIDsHadrons'          : True,
     
     # B cuts
     'B_Comb_MassLow'      : 4600.0,
@@ -138,27 +138,27 @@ default_config = {
     'HLT1_FILTER' : None ,
     'L0DU_FILTER' : None , 
 
-    'DECAYS'              :  [#"B0 -> J/psi(1S) phi(1020)",   #only keep channels with pi0 in final state (and some control channels) for this stripping round               
-                              "[B0 -> J/psi(1S) K*(892)0]cc",               
-                              #"B0 -> J/psi(1S) rho(770)0",
-                              "[B+ -> J/psi(1S) rho(770)+]cc",
-                              #"B0 -> J/psi(1S) f_2(1950)",                  
-                              #"B0 -> J/psi(1S) KS0",                        
-                              #"[B0 -> J/psi(1S) D~0]cc",                    
-                              "[B+ -> J/psi(1S) K+]cc",                     
-                              #"[B+ -> J/psi(1S) pi+]cc",                    
-                              "[B+ -> J/psi(1S) K*(892)+]cc",               
-                              #"[B+ -> J/psi(1S) D+]cc",                     
-                              #"[B+ -> J/psi(1S) D*(2010)+]cc",              
-                              #"[Lambda_b0 -> J/psi(1S) Lambda0]cc",         
-                              #"[Lambda_b0 -> J/psi(1S) Lambda(1520)0]cc",   
-                              "B0 -> J/psi(1S) pi0"                        
-                              #"[B+ -> J/psi(1S) a_1(1260)+]cc",             
-                              #"[B+ -> J/psi(1S) K_1(1270)+]cc",             
-                              #"[B+ -> J/psi(1S) K_2(1770)+]cc",
-                              #"B0 -> J/psi(1S) K_1(1270)0",
-                              #"[B+ -> J/psi(1S) K_1(1400)+]cc", 
-                              #"B0 -> J/psi(1S) K_1(1400)0"
+    'DECAYS'              :  [ "B0 -> J/psi(1S) phi(1020)",   #only keep channels with pi0 in final state (and some control channels) for this stripping round               
+                               "[B0 -> J/psi(1S) K*(892)0]cc",               
+                               "B0 -> J/psi(1S) rho(770)0",
+                               "[B+ -> J/psi(1S) rho(770)+]cc",
+                               "B0 -> J/psi(1S) f_2(1950)",                  
+                               "B0 -> J/psi(1S) KS0",                        
+                               "[B0 -> J/psi(1S) D~0]cc",                    
+                               "[B+ -> J/psi(1S) K+]cc",                     
+                               "[B+ -> J/psi(1S) pi+]cc",                    
+                               "[B+ -> J/psi(1S) K*(892)+]cc",               
+                               "[B+ -> J/psi(1S) D+]cc",                     
+                               "[B+ -> J/psi(1S) D*(2010)+]cc",              
+                               "[Lambda_b0 -> J/psi(1S) Lambda0]cc",
+                               "[Lambda_b0 -> J/psi(1S) Lambda(1520)0]cc",   
+                               "B0 -> J/psi(1S) pi0"                        
+                               "[B+ -> J/psi(1S) a_1(1260)+]cc",             
+                               "[B+ -> J/psi(1S) K_1(1270)+]cc",             
+                               "[B+ -> J/psi(1S) K_2(1770)+]cc",
+                               "B0 -> J/psi(1S) K_1(1270)0",
+                               "[B+ -> J/psi(1S) K_1(1400)+]cc", 
+                               "B0 -> J/psi(1S) K_1(1400)0"
                              ]
 
     },
@@ -664,22 +664,25 @@ class B2XMuMuConf(LineBuilder) :
         """
         Make omega -> pi+ pi- pi0 
         """
-        _omega2pipipizero = CombineParticles()
+        #_omega2pipipizero = CombineParticles()
+        
+        _omega2pipipizero = DaVinci__N3BodyDecays() 
         _omega2pipipizero.DecayDescriptor = "omega(782) -> pi+ pi- pi0"
         _omega2pipipizero.CombinationCut = "(ADAMASS('omega(782)') < %(Omega_CombMassWin)s * MeV) " %conf
-                         #"(ADOCACHI2CUT(20.,''))" 
-                                                
+        #"(ADOCACHI2CUT(20.,''))"
+        _omega2pipipizero.Combination12Cut = "(AM < 1000*MeV)&(ACHI2DOCA(1,2) < 16)"
+        
         _omega2pipipizero.MotherCut = "(ADMASS('omega(782)') < %(Omega_MassWin)s *MeV) & " \
                                       "(VFASPF(VPCHI2)> %(OmegaChi2Prob)s )"  %conf
                          
                                  
 
-        _omegaConf = _omega2pipipizero.configurable("Combine_"+self.name+"_PiPiPi0")
+        #_omegaConf = _omega2pipipizero.configurable("Combine_"+self.name+"_PiPiPi0")
         #_omegaConf.ParticleCombiners.update ( { '' : 'OfflineVertexFitter:PUBLIC' } )
                                                  
         _selOMEGA2PIPIPIZERO = Selection( "Selection_"+self.name+"_omega2pipipizero",
-                                       Algorithm = _omegaConf,
-                                       RequiredSelections = [ Pions, Pi0 ] )
+                                          Algorithm = _omega2pipipizero,
+                                          RequiredSelections = [ Pions, Pi0 ] )
         return _selOMEGA2PIPIPIZERO
 
 
@@ -897,11 +900,15 @@ class B2XMuMuConf(LineBuilder) :
             a_1 - > pi pi pi 
         """      
         # First make an a_1(1260)+ selection
-        _a12pipipi = CombineParticles()
+        #_a12pipipi = CombineParticles()
+        _a12pipipi = DaVinci__N3BodyDecays() 
         _a12pipipi.DecayDescriptors = [ "[a_1(1260)+ -> pi+ pi+ pi-]cc" ]
         _a12pipipi.CombinationCut = self.__A1CombCut__(conf)
         _a12pipipi.MotherCut = self.__A1Cut__(conf)
-
+        
+        _a12pipipi.Combination12Cut = "(AM < %(A1_Comb_MassHigh)s * MeV) & "\
+                                      "(ACHI2DOCA(1,2) < 16)"  % conf 
+        
         selA1 = Selection( "Selection_"+self.name+"_a1",
                            Algorithm=_a12pipipi,
                            RequiredSelections=[Pions] )
@@ -967,8 +974,11 @@ class B2XMuMuConf(LineBuilder) :
         K_1 0 -> Ks pi+ pi-
         """
 
-        _k102kspipi = CombineParticles()
-        _k102kspipi.DecayDescriptors = [ "K_1(1270)0 -> KS0 pi+ pi-" ]
+        #_k102kspipi = CombineParticles()
+        _k102kspipi = DaVinci__N3BodyDecays()
+        _k102kspipi.DecayDescriptors = [ "K_1(1270)0 -> pi+ pi- KS0" ]
+        _k102kspipi.Combination12Cut = "(AM < %(A1_Comb_MassHigh)s * MeV) & "\
+                                       "(ACHI2DOCA(1,2) < 20)"  % conf 
         _k102kspipi.CombinationCut = self.__A1CombCut__(conf)
         _k102kspipi.MotherCut = self.__A1Cut__(conf)
 
@@ -1079,20 +1089,3 @@ class B2XMuMuConf(LineBuilder) :
         return sel
 
 
-##   _b2xmumu.DecayDescriptors = [       "B0 -> J/psi(1S) phi(1020)",
-##                                       "[B0 -> J/psi(1S) K*(892)0]cc",
-##                                       "B0 -> J/psi(1S) rho(770)0",
-##                                       "B0 -> J/psi(1S) f_2(1950)",
-##                                       "B0 -> J/psi(1S) KS0",
-##                                       "[B0 -> J/psi(1S) D~0]cc",
-##                                       "[B+ -> J/psi(1S) K+]cc",
-##                                       "[B+ -> J/psi(1S) pi+]cc",
-##                                       "[B+ -> J/psi(1S) K*(892)+]cc",
-##                                       "[B+ -> J/psi(1S) D+]cc",
-##                                       "[B+ -> J/psi(1S) D*(2010)+]cc",
-##                                       "[Lambda_b0 -> J/psi(1S) Lambda0]cc",
-##                                       "[Lambda_b0 -> J/psi(1S) Lambda(1520)0]cc",
-##                                       "B0 -> J/psi(1S) pi0",
-##                                       "[B+ -> J/psi(1S) a_1(1260)+]cc",
-##                                       "[B+ -> J/psi(1S) K_1(1270)+]cc",
-##                                       "[B+ -> J/psi(1S) K_2(1770)+]cc"]             
