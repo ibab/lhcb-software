@@ -659,6 +659,51 @@ CC2DD =  {
     ],
     }
 
+CC2DDcontrol = {
+    'WGs'  : ['BandQ'],
+    'BUILDERTYPE'       : 'CC2DDConf',
+    'CONFIG'   :  {
+######## D0 / D~0 -> K pi cuts
+    'D0MassWin'     : "60*MeV",
+    'D0PT'          : "0*MeV",    ### no cut
+    'D0VtxChi2Ndof' : 10,
+                   'D0Bpvdira'     : -10.,
+    'D0Bpvdls'      : 3.,
+    'D0daughterBpvIpChi2'    : 3.,
+    'D0daughterPT'           : "600*MeV",
+                   'D0daughterP'            : "5*GeV",
+    'D0daughterTrkChi2'      : 100000, #disabled
+    'D0daughterTrkGhostProb' : 0.4,
+    ### ProbNN conditions
+    'D0daughterKaonProbNNk'  : 0.0,
+    'D0daughterPionProbNNpi' : 0.0,
+    ######## Dplus/Dminus -> Kpipi cuts, used also for D_s+/D_s- ->KKpi
+    'DpmMassWin'     : "60*MeV",
+                   'DpmPT'          : "0*MeV",    ### no cut
+                   'DpmVtxChi2Ndof' : 10,
+                   'DpmBpvdira'     : -10.,
+                   'DpmBpvdls'      : 3.,
+                   'DpmdaughterBpvIpChi2'    : 3.,
+                   'DpmdaughterPT'           : "500*MeV",
+                   'DpmdaughterP'            : "5*GeV",
+                   'DpmdaughterTrkChi2'      : 100000, #disabled
+                   'DpmdaughterTrkGhostProb' : 0.4,
+### ProbNN conditions
+                   'DpmdaughterKaonProbNNk'  : 0.0,
+                   'DpmdaughterPionProbNNpi' : 0.0,
+######## psi(3779) -> D D  cuts
+#                   'CCMassCut'     : "(AM<5000*MeV)",
+# no mass constraint
+                   'CCMassCut'      : "(AM>0)",
+                   'CCVtxChi2Ndof'  : 10,
+                   'CCMaxD0ChildPT' : "0*MeV",    ### no cut
+                   'CCMaxD0TreePT'  : "0*MeV",    ### no cut
+                   'CCMaxD0MinTreeIpChi2'   : "0.",    ## unused for the moment
+                   },
+    'STREAMS' : [
+    'Charm'
+    ],
+    }   
 
 
 
