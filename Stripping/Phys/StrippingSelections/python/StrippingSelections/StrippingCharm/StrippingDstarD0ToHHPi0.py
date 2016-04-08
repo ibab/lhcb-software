@@ -45,7 +45,7 @@ default_config = {
             ,"D0_APT" : 1400  #MeV
             ,"useTOS" : True  #adimensional
             ,"useHLT2" : False  #adimensional
-            ,"TOSFilter" : { "Hlt2CharmHadDstp2D0Pip_D02.*Pi0_Pi0.*Decision%TOS" : 0, 'Hlt2CharmHadInclDst2PiD02HHXBDTDecision%TOS' : 0, 'Hlt2Global%TIS' : 0 } #{ 'Hlt2CharmHadInclDst2PiD02HHXBDTDecision%TOS' : 0 }  #adimensional
+            ,"TOSFilter" : { "Hlt2CharmHadDstp2D0Pip_D02.*Pi0_Pi0.*Decision%TOS" : 0, 'Hlt2CharmHadInclDst2PiD02HHXBDTDecision%TOS' : 0, 'Hlt2Global%TIS' : 0 } #adimensional
             ,"Hlt2Filter" :  ""  #adimensional
             }
         }
