@@ -60,7 +60,7 @@ default_config = {
     'STREAMS'     : ['EW'],
     'CONFIG'      : {
       'common': {
-        'checkPV': True,
+        'checkPV': False,
       },
       'lines': {
         'DisplPhiPhi': {
