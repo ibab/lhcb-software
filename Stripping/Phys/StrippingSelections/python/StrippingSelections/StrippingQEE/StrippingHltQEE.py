@@ -90,7 +90,7 @@ default_config = {
 
 
 class HltQEEConf(LineBuilder):
-  __configuration_keys__ = default_config.values()[0]['CONFIG'].keys()
+  __configuration_keys__ = ('common','lines')
 
   def __init__(self, name, config) :
     LineBuilder.__init__(self, name, config)
