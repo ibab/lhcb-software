@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-08 - Guido Andreassi
+ - Added Upsilon2eMu and Upsilon2ee lines to LFV lines in RD
+
 ! 2016-04-08 - Chitsanu Khurewathanakul (QEE)
  - New StrippingHltQEE, selecting event passing specific trigger decision.
  - Reverted Exotica to previous version.

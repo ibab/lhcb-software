@@ -702,6 +702,121 @@ related_info_tools_Bu2KJPsiee = [{'Type' : 'RelInfoBs2MuMuBIsolations',
                             ] ## matches 'RelatedInfoTools'
 
 
+related_info_tools_Upsilon2eMu = [{'Type' : 'RelInfoBs2MuMuBIsolations',
+                                  'Variables' : ['BSMUMUCDFISO',
+                                                 'BSMUMUOTHERBMAG',
+                                                 'BSMUMUOTHERBANGLE',
+                                                 'BSMUMUOTHERBBOOSTMAG',
+                                                 'BSMUMUOTHERBBOOSTANGLE',
+                                                 'BSMUMUOTHERBTRACKS'],
+                                  'Location'  : 'BSMUMUVARIABLES',  ## For the Upsilon
+                                  'tracktype' : 3,
+                                  'makeTrackCuts' : False
+                                  },
+                                  {'Type' : 'RelInfoBs2MuMuTrackIsolations',
+                                  'Variables' : ['BSMUMUTRACKPLUSISO',
+                                                 'BSMUMUTRACKPLUSISOTWO',
+                                                 'ISOTWOBODYQPLUS',
+                                                 'ISOTWOBODYMASSISOPLUS',
+                                                 'ISOTWOBODYCHI2ISOPLUS',
+                                                 'ISOTWOBODYISO5PLUS'],
+                                  'DaughterLocations' : {
+                                  '[Upsilon(1S) -> e+ ^[mu-]cc]CC' :  'Muon_ISO',
+                                  '[Upsilon(1S) -> ^e+ [mu-]cc]CC' :  'Electron_ISO',
+                                  },
+                                  
+                                  'tracktype'  : 3,
+                                  'angle'      : 0.27,
+                                  'fc'         : 0.60,
+                                  'doca_iso'   : 0.13,
+                                  'ips'        : 3.0,
+                                  'svdis'      : -0.15,
+                                  'svdis_h'    : 30.,
+                                  'pvdis'      : 0.5,
+                                  'pvdis_h'    : 40.,
+                                  'makeTrackCuts' : False,
+                                  'IsoTwoBody' : True
+                                  },
+                                  
+                                  {'Type': 'RelInfoVertexIsolation',
+                                  'Location':'VtxIsoInfo',
+                                  },
+                                  
+                                  {'Type': 'RelInfoConeVariables',
+                                  'Location':'ConeIsoInfo',
+                                  },
+                                  
+                                  {'Type': 'RelInfoVertexIsolationBDT',
+                                  'Location':'VtxIsoInfoBDT',
+                                  },
+                                  
+                                  {'Type': 'RelInfoTrackIsolationBDT',
+                                  'Variables' : 0,
+                                  'DaughterLocations': {
+                                  '[Upsilon(1S) -> e+ ^[mu-]cc]CC' :  'Muon_TrackIsoBDT',
+                                  '[Upsilon(1S) -> ^e+ [mu-]cc]CC' :  'Electron_TrackIsoBDT',
+                                  }},
+                                  ] ## matches 'RelatedInfoTools'
+
+
+related_info_tools_Upsilon2ee = [{'Type' : 'RelInfoBs2MuMuBIsolations',
+                                 'Variables' : ['BSMUMUCDFISO',
+                                                'BSMUMUOTHERBMAG',
+                                                'BSMUMUOTHERBANGLE',
+                                                'BSMUMUOTHERBBOOSTMAG',
+                                                'BSMUMUOTHERBBOOSTANGLE',
+                                                'BSMUMUOTHERBTRACKS'],
+                                 'Location'  : 'BSMUMUVARIABLES',  ## For the Upsilon
+                                 'tracktype' : 3,
+                                 'makeTrackCuts' : False
+                                 },
+                                 {'Type' : 'RelInfoBs2MuMuTrackIsolations',
+                                 'Variables' : ['BSMUMUTRACKPLUSISO',
+                                                'BSMUMUTRACKPLUSISOTWO',
+                                                'ISOTWOBODYQPLUS',
+                                                'ISOTWOBODYMASSISOPLUS',
+                                                'ISOTWOBODYCHI2ISOPLUS',
+                                                'ISOTWOBODYISO5PLUS'],
+                                 'DaughterLocations' : {
+                                 '[Upsilon(1S) -> e+ ^[e-]cc]CC' :  'Electron2_ISO',
+                                 '[Upsilon(1S) -> ^e+ [e-]cc]CC' :  'Electron1_ISO',
+                                 },
+                                 
+                                 'tracktype'  : 3,
+                                 'angle'      : 0.27,
+                                 'fc'         : 0.60,
+                                 'doca_iso'   : 0.13,
+                                 'ips'        : 3.0,
+                                 'svdis'      : -0.15,
+                                 'svdis_h'    : 30.,
+                                 'pvdis'      : 0.5,
+                                 'pvdis_h'    : 40.,
+                                 'makeTrackCuts' : False,
+                                 'IsoTwoBody' : True
+                                 },
+                                 
+                                 {'Type': 'RelInfoVertexIsolation',
+                                 'Location':'VtxIsoInfo',
+                                 },
+                                 
+                                 {'Type': 'RelInfoConeVariables',
+                                 'Location':'ConeIsoInfo',
+                                 },
+                                 
+                                 {'Type': 'RelInfoVertexIsolationBDT',
+                                 'Location':'VtxIsoInfoBDT',
+                                 },
+                                 
+                                 {'Type': 'RelInfoTrackIsolationBDT',
+                                 'Variables' : 0,
+                                 'DaughterLocations': {
+                                 '[Upsilon(1S) -> e+ ^[e-]cc]CC' :  'Electron2_TrackIsoBDT',
+                                 '[Upsilon(1S) -> ^e+ [e-]cc]CC' :  'Electron1_TrackIsoBDT',
+                                 }},
+                                 ] ## matches 'RelatedInfoTools'
+
+
+
 default_config = {
     'NAME' : 'LFV',
     'BUILDERTYPE' : 'LFVLinesConf' ,
@@ -729,6 +844,8 @@ default_config = {
     'B2TauMuPrescale'                   :1,
     'B2hTauMuPrescale'                  :1,
     'Tau2MuEtaPrimePrescale'            :1,
+    'Upsilon2eMuPrescale'   :1,
+    'Upsilon2eePrescale'    :0.8,
     'RelatedInfoTools_B2eMu'            : related_info_tools_B2eMu,
     'RelatedInfoTools_JPsi2eMu'         : related_info_tools_JPsi2eMu,
     'RelatedInfoTools_JPsi2MuMuControl' : related_info_tools_JPsi2MuMuControl,
@@ -740,6 +857,8 @@ default_config = {
     'RelatedInfoTools_Tau2PhiMu'        : related_info_tools_Tau2PhiMu,
     'RelatedInfoTools_Bu2KJPsiee'       : related_info_tools_Bu2KJPsiee,
     'RelatedInfoTools_Tau2MuEtaPrime'   : related_info_tools_Tau2MuEtaPrime,
+    'RelatedInfoTools_Upsilon2eMu'      : related_info_tools_Upsilon2eMu,
+    'RelatedInfoTools_Upsilon2ee'      : related_info_tools_Upsilon2ee,
     'config_B2eMu'          : {
       'min_MIPCHI2DV': 25.,
       'max_ADAMASS'  : 1200*MeV,
@@ -828,6 +947,20 @@ default_config = {
             'pipi_cuts'          :  'ACHI2DOCA(1,2)<16',
         }, #matches config_EtaPrime2pipipi
     }, #matches config_Tau2MuEtaPrime
+
+
+        'config_Upsilon2eMu' : {
+            'mu_cuts'           :   "(PT > 1000.*MeV) & (P > 7000.*MeV) & (TRCHI2DOF < 3.)",
+            'e_cuts'            :   "(PT > 1000.*MeV) & (P > 7000.*MeV) & (TRCHI2DOF < 3.) & (PIDe > 1)",
+            'comb_cuts'         :   "in_range(7250, AM, 11000) & ACUTDOCA(0.3*mm,'')",
+            'upsilon_cuts'      :   "(VFASPF(VCHI2) < 25) & (BPVIPCHI2() < 9) & (BPVVDCHI2 < 25)"
+    }, #matches config_Upsilon2eMu
+
+        'config_Upsilon2ee' : {
+            'e_cuts'            :   "(PT > 1000.*MeV) & (P > 7000.*MeV) & (TRCHI2DOF < 3.) & (PIDe > 1)",
+            'comb_cuts'         :   "in_range(6000, AM, 11000) & ACUTDOCA(0.3*mm,'')",
+            'upsilon_cuts'      :   "(VFASPF(VCHI2) < 25) & (BPVIPCHI2() < 9) & (BPVVDCHI2 < 25)"
+    }#matches config_Upsilon2ee
 } #matches 'CONFIG'
 }
 
@@ -855,6 +988,8 @@ class LFVLinesConf(LineBuilder) :
                               'B2TauMuPrescale',
                               'B2hTauMuPrescale',
                               'Tau2MuEtaPrimePrescale',
+                              'Upsilon2eMuPrescale',
+                              'Upsilon2eePrescale',
                               'RelatedInfoTools_B2eMu',
                               'RelatedInfoTools_JPsi2eMu',
                               'RelatedInfoTools_JPsi2MuMuControl',
@@ -866,11 +1001,15 @@ class LFVLinesConf(LineBuilder) :
                               'RelatedInfoTools_Tau2PhiMu',
                               'RelatedInfoTools_Bu2KJPsiee',
                               'RelatedInfoTools_Tau2MuEtaPrime',
+                              'RelatedInfoTools_Upsilon2eMu',
+                              'RelatedInfoTools_Upsilon2ee',
                               'config_B2eMu',
                               'config_JPsi2eMu',
                               'config_PromptJPsi2eMu',
                               'config_PromptPhi2eMu',
                               'config_Tau2MuEtaPrime',
+                              'config_Upsilon2eMu',
+                              'config_Upsilon2ee'
                               )
         
         
@@ -901,6 +1040,8 @@ class LFVLinesConf(LineBuilder) :
             htaumu_name=name+'B2hTauMu'
             muetap_gamma_name = name+'Tau2MuEtaP2pipig'
             muetap_pi_name = name+'Tau2MuEtaP2pipipi'
+            upsilon2eMu_name = name+'upsilon2eMu'
+            upsilon2ee_name = name+'upsilon2ee'
 
 
             self.selTau2PhiMu       = makeTau2PhiMu(tau_name)
@@ -929,6 +1070,9 @@ class LFVLinesConf(LineBuilder) :
             self.selB2hTauMu        = makeB2hTauMu(htaumu_name)
             self.selTau2MuEtaPrime_gamma  = makeTau2MuEtaPrime(self, muetap_gamma_name, config['config_Tau2MuEtaPrime'], 'gamma')
             self.selTau2MuEtaPrime_pi     = makeTau2MuEtaPrime(self, muetap_pi_name, config['config_Tau2MuEtaPrime'], 'pi0')
+            self.selUpsilon2eMu = makeUpsilon2eMu(self, upsilon2eMu_name, config['config_Upsilon2eMu'])
+            self.selUpsilon2ee = makeUpsilon2ee(self, upsilon2ee_name, config['config_Upsilon2ee'])
+
 
 
 
@@ -1106,6 +1250,23 @@ class LFVLinesConf(LineBuilder) :
                                                 RelatedInfoTools = config['RelatedInfoTools_Tau2MuEtaPrime'],
                                                 RequiredRawEvents = ['Calo'],
                                                 )
+                                                
+                                                
+            self.Upsilon2eMuLine = StrippingLine(upsilon2eMu_name+'Line',
+                                                 prescale = config['Upsilon2eMuPrescale'],
+                                                 postscale = config['Postscale'],
+                                                 algos = [ self.selUpsilon2eMu ],
+                                                 RelatedInfoTools = config['RelatedInfoTools_Upsilon2eMu'],
+                                                 RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
+                                                 )
+                                                
+            self.Upsilon2eeLine = StrippingLine(upsilon2ee_name+'Line',
+                                                prescale = config['Upsilon2eePrescale'],
+                                                postscale = config['Postscale'],
+                                                algos = [ self.selUpsilon2ee ],
+                                                RelatedInfoTools = config['RelatedInfoTools_Upsilon2ee'],
+                                                RequiredRawEvents = ['Velo', 'Muon', 'Calo'],
+                                                )
                                         
             
             self.registerLine(self.tau2PhiMuLine)
@@ -1134,6 +1295,9 @@ class LFVLinesConf(LineBuilder) :
             self.registerLine(self.b2hTauMuLine)
             self.registerLine(self.Tau2MuEtaPrime_gamma)
             self.registerLine(self.Tau2MuEtaPrime_pi)
+            self.registerLine(self.Upsilon2eMuLine)
+            self.registerLine(self.Upsilon2eeLine)
+
 
 
 
@@ -2023,4 +2187,60 @@ def makeEtaPrime2pipipi(name, config) :
     return Selection (name,
                       Algorithm = EtaPrime2pipipi,
                       RequiredSelections = [ _stdLoosePions, _stdPi0])
+
+
+
+
+
+def makeUpsilon2eMu(self, name, config):
+    """
+        eta' selection for upsilon -> e mu
+        Please contact Guido Andreassi if you think of modifying this line!
+        
+        Arguments:
+        name        : name of the Selection , config:  configuration dictionary.
+        """
+    
+    Upsilon2eMu = CombineParticles(
+                                   DecayDescriptors = ["[Upsilon(1S) -> e+ mu-]cc","[Upsilon(1S) -> e+ mu+]cc"],
+                                   DaughtersCuts = {
+                                   "mu+" : "{mu_cuts}".format(**config) ,
+                                   "e+"  : "{e_cuts}".format(**config),
+                                   },
+                                   CombinationCut = "{comb_cuts}".format(**config),
+                                   MotherCut = "{upsilon_cuts}".format(**config)
+                                   )
+        
+    _stdTightMuons = DataOnDemand(Location = "Phys/StdTightMuons/Particles")
+    _stdTightElectrons = DataOnDemand(Location = "Phys/StdTightElectrons/Particles")
+                                   
+    return Selection(name,
+                     Algorithm = Upsilon2eMu,
+                     RequiredSelections = [ _stdTightMuons, _stdTightElectrons])
+
+
+def makeUpsilon2ee(self, name, config):
+    """
+        eta' selection for upsilon -> e e
+        Please contact Guido Andreassi if you think of modifying this line!
+        
+        Arguments:
+        name        : name of the Selection , config:  configuration dictionary.
+        """
+    
+    Upsilon2ee = CombineParticles(
+                                  DecayDescriptors = ["[Upsilon(1S) -> e+ e-]cc","[Upsilon(1S) -> e+ e+]cc"],
+                                  DaughtersCuts = {
+                                  "e-"  : "{e_cuts}".format(**config) ,
+                                  "e+"  : "{e_cuts}".format(**config),
+                                  },
+                                  CombinationCut = "{comb_cuts}".format(**config),
+                                  MotherCut = "{upsilon_cuts}".format(**config)
+                                  )
+        
+    _stdTightElectrons = DataOnDemand(Location = "Phys/StdTightElectrons/Particles")
+                                  
+    return Selection(name,
+                     Algorithm = Upsilon2ee,
+                     RequiredSelections = [_stdTightElectrons])
 
