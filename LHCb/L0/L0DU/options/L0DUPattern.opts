@@ -1,50 +1,22 @@
+// === header
 #include "$ORWELLOPTS/OrwellApp.opts"
-//#include "$STDOPTS/LHCbApplication.opts"
-#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
-//--------------------------------------------------------
+MessageSvc.OutputLevel = 3; 
 
-#include "$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts"
-
-//// ---emumate standard configs
-
-//#include "$L0TCK/L0DUConfig.opts"
-//ToolSvc.L0DUConfig.Preload = true; 
-
-//// --- emulate pattern configs
-
-L0DU.L0DUConfigProviderName = "L0PatternConfig";
-L0DUFromRaw.L0DUFromRawTool.L0DUConfigProviderName = "L0PatternConfig";
-
-// Emulation config : 
-L0DU.TCK = "0xDEB7";  
-L0DU.BankVersion = 2;
-
-
-// the processing options
+// === processing options
 #include "$L0DUROOT/options/L0DUPatternConfig.opts"
-
-
-
-//---------------------------------------------------------------------------
-// Histogram output
-//---------------------------------------------------------------------------
+L0Pattern.OutputLevel=2;
+// === Histogram output
 ApplicationMgr.ExtSvc += { "NTupleSvc" };
-
-
-// Root format 
 ApplicationMgr.HistogramPersistency = "ROOT";
 NTupleSvc.Output={"FILE1 DATAFILE='L0Pattern.root' TYP='ROOT' OPT='NEW'"};
 
-
-//---------------------------------------------------------------------------
-// Event input  (& output)
-//---------------------------------------------------------------------------
+// Some relevant data
+#include "$STDOPTS/RawDataIO.opts" 
+EventPersistencySvc.CnvServices += { "LHCb::RawDataCnvSvc" };
+EventSelector.Input = {   
+  "DATAFILE='mdf:root://eoslhcb.cern.ch//eos/lhcb/wg/HLT/2016CommissioningDatasets/BWDivUnfiltered/Run_0166687_20151027/files/Run_0166687_20151027-173732.hltb0307.mdf'  SVC='LHCb::MDFSelector'",
+  "DATAFILE='mdf://root://eoslhcb.cern.ch//eos/lhcb/wg/HLT/2016CommissioningDatasets/BWDivUnfiltered/Run_0166687_20151027/files/Run_0166687_20151027-173730.hltb0205.mdf'  SVC='LHCb::MDFSelector' " 
+}; 
 
 ApplicationMgr.EvtMax = 256;
-EventSelector.FirstEvent = 1;  
-//EventSelector.Input += {  
-//	"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v3-lumi2/00001883/DST/0000/00001883_00002264_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-//};
-#pragma print off
-#include "$ORWELLOPTS/inputRawData.opts"
-#pragma print on
+EventSelector.FirstEvent = 2;  
