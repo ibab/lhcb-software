@@ -22,7 +22,7 @@
   <argument name="validator"><text>
 block = """
 Average size of PV container = 2.01599147122
-Average size of ProtoParticle container = 7.44669509595
+Average size of ProtoParticle container = 7.45095948827
 Average size of Track container = 7.52132196162
 Average size of RICH PID container = 3.76759061834
 Average size of Muon PID container = 3.76759061834
