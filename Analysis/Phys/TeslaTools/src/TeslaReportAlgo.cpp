@@ -421,10 +421,14 @@ StatusCode TeslaReportAlgo::execute()
               // if we find a hypo that is not in the proto in the container then continue
               unsigned int commonHypos=0;
               for( auto hypo : proto->calo() ){
-                if( compareHypoPosition(hypo, iproto->calo())==hypo ){
-                  break;
+                // check to see if the same pointer is there
+                for( auto ihypo : iproto->calo() ) {
+                  if(hypo==ihypo){
+                    commonHypos++;
+                    break;
+                  }
                 }
-                else commonHypos++;
+                //if( compareHypoPosition(hypo, iproto->calo())!=hypo  && hypo->parent()) commonHypos++;
               }
               // if every hypo is in a proto already in the container, then use that proto
               if( commonHypos==proto->calo().size() ){
@@ -593,10 +597,14 @@ StatusCode TeslaReportAlgo::ProcessObject(int n, LHCb::Particle* Part, const LHC
           // if we find a hypo that is not in the proto in the container then continue
           unsigned int commonHypos=0;
           for( auto hypo_d : proto_d->calo() ){
-            if( compareHypoPosition(hypo_d, iproto->calo())==hypo_d ){
-              break;
+            // check to see if the same pointer is there
+            for( auto ihypo : iproto->calo() ) {
+              if(hypo_d==ihypo){
+                commonHypos++;
+                break;
+              }
             }
-            else commonHypos++;
+            //if( compareHypoPosition(hypo_d, iproto->calo())!=hypo_d || ) commonHypos++; 
           }
           // if every hypo is in a proto already in the container, then use that proto
           if( commonHypos==proto_d->calo().size() ){

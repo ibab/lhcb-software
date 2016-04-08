@@ -3,6 +3,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2015-04-08 - Sean Benson
+ - Suppress neutral clones.
+
 ! 2015-04-07 - Sean Benson
  - Fix CaloHypo restoration for Hypos already present.
 
