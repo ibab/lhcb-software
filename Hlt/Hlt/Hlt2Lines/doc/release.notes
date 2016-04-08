@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2016-04-08 - Rosen Matev
+ - Add Hlt2MBNoBias line accepting Hlt1MBNoBiasDecision
+ - Remove old NoBiasPassThrough used in 2015 early measurements
+
 ! 2016-04-01 - Mark Williams
  - Fixed PersistReco flag for one CharmHad line
 
