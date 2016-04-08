@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-08 - Liupan An
+ - Stripping26 BandQ: prescale factor added for StrippingPromptCharm.py and StrippingXibc.py
+
 ! 2016-04-08 - Ricardo Vazquez Gomez
  - Add mass cut in Ds lines for StrippingB2DMuForTauMu.py
 

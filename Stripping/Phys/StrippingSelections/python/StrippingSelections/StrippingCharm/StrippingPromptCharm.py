@@ -275,10 +275,10 @@ _default_configuration_ = {
     ## monitoring ?
     'Monitor'     : False ,
     ## pescales
-    'D0Prescale'               : 1.0 ,
+    'D0Prescale'               : 0.3 ,
     'D*Prescale'               : 1.0 ,
-    'DsPrescale'               : 1.0 ,
-    'D+Prescale'               : 1.0 ,
+    'DsPrescale'               : 0.7 ,
+    'D+Prescale'               : 0.4 ,
     'LambdaCPrescale'          : 1.0 ,
     'XiC0Prescale'             : 1.0 ,
     'OmegaC0Prescale'          : 1.0 ,
@@ -315,7 +315,7 @@ _default_configuration_ = {
 default_config = {
     #
     'NAME'        :   'PromptCharm'       ,
-    'WGs'         : [ 'BandQ' , 'Charm' ] ,
+    'WGs'         : [ 'BandQ' ] ,
     'CONFIG'      : _default_configuration_  , 
     'BUILDERTYPE' :   'StrippingPromptCharmConf'            ,
     'STREAMS'     : { 'Charm'    : [ 'StrippingD02KpiForPromptCharm'              , 

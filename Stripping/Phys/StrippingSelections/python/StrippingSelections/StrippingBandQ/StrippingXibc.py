@@ -89,7 +89,8 @@ default_config = {
     , 'Xibc_ENDVERTEXCHI2'                : 7
     , 'Xibc_MassWindow'                   : '2*GeV'
     , 'Xibc_MINPVIP'                      : 1e3			#DISABLED FOR INCLUSIVITY
-    , 'Xibc2LcJpsiPrescale'               : 1.0
+    , 'Xibc2LcJpsiPrescale'               : 0.2
+    #, 'Xibc2LcJpsiPrescale'               : 1.0
     ####### #
     , 'Protons4Lambda0_ProbNNp'           : 0.02
     , 'LongProtons4Lambda0_MINIPCHI2'     : 2
