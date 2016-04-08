@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2016-04-08 - Maximilian Schlupp
+ - Bugfix Upsilon2emu/ee lines in LFV
+
+! 2016-04-08 - Maximilian Schlupp
  - Add FullDST support for Jpsi2emu control lines
  - remove MDST.dst flag for Jpsi2emu control lines
  - tighten cuts and prescale to reduce rate of LFV module

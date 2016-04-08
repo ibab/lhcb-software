@@ -864,7 +864,9 @@ default_config = {
           'StrippingLFVBu2KJPsieeLine',
           'StrippingLFVB2hTauMuLine',
           'StrippingLFVTau2MuEtaP2pipigLine',
-          'StrippingLFVTau2MuEtaP2pipipiLine'
+          'StrippingLFVTau2MuEtaP2pipipiLine',
+          'StrippingLFVupsilon2eMuLine',
+          'StrippingLFVupsilon2eeLine'
         ]
     },
     'WGs'     : [ 'RD' ],
