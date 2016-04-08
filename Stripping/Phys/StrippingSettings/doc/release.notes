@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2016-04-08 - Roberta Cardinale
+ - Stripping26 BandQ: Fixed typo in CC2DDcontrol line 
+
 ! 2016-04-08 - Liupan An
  - Stripping26 BandQ: Modify the prescale factors of PromptCharm; add the CC2DDcontrol line 
 

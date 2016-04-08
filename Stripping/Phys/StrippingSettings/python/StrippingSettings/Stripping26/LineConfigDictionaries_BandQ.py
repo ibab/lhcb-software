@@ -659,9 +659,9 @@ CC2DD =  {
     ],
     }
 
-CC2DDcontrolLine =  {
-	'NAME' : 'CC2DDcontrolLine',
-	'WGs'  : ['BandQ'],
+CC2DDcontrol =  {
+    #'NAME' : 'CC2DDcontrol',
+    'WGs'  : ['BandQ'],
 	'BUILDERTYPE'       : 'CC2DDConf',
 	'CONFIG'   :  {
 	   ######## D0 / D~0 -> K pi cuts
